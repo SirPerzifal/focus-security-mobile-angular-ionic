@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true">
+  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
+    <div class="flex flex-col justify-end items-center">
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+
+      <div class="flex mt-[50px] self-start">
+        <div class="flex flex-col items-center">
+          <app-button 
+            [customClasses]="{'bg-[var(--ion-color-primary)]':true, 'p-[15px]':true, 'rounded-lg':true}"
+            icon="location"
+            iconPosition="middle"
+            [iconClass]="{'text-white':true}"
+            >
+          </app-button>
+          <!-- <app-button [text]="'Pick up'" [customClasses]="{'bg-[red]':true, 'p-[10px]':true, 'rounded-lg':true}"></app-button> -->
+          <span class="text-[12px]"><b>PICK UP</b></span>
+          <span class="text-[12px]"><b>DROP OFF</b></span>
+        </div>
+      </div>
+      
+      <div class="flex flex-col w-[100%] mt-[50px]">
+        <div class="flex justify-start items-center">
+          <app-button [text]="'PICK UP'" [customClasses]="{'text-white':true,'bg-[var(--ion-color-primary)]':true, 'py-[10px]':true, 'px-[25px]':true, 'rounded-lg':true}"></app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true">
+  <div class="absolute h-1/2 mt-64 opacity-20">
+    <img
+    alt="Focus Security"
+    src="assets/img/focus_logo-removebg.png"
+  />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-row justify-around mt-6">
+      <div class="text-sm flex flex-col items-center">
+        <div><b>SITE NAME</b></div>
+        <div><b>VISITOR MANAGEMENT SYSTEM</b></div>
+      </div>
+    </div>
+    <div class="flex flex-row mt-8">
+      <div class="flex flex-col items-center">
+        <button id="shadow_back" class="w-10 h-10 bg-[var(--ion-color-primary)] rounded-xl">
+            <ion-icon name="people-outline" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
+        </button>
+        <div class="text-[10px] mt-1">
+          VISITORS
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-row justify-between mt-8">
+      <app-visitor-button [text]="'PRE REGISTERED'" [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowQr()"></app-visitor-button>
+      <app-visitor-button [text]="'WALK IN'" [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowWalk()"></app-visitor-button>
+      <app-visitor-button [text]="'DRIVE IN'" [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowDrive()"></app-visitor-button>
+    </div>
+
+    <div class="flex flex-row">
+      <div class="mt-8 flex flex-col justify-around items-center h-72 w-full" *ngIf="showQr" @fadeInOut>
+        <img
+          alt="QR"
+          src="assets/img/qr.png"
+          class="w-60 h-60" />
+      </div>
+
+      <div class="mt-8 flex flex-col justify-between items-center h-72 w-full" *ngIf="showWalk" @fadeInOut>
+        
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div> 
+        <div class="flex flex-row justify-between w-full">
+          <div class="w-4/6">
+            <app-text-input [id]="'walk_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div>
+          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full'"></app-visitor-button>
+        </div>
+      </div>
+  
+      <div class="mt-8 flex flex-col justify-between items-center h-80 w-full" *ngIf="showDrive" @fadeInOut>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div> 
+        <div class="flex flex-row justify-between w-full">
+          <div class="w-4/6">
+            <app-text-input [id]="'walk_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div>
+          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full'"></app-visitor-button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</ion-content>

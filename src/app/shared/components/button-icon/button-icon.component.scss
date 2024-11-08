@@ -1,0 +1,56 @@
+.fsc-icon-button-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+}
+.fsc-icon-button {
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 49px;
+  height: 46px;
+  margin: 10px;
+
+  &::part(native) {
+    padding: 0;
+  }
+}
+.fsc-icon {
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+.fsc-icon, .fsc-icon-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fsc-icon-wrapper {
+  img {
+    width: 24px;  // Sesuaikan dengan ukuran yang Anda inginkan
+    height: 24px; // Sesuaikan dengan ukuran yang Anda inginkan
+    object-fit: contain;
+  }
+}
+.fsc-icon-button-label {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 9px;
+}

@@ -1,0 +1,42 @@
+.fsh-logo {
+    display: flex;
+    justify-content: center;
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
+
+.fsh-logo img {
+    width: 250px;
+}
+
+.fsh-double-button {
+    padding: 2px 2px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bolder;
+}
+
+.fsh-alert-button {
+    padding: 5px 5px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bolder;
+    font-size: 12px;
+    position: relative; // Tambahkan ini
+}
+
+.fsh-badge-button {
+    position: absolute;
+    top: -8px; // Sesuaikan nilai ini untuk mengatur posisi vertikal
+    right: 5px; // Sesuaikan nilai ini untuk mengatur posisi horizontal
+    border-radius: 50%;
+    padding: 2px 6px; // Sesuaikan padding untuk ukuran yang lebih kecil
+    font-size: 18px; // Kurangi ukuran font
+    font-weight: bold;
+    min-width: 24px; // Tambahkan ini untuk memastikan lebar minimum
+    height: 24px; // Tambahkan ini untuk memastikan tinggi minimum
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

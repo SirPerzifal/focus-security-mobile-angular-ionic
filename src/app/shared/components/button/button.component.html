@@ -1,0 +1,29 @@
+<!-- <div [class]="getFilteredClasses(customClasses)">
+  <ng-content></ng-content><div class="middlizing-text">{{text}}</div>
+</div> -->
+
+<div [class]="getFilteredClasses(customClasses)" class="button-container">
+  <!-- Left section -->
+  <ng-container *ngIf="iconPosition === 'left'">
+    <ion-icon *ngIf="icon" [name]="icon" [class]="getFilteredClasses(iconClass)"></ion-icon>
+    <img *ngIf="imageSrc" [src]="imageSrc" [alt]="imageAlt" class="button-image">
+  </ng-container>
+
+  <!-- Text before middle icon -->
+  <div *ngIf="iconPosition !== 'middle'" class="middlizing-text">{{text}}</div>
+  
+  <!-- Middle section -->
+  <ng-container *ngIf="iconPosition === 'middle'">
+    <div class="middle-content">
+      <div class="text-above" *ngIf="text">{{text}}</div>
+      <ion-icon *ngIf="icon" [name]="icon" [class]="getFilteredClasses(iconClass)"></ion-icon>
+      <img *ngIf="imageSrc" [src]="imageSrc" [alt]="imageAlt" class="button-image">
+    </div>
+  </ng-container>
+
+  <!-- Right section -->
+  <ng-container *ngIf="iconPosition === 'right'">
+    <ion-icon *ngIf="icon" [name]="icon" [class]="getFilteredClasses(iconClass)"></ion-icon>
+    <img *ngIf="imageSrc" [src]="imageSrc" [alt]="imageAlt" class="button-image">
+  </ng-container>
+</div>

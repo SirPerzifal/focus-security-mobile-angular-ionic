@@ -1,0 +1,45 @@
+<ion-content class="ion-padding h-full flex flex-col">
+  <div class="text-center">
+    <h1 class="text-xl font-bold text-[var(--ion-color-medium-contrast)]">
+      SITE NAME
+    </h1>
+    <h2 class="text-lg font-bold text-[var(--ion-color-medium-contrast)]">
+      VISITOR MANAGEMENT SYSTEM
+    </h2>
+  </div>
+  <div class="grid grid-cols mt-8">
+    <div class="flex flex-wrap gap-4 justify-center">        
+      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" />
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" />
+    </div>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" />
+      <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" />
+      <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" />
+      <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" />
+    </div>
+  </div>
+  <div class="fsh-logo text-center">
+    <img alt="Focus Security Logo" class="mx-auto" src="assets/Logo.png"/>
+  </div>
+  <div class="flex-none">
+    <div class="grid grid-cols-2">
+      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+        VEHICLE RECORDS
+      </ion-button>
+      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+        VISITOR RECORDS
+      </ion-button>
+    </div>
+    <div class="relative w-full mt-4">
+      <ion-button expand="block" fill="clear" class="w-full fsh-alert-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+        ALERTS
+      </ion-button>
+      <span class="fsh-badge-button bg-[var(--ion-color-danger)]">
+        1
+      </span>
+    </div>
+  </div>
+</ion-content>
