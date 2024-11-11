@@ -1,5 +1,5 @@
 .scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 12px;
   height: 23px;
 }
 
@@ -9,7 +9,7 @@
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #8f8c8c;
+  background: #10421D;
   border-radius: 100vh;
-  border: 6px solid #8f8c8c;
+  border: 6px solid #10421D;
 }

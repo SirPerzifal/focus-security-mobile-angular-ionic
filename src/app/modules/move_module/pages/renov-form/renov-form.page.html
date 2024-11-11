@@ -6,8 +6,10 @@
 
       <div class="flex mt-[50px] self-start">
         <div class="flex flex-col items-center">
-          <button class="bg-[red] p-[10px] rounded-lg">Test</button>
-          <span class="text-[12px]"><b>Renovations</b></span>
+          <button class="bg-[--ion-color-primary] p-[10px] rounded-lg text-[white]" [routerLink]="['/move-home']"><img
+            alt="Focus Security"
+            src="assets/icon/Hammer.png" /></button>
+          <span class="text-[12px]"><b>Renovators</b></span>
         </div>
       </div>
       
@@ -21,7 +23,7 @@
         </div>
         <div class="contact flex mt-[5px]">
           <app-text-input [id]="'contractor_contact'" [placeholder]="'Contact No'" [customClasses]="{'h-[53px]':true,'mr-[5px]': true,'w-[100%]': true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-          <button class="flex flex-col bg-[yellow] rounded-lg p-[10px] items-center w-[40%] text-[12px] items-center justify-center ml-[5px]">
+          <button class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[40%] text-[12px] items-center justify-center ml-[5px]">
             <span>Search</span>
           </button>
         </div>
@@ -58,12 +60,12 @@
           </div>
         </div>
         <div class="contac mt-[15px]">
-          <button class="bg-[green] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
             <span>Save Record & Open Barrier</span>
           </button>
         </div>
         <div class="contac mt-[5px]">
-          <button class="bg-[green] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
             <span>Save Record Only</span>
           </button>
         </div>

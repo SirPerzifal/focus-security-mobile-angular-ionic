@@ -1,21 +1,26 @@
 <ion-content class="ion-padding h-full flex flex-col">
   <div class="text-center">
-    <h1 class="text-xl font-bold text-[var(--ion-color-medium-contrast)]">
+    <h1 class="text-xl font-bold text-[black] dark:text-[white]">
       SITE NAME
     </h1>
-    <h2 class="text-lg font-bold text-[var(--ion-color-medium-contrast)]">
+    <h2 class="text-lg font-bold text-[black] dark:text-[white]">
       VISITOR MANAGEMENT SYSTEM
     </h2>
   </div>
   <div class="grid grid-cols mt-8">
     <div class="flex flex-wrap gap-4 justify-center">        
-      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" />
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" />
+      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']"/>
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']"/>
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" />
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']"/>
+      <!-- <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'"  />
+      <app-button-icon [customNameIcon]="'faUserGroup'" [text]="'VISITORS'"  />
+      <app-button-icon [customNameIcon]="'faUserShield'" [text]="'CONTRACTORS'" />
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'"  /> -->
     </div>
     <div class="flex flex-wrap gap-4 justify-center">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" />
+      <!-- <app-button-icon [customNameIcon]="'faTruckPickup'" [text]="'DELIVERIES'"  /> -->
       <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" />
       <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" />
       <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" />

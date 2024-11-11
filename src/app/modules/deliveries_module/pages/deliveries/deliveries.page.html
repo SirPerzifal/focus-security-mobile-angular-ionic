@@ -1,0 +1,147 @@
+<ion-content [fullscreen]="true">
+  <div class="absolute h-1/2 mt-64 opacity-20">
+    <img
+    alt="Focus Security"
+    src="assets/img/focus_logo-removebg.png"
+  />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center mt-6">
+      <h1 class="text-xl font-bold text-[black] dark:text-[white]">
+        SITE NAME
+      </h1>
+      <h2 class="text-lg font-bold text-[black] dark:text-[white]">
+        VISITOR MANAGEMENT SYSTEM
+      </h2>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/home-vms']" />
+    </div>
+    <div class="flex flex-rowspace-x-4 space-x-7">
+      <app-button-icon 
+        [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" 
+        [text]="'FOOD DELIVERIES'" 
+        (click)="toggleFoodDeliveries()" 
+        [isActive]="buttonStates.foodDeliveries"
+      />
+      <app-button-icon 
+        [customImageIcon]="'assets/icon/home-icon/Package.webp'" 
+        [text]="'PACKAGE DELIVERIES'" 
+        (click)="togglePackageDeliveries()" 
+        [isActive]="buttonStates.packageDeliveries"
+      />
+      <app-button-icon 
+        [customNameIcon]="'faCouch'" 
+        [text]="'BULKY ITEM DELIVERIES'" 
+        (click)="toggleBulkyItemDeliveries()" 
+        [isActive]="buttonStates.bulkyItemDeliveries"
+      />
+    </div>
+
+    <div class="w-full flex flex-row">
+      <div class="w-full" *ngIf="foodDeliveries" @fadeInOut>
+        <div class="border-t border-black dark:border-white mt-7"></div>
+        <div class="mt-1 flex flex-row justify-between w-full" >
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodPanda.webp'" [text]="'FOODPANDA'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABFOOD'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Deliveroo.webp'" [text]="'DELIVEROO'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" />
+        </div>
+        <div class="flex flex-row space-x-7 w-full" >
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'WALK IN'" />
+          <app-button-icon [customNameIcon]="'faCar'" [text]="'DRIVE IN'" />
+        </div>
+        <div class="mt-5 flex flex-col justify-around items-center w-full">
+          <div class="w-full mb-3">
+            <app-text-input [id]="'walk_in_name'" [placeholder]="'CONTACT NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div> 
+          <div class="w-full mb-3">
+            <button id="dropdownDefaultButton" (click)="toggleDropdown()" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
+              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </div>
+          <div class="w-full mb-3">
+            <button id="dropdownDefaultButton" (click)="toggleDropdown()" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
+              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </div>
+          <div class="w-full mb-3">
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full'"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
+        <div class="border-t border-black dark:border-white mt-7"></div>
+        <div class="mt-1 flex flex-row justify-between w-full" >
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/NinjaVan.webp'" [text]="'NINJAVAN'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABEXPRESS'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/SingPos.webp'" [text]="'SINGPOST'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" />
+        </div>
+        <div class="mt-8 flex flex-col justify-between items-center w-full" >
+          <div class="w-full mb-3">
+            <app-text-input [id]="'walk_in_name'" [placeholder]="'CONTACT NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div>
+          <div class="w-full mb-3">
+            <app-text-input [id]="'walk_in_block'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div>
+          <div class="w-full flex mb-3 justify-between">
+            <div class="flex items-center me-4">
+                <input id="inline-radio" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+                <label for="inline-radio" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Multiple Units</label>
+            </div>
+            <div class="flex items-center">
+                <input id="inline-2-radio" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+                <label for="inline-2-radio" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Single Unit</label>
+            </div>
+          </div>
+          <div class="w-full mb-3">
+            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
+              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </div>
+          <div class="w-full mb-3">
+            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">UNIT
+              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </div>
+          <div class="w-full mb-3">
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full'"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="mt-8 flex flex-col justify-between items-center h-80 w-full" *ngIf="bulkyItemDeliveries" @fadeInOut>
+        
+      </div>
+    </div>
+    
+  </div>
+  <div id="dropdown" class="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" *ngIf="isDropdownOpen">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+      </li>
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+      </li>
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+      </li>
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+      </li>
+    </ul>
+  </div>
+</ion-content>

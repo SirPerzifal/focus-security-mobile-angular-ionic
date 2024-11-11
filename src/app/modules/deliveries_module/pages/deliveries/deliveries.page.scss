@@ -1,0 +1,25 @@
+#shadow_back {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+#middle_button {
+    height: 40px; 
+    border-radius: 6px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+#dropdown {
+    position: absolute; /* Mengatur posisi dropdown menjadi absolute */
+    top: 100%; /* Menempatkan dropdown di bawah button */
+    left: 0; /* Menempatkan dropdown sejajar dengan button */
+    z-index: 1000; /* Memastikan dropdown berada di atas elemen lainnya */
+  }
+
+.image_bg{
+    position: absolute;
+    height: 50%;
+    margin-top:256px;
+    opacity: 0.2;
+}

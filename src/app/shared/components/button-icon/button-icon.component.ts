@@ -7,7 +7,8 @@ import {
   faHammer, 
   faTruckPickup, 
   faTruckMedical, 
-  faCar 
+  faCar,
+  faCouch
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -19,15 +20,16 @@ export class ButtonIconComponent implements OnInit {
   
   @Input() text: string = '';
   @Input() customNameIcon: string = '';
-  @Input() customImageIcon: string = ''; // Input baru untuk gambar
+  @Input() customImageIcon: string = ''; 
+  @Input() isActive: boolean = true; // Tambahkan input untuk status aktif
   
   icon: IconDefinition = faCar;
-  showIcon: boolean = true; // Flag untuk menentukan apakah menampilkan ikon atau gambar
+  showIcon: boolean = true;
 
   constructor() { }
 
   ngOnInit() {
-    this.showIcon = !this.customImageIcon; // Jika ada customImageIcon, showIcon = false
+    this.showIcon = !this.customImageIcon;
     if (this.showIcon) {
       this.setIcon();
     }
@@ -52,6 +54,9 @@ export class ButtonIconComponent implements OnInit {
         break;
       case 'faTruckMedical':
         this.icon = faTruckMedical;
+        break;
+      case 'faCouch':
+        this.icon = faCouch;
         break;
       case 'faCar':
         this.icon = faCar;

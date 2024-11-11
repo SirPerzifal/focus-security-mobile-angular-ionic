@@ -19,4 +19,8 @@ export class MoveHomePage implements OnInit {
   form() {
     this.router.navigate(['move-form']);
   }
+
+  renov_form(){
+    this.router.navigate(['renov-form']);
+  }
 }

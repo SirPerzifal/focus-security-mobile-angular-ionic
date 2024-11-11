@@ -1,5 +1,12 @@
 <div class="fsc-icon-button-layout">
-  <ion-button fill="clear" class="fsc-icon-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+  <ion-button 
+    fill="clear" 
+    class="fsc-icon-button" 
+    [ngClass]="{
+      'bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]': isActive,
+      'bg-[#D0D0D0] text-[#757575]': !isActive
+    }"
+  >
     <ng-container *ngIf="showIcon; else imageTemplate">
       <fa-icon class="fsc-icon" [icon]="icon"></fa-icon>
     </ng-container>
@@ -9,7 +16,7 @@
       </div>
     </ng-template>
   </ion-button>
-  <span class="fsc-icon-button-label break-words font-bold text-[var(--ion-color-medium-contrast)]">
+  <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]">
     {{text}}
   </span>
 </div>

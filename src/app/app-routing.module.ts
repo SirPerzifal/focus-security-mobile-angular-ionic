@@ -46,6 +46,10 @@ const routes: Routes = [
     path: 'pick-up-page',
     loadChildren: () => import('./modules/pick_up_modules/pages/pick-up-page/pick-up-page.module').then( m => m.PickUpPagePageModule)
   },
+  {
+    path: 'deliveries',
+    loadChildren: () => import('./modules/deliveries_module/pages/deliveries/deliveries.module').then( m => m.DeliveriesPageModule)
+  },
 ];
 
 @NgModule({
