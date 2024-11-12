@@ -1,30 +1,102 @@
 <ion-content [fullscreen]="true">
-  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
-    <div class="flex flex-col justify-end items-center">
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
-
-      <div class="flex mt-[50px] self-start">
-        <div class="flex flex-col items-center">
-          <app-button 
-            [customClasses]="{'bg-[var(--ion-color-primary)]':true, 'p-[15px]':true, 'rounded-lg':true}"
-            icon="location"
-            iconPosition="middle"
-            [iconClass]="{'text-white':true}"
-            [routerLink]="['/home-vms']"
-            >
-          </app-button>
-          <!-- <app-button [text]="'Pick up'" [customClasses]="{'bg-[red]':true, 'p-[10px]':true, 'rounded-lg':true}"></app-button> -->
-          <span class="text-[12px]"><b>PICK UP</b></span>
-          <span class="text-[12px]"><b>DROP OFF</b></span>
-        </div>
+  <div class="absolute h-1/2 mt-64 opacity-20">
+    <img
+    alt="Focus Security"
+    src="assets/img/focus_logo-removebg.png"
+  />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-row justify-around mt-6">
+      <div class="text-sm flex flex-col items-center">
+        <div><b>SITE NAME</b></div>
+        <div><b>VISITOR MANAGEMENT SYSTEM</b></div>
       </div>
-      
-      <div class="flex flex-col w-[100%] mt-[50px]">
-        <div class="flex justify-start items-center">
-          <app-button [text]="'PICK UP'" [customClasses]="{'text-white':true,'bg-[var(--ion-color-primary)]':true, 'py-[10px]':true, 'px-[25px]':true, 'rounded-lg':true}"></app-button>
+    </div>
+    <div class="flex flex-row mt-8">
+      <div class="flex flex-col items-center">
+        <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl" [routerLink]="['/home-vms']">
+            <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
+        </button>
+        <div class="text-[10px] mt-1">
+          <div class="text-xs flex flex-col items-center">
+            <div>
+              <b>PICK UP</b>
+            </div> 
+            <div>
+              <b>DROP OFF</b>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <div class="flex flex-row justify-start mt-8">
+      <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()"></app-visitor-button>
+      <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-secondary)] text-white w-24 ml-2 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
+    </div>
+    <div class="mt-7 flex flex-row">
+      <div class="flex flex-col h-72 w-full"  *ngIf="showForm" @fadeInOut>
+        <div class="flex flex-row justify-start items-start">
+          <div class="flex flex-col items-center w-1/4">
+            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+              <img
+              alt="Grab"
+              src="assets/icon/pick_up-page/Grab_Outline.png" />
+                <!-- <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon> -->
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>PHV VEHICLE</b>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-1/4">
+            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+              <fa-icon [icon]="faTaxi" class="text-[#ffffff]"></fa-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>TAXI</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-1/4">
+            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+                <ion-icon name="car-sport-outline" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>PRIVATE CAR</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full mt-5">
+          <div class="w-full">
+            <app-text-input [id]="'pick_up_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+          </div>
+          <div class="w-full">
+            <app-text-input [id]="'pick_up_location'" [placeholder]="'Location (BLK / PICK UP POINT)'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+          </div>
+        </div>
+        
+        <div class="w-full mt-5">
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"></app-visitor-button>
+          </div>
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"></app-visitor-button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
   </div>
+  
 </ion-content>

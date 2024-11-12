@@ -6,8 +6,10 @@ import { IonicModule } from '@ionic/angular';
 
 import { PickUpPagePageRoutingModule } from './pick-up-page-routing.module';
 
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 import { PickUpPagePage } from './pick-up-page.page';
+import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   imports: [
@@ -15,7 +17,9 @@ import { PickUpPagePage } from './pick-up-page.page';
     FormsModule,
     IonicModule,
     PickUpPagePageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    SharedModule,
+    FontAwesomeModule
   ],
   declarations: [PickUpPagePage]
 })

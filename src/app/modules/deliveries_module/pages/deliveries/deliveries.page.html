@@ -15,26 +15,29 @@
       </h2>
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/home-vms']" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
     <div class="flex flex-rowspace-x-4 space-x-7">
       <app-button-icon 
         [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" 
-        [text]="'FOOD DELIVERIES'" 
+        [text]="'FOOD DELIVERY'" 
         (click)="toggleFoodDeliveries()" 
         [isActive]="buttonStates.foodDeliveries"
+        [disableClick]="true"
       />
       <app-button-icon 
         [customImageIcon]="'assets/icon/home-icon/Package.webp'" 
         [text]="'PACKAGE DELIVERIES'" 
         (click)="togglePackageDeliveries()" 
         [isActive]="buttonStates.packageDeliveries"
+        [disableClick]="true"
       />
       <app-button-icon 
         [customNameIcon]="'faCouch'" 
         [text]="'BULKY ITEM DELIVERIES'" 
         (click)="toggleBulkyItemDeliveries()" 
         [isActive]="buttonStates.bulkyItemDeliveries"
+        [disableClick]="true"
       />
     </div>
 
@@ -42,32 +45,40 @@
       <div class="w-full" *ngIf="foodDeliveries" @fadeInOut>
         <div class="border-t border-black dark:border-white mt-7"></div>
         <div class="mt-1 flex flex-row justify-between w-full" >
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodPanda.webp'" [text]="'FOODPANDA'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABFOOD'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Deliveroo.webp'" [text]="'DELIVEROO'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodPanda.webp'" [text]="'FOODPANDA'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABFOOD'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Deliveroo.webp'" [text]="'DELIVEROO'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" (buttonClick)="onButtonClick($event)" />
         </div>
         <div class="flex flex-row space-x-7 w-full" >
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'WALK IN'" />
-          <app-button-icon [customNameIcon]="'faCar'" [text]="'DRIVE IN'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'WALK IN'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customNameIcon]="'faCar'" [text]="'DRIVE IN'" (buttonClick)="onButtonClick($event)" />
         </div>
         <div class="mt-5 flex flex-col justify-around items-center w-full">
           <div class="w-full mb-3">
             <app-text-input [id]="'walk_in_name'" [placeholder]="'CONTACT NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
           </div> 
           <div class="w-full mb-3">
-            <button id="dropdownDefaultButton" (click)="toggleDropdown()" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
-              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
+            <form class="max-w-sm mx-auto">
+              <select id="block" class="bg-transparent border border-[#BDBDBD] text-gray-900 text-sm rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                <option selected>Choose Block</option>
+                <option value="block_1">Block 1</option>
+                <option value="block_2">Block 2</option>
+                <option value="block_3">Block 3</option>
+                <option value="block_4">Block 4</option>
+              </select>
+            </form>
           </div>
           <div class="w-full mb-3">
-            <button id="dropdownDefaultButton" (click)="toggleDropdown()" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
-              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
+            <form class="max-w-sm mx-auto">
+              <select id="unit" class="bg-transparent border border-[#BDBDBD] text-gray-900 text-sm rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                <option selected>Choose Unit</option>
+                <option value="unit_1">Unit 1</option>
+                <option value="unit_2">Unit 2</option>
+                <option value="unit_3">Unit 3</option>
+                <option value="unit_4">Unit 4</option>
+              </select>
+            </form>
           </div>
           <div class="w-full mb-3">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'"></app-visitor-button>
@@ -79,10 +90,10 @@
       <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
         <div class="border-t border-black dark:border-white mt-7"></div>
         <div class="mt-1 flex flex-row justify-between w-full" >
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/NinjaVan.webp'" [text]="'NINJAVAN'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABEXPRESS'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/SingPos.webp'" [text]="'SINGPOST'" />
-          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/NinjaVan.webp'" [text]="'NINJAVAN'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/Grab.webp'" [text]="'GRABEXPRESS'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/SingPos.webp'" [text]="'SINGPOST'" (buttonClick)="onButtonClick($event)" />
+          <app-button-icon [customImageIcon]="'assets/icon/home-icon/FoodBar.webp'" [text]="'OTHERS'" (buttonClick)="onButtonClick($event)" />
         </div>
         <div class="mt-8 flex flex-col justify-between items-center w-full" >
           <div class="w-full mb-3">
@@ -102,18 +113,26 @@
             </div>
           </div>
           <div class="w-full mb-3">
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">BLOCK
-              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
+            <form class="max-w-sm mx-auto">
+              <select id="block" class="bg-transparent border border-[#BDBDBD] text-gray-900 text-sm rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                <option selected>Choose Block</option>
+                <option value="block_1">Block 1</option>
+                <option value="block_2">Block 2</option>
+                <option value="block_3">Block 3</option>
+                <option value="block_4">Block 4</option>
+              </select>
+            </form>
           </div>
           <div class="w-full mb-3">
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="bg-transparent ring-1 ring-[#BDBDBD] focus:ring-2 focus:ring-[#BDBDBD] font-medium rounded text-xs px-3 py-2.5 text-center inline-flex items-center w-full justify-between text-[#BDBDBD]" type="button">UNIT
-              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
+            <form class="max-w-sm mx-auto">
+              <select id="unit" class="bg-transparent border border-[#BDBDBD] text-gray-900 text-sm rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                <option selected>Choose Unit</option>
+                <option value="unit_1">Unit 1</option>
+                <option value="unit_2">Unit 2</option>
+                <option value="unit_3">Unit 3</option>
+                <option value="unit_4">Unit 4</option>
+              </select>
+            </form>
           </div>
           <div class="w-full mb-3">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'"></app-visitor-button>
@@ -127,21 +146,5 @@
       </div>
     </div>
     
-  </div>
-  <div id="dropdown" class="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" *ngIf="isDropdownOpen">
-    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-      </li>
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-      </li>
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-      </li>
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
-      </li>
-    </ul>
   </div>
 </ion-content>

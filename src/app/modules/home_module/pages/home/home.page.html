@@ -8,22 +8,17 @@
     </h2>
   </div>
   <div class="grid grid-cols mt-8">
-    <div class="flex flex-wrap gap-4 justify-center">        
-      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']"/>
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']"/>
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" />
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']"/>
-      <!-- <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'"  />
-      <app-button-icon [customNameIcon]="'faUserGroup'" [text]="'VISITORS'"  />
-      <app-button-icon [customNameIcon]="'faUserShield'" [text]="'CONTRACTORS'" />
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'"  /> -->
+    <div class="flex flex-wrap gap-4 justify-center">
+      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
     </div>
     <div class="flex flex-wrap gap-4 justify-center">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" />
-      <!-- <app-button-icon [customNameIcon]="'faTruckPickup'" [text]="'DELIVERIES'"  /> -->
-      <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" />
-      <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" />
-      <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" [isActive]="true" [disableClick]="true" />
     </div>
   </div>
   <div class="fsh-logo text-center">

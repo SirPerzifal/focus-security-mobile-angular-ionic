@@ -19,9 +19,6 @@ import { trigger, state, style, animate, transition} from '@angular/animations';
 })
 export class DeliveriesPage implements OnInit {
 
-  // Variabel untuk mengontrol visibilitas dropdown
-  isDropdownOpen: boolean = false;
-
   constructor() { }
 
   // Tambahkan objek untuk status aktif tombol
@@ -31,16 +28,12 @@ export class DeliveriesPage implements OnInit {
     bulkyItemDeliveries: false
   };
 
+  foodDeliveries = false; // Ubah menjadi false secara default
   packageDeliveries = false;
   bulkyItemDeliveries = false;
-  foodDeliveries = false; // Ubah menjadi false secara default
+  foodDeliveriesTrans = false;
   packageDeliveriesTrans = false;
   bulkyItemDeliveriesTrans = false;
-  foodDeliveriesTrans = false;
-
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen; // Toggle dropdown
-  }
 
   toggleFoodDeliveries() {
     if (!this.bulkyItemDeliveriesTrans && !this.packageDeliveriesTrans){
@@ -94,6 +87,11 @@ export class DeliveriesPage implements OnInit {
         this.bulkyItemDeliveriesTrans = false
       }, 300)
     }
+  }
+
+  // Metode untuk menangani klik tombol
+  onButtonClick(event: { text: string, isActive: boolean }) {
+    console.log(`Button clicked: ${event.text}, Active: ${event.isActive}`);
   }
 
   ngOnInit() {

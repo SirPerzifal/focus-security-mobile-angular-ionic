@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { 
   faLocationDot, 
@@ -19,9 +19,14 @@ import {
 export class ButtonIconComponent implements OnInit {
   
   @Input() text: string = '';
+  @Input() extraClass: string = ''; 
+  @Input() extraTextClass: string = ''; 
   @Input() customNameIcon: string = '';
-  @Input() customImageIcon: string = ''; 
-  @Input() isActive: boolean = true; // Tambahkan input untuk status aktif
+  @Input() customImageIcon: string = '';
+  @Input() disableClick: boolean = false; // Input baru untuk mengontrol event click
+  @Input() isActive: boolean = false; // Tambahkan input untuk status aktif
+
+  @Output() buttonClick = new EventEmitter<{ text: string, isActive: boolean }>(); // Emit objek dengan teks dan status aktif
   
   icon: IconDefinition = faCar;
   showIcon: boolean = true;
@@ -64,5 +69,13 @@ export class ButtonIconComponent implements OnInit {
       default:
         this.icon = faCar;
     }
+  }
+
+  onButtonClick() {
+    if (this.disableClick) {
+      return; // Jika disableClick true, tidak lakukan apa-apa
+    }
+    this.isActive = !this.isActive; // Toggle status isActive
+    this.buttonClick.emit({ text: this.text, isActive: this.isActive }); // Emit objek dengan teks dan status aktif
   }
 }
