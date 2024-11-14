@@ -50,6 +50,42 @@ const routes: Routes = [
     path: 'deliveries',
     loadChildren: () => import('./modules/deliveries_module/pages/deliveries/deliveries.module').then( m => m.DeliveriesPageModule)
   },
+  {
+    path: 'hired-car',
+    loadChildren: () => import('./modules/resident_module/pages/hired-car/hired-car.module').then( m => m.HiredCarPageModule)
+  },
+  {
+    path: 'login-end-user',
+    loadChildren: () => import('./modules/login_module/pages/login-end-user/login-end-user.module').then( m => m.LoginEndUserPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./modules/register_module/pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'register-resident',
+    loadChildren: () => import('./modules/register_module/pages/register-resident/register-resident.module').then( m => m.RegisterResidentPageModule)
+  },
+  {
+    path: 'register-commercial',
+    loadChildren: () => import('./modules/register_module/pages/register-commercial/register-commercial.module').then( m => m.RegisterCommercialPageModule)
+  },
+  {
+    path: 'resident-homepage',
+    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule)
+  },
+  {
+    path: 'resident-visitors',
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/resident-visitors.module').then( m => m.ResidentVisitorsPageModule)
+  },
+  {
+    path: 'invite-form',
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/invite-form/invite-form.module').then( m => m.InviteFormPageModule)
+  },
+  {
+    path: 'invite-from-history',
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/invite-from-history/invite-from-history.module').then( m => m.InviteFromHistoryPageModule)
+  },
 ];
 
 @NgModule({

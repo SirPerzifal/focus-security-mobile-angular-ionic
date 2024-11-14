@@ -1,0 +1,51 @@
+<ion-content class="ion-padding h-full flex flex-col">
+  <ion-icon class="text-2xl" name="arrow-back-outline" [routerLink]="['/register']">
+  </ion-icon>
+  <div class="fslp-container">
+    <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png"/>
+    <h2 class="fslp-title font-bold text-[var(--ion-color-primary)]">
+     New User Registration
+    </h2>
+    <div>
+      <app-text-input [id]="'full_name'" [placeholder]="'Full Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div> 
+    <div class="mt-2">
+      <app-text-input [id]="'nickname'" [placeholder]="'Nickname'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div>
+    <div class="mt-2">
+      <app-text-input [id]="'email'" [placeholder]="'Email Address'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div> 
+    <div class="mt-2">
+      <app-text-input [id]="'phone'" [placeholder]="'Mobile No'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div>
+    <div class="mt-2">
+      <app-text-input [id]="'block'" [placeholder]="'Block'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div>
+    <div class="mt-2">
+      <app-text-input [id]="'unit'" [placeholder]="'Unit'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+    </div>
+    <div class="w-full flex mt-2 justify-between">
+      <div class="flex items-center me-4">
+        <input id="owner" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+        <label for="inline-radio" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Owner</label>
+      </div>
+      <div class="flex items-center me-4">
+          <input id="famili_member" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+          <label for="inline-2-radio" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Family Member</label>
+      </div>
+      <div class="flex items-center">
+        <input id="tenant" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+        <label for="inline-2-radio" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Tenant</label>
+      </div>
+    </div>
+    <div class="flex items-center mt-5">
+      <input checked id="terms_conditions" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+      <label for="checked-checkbox" class="ms-2 fsles-bottom text-xs font-medium text-gray-900 dark:text-gray-300">I agree to the <strong>terms & conditions</strong></label>
+    </div>
+    <div class="fsles-button-container mt-5">
+      <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['']">
+       Submit For Approval
+      </ion-button>
+    </div>
+   </div>
+</ion-content>

@@ -8,7 +8,9 @@ import {
   faTruckPickup, 
   faTruckMedical, 
   faCar,
-  faCouch
+  faCouch,
+  faUser,
+  faCheck
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -62,6 +64,12 @@ export class ButtonIconComponent implements OnInit {
         break;
       case 'faCouch':
         this.icon = faCouch;
+        break;
+      case 'faUser':
+        this.icon = faUser;
+        break;
+      case 'faCheck':
+        this.icon = faCheck;
         break;
       case 'faCar':
         this.icon = faCar;

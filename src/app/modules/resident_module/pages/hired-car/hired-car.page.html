@@ -1,0 +1,102 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+        <div class="flex flex-col justify-start">
+            <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[28px] font-bold text-[black] w-[140px] mt-[-14px]">Visitors Hired Car</h1>
+		</div>
+	</div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-4">
+      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowInv()"></app-visitor-button>
+      <app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowHired()"></app-visitor-button>
+      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+    </div>
+    <div class="flex flex-row">
+      <div class="flex flex-col">
+        <div class="flex flex-row justify-start mt-4">
+          <u class="text-[14px] font-bold">Entry Details</u>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        </div>
+        <div class="flex flex-row justify-start mt-4">
+          <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[#C9CC3F] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()"></app-visitor-button>
+          <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[#C9CC3F] text-white w-24 ml-2 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
+        </div>
+        <div class="flex flex-row justify-start items-start mt-4">
+          <div class="flex flex-col items-center w-12" (click)="usePhvVehicle()">
+            <button id="shadow_back" [class]="phv_vehicle ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <img
+              alt="Grab"
+              src="assets/icon/pick_up-page/Grab_Outline.png" [class]="phv_vehicle ? 'icon-black' : ''"/>
+                <!-- <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon> -->
+            </button>
+            <div class="text-[10px] flex flex-col relative items-center mt-1">
+              <b>PHV</b>
+              <b>Vehicle</b>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-12 ml-5" (click)="useTaxi()">
+            <button id="shadow_back" [class]="taxi ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <fa-icon [icon]="faTaxi" [class]="taxi ? 'text-[#000000]' : 'text-white'"></fa-icon>
+            </button>
+            <div class="text-[10px] flex flex-col relative items-center mt-1">
+              <b>TAXI</b>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-12 ml-5" (click)="usePrivateCar()">
+            <button id="shadow_back" [class]="private_car ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <ion-icon name="car-sport-outline" aria-hidden="true" [color]="private_car ? 'dark' : 'light'" class="w-6 h-6 mt-1"></ion-icon>
+            </button>
+            <div class="text-[10px] flex flex-col relative items-center mt-1">
+              <b>PRIVATE</b>
+              <b>Car</b>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col mt-4 text-[12px]">
+          <p class="underline underline-offset-1 font-bold">Temporary Pickup/Drop-off Vehicle Authorization<p>
+              <br>
+          <p>This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit. <br>
+            <br>
+            This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.<br>
+            <br>
+            Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.</p>
+        </div>
+        <div class="flex flex-row mt-4 text-[12px]">
+          <input type="checkbox" id="agreement" name="agreement" value="1" class="mr-1 accent-black rounded">
+          <b >I agree to the terms above</b>
+        </div>
+        <div class="flex flex-row mt-4 text-[12px] w-full">
+          <div class="w-full">
+            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <div class="flex justify-evenly bg-green-200 fixed bottom-0 w-full">
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="home" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Home</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="alert-circle" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Report an App Issue</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="settings" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Settings</span>
+      </div>
+    </ion-button>
+  </div>
+</ion-content>

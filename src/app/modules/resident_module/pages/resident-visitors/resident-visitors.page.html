@@ -1,0 +1,120 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+		<div class="flex flex-col justify-start">
+			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[32px] font-bold text-[black]">Visitors</h1>
+		</div>
+	</div>
+	<!-- CONTENT -->
+	<div class="flex flex-col relative mt-2 mx-4">
+		<div class="flex flex-row justify-between mt-4">
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowInv()"></app-visitor-button>
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHired()"></app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+		</div>
+		<div class="flex flex-row w-full">
+			<div class="flex flex-col w-full">
+				<div class="flex flex-row justify-between mt-4">
+					<app-visitor-button [text]="'New Invite'" [extraClass]="showNewInv ? 'bg-[#C9CC3F] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowNewInv()"></app-visitor-button>
+					<app-visitor-button [text]="'Active Invites'" [extraClass]="showActInv ? 'bg-[#C9CC3F] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowActInv()"></app-visitor-button>
+					<div class="w-24"></div>
+				</div>
+				<div class="flex flex-row w-full">
+					<div class="w-full" *ngIf="showNewInv" @fadeInOut>
+						<div class="flex flex-row justify-start mt-4">
+							<u class="text-[14px] font-bold">Entry Details</u>
+						</div>
+						<div class="w-full">
+							<app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+						</div>
+						<div class="flex flex-row mt-4 text-[12px]">
+							<input type="checkbox" id="entry" name="entry" value="one_time" class="mr-1 accent-black rounded">
+							<b >One-Time Entry</b>
+							<input type="checkbox" id="entry" name="entry" value="multi" class="mr-1 accent-black rounded ml-4">
+							<b >Multiple Entry</b>
+						</div>
+						<div class="flex flex-col mt-4 ">
+							<u class="text-[14px] font-bold">Invitation Details</u>
+							<div class="w-full">
+								<app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Invitatioin Title (E.g Alexs 1st Birthday Party)'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+							</div>
+							<div class="w-full">
+								<app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+							</div>
+						</div>
+						<div class="flex flex-row mt-4 text-[12px]">
+							<input type="checkbox" id="inv_agreement" name="inv_agreement" value="1" class="mr-1 accent-black rounded">
+							<b >Provide my unit number to visitor</b>
+						</div>
+						<div class="flex flex-row mt-4 text-[12px] w-full">
+							<div class="w-full">
+								<app-visitor-button [text]="'Next'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'" [routerLink]="['/invite-form']"></app-visitor-button>
+							</div>
+						</div>
+					</div>
+					<div class="w-full" *ngIf="showActInv" @fadeInOut>
+						<div *ngIf="upcomingInvites.length > 0; else noInvites">
+							<div 
+								*ngFor="let invite of upcomingInvites" 
+								class="w-full bg-green-100 p-2 my-2 rounded-lg flex justify-between items-center"
+								>
+								<div>
+									<h2 class="text-lg font-bold text-gray-800">
+										{{ invite.name }}
+									</h2>
+									<p class="text-gray-800 text-xs">
+										Date of Invite: {{ invite.dateOfInvite }}
+									</p>
+									<p class="text-gray-800 text-xs">
+										Vehicle No: {{ invite.vehicleNo }}
+									</p>
+									<p class="text-gray-800 text-xs">
+										Type of Entry: {{ invite.entryType }}
+									</p>
+								</div>
+								<ion-button 
+									(click)="presentCustomAlert('Cancel Invite', 'Cancel', 'Confirm', invite)"
+									fill="clear"
+									class="bg-red-200 text-red-800 rounded-md font-bold"
+									>
+									Cancel Invite
+								</ion-button>
+							</div>
+						</div>
+						<!-- Template untuk kondisi tidak ada invite -->
+						<ng-template #noInvites>
+							<div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+								<p class="text-gray-600">You have no upcoming invites.....</p>
+								<p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
+								<p class="text-gray-600"><strong><a href="/resident-visitors">Click Here</a></strong> to invite a friend now.</p>
+							</div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ############################### -->
+	<div class="flex justify-evenly bg-green-200 fixed bottom-0 w-full">
+		<ion-button fill="clear" [routerLink]="['/resident-homepage']">
+			<div class="flex flex-col items-center text-black">
+				<ion-icon name="home" class="text-2xl mb-2"></ion-icon>
+				<span class="text-[8px] font-bold">Home</span>
+			</div>
+		</ion-button>
+		<ion-button fill="clear">
+			<div class="flex flex-col items-center text-black">
+				<ion-icon name="alert-circle" class="text-2xl mb-2"></ion-icon>
+				<span class="text-[8px] font-bold">Report an App Issue</span>
+			</div>
+		</ion-button>
+		<ion-button fill="clear">
+			<div class="flex flex-col items-center text-black">
+				<ion-icon name="settings" class="text-2xl mb-2"></ion-icon>
+				<span class="text-[8px] font-bold">Settings</span>
+			</div>
+		</ion-button>
+	</div>
+</ion-content>
