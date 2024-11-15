@@ -86,6 +86,14 @@ const routes: Routes = [
     path: 'invite-from-history',
     loadChildren: () => import('./modules/resident_module/pages/resident-visitors/invite-from-history/invite-from-history.module').then( m => m.InviteFromHistoryPageModule)
   },
+  {
+    path: 'history',
+    loadChildren: () => import('./modules/resident_module/pages/history/history.module').then( m => m.HistoryPageModule)
+  },
+  {
+    path: 'history-details',
+    loadChildren: () => import('./modules/resident_module/pages/history-details/history-details.module').then( m => m.HistoryDetailsPageModule)
+  },
 ];
 
 @NgModule({

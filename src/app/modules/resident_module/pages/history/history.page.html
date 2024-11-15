@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+        <div class="flex flex-col justify-start">
+            <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[28px] font-bold text-[black] w-[140px] mt-[-14px]">Visitors History</h1>
+		</div>
+	</div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-4">
+      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowInv()"></app-visitor-button>
+      <app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHired()"></app-visitor-button>
+      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+    </div>
+    <div class="flex flex-row w-full">
+      <div class="flex flex-col w-full">
+        <div class="w-full mt-4">
+            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>Type of Invite History</option>
+              <option value="unit_1">UNIT 1</option>
+              <option value="unit_2">UNIT 2</option>
+              <option value="unit_3">UNIT 3</option>
+              <option value="unit_4">UNIT 4</option>
+            </select>
+        </div>
+        <div class="flex flex-row w-full mt-4 items-center">
+          <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <u class="ml-2 text-xs font-bold ">Clear Filter</u>
+        </div>
+        <div class="w-full mt-4">
+          <div clas="flex flex-col w-full justify-start">
+            <app-history-card [purpose]="'Delivery'" [visitor]="'Nil'" [visit_date]="'24/10/2024'"  ></app-history-card>
+            <app-history-card [purpose]="'Visiting'" [visitor]="'Sunil Jayakumar'" [visit_date]="'23/10/2024'"  ></app-history-card>
+            <app-history-card [purpose]="'Drop Off'" [visitor]="'Nil'" [visit_date]="'23/10/2024'"  ></app-history-card>
+            <app-history-card [purpose]="'Visiting'" [visitor]="'Ashwinder'" [visit_date]="'23/10/2024'" [banned]="true" ></app-history-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <div class="flex justify-evenly bg-green-200 fixed bottom-0 w-full">
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="home" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Home</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="alert-circle" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Report an App Issue</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="settings" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[8px] font-bold">Settings</span>
+      </div>
+    </ion-button>
+  </div>
+</ion-content>

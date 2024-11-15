@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 interface Invitee {
   name: string;
@@ -12,73 +12,84 @@ interface Invitee {
   templateUrl: './invite-form.page.html',
   styleUrls: ['./invite-form.page.scss'],
 })
-export class InviteFormPage implements OnInit, AfterViewInit {
-  @ViewChild('formContainer') formContainer: ElementRef | null = null;
-
+export class InviteFormPage implements OnInit {
   inviteeFormList: Invitee[] = [];
   addInviteeText: string = 'Add Invitee';
+  isFormInitialized: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.loadInvitees();
+    // Gunakan setTimeout untuk memastikan rendering
+    this.route.queryParams.subscribe(params => {
+      this.initializeInviteeForm(params);
+    });
+    console.log(this.isFormInitialized)
+    console.log(this.inviteeFormList)
   }
 
-  ngAfterViewInit() {
-    // Jika ada masalah rendering, coba refresh view
-    this.refreshView();
-  }
-
-  loadInvitees() {
+  initializeInviteeForm(params?: any) {
+    // Cek state dari navigasi saat ini
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      const selectedInvitees = navigation.extras.state['selectedInvitees'] as Invitee[];
-      
-      if (selectedInvitees && selectedInvitees.length > 0) {
-        // Gunakan spread operator untuk membuat salinan baru
-        this.inviteeFormList = [...selectedInvitees];
-        this.addInviteeText = 'Add More Invitees';
+    const navigationState = navigation?.extras.state;
+
+    // Cek state dari route
+    let selectedInvitees: any[] = [];
+
+    // Prioritaskan state dari navigasi
+    if (navigationState && navigationState['selectedInvitees']) {
+      selectedInvitees = navigationState['selectedInvitees'];
+    } 
+    // Jika tidak ada, cek params
+    else if (params && params['selectedInvitees']) {
+      try {
+        selectedInvitees = JSON.parse(params['selectedInvitees']);
+      } catch (error) {
+        console.error('Error parsing selectedInvitees', error);
       }
     }
 
-    // Jika tidak ada invitee, tambahkan satu form kosong
+    // Proses data invitee
+    if (selectedInvitees && selectedInvitees.length > 0) {
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
+        name: invitee.name || '',
+        phone: invitee.phone || '',
+        plate: invitee.plate || ''
+      }));
+      this.addInviteeText = 'Add More Invitees';
+    }
+
+    // Jika tidak ada data, tambahkan form kosong
     if (this.inviteeFormList.length === 0) {
       this.addInvitee();
     }
+
+    // Tandai form sudah diinisialisasi
+    this.isFormInitialized = true;
   }
 
   addInvitee() {
-    // Tambahkan objek kosong dengan struktur Invitee
-    this.inviteeFormList.push({ 
+    const newInvitee: Invitee = { 
       name: '', 
       phone: '', 
       plate: '' 
-    });
+    };
     
-    // Pastikan teks berubah
+    this.inviteeFormList.push(newInvitee);
     this.addInviteeText = 'Add More Invitees';
-
-    // Refresh view
-    this.refreshView();
   }
 
-  refreshView() {
-    // Metode untuk memaksa Angular melakukan change detection
-    setTimeout(() => {
-      if (this.formContainer) {
-        // Tambahkan pengecekan null sebelum mengakses nativeElement
-        this.formContainer.nativeElement.innerHTML = 
-          this.formContainer.nativeElement.innerHTML;
-      }
+  navigateToInviteFormHistory() {
+    // Kirim data yang sudah diisi ke halaman invite-form-history
+    this.router.navigate(['/invite-from-history'], { 
+      state: { existingInvitees: this.inviteeFormList } 
     });
   }
 
-  // Tambahkan metode untuk menangani form submission
   onSubmit() {
-    // Lakukan validasi atau proses data form di sini
-    console.log('Invitee List:', this.inviteeFormList);
-    
-    // Contoh validasi sederhana
     const isValid = this.inviteeFormList.every(invitee => 
       invitee.name.trim() !== '' && 
       invitee.phone.trim() !== '' && 
@@ -86,10 +97,14 @@ export class InviteFormPage implements OnInit, AfterViewInit {
     );
 
     if (isValid) {
-      // Lakukan proses selanjutnya, misalnya kirim data
-      alert('Form valid! Mengirim data...');
+      console.log('Submitting Invitees:', this.inviteeFormList);
     } else {
-      alert('Harap lengkapi semua field');
+      alert('Harap lengkapi semua field invitee');
     }
+  }
+
+  // Kontrol rendering form
+  shouldShowForm(): boolean {
+    return this.isFormInitialized && this.inviteeFormList.length > 0;
   }
 }

@@ -1,0 +1,24 @@
+<div [class]="banned ? 'bg-red-400 p-4 rounded-lg flex justify-between items-center w-full mb-2' : 'bg-green-100 p-4 rounded-lg flex justify-between items-center w-full mb-2'">
+  <div class="text-xs font-bold">
+    <table>
+      <tr class="h-6">
+        <td >Purpose</td>
+        <td>:</td>
+        <td>{{purpose}}</td>
+      </tr>
+      <tr class="h-6">
+        <td>Visitor Name</td>
+        <td>:</td>
+        <td>{{visitor}}</td>
+      </tr>
+      <tr class="h-6">
+        <td>Date Of Visit</td>
+        <td>:</td>
+        <td>{{visit_date}}</td>
+      </tr>
+    </table>
+  </div>
+  <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-sm rounded-md font-bold" (click)="openDetails()">
+    View Details
+  </button>
+</div>

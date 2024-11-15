@@ -56,7 +56,7 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   toggleShowHistory() {
-    this.router.navigate(['']);
+    this.router.navigate(['/history']);
   }
 
   toggleShowNewInv() {

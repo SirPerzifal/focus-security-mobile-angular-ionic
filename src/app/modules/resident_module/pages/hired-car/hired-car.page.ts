@@ -30,11 +30,11 @@ export class HiredCarPage implements OnInit {
   }
 
   toggleShowHired() {
-    this.router.navigate(['hired-car']);
+    // this.router.navigate(['hired-car']);
   }
 
   toggleShowHistory() {
-    this.router.navigate(['']);
+    this.router.navigate(['history']);
   }
 
   showPick = true;

@@ -7,6 +7,7 @@ import { ButtonComponent } from './button/button.component';
 import { VisitorButtonComponent } from './visitor-button/visitor-button.component';
 import { VisitorInputComponent } from './visitor-input/visitor-input.component';
 import { TextInputComponent } from './text-input/text-input.component';
+import { HistoryCardComponent } from './history-card/history-card.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { TextInputComponent } from './text-input/text-input.component';
     ButtonComponent,
     VisitorButtonComponent,
     VisitorInputComponent,
-    TextInputComponent
+    TextInputComponent,
+    HistoryCardComponent,
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { TextInputComponent } from './text-input/text-input.component';
     ButtonComponent,
     VisitorButtonComponent,
     VisitorInputComponent,
-    TextInputComponent
+    TextInputComponent,
+    HistoryCardComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
