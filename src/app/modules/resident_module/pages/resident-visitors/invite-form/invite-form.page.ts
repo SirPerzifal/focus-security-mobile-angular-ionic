@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 interface Invitee {
   name: string;
@@ -23,6 +24,7 @@ export class InviteFormPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isFormInitialized = false;
     // Gunakan setTimeout untuk memastikan rendering
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);

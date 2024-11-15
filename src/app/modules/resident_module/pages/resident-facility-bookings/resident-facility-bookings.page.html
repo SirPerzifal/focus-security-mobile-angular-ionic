@@ -1,0 +1,55 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+		<div class="flex flex-col justify-start">
+			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
+		</div>
+	</div>
+	<!-- CONTENT -->
+	<div class="flex flex-col relative mt-2 mx-4">
+		<div class="flex flex-row mt-4 justify-between w-full">
+      <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
+      <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+			<app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
+		</div>
+		<div class="flex flex-row w-full">
+      <div class="bg-green-100 rounded-2xl px-4 py-2 mt-4 w-full">
+        <h2 class="text-lg font-bold mb-2 text-black">Booking Approved</h2>
+        <p class="font-bold text-lg text-black">Tennis Court 2</p>
+        <div class="table w-ful">
+            <div class="table-row">
+                <p class="font-bold table-cell text-sm text-black">Event Date</p>
+                <p class="ml-2 table-cell text-sm text-black">: 26/10/2024</p>
+            </div>
+            <div class="table-row">
+                <p class="font-bold table-cell text-sm text-black">Booking Start Time</p>
+                <p class="ml-2 table-cell text-sm text-black">: 06:00pm</p>
+            </div>
+            <div class="table-row">
+                <p class="font-bold table-cell text-sm text-black">Booking End Time</p>
+                <p class="ml-2 table-cell text-sm text-black">: 07:00pm</p>
+            </div>
+            <div class="table-row">
+                <p class="font-bold table-cell text-sm text-black">Booked By</p>
+                <p class="ml-2 table-cell text-sm text-black">: Ashok</p>
+            </div>
+        </div>
+        <div class="flex justify-between mt-4">
+            <ion-button fill="clear" class="flex items-center font-bold text-xs text-black">
+                <ion-icon name="calendar-outline" class="mr-1 bg-sky-100 p-2 rounded-full text-black"></ion-icon>
+                Add to Calendar
+            </ion-button>
+            <ion-button fill="clear" class="flex items-center font-bold text-xs text-black">
+                <ion-icon name="close-circle-outline" class="mr-1 bg-red-100 p-2 rounded-full text-black"></ion-icon>
+                Cancel Booking
+            </ion-button>
+        </div>
+      </div>
+		</div>
+	</div>
+	<!-- ############################### -->
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

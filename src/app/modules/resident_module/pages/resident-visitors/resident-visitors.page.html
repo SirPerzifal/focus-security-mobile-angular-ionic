@@ -97,24 +97,5 @@
 		</div>
 	</div>
 	<!-- ############################### -->
-	<div class="flex justify-evenly bg-green-200 fixed bottom-0 w-full">
-		<ion-button fill="clear" [routerLink]="['/resident-homepage']">
-			<div class="flex flex-col items-center text-black">
-				<ion-icon name="home" class="text-2xl mb-2"></ion-icon>
-				<span class="text-[8px] font-bold">Home</span>
-			</div>
-		</ion-button>
-		<ion-button fill="clear">
-			<div class="flex flex-col items-center text-black">
-				<ion-icon name="alert-circle" class="text-2xl mb-2"></ion-icon>
-				<span class="text-[8px] font-bold">Report an App Issue</span>
-			</div>
-		</ion-button>
-		<ion-button fill="clear">
-			<div class="flex flex-col items-center text-black">
-				<ion-icon name="settings" class="text-2xl mb-2"></ion-icon>
-				<span class="text-[8px] font-bold">Settings</span>
-			</div>
-		</ion-button>
-	</div>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

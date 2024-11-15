@@ -52,7 +52,7 @@ const routes: Routes = [
   },
   {
     path: 'hired-car',
-    loadChildren: () => import('./modules/resident_module/pages/hired-car/hired-car.module').then( m => m.HiredCarPageModule)
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/hired-car/hired-car.module').then( m => m.HiredCarPageModule)
   },
   {
     path: 'login-end-user',
@@ -88,11 +88,15 @@ const routes: Routes = [
   },
   {
     path: 'history',
-    loadChildren: () => import('./modules/resident_module/pages/history/history.module').then( m => m.HistoryPageModule)
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/history/history.module').then( m => m.HistoryPageModule)
   },
   {
     path: 'history-details',
-    loadChildren: () => import('./modules/resident_module/pages/history-details/history-details.module').then( m => m.HistoryDetailsPageModule)
+    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/history-details/history-details.module').then( m => m.HistoryDetailsPageModule)
+  },
+  {
+    path: 'resident-facility-bookings',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/resident-facility-bookings.module').then( m => m.ResidentFacilityBookingsPageModule)
   },
 ];
 

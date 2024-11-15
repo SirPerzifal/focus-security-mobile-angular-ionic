@@ -9,7 +9,6 @@ import { VisitorInputComponent } from './visitor-input/visitor-input.component';
 import { TextInputComponent } from './text-input/text-input.component';
 import { HistoryCardComponent } from './history-card/history-card.component';
 
-
 @NgModule({
   declarations: [
     ButtonComponent,

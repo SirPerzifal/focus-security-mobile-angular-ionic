@@ -5,10 +5,14 @@ import { IonicModule } from '@ionic/angular';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { ButtonIconComponent } from './components/button-icon/button-icon.component';
+import { BottomNavBarComponent } from './components/bottom-nav-bar/bottom-nav-bar.component';
+import { MultiLineButtonComponent } from './components/multi-line-button/multi-line-button.component';
 
 @NgModule({
   declarations: [
-    ButtonIconComponent
+    ButtonIconComponent,
+    BottomNavBarComponent,
+    MultiLineButtonComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +21,9 @@ import { ButtonIconComponent } from './components/button-icon/button-icon.compon
   ],
   exports: [
     ButtonIconComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BottomNavBarComponent,
+    MultiLineButtonComponent
   ]
 })
 export class SharedModule { }

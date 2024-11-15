@@ -109,3 +109,15 @@
         background-color: #E3787E;
     }
 }
+
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+ion-content::webkit-scrollbar {
+display:none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
