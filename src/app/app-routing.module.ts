@@ -98,6 +98,10 @@ const routes: Routes = [
     path: 'resident-facility-bookings',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/resident-facility-bookings.module').then( m => m.ResidentFacilityBookingsPageModule)
   },
+  {
+    path: 'facility-new-booking',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/resident_facility_bookings/facility-new-booking/facility-new-booking.module').then( m => m.FacilityNewBookingPageModule)
+  },
 ];
 
 @NgModule({
