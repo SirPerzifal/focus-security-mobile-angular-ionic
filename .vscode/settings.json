@@ -1,3 +1,9 @@
 {
-  "typescript.preferences.autoImportFileExcludePatterns": ["@ionic/angular/common", "@ionic/angular/standalone"]
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "@ionic/angular/common",
+    "@ionic/angular/standalone"
+  ],
+  "svn.delete.ignoredRulesForDeletedFiles": [
+    "src/app/modules/resident_module/pages/resident-facility-bookings/resident_facility_bookings"
+  ]
 }

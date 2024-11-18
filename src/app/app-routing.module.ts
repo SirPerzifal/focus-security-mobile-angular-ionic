@@ -100,7 +100,11 @@ const routes: Routes = [
   },
   {
     path: 'facility-new-booking',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/resident_facility_bookings/facility-new-booking/facility-new-booking.module').then( m => m.FacilityNewBookingPageModule)
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-new-booking/facility-new-booking.module').then( m => m.FacilityNewBookingPageModule)
+  },
+  {
+    path: 'facility-place-booking',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-place-booking/facility-place-booking.module').then( m => m.FacilityPlaceBookingPageModule)
   },
 ];
 

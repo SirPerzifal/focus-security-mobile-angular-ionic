@@ -1,0 +1,109 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+		<div class="flex flex-col justify-start">
+			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
+		</div>
+	</div>
+	<!-- CONTENT -->
+	<div class="flex flex-col relative mt-2 mx-4 mb-16">
+		<div class="flex flex-row mt-4 justify-between w-full">
+			<app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
+			<app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+			<app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
+		</div>
+    <div class="w-full bg-green-100 rounded-md text-center my-4 m-0">
+      <h2 class="text-lg font-bold text-black">
+        Tennis Court
+      </h2>
+      <p class="text-sm text-black">
+        (2 Facilities)
+      </p>
+    </div>
+    <div class="flex flex-col relative">
+      <ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/invite-form']">
+        <div class="flex flex-col items-center text-black">
+          <ion-icon name="arrow-back"></ion-icon>
+        </div>
+      </ion-button>
+      <div class="flex flex-row justify-center space-x-3 w-full">
+        <app-visitor-button [text]="'Court 1'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'"></app-visitor-button>
+        <app-visitor-button [text]="'Court 2'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'"></app-visitor-button>
+      </div>
+      <div class="my-4">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        <ion-modal keep-contents-mounted="true">
+         <ng-template>
+          <ion-datetime id="datetime" presentation="date" value="2023-11-02" format-options='{"date": {"weekday": "short", "month": "long", "day": "2-digit"}}'>
+          </ion-datetime>
+         </ng-template>
+        </ion-modal>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         0700 - 0800
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         0800 - 0900
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         0900 - 1000
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1000 - 1100
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1100 - 1200
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1200 - 1300
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1300 - 1400
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1400 - 1500
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1500 - 1600
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1600 - 1700
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1700 - 1800
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1800 - 1900
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         1900 - 2000
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         2000 - 2100
+        </button>
+        <button class="bg-[#D0D0D0] text-[#757575] py-2 rounded">
+         2100 - 2200
+        </button>
+      </div>
+      <div class="flex items-start mb-4">
+        <input class="mr-2 mt-1" type="checkbox"/>
+        <p class="text-xs">
+         By clicking "Book Now," I acknowledge that I have read and agree to the
+         <a class="text-blue" href="#">
+          Terms and Conditions
+         </a>
+         for using this facility.
+        </p>
+      </div>
+      <div class="text-center mb-4">
+        <app-visitor-button [text]="'Book Now'" [extraClass]="'bg-[#10421d] text-[white] w-full'"></app-visitor-button>
+      </div>
+    </div>
+	</div>
+	<!-- ############################### -->
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>
