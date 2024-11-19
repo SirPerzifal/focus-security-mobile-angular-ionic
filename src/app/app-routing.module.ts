@@ -126,6 +126,17 @@ const routes: Routes = [
     path: 'manage-add',
     loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-add/manage-add.module').then( m => m.ManageAddPageModule)
   },
+<<<<<<< .mine
+  {
+    path: 'manage-new-card',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-new-card/manage-new-card.module').then( m => m.ManageNewCardPageModule)
+  },
+  {
+    path: 'manage-payment-method',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-payment-method/manage-payment-method.module').then( m => m.ManagePaymentMethodPageModule)
+  },
+||||||| .r21
+=======
   {
     path: 'facility-booking-payment',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-booking-payment/facility-booking-payment.module').then( m => m.FacilityBookingPaymentPageModule)
@@ -138,6 +149,7 @@ const routes: Routes = [
     path: 'facility-history',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history/facility-history.module').then( m => m.FacilityHistoryPageModule)
   },
+>>>>>>> .r23
 ];
 
 @NgModule({

@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
   declarations: [AppComponent],
   imports: [
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot({innerHTMLTemplatesEnabled:true}), 
     AppRoutingModule, 
     BrowserAnimationsModule, 
     SharedModule,

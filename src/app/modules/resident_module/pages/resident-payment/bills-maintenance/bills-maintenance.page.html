@@ -1,8 +1,11 @@
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Payments My Bills'" />
+	<app-resident-header [text]="'Payments'" [text_second]="'My Bills'" />
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="flex flex-row justify-between mt-4">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-payment']"></ion-icon>
+    </div>
+    <div class="flex flex-row justify-between mt-2">
       <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'" ></app-visitor-button>
       <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-fines']"></app-visitor-button>
       <app-visitor-button [text]="'payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-history']"></app-visitor-button>

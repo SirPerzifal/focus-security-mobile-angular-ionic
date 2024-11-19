@@ -1,0 +1,43 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Payments'" [text_second]="'Add New Card'"/>
+  <!-- CONTENT -->
+  <div class="flex flex-col mt-2 w-full px-4">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10"
+        [routerLink]="['/manage-add']"></ion-icon>
+    </div>
+    <div class="w-full justify-around flex">
+      <img src="assets/icon/resident-icon/payment-visa.png" class="w-1/3"/>
+    </div>
+    <div class="flex flex-col mt-4">
+      <div class="w-full">
+        <app-text-input [id]="'name_card'" [placeholder]="'Name on Card'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'number_card'" [placeholder]="'Card number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+      </div>
+      <div class="flex flex-row">
+        <div class="w-1/5">
+          <app-text-input [id]="'mm_card'" [placeholder]="'MM'" [customClasses]="{'w-full':true}" [type]="'number'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        </div>
+        <div class="w-1/5 ml-1">
+          <app-text-input [id]="'yy_card'" [placeholder]="'YY'" [customClasses]="{'w-full':true}" [type]="'number'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        </div>
+      </div>
+      <div class="flex flex-row items-center mt-1">
+        <div class="w-1/5">
+          <app-text-input [id]="'cvv_card'" [placeholder]="'CVV'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-sm': true}"></app-text-input>
+        </div>
+        <div class="w-1/5 ml-1">
+          <ion-icon name="help-circle" size="large" class="text-[var(--ion-color-primary)] size-10 mt-[6px]"
+        (click)="showAlertButtons()"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 w-full">
+      <button class="bg-[#d3f8d3] text-black mt-1 w-full text-sm rounded-sm h-10 font-bold" [routerLink]="['/manage-payment-method']">Submit</button>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

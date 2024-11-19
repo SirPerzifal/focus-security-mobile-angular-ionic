@@ -10,6 +10,8 @@ export class ResidentHeaderComponent  implements OnInit {
   constructor() { }
 
   @Input() text: string=""
+  @Input() text_second: string=""
+  @Input() secondClass: string=""
 
   ngOnInit() {}
 

@@ -1,21 +1,20 @@
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Payments My Bills'" />
+  <app-resident-header [text]="'Payments'" [text_second]="'Manage Payment Methods'" />
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="flex flex-row justify-between mt-4">
-      <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
-      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'" ></app-visitor-button>
-      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-history']"></app-visitor-button>
+  <div class="flex flex-col mt-2 w-full px-4">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10"
+        [routerLink]="['/resident-payment']"></ion-icon>
     </div>
-    <div class="flex flex-row w-full">
-      <div class="flex flex-col w-full">
-        <div class="w-full mt-4">
-          <div clas="flex flex-col w-full justify-start">
-            <app-small-bills-card-detailed [title]="'Current Outstanding'" [desc_title]="'Wheel Clamped'" [vehicle_no]="'SBS1234A'" [violation_date]="'27/10/2024'" [total]="'S$250.00'"  ></app-small-bills-card-detailed>
-          </div>
-        </div>
-      </div>
+    <div class="mt-2 w-full">
+      <button class="bg-[#d3f8d3] text-black mt-1 w-full text-sm rounded-full h-10 font-bold" [routerLink]="['/manage-new-card']">Add New Card</button>
     </div>
+    <div class="w-full text-center mt-20 font-bold text-[#2E2E2E]">
+      To streamline the payment of facility fees, deposits, and other charges, you can securely add your preferred debit or credit card details here. 
+<br><br>
+iFS360 utilizes the "x" payment gateway provider, ensuring a secure connection to process your payments efficiently.
+    </div>
+
   </div>
   <!-- ############################### -->
   <app-bottom-nav-bar></app-bottom-nav-bar>

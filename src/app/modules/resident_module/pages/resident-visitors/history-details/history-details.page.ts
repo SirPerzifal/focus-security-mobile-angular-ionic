@@ -35,7 +35,7 @@ export class HistoryDetailsPage implements OnInit {
   }
 
   toggleShowHistory() {
-    this.router.navigate(['']);
+    // this.router.navigate(['']);
   }
 
   ngOnInit() {
