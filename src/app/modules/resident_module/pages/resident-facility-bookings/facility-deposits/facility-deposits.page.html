@@ -1,0 +1,98 @@
+<ion-content [fullscreen]="true">
+  <div class="header fixed top-0">
+    <div class="flex flex-col justify-start">
+      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+    </div>
+    <div class="logo">
+      <h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
+    </div>
+  </div>
+
+  <div class="flex flex-col relative mt-2 mb-16">
+    <div class="mx-4">
+      <div class="flex flex-row mt-4 justify-between w-full">
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowDep()"></app-visitor-button>
+        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
+      </div>
+    </div>
+
+    <!-- Konten Utama Deposits -->
+    <ng-container *ngIf="showMainContent" @fadeInOut>
+      <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-2">
+        <h2 class="text-md font-bold text-black absolute">
+          Refunded deposits
+        </h2>
+        <ion-button class="flex flex-row justify-center items-center absolute right-2 icon" fill="clear" (click)="showDepositHistoryPage()">
+          <div class="flex flex-col items-center text-black">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </ion-button>
+      </div>
+      <div class="w-full bg-green-200 text-center mt-2 m-0 p-3">
+        <h2 class="text-md font-bold text-black">
+          Active Deposits History
+        </h2>
+      </div>
+      <div class="flex flex-col relative mx-4">
+        <div class="bg-green-200 p-4 mt-4 rounded-lg text-left font-bold text-black">
+          <h3>Current Deposit Balance</h3>
+          <h4>S$ 40.00</h4>
+        </div>
+        <div class="bg-green-200 p-4 mt-2 rounded-lg">
+            <div class="text-green-700 font-bold text-black"><a href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black">S$ 40.00</div>
+            <div class="text-black">Deposited On : 24/10/2024</div>
+            <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Konten Deposit History -->
+    <ng-container *ngIf="showDepositHistory" @fadeInOut>
+      <div class="w-full bg-green-200 text-center mt-2 m-0 p-3">
+        <h2 class="text-md font-bold text-black">
+          Deposits History
+        </h2>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between mb-4">
+          <ion-button class="flex flex-row justify-center items-center icon" fill="clear" (click)="backToMainDeposits()">
+            <div class="flex flex-col items-center text-black">
+              <ion-icon name="arrow-back"></ion-icon>
+            </div>
+          </ion-button>
+          <div class="flex flex-col items-end">
+              <button class="bg-yellow-400 py-2 px-4 rounded mb-2 text-xs">All Records</button>
+              <div class="flex space-x-2">
+                  <input type="date" placeholder="Start Date" class="py-2 px-4 rounded border text-xs border-gray-300">
+                  <input type="date" placeholder="End Date" class="py-2 px-4 rounded border text-xs border-gray-300">
+              </div>
+          </div>
+        </div>
+        <div class="bg-sky-200 p-4 rounded-lg text-left font-bold text-black mb-4">
+            Refunded Deposit Till Date<br>
+            S$60.00
+        </div>
+        <div class="bg-green-200 p-4 mt-2 rounded-lg">
+            <div class="text-green-700 font-bold text-black"><a href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black">S$ 40.00</div>
+            <div class="text-black">Deposited On : 24/10/2024</div>
+            <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div>
+        </div>
+        <div class="bg-green-200 p-4 mt-2 rounded-lg">
+            <div class="text-green-700 font-bold text-black"><a href="#">BBQ </a></div>
+            <div class="font-bold text-black">S$ 40.00</div>
+            <div class="text-black">Deposited On : 24/10/2024</div>
+            <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

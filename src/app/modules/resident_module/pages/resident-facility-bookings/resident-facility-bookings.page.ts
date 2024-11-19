@@ -46,11 +46,11 @@ export class ResidentFacilityBookingsPage implements OnInit {
   }
 
   toggleShowDep() {
-    this.router.navigate(['']);
+    this.router.navigate(['facility-deposits']);
   }
 
   toggleShowHis() {
-    this.router.navigate(['']);
+    this.router.navigate(['facility-history']);
   }
 
   cancelBooking() {

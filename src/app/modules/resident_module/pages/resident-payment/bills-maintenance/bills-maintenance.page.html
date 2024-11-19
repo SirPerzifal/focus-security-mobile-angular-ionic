@@ -1,0 +1,24 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Payments My Bills'" />
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-4">
+      <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'" ></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-fines']"></app-visitor-button>
+      <app-visitor-button [text]="'payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-history']"></app-visitor-button>
+    </div>
+    <div class="flex flex-row w-full">
+      <div class="flex flex-col w-full">
+        <div class="w-full mt-4">
+          <div clas="flex flex-col w-full justify-start">
+            <app-small-bills-card [title]="'Current Outstanding'"[total]="'S$900.00'"  ></app-small-bills-card>
+            <app-small-bills-card [title]="'Upcoming Maintenance Fee'" [description]="'For the month of November 2024'" [total]="'S$450.00'"  ></app-small-bills-card>
+            <app-small-bills-card [title]="'Overdue'" [total]="'S$450.00'" [warning]="true" ></app-small-bills-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

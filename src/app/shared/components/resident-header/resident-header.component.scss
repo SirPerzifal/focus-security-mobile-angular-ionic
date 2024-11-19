@@ -1,0 +1,17 @@
+.header {
+    background-color: #d3f8d3;
+    padding: 10px 20px 10px;
+    text-align: center;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    position: relative;
+}
+.header img {
+    border-radius: 0;
+    height: 60px;
+    width: 95px;
+}
+.header .logo {
+    top: 20px;
+    right: 20px;
+}

@@ -8,6 +8,9 @@ import { VisitorButtonComponent } from './visitor-button/visitor-button.componen
 import { VisitorInputComponent } from './visitor-input/visitor-input.component';
 import { TextInputComponent } from './text-input/text-input.component';
 import { HistoryCardComponent } from './history-card/history-card.component';
+import { SmallBillsCardComponent } from './small-bills-card/small-bills-card.component';
+import { SmallBillsCardDetailedComponent } from './small-bills-card-detailed/small-bills-card-detailed.component';
+import { ResidentHeaderComponent } from './resident-header/resident-header.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +19,9 @@ import { HistoryCardComponent } from './history-card/history-card.component';
     VisitorInputComponent,
     TextInputComponent,
     HistoryCardComponent,
+    SmallBillsCardComponent,
+    SmallBillsCardDetailedComponent,
+    ResidentHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +34,9 @@ import { HistoryCardComponent } from './history-card/history-card.component';
     VisitorInputComponent,
     TextInputComponent,
     HistoryCardComponent,
+    SmallBillsCardComponent,
+    SmallBillsCardDetailedComponent,
+    ResidentHeaderComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

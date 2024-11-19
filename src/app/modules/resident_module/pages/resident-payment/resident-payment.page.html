@@ -1,0 +1,22 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Payment'" />
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col gap-1 mt-4">
+      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-green-200 rounded-full "
+        [routerLink]="['/manage-add']">
+        <img class="w-8 h-8" src="assets/icon/resident-icon/payment-manage.png" alt="Icon for Visitors" />
+        <span class="flex-grow font-bold text-start ml-2 text-xs">Manage My Payment Methods</span>
+        <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-green-200 rounded-full "
+        [routerLink]="['/bills-maintenance']">
+        <img class="w-8 h-8" src="assets/icon/resident-icon/payment-bills.png" alt="Icon for Facility Bookings" />
+        <span class="flex-grow font-bold text-start ml-2 text-xs">My Bills</span>
+        <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

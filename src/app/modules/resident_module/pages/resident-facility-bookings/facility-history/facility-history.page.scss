@@ -1,0 +1,29 @@
+.header {
+    background-color: #d3f8d3;
+    padding: 10px 20px 10px;
+    text-align: center;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    position: relative;
+}
+.header img {
+    border-radius: 0;
+    height: 60px;
+    width: 95px;
+}
+.header .logo {
+    position: absolute;
+    top: 28px;
+    right: 20px;
+}
+.icon {
+    font-size: 18px;
+    background-color: #10421d;
+    border-radius: 100%;
+    color: white;
+    height: 32px;
+    width: 32px;
+}
+.icon ion-icon {
+    color: white;
+}

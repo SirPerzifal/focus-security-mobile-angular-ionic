@@ -1,0 +1,53 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Payments My Bills'" />
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-4">
+      <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'"
+        [routerLink]="['/bills-maintenance']"></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'"
+        [routerLink]="['/bills-fines']"></app-visitor-button>
+      <app-visitor-button [text]="'Payment History'"
+        [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'"></app-visitor-button>
+    </div>
+    <div class="w-full mt-4">
+      <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+        <option selected>Type of Invite History</option>
+        <option value="unit_1">UNIT 1</option>
+        <option value="unit_2">UNIT 2</option>
+        <option value="unit_3">UNIT 3</option>
+        <option value="unit_4">UNIT 4</option>
+      </select>
+    </div>
+    <div class="flex flex-row w-full mt-1 items-center">
+      <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+      <u class="ml-2 text-xs font-bold ">Clear Filter</u>
+    </div>
+    <div class="w-full text-xs font-bold text-justify mt-2">
+      The app provides payment history for up to 13 months from the
+      current date. For invoices older than this period, please contact
+      MA for assistance.
+    </div>
+    <div class="flex flex-row w-full">
+      <div class="flex flex-col w-full">
+        <div class="w-full mt-3">
+          <div clas="flex flex-col w-full justify-start">
+            <div class="font-bold m-1">SEPTEMBER 2024</div>
+            <app-small-bills-card-detailed [title]="'Parking Violation'" [desc_title]="'Wheel Clamped'"
+              [vehicle_no]="'SBS1234A'" [violation_date]="'27/09/2024'" [paid_on]="'27/09/2024, 0830am'"
+              [total]="'S$250.00'"></app-small-bills-card-detailed>
+            <div class="font-bold m-1">AUGUST 2024</div>
+            <app-small-bills-card-detailed [title]="'Maintenance Fee'" [desc_title]="'Monthly Maintenance Fee'"
+              [violation_date]="'01/09/2024'" [paid_on]="'25/09/2024, 0900am'"
+              [total]="'S$450.00'"></app-small-bills-card-detailed>
+            <app-small-bills-card-detailed [title]="'Maintenance Fee'" [desc_title]="'Monthly Maintenance Fee'"
+              [violation_date]="'01/08/2024'" [paid_on]="'25/09/2024, 0830am'"
+              [total]="'S$250.00'"></app-small-bills-card-detailed>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

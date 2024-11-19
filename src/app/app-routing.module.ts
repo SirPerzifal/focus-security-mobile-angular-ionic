@@ -106,6 +106,38 @@ const routes: Routes = [
     path: 'facility-place-booking',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-place-booking/facility-place-booking.module').then( m => m.FacilityPlaceBookingPageModule)
   },
+  {
+    path: 'resident-payment',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/resident-payment.module').then( m => m.ResidentPaymentPageModule)
+  },
+  {
+    path: 'bills-maintenance',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-maintenance/bills-maintenance.module').then( m => m.BillsMaintenancePageModule)
+  },
+  {
+    path: 'bills-fines',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-fines/bills-fines.module').then( m => m.BillsFinesPageModule)
+  },
+  {
+    path: 'bills-history',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-history/bills-history.module').then( m => m.BillsHistoryPageModule)
+  },
+  {
+    path: 'manage-add',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-add/manage-add.module').then( m => m.ManageAddPageModule)
+  },
+  {
+    path: 'facility-booking-payment',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-booking-payment/facility-booking-payment.module').then( m => m.FacilityBookingPaymentPageModule)
+  },
+  {
+    path: 'facility-deposits',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-deposits/facility-deposits.module').then( m => m.FacilityDepositsPageModule)
+  },
+  {
+    path: 'facility-history',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history/facility-history.module').then( m => m.FacilityHistoryPageModule)
+  },
 ];
 
 @NgModule({

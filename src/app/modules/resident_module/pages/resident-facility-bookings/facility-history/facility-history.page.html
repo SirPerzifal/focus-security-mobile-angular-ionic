@@ -1,0 +1,102 @@
+<ion-content [fullscreen]="true">
+  <div class="header fixed top-0">
+    <div class="flex flex-col justify-start">
+      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+    </div>
+    <div class="logo">
+      <h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
+    </div>
+  </div>
+
+  <div class="flex flex-col relative mt-2 mb-16">
+    <div class="mx-4">
+      <div class="flex flex-row mt-4 justify-between w-full">
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
+        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowHis()"></app-visitor-button>
+      </div>
+    </div>
+
+    <!-- Konten Utama -->
+    <ng-container *ngIf="showMainContent">
+      <div @fadeInOut class="p-4">
+        <div class="flex mb-2 justify-end items-end">
+          <button class="bg-yellow-400 py-2 px-4 rounded mb-2 text-xs">All Records</button>
+        </div>
+        <div class="flex justify-center gap-2 mb-5">
+          <input type="date" placeholder="Start Date" class="py-2 px-4 rounded-lg border border-gray-300">
+          <input type="date" placeholder="End Date" class="py-2 px-4 rounded-lg border border-gray-300">
+        </div>
+        <div *ngFor="let booking of bookingList" class="bg-[#E9F5E1] rounded-2xl p-5 m-5 flex justify-between items-center">
+          <div class="max-w-[80%]">
+            <div class="bg-[#A3D9A5] text-white py-1 px-2 rounded-md font-bold inline-block">{{ booking.status }}</div>
+            <h2 class="text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
+            <p class="text-black">Event Date : {{ booking.eventDate }}</p>
+            <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
+            <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p>
+          </div>
+          <ion-button class="flex flex-row justify-center items-center absolute right-16 icon" fill="clear" (click)="toDetail(booking)">
+            <div class="flex flex-col items-center text-black">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </div>
+          </ion-button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Konten Detail Booking -->
+    <ng-container *ngIf="showDetailContent">
+      <div @fadeInOut class="w-full bg-green-100 text-center mt-4 m-0 p-2">
+        <h2 class="text-lg font-bold text-black">
+          {{ bookingDetails.facilityName }} Booking details
+        </h2>
+      </div>
+
+      <div class="flex flex-col relative mx-4">
+        <ion-button
+          class="flex flex-row justify-center items-center w-full icon my-2" 
+          fill="clear" 
+          (click)="backToMainContent()">
+          <div class="flex flex-col items-center text-black">
+            <ion-icon name="arrow-back"></ion-icon>
+          </div>
+        </ion-button>
+
+        <div>
+          <p><strong>Facility</strong>: {{ bookingDetails.facilityName }}</p>
+          <p><strong>Event Date</strong>: {{ bookingDetails.eventDate }}, {{ bookingDetails.eventDay }}</p>
+          <p><strong>Booking Time</strong>: {{ bookingDetails.bookingTime }}</p>
+        </div>
+
+        <div class="mt-4">
+          <p class="font-bold">Payment Breakdown</p>
+          <div class="flex justify-between">
+            <p>Booking Fee</p>
+            <p>${{ bookingDetails.bookingFee.toFixed(2) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Deposit</p>
+            <p>${{ bookingDetails.deposit.toFixed(2) }}</p>
+          </div>
+          <hr class="my-2">
+          <div class="flex justify-between font-bold">
+            <p>Grand Total</p>
+            <p>${{ calculateTotal().toFixed(2) }}</p>
+          </div>
+        </div>
+
+        <!-- Tombol Proceed to Payment -->
+        <div class="text-center mb-4">
+          <app-visitor-button
+            [text]="'Email Receipt'" 
+            [extraClass]="'bg-[#10421d] text-[white] w-full mt-4 mb-2'"
+            (click)="proceedToEmail()">
+          </app-visitor-button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>
