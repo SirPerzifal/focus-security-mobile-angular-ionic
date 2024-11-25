@@ -11,6 +11,7 @@ import { HistoryCardComponent } from './history-card/history-card.component';
 import { SmallBillsCardComponent } from './small-bills-card/small-bills-card.component';
 import { SmallBillsCardDetailedComponent } from './small-bills-card-detailed/small-bills-card-detailed.component';
 import { ResidentHeaderComponent } from './resident-header/resident-header.component';
+import { FamilyCardComponent } from './family-card/family-card.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ResidentHeaderComponent } from './resident-header/resident-header.compo
     SmallBillsCardComponent,
     SmallBillsCardDetailedComponent,
     ResidentHeaderComponent,
+    FamilyCardComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ import { ResidentHeaderComponent } from './resident-header/resident-header.compo
     SmallBillsCardComponent,
     SmallBillsCardDetailedComponent,
     ResidentHeaderComponent,
+    FamilyCardComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

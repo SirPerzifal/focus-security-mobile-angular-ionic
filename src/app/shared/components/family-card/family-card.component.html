@@ -1,0 +1,33 @@
+<div [class]="'bg-[#d3f8d3] p-2 rounded-xl w-full mb-2 relative'">
+  <div class="flex flex-row justify-between font-bold items-center">
+    <div class="flex flex-col w-4/6">
+      <div class="text-base font-extrabold">
+        {{type}}
+      </div>
+      <div class="text-[10px] flex flex-col">
+        <table>
+          <tr class="">
+            <td class="w-2/5">Name</td>
+            <td>:</td>
+            <td class="w-4/5">{{name}}</td>
+          </tr>
+          <tr class="">
+            <td>Mobile</td>
+            <td>:</td>
+            <td>{{mobile}}</td>
+          </tr>
+          <tr class="">
+            <td>Type</td>
+            <td>:</td>
+            <td>{{head_type}}</td>
+          </tr>
+        </table>
+      </div>
+      
+    </div>
+    <div class="flex flex-col items-center">
+      <ion-icon size="large" class="text-[var(--ion-color-primary)] size-10" name="arrow-forward-circle" (click)="openDetails()"></ion-icon>
+    </div>
+  </div>
+  
+</div>

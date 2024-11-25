@@ -11,8 +11,24 @@ export class TextInputComponent  implements OnInit {
   @Input() type: string='text';
   @Input() customClasses: {[key:string]:boolean} = {};
   @Input() customInputClasses: {[key:string]:boolean} = {};
-  @Input() value: string = '';
+  // @Input() value: string = '';
   @Input() id: string = '';
+
+  private _value: string = '';
+
+  @Input()
+  set value(val: string | Date) {
+    if (val instanceof Date) {
+      // Konversi Date ke string dalam format YYYY-MM-DD
+      this._value = val.toISOString().split('T')[0];
+    } else {
+      this._value = val || '';
+    }
+  }
+
+  get value(): string {
+    return this._value;
+  }
 
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
 

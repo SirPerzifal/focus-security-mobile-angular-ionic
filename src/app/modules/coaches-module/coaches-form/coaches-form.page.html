@@ -1,0 +1,66 @@
+<ion-content [fullscreen]="true">
+  <div class="ion-no-padding" class="flex flex-col p-8 h-screen font-poppins">
+    <div class="flex flex-col justify-end items-center w-full">
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+
+      <div class="flex mt-[50px] self-start">
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
+      </div>
+      
+      <div class="flex flex-row items-left space-x-2 mt-8">
+        <app-visitor-button [text]="'WALK IN'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24'" ></app-visitor-button>
+        <app-visitor-button [text]="'DRIVE IN'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/walk-in']" [queryParams]="{ showDrive: true }"></app-visitor-button>
+      </div>
+  
+      <div class="flex flex-row">
+  
+        <div class="mt-8 flex flex-col justify-between items-center h-72 w-full">
+          
+          <div class="w-full">
+            <app-text-input [id]="'walk_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div> 
+          <div class="flex flex-row justify-between w-full">
+            <div class="w-4/6">
+              <app-text-input [id]="'walk_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+            </div>
+            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+          </div>
+          <div class="w-full">
+            <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+            <select id="walk_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>CHOOSE BLOCK</option>
+              <option value="block_1">BLOCK 1</option>
+              <option value="block_2">BLOCK 2</option>
+              <option value="block_3">BLOCK 3</option>
+              <option value="block_4">BLOCK 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>CHOOSE UNIT</option>
+              <option value="unit_1">UNIT 1</option>
+              <option value="unit_2">UNIT 2</option>
+              <option value="unit_3">UNIT 3</option>
+              <option value="unit_4">UNIT 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>CHOOSE UNIT</option>
+              <option value="unit_1">UNIT 1</option>
+              <option value="unit_2">UNIT 2</option>
+              <option value="unit_3">UNIT 3</option>
+              <option value="unit_4">UNIT 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

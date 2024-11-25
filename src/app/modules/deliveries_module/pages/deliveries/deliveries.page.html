@@ -43,7 +43,7 @@
 
     <div class="w-full flex flex-row">
       <div class="w-full" *ngIf="foodDeliveries" @fadeInOut>
-        <div class="border-t border-black dark:border-white mt-7"></div>
+        <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
         <div class="mt-1 flex flex-row justify-between w-full" >
           <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodPanda.webp'" [text]="'FOODPANDA'" (buttonClick)="onButtonClick($event)" />
           <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Grab.webp'" [text]="'GRABFOOD'" (buttonClick)="onButtonClick($event)" />
@@ -92,7 +92,7 @@
       </div>
 
       <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
-        <div class="border-t border-black dark:border-white mt-7"></div>
+        <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
         <div class="mt-1 flex flex-row justify-between w-full" >
           <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/NinjaVan.webp'" [text]="'NINJAVAN'" (buttonClick)="onButtonClick($event)" />
           <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Grab.webp'" [text]="'GRABEXPRESS'" (buttonClick)="onButtonClick($event)" />

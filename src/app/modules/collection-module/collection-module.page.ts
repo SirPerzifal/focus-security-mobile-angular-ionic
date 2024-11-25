@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-walk-in',
-  templateUrl: './walk-in.page.html',
-  styleUrls: ['./walk-in.page.scss'],
+  selector: 'app-collection-module',
+  templateUrl: './collection-module.page.html',
+  styleUrls: ['./collection-module.page.scss'],
   animations: [
     trigger('fadeInOut', [
       transition(':enter', [
@@ -18,35 +17,20 @@ import { ActivatedRoute } from '@angular/router';
     ])
   ]
 })
-export class WalkInPage implements OnInit {
+export class CollectionModulePage implements OnInit {
 
-  constructor(private paramsActiveFromCoaches: ActivatedRoute) { }
+  constructor() { }
 
 
   showWalk = false;
   showDrive = false;
-  showQr = false;
   showWalkTrans = false;
   showDriveTrans = false;
-  showQrTrans = false;
-
-  toggleShowQr() {
-    if (!this.showDriveTrans && !this.showWalkTrans){
-      this.showQrTrans = true
-      this.showDrive = false;
-      this.showWalk = false;
-      setTimeout(()=>{
-        this.showQr = true;
-        this.showQrTrans = false
-      }, 300)
-    }
-  }
 
   toggleShowWalk() {
-    if (!this.showQrTrans && !this.showDriveTrans){
+    if (!this.showDriveTrans){
       this.showWalkTrans = true
       this.showDrive = false;
-      this.showQr = false;
       setTimeout(()=>{
         this.showWalk = true;
         this.showWalkTrans = false
@@ -55,10 +39,9 @@ export class WalkInPage implements OnInit {
   }
 
   toggleShowDrive() {
-    if (!this.showQrTrans && !this.showWalkTrans){
+    if (!this.showWalkTrans){
       this.showDriveTrans = true
       this.showWalk = false;
-      this.showQr = false;
       setTimeout(()=>{
         this.showDrive = true;
         this.showDriveTrans = false
@@ -67,11 +50,6 @@ export class WalkInPage implements OnInit {
   }
 
   ngOnInit() {
-    this.paramsActiveFromCoaches.queryParams.subscribe(params => {
-      if (params['showDrive']) {  // Gunakan bracket notation di sini
-        this.showDrive = true; // Atur showDrive menjadi true jika parameter ada
-      }
-    });
   }
 
 }

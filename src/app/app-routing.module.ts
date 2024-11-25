@@ -126,7 +126,6 @@ const routes: Routes = [
     path: 'manage-add',
     loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-add/manage-add.module').then( m => m.ManageAddPageModule)
   },
-<<<<<<< .mine
   {
     path: 'manage-new-card',
     loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-new-card/manage-new-card.module').then( m => m.ManageNewCardPageModule)
@@ -135,8 +134,6 @@ const routes: Routes = [
     path: 'manage-payment-method',
     loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-payment-method/manage-payment-method.module').then( m => m.ManagePaymentMethodPageModule)
   },
-||||||| .r21
-=======
   {
     path: 'facility-booking-payment',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-booking-payment/facility-booking-payment.module').then( m => m.FacilityBookingPaymentPageModule)
@@ -149,7 +146,38 @@ const routes: Routes = [
     path: 'facility-history',
     loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history/facility-history.module').then( m => m.FacilityHistoryPageModule)
   },
->>>>>>> .r23
+  {
+    path: 'resident-my-family',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/resident-my-family.module').then( m => m.ResidentMyFamilyPageModule)
+  },
+  {
+    path: 'family-add-member',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-add-member/family-add-member.module').then( m => m.FamilyAddMemberPageModule)
+  },
+  {
+    path: 'family-edit-member',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-edit-member/family-edit-member.module').then( m => m.FamilyEditMemberPageModule)
+  },
+  {
+    path: 'family-tenant-extend',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-tenant-extend/family-tenant-extend.module').then( m => m.FamilyTenantExtendPageModule)
+  },
+  {
+    path: 'collection-module',
+    loadChildren: () => import('./modules/collection-module/collection-module.module').then( m => m.CollectionModulePageModule)
+  },
+  {
+    path: 'coaches-module',
+    loadChildren: () => import('./modules/coaches-module/coaches-module.module').then( m => m.CoachesModulePageModule)
+  },
+  {
+    path: 'emergency-module',
+    loadChildren: () => import('./modules/emergency-module/emergency-module.module').then( m => m.EmergencyModulePageModule)
+  },
+  {
+    path: 'coaches-form',
+    loadChildren: () => import('./modules/coaches-module/coaches-form/coaches-form.module').then( m => m.CoachesFormPageModule)
+  },
 ];
 
 @NgModule({

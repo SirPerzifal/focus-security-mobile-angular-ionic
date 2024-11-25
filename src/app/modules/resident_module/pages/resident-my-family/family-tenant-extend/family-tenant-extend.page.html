@@ -1,0 +1,34 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'My Family'" [text_second]="'Edit Member'"/>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-family']"></ion-icon>
+    </div>
+    <div class="flex flex-col justify-between mt-2">
+      <div class="w-full text-sm">
+        Name of Tenant: {{name}}
+      </div>
+      <div class="w-full text-sm">
+        Current End Date: {{end_date}}
+      </div>
+      <div class="w-full flex flex-row justify-between">
+        <div class="w-4/6">
+          <app-text-input [id]="'tenancy_agreement'" [placeholder]="'Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        </div>
+        <button id="middle_button" class="bg-[var(--ion-color-secondary)] text-white w-[30%] h-12 text-sm mt-1 rounded"><b>Upload</b></button>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'end_date'" [placeholder]="'End Date of Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" ></app-text-input>
+      </div>
+      <div class="w-full">
+        <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" [routerLink]="['/resident-my-family']">Submit for Approval</button>
+        
+      </div>
+    </div>
+    <div class="flex flex-row w-full">
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

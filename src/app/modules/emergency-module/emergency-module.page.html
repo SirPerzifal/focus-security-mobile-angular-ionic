@@ -1,0 +1,58 @@
+<ion-content [fullscreen]="true">
+  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
+    <div class="flex flex-col justify-end items-center">
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+
+      <div class="flex mt-[50px] self-start">
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+      </div>
+      
+      <div class="flex mt-[20px] space-x-6 justify-between">
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+      </div>
+
+      <div class="flex flex-col w-[100%] mt-[50px]">
+        <div class="name mt-[5px]">
+          <app-text-input [id]="'contractor_name'" [placeholder]="'Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
+        </div>
+        <div class="identification-input mt-[10px]">
+          <app-text-input [id]="'contractor_identification_input'" [placeholder]="'NRIC / FIN'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        </div>
+        <div class="vehicle-number mt-[10px]">
+          <app-text-input [id]="'company_vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        </div>
+        <div class="company-name mt-[10px]">
+          <app-text-input [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        </div>
+        <div class="sub-contractor mt-[10px]">
+          <select name="blok" id="blok" class="h-[53px] w-[100%] rounded-lg">
+            <option>
+              Block
+            </option>   
+          </select>
+        </div>
+        <div class="sub-contractor mt-[10px]">
+          <select name="unit" id="unit" class="h-[53px] w-[100%] rounded-lg">
+            <option>
+              Unit
+            </option>   
+          </select>
+        </div>
+        <div class="contac mt-[15px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+            <span>Save Record & Open Barrier</span>
+          </button>
+        </div>
+        <div class="contac mt-[5px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+            <span>Save Record Only</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
