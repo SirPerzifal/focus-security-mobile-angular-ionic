@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true">
+  <div class="absolute h-1/2 mt-64 opacity-20">
+    <img
+    alt="Focus Security"
+    src="assets/img/focus_logo-removebg.png"
+  />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-row justify-around mt-6">
+      <div class="text-sm flex flex-col items-center">
+        <div><b>SITE NAME</b></div>
+        <div><b>VISITOR MANAGEMENT SYSTEM</b></div>
+      </div>
+    </div>
+    <div class="flex flex-row mt-8">
+      <div class="flex flex-col items-center">
+        <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [isActive]="true" [routerLink]="['/home-vms']" />
+      </div>
+    </div>
+    <div class="flex flex-row">
+      <div class="mt-8 flex flex-col justify-between items-center h-80 w-full">
+        <div class="w-full mt-2">
+          <app-text-input [id]="'name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div> 
+        <div class="flex flex-row justify-between w-full mt-2">
+          <div class="w-4/6">
+            <app-text-input [id]="'contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          </div>
+          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+        </div>
+        <div class="w-full mt-2">
+          <app-text-input [id]="'vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full mt-2">
+          <select id="block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+            <option selected>CHOOSE BLOCK</option>
+            <option value="block_1">BLOCK 1</option>
+            <option value="block_2">BLOCK 2</option>
+            <option value="block_3">BLOCK 3</option>
+            <option value="block_4">BLOCK 4</option>
+          </select>
+        </div>
+        <div class="w-full mt-2">
+          <select id="unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+            <option selected>CHOOSE UNIT</option>
+            <option value="unit_1">UNIT 1</option>
+            <option value="unit_2">UNIT 2</option>
+            <option value="unit_3">UNIT 3</option>
+            <option value="unit_4">UNIT 4</option>
+          </select>
+        </div>
+        <div class="w-full mt-2">
+          <app-text-input [id]="'reason'" [placeholder]="'REASON'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <div class="w-full mt-2">
+          <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</ion-content>

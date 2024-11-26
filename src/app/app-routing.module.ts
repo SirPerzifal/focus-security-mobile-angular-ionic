@@ -163,6 +163,18 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-tenant-extend/family-tenant-extend.module').then( m => m.FamilyTenantExtendPageModule)
   },
   {
+    path: 'unregistered-resident-car',
+    loadChildren: () => import('./modules/unregistered_resident_car/pages/unregistered-resident-car/unregistered-resident-car.module').then( m => m.UnregisteredResidentCarPageModule)
+  },
+  {
+    path: 'ma-visitor-list',
+    loadChildren: () => import('./modules/ma_visitor_list/pages/ma-visitor-list/ma-visitor-list.module').then( m => m.MaVisitorListPageModule)
+  },
+  {
+    path: 'ma-visitor-form',
+    loadChildren: () => import('./modules/ma_visitor_list/pages/ma-visitor-form/ma-visitor-form.module').then( m => m.MaVisitorFormPageModule)
+  },
+  {
     path: 'collection-module',
     loadChildren: () => import('./modules/collection-module/collection-module.module').then( m => m.CollectionModulePageModule)
   },
@@ -177,6 +189,14 @@ const routes: Routes = [
   {
     path: 'coaches-form',
     loadChildren: () => import('./modules/coaches-module/coaches-form/coaches-form.module').then( m => m.CoachesFormPageModule)
+  },
+  {
+    path: 'resident-my-vehicle',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/resident-my-vehicle.module').then( m => m.ResidentMyVehiclePageModule)
+  },
+  {
+    path: 'my-vehicle-form',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-form/my-vehicle-form.module').then( m => m.MyVehicleFormPageModule)
   },
 ];
 
