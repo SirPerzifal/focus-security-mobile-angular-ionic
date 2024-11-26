@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true">
-  <div class="ion-no-padding" class="flex flex-col p-8 h-screen font-poppins">
-    <div class="flex flex-col justify-end items-center w-full">
+  <div class="ion-no-padding" class="flex flex-col h-screen font-poppins">
+    <div class="flex flex-col justify-end items-center w-full p-8">
       <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
       <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
 
@@ -8,12 +8,12 @@
         <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
       </div>
       
-      <div class="flex flex-row items-left space-x-2 mt-8">
+      <div class="self-start space-x-2 mt-8">
         <app-visitor-button [text]="'WALK IN'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24'" ></app-visitor-button>
         <app-visitor-button [text]="'DRIVE IN'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/walk-in']" [queryParams]="{ showDrive: true }"></app-visitor-button>
       </div>
   
-      <div class="flex flex-row">
+      <div class="flex flex-row w-full ">
   
         <div class="mt-8 flex flex-col justify-between items-center h-72 w-full">
           

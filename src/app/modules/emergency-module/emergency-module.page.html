@@ -5,28 +5,57 @@
       <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
 
       <div class="flex mt-[50px] self-start">
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       </div>
       
-      <div class="flex mt-[20px] space-x-6 justify-between">
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+      <div class="flex mt-[20px] w-full justify-between">
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Ambulance.webp'" [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'AMBULANCE'" [isActive]="true" [disableClick]="true"  (click)="toggleShowAmbulance()"/>
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Police.webp'" [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'POLICE'" [isActive]="true" [disableClick]="true"  (click)="toggleShowPolice()"/>
+        <app-button-icon [customImageIcon]="'assets/icon/home-icon/SCDF.webp'" [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'SCDF'" [isActive]="true" [disableClick]="true"  (click)="toggleShowSCDF()"/>
+        <app-button-icon [customNameIcon]="''" [isActive]="true" [text]="'OTHERS'" />
       </div>
 
-      <div class="flex flex-col w-[100%] mt-[50px]">
+      <div class="flex flex-col w-[100%] mt-[50px]" *ngIf="showAmbulance" @fadeInOut>
         <div class="name mt-[5px]">
-          <app-text-input [id]="'contractor_name'" [placeholder]="'Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
+          <app-text-input [id]="'rank_name'" [placeholder]="'Rank and Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
         </div>
         <div class="identification-input mt-[10px]">
-          <app-text-input [id]="'contractor_identification_input'" [placeholder]="'NRIC / FIN'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+          <app-text-input [id]="'contact_number'" [placeholder]="'Contact Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
         </div>
         <div class="vehicle-number mt-[10px]">
-          <app-text-input [id]="'company_vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+          <app-text-input [id]="'sd_field'" [placeholder]="'Station & Division'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
         </div>
         <div class="company-name mt-[10px]">
-          <app-text-input [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+          <app-text-input [id]="'vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        </div>
+        <div class="sub-contractor mt-[10px]">
+          <select name="blok" id="blok" class="h-[53px] w-[100%] rounded-lg">
+            <option>
+              Block
+            </option>   
+          </select>
+        </div>
+        <div class="sub-contractor mt-[10px]">
+          <select name="unit" id="unit" class="h-[53px] w-[100%] rounded-lg">
+            <option>
+              Unit
+            </option>   
+          </select>
+        </div>
+        <div class="contac mt-[15px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+            <span>Save Record & Open Barrier</span>
+          </button>
+        </div>
+        <div class="contac mt-[5px]">
+          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
+            <span>Save Record Only</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col w-[100%] mt-[50px]" *ngIf="showPolice" @fadeInOut>
+        <div class="company-name mt-[10px]">
+          <app-text-input [id]="'vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
         </div>
         <div class="sub-contractor mt-[10px]">
           <select name="blok" id="blok" class="h-[53px] w-[100%] rounded-lg">
