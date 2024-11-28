@@ -1,13 +1,138 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>resident-my-vehicle</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">resident-my-vehicle</ion-title>
-    </ion-toolbar>
-  </ion-header>
+	<div class="header fixed top-0">
+		<div class="flex flex-col justify-start">
+			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+		<div class="logo">
+			<h1 class="text-[22px] font-bold text-[black]">My Vehicle</h1>
+		</div>
+	</div>
+
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="flex flex-col gap-1 mt-4 mb-2">
+      <ion-button fill="clear" expand="full" class="flex items-center bg-green-200 rounded-full" 
+                  *ngIf="userRole === 'household'" 
+                  [routerLink]="['/my-vehicle-form']">
+        <span class="flex-grow font-bold text-center ml-2 text-xs">Add New Vehicle</span>
+      </ion-button>
+      <ion-button fill="clear" expand="full" class="flex items-center bg-gray-200 rounded-full" 
+                  *ngIf="userRole !== 'household'" 
+                  disabled>
+        <span class="flex-grow font-bold text-center ml-2 text-gray-600 text-xs">Add New Vehicle</span>
+      </ion-button>
+      <div *ngIf="userRole !== 'household'" class="text-center text-sm white:text-black mx-5 mb-2"> "Please contact your primary or secondary contact of the household to add a new vehicle" </div>
+    </div>
+
+    <div *ngFor="let vehicle of vehicles" [ngClass]="{
+      'bg-green-200': vehicle.status === 'approve',
+      'bg-red-200': vehicle.status === 'pending',
+      'bg-yellow-200': vehicle.status === 'pending_payment'
+      }" class="bg-green-200 p-3 mb-5 rounded-2xl w-full">
+      <p class="font-bold text-lg text-black mb-2">{{ vehicle.id | titlecase }} Vehicle</p>
+      <div class="flex justify-between">
+        <div class="table w-full">
+          <div class="table-row" *ngFor="let field of ['Vehicle No', 'Make', 'Colour', 'Vehicle Type', 'Fees']">
+            <p class="font-bold table-cell text-[11px] text-black">{{ field }}</p>
+            <p class="table-cell text-[11px] text-black">: {{ getVehicleValue(vehicle, field) }}</p>
+          </div>
+        </div>
+        <div class="flex flex-col mt-1 w-full">
+          <div class="flex items-end justify-end">
+            <ion-icon class="icon bg-green-800 rounded-full p-2 font-xs" name="arrow-forward"></ion-icon>
+          </div>
+          <div class="flex flex-row items-center justify-end mt-5">
+            <ng-container *ngIf="vehicle.status === 'approve'; else pendingTemplate">
+              <ion-icon name="checkmark" class="mr-1 bg-green-500 p-1 rounded-full font-bold text-white text-[18px]"></ion-icon>
+              <p class="text-green-500 text-[13px]">Approved</p>
+            </ng-container>
+            <ng-template #pendingTemplate>
+              <ion-icon name="alert-circle-outline" class="mr-1 bg-blue-500 rounded-full font-bold text-white text-[24px]"></ion-icon>
+              <p class="text-blue-500 text-[13px]">Pending Approval</p>
+            </ng-template>
+          </div>
+          <div *ngIf="vehicle.status === 'pending_payment'" class="flex justify-end items-end">
+            <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-sm rounded-md">Pay Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div id="pending" class="bg-red-200 p-3 mb-5 rounded-2xl w-full">
+      <p class="font-bold text-lg text-black mb-2">Second Vehicle</p>
+      <div class="flex justify-between">
+        <div class="table w-full">
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Vehicle No</p>
+            <p class="table-cell text-[11px] text-black">: SYK1234A</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Make</p>
+            <p class="table-cell text-[11px] text-black">: Toyota</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Colour</p>
+            <p class="table-cell text-[11px] text-black">: Black</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Vehicle Type</p>
+            <p class="table-cell text-[11px] text-black">: Car</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Fees</p>
+            <p class="table-cell text-[11px] text-black">: S$0.00</p>
+          </div>
+        </div>
+        <div class="flex flex-col mt-1 w-full">
+          <div class="flex items-end justify-end">
+            <ion-icon class="icon bg-green-800 rounded-full p-2 font-xs" name="arrow-forward"></ion-icon>
+          </div>
+          <div class="flex flex-row items-center justify-end mt-5">
+            <ion-icon name="alert-circle-outline" class="mr-1 bg-blue-500 rounded-full font-bold text-white text-[24px]"></ion-icon>
+            <p class="text-blue-500 text-[13px]">Pending Approval</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pending_payment" class="bg-yellow-200 p-3 mb-5 rounded-2xl w-full">
+      <p class="font-bold text-lg text-black mb-2">Temporary Vehicle</p>
+      <div class="flex justify-between">
+        <div class="table w-full">
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Vehicle No</p>
+            <p class="table-cell text-[11px] text-black">: SYK1234A</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Make</p>
+            <p class="table-cell text-[11px] text-black">: Toyota</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Colour</p>
+            <p class="table-cell text-[11px] text-black">: Black</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Vehicle Type</p>
+            <p class="table-cell text-[11px] text-black">: Car</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-[11px] text-black">Fees</p>
+            <p class="table-cell text-[11px] text-black">: S$0.00</p>
+          </div>
+        </div>
+        <div class="flex flex-col mt-1 w-full">
+          <div class="flex items-end justify-end">
+            <ion-icon class="icon bg-green-800 rounded-full p-2 font-xs" name="arrow-forward"></ion-icon>
+          </div>
+          <div class="flex flex-row items-center justify-end mt-5">
+            <ion-icon name="alert-circle-outline" class="mr-1 bg-blue-500 rounded-full font-bold text-white text-[24px]"></ion-icon>
+            <p class="text-blue-500 text-[13px]">Pending Approval</p>
+          </div>
+          <div class="flex justify-end items-end">
+            <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-sm rounded-md">Pay Now</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+	<!-- ############################### -->
+	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

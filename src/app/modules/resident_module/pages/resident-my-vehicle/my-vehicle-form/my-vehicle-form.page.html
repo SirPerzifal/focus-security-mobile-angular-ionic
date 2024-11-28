@@ -1,13 +1,69 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>my-vehicle-form</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-vehicle-form</ion-title>
-    </ion-toolbar>
-  </ion-header>
+	<app-resident-header [text]="'My Vehicle'"/>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mt-2 mx-4 mb-24">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-vehicle']"></ion-icon>
+    </div>
+    <div class="flex flex-col justify-between mt-2">
+      <div class="w-full">
+        <select id="type_of_application" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
+          <option selected>Type of Application</option>
+          <option value="unit_1">Permanent</option>
+          <option value="unit_2">Temporary</option>
+        </select>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'name'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'nickname'" [placeholder]="'IU Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+      </div>
+      <div class="w-full">
+        <select id="type_of_application" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
+          <option selected>Type of Vehicle</option>
+          <option value="unit_1">Car</option>
+          <option value="unit_2">Motorbike</option>
+          <option value="unit_3">Van</option>
+          <option value="unit_4">Lorry</option>
+        </select>
+      </div>
+      <div class="w-full">
+        <select id="vehicle_make" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
+          <option selected>Vehicle Make</option>
+          <option value="unit_1">tes</option>
+          <option value="unit_2">tes</option>
+          <option value="unit_3">tes</option>
+          <option value="unit_4">Tes</option>
+        </select>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'mobile'" [placeholder]="'Vehicle Colour'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+      </div>
+      
+      <div class="w-full flex flex-row justify-between">
+        <div class="w-4/6">
+          <app-text-input [id]="'tenancy_agreement'" [placeholder]="'Vehicle Log Document'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        </div>
+        <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-sm mt-1 rounded">Upload</button>
+      </div>
+      <div class="w-full">
+        <select id="vehicle_make" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
+          <option selected>Reason For Temporary Car</option>
+          <option value="unit_1">Car at Workshop</option>
+          <option value="unit_2">Rental Car</option>
+          <option value="unit_3">Work Vehicle</option>
+          <option value="unit_4">Others</option>
+        </select>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'end_date'" [placeholder]="'End Date of Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" ></app-text-input>
+      </div>
+      <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" [routerLink]="['/resident-my-family']">Submit For Approval</button>
+    </div>
+    <div class="flex flex-row w-full">
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
