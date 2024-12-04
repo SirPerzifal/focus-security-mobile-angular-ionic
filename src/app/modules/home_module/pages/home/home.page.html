@@ -1,39 +1,31 @@
-<ion-content [fullscreen]="true" class="p-8 h-full flex flex-col">
-  <div class="absolute h-1/2 mt-64 opacity-20">
+<ion-content [fullscreen]="true" class="p-8 h-full flex flex-col overflow-scroll scrollbar overflow-y-hidden">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img
-    alt="Focus Security"
-    src="assets/img/focus_logo-removebg.png"
-  />
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
   </div>
-  <div class="text-center">
-    <h1 class="text-xl font-bold text-[black] dark:text-[white]">
-      SITE NAME
-    </h1>
-    <h2 class="text-lg font-bold text-[black] dark:text-[white]">
-      VISITOR MANAGEMENT SYSTEM
-    </h2>
+  <div class="mt-3 flex flex-col items-center justify-center text-center">
+    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
   </div>
-  <div class="grid grid-cols mt-8">
-    <div class="flex flex-wrap gap-4 justify-center">
-      <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
-    </div>
-    <div class="flex flex-wrap gap-4 justify-center">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'COLLECTION'" [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [routerLink]="['/emergency-module']" [disableClick]="true" />
-    </div>
-    <div class="flex flex-wrap gap-4 justify-center">
-      <app-button-icon [customNameIcon]="'faCar'" [text]="'OVERNIGHT PARKING LIST'" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" [isActive]="true" [disableClick]="true" />
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
-    </div>
+  <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
+    <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'COLLECTION'" [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [routerLink]="['/emergency-module']" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faCar'" [text]="'OVERNIGHT PARKING LIST'" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
   </div>
-  <div class="fixed bottom-0 w-full p-4">
+  <div class="bottom-0 w-full p-4 justify-items-end">
     <div class="grid grid-cols-2">
       <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
         VEHICLE RECORDS

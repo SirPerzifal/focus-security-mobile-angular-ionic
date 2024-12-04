@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
-import { faTaxi } from '@fortawesome/free-solid-svg-icons';
+import { faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -21,12 +21,18 @@ import { faTaxi } from '@fortawesome/free-solid-svg-icons';
 export class PickUpPagePage implements OnInit {
 
   faTaxi = faTaxi
+  faMotorcycle = faMotorcycle
 
   constructor() { }
 
   showPick = false;
   showDrop = false
   showForm = false
+
+  valPhv = false
+  valCar = false
+  valTaxi = false
+  valBike = false
 
   toggleShowPick() {
     this.showForm = true;
@@ -38,6 +44,22 @@ export class PickUpPagePage implements OnInit {
     this.showForm = true;
     this.showPick = false;
     this.showDrop = true;
+  }
+
+  useVehicle(val: string) {
+    this.valPhv = false
+    this.valCar = false
+    this.valTaxi = false
+    this.valBike = false
+    if(val == 'phv'){
+      this.valPhv = true
+    } else if (val == 'car'){
+      this.valCar = true
+    } else if (val == 'bike'){
+      this.valBike = true
+    }else {
+      this.valTaxi = true
+    }
   }
 
   ngOnInit() {

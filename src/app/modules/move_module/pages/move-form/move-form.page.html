@@ -1,75 +1,84 @@
 <ion-content [fullscreen]="true">
-  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
-    <div class="flex flex-col justify-end items-center">
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
-
-      <div class="flex mt-[50px] self-start">
-        <div class="flex flex-col items-center">
-          <button class="bg-[--ion-color-primary] p-[10px] rounded-lg text-[white]" [routerLink]="['/move-home']"><img
-            alt="Focus Security"
-            src="assets/icon/Hammer.png" /></button>
-          <span class="text-[12px]"><b>Move In / Out</b></span>
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    <div class="flex flex-row mt-8">    
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
+    </div>
+    <div class="flex flex-col w-full mt-[50px] space-y-3 items-center">
+      <div class="w-full flex flex-row space-x-1">
+        <div class="w-1/2">
+          <app-text-input [id]="'block'" [placeholder]="'Block'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
+        <div class="w-1/2">
+          <app-text-input [id]="'unit'" [placeholder]="'Unit'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+      </div> 
+      <div class="w-full">
+        <app-text-input [id]="'contractor_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="flex flex-row justify-between w-full">
+        <div class="w-4/6">
+          <app-text-input [id]="'contractor_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
       </div>
-      
-      <div class="flex flex-col w-[100%] mt-[50px]">
-        <div class="flex">
-          <app-text-input [id]="'block'" [placeholder]="'Block'" [customClasses]="{'h-[53px]':true,'mr-[5px]': true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-          <app-text-input [id]="'unit'" [placeholder]="'Unit'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-        </div>
-        <div class="name mt-[5px]">
-          <app-text-input [id]="'contractor_name'" [placeholder]="'Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-        </div>
-        <div class="contact flex mt-[5px]">
-          <app-text-input [id]="'contractor_contact'" [placeholder]="'Contact No'" [customClasses]="{'h-[53px]':true,'mr-[5px]': true,'w-[100%]': true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-          <button class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[40%] text-[12px] items-center justify-center ml-[5px] text-[white]">
-            <span>Search</span>
-          </button>
-        </div>
-        <div class="identification flex mt-[10px]">
+      <div class="flex mt-[10px] flex-row justify-between w-full">
+        <div>
           <input type="radio" name="SelectedIdentification" id="nric_identification" value="nric" class="mr-[5px]" />
           <label class="mr-[10px]" for="nric_identification">NRIC</label>
+        </div>
+        <div>
           <input type="radio" name="SelectedIdentification"  id="fin_identification" value="fin" class="mr-[5px]" />
           <label for="fin_identification">FIN</label>
-          <!-- <app-text-input [id]="'nric_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
-          <label for="nric_identification">NRIC</label>
-          <app-text-input [id]="'fin_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
-          <label for="fin_identification">FIN</label> -->
         </div>
-        <div class="identification-input mt-[10px]">
-          <app-text-input [id]="'contractor_identification_input'" [placeholder]="'NRIC / FIN'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        <!-- <app-text-input [id]="'nric_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
+        <label for="nric_identification">NRIC</label>
+        <app-text-input [id]="'fin_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
+        <label for="fin_identification">FIN</label> -->
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'contractor_nric/fin'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div>
+      <div class="w-full">
+        <app-text-input [id]="'contractor_vc'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full">
+        <app-text-input [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full">
+        <!-- <app-text-input [id]="'contractor_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onPaxCountChange($event)">
+          <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i + 1">
+            No Of Pax {{ i + 1 }}
+          </option>  
+        </select>
+      </div>
+      <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-1">
+        <div class="w-1/2">
+          <app-text-input [id]="'name_pax'" [placeholder]="'Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
-        <div class="vehicle-number mt-[10px]">
-          <app-text-input [id]="'company_vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
+        <div class="w-1/2">
+          <app-text-input [id]="'NRIC / FIN'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
-        <div class="company-name mt-[10px]">
-          <app-text-input [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
-        </div>
-        <div class="sub-contractor mt-[10px]">
-          <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="h-[53px] w-[100%] rounded-lg" (change)="onPaxCountChange($event)">
-            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i + 1">
-              No Of Pax {{ i + 1 }}
-            </option>   
-          </select>
-        </div>
-        <div *ngFor="let count of [].constructor(paxCount); let i = index" class="sub-contractor mt-[10px]">
-          <div class="flex">
-            <app-text-input [id]="'sub-contractor_name'" [placeholder]="'Name'" [customClasses]="{'h-[53px]':true,'mr-[5px]': true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-            <app-text-input [id]="'sub-contractor_identification'" [placeholder]="'NRIC / FIN'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-          </div>
-        </div>
-        <div class="contac mt-[15px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record & Open Barrier</span>
-          </button>
-        </div>
-        <div class="contac mt-[5px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record Only</span>
-          </button>
-        </div>
+      </div> 
+      <div class="w-full">
+        <app-visitor-button [text]="'SAVE RECORD & Open Barrier'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-xs'"></app-visitor-button>
       </div>
     </div>
   </div>
+  
 </ion-content>

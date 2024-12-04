@@ -1,25 +1,18 @@
 <ion-content [fullscreen]="true">
-  <div class="absolute h-1/2 mt-64 opacity-20">
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img
-    alt="Focus Security"
-    src="assets/img/focus_logo-removebg.png"
-  />
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-row justify-around mt-6">
-      <div class="text-sm flex flex-col items-center">
-        <div><b>SITE NAME</b></div>
-        <div><b>VISITOR MANAGEMENT SYSTEM</b></div>
-      </div>
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
-    <div class="flex mt-[50px] self-start">
-      <div class="flex flex-col items-center">
-        <button class="bg-[--ion-color-primary] p-[10px] rounded-lg text-[white]" [routerLink]="['/ma-visitor-list']">
-          <fa-icon [icon]="faUsers" class="text-[#ffffff]"></fa-icon>
-        </button>
-        <span class="text-[12px]"><b>MA Visitor</b></span>
-        <span class="text-[12px]"><b>List</b></span>
-      </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
     </div>
     <div class="flex flex-row justify-between mt-8">
       <app-visitor-button [text]="'WALK IN'" [extraClass]="showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowWalk()"></app-visitor-button>

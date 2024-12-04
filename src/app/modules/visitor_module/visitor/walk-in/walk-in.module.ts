@@ -8,6 +8,7 @@ import { WalkInPageRoutingModule } from './walk-in-routing.module';
 
 import { WalkInPage } from './walk-in.page';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     FormsModule,
     IonicModule,
     WalkInPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    SharedModule
   ],
   declarations: [WalkInPage]
 })

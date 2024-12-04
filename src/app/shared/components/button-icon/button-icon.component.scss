@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 65px;
+  width: 105px;
 }
 .fsc-icon-button {
   padding: 10px;
@@ -12,8 +12,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 49px;
-  height: 46px;
+  width: 54px;
+  height: 50px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   &::part(native) {
@@ -21,9 +21,9 @@
   }
 }
 .fsc-icon {
-  font-size: 18px;
-  width: 24px;
-  height: 24px;
+  font-size: 23px;
+  width: 29px;
+  height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,13 +44,13 @@
 
 .fsc-icon-wrapper {
   img {
-    width: 24px;  // Sesuaikan dengan ukuran yang Anda inginkan
-    height: 24px; // Sesuaikan dengan ukuran yang Anda inginkan
+    width: 29px;  // Sesuaikan dengan ukuran yang Anda inginkan
+    height: 29px; // Sesuaikan dengan ukuran yang Anda inginkan
     object-fit: contain;
   }
 }
 .fsc-icon-button-label {
   margin-top: 5px;
   text-align: center;
-  font-size: 9px;
+  font-size: 14px;
 }

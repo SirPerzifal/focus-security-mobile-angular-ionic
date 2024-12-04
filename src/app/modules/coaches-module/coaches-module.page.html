@@ -1,94 +1,97 @@
 <ion-content [fullscreen]="true">
-  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
-    <div class="flex flex-col justify-end items-center">
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
-
-      <div class="flex mt-[50px] self-start">
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
-      </div>
-
-      <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
-        <span class="text-[12px]"><b>Approved list</b></span>
-        <div class="w-[100%] flex self-start mt-[20px]">
-          <button (click)="form()" class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </button>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    <div class="flex flex-row mt-8">    
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+    </div>
+    <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
+      <span class="text-[18px]"><b>Moving In / Out</b></span>
+      <div class="w-[100%] flex self-start mt-[20px] grid grid-cols-4 gap-4 justify-items-center">
+        <button (click)="form()" class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </button>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
         </div>
-        <div class="w-[100%] flex self-start mt-[20px]">
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
         </div>
-        <div class="w-[100%] flex self-start mt-[20px]">
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
-          <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[70px] text-[9px] m-[5px]">
-            <span>Blk 29</span>
-            <span>0101</span>
-          </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
+        </div>
+        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
+          <span>Blk 29</span>
+          <span>0101</span>
         </div>
       </div>
     </div>
   </div>
+  
 </ion-content>

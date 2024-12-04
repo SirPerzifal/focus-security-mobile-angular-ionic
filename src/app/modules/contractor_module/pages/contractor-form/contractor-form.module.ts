@@ -8,6 +8,7 @@ import { ContractorFormPageRoutingModule } from './contractor-form-routing.modul
 
 import { ContractorFormPage } from './contractor-form.page';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     FormsModule,
     IonicModule,
     ComponentsModule,
-    ContractorFormPageRoutingModule
+    ContractorFormPageRoutingModule,
+    SharedModule
   ],
   declarations: [ContractorFormPage]
 })

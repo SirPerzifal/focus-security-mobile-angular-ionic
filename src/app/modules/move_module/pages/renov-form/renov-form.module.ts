@@ -8,6 +8,7 @@ import { RenovFormPageRoutingModule } from './renov-form-routing.module';
 
 import { RenovFormPage } from './renov-form.page';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     ReactiveFormsModule,
     IonicModule,
     ComponentsModule,
-    RenovFormPageRoutingModule
+    RenovFormPageRoutingModule,
+    SharedModule
   ],
   declarations: [RenovFormPage]
 })

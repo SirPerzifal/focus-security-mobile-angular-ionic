@@ -24,20 +24,24 @@ export class EmergencyModulePage implements OnInit {
   showAmbulance = false;
   showPolice = false;
   showSCDF = false;
+  showOthers = false;
   showAmbulanceTrans = false;
   showPoliceTrans = false;
   showSCDFTrans = false;
+  showOthersTrans = false;
 
   toggleShowSCDF() {
     if (!this.showPoliceTrans && !this.showAmbulanceTrans){
       this.showSCDFTrans = true
       this.showPolice = false;
       this.showAmbulance = false;
+      this.showOthers = false
       setTimeout(()=>{
-        this.showSCDF = true;
+        this.showSCDF = true
         this.showSCDFTrans = false
       }, 300)
     }
+    console.log(this.showAmbulanceTrans, this.showPoliceTrans, this.showSCDFTrans, this.showAmbulance, this.showPolice, this.showSCDF)
   }
 
   toggleShowAmbulance() {
@@ -45,11 +49,13 @@ export class EmergencyModulePage implements OnInit {
       this.showAmbulanceTrans = true
       this.showPolice = false;
       this.showSCDF = false;
+      this.showOthers = false
       setTimeout(()=>{
-        this.showAmbulance = true;
-        this.showAmbulanceTrans = false
+        this.showAmbulance = true
+        this.showAmbulanceTrans = false;
       }, 300)
     }
+    console.log(this.showAmbulanceTrans, this.showPoliceTrans, this.showSCDFTrans, this.showAmbulance, this.showPolice, this.showSCDF)
   }
 
   toggleShowPolice() {
@@ -57,11 +63,27 @@ export class EmergencyModulePage implements OnInit {
       this.showPoliceTrans = true
       this.showAmbulance = false;
       this.showSCDF = false;
+      this.showOthers = false
       setTimeout(()=>{
-        this.showPolice = true;
-        this.showPoliceTrans = false
+        this.showPolice = true
+        this.showPoliceTrans = false;
       }, 300)
     }
+    console.log(this.showAmbulanceTrans, this.showPoliceTrans, this.showSCDFTrans, this.showAmbulance, this.showPolice, this.showSCDF)
+  }
+
+  toggleShowOthers() {
+    if (!this.showSCDFTrans && !this.showAmbulanceTrans){
+      this.showOthersTrans = true
+      this.showPolice = false
+      this.showAmbulance = false;
+      this.showSCDF = false;
+      setTimeout(()=>{
+        this.showOthers = true
+        this.showOthersTrans = false;
+      }, 300)
+    }
+    console.log(this.showAmbulanceTrans, this.showPoliceTrans, this.showSCDFTrans, this.showAmbulance, this.showPolice, this.showSCDF)
   }
 
   ngOnInit() {

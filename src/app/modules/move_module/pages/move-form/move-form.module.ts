@@ -8,6 +8,7 @@ import { MoveFormPageRoutingModule } from './move-form-routing.module';
 
 import { MoveFormPage } from './move-form.page';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     ReactiveFormsModule,
     IonicModule,
     ComponentsModule,
-    MoveFormPageRoutingModule
+    MoveFormPageRoutingModule,
+    SharedModule
   ],
   declarations: [MoveFormPage]
 })

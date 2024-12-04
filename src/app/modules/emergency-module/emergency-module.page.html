@@ -1,86 +1,99 @@
 <ion-content [fullscreen]="true">
-  <div class="ion-no-padding" class="flex flex-col p-[25px] h-screen font-poppins">
-    <div class="flex flex-col justify-end items-center">
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [routerLink]="['/home-vms']" [disableClick]="true" />
+    </div>
+    <div class="flex mt-[20px] w-full justify-between">
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Ambulance.webp'" [isActive]="showAmbulance" [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()"/>
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Police.webp'" [isActive]="showPolice" [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'POLICE'" [disableClick]="true" (click)="toggleShowPolice()"/>
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/SCDF.webp'" [isActive]="showSCDF" [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()"/>
+      <app-button-icon [customNameIcon]="''" [isActive]="showOthers" [text]="'OTHERS'" (click)="toggleShowOthers()" />
+    </div>
 
-      <div class="flex mt-[50px] self-start">
-        <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+    <div class="mt-5 flex flex-col justify-around items-center w-full" *ngIf="showAmbulance" @fadeInOut>
+      <div class="w-full mb-3">
+        <app-text-input [id]="'contact_number'" [placeholder]="'CONTACT NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full mb-3">
+        <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <select id="deliveries_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <option selected>CHOOSE BLOCK</option>
+          <option value="block_1">BLOCK 1</option>
+          <option value="block_2">BLOCK 2</option>
+          <option value="block_3">BLOCK 3</option>
+          <option value="block_4">BLOCK 4</option>
+        </select>
       </div>
-      
-      <div class="flex mt-[20px] w-full justify-between">
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Ambulance.webp'" [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'AMBULANCE'" [isActive]="true" [disableClick]="true"  (click)="toggleShowAmbulance()"/>
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/Police.webp'" [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'POLICE'" [isActive]="true" [disableClick]="true"  (click)="toggleShowPolice()"/>
-        <app-button-icon [customImageIcon]="'assets/icon/home-icon/SCDF.webp'" [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'SCDF'" [isActive]="true" [disableClick]="true"  (click)="toggleShowSCDF()"/>
-        <app-button-icon [customNameIcon]="''" [isActive]="true" [text]="'OTHERS'" />
+      <div class="w-full mb-5">
+        <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <select id="deliveries_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <option selected>CHOOSE UNIT</option>
+          <option value="unit_1">UNIT 1</option>
+          <option value="unit_2">UNIT 2</option>
+          <option value="unit_3">UNIT 3</option>
+          <option value="unit_4">UNIT 4</option>
+        </select>
       </div>
-
-      <div class="flex flex-col w-[100%] mt-[50px]" *ngIf="showAmbulance" @fadeInOut>
-        <div class="name mt-[5px]">
-          <app-text-input [id]="'rank_name'" [placeholder]="'Rank and Name'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>
-        </div>
-        <div class="identification-input mt-[10px]">
-          <app-text-input [id]="'contact_number'" [placeholder]="'Contact Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
-        </div>
-        <div class="vehicle-number mt-[10px]">
-          <app-text-input [id]="'sd_field'" [placeholder]="'Station & Division'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
-        </div>
-        <div class="company-name mt-[10px]">
-          <app-text-input [id]="'vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
-        </div>
-        <div class="sub-contractor mt-[10px]">
-          <select name="blok" id="blok" class="h-[53px] w-[100%] rounded-lg">
-            <option>
-              Block
-            </option>   
-          </select>
-        </div>
-        <div class="sub-contractor mt-[10px]">
-          <select name="unit" id="unit" class="h-[53px] w-[100%] rounded-lg">
-            <option>
-              Unit
-            </option>   
-          </select>
-        </div>
-        <div class="contac mt-[15px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record & Open Barrier</span>
-          </button>
-        </div>
-        <div class="contac mt-[5px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record Only</span>
-          </button>
-        </div>
+      <div class="w-full mb-3">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+          SAVE RECORD & OPEN BARRIER
+        </ion-button>
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+          SAVE RECORD ONLY
+        </ion-button>
       </div>
-      <div class="flex flex-col w-[100%] mt-[50px]" *ngIf="showPolice" @fadeInOut>
-        <div class="company-name mt-[10px]">
-          <app-text-input [id]="'vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'h-[53px]':true}" [type]="'text'" [customInputClasses]="{'rounded-lg':true, 'w-full':true,'h-full':true, 'text-sm':true, 'sm:text-[14px]':true, 'md:text-[24px]':true,'lg:text-[36px]':true, 'pl-[20px]':true}"></app-text-input>                  
-        </div>
-        <div class="sub-contractor mt-[10px]">
-          <select name="blok" id="blok" class="h-[53px] w-[100%] rounded-lg">
-            <option>
-              Block
-            </option>   
-          </select>
-        </div>
-        <div class="sub-contractor mt-[10px]">
-          <select name="unit" id="unit" class="h-[53px] w-[100%] rounded-lg">
-            <option>
-              Unit
-            </option>   
-          </select>
-        </div>
-        <div class="contac mt-[15px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record & Open Barrier</span>
-          </button>
-        </div>
-        <div class="contac mt-[5px]">
-          <button class="bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[100%] text-[16px] items-center justify-center ml-[5px]">
-            <span>Save Record Only</span>
-          </button>
-        </div>
+    </div>
+    <div class="flex flex-col w-[100%] mt-[50px]" *ngIf="showPolice" @fadeInOut>
+      <div class="w-full mb-3">
+        <app-text-input [id]="'contact_number'" [placeholder]="'Rank and Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full mb-3">
+        <app-text-input [id]="'contact_number'" [placeholder]="'Contact Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full mb-3">
+        <app-text-input [id]="'contact_number'" [placeholder]="'Station & Division'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full mb-3">
+        <app-text-input [id]="'contact_number'" [placeholder]="'CONTACT NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </div> 
+      <div class="w-full mb-3">
+        <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <select id="deliveries_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <option selected>CHOOSE BLOCK</option>
+          <option value="block_1">BLOCK 1</option>
+          <option value="block_2">BLOCK 2</option>
+          <option value="block_3">BLOCK 3</option>
+          <option value="block_4">BLOCK 4</option>
+        </select>
+      </div>
+      <div class="w-full mb-5">
+        <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <select id="deliveries_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <option selected>CHOOSE UNIT</option>
+          <option value="unit_1">UNIT 1</option>
+          <option value="unit_2">UNIT 2</option>
+          <option value="unit_3">UNIT 3</option>
+          <option value="unit_4">UNIT 4</option>
+        </select>
+      </div>
+      <div class="w-full mb-3">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+          SAVE RECORD & OPEN BARRIER
+        </ion-button>
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+          SAVE RECORD ONLY
+        </ion-button>
       </div>
     </div>
   </div>

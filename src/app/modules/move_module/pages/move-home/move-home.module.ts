@@ -8,6 +8,7 @@ import { MoveHomePageRoutingModule } from './move-home-routing.module';
 
 import { MoveHomePage } from './move-home.page';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     FormsModule,
     IonicModule,
     ComponentsModule,
-    MoveHomePageRoutingModule
+    MoveHomePageRoutingModule,
+    SharedModule
   ],
   declarations: [MoveHomePage]
 })

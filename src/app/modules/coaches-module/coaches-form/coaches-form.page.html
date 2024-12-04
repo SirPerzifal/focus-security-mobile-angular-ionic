@@ -1,8 +1,10 @@
 <ion-content [fullscreen]="true">
   <div class="ion-no-padding" class="flex flex-col h-screen font-poppins">
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
     <div class="flex flex-col justify-end items-center w-full p-8">
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>FOCUS SECURITY</b></span>
-      <span class="text-[14px] sm:text-[36px] md:text-[48px] lg:text-[60px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
 
       <div class="flex mt-[50px] self-start">
         <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
@@ -15,7 +17,7 @@
   
       <div class="flex flex-row w-full ">
   
-        <div class="mt-8 flex flex-col justify-between items-center h-72 w-full">
+        <div class="mt-8 flex flex-col justify-between items-center h-72 w-full space-y-3">
           
           <div class="w-full">
             <app-text-input [id]="'walk_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>

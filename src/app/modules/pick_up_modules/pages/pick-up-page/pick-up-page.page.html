@@ -1,43 +1,31 @@
 <ion-content [fullscreen]="true">
-  <div class="absolute h-1/2 mt-64 opacity-20">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img
-    alt="Focus Security"
-    src="assets/img/focus_logo-removebg.png"
-  />
+      alt="Focus Security"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-row justify-around mt-6">
-      <div class="text-sm flex flex-col items-center">
-        <div><b>SITE NAME</b></div>
-        <div><b>VISITOR MANAGEMENT SYSTEM</b></div>
-      </div>
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
     <div class="flex flex-row mt-8">
       <div class="flex flex-col items-center">
-        <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl" [routerLink]="['/home-vms']">
-            <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
-        </button>
-        <div class="text-[10px] mt-1">
-          <div class="text-xs flex flex-col items-center">
-            <div>
-              <b>PICK UP</b>
-            </div> 
-            <div>
-              <b>DROP OFF</b>
-            </div>
-          </div>
-        </div>
+        <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       </div>
     </div>
-    <div class="flex flex-row justify-start mt-8">
+    <div id="entry_type" class="flex flex-row justify-start mt-8">
       <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()"></app-visitor-button>
       <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-secondary)] text-white w-24 ml-2 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
     </div>
     <div class="mt-7 flex flex-row">
-      <div class="flex flex-col h-72 w-full"  *ngIf="showForm" @fadeInOut>
-        <div class="flex flex-row justify-start items-start">
+      <div class="flex flex-col h-72 w-full" *ngIf="showForm" @fadeInOut>
+        <div id="vehicle_type" class="flex flex-row justify-start items-start">
           <div class="flex flex-col items-center w-1/4">
-            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('phv')" [ngClass]="{'bg-[var(--ion-color-primary)]': valPhv, 'bg-[#D0D0D0]': !valPhv}">
               <img
               alt="Grab"
               src="assets/icon/pick_up-page/Grab_Outline.png" />
@@ -52,7 +40,7 @@
             </div>
           </div>
           <div class="flex flex-col items-center w-1/4">
-            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('taxi')" [ngClass]="{'bg-[var(--ion-color-primary)]': valTaxi, 'bg-[#D0D0D0]': !valTaxi}">
               <fa-icon [icon]="faTaxi" class="text-[#ffffff]"></fa-icon>
             </button>
             <div class="text-[10px] mt-1">
@@ -64,13 +52,25 @@
             </div>
           </div>
           <div class="flex flex-col items-center w-1/4">
-            <button id="shadow_back" class="w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('car')" [ngClass]="{'bg-[var(--ion-color-primary)]': valCar, 'bg-[#D0D0D0]': !valCar}">
                 <ion-icon name="car-sport-outline" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
             </button>
             <div class="text-[10px] mt-1">
               <div class="text-xs flex flex-col items-center">
                 <div>
                   <b>PRIVATE CAR</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-1/4">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('bike')" [ngClass]="{'bg-[var(--ion-color-primary)]': valBike, 'bg-[#D0D0D0]': !valBike}">
+              <fa-icon [icon]="faMotorcycle" class="text-[#ffffff]"></fa-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>MOTORBIKE</b>
                 </div>
               </div>
             </div>
