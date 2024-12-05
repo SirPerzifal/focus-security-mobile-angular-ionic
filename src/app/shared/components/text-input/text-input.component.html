@@ -1,3 +1,10 @@
 <div [class]="getFilteredClasses(customClasses)">
-  <input [id]="id" [class]="getFilteredClasses(customInputClasses)" [type]="type" [placeholder]="placeholder" [value]="value" (keyup)="onKeyUp($event)" />
+  <input 
+    [id]="id" 
+    [class]="getFilteredClasses(customInputClasses)" 
+    [type]="type" 
+    [placeholder]="placeholder" 
+    [(ngModel)]="value"
+    (keyup)="onKeyUp($event)" 
+  />
 </div>

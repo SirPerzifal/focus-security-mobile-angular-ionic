@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
+import { VisitorService } from 'src/app/services/visitor/visitor.service';
 
 @Component({
   selector: 'app-walk-in',
@@ -20,8 +21,40 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class WalkInPage implements OnInit {
 
-  constructor(private paramsActiveFromCoaches: ActivatedRoute) { }
+  constructor(private paramsActiveFromCoaches: ActivatedRoute, private visitorService: VisitorService) { }
 
+  formData = {
+    visitor_name: '',
+    visitor_contact_no: '',
+    visitor_type: 'walk_in',
+    visitor_vehicle: '',
+    block: 'Block 1',
+    unit: 'Unit 1'
+  };
+
+  onSubmitDriveIn() {
+    console.log(this.formData)
+    this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit).subscribe(
+      res => {
+        console.log(res);
+      },
+      error => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  onSubmitWalkIn() {
+    console.log(this.formData)
+    this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit).subscribe(
+      res => {
+        console.log(res);
+      },
+      error => {
+        console.error('Error:', error);
+      }
+    );
+  }
 
   showWalk = false;
   showDrive = false;

@@ -18,22 +18,22 @@
     <div class="flex flex-col w-full mt-[50px] space-y-3 items-center">
       <div class="w-full flex flex-row space-x-1">
         <div class="w-1/2">
-          <app-text-input [id]="'block'" [placeholder]="'Block'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <app-text-input #textInput [id]="'block'" [placeholder]="'Block'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
         <div class="w-1/2">
-          <app-text-input [id]="'unit'" [placeholder]="'Unit'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <app-text-input #textInput [id]="'unit'" [placeholder]="'Unit'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
       </div> 
       <div class="w-full">
-        <app-text-input [id]="'contractor_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        <app-text-input #textInput [id]="'contractor_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
       </div> 
       <div class="flex flex-row justify-between w-full">
         <div class="w-4/6">
-          <app-text-input [id]="'contractor_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <app-text-input #textInput [id]="'contractor_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
         <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
       </div>
-      <div class="flex mt-[10px] flex-row justify-between w-full">
+      <div class="flex mt-[10px] ml-[15px] gap-x-8 flex-row w-full">
         <div>
           <input type="radio" name="SelectedIdentification" id="nric_identification" value="nric" class="mr-[5px]" />
           <label class="mr-[10px]" for="nric_identification">NRIC</label>
@@ -42,22 +42,22 @@
           <input type="radio" name="SelectedIdentification"  id="fin_identification" value="fin" class="mr-[5px]" />
           <label for="fin_identification">FIN</label>
         </div>
-        <!-- <app-text-input [id]="'nric_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
+        <!-- <app-text-input #textInput [id]="'nric_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
         <label for="nric_identification">NRIC</label>
-        <app-text-input [id]="'fin_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
+        <app-text-input #textInput [id]="'fin_identification'" [customClasses]="{'mr-[5px]': true,'w-[100%]': true}" [type]="'radio'"></app-text-input>
         <label for="fin_identification">FIN</label> -->
       </div>
       <div class="w-full">
-        <app-text-input [id]="'contractor_nric/fin'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        <app-text-input #textInput [id]="'contractor_nric/fin'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
       </div>
       <div class="w-full">
-        <app-text-input [id]="'contractor_vc'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        <app-text-input #textInput [id]="'contractor_vc'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
       </div> 
       <div class="w-full">
-        <app-text-input [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        <app-text-input #textInput [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
       </div> 
       <div class="w-full">
-        <!-- <app-text-input [id]="'contractor_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
+        <!-- <app-text-input #textInput [id]="'contractor_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
         <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onPaxCountChange($event)">
           <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i + 1">
             No Of Pax {{ i + 1 }}
@@ -66,17 +66,17 @@
       </div>
       <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-1">
         <div class="w-1/2">
-          <app-text-input [id]="'name_pax'" [placeholder]="'Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <app-text-input #textInput [id]="'name_pax'" [placeholder]="'Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
         <div class="w-1/2">
-          <app-text-input [id]="'NRIC / FIN'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <app-text-input #textInput [id]="'NRIC / FIN'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
         </div>
       </div> 
       <div class="w-full">
-        <app-visitor-button [text]="'SAVE RECORD & Open Barrier'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
+        <app-visitor-button [text]="'SAVE RECORD & Open Barrier'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="saveRecordAndOpenBarrier()"></app-visitor-button>
       </div>
       <div class="w-full">
-        <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-xs'"></app-visitor-button>
+        <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-xs'" (click)="saveRecordOnly()"></app-visitor-button>
       </div>
     </div>
   </div>

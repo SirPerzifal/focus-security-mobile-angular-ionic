@@ -7,171 +7,56 @@
       class="object-contain w-full h-full"
     />
   </div>
-  <div class="flex flex-col relative mt-2 mx-4">
+  
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
+    
     <div class="flex flex-row mt-8">    
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon 
+        [customNameIcon]="'faHammer'" 
+        [text]="'MOVE IN / OUT RENOVATORS'" 
+        [routerLink]="['/home-vms']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />
     </div>
+
+    <!-- Move In / Out Section -->
     <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
       <span class="text-[18px]"><b>Moving In / Out</b></span>
       <div class="w-[100%] flex self-start mt-[20px] grid grid-cols-4 gap-4 justify-items-center">
-        <button (click)="form()" class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
+        <button 
+          *ngFor="let schedule of moveInSchedules" 
+          (click)="form(schedule.block_name, schedule.unit_name)" 
+          class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]"
+        >
+          <span>{{ schedule.block_name }}</span>
+          <span>{{ schedule.unit_name }}</span>
         </button>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
       </div>
     </div>
 
+    <!-- Renovations Section -->
     <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
       <span class="text-[18px]"><b>Renovations</b></span>
       <div class="w-[100%] flex self-start mt-[20px] grid grid-cols-4 gap-4 justify-items-center">
-        <button (click)="renov_form()" class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
+        <button 
+          *ngFor="let schedule of renovationSchedules" 
+          (click)="renov_form(schedule.block_name, schedule.unit_name)" 
+          class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]"
+        >
+          <span>{{ schedule.block_name }}</span>
+          <span>{{ schedule.unit_name }}</span>
         </button>
-        <!-- <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-        </div> -->
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
-        <div class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]">
-          <span>Blk 29</span>
-          <span>0101</span>
-        </div>
       </div>
     </div>
   </div>
-  
 </ion-content>

@@ -1,110 +1,143 @@
 <ion-content [fullscreen]="true">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="Focus Security"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <img alt="Focus Security" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
-    <div class="flex flex-row mt-8">    
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+    <div class="flex flex-row mt-8">
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'"
+        [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
     <div class="flex flex-row justify-between mt-8">
-      <app-visitor-button [text]="'PRE REGISTERED'" [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowQr()"></app-visitor-button>
-      <app-visitor-button [text]="'WALK IN'" [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowWalk()"></app-visitor-button>
-      <app-visitor-button [text]="'DRIVE IN'" [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowDrive()"></app-visitor-button>
+      <app-visitor-button [text]="'PRE REGISTERED'"
+        [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        (click)="toggleShowQr()"></app-visitor-button>
+      <app-visitor-button [text]="'WALK IN'"
+        [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        (click)="toggleShowWalk()"></app-visitor-button>
+      <app-visitor-button [text]="'DRIVE IN'"
+        [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        (click)="toggleShowDrive()"></app-visitor-button>
     </div>
 
     <div class="flex flex-row">
       <div class="mt-8 flex flex-col justify-around items-center h-72 w-full" *ngIf="showQr" @fadeInOut>
-        <img
-          alt="QR"
-          src="assets/img/qr.png"
-          class="w-60 h-60" />
+        <img alt="QR" src="assets/img/qr.png" class="w-60 h-60" />
       </div>
 
-      <div class="mt-8 flex flex-col justify-between items-center h-72 w-full" *ngIf="showWalk" @fadeInOut>
-        
-        <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-        </div> 
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'walk_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <form (ngSubmit)="onSubmitWalkIn()" class="justify-between items-center h-80 w-full" #walkInForm="ngForm"  *ngIf="showWalk" @fadeInOut>
+        <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
+          <div class="w-full">
+            <input id="walk_in_name" placeholder="NAME"
+              type="text"
+              class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
+            [(ngModel)]="formData.visitor_name" name="visitor_name">
           </div>
-          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
-        </div>
-        <div class="w-full">
-          <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <select id="walk_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-            <option selected>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-            <option selected>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
-        </div>
-      </div>
-  
-      <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3" *ngIf="showDrive" @fadeInOut>
-        <div class="w-full">
-          <app-text-input [id]="'drive_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-        </div> 
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'drive_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+          <div class="flex flex-row justify-between w-full">
+            <div class="w-4/6">
+              <input id="walk_in_contact" placeholder="CONTACT NO"
+                type="text"
+                class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
+              [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
+            </div>
+            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
           </div>
-          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+          <div class="w-full">
+            <input id="walk_in_vehicle" placeholder="VEHICLE NUMBER"
+              type="text"
+              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-full"
+            [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
+          </div>
+          <div class="w-full">
+            <select id="walk_in_block"
+              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
+            [(ngModel)]="formData.block" name="block">
+              <option value="Block 1">BLOCK 1</option>
+              <option value="Block 2">BLOCK 2</option>
+              <option value="Block 3">BLOCK 3</option>
+              <option value="Block 4">BLOCK 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <select id="walk_in_unit"
+              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
+            [(ngModel)]="formData.unit" name="unit">
+              <option value="Unit 1">UNIT 1</option>
+              <option value="Unit 2">UNIT 2</option>
+              <option value="Unit 3">UNIT 3</option>
+              <option value="Unit 4">UNIT 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              type="submit"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              ></app-visitor-button>
+          </div>
         </div>
-        <div class="w-full">
-          <app-text-input [id]="'drive_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      </form>
+
+      <form (ngSubmit)="onSubmitDriveIn()" class="justify-between items-center h-80 w-full" #driveInForm="ngForm"  *ngIf="showDrive" @fadeInOut>
+        <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
+          <div class="w-full">
+            <input id="drive_in_name" placeholder="NAME"
+              type="text"
+              class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
+            [(ngModel)]="formData.visitor_name" name="visitor_name">
+          </div>
+          <div class="flex flex-row justify-between w-full">
+            <div class="w-4/6">
+              <input id="drive_in_contact" placeholder="CONTACT NO"
+                type="text"
+                class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
+              [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
+            </div>
+            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+          </div>
+          <div class="w-full">
+            <input id="drive_in_vehicle" placeholder="VEHICLE NUMBER"
+              type="text"
+              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-full"
+            [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
+          </div>
+          <div class="w-full">
+            <select id="drive_in_block"
+              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
+            [(ngModel)]="formData.block" name="block">
+              <option value="Block 1">BLOCK 1</option>
+              <option value="Block 2">BLOCK 2</option>
+              <option value="Block 3">BLOCK 3</option>
+              <option value="Block 4">BLOCK 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <select id="drive_in_unit"
+              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
+            [(ngModel)]="formData.unit" name="unit">
+              <option value="Unit 1">UNIT 1</option>
+              <option value="Unit 2">UNIT 2</option>
+              <option value="Unit 3">UNIT 3</option>
+              <option value="Unit 4">UNIT 4</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              type="submit"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              ></app-visitor-button>
+          </div>
         </div>
-        <div class="w-full">
-          <!-- <app-text-input [id]="'drive_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <select id="drive_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-            <option selected>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <!-- <app-text-input [id]="'drive_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <select id="drive_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-            <option selected>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
-        </div>
-      </div>
+      </form>
     </div>
-    
+
   </div>
-  
+
 </ion-content>

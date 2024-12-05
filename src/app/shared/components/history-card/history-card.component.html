@@ -1,19 +1,19 @@
 <div [class]="banned ? 'bg-red-400 p-4 rounded-lg flex justify-between items-center w-full mb-2' : 'bg-green-100 p-4 rounded-lg flex justify-between items-center w-full mb-2'">
-  <div class="text-xs font-bold">
-    <table>
+  <div class="text-xs font-bold w-[60%]">
+    <table class="w-full table-fixed">
       <tr class="h-6">
-        <td >Purpose</td>
-        <td>:</td>
-        <td>{{purpose}}</td>
+        <td width="">Purpose</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate">{{purpose}}</td>
       </tr>
       <tr class="h-6">
         <td>Visitor Name</td>
-        <td>:</td>
-        <td>{{visitor}}</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate">{{visitor}}</td>
       </tr>
       <tr class="h-6">
         <td>Date Of Visit</td>
-        <td>:</td>
+        <td class="w-[5%]">:</td>
         <td>{{visit_date}}</td>
       </tr>
     </table>

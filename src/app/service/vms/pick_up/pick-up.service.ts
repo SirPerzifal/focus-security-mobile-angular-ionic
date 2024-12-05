@@ -1,27 +1,56 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ApiService } from '../../api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class VmsServicePickUp {
-  private apiUrl = 'http://192.168.1.144:8069/vms/post/add_entry'; // Ganti dengan URL server Odoo Anda
+export class VmsServicePickUp extends ApiService{
+  private apiUrl = this.baseUrl + '/vms/post/add_entry';
 
-  constructor(private http: HttpClient) {}
+  constructor(http: HttpClient) {super(http)}
 
   addEntry(entryType: string, vehicleType: string, vehicleNumber: string, block: string): Observable<any> {
     const body = {
-      entry_type: entryType,
-      vehicle_type: vehicleType,
-      vehicle_number: vehicleNumber,
-      block: block
+      jsonrpc: '2.0',
+      params : {
+        entry_type: entryType,
+        vehicle_type: vehicleType,
+        vehicle_number: vehicleNumber,
+        block: block
+      }
     };
 
+    console.log("body", body)
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     });
 
-    return this.http.post(this.apiUrl, body, { headers });
+    return this.http.post(this.apiUrl, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Tambahkan error handler
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    
+    // Log detail error
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      console.error('Client-side error:', error.error.message);
+    } else {
+      // Server-side error
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`
+      );
+    }
+
+    // Kembalikan error yang dapat di-subscribe
+    return throwError(() => new Error('Something went wrong; please try again later.'));
   }
 }

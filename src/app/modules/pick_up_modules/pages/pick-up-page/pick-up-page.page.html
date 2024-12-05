@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col items-center w-1/4">
+          <div class="flex flex-col items-center w-28">
             <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('taxi')" [ngClass]="{'bg-[var(--ion-color-primary)]': valTaxi, 'bg-[#D0D0D0]': !valTaxi}">
               <fa-icon [icon]="faTaxi" class="text-[#ffffff]"></fa-icon>
             </button>
@@ -51,7 +51,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col items-center w-1/4">
+          <div class="flex flex-col items-center w-28">
             <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('car')" [ngClass]="{'bg-[var(--ion-color-primary)]': valCar, 'bg-[#D0D0D0]': !valCar}">
                 <ion-icon name="car-sport-outline" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
             </button>
@@ -63,7 +63,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col items-center w-1/4">
+          <div class="flex flex-col items-center w-28">
             <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('bike')" [ngClass]="{'bg-[var(--ion-color-primary)]': valBike, 'bg-[#D0D0D0]': !valBike}">
               <fa-icon [icon]="faMotorcycle" class="text-[#ffffff]"></fa-icon>
             </button>
@@ -78,19 +78,43 @@
         </div>
         <div class="w-full mt-5">
           <div class="w-full">
-            <app-text-input [id]="'pick_up_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+            <app-text-input 
+              #vehicleNumberInput
+              [id]="'pick_up_vhcnum'" 
+              [placeholder]="'Vehicle Number'" 
+              [customClasses]="{'w-full':true}" 
+              [type]="'text'" 
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"
+              (valueChange)="onVehicleNumberChange($event)"
+            ></app-text-input>
           </div>
           <div class="w-full">
-            <app-text-input [id]="'pick_up_location'" [placeholder]="'Location (BLK / PICK UP POINT)'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+            <app-text-input 
+              #locationInput
+              [id]="'pick_up_location'" 
+              [placeholder]="'Location (BLK / PICK UP POINT)'" 
+              [customClasses]="{'w-full':true}" 
+              [type]="'text'" 
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"
+              (valueChange)="onVehicleBlkChange($event)"
+            ></app-text-input>
           </div>
         </div>
         
         <div class="w-full mt-5">
           <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"></app-visitor-button>
+            <app-visitor-button 
+              [text]="'SAVE RECORD & OPEN BARRIER'" 
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"
+              (click)="saveRecord(true)"
+            ></app-visitor-button>
           </div>
           <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"></app-visitor-button>
+            <app-visitor-button 
+              [text]="'SAVE RECORD ONLY'" 
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'"
+              (click)="saveRecord(false)"
+            ></app-visitor-button>
           </div>
         </div>
         

@@ -9,6 +9,7 @@ export class VisitorInputComponent  implements OnInit {
 
   @Input() placeholder: string='';
   @Input() extraClass: string='';
+  @Input() value: string='';
   
   constructor() { }
 

@@ -1,5 +1,5 @@
 .header {
-    background-color: #d3f8d3;
+    background-color: #D8ECCF;
     padding: 10px 20px 10px;
     text-align: center;
     border-bottom-left-radius: 25px;
@@ -21,9 +21,14 @@
     background-color: #10421d;
     border-radius: 100%;
     color: white;
+    min-height: 32px;
     height: 32px;
     width: 32px;
 }
 .icon ion-icon {
     color: white;
+}
+
+td, th {
+    padding:0 4px;
 }

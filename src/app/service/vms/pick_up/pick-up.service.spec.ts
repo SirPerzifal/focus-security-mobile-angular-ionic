@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PickUpService } from './pick-up.service';
+import { VmsServicePickUp } from './pick-up.service';
 
 describe('PickUpService', () => {
-  let service: PickUpService;
+  let service: VmsServicePickUp;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PickUpService);
+    service = TestBed.inject(VmsServicePickUp);
   });
 
   it('should be created', () => {

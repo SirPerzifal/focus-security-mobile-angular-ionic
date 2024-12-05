@@ -32,9 +32,28 @@
           <div class="max-w-[80%]">
             <div class="bg-[#A3D9A5] text-white py-1 px-2 rounded-md font-bold inline-block">{{ booking.status }}</div>
             <h2 class="text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
-            <p class="text-black">Event Date : {{ booking.eventDate }}</p>
+            <div class="text-black text-xs">
+              <table>
+                <tr class="h-1">
+                  <td >Event Date</td>
+                  <td>:</td>
+                  <td>{{ booking.eventDate }}</td>
+                </tr>
+                <tr class="h-1">
+                  <td>Booked By</td>
+                  <td>:</td>
+                  <td>{{ booking.bookedBy }}</td>
+                </tr>
+                <tr class="h-1">
+                  <td>Deposit Status</td>
+                  <td>:</td>
+                  <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</td>
+                </tr>
+              </table>
+            </div>
+            <!-- <p class="text-black">Event Date : {{ booking.eventDate }}</p>
             <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
-            <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p>
+            <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p> -->
           </div>
           <ion-button class="flex flex-row justify-center items-center absolute right-16 icon" fill="clear" (click)="toDetail(booking)">
             <div class="flex flex-col items-center text-black">

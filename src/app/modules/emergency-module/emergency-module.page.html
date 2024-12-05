@@ -14,7 +14,7 @@
     <div class="flex flex-row mt-8">
       <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [routerLink]="['/home-vms']" [disableClick]="true" />
     </div>
-    <div class="flex mt-[20px] w-full justify-between">
+    <div class="flex mt-5 flex-rowspace-x-4 space-x-7 w-full">
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/Ambulance.webp'" [isActive]="showAmbulance" [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()"/>
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/Police.webp'" [isActive]="showPolice" [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'POLICE'" [disableClick]="true" (click)="toggleShowPolice()"/>
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/SCDF.webp'" [isActive]="showSCDF" [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()"/>
@@ -46,10 +46,10 @@
         </select>
       </div>
       <div class="w-full mb-3">
-        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)] text-white font-bold text-xs" [routerLink]="['/home-vms']">
           SAVE RECORD & OPEN BARRIER
         </ion-button>
-        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)] text-white font-bold text-xs" [routerLink]="['/home-vms']">
           SAVE RECORD ONLY
         </ion-button>
       </div>
@@ -88,10 +88,10 @@
         </select>
       </div>
       <div class="w-full mb-3">
-        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)] text-white font-bold text-xs" [routerLink]="['/home-vms']">
           SAVE RECORD & OPEN BARRIER
         </ion-button>
-        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" [routerLink]="['/home-vms']">
+        <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)] text-white font-bold text-xs" [routerLink]="['/home-vms']">
           SAVE RECORD ONLY
         </ion-button>
       </div>

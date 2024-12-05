@@ -64,7 +64,7 @@
 									<h2 class="text-lg font-bold text-gray-800">
 										{{ invite.name }}
 									</h2>
-									<p class="text-gray-800 text-xs">
+									<!-- <p class="text-gray-800 text-xs">
 										Date of Invite: {{ invite.dateOfInvite }}
 									</p>
 									<p class="text-gray-800 text-xs">
@@ -72,7 +72,26 @@
 									</p>
 									<p class="text-gray-800 text-xs">
 										Type of Entry: {{ invite.entryType }}
-									</p>
+									</p> -->
+									<div>
+										<table>
+											<tr class="text-xs text-gray-800 h-1">
+											  <td >Date of Invite</td>
+											  <td>:</td>
+											  <td>{{invite.dateOfInvite}}</td>
+											</tr>
+											<tr class="text-xs text-gray-800 h-1">
+											  <td>Vehicle No</td>
+											  <td>:</td>
+											  <td>{{invite.vehicleNo}}</td>
+											</tr>
+											<tr class="text-xs text-gray-800 h-1">
+											  <td>Type of Entry</td>
+											  <td>:</td>
+											  <td>{{invite.entryType}}</td>
+											</tr>
+										  </table>
+									</div>
 								</div>
 								<ion-button 
 									(click)="presentCustomAlert('Cancel Invite', 'Cancel', 'Confirm', invite)"

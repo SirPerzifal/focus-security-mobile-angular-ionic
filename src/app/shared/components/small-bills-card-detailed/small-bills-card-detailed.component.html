@@ -15,7 +15,26 @@
         <div>
           {{desc_title}}
         </div>
-        <div *ngIf="vehicle_no">
+        <div class="text-black">
+          <table>
+            <tr *ngIf="vehicle_no" class="h-1">
+              <td >Vehicle No</td>
+              <td>:</td>
+              <td>{{vehicle_no}}</td>
+            </tr>
+            <tr class="h-1">
+              <td>Date of Violation</td>
+              <td>:</td>
+              <td>{{violation_date}}</td>
+            </tr>
+            <tr *ngIf="paid_on" class="h-1">
+              <td>Paid On</td>
+              <td>:</td>
+              <td>{{paid_on}}</td>
+            </tr>
+          </table>
+        </div>
+        <!-- <div *ngIf="vehicle_no">
           Vehicle No: {{vehicle_no}}
         </div>
         <div>
@@ -23,7 +42,7 @@
         </div>
         <div *ngIf="paid_on">
           Paid On: {{paid_on}}
-        </div>
+        </div> -->
       </div>
       
     </div>
