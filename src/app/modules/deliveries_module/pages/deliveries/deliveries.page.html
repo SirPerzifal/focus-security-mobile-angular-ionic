@@ -11,7 +11,7 @@
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-4 flex-rowspace-x-4">
+    <div class="flex mt-4 flex-rowspace-x-4 space-x-7">
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodBar.webp'" [text]="'FOOD DELIVERY'"
         (click)="toggleFoodDeliveries()" [isActive]="buttonStates.foodDeliveries" [disableClick]="true" />
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Package.webp'" [text]="'PACKAGE DELIVERIES'"
@@ -25,7 +25,23 @@
         *ngIf="foodDeliveries" @fadeInOut>
         <div class="w-full mt-4">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="mt-1 grid grid-cols-4 gap-4 justify-items-center w-full">
+          <div class="flex flex-col">
+            <div class="flex mt-4 flex-rowspace-x-4 space-x-7">
+              <div *ngFor="let button of foodDeliveryButtons">
+                <app-button-icon [customImageIcon]="button.image ? button.image : ''"
+                [text]="button.text" [isActive]="button.isActive" [id]="button.id"
+                (buttonClick)="toggleDeliveryButton(button)" />
+              </div>
+            </div>
+            <div class="flex mt-4 flex-rowspace-x-4 space-x-7">
+              <div *ngFor="let deliveriesButton of deliveriesType">
+                <app-button-icon [customImageIcon]="deliveriesButton.image ? deliveriesButton.image : ''"
+                [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''" [text]="deliveriesButton.text" [isActive]="deliveriesButton.isActive"
+                (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" />
+              </div>
+            </div>
+          </div>
+          <!-- <div class="mt-1 grid grid-cols-4 gap-4 justify-items-center w-full">
             <div *ngFor="let button of foodDeliveryButtons" class="flex flex-col items-center">
               <app-button-icon [customImageIcon]="button.image ? button.image : ''"
                 [text]="button.text" [isActive]="button.isActive" [id]="button.id"
@@ -38,7 +54,7 @@
                 [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''" [text]="deliveriesButton.text" [isActive]="deliveriesButton.isActive"
                 (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" />
             </div>
-          </div>
+          </div> -->
           <div class="mt-5 flex flex-col justify-around items-center w-full">
             <div class="w-full mb-3">
               <input id="contact_number" placeholder="CONTACT NUMBER" type="text"
@@ -84,14 +100,20 @@
         *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full mt-4" *ngIf="packageDeliveries" @fadeInOut>
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="mt-1 flex flex-row space-x-7 w-full">
+          <div class="flex mt-4 flex-rowspace-x-4 space-x-7">
+            <div *ngFor="let button of packageDeliveryButtons">
+              <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive" [id]="button.id"
+                  (buttonClick)="toggleDeliveryButton(button)" />
+            </div>
+          </div>
+          <!-- <div class="mt-1 flex flex-row space-x-7 w-full">
             <div class="mt-1 grid grid-cols-4 gap-4 justify-items-center w-full">
               <div *ngFor="let button of packageDeliveryButtons" class="flex flex-col items-center">
                 <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive" [id]="button.id"
                   (buttonClick)="toggleDeliveryButton(button)" />
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="mt-8 flex flex-col justify-between items-center w-full">
             <div class="w-full mb-3">
               <input id="contact_number" placeholder="CONTACT NUMBER" type="text"
@@ -103,7 +125,7 @@
                 class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-xs h-10"
                 [(ngModel)]="formData.vehicle_number" name="vehicle_number">
             </div>
-            <div class="w-full flex mb-3 justify-between">
+            <div class="w-full flex mb-3 gap-x-8">
               <div class="flex items-center me-4">
                 <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
                   (change)="onUnitTypeChange('multiple')"
@@ -129,17 +151,32 @@
                 <option value="Block 4">BLOCK 4</option>
               </select>
             </div>
-            <div class="w-full mb-3" *ngIf="showUnit" @fadeInOut>
-              <form class="max-w-sm mx-auto">
-                <select id="deliveries_unit"
+            <div class="w-full mb-3" *ngIf="showPax" @fadeInOut>
+              <form class="mx-auto">
+                <select id="number_pax"
                 class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
-                [(ngModel)]="formData.unit" name="unit">
+                [(ngModel)]="formData.pax" name="pax">
+                <option value="0" selected hidden>Number of Pax</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+              </form>
+            </div>
+            <div class="w-full mb-3" *ngIf="showUnit" @fadeInOut>
+              <select id="deliveries_unit"
+              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
+              [(ngModel)]="formData.unit" name="unit">
                 <option value="Unit 1">UNIT 1</option>
                 <option value="Unit 2">UNIT 2</option>
                 <option value="Unit 3">UNIT 3</option>
                 <option value="Unit 4">UNIT 4</option>
               </select>
-              </form>
             </div>
             <div class="w-full mb-3" *ngIf="showRemarks" @fadeInOut>
               <textarea id="remarks" rows="4"

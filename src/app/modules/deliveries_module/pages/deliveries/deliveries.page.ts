@@ -55,6 +55,7 @@ export class DeliveriesPage implements OnInit {
     }, 
     block: 'Block 1', 
     unit: 'Unit 1',
+    pax:'0'
   };
 
   getFoodPlatform() {
@@ -342,24 +343,28 @@ export class DeliveriesPage implements OnInit {
   showBlock: boolean = false; // To control the visibility of the block dropdown
   showUnit: boolean = false; // To control the visibility of the unit dropdown
   showRemarks: boolean = false; // To control the visibility of the remarks text area
+  showPax:boolean=false;
 
   onUnitTypeChange(unitType: string) {
     this.selectedUnitType = unitType;
 
     if (unitType === 'multiple') {
       this.showBlock = false; // Show block dropdown for multiple units
-      this.showUnit = true; // Show unit dropdown for multiple units
+      this.showUnit = false; // Show unit dropdown for multiple units
       this.showRemarks = true; // Show remarks text area for multiple units
+      this.showPax = true
       this.package_delivery_type = 'multiple'
     } else if (unitType === 'single') {
       this.showBlock = true; // Hide block dropdown for single unit
       this.showUnit = true; // Show unit dropdown for single unit
       this.showRemarks = false; // Hide remarks text area for single unit
+      this.showPax = false
       this.package_delivery_type = 'single'
     } else {
       this.showBlock = false; // Hide both if nothing is selected
       this.showUnit = false;
       this.showRemarks = false; // Hide remarks text area
+      this.showPax = false
       this.package_delivery_type = ''
     }
   }

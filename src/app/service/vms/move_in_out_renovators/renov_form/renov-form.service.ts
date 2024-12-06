@@ -41,6 +41,7 @@ export class RenovFormService extends ApiService {
     };
 
     console.log("Request Body:", body);
+    console.log("SubCon:", subContractors);
     
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

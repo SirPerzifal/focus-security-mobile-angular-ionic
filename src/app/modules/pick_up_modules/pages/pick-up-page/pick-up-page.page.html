@@ -17,14 +17,14 @@
         <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       </div>
     </div>
-    <div id="entry_type" class="flex flex-row justify-start mt-8">
+    <div id="entry_type" class="flex flex-row justify-start mt-8 ml-4">
       <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] text-white w-24 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()"></app-visitor-button>
-      <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-secondary)] text-white w-24 ml-2 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
+      <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-primary)] text-white w-24 ml-2 text-sm' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
     </div>
     <div class="mt-7 flex flex-row">
       <div class="flex flex-col h-72 w-full" *ngIf="showForm" @fadeInOut>
-        <div id="vehicle_type" class="flex flex-row justify-start items-start">
-          <div class="flex flex-col items-center w-1/4">
+        <div id="vehicle_type" class="flex flex-row">
+          <div class="flex flex-col items-center w-28">
             <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('phv')" [ngClass]="{'bg-[var(--ion-color-primary)]': valPhv, 'bg-[#D0D0D0]': !valPhv}">
               <img
               alt="Grab"
@@ -76,6 +76,59 @@
             </div>
           </div>
         </div>
+        <!-- <div id="vehicle_type" class="flex flex-row justify-start items-start">
+          <div class="flex flex-col items-center w-1/4">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('phv')" [ngClass]="{'bg-[var(--ion-color-primary)]': valPhv, 'bg-[#D0D0D0]': !valPhv}">
+              <img
+              alt="Grab"
+              src="assets/icon/pick_up-page/Grab_Outline.png" />
+                <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>PHV VEHICLE</b>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-28">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('taxi')" [ngClass]="{'bg-[var(--ion-color-primary)]': valTaxi, 'bg-[#D0D0D0]': !valTaxi}">
+              <fa-icon [icon]="faTaxi" class="text-[#ffffff]"></fa-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>TAXI</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-28">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('car')" [ngClass]="{'bg-[var(--ion-color-primary)]': valCar, 'bg-[#D0D0D0]': !valCar}">
+                <ion-icon name="car-sport-outline" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>PRIVATE CAR</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center w-28">
+            <button id="shadow_back" class="w-12 h-12 rounded-xl" (click)="useVehicle('bike')" [ngClass]="{'bg-[var(--ion-color-primary)]': valBike, 'bg-[#D0D0D0]': !valBike}">
+              <fa-icon [icon]="faMotorcycle" class="text-[#ffffff]"></fa-icon>
+            </button>
+            <div class="text-[10px] mt-1">
+              <div class="text-xs flex flex-col items-center">
+                <div>
+                  <b>MOTORBIKE</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
         <div class="w-full mt-5">
           <div class="w-full">
             <app-text-input 

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MoveFormService } from 'src/app/service/vms/move_in_out_renovators/move_form/move-form.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-move-form',
@@ -26,7 +27,8 @@ export class MoveFormPage implements OnInit {
     private route: ActivatedRoute,
     private moveFormService: MoveFormService,
     private toastController: ToastController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -57,6 +59,8 @@ export class MoveFormPage implements OnInit {
     this.paxCount = parseInt(event.target.value, 10);
     // Reset pax data
     this.paxData = [];
+    // Kumpulkan data pax setelah mengubah paxCount
+    this.collectPaxData();
   }
 
   // Ambil nilai dari input
@@ -79,9 +83,12 @@ export class MoveFormPage implements OnInit {
   collectPaxData() {
     this.paxData = [];
     for (let i = 0; i < this.paxCount; i++) {
+      const name = this.getInputValue(`name_pax_${i}`);
+      const nric = this.getInputValue(`nric_fin_pax_${i}`);
+      console.log(`Pax ${i}: Name = ${name}, NRIC = ${nric}`); // Tambahkan log ini
       this.paxData.push({
-        contractor_name: this.getInputValue(`name_pax_${i}`),
-        identification_number: this.getInputValue(`nric_fin_pax_${i}`)
+        contractor_name: name,
+        identification_number: nric
       });
     }
   }
@@ -104,11 +111,21 @@ export class MoveFormPage implements OnInit {
     });
     await loading.present();
 
-    // Pastikan Anda mengumpulkan semua data yang diperlukan
+    // Kumpulkan data pax sebelum menggunakan subContractors
+    this.collectPaxData();
+
     const subContractors = this.paxData.map(pax => ({
-      contractor_name: pax.name,
-      identification_number: pax.nric
+      contractor_name: pax.contractor_name, // Pastikan ini sesuai dengan nama property yang benar
+      identification_number: pax.identification_number // Pastikan ini sesuai dengan nama property yang benar
     }));
+
+    console.log("subcon", subContractors);
+    console.log("paxdata", this.paxData);
+
+    if (!subContractors.length) {      
+      console.log("No subcontractors found");
+      return;
+    }
   
     this.moveFormService.addSchedule(
       this.getInputValue('contractor_name'),
@@ -126,11 +143,14 @@ export class MoveFormPage implements OnInit {
         if (response.result.status_code === 200) {
           this.presentToast('Schedule added successfully', 'success');
           loading.dismiss();
+          this.router.navigate(['home-vms'])
           
           if (openBarrier) {
             // Logika membuka barrier
             console.log('Membuka barrier');
+            this.presentToast('Schedule added successfully dan Membuka barrier', 'success');
             loading.dismiss();
+            this.router.navigate(['home-vms'])
           }
         } else {
           this.presentToast(response.result.status_description, 'danger');

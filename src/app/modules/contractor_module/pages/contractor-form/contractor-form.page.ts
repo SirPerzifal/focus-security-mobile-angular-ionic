@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ContractorsService } from 'src/app/service/vms/contrantors/contractors.service';
 @Component({
@@ -21,7 +22,8 @@ export class ContractorFormPage implements OnInit {
 
   constructor(
     private contractorService: ContractorsService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -96,6 +98,10 @@ export class ContractorFormPage implements OnInit {
         next: (response: any) => {
           if (response.result.status_code === 200) {
             this.presentToast('Berhasil menyimpan data contractor', 'success');
+            this.router.navigate(['home-vms'])
+
+            console.log(this.selectedBlock)
+            console.log(this.selectedUnit)
             
             // Reset form
             this.resetForm();
@@ -103,6 +109,11 @@ export class ContractorFormPage implements OnInit {
             // Tambahkan logika untuk membuka barrier jika openBarrier true
             if (openBarrier) {
               console.log('Membuka barrier');
+              this.presentToast('Berhasil menyimpan data contractor dan Membuka barrier', 'success');
+              this.router.navigate(['home-vms'])
+
+              console.log(this.selectedBlock)
+              console.log(this.selectedUnit)
             }
           } else {
             this.presentToast('Gagal menyimpan data', 'danger');

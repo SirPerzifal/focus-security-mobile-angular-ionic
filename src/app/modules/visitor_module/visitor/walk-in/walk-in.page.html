@@ -12,15 +12,15 @@
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex flex-row justify-between mt-8">
+    <div class="flex flex-row mt-8">
       <app-visitor-button [text]="'PRE REGISTERED'"
-        [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
         (click)="toggleShowQr()"></app-visitor-button>
       <app-visitor-button [text]="'WALK IN'"
-        [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
         (click)="toggleShowWalk()"></app-visitor-button>
       <app-visitor-button [text]="'DRIVE IN'"
-        [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
+        [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
         (click)="toggleShowDrive()"></app-visitor-button>
     </div>
 
@@ -45,12 +45,6 @@
               [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
             </div>
             <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
-          </div>
-          <div class="w-full">
-            <input id="walk_in_vehicle" placeholder="VEHICLE NUMBER"
-              type="text"
-              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-full"
-            [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
           </div>
           <div class="w-full">
             <select id="walk_in_block"

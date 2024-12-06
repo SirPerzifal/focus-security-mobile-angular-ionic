@@ -34,7 +34,7 @@ export class WalkInPage implements OnInit {
 
   onSubmitDriveIn() {
     console.log(this.formData)
-    this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit).subscribe(
+    this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', '', this.formData.block, this.formData.unit).subscribe(
       res => {
         console.log(res);
       },

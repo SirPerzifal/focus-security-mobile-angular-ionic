@@ -4,8 +4,7 @@ import { faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
 import { VmsServicePickUp } from 'src/app/service/vms/pick_up/pick-up.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController } from '@ionic/angular';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -61,7 +60,8 @@ export class PickUpPagePage implements OnInit {
   constructor(
     private vmsService: VmsServicePickUp,
     private toastController: ToastController,
-    private userApi: UserService
+    private userApi: UserService,
+    private router: Router
   ) { }
 
   toggleShowPick() {
@@ -157,11 +157,14 @@ export class PickUpPagePage implements OnInit {
             this.locationInput.value = '';
             this.selectedVehicleType = '';
             this.resetVehicleSelection();
-  
+            
+            this.router.navigate(['home-vms'])
             // Tambahkan logika untuk membuka barrier jika openBarrier true
             if (openBarrier) {
               // Implementasi logika membuka barrier
               console.log('Membuka barrier');
+              this.presentToast('Berhasil menyimpan data dan Membuka barrier', 'success');
+              this.router.navigate(['home-vms'])
             }
           } else {
             this.presentToast('Gagal menyimpan data', 'danger');
