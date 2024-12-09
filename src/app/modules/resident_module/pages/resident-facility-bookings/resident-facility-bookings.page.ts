@@ -108,6 +108,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
   //     duration: 2000,
   //     position: 'bottom'
   //   });
-  //   toast.present();
+  //   
+  // toast.present(0)
   // }
 }

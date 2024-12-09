@@ -12,4 +12,8 @@ export class UnregisteredResidentCarPage implements OnInit {
   ngOnInit() {
   }
 
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
+  }
+
 }

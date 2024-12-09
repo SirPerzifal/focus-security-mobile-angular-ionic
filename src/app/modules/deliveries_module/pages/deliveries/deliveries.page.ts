@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { FoodPlatformService } from 'src/app/services/food_platform/food-platform.service';
+import { FoodPlatformService } from 'src/app/service/vms/food_platform/food-platform.service';
+import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-deliveries',
@@ -31,7 +33,7 @@ export class DeliveriesPage implements OnInit {
     { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: 0 },
   ];
 
-  constructor(private foodPlatform: FoodPlatformService) { }
+  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController) { }
 
   package_delivery_type = ""
   food_delivery_type = ""
@@ -55,7 +57,8 @@ export class DeliveriesPage implements OnInit {
     }, 
     block: 'Block 1', 
     unit: 'Unit 1',
-    pax:'0'
+    pax:'0',
+    remarks: ''
   };
 
   getFoodPlatform() {
@@ -93,52 +96,148 @@ export class DeliveriesPage implements OnInit {
     )
   }
 
-  onSubmitFood() {
-    console.log(this.formData)
-    this.foodPlatform.pastAddDeliveries(
-      this.formData.contact_number, 
-      '', 
-      'food' , 
-      this.formData.food_delivery= {
-        id: this.food_delivery_id,
-        other: this.food_delivery_id == 0 ? 'Others Checked' : '',
-        delivery_option: this.food_delivery_type
-      }, 
-      {}, 
-      this.formData.block, 
-      this.formData.unit
-    ).subscribe(
-      res => {
-        console.log(res);
-      },
-      error => {
-        console.error('Error:', error);
-      }
-    );
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
+    });
+    toast.present();
   }
 
-  onSubmitPackage() {
+  onSubmitFood(openBarrier: boolean = false) {
+    console.log(openBarrier)
+    console.log(this.formData)
+    let errMsg = ""
+    if (!this.food_delivery_id){
+      errMsg += 'Please select a delivery platform!\n';
+    }
+    if (!this.food_delivery_type){
+      errMsg += 'Please select a delivery type!\n';
+    }
+    if (!this.formData.contact_number){
+      errMsg += 'Please insert a contact number!\n';
+    }
+    if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number){
+      errMsg += 'Please insert a vehicle number!\n';
+    }
+    if (!this.formData.block || !this.formData.unit){
+      errMsg += 'Please insert a block and unit!\n';
+    }
+    if(errMsg != ""){
+      this.presentToast(errMsg, 'danger')
+      return
+    }
+    try {
+      this.foodPlatform.pastAddDeliveries(
+        this.formData.contact_number, 
+        this.food_delivery_type == 'drive_in' ? this.formData.vehicle_number : '', 
+        'food' , 
+        this.formData.food_delivery= {
+          id: this.food_delivery_id,
+          other: this.food_delivery_id == 0 ? 'Others Checked' : '',
+          delivery_option: this.food_delivery_type
+        }, 
+        {}, 
+        this.formData.block, 
+        this.formData.unit,
+        {}
+      ).subscribe(
+        res => {
+          console.log(res);
+          if (res.result.status_code == 200){
+            if (openBarrier){
+              this.presentToast('Successfully Insert Food Delivery Record and Opened the Barrier', 'success');
+            } else {
+              this.presentToast('Successfully Insert Food Delivery Record', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else {
+            this.presentToast('Failed To Insert Food Delivery Record', 'danger');
+          }
+        },
+        error => {
+          console.error('Error:', error);
+        }
+      );
+    } catch (error){
+      console.error('Unexpected error:', error);
+      this.presentToast(String(error), 'danger');
+    }
+    
+  }
+
+  onSubmitPackage(openBarrier: boolean = false) {
+    console.log(openBarrier)
+    let mutiple_unit = {
+      pax: '0',
+      remarks: ''
+    }
     console.log('PACKAGE')
-    this.foodPlatform.pastAddDeliveries(
-      this.formData.contact_number, 
-      this.formData.vehicle_number, 
-      'package' , 
-      {}, 
-      this.formData.package_delivery= {
-        id: this.package_delivery_id,
-        other: this.package_delivery_id == 0 ? 'Others Checked' : '',
-        delivery_option: this.package_delivery_type
-      }, 
-      this.formData.block, 
-      this.formData.unit
-    ).subscribe(
-      res => {
-        console.log(res);
-      },
-      error => {
-        console.error('Error:', error);
-      }
-    );
+    let errMsg = ""
+    if (!this.package_delivery_id){
+      errMsg += 'Please select a delivery platform!\n';
+    }
+    if (!this.package_delivery_type){
+      errMsg += 'Please select a delivery type!\n';
+    }
+    if (!this.formData.contact_number){
+      errMsg += 'Please insert your contact number!\n';
+    }
+    if (!this.formData.vehicle_number){
+      errMsg += 'Please insert your vehicle number!\n';
+    }
+    if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit)){
+      errMsg += 'Please insert your block and unit!\n';
+    }
+    if (this.package_delivery_type == "multiple" && this.formData.pax == "0"){
+      errMsg += 'Please insert number of Pax!\n';
+    }
+    if(errMsg != ""){
+      this.presentToast(errMsg, 'danger')
+      return
+    }
+    try{
+      this.foodPlatform.pastAddDeliveries(
+        this.formData.contact_number, 
+        this.formData.vehicle_number, 
+        'package' , 
+        {}, 
+        this.formData.package_delivery= {
+          id: this.package_delivery_id,
+          other: this.package_delivery_id == 0 ? 'Others Checked' : '',
+          delivery_option: this.package_delivery_type
+        }, 
+        this.formData.block, 
+        this.formData.unit,
+        mutiple_unit = {
+          pax: this.formData.pax,
+          remarks: this.formData.remarks
+        }
+      ).subscribe(
+        res => {
+          console.log(res);
+          if (res.result.status_code == 200){
+            if (openBarrier){
+              console.log("Barrier Opened")
+              this.presentToast('Successfully Insert Package Delivery Record and Opened the Barrier', 'success');
+            }else {
+              this.presentToast('Successfully Insert Package Delivery Record', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else {
+            this.presentToast('Failed To Insert Package Delivery Record', 'danger');
+          }
+        },
+        error => {
+          console.error('Error:', error);
+        }
+      );
+    } catch (error){
+      console.error('Unexpected error:', error);
+      this.presentToast(String(error), 'danger');
+    }
+    
   }
 
   // Tambahkan objek untuk status aktif tombol
@@ -367,5 +466,9 @@ export class DeliveriesPage implements OnInit {
       this.showPax = false
       this.package_delivery_type = ''
     }
+  }
+
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
   }
 }

@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img
@@ -38,8 +38,11 @@
       <div class="w-full">
         <app-text-input #contractorIdentificationNumberInput [id]="'contractor_identification_number'" [placeholder]="'NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
       </div>
-      <div class="w-full">
-        <app-text-input #contractorVehicleNumberInput [id]="'contractor_vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <div class="w-full flex flex-row justify-between">
+        <div class="w-[90%]">
+          <app-text-input #contractorVehicleNumberInput [id]="'contractor_vehicle_number'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+        </div>
+        <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
       </div> 
       <div class="w-full">
         <app-text-input #contractorCompanyNameInput [id]="'contractor_company_name'" [placeholder]="'Company Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>

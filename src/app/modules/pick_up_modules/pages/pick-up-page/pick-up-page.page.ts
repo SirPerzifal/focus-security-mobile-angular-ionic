@@ -5,7 +5,7 @@ import { VmsServicePickUp } from 'src/app/service/vms/pick_up/pick-up.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user/user.service';
+import { UserService } from 'src/app/service/vms/user/user.service';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -194,9 +194,24 @@ export class PickUpPagePage implements OnInit {
       duration: 2000,
       color: color
     });
-    toast.present();
+    
+    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
+    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+
+    toast.present().then(() => {
+      if (color == 'success'){
+        pingSound.play().catch((err) => console.error('Error playing sound:', err));
+      } else {
+        errorSound.play().catch((err) => console.error('Error playing sound:', err));
+      }
+      
+    });;;
   }
 
   ngOnInit() {
+  }
+
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
   }
 }

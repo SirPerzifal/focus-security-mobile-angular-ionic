@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img alt="Focus Security" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="w-full flex flex-row">
-      <form (ngSubmit)="onSubmitFood()" class="justify-between items-center h-80 w-full" #foodForm="ngForm"
+      <form class="justify-between items-center h-80 w-full" #foodForm="ngForm"
         *ngIf="foodDeliveries" @fadeInOut>
         <div class="w-full mt-4">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
@@ -62,6 +62,12 @@
                 [(ngModel)]="formData.contact_number" name="contact_number">
 
             </div>
+            <div *ngIf="food_delivery_type == 'drive_in'" class="mb-3 w-full flex flex-row justify-between">
+              <input id="vehicle_number" placeholder="VEHICLE NUMBER" type="text"
+              class="border outline-[#DBDBD] w-[90%] rounded py-2 px-3 text-xs h-10"
+              [(ngModel)]="formData.vehicle_number" name="vehicle_number">
+              <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
+            </div>
             <div class="w-full mb-3">
               <select id="deliveries_block"
                 class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
@@ -83,12 +89,10 @@
               </select>
             </div>
             <div class="w-full mb-3">
-              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]"
-              type="submit">
+              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitFood(true)">
                 SAVE RECORD & OPEN BARRIER
               </ion-button>
-              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]"
-                [routerLink]="['/home-vms']">
+              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitFood()">
                 SAVE RECORD ONLY
               </ion-button>
             </div>
@@ -96,7 +100,7 @@
         </div>
       </form>
 
-      <form (ngSubmit)="onSubmitPackage()" class="justify-between items-center h-80 w-full" #packageForm="ngForm"
+      <form class="justify-between items-center h-80 w-full" #packageForm="ngForm"
         *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full mt-4" *ngIf="packageDeliveries" @fadeInOut>
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
@@ -120,10 +124,11 @@
                 class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-xs h-10"
                 [(ngModel)]="formData.contact_number" name="contact_number">
             </div>
-            <div class="w-full mb-3">
+            <div class="w-full mb-3 flex flex-row justify-between">
               <input id="vehicle_number" placeholder="VEHICLE NUMBER" type="text"
-                class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-xs h-10"
+                class="border outline-[#DBDBD] w-[90%] rounded py-2 px-3 text-xs h-10"
                 [(ngModel)]="formData.vehicle_number" name="vehicle_number">
+                <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
             </div>
             <div class="w-full flex mb-3 gap-x-8">
               <div class="flex items-center me-4">
@@ -181,15 +186,14 @@
             <div class="w-full mb-3" *ngIf="showRemarks" @fadeInOut>
               <textarea id="remarks" rows="4"
                 class="bg-transparent border border-[#BDBDBD] text-gray-900 text-sm rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-                placeholder="Enter your remarks here..."></textarea>
+                placeholder="Enter your remarks here..." [(ngModel)]="formData.remarks"></textarea>
             </div>
             <div class="w-full mb-3">
-              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]"
-              type="submit">
+              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitPackage(true)"
+              >
                 SAVE RECORD & OPEN BARRIER
               </ion-button>
-              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]"
-                [routerLink]="['/home-vms']">
+              <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitPackage()">
                 SAVE RECORD ONLY
               </ion-button>
             </div>

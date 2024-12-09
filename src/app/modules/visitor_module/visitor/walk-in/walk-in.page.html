@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img alt="Focus Security" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
@@ -26,10 +26,10 @@
 
     <div class="flex flex-row">
       <div class="mt-8 flex flex-col justify-around items-center h-72 w-full" *ngIf="showQr" @fadeInOut>
-        <img alt="QR" src="assets/img/qr.png" class="w-60 h-60" />
+        <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60" />
       </div>
 
-      <form (ngSubmit)="onSubmitWalkIn()" class="justify-between items-center h-80 w-full" #walkInForm="ngForm"  *ngIf="showWalk" @fadeInOut>
+      <form class="justify-between items-center h-80 w-full" #walkInForm="ngForm"  *ngIf="showWalk" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
           <div class="w-full">
             <input id="walk_in_name" placeholder="NAME"
@@ -68,16 +68,16 @@
           </div>
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
-              type="submit"></app-visitor-button>
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitWalkIn()"
+              ></app-visitor-button>
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitWalkIn(true)"
               ></app-visitor-button>
           </div>
         </div>
       </form>
 
-      <form (ngSubmit)="onSubmitDriveIn()" class="justify-between items-center h-80 w-full" #driveInForm="ngForm"  *ngIf="showDrive" @fadeInOut>
+      <form class="justify-between items-center h-80 w-full" #driveInForm="ngForm"  *ngIf="showDrive" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
           <div class="w-full">
             <input id="drive_in_name" placeholder="NAME"
@@ -94,11 +94,12 @@
             </div>
             <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
           </div>
-          <div class="w-full">
+          <div class="w-full flex flex-row justify-between">
             <input id="drive_in_vehicle" placeholder="VEHICLE NUMBER"
               type="text"
-              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-full"
+              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-[90%]"
             [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
+              <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
           </div>
           <div class="w-full">
             <select id="drive_in_block"
@@ -123,9 +124,9 @@
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
-              type="submit"></app-visitor-button>
+              (click)="onSubmitDriveIn()"></app-visitor-button>
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitDriveIn(true)"
               ></app-visitor-button>
           </div>
         </div>

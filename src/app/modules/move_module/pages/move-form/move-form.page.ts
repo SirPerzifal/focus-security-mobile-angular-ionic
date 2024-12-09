@@ -170,6 +170,21 @@ export class MoveFormPage implements OnInit {
       duration: 2000,
       color: color
     });
-    toast.present();
+    
+    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
+    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+
+    toast.present().then(() => {
+      if (color == 'success'){
+        pingSound.play().catch((err) => console.error('Error playing sound:', err));
+      } else {
+        errorSound.play().catch((err) => console.error('Error playing sound:', err));
+      }
+      
+    });;;
+  }
+
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
   }
 }

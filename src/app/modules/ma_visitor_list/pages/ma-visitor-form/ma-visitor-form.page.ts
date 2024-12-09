@@ -28,4 +28,8 @@ export class MaVisitorFormPage implements OnInit {
     this.showDrive = true;
   }
 
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
+  }
+
 }

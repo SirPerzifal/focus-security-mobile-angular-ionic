@@ -52,4 +52,8 @@ export class CollectionModulePage implements OnInit {
   ngOnInit() {
   }
 
+  refreshVehicle() {
+    console.log("Vehicle Refresh")
+  }
+
 }
