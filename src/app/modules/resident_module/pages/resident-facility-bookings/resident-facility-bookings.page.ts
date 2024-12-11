@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
 
 interface ActiveBooking {
   facilityName: string;
@@ -10,6 +12,15 @@ interface ActiveBooking {
   bookedBy: string;
 }
 
+// Tambahkan interface ini di bagian atas file TypeScript Anda
+interface BookingResponse {
+  facility_name: string;
+  booking_date: string;
+  start_datetime: string;
+  stop_datettime: string;
+  booked_by: string;
+}
+
 @Component({
   selector: 'app-resident-facility-bookings',
   templateUrl: './resident-facility-bookings.page.html',
@@ -17,24 +28,73 @@ interface ActiveBooking {
 })
 export class ResidentFacilityBookingsPage implements OnInit {
   activeBookings: ActiveBooking[] = [];
-
-  constructor(private router:Router, private alertController: AlertController) { }
-
+  unit_id: number = 1;
+  
+  constructor(
+    private router:Router, 
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private facilityBookingsService: FacilityBookingsService
+  ) { }
+  
+  
   ngOnInit() {
     this.loadActiveBookings();
   }
 
   loadActiveBookings() {
-    // Simulasi pengambilan data booking aktif
-    this.activeBookings = [
-      {
-        facilityName: 'Tennis Court 2',
-        eventDate: '26/10/2024',
-        startTime: '06:00pm',
-        endTime: '07:00pm',
-        bookedBy: 'Ashok'
-      }
-    ];
+    this.facilityBookingsService.getFacilityBookingsServices(this.unit_id.toString())
+      .subscribe({
+        next: (response: any) => {
+          if (response.result.response_code === 200) {
+            // Map data dengan tipe yang jelas
+            this.activeBookings = response.result.active_bookings.map((booking: BookingResponse) => ({
+              facilityName: booking.facility_name,
+              eventDate: this.formatDate(booking.booking_date),
+              startTime: this.formatTime(booking.start_datetime),
+              endTime: this.formatTime(booking.stop_datettime),
+              bookedBy: booking.booked_by
+            }));
+            console.log('Mapped Active Bookings:', this.activeBookings);
+          } else {
+            this.presentToast('Failed to load booking data', 'danger');
+            console.error('Error:', response);
+          }
+        },
+        error: (error) => {
+          this.presentToast('Error loading active booking data', 'danger');
+          console.error('Error:', error);
+        }
+      });
+  }
+  
+  // Update format methods untuk menangani variasi format tanggal
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-GB', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      });
+    } catch {
+      return dateString;
+    }
+  }
+  
+  formatTime(dateTimeString: string): string {
+    if (!dateTimeString) return '';
+    try {
+      const date = new Date(dateTimeString);
+      return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    } catch {
+      return dateTimeString;
+    }
   }
   
   toggleShowActBk() {
@@ -111,4 +171,22 @@ export class ResidentFacilityBookingsPage implements OnInit {
   //   
   // toast.present(0)
   // }
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color
+    });
+    
+    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
+    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+
+    toast.present().then(() => {
+      if (color === 'success') {
+        pingSound.play().catch((err) => console.error('Error playing sound:', err));
+      } else {
+        errorSound.play().catch((err) => console.error('Error playing sound:', err));
+      }
+    });
+  }
 }

@@ -1,67 +1,72 @@
 <ion-content [fullscreen]="true">
-	<div class="header fixed top-0">
-		<div class="flex flex-col justify-start">
+	<div class="scrollale-content">
+		<div class="header fixed top-0">
+		  <div class="flex flex-col justify-start">
 			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-		</div>
-		<div class="logo">
+		  </div>
+		  <div class="logo">
 			<h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
+		  </div>
 		</div>
-	</div>
-	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4">
-		<div class="flex flex-row mt-4 justify-between w-full">
+		
+		<!-- CONTENT -->
+		<div class="flex flex-col relative mt-2 mx-4">
+		  <div class="flex flex-row mt-4 justify-between w-full">
 			<app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
 			<app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
 			<app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
 			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
-		</div>
-		
-		<div *ngIf="activeBookings.length > 0; else noActiveBookings" class="flex flex-row w-full">
-			<div id="active_booking" class="bg-green-100 rounded-2xl px-4 py-2 mt-4 w-full">
-				<h2 class="flex text-lg font-bold mb-2 text-green-500 justify-items-center items-center text-center">
-					<ion-icon name="checkmark" class="mr-0.5 bg-green-500 p-1 rounded-full text-white text-[18px]"></ion-icon>
-					Booking Approved
-				</h2>
-				<p class="font-bold text-lg text-black">{{ activeBookings[0].facilityName }}</p>
-				<div class="table w-full">
-					<div class="table-row">
-						<p class="font-bold table-cell text-sm text-black">Event Date</p>
-						<p class="ml-2 table-cell text-sm text-black">: {{ activeBookings[0].eventDate }}</p>
-					</div>
-					<div class="table-row">
-						<p class="font-bold table-cell text-sm text-black">Booking Start Time</p>
-						<p class="ml-2 table-cell text-sm text-black">: {{ activeBookings[0].startTime }}</p>
-					</div>
-					<div class="table-row">
-						<p class="font-bold table-cell text-sm text-black">Booking End Time</p>
-						<p class="ml-2 table-cell text-sm text-black">: {{ activeBookings[0].endTime }}</p>
-					</div>
-					<div class="table-row">
-						<p class="font-bold table-cell text-sm text-black">Booked By</p>
-						<p class="ml-2 table-cell text-sm text-black">: {{ activeBookings[0].bookedBy }}</p>
-					</div>
+		  </div>
+		  
+		  <!-- Tampilkan daftar booking aktif -->
+		  <div *ngIf="activeBookings.length > 0; else noActiveBookings">
+			<div *ngFor="let booking of activeBookings; let i = index" 
+				 class="bg-green-100 rounded-2xl px-4 py-2 mt-4 w-full">
+			  <h2 class="flex text-lg font-bold mb-2 text-green-500 justify-items-center items-center text-center">
+				<ion-icon name="checkmark" class="mr-0.5 bg-green-500 p-1 rounded-full text-white text-[18px]"></ion-icon>
+				Booking Approved
+			  </h2>
+			  <p class="font-bold text-lg text-black">{{ booking.facilityName }}</p>
+			  <div class="table w-full">
+				<div class="table-row">
+				  <p class="font-bold table-cell text-sm text-black">Event Date</p>
+				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.eventDate }}</p>
 				</div>
-				<div class="flex justify-between mt-2">
-					<ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black">
-						<ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-1 rounded-full text-white text-[18px]"></ion-icon>
-						Add to Calendar
-					</ion-button>
-					<ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black" (click)="cancelBooking()">
-						<ion-icon name="close-outline" class="mr-0.5 bg-red-400 p-1 rounded-full text-white text-[18px]"></ion-icon>
-						Cancel Booking
-					</ion-button>
+				<div class="table-row">
+				  <p class="font-bold table-cell text-sm text-black">Booking Start Time</p>
+				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.startTime }}</p>
 				</div>
+				<div class="table-row">
+				  <p class="font-bold table-cell text-sm text-black">Booking End Time</p>
+				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.endTime }}</p>
+				</div>
+				<div class="table-row">
+				  <p class="font-bold table-cell text-sm text-black">Booked By</p>
+				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.bookedBy }}</p>
+				</div>
+			  </div>
+			  <div class="flex justify-between mt-2">
+				<ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black">
+				  <ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-1 rounded-full text-white text-[18px]"></ion-icon>
+				  Add to Calendar
+				</ion-button>
+				<ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black" (click)="cancelBooking()">
+				  <ion-icon name="close-outline" class="mr-0.5 bg-red-400 p-1 rounded-full text-white text-[18px]"></ion-icon>
+				  Cancel Booking
+				</ion-button>
+			  </div>
 			</div>
-		</div>
-
-		<ng-template #noActiveBookings>
+		  </div>
+	  
+		  <ng-template #noActiveBookings>
 			<div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
-				<p class="text-gray-600">You have no active bookings.....</p>
-				<p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
-				<p class="text-gray-600"><strong><a routerLink="/facility-new-booking">Click Here</a></strong> to make a new booking now.</p>
+			  <p class="text-gray-600">You have no active bookings.....</p>
+			  <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
+			  <p class="text-gray-600"><strong><a routerLink="/facility-new-booking">Click Here</a></strong> to make a new booking now.</p>
 			</div>
-		</ng-template>
+		  </ng-template>
+		</div>
 	</div>
-	<!-- ############################### -->
+  
 	<app-bottom-nav-bar></app-bottom-nav-bar>
-</ion-content>
+  </ion-content>

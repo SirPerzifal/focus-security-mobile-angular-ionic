@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
   // protected readonly baseUrl = 'https://isanago.sgeede.com';
-  protected readonly baseUrl = 'http://192.168.1.144:8069';
+  protected readonly baseUrl = 'http://0.0.0.0:8017';
 
   constructor(protected http: HttpClient) {}
 }

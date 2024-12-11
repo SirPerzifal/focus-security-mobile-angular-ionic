@@ -198,6 +198,10 @@ const routes: Routes = [
     path: 'my-vehicle-form',
     loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-form/my-vehicle-form.module').then( m => m.MyVehicleFormPageModule)
   },
+  {
+    path: 'my-vehicle-detail',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-detail/my-vehicle-detail.module').then( m => m.MyVehicleDetailPageModule)
+  },
 ];
 
 @NgModule({
