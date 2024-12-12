@@ -202,6 +202,22 @@ const routes: Routes = [
     path: 'my-vehicle-detail',
     loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-detail/my-vehicle-detail.module').then( m => m.MyVehicleDetailPageModule)
   },
+  {
+    path: 'vehicle-records-page',
+    loadChildren: () => import('./modules/vehicle_records_module/pages/vehicle-records-page/vehicle-records-page.module').then( m => m.VehicleRecordsPagePageModule)
+  },
+  {
+    path: 'visitor-records',
+    loadChildren: () => import('./modules/visitor_records_module/pages/visitor-records/visitor-records.module').then( m => m.VisitorRecordsPageModule)
+  },
+  {
+    path: 'visitor-record-detail',
+    loadChildren: () => import('./modules/visitor_records_module/pages/visitor-record-detail/visitor-record-detail.module').then( m => m.VisitorRecordDetailPageModule)
+  },
+  {
+    path: 'alert-main',
+    loadChildren: () => import('./modules/alert_module/pages/alert-main/alert-main.module').then( m => m.AlertMainPageModule)
+  },
 ];
 
 @NgModule({

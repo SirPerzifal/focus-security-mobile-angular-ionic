@@ -1,0 +1,95 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    <div class="flex flex-row mt-8">
+      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
+        VISITOR RECORDS
+      </ion-button>
+      <!-- <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" /> -->
+    </div>
+    <div class="flex flex-row mt-8">
+      <button @fadeInOut *ngIf="!showSearch" class="h-10 rounded-md text-center align-middle font-bold text-md" [ngClass]="show48Hrs ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'" (click)="toggleShow48Hrs()">
+        48Hrs
+      </button>
+      <button @fadeInOut *ngIf="!showSearch" class="h-10 rounded-md text-center align-middle font-bold text-md" [ngClass]="show24Hrs ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'" (click)="toggleShow24Hrs()">
+        24Hrs
+      </button>
+      <button @fadeInOut *ngIf="!showSearch" class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="showSearch ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowSearch()">
+        SEARCH
+      </button>
+      <button @fadeInOut *ngIf="showSearch" class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="walkIn ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleWalkIn()">
+        WALK-IN
+      </button>
+      <button @fadeInOut *ngIf="showSearch" class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="driveIn ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleDriveIn()">
+        DRIVE-IN
+      </button>
+    </div>
+
+    <div @fadeInOut class="flex flex-col" *ngIf="!showSearch">
+      <div *ngFor="let record of vehicleRecords" class="move_in_box flex flex-col mt-[50px] self-start rounded-xl border-2 border-[var(--ion-color-primary)] w-[100%] h-[180px] p-[10px] bg-[var(--ion-color-primary)] overflow-scroll scrollbar overflow-x-hidden">
+        <div class="flex flex-col ml-3 gap-y-3 text-white text-[18px]">
+          <table>
+            <tr class="h-9">
+              <td class="w-[15%]">Vehicle</td>
+              <td>:</td>
+              <td>{{record.vehicle}}</td>
+            </tr>
+            <tr class="h-9">
+              <td class="w-[15%]">Purpose</td>
+              <td>:</td>
+              <td>{{record.purpose}}</td>
+            </tr>
+            <tr class="h-9">
+              <td class="w-[15%]">Entry</td>
+              <td>:</td>
+              <td>{{record.entry}}</td>
+            </tr>
+            <tr class="h-9">
+              <td class="w-[15%]">Exit</td>
+              <td>:</td>
+              <td>{{record.exit}}</td>
+            </tr>
+          </table>
+          <!-- <span class="text-[18px]"><b>Renovations</b></span>
+          <span class="text-[18px]"><b>Renovations</b></span>
+          <span class="text-[18px]"><b>Renovations</b></span>
+          <span class="text-[18px]"><b>Renovations</b></span> -->
+        </div>
+      </div>
+    </div>
+    <div @fadeInOut class="flex flex-col" *ngIf="showSearch">
+      <div class="flex ml-5 mt-12 flex-row gap-x-8 w-full">
+        <div *ngIf="walkIn">
+          <input type="radio" name="SelectedIdentification" id="name_identification" value="name" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
+          <label for="name">Name</label>
+        </div>
+        <div *ngIf="driveIn">
+          <input  type="radio" name="SelectedIdentification" id="vehicle_identification" value="vehicle" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
+          <label for="vehicle">Vehicle No</label>
+        </div>
+        <div>
+          <input type="radio" name="SelectedIdentification" id="contact_identification" value="contact" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
+          <label for="contact">Contact No.</label>
+        </div>
+      </div>
+      <div class="flex flex-row justify-center w-full gap-x-6 mt-4">
+        <div *ngIf="walkIn" class="w-4/6">
+          <app-text-input [id]="'search_by_visitor_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [isReadonly]="!isSearchTypeSelected"></app-text-input>
+        </div>
+        <div *ngIf="driveIn" class="w-4/6">
+          <app-text-input [id]="'search_by_vehicle_no_drive_in'" [placeholder]="'VEHICLE NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [isReadonly]="!isSearchTypeSelected"></app-text-input>
+        </div>
+        <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-md rounded-md" [routerLink]="['/visitor-record-detail']" [queryParams]="{ driveIn, walkIn }">SEARCH</button>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

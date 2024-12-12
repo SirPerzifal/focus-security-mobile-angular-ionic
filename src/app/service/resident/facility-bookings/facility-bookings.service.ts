@@ -14,7 +14,7 @@ export class FacilityBookingsService extends ApiService {
     super(http);
   }
 
-  getFacilityBookingsServices(unit_id: string): Observable<any> {
+  getActiveFacilityBookingsServices(unit_id: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'

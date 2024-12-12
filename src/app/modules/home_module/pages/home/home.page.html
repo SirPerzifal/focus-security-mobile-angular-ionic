@@ -2,13 +2,13 @@
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img
-      alt="Focus Security"
+      alt="IFS360"
       src="assets/img/focus_logo-removebg.png"
       class="object-contain w-full h-full"
     />
   </div>
   <div class="mt-3 flex flex-col items-center justify-center text-center">
-    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>FOCUS SECURITY</b></span>
+    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
     <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
   </div>
   <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
@@ -27,15 +27,15 @@
   </div>
   <div class="bottom-0 w-full p-4 justify-items-end">
     <div class="grid grid-cols-2">
-      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/vehicle-records-page']">
         VEHICLE RECORDS
       </ion-button>
-      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]">
+      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/visitor-records']">
         VISITOR RECORDS
       </ion-button>
     </div>
     <div class="relative w-full mt-4">
-      <ion-button expand="block" fill="clear" class="w-full fsh-alert-button bg-[red] text-[var(--ion-color-medium-contrast)]">
+      <ion-button expand="block" fill="clear" class="w-full fsh-alert-button bg-[red] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/alert-main']">
         ALERTS
       </ion-button>
       <span class="fsh-badge-button bg-[var(--ion-color-danger)]">

@@ -5,6 +5,7 @@
     [type]="type" 
     [placeholder]="placeholder" 
     [(ngModel)]="value"
-    (keyup)="onKeyUp($event)" 
+    (keyup)="onKeyUp($event)"
+    [readonly]="isReadonly" 
   />
 </div>

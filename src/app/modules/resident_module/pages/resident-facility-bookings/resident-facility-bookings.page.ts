@@ -43,7 +43,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
   }
 
   loadActiveBookings() {
-    this.facilityBookingsService.getFacilityBookingsServices(this.unit_id.toString())
+    this.facilityBookingsService.getActiveFacilityBookingsServices(this.unit_id.toString())
       .subscribe({
         next: (response: any) => {
           if (response.result.response_code === 200) {

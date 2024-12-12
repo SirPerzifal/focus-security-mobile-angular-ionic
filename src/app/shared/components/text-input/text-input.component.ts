@@ -12,6 +12,7 @@ export class TextInputComponent  implements OnInit {
   @Input() customClasses: {[key:string]:boolean} = {};
   @Input() customInputClasses: {[key:string]:boolean} = {};
   @Input() id: string = '';
+  @Input() isReadonly: boolean = false;
 
   // Tambahkan decorator @Output untuk value
   @Output() valueChange = new EventEmitter<string>();
