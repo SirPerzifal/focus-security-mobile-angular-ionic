@@ -1,20 +1,25 @@
-<div [class]="banned ? 'bg-red-400 p-4 rounded-lg flex justify-between items-center w-full mb-2' : 'bg-green-100 p-4 rounded-lg flex justify-between items-center w-full mb-2'">
+<div [class]="historyData.banned ? 'bg-red-400 p-4 rounded-lg flex justify-between items-center w-full mb-2' : 'bg-green-100 p-4 rounded-lg flex justify-between items-center w-full mb-2'">
   <div class="text-xs font-bold w-[60%]">
     <table class="w-full table-fixed">
       <tr class="h-6">
         <td width="">Purpose</td>
         <td class="w-[5%]">:</td>
-        <td class="truncate">{{purpose}}</td>
+        <td class="truncate">{{historyData.purpose}}</td>
       </tr>
-      <tr class="h-6">
+      <tr class="h-6" *ngIf="historyData.purpose == 'Visiting'">
         <td>Visitor Name</td>
         <td class="w-[5%]">:</td>
-        <td class="truncate">{{visitor}}</td>
+        <td class="truncate">{{historyData.visitor_name}}</td>
+      </tr>
+      <tr class="h-6"  *ngIf="historyData.purpose != 'Visiting'">
+        <td>Vehicle Number</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate">{{historyData.vehicle_number}}</td>
       </tr>
       <tr class="h-6">
         <td>Date Of Visit</td>
         <td class="w-[5%]">:</td>
-        <td>{{visit_date}}</td>
+        <td>{{historyData.visitor_date}}</td>
       </tr>
     </table>
   </div>

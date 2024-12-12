@@ -3,6 +3,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { FoodPlatformService } from 'src/app/service/vms/food_platform/food-platform.service';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 
 @Component({
   selector: 'app-deliveries',
@@ -33,13 +34,16 @@ export class DeliveriesPage implements OnInit {
     { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: 0 },
   ];
 
-  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController) { }
+  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService) { }
 
   package_delivery_type = ""
   food_delivery_type = ""
 
   food_delivery_id = 0
   package_delivery_id = 0
+
+  Block: any[] = [];
+  Unit: any[] = [];
 
   formData = {
     contact_number: '', 
@@ -55,8 +59,8 @@ export class DeliveriesPage implements OnInit {
       other: 'Test Others',
       delivery_option: 'single'
     }, 
-    block: 'Block 1', 
-    unit: 'Unit 1',
+    block: '1', 
+    unit: '1',
     pax:'0',
     remarks: ''
   };
@@ -208,8 +212,8 @@ export class DeliveriesPage implements OnInit {
           other: this.package_delivery_id == 0 ? 'Others Checked' : '',
           delivery_option: this.package_delivery_type
         }, 
-        this.formData.block, 
-        this.formData.unit,
+        this.package_delivery_type == 'multiple' ? '1' : this.formData.block, 
+        this.package_delivery_type == 'multiple' ? '1' : this.formData.unit,
         mutiple_unit = {
           pax: this.formData.pax,
           remarks: this.formData.remarks
@@ -424,6 +428,54 @@ export class DeliveriesPage implements OnInit {
     console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
   }
 
+  onBlockChange(event: any) {
+    this.formData.block = event.target.value;
+    console.log(this.formData.block)
+    this.loadUnit(); // Panggil method load unit
+  }
+
+  onUnitChange(event: any) {
+    this.formData.unit = event.target.value;
+    console.log(this.formData.unit)
+  }
+
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load vehicle data', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading vehicle data', 'danger');
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  loadUnit() {
+    this.blockUnitService.getUnit(this.formData.block).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result; // Simpan data unit
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load unit data', 'danger');
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+      }
+    });
+  }
+
   ngOnInit() {
     // Semua tombol tidak aktif pada awalnya
     this.buttonStates = {
@@ -433,7 +485,7 @@ export class DeliveriesPage implements OnInit {
     };
     this.foodDeliveryButtons.forEach(button => button.isActive = false);
     this.packageDeliveryButtons.forEach(button => button.isActive = false);
-
+    this.loadBlock()
     this.getFoodPlatform()
     this.getPackagePlatform()
   }

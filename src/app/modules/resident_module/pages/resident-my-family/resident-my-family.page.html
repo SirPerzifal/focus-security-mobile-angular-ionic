@@ -13,10 +13,19 @@
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">
-            <app-family-card [type]="'Primary Contract'" [name]="'Veekneshwaran'" [mobile]="'89230461'" [head_type]="'Family'" [nickname]="'Veeknesh'" [email]="'veekneshw@gmail.com'"/>
-            <app-family-card [type]="'Secondary Contract'" [name]="'Bobby'" [mobile]="'80216095'" [head_type]="'Family'" [nickname]="'Bob'" [email]="'bobby@gmail.com'"/>
-            <app-family-card [type]="'Member'" [name]="'Bobby'" [mobile]="'94515667'" [head_type]="'Family'" [nickname]="'Bob'" [email]="'bobby@gmail.com'"/>
-            <app-family-card [type]="'Tenant'" [name]="'Patrick Tan'" [mobile]="'89230461'" [head_type]="'Tenant'" [nickname]="'Patrick'" [email]="'patrick@gmail.com'" [tenant]="true"/>
+            <div *ngFor="let data of familyData">
+              <app-family-card 
+              [id]="data.id"
+              [type]="data.type" 
+                [hard_type]="data.hard_type" 
+                [name]="data.name" 
+              [mobile]="data.mobile" 
+              [nickname]="data.nickname" 
+              [email]="data.email"
+              [head_type]="data.head_type"
+              [end_date]="data.end_date"
+              />
+            </div>
           </div>
         </div>
       </div>

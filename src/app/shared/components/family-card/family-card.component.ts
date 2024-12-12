@@ -10,7 +10,9 @@ export class FamilyCardComponent  implements OnInit {
 
   constructor(private router: Router) { }
 
+  @Input() id: Number=0
   @Input() type: string=""
+  @Input() hard_type: string=""
   @Input() name: string=""
   @Input() mobile: string=""
   @Input() head_type: string=""
@@ -23,9 +25,13 @@ export class FamilyCardComponent  implements OnInit {
   ngOnInit() {}
 
   openDetails() {
+    console.log(this.end_date)
     this.router.navigate(['/family-edit-member'], {
+      
       state: {
+        id: this.id,
         type: this.type,
+        hard_type: this.hard_type,
         name: this.name,
         mobile: this.mobile,
         head_type: this.head_type,

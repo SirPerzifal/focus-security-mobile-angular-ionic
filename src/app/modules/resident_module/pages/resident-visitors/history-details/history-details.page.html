@@ -13,73 +13,71 @@
           <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-8" [routerLink]="['/history']"></ion-icon>
         </div>
         <div class="w-full mt-2">
-          <div [class]="banned ? 'bg-red-400 p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
+          <div [class]="historyData.banned ? 'bg-red-400 p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
             <div class="text-xs font-bold">
-              <div class="text-lg font-bold mb-2">
-                {{visitor}}
-              </div>
+              <div class="text-lg font-bold mb-2">{{historyData.visitor_name}}</div>
               <table>
                 <tr class="h-6">
                   <td>Purpose</td>
                   <td>:</td>
-                  <td>{{purpose}}</td>
+                  <td>{{historyData.purpose}}</td>
                 </tr>
-                <tr class="h-6" *ngIf="purpose == 'Delivery'">
+                <tr class="h-6" *ngIf="historyData.purpose == 'Delivery'">
                   <td>Delivery Type</td>
                   <td>:</td>
-                  <td>Food / Package / Bulky</td>
+                  <td>{{historyData.delivery_type}}</td>
                 </tr>
-                <tr class="h-6" *ngIf="purpose == 'Drop Off'">
+                <tr class="h-6" *ngIf="historyData.purpose === 'Drop Off' || historyData.purpose === 'Pick Up'">
                   <td>Mode of Vehicle</td>
                   <td>:</td>
-                  <td>PHV / Taxi / Private Car</td>
+                  <td>{{historyData.vehicle_type}}</td>
                 </tr>
                 <tr class="h-6">
                   <td>Date Of Visit</td>
                   <td>:</td>
-                  <td>{{visit_date}}</td>
+                  <td>{{historyData.visitor_date}}</td>
                 </tr>
                 <tr class="h-6">
                   <td>Entry Time</td>
                   <td>:</td>
-                  <td>1200hrs</td>
+                  <td>{{historyData.visitor_entry_time}}hrs</td>
                 </tr>
                 <tr class="h-6">
                   <td>Exit Time</td>
                   <td>:</td>
-                  <td>144hrs</td>
+                  <td>{{historyData.visitor_exit_time}}hrs</td>
                 </tr>
-                <tr class="h-6" *ngIf="purpose != 'Drop Off'">
+                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting' || historyData.purpose == 'Delivery' ">
                   <td>Mode of Entry</td>
                   <td>:</td>
-                  <td>Drive In</td>
+                  <td>{{historyData.mode_of_entry}}</td>
                 </tr>
-                <tr class="h-6">
+                <tr class="h-6" *ngIf="historyData.mode_of_entry != 'Walk In'">
                   <td>Vehicle No</td>
                   <td>:</td>
-                  <td>SNKS452D</td>
+                  <td>{{historyData.vehicle_number}}</td>
                 </tr>
-                <tr class="h-6" *ngIf="purpose == 'Visiting'">
+                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting'">
                   <td>Point of Entry</td>
                   <td>:</td>
-                  <td>Barrier / Main Gate / Slide Gate</td>
+                  <td>{{historyData.point_of_entry}}</td>
                 </tr>
-                <tr class="h-6" *ngIf="purpose != 'Drop Off'">
+                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting' || historyData.purpose == 'Delivery'">
                   <td>Mobile No</td>
                   <td>:</td>
-                  <td>8021 6095</td>
+                  <td>{{historyData.mobile_number}}</td>
                 </tr>
               </table>
             </div>
-            <div class="w-full flex flex-row justify-around mt-6" *ngIf="banned">
+            <div class="w-full flex flex-row justify-around mt-6" *ngIf="historyData.banned">
               <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8'"></app-visitor-button>
               <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
               <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'"></app-visitor-button>
             </div>
-            <div class="w-full flex flex-row justify-around mt-6" *ngIf="!banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="purpose == 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="purpose == 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="purpose != 'Drop Off'"></app-visitor-button>
+            <div class="w-full flex flex-row justify-around mt-6" *ngIf="!historyData.banned">
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="historyData.purpose == 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose == 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="historyData.purpose != 'Drop Off'"></app-visitor-button>
             </div>
           </div>
         </div>

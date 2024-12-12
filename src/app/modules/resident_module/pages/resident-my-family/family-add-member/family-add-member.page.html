@@ -5,40 +5,102 @@
     <div class="w-full mt-2">
       <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-family']"></ion-icon>
     </div>
-    <div class="flex flex-col justify-between mt-2">
-      <div class="w-full">
-        <app-text-input [id]="'name'" [placeholder]="'Full Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
-      </div>
-      <div class="w-full">
-        <app-text-input [id]="'nickname'" [placeholder]="'Nickname'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
-      </div>
-      <div class="w-full">
-        <app-text-input [id]="'email'" [placeholder]="'Email Address'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
-      </div>
-      <div class="w-full">
-        <app-text-input [id]="'mobile'" [placeholder]="'Mobile Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
-      </div>
-      <div class="w-full">
-        <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
-          <option selected>Type of Residence</option>
-          <option value="unit_1">Family, Primary Contact</option>
-          <option value="unit_2">Family, Secondary Contact</option>
-          <option value="unit_3">Family, Member</option>
-          <option value="unit_4">Tenant</option>
-        </select>
-      </div>
-      
-      <div class="w-full flex flex-row justify-between">
-        <div class="w-4/6">
-          <app-text-input [id]="'tenancy_agreement'" [placeholder]="'Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+    <form (ngSubmit)="onSubmit()">
+      <div class="flex flex-col justify-between mt-2">
+        <div class="w-full">
+          <app-text-input
+            [id]="'full_name'"
+            [placeholder]="'Full Name'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+            [value]="formData.full_name"
+            (valueChange)="onFullNameChange($event)"
+          ></app-text-input>
         </div>
-        <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-sm mt-1 rounded">Upload</button>
+        
+        <div class="w-full">
+          <app-text-input
+            [id]="'nickname'"
+            [placeholder]="'Nickname'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+            [value]="formData.nickname"
+            (valueChange)="onNicknameChange($event)"
+          ></app-text-input>
+        </div>
+        
+        <div class="w-full">
+          <app-text-input
+            [id]="'email_address'"
+            [placeholder]="'Email Address'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+            [value]="formData.email_address"
+            (valueChange)="onEmailAddressChange($event)"
+          ></app-text-input>
+        </div>
+        
+        <div class="w-full">
+          <app-text-input
+            [id]="'mobile_number'"
+            [placeholder]="'Mobile Number'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+            [value]="formData.mobile_number"
+            (valueChange)="onMobileNumberChange($event)"
+          ></app-text-input>
+        </div>
+        
+        <div class="w-full">
+          <select
+            id="type_of_residence"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1"
+            [(ngModel)]="formData.type_of_residence" name="type_of_residence"
+          >
+            <option [value]="">Type of Residence</option>
+            <option [value]="'primary_contact'">Family, Primary Contact</option>
+            <option [value]="'secondary_contact'">Family, Secondary Contact</option>
+            <option [value]="'member'">Family, Member</option>
+            <option [value]="'tenants'">Tenant</option>
+          </select>
+        </div>
+        
+        <div class="w-full flex flex-col">
+          <!-- <div class="w-4/6"> -->
+            <!-- <app-text-input
+              [id]="'tenancies_tenancy_aggrement'"
+              [placeholder]="'Tenancy Agreement'"
+              [customClasses]="{'w-full': true}"
+              [type]="'file'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-black': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+              (valueChange)="onTenanciesChange($event)"
+            ></app-text-input> -->
+            <label for="tenant_file" class="w-full h-12 mt-1 border rounded px-3 text-sm flex flex-col justify-center" style="border: solid #6B7280 1px;" *ngIf="!fileCheck" [ngClass]="{'hidden': formData.type_of_residence != 'tenants'}"><b>Select Tenant Agreement File</b></label>
+            <input type="file" id="tenant_file" class="w-full h-12 mt-1 border rounded py-2 px-3 text-sm" (change)="onTenanciesChange($event)" style="border: #6B7280 solid 1px;" [ngClass]="{'hidden': !fileCheck || formData.type_of_residence != 'tenants'}" />
+          <!-- </div> -->
+          <!-- <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-sm mt-1 rounded">
+            Upload
+          </button> -->
+        </div>
+        
+        <div class="w-full" [ngClass]="{'hidden': formData.type_of_residence != 'tenants'}">
+          <app-text-input
+            [id]="'tenancies_end_of_tenancy_aggrement'"
+            [placeholder]="'End Date of Tenancy Agreement'"
+            [customClasses]="{'w-full': true}"
+            [type]="'date'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+            [value]="formData.tenancies.end_of_tenancy_aggrement"
+            (valueChange)="onEndOfTenancyAgreementChange($event)"
+          ></app-text-input>
+        </div>
+        <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" type="submit">Add New Card</button>
       </div>
-      <div class="w-full">
-        <app-text-input [id]="'end_date'" [placeholder]="'End Date of Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" ></app-text-input>
-      </div>
-      <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" [routerLink]="['/resident-my-family']">Add New Card</button>
-    </div>
+    </form>
     <div class="flex flex-row w-full">
     </div>
   </div>

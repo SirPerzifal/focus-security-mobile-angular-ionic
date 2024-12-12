@@ -9,20 +9,30 @@ import { AlertController } from '@ionic/angular';
 })
 export class HistoryDetailsPage implements OnInit {
 
-  purpose: string = '';
-  visitor: string = '';
-  visit_date: string = '';
-  banned: boolean = false;
+  historyData!: {
+    purpose: 'Drop Off' | 'Pick Up' | 'Visiting' | 'Delivery' | string;
+    visitor_name: string;
+    visitor_date: Date;
+    visitor_entry_time: string;
+    visitor_exit_time: string;
+    mode_of_entry: string;
+    vehicle_number: string;
+    point_of_entry: string;
+    mobile_number: string;
+    delivery_type: string;
+    vehicle_type: string;
+    banned: boolean;
+    id: number;
+  };
 
   constructor(private router: Router, private alertController: AlertController) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { purpose: string, visitor: string, visit_date: string, banned: boolean };
+    const state = navigation?.extras.state as { historyData: any };
     if (state) {
-      this.purpose = state.purpose;
-      this.visitor = state.visitor;
-      this.visit_date = state.visit_date;
-      this.banned = state.banned;
+      this.historyData = state.historyData;
+      console.log(this.historyData)
+      // this.banned = state.banned;
     }
   }
 
@@ -39,7 +49,7 @@ export class HistoryDetailsPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.purpose, this.visitor, this.visit_date, this.banned)
+    // console.log(this.purpose, this.visitor, this.visit_date, this.banned)
   }
 
   public async showAlertButtons(headerName: string, className: string) {

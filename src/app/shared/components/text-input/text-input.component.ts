@@ -1,9 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-text-input',
   templateUrl: './text-input.component.html',
   styleUrls: ['./text-input.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextInputComponent),
+      multi: true
+    }
+  ]
+
 })
 export class TextInputComponent  implements OnInit {
 
@@ -12,6 +21,7 @@ export class TextInputComponent  implements OnInit {
   @Input() customClasses: {[key:string]:boolean} = {};
   @Input() customInputClasses: {[key:string]:boolean} = {};
   @Input() id: string = '';
+  @Input() name: string = '';
   @Input() isReadonly: boolean = false;
 
   // Tambahkan decorator @Output untuk value
@@ -27,11 +37,31 @@ export class TextInputComponent  implements OnInit {
       this._value = val || '';
     }
     // Emit perubahan value
+    this.onChange(this._value);
     this.valueChange.emit(this._value);
   }
 
   get value(): string {
     return this._value;
+  }
+
+  onChange: (value: string) => void = () => {};
+  onTouched: () => void = () => {};
+
+  writeValue(value: string): void {
+    this._value = value || '';
+  }
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    // Optional: Handle input disabling
   }
 
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
@@ -50,5 +80,6 @@ export class TextInputComponent  implements OnInit {
     this.keyupEvent.emit(event);
     // Emit value baru
     this.valueChange.emit(this._value);
+    this.onChange(this._value); 
   }
 }

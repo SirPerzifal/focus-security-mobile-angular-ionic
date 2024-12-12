@@ -13,7 +13,9 @@
           <u class="text-[14px] font-bold">Entry Details</u>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+          <app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" 
+          [value]="formData.vehicle_number"
+          (valueChange)="changeVehicleNumber($event)"></app-text-input>
         </div>
         <div class="flex flex-row justify-start mt-4">
           <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[#C9CC3F] w-24 text-sm text-black' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()" [customStyle]="showPick ? 'border: solid black 2px' : 'border: solid #808080 2px'"></app-visitor-button>
@@ -49,6 +51,15 @@
               <b>Car</b>
             </div>
           </div>
+          <div class="flex flex-col items-center w-12 ml-5" (click)="useMotorBike()">
+            <button id="shadow_back" [class]="motor_bike ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <fa-icon [icon]="faMotorcycle" [class]="motor_bike ? 'text-[#000000]' : 'text-white'"></fa-icon>
+            </button>
+            <div class="text-[10px] flex flex-col relative items-center mt-1">
+              <b>Motor</b>
+              <b>Bike</b>
+            </div>
+          </div>
         </div>
         <div class="flex flex-col mt-4 text-[12px]">
           <p class="underline underline-offset-1 font-bold">Temporary Pickup/Drop-off Vehicle Authorization<p>
@@ -65,7 +76,7 @@
         </div>
         <div class="flex flex-row mt-4 text-[12px] w-full">
           <div class="w-full">
-            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'"></app-visitor-button>
+            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'" (click)="onSubmit()"></app-visitor-button>
           </div>
         </div>
       </div>

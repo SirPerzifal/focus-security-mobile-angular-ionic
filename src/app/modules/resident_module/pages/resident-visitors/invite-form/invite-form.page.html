@@ -9,8 +9,8 @@
 		</div>
 	</div>
 	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4">
-		<ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/resident-visitors']">
+	<div class="flex flex-col relative mt-2 mx-4 mb-20">
+		<ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/resident-visitors']" (click)="backWithState()">
 		  <div class="flex flex-col items-center text-black">
 			<ion-icon name="arrow-back"></ion-icon>
 		  </div>
@@ -43,14 +43,14 @@
 				  name="phone_{{i}}"
 				  placeholder="Mobile Number" 
 				  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-sm"
-				  [(ngModel)]="inviteeFormList[i].phone"
+				  [(ngModel)]="inviteeFormList[i].mobile_number"
 				  required>
 				<input 
 				  [id]="'invf_plate_' + i" 
 				  name="plate_{{i}}"
 				  placeholder="Vehicle Number" 
 				  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-sm"
-				  [(ngModel)]="inviteeFormList[i].plate"
+				  [(ngModel)]="inviteeFormList[i].car_number"
 				  required>
 			  </div>
 			</div>

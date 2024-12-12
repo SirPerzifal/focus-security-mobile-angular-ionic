@@ -47,23 +47,15 @@
             <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
           </div>
           <div class="w-full">
-            <select id="walk_in_block"
-              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
-            [(ngModel)]="formData.block" name="block">
-              <option value="Block 1">BLOCK 1</option>
-              <option value="Block 2">BLOCK 2</option>
-              <option value="Block 3">BLOCK 3</option>
-              <option value="Block 4">BLOCK 4</option>
+            <select id="rv_block" (change)="onBlockChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+              <option selected>CHOOSE BLOCK</option>
+              <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
           <div class="w-full">
-            <select id="walk_in_unit"
-              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
-            [(ngModel)]="formData.unit" name="unit">
-              <option value="Unit 1">UNIT 1</option>
-              <option value="Unit 2">UNIT 2</option>
-              <option value="Unit 3">UNIT 3</option>
-              <option value="Unit 4">UNIT 4</option>
+            <select id="rv_unit" (change)="onUnitChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>CHOOSE UNIT</option>
+              <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>
           <div class="w-full">
@@ -102,23 +94,15 @@
               <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
           </div>
           <div class="w-full">
-            <select id="drive_in_block"
-              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
-            [(ngModel)]="formData.block" name="block">
-              <option value="Block 1">BLOCK 1</option>
-              <option value="Block 2">BLOCK 2</option>
-              <option value="Block 3">BLOCK 3</option>
-              <option value="Block 4">BLOCK 4</option>
+            <select id="rv_block" (change)="onBlockChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+              <option selected>CHOOSE BLOCK</option>
+              <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
           <div class="w-full">
-            <select id="drive_in_unit"
-              class="border w-full rounded py-2 px-3 outline-[#DBDBD] h-10 text-xs tex-[#B7280]"
-            [(ngModel)]="formData.unit" name="unit">
-              <option value="Unit 1">UNIT 1</option>
-              <option value="Unit 2">UNIT 2</option>
-              <option value="Unit 3">UNIT 3</option>
-              <option value="Unit 4">UNIT 4</option>
+            <select id="rv_unit" (change)="onUnitChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+              <option selected>CHOOSE UNIT</option>
+              <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>
           <div class="w-full">

@@ -1,7 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+
+interface FormData {
+  dateOfInvite: Date;
+  vehicleNumber: string;
+  entryType: string;
+  entryTitle: string;
+  entryMessage: string;
+  isProvideUnit: boolean;
+  hiredCar: string;
+  unit: number;
+}
 
 @Component({
   selector: 'app-resident-visitors',
@@ -26,26 +38,125 @@ export class ResidentVisitorsPage implements OnInit {
   showActInvTrans = false;
   selectedInvite: any = null;
   // Array untuk menyimpan data invites
-  upcomingInvites:any[] = [
+  activeInvites:any[] = [
     {
-      name: 'Sunil Jayakumar',
-      dateOfInvite: '26/10/2024',
-      vehicleNo: 'SNK5424D',
-      entryType: 'One Time Entry'
-    },
-    {
-      name: 'PHV - DROP OFF',
-      dateOfInvite: '26/10/2024',
-      vehicleNo: 'SNK5424D',
-      entryType: 'One Time Entry'
+      name: '',
+      dateOfInvite: '',
+      vehicleNo: '',
+      entryType: '',
+      invite_id: '',
+      is_entry: false
     }
-    // Tambahkan data lain jika diperlukan
-  ];
+  ]
 
   constructor(
     private router: Router,
-    private alertController: AlertController
-  ) {}
+    private alertController: AlertController,
+    private residentVisitorService: VisitorService,
+    private toastController: ToastController
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: FormData };
+    if (state) {
+      this.formData = state.formData;
+      console.log(this.formData)
+    }
+  }
+
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
+    });
+
+    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
+    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+
+    toast.present().then(() => {
+      
+      
+    });;
+  }
+
+  formData = {
+    dateOfInvite: new Date(),
+    vehicleNumber: "",
+    entryType: "",
+    entryTitle: "",
+    entryMessage: "",
+    isProvideUnit: false,
+    hiredCar: "",
+    unit: 0,
+  }
+
+  onEntryTypeChange(value: string): void {
+    this.formData.entryType = this.formData.entryType === value ? '' : value;
+  }
+
+  onProvideUnitChange() {
+    this.formData.isProvideUnit = !this.formData.isProvideUnit
+  }
+
+  onVehicleNumberChange(value: string) {
+    this.formData.vehicleNumber = value;
+  }
+
+  entryTitleChange(value: string) {
+    this.formData.entryTitle = value;
+  }
+
+  onSubmitNext() {
+    let errMsg = ''
+    if (this.formData.vehicleNumber == "") {
+      errMsg += 'Please fill vehicle number! \n'
+    }
+    if (this.formData.entryType == "") {
+      errMsg += "Please choose entry type! \n"
+    }
+    if (this.formData.entryTitle == "") {
+      errMsg += "Please fill entry tittle! \n"
+    }
+    
+    console.log(this.formData)
+    if (errMsg == ''){
+      this.router.navigate(['/invite-form'], {
+        state: {
+          formData: this.formData,
+        }
+      });
+    } else {
+      this.presentToast(errMsg, 'danger')
+    }
+    
+  }
+
+  getActiveInvites(){
+    try{
+      this.residentVisitorService.getActiveInvites().subscribe(
+        res => {
+          var result = res.result['response_result']
+          this.activeInvites = []
+          result.forEach((item: any) => {
+            this.activeInvites.push({
+              name: item['visitor_name'],
+              dateOfInvite: item['visit_date'],
+              vehicleNo: item['vehicle_number'],
+              entryType: item['entry_type'],
+              invite_id: item['invite_id'],
+              is_entry: item['is_entry']
+            });
+          });
+        },
+        error => {
+          console.log(error)
+        }
+      )
+     } catch (err) {
+      console.log(err)
+     }
+     console.log(this.activeInvites)
+  }
 
   toggleShowInv() {
     this.router.navigate(['resident-visitors']);
@@ -120,10 +231,32 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   confirmCancel(invite: any) {
-    // Logika pembatalan undangan
-    console.log('Cancelling invite:', invite);
-    // Misalnya, hapus invite dari daftar atau panggil service
+    try{
+      this.residentVisitorService.postCancelVisitor(invite.is_entry ? false : invite.invite_id, !invite.is_entry ? false : invite.invite_id).subscribe(
+        res => {
+          console.log("Success")
+          this.presentToast('Successfully cancel invites!', 'success')
+          this.activeInvites = this.activeInvites.filter(inviteItem => inviteItem.invite_id !== invite.invite_id)
+        },
+        error => {
+          this.presentToast(error, 'danger')
+          console.log(error)
+        }
+      )
+     } catch (err) {
+      this.presentToast(String(err), 'danger')
+      console.log(err)
+     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getActiveInvites()
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event['url'] == '/resident-visitors'){
+          this.getActiveInvites();
+        }
+      }
+    });
+  }
 }

@@ -10,24 +10,23 @@
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
-            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-              <option selected>Type of Invite History</option>
-              <option value="unit_1">UNIT 1</option>
-              <option value="unit_2">UNIT 2</option>
-              <option value="unit_3">UNIT 3</option>
-              <option value="unit_4">UNIT 4</option>
+            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onChangeVisitorType($event)">
+              <option value="" selected>Type of Invite History</option>
+              <option value="Visiting">Visiting</option>
+              <option value="Delivery">Delivery</option>
+              <option value="Pick Off">Pick Off</option>
+              <option value="Drop Off">Drop Off</option>
             </select>
         </div>
         <div class="flex flex-row w-full mt-4 items-center">
-          <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-          <u class="ml-2 text-xs font-bold ">Clear Filter</u>
+          <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onChangeDateFilter($event)">
+          <u class="ml-2 text-xs font-bold" (click)="clearDateFilter()">Clear Filter</u>
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">
-            <app-history-card [purpose]="'Delivery'" [visitor]="'Nil'" [visit_date]="'24/10/2024'"  ></app-history-card>
-            <app-history-card [purpose]="'Visiting'" [visitor]="'Sunil Jayakumar'" [visit_date]="'23/10/2024'"  ></app-history-card>
-            <app-history-card [purpose]="'Drop Off'" [visitor]="'Nil'" [visit_date]="'23/10/2024'"  ></app-history-card>
-            <app-history-card [purpose]="'Visiting'" [visitor]="'Ashwinder'" [visit_date]="'23/10/2024'" [banned]="true" ></app-history-card>
+            <div *ngFor="let data of filteredData">
+              <app-history-card [historyData]="data" />
+            </div>
           </div>
         </div>
       </div>

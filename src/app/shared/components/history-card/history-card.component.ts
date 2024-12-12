@@ -10,22 +10,30 @@ export class HistoryCardComponent  implements OnInit {
 
   constructor(private router: Router) { }
 
-  @Input() purpose: string=''
-  @Input() visitor: string=''
-  @Input() visit_date: string=''
-  @Input() banned: boolean=false
+  @Input() historyData!: {
+    purpose: string;
+    visitor_name: string;
+    visitor_date: Date;
+    visitor_entry_time: number;
+    visitor_exit_time: number;
+    mode_of_entry: string;
+    vehicle_number: string;
+    point_of_entry: string;
+    mobile_number: string;
+    delivery_type: string;
+    vehicle_type: string;
+    banned: boolean;
+    id: number;
+  };
 
   ngOnInit() {
-    console.log(this.purpose, this.visitor, this.visit_date, this.banned)
+    // console.log(this.historyData)
   }
 
   openDetails() {
     this.router.navigate(['/history-details'], {
       state: {
-        purpose: this.purpose,
-        visitor: this.visitor,
-        visit_date: this.visit_date,
-        banned: this.banned
+        historyData: this.historyData
       }
     });
   }

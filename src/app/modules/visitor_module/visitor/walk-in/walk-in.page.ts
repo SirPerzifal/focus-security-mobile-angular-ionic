@@ -3,6 +3,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { VisitorService } from 'src/app/service/vms/visitor/visitor.service';
 import { ToastController } from '@ionic/angular';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 
 @Component({
   selector: 'app-walk-in',
@@ -22,16 +23,24 @@ import { ToastController } from '@ionic/angular';
 })
 export class WalkInPage implements OnInit {
 
-  constructor(private paramsActiveFromCoaches: ActivatedRoute, private visitorService: VisitorService, private toastController: ToastController, private router: Router) { }
+  constructor(
+    private paramsActiveFromCoaches: ActivatedRoute, 
+    private visitorService: VisitorService, 
+    private toastController: ToastController, 
+    private router: Router,
+    private blockUnitService: BlockUnitService) { }
 
   formData = {
     visitor_name: '',
     visitor_contact_no: '',
     visitor_type: 'walk_in',
     visitor_vehicle: '',
-    block: 'Block 1',
-    unit: 'Unit 1'
+    block: '',
+    unit: ''
   };
+
+  Block: any[] = [];
+  Unit: any[] = [];
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
@@ -45,11 +54,7 @@ export class WalkInPage implements OnInit {
     const errorSound = new Audio('assets/sound/Error Alert.mp3');
 
     toast.present().then(() => {
-      if (color == 'success'){
-        pingSound.play().catch((err) => console.error('Error playing sound:', err));
-      } else {
-        errorSound.play().catch((err) => console.error('Error playing sound:', err));
-      }
+      
       
     });;
   }
@@ -191,7 +196,57 @@ export class WalkInPage implements OnInit {
     }
   }
 
+  onBlockChange(event: any) {
+    this.formData.block = event.target.value;
+    console.log(this.formData.block)
+    this.loadUnit(); // Panggil method load unit
+  }
+
+  onUnitChange(event: any) {
+    this.formData.unit = event.target.value;
+    console.log(this.formData.unit)
+  }
+
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load vehicle data', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading vehicle data', 'danger');
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  loadUnit() {
+    this.blockUnitService.getUnit(this.formData.block).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result; // Simpan data unit
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load unit data', 'danger');
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+      }
+    });
+  }
+
+
   ngOnInit() {
+    this.loadBlock(); 
     this.paramsActiveFromCoaches.queryParams.subscribe(params => {
       if (params['showDrive']) {  // Gunakan bracket notation di sini
         this.showDrive = true; // Atur showDrive menjadi true jika parameter ada

@@ -1,12 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import { ToastController } from '@ionic/angular';
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
 interface Invitee {
   name: string;
-  phone: string;
-  plate: string;
+  mobile_number: string;
+  car_number: string;
 }
+
+interface FormData {
+  dateOfInvite: Date;
+  vehicleNumber: string;
+  entryType: string;
+  entryTitle: string;
+  entryMessage: string;
+  isProvideUnit: boolean;
+  hiredCar: string;
+  unit: number;
+}
+
 
 @Component({
   selector: 'app-invite-form',
@@ -18,10 +32,30 @@ export class InviteFormPage implements OnInit {
   addInviteeText: string = 'Add Invitee';
   isFormInitialized: boolean = false;
 
+  formData = {
+    dateOfInvite: new Date(),
+    vehicleNumber: "",
+    entryType: "",
+    entryTitle: "",
+    entryMessage: "",
+    isProvideUnit: false,
+    hiredCar: "",
+    unit: 0,
+  }
+
   constructor(
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private residentVisitorService: VisitorService,
+    private toastController: ToastController
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: FormData };
+    if (state) {
+      this.formData = state.formData;
+      console.log(this.formData)
+    }
+  }
 
   ngOnInit() {
     this.isFormInitialized = false;
@@ -31,6 +65,23 @@ export class InviteFormPage implements OnInit {
     });
     console.log(this.isFormInitialized)
     console.log(this.inviteeFormList)
+  }
+
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
+    });
+
+    
+    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
+    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+
+    toast.present().then(() => {
+      
+      
+    });;
   }
 
   initializeInviteeForm(params?: any) {
@@ -58,8 +109,8 @@ export class InviteFormPage implements OnInit {
     if (selectedInvitees && selectedInvitees.length > 0) {
       this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
         name: invitee.name || '',
-        phone: invitee.phone || '',
-        plate: invitee.plate || ''
+        mobile_number: invitee.mobile_number || '',
+        car_number: invitee.car_number || ''
       }));
       this.addInviteeText = 'Add More Invitees';
     }
@@ -76,8 +127,8 @@ export class InviteFormPage implements OnInit {
   addInvitee() {
     const newInvitee: Invitee = { 
       name: '', 
-      phone: '', 
-      plate: '' 
+      mobile_number: '', 
+      car_number: '' 
     };
     
     this.inviteeFormList.push(newInvitee);
@@ -91,17 +142,54 @@ export class InviteFormPage implements OnInit {
     });
   }
 
+  backWithState() {
+    this.router.navigate(['/resident-visitors'], {
+      state: {
+        formData: this.formData,
+      }
+    });
+  }
+
   onSubmit() {
     const isValid = this.inviteeFormList.every(invitee => 
       invitee.name.trim() !== '' && 
-      invitee.phone.trim() !== '' && 
-      invitee.plate.trim() !== ''
+      invitee.mobile_number.trim() !== '' && 
+      invitee.car_number.trim() !== ''
     );
 
     if (isValid) {
       console.log('Submitting Invitees:', this.inviteeFormList);
+      try {
+        this.residentVisitorService.postCreateExpectedVisitors(
+          this.formData.dateOfInvite,
+          this.formData.entryType,
+          this.formData.entryTitle,
+          this.formData.entryMessage,
+          this.formData.isProvideUnit,
+          this.inviteeFormList,
+          this.formData.hiredCar,
+          this.formData.unit,
+        ).subscribe(
+          res => {
+            console.log(res);
+            // if (res.result.status_code == 200) {
+              
+              this.presentToast('Success Add Record', 'success');
+              this.router.navigate(['resident-visitors'])
+            // } else {
+            //   this.presentToast('Failed Add Record', 'danger');
+            // }
+          },
+          error => {
+            console.error('Error:', error);
+          }
+        );
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        this.presentToast(String(error), 'danger');
+      }
     } else {
-      alert('Harap lengkapi semua field invitee');
+      this.presentToast('Please fill all needed field.', 'danger');
     }
   }
 
