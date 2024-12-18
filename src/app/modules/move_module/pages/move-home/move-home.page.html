@@ -15,7 +15,11 @@
 
   <div *ngIf="!isLoading" class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
+        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
     
@@ -30,33 +34,38 @@
     </div>
 
     <!-- Move In / Out Section -->
-    <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
-      <span class="text-[18px]"><b>Moving In / Out</b></span>
-      <div class="w-[100%] flex self-start mt-[20px] grid grid-cols-4 gap-4 justify-items-center">
-        <button 
-          *ngFor="let schedule of moveInSchedules" 
-          (click)="form(schedule.block_name, schedule.unit_name)" 
-          class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]"
-        >
-          <span>{{ schedule.block_name }}</span>
-          <span>{{ schedule.unit_name }}</span>
-        </button>
+    <div class="flex flex-row">
+      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
+        <span class="text-2xl"><b>MOVING IN / OUT</b></span>
+        <div class="w-[100%] flex self-start mt-5 grid grid-cols-4 gap-4 justify-items-center">
+          <button 
+            *ngFor="let schedule of moveInSchedules" 
+            (click)="form(schedule.block_name, schedule.unit_name)" 
+            class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-36 text-2xl m-[5px]"
+          >
+            <span><b>{{ schedule.block_name }}</b></span>
+            <span><b>{{ schedule.unit_name }}</b></span>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Renovations Section -->
-    <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
-      <span class="text-[18px]"><b>Renovations</b></span>
-      <div class="w-[100%] flex self-start mt-[20px] grid grid-cols-4 gap-4 justify-items-center">
-        <button 
-          *ngFor="let schedule of renovationSchedules" 
-          (click)="renov_form(schedule.block_name, schedule.unit_name)" 
-          class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-[80px] text-[14px] m-[5px]"
-        >
-          <span>{{ schedule.block_name }}</span>
-          <span>{{ schedule.unit_name }}</span>
-        </button>
+    <div class="flex flex-row">
+      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
+        <span class="text-2xl"><b>RENOVATIONS</b></span>
+        <div class="w-[100%] flex self-start mt-5 grid grid-cols-4 gap-4 justify-items-center">
+          <button 
+            *ngFor="let schedule of renovationSchedules" 
+            (click)="renov_form(schedule.block_name, schedule.unit_name)" 
+            class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-36 text-2xl m-[5px]"
+          >
+          <span><b>{{ schedule.block_name }}</b></span>
+          <span><b>{{ schedule.unit_name }}</b></span>
+          </button>
+        </div>
       </div>
     </div>
+    
   </div>
 </ion-content>

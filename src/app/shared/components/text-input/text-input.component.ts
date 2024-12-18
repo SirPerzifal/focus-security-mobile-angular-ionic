@@ -17,12 +17,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TextInputComponent  implements OnInit {
 
   @Input() placeholder: string='';
+  @Input() labelText: string='';
   @Input() type: string='text';
   @Input() customClasses: {[key:string]:boolean} = {};
   @Input() customInputClasses: {[key:string]:boolean} = {};
   @Input() id: string = '';
   @Input() name: string = '';
   @Input() isReadonly: boolean = false;
+  @Input() min: string | null = null; // Allow min to be null by default
 
   // Tambahkan decorator @Output untuk value
   @Output() valueChange = new EventEmitter<string>();

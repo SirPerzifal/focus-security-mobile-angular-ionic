@@ -86,6 +86,16 @@ export class EmergencyModulePage implements OnInit {
     console.log(this.showAmbulanceTrans, this.showPoliceTrans, this.showSCDFTrans, this.showAmbulance, this.showPolice, this.showSCDF)
   }
 
+  vehicle_number = ''
+
+  refreshVehicle() {
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.vehicle_number = randomVhc
+    console.log("Vehicle Refresh", randomVhc)
+  }
+
   ngOnInit() {
   }
 

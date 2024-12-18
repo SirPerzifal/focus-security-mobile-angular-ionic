@@ -29,3 +29,12 @@
 .icon ion-icon {
     color: white;
 }
+ion-checkbox {
+    --size: 32px;
+    --checkbox-background-checked: #10421D;
+}
+
+ion-checkbox::part(container) {
+border-radius: 6px;
+border: 2px solid #10421D;
+}

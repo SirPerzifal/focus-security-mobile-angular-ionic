@@ -8,25 +8,32 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
+        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/home-vms']" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="move_in_box flex flex-col mt-[50px] self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] overflow-scroll scrollbar overflow-x-hidden">
-      <span class="text-[12px]"><b>Approved list || DATE</b></span>
-      <div class="w-[100%] flex flex-col mt-[5px]">
-        <button (click)="form()" class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-[12px] mt-[5px]">
-          <span>Name || Company</span>
-        </button>
-        <div class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-[12px] mt-[5px]">
-          <span>Name || Company</span>
-        </div>
-        <div class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-[12px] mt-[5px]">
-          <span>Name || Company</span>
+    <div class="flex flex-row">
+      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
+        <span class="text-2xl"><b>APPROVED LIST || DATE</b></span>
+        <div class="w-[100%] flex flex-col mt-5 space-y-3">
+          <button (click)="form()" class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-2xl">
+            <span>NAME || COMPANY</span>
+          </button>
+          <div class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-2xl">
+            <span>NAME || COMPANY</span>
+          </div>
+          <div class="flex flex-col w-full bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center text-2xl">
+            <span>NAME || COMPANY</span>
+          </div>
         </div>
       </div>
     </div>
+    
   </div>
 </ion-content>

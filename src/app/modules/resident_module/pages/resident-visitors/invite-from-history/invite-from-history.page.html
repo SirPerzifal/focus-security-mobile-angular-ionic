@@ -1,13 +1,5 @@
 <ion-content [fullscreen]="true">
-	<div class="header fixed top-0">
-		<div class="flex flex-col justify-start">
-			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-		</div>
-		<div class="logo">
-			<h1 class="text-[26px] font-bold text-[black]">Visitors</h1>
-      <p class="font-bold text-[black]">Daily Invite</p>
-		</div>
-	</div>
+	<app-resident-header [text]="'Visitors'" [text_second]="'Daily Invite'" />
 	<!-- CONTENT -->
 	<div class="flex flex-col relative mt-2 mx-4">
     <ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/invite-form']">
@@ -17,18 +9,24 @@
 		</ion-button>
 
     <div class="flex flex-col mt-2">
-      <u class="text-[14px] font-bold">Invitee History List</u>
+      <p class="text-[14px] font-bold">Invitee History List</p>
       <div id="data">
         <div *ngFor="let invitee of historyData" class="w-full flex justify-between flex-row mt-4">
-          <div class="w-10/12">
-            <app-text-input [id]="'invf_name'" [placeholder]="'Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" [value]="invitee.name" readonly></app-text-input>
+          <div class="w-11/12">
+            <div class="flex flex-row justify-start mt-4">
+              <p class="text-sm font-bold">Name on the List</p>
+            </div>
+            <div class="flex">
+              <app-text-input [id]="'invf_name'" [placeholder]="'Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" [value]="invitee.name" readonly></app-text-input>
+              <ion-checkbox class="ml-2 flex items-center w-[20px]"></ion-checkbox>
+            </div>
           </div>
-          <app-button-icon [customNameIcon]="'faCheck'" (click)="toggleSelect(invitee)" [isActive]="selectedInvitees.includes(invitee)"></app-button-icon>
+          <!-- <app-button-icon [customNameIcon]="'faCheck'" (click)="toggleSelect(invitee)" [isActive]="selectedInvitees.includes(invitee)"></app-button-icon> -->
         </div>
       </div>
       <div class="flex flex-row mt-4 text-[12px] w-full">
         <div class="w-full">
-          <app-visitor-button [text]="'Confirm'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'" (click)="confirmSelection()"></app-visitor-button>
+          <app-visitor-button [text]="'Confirm'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm'" (click)="confirmSelection()"></app-visitor-button>
         </div>
       </div>
     </div>

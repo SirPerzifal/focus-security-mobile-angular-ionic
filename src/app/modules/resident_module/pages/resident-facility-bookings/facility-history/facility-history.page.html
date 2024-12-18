@@ -28,9 +28,19 @@
           <input type="date" placeholder="Start Date" class="py-2 px-4 rounded-lg border border-gray-300">
           <input type="date" placeholder="End Date" class="py-2 px-4 rounded-lg border border-gray-300">
         </div>
-        <div *ngFor="let booking of bookingList" class="bg-[#E9F5E1] rounded-2xl p-5 m-5 flex justify-between items-center">
+        <div *ngFor="let booking of bookingList" [ngClass]="{
+          'bg-green-100': booking.status === 'Approved',
+          'bg-sky-100': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
+          'bg-red-200': booking.status === 'Rejected' || booking.status === 'Cancelled',
+          'bg-yellow-200': booking.status === 'Requested',
+          }" class="bg-[#E9F5E1] rounded-2xl p-5 m-5 flex justify-between items-center">
           <div class="max-w-[80%]">
-            <div class="bg-[#A3D9A5] text-white py-1 px-2 rounded-md font-bold inline-block">{{ booking.status }}</div>
+            <div [ngClass]="{
+              'bg-green-300': booking.status === 'Approved',
+              'bg-sky-300': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
+              'bg-red-400': booking.status === 'Rejected' || booking.status === 'Cancelled',
+              'bg-yellow-400': booking.status === 'Requested',
+              }" class="bg-[#A3D9A5] text-white py-1 px-2 rounded-md font-bold inline-block">{{ booking.status }}</div>
             <h2 class="text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
             <div class="text-black text-xs">
               <table>
@@ -47,7 +57,7 @@
                 <tr class="h-1">
                   <td>Deposit Status</td>
                   <td>:</td>
-                  <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</td>
+                  <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending Payment' }}</td>
                 </tr>
               </table>
             </div>

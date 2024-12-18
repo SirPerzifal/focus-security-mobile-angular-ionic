@@ -5,113 +5,151 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20"
+          [routerLink]="['/home-vms']"></ion-icon>
+        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex flex-row mt-8">
-      <app-visitor-button [text]="'PRE REGISTERED'"
-        [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
-        (click)="toggleShowQr()"></app-visitor-button>
-      <app-visitor-button [text]="'WALK IN'"
-        [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
-        (click)="toggleShowWalk()"></app-visitor-button>
-      <app-visitor-button [text]="'DRIVE IN'"
-        [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
-        (click)="toggleShowDrive()"></app-visitor-button>
+    <div class="flex mt-8 flex-rowspace-x-4 space-x-7">
+      <!-- <app-button-icon [textOnly]="true" [text]="'PRE REGISTERED'"
+        (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true" /> -->
+      <!-- <app-visitor-button [text]="'PRE REGISTERED'"
+        [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-32 text-xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-xl h-28'"
+        (click)="toggleShowQr()"></app-visitor-button> -->
+
+        <app-button-icon [customNameIcon]="'faQrcode'" [text]="'PRE REGISTERED'"
+        (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true"/>
+
+        <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
+        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
+
+        <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
+        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
+
+        <!-- <app-button-icon [textOnly]="true" [text]="'WALK IN'"
+        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" /> -->
+      <!-- <app-visitor-button [text]="'WALK IN'"
+        [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-32 text-xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-xl h-28'"
+        (click)="toggleShowWalk()"></app-visitor-button> -->
+
+        <!-- <app-button-icon [textOnly]="true" [text]="'DRIVE IN'"
+        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" /> -->
+      <!-- <app-visitor-button [text]="'DRIVE IN'"
+        [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-32 text-xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-xl h-28'"
+        (click)="toggleShowDrive()"></app-visitor-button> -->
     </div>
 
     <div class="flex flex-row">
-      <div class="mt-8 flex flex-col justify-around items-center h-72 w-full" *ngIf="showQr" @fadeInOut>
+      <div class="mt-8 flex flex-col justify-around items-center h-72 w-full mx-4" *ngIf="showQr" @fadeInOut>
         <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60" />
       </div>
 
-      <form class="justify-between items-center h-80 w-full" #walkInForm="ngForm"  *ngIf="showWalk" @fadeInOut>
-        <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
-          <div class="w-full">
-            <input id="walk_in_name" placeholder="NAME"
-              type="text"
-              class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
-            [(ngModel)]="formData.visitor_name" name="visitor_name">
+      <form class="justify-between items-center w-full mx-4" #walkInForm="ngForm" *ngIf="showWalk" @fadeInOut>
+        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-3 mb-4">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>NAME</u></b></label>
+            <input id="walk_in_name" placeholder="EG. JASON MICHAEL" type="text"
+              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+              [(ngModel)]="formData.visitor_name" name="visitor_name">
           </div>
           <div class="flex flex-row justify-between w-full">
-            <div class="w-4/6">
-              <input id="walk_in_contact" placeholder="CONTACT NO"
-                type="text"
-                class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
-              [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
+            <div class="w-4/6 flex flex-col">
+              <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
+              <input id="walk_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
+                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+                [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
             </div>
-            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+            <div class="h-25 flex flex-col justify-end w-1/4">
+              <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl">SEARCH</button>
+            </div> 
           </div>
-          <div class="w-full">
-            <select id="rv_block" (change)="onBlockChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <select id="rv_block" (change)="onBlockChange($event)"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option selected>CHOOSE BLOCK</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-          <div class="w-full">
-            <select id="rv_unit" (change)="onUnitChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>UNIT</u></b></label>
+            <select id="rv_unit" (change)="onUnitChange($event)"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option selected>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitWalkIn()"
-              ></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitWalkIn(true)"
-              ></app-visitor-button>
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
+              (click)="onSubmitWalkIn()"></app-visitor-button>
+            <!-- <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"
+              (click)="onSubmitWalkIn(true)"></app-visitor-button> -->
           </div>
         </div>
       </form>
 
-      <form class="justify-between items-center h-80 w-full" #driveInForm="ngForm"  *ngIf="showDrive" @fadeInOut>
-        <div class="mt-8 flex flex-col justify-between items-center h-80 w-full space-y-3">
-          <div class="w-full">
-            <input id="drive_in_name" placeholder="NAME"
-              type="text"
-              class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
-            [(ngModel)]="formData.visitor_name" name="visitor_name">
+      <form class="justify-between items-center w-full mx-4" #driveInForm="ngForm" *ngIf="showDrive" @fadeInOut>
+        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-3  mb-4">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>NAME</u></b></label>
+            <input id="drive_in_name" placeholder="EG. BRIAN REINER" type="text"
+              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+              [(ngModel)]="formData.visitor_name" name="visitor_name">
           </div>
           <div class="flex flex-row justify-between w-full">
-            <div class="w-4/6">
-              <input id="drive_in_contact" placeholder="CONTACT NO"
-                type="text"
-                class="border-black border-[1px] w-full rounded py-2 px-3 text-xs h-10"
-              [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
+            <div class="w-4/6 flex flex-col">
+              <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
+              <input id="drive_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
+                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+                [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
             </div>
-            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs">SEARCH</button>
+            <div class="h-25 flex flex-col justify-end w-1/4">
+              <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl">SEARCH</button>
+            </div>            
           </div>
           <div class="w-full flex flex-row justify-between">
-            <input id="drive_in_vehicle" placeholder="VEHICLE NUMBER"
-              type="text"
-              class="border-black border-[1px] py-2 px-3 outline-[#DBDBD] text-xs rounded h-10 w-[90%]"
-            [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
-              <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
+            <div class="w-[90%] flex flex-col">
+              <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
+              <input id="drive_in_vehicle" placeholder="EG. SBA 8888 V" type="text"
+                class="border-[1px] py-2 px-3 outline-[#DBDBD] text-2xl rounded h-20"
+                [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
+            </div>
+            <div class="h-25 flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+            </div>
           </div>
-          <div class="w-full">
-            <select id="rv_block" (change)="onBlockChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <select id="rv_block" (change)="onBlockChange($event)"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option selected>CHOOSE BLOCK</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-          <div class="w-full">
-            <select id="rv_unit" (change)="onUnitChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-              <option selected>CHOOSE UNIT</option>
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>UNIT</u></b></label>
+            <select id="rv_unit" (change)="onUnitChange($event)"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+              <option value="0" selected>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>
-          <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"
-              (click)="onSubmitDriveIn()"></app-visitor-button>
+          <div class="w-full ">
+            <!-- <app-visitor-button [text]="'SAVE RECORD'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
+              (click)="onSubmitDriveIn()"></app-visitor-button> -->
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'" (click)="onSubmitDriveIn(true)"
-              ></app-visitor-button>
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
+              (click)="onSubmitDriveIn(true)"></app-visitor-button>
           </div>
         </div>
       </form>

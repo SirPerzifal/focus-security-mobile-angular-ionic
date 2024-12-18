@@ -13,6 +13,6 @@ export class HistoryService extends ApiService{
   }
 
   getHistoryList(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/get/visitor_history`, {jsonrpc: '2.0', params: {unit_id: 0}})
+    return this.http.post<any>(`${this.baseUrl}/resident/get/visitor_history`, {jsonrpc: '2.0', params: {unit_id: 1}})
   }
 }

@@ -39,7 +39,7 @@ export class VisitorService extends ApiService{
           is_provide_unit,
           invitees,
           hired_car,
-          unit, 
+          unit: 1, 
         }
       },
       {headers}
@@ -50,7 +50,7 @@ export class VisitorService extends ApiService{
   }
 
   getActiveInvites(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/get/active_invites`, {jsonrpc: '2.0', params: {unit_id: 0}})
+    return this.http.post<any>(`${this.baseUrl}/resident/get/active_invites`, {jsonrpc: '2.0', params: {unit_id: 1}})
   }
 
   postCancelVisitor(

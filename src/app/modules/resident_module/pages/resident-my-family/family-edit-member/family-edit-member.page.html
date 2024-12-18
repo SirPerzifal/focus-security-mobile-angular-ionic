@@ -68,7 +68,7 @@
         </select>
       </div>
       
-      <div class="w-full" *ngIf="formData.type_of_residence == 'tenants'">
+      <!-- <div class="w-full" *ngIf="formData.type_of_residence == 'tenants'">
         <app-text-input
           [id]="'tenancies.end_of_tenancy_aggrement'"
           [placeholder]="'End Date of Tenancy Agreement'"
@@ -78,13 +78,14 @@
           [value]="formData.tenancies.end_of_tenancy_aggrement"
           (valueChange)="onEndOfTenancyAgreementChange($event)"
         ></app-text-input>
-      </div>
+      </div> -->
       <div class="w-full" *ngIf="formData.type_of_residence != 'tenants'">
         <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="onSubmit()">Update Family Member Details</button>
         <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" [routerLink]="['/resident-my-family']">Send a Reset Password Email</button>
         <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="onDelete()">Delete Family member</button>
       </div>
       <div class="w-full" *ngIf="formData.type_of_residence == 'tenants'">
+        <!-- <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="onSubmit()">Update Tenant Details</button> -->
         <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="openExtend()">Request for Tenancy Agreement Date Extension</button>
         <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="onDelete()">Delete User</button>
       </div>

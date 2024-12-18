@@ -10,7 +10,11 @@ import {
   faCar,
   faCouch,
   faUser,
-  faCheck
+  faCheck,
+  faPersonWalking,
+  faCarSide,
+  faBoxesPacking,
+  faQrcode
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -21,6 +25,7 @@ import {
 export class ButtonIconComponent implements OnInit {
   
   @Input() text: string = '';
+  @Input() textOnly: boolean = false;
   @Input() extraClass: string = ''; 
   @Input() extraTextClass: string = ''; 
   @Input() customNameIcon: string = '';
@@ -74,6 +79,18 @@ export class ButtonIconComponent implements OnInit {
       case 'faCar':
         this.icon = faCar;
         break;
+      case 'faPersonWalking':
+        this.icon = faPersonWalking;
+          break;
+      case 'faCarSide':
+        this.icon = faCarSide;
+          break;
+      case 'faBoxesPacking':
+        this.icon = faBoxesPacking;
+          break;
+      case 'faQrcode':
+        this.icon = faQrcode;
+          break;
       default:
         this.icon = faCar;
     }

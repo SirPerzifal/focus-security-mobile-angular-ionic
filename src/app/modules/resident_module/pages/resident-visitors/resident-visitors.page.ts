@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
 interface FormData {
-  dateOfInvite: Date;
+  dateOfInvite: string;
   vehicleNumber: string;
   entryType: string;
   entryTitle: string;
@@ -32,6 +32,8 @@ interface FormData {
   ]
 })
 export class ResidentVisitorsPage implements OnInit {
+  
+  formattedDate: string = '';
   showNewInv = true;
   showActInv = false;
   showNewInvTrans = false;
@@ -42,6 +44,7 @@ export class ResidentVisitorsPage implements OnInit {
     {
       name: '',
       dateOfInvite: '',
+      vehicleNumber: '',
       vehicleNo: '',
       entryType: '',
       invite_id: '',
@@ -53,15 +56,9 @@ export class ResidentVisitorsPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private residentVisitorService: VisitorService,
-    private toastController: ToastController
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: FormData };
-    if (state) {
-      this.formData = state.formData;
-      console.log(this.formData)
-    }
-  }
+    private toastController: ToastController,
+    private activeRoute: ActivatedRoute
+  ) {}
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
@@ -70,8 +67,6 @@ export class ResidentVisitorsPage implements OnInit {
       color: color
     });
 
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
 
     toast.present().then(() => {
       
@@ -80,7 +75,7 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   formData = {
-    dateOfInvite: new Date(),
+    dateOfInvite: "",
     vehicleNumber: "",
     entryType: "",
     entryTitle: "",
@@ -90,16 +85,33 @@ export class ResidentVisitorsPage implements OnInit {
     unit: 0,
   }
 
+  getTodayDate(): string {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+    const yyyy = today.getFullYear();
+    return `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+  }
+
   onEntryTypeChange(value: string): void {
     this.formData.entryType = this.formData.entryType === value ? '' : value;
   }
 
   onProvideUnitChange() {
-    this.formData.isProvideUnit = !this.formData.isProvideUnit
+    this.formData.isProvideUnit = !this.formData.isProvideUnit;
   }
 
-  onVehicleNumberChange(value: string) {
-    this.formData.vehicleNumber = value;
+  onDateOfInviteChange(value: string) {
+    // Simpan nilai dalam format yyyy-mm-dd
+    this.formData.dateOfInvite = value;
+
+    // Konversi ke format dd/mm/yyyy untuk ditampilkan
+    const dateParts = value.split('-');
+    if (dateParts.length === 3) {
+        this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // dd/mm/yyyy
+    } else {
+        this.formattedDate = ''; // Reset jika format tidak valid
+    }
   }
 
   entryTitleChange(value: string) {
@@ -107,40 +119,49 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   onSubmitNext() {
-    let errMsg = ''
-    if (this.formData.vehicleNumber == "") {
-      errMsg += 'Please fill vehicle number! \n'
-    }
-    if (this.formData.entryType == "") {
-      errMsg += "Please choose entry type! \n"
-    }
-    if (this.formData.entryTitle == "") {
-      errMsg += "Please fill entry tittle! \n"
+    if (!this.formData.isProvideUnit) {
+      this.presentToast('Please provide your unit number to proceed.', 'danger');
+      return; // Hentikan eksekusi jika checkbox tidak dicentang
     }
     
-    console.log(this.formData)
-    if (errMsg == ''){
+    let errMsg = '';
+    if (this.formData.dateOfInvite == "") {
+      errMsg += 'Please fill vehicle number! \n';
+    }
+    if (this.formData.entryType == "") {
+      errMsg += "Please choose entry type! \n";
+    }
+    if (this.formData.entryTitle == "") {
+      errMsg += "Please fill entry title! \n";
+    }
+    
+    console.log(this.formData);
+    if (errMsg == '') {
       this.router.navigate(['/invite-form'], {
         state: {
           formData: this.formData,
         }
       });
     } else {
-      this.presentToast(errMsg, 'danger')
+      this.presentToast(errMsg, 'danger');
     }
-    
   }
 
-  getActiveInvites(){
-    try{
+  getActiveInvites() {
+    try {
       this.residentVisitorService.getActiveInvites().subscribe(
         res => {
-          var result = res.result['response_result']
-          this.activeInvites = []
+          var result = res.result['response_result'];
+          this.activeInvites = [];
           result.forEach((item: any) => {
+            // Memformat dateOfInvite
+            const visitDate = item['visit_date'];
+            const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
+  
             this.activeInvites.push({
               name: item['visitor_name'],
-              dateOfInvite: item['visit_date'],
+              dateOfInvite: formattedDate, // Menggunakan tanggal yang sudah diformat
               vehicleNo: item['vehicle_number'],
               entryType: item['entry_type'],
               invite_id: item['invite_id'],
@@ -149,13 +170,13 @@ export class ResidentVisitorsPage implements OnInit {
           });
         },
         error => {
-          console.log(error)
+          console.log(error);
         }
-      )
-     } catch (err) {
-      console.log(err)
-     }
-     console.log(this.activeInvites)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    // console.log(this.activeInvites);
   }
 
   toggleShowInv() {
@@ -251,12 +272,31 @@ export class ResidentVisitorsPage implements OnInit {
 
   ngOnInit() {
     this.getActiveInvites()
+    this.formattedDate = this.getTodayDate(); // Set tanggal hari ini
+    // Inisialisasi formattedDate jika ada tanggal yang sudah ada
+    if (this.formData.dateOfInvite) {
+      const dateParts = this.formData.dateOfInvite.split('-');
+      if (dateParts.length === 3) {
+          this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // dd/mm/yyyy
+      }
+    }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        if (event['url'] == '/resident-visitors'){
+        console.log(event['url'])
+        if (event['url'].split('?')[0] == '/resident-visitors'){
           this.getActiveInvites();
+          this.activeInvites
         }
       }
     });
+    this.activeRoute.queryParams.subscribe(params => {
+      console.log(params);
+      if (params['openActive']) {
+        this.toggleShowActInv()
+      } else {
+        this.toggleShowNewInv()
+      }
+    });
+  
   }
 }

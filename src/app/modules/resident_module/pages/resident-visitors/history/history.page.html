@@ -3,13 +3,22 @@
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
     <div class="flex flex-row justify-between mt-4">
-      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowInv()"></app-visitor-button>
-      <app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHired()"></app-visitor-button>
-      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowInv()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowHired()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+				(click)="toggleShowHistory()">
+			</app-visitor-button>
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
-        <div class="w-full mt-4">
+        <div class="flex flex-row justify-start mt-4">
+          <p class="text-sm font-bold">Filter for Type History</p>
+        </div>
+        <div class="w-full mt-1">
             <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onChangeVisitorType($event)">
               <option value="" selected>Type of Invite History</option>
               <option value="Visiting">Visiting</option>
@@ -19,8 +28,34 @@
             </select>
         </div>
         <div class="flex flex-row w-full mt-4 items-center">
-          <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]" (change)="onChangeDateFilter($event)">
-          <u class="ml-2 text-xs font-bold" (click)="clearDateFilter()">Clear Filter</u>
+          <div class="w-full flex flex-col items-center">
+            <div class="flex flex-row justify-between items-center w-full mb-1">
+              <p class="text-sm font-bold">Filter Date</p>
+              <u class="text-sm font-bold" (click)="clearDateFilter()">Clear Filter</u>
+            </div>
+            <div class="flex flex-row space-x-2 w-full">
+              <div class="flex flex-row items-center justify-between border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-sm">
+                <input
+                  type="text"
+                  placeholder="Start Filter Date"
+                  value="{{showStartDate}}"
+                  class="w-[100px]"
+                  readonly
+                />
+                <input type="date" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
+              </div>
+              <div class="flex flex-row items-center justify-between border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-sm">
+                <input
+                  type="text"
+                  placeholder="End Filter Date"
+                  value="{{showEndDate}}"
+                  class="w-[100px]"
+                  readonly
+                />
+                <input type="date" min="{{startDateFilter}}" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeEndDate($event)">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">

@@ -38,6 +38,7 @@ export class ResidentMyFamilyPage implements OnInit {
         console.log(error)
       }
     )
+    console.log(this.familyData)
   }
 
   ngOnInit() {

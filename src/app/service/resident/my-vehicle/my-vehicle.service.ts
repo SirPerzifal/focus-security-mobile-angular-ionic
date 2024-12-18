@@ -14,14 +14,21 @@ export class MyVehicleService extends ApiService {
     super(http);
   }
 
-  getVehicleDetail(): Observable<any> {
+  getVehicleDetail(unitId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
   
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        unit_id: unitId,
+      }
+    };
+
     // Change to send data in request body
-    return this.http.post(`${this.apiUrl}`, {}, { headers }).pipe(
+    return this.http.post(`${this.apiUrl}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

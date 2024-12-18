@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mt-2 mb-16">
+  <div class="flex flex-col relative mt-2 mb-32">
     <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
         <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
@@ -20,32 +20,23 @@
       </div>
     </div>
 
-    <div class="w-full bg-green-100 text-center my-4 m-0">
-      <h2 class="text-lg font-bold text-black">
-        {{ facilityDetail?.facility_name || 'Place Name' }}
-      </h2>
-      <p class="text-sm text-black">
-        Total Facilities: {{ facilityDetail?.total_facilities || 0 }}
-      </p>
-    </div>
-
-    <div class="mx-4 flex flex-col relative">
-      <ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/facility-new-booking']">
+    <div class="flex flex-row w-full bg-green-100 my-4 m-0">
+      <ion-button class="w1/5 mr-1.5 flex flex-row justify-center items-center icon" fill="clear" [routerLink]="['/facility-new-booking']">
         <div class="flex flex-col items-center text-black">
           <ion-icon name="arrow-back"></ion-icon>
         </div>
       </ion-button>
-
-      <div class="flex flex-row justify-center space-x-3 w-full">
-        <ng-container *ngFor="let room of facilityDetail?.facility_detail">
-          <app-visitor-button 
-            [text]="room.room_name" 
-            [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'"
-            (click)="roomId = room.room_id; loadRoomSchedule()"
-          ></app-visitor-button>
-        </ng-container>
+      <div class="w-4/5 flex flex-col justify-center items-center text-black text-center">
+        <h2 class="text-lg font-bold text-black">
+          {{ facilityDetail?.facility_name || 'Place Name' }}
+        </h2>
+        <p class="text-sm text-black">
+          Total Facilities: {{ facilityDetail?.total_facilities || 0 }}
+        </p>
       </div>
+    </div>
 
+    <div class="mx-4 flex flex-col relative">
       <div class="my-4">
         <ion-datetime-button datetime="datetime"></ion-datetime-button>
         <ion-modal keep-contents-mounted="true">
@@ -54,10 +45,23 @@
               id="datetime" 
               presentation="date" 
               [(ngModel)]="selectedDate"
-              format-options='{"date": {"weekday": "short", "month": "long", "day": "2-digit"}}'
+              [formatOptions]="{
+                date: {
+                  day: '2-digit',
+                  weekday: 'short',
+                  month: 'long',
+                },
+              }"
             ></ion-datetime>
           </ng-template>
         </ion-modal>
+      </div>
+
+      <div class="flex flex-row justify-center space-x-3 w-full mb-3">
+        <select id="ch_room" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+          <option selected>CHOOSE ROOM</option>
+          <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.room_name }}</option>
+        </select>
       </div>
 
       <div class="grid grid-cols-3 gap-2 mb-4">

@@ -24,14 +24,14 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 export class DeliveriesPage implements OnInit {
 
   deliveriesType = [
-    { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'WALK IN', isActive: false },
-    { icon: 'faCar', text: 'DRIVE IN', isActive: false },
+    { icon: 'faPersonWalking', text: 'WALK IN', isActive: false },
+    { icon: 'faCarSide', text: 'DRIVE IN', isActive: false },
   ];
   foodDeliveryButtons = [
     { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: 0 }
   ];
   packageDeliveryButtons = [
-    { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: 0 },
+    { image: 'assets/icon/deliveries-icon/Package.webp', text: 'Not Exist', isActive: false, id: 0 },
   ];
 
   constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService) { }
@@ -72,7 +72,9 @@ export class DeliveriesPage implements OnInit {
         var result = res.result['result']
         console.log(result)
         result.forEach((item: any) => {
-          this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: item['name'], isActive: false, id: item['id']});
+          const base64Image = item['icon'];
+          const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/FoodBar.webp'; 
+          this.foodDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
         });
         this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 0});
       },
@@ -89,10 +91,13 @@ export class DeliveriesPage implements OnInit {
         var result = res.result['result']
         console.log(result)
         result.forEach((item: any) => {
-          this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: item['name'], isActive: false, id: item['id']});
+          const base64Image = item['icon'];
+          const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp'; 
+          console.log(formattedImage)
+          this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
           console.log(item)
         });
-        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 0});
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 0});
       },
       error => {
         console.log(error)
@@ -400,31 +405,53 @@ export class DeliveriesPage implements OnInit {
     // Reset all buttons to inactive
     
     // Set the selected button to active
-    
+    console.log(this.food_delivery_id)
     if (this.foodDeliveries) {
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
-      this.food_delivery_id = selectedButton.id
+      if(this.food_delivery_id != selectedButton.id){
+        this.food_delivery_id = selectedButton.id
+      } else {
+        this.food_delivery_id = 0
+      }
     }
 
     if (this.packageDeliveries) {
       this.packageDeliveryButtons.forEach(button => button.isActive = false);
-      this.package_delivery_id = selectedButton.id
+      if(this.package_delivery_id != selectedButton.id){
+        this.package_delivery_id = selectedButton.id
+      } else {
+        this.package_delivery_id = 0
+      }
     }
 
-    selectedButton.isActive = true;
+    selectedButton.isActive = !selectedButton.isActive;
 
     // Handle any additional logic needed for the button click
     console.log(`Button clicked: ${selectedButton.id}, Active: ${selectedButton.isActive}`);
+    
   }
 
   toggleDeliveryTypeButton(selectedButton: any) {
     // Reset all buttons to inactive
+    let mark = false
     this.deliveriesType.forEach(button => button.isActive = false);
     // Set the selected button to active
+
     selectedButton.isActive = true;
 
     // Handle any additional logic needed for the button click
-    this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
+    if (this.food_delivery_type == 'walk_in' && selectedButton.text == 'WALK IN') {
+      mark = true
+    }
+    if (this.food_delivery_type == 'drive_in' && selectedButton.text == 'DRIVE IN') {
+      mark = true
+    }
+    if (mark){
+      this.food_delivery_type = ''
+    } else {
+      this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
+    }
+    
     console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
   }
 
@@ -520,7 +547,13 @@ export class DeliveriesPage implements OnInit {
     }
   }
 
+  vehicle_number = ''
+
   refreshVehicle() {
-    console.log("Vehicle Refresh")
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.formData.vehicle_number = randomVhc
+    console.log("Vehicle Refresh", this.formData.vehicle_number)
   }
 }

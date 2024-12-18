@@ -29,7 +29,8 @@ export class FamilyService extends ApiService{
       email_address,
       mobile_number,
       type_of_residence,
-      tenancies
+      tenancies,
+      unit: 1
     }})
   }
 

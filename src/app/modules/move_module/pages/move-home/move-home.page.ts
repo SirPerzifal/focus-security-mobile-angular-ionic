@@ -110,8 +110,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       color: color
     });
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+    
 
     toast.present().then(() => {
       

@@ -1,44 +1,74 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20"
+          [routerLink]="['/ma-visitor-list']"></ion-icon>
+        <span
+          class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
       <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']"
+        [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex flex-row justify-start mt-8">
-      <app-visitor-button [text]="'WALK IN'" [extraClass]="showWalk ? 'bg-[var(--ion-color-primary)] text-white w-24 mr-2' : 'bg-[#D0D0D0] text-[#757575] w-24 mr-2'" (click)="toggleShowWalk()"></app-visitor-button>
-      <app-visitor-button [text]="'DRIVE IN'" [extraClass]="showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowDrive()"></app-visitor-button>
-      <div class="w-1/3"></div>
+    <div class="flex mt-8 flex-rowspace-x-4 space-x-7">
+      <!-- <app-button-icon [textOnly]="true" [text]="'WALK IN'"
+        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
+        <app-button-icon [textOnly]="true" [text]="'DRIVE IN'"
+        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" /> -->
+        <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
+        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
+        <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
+        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
+
+
+      <!-- <app-visitor-button [text]="'WALK IN'"
+        [extraClass]="showWalk ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28 mr-2' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28 mr-2'"
+        (click)="toggleShowWalk()"></app-visitor-button>
+      <app-visitor-button [text]="'DRIVE IN'"
+        [extraClass]="showDrive ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'"
+        (click)="toggleShowDrive()"></app-visitor-button>
+      <div class="w-1/3"></div> -->
     </div>
 
     <div class="flex flex-row">
-      <div class="mt-4 flex flex-col justify-between items-center h-80 w-full">
-        <div class="w-full mt-2">
-          <app-text-input [id]="'drive_in_name'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [value]="'VEEKNESH'"></app-text-input>
-        </div> 
-        <div class="flex flex-row justify-between w-full mt-2">
+      <div class="mt-8 flex flex-col items-center mx-4 space-y-3 w-full mb-4" *ngIf="showWalk" @fadeInOut>
+        <div class="w-full">
+          <app-text-input [id]="'walk_in_name'" [placeholder]="'EG. HANA CHLOE'" [labelText]="'NAME'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+            [value]="'VEEKNESH'"></app-text-input>
+        </div>
+        <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
-            <app-text-input [id]="'drive_in_contact'" [placeholder]="'CONTACT NO'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [value]="'8021 6095'"></app-text-input>
+            <app-text-input [id]="'walk_in_contact'" [placeholder]="'EG. +65 XXXX XXX'" [labelText]="'CONTACT NUMBER'"
+              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [value]="'8021 6095'"></app-text-input>
           </div>
-          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-xs rounded">SEARCH</button>
+          <div class="w-1/4 flex flex-col justify-end">
+            <button id="middle_button"
+              class="bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl rounded">SEARCH</button>
+          </div>
         </div>
-        <div class="w-full mt-2 flex flex-row justify-between">
+        <!-- <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
-            <app-text-input [id]="'drive_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [value]="'SNK5424D'"></app-text-input>
+            <app-text-input [id]="'walk_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [value]="'SNK5424D'"></app-text-input>
           </div>
-          <img alt="Loading" src="assets/img/Loading.png" class="h-10 w-10" (click)="refreshVehicle()" />
-        </div>
-        <div class="w-full mt-2">
-          <select id="drive_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+          <div class="h-25 flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+            </div>
+        </div> -->
+        <div class="w-full">
+          <label class="text-2xl"><u><b>BLOCK</b></u></label>
+          <select id="walk_in_block"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option selected>CHOOSE BLOCK</option>
             <option value="block_1">BLK 27A</option>
             <option value="block_2">BLK 28A</option>
@@ -46,9 +76,11 @@
             <option value="block_4">BLK 39A</option>
           </select>
         </div>
-        <div class="w-full mt-2">
-          <!-- <app-text-input [id]="'drive_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <select id="drive_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+        <div class="w-full">
+          <label class="text-2xl"><u><b>UNIT</b></u></label>
+          <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-2xl':true}"></app-text-input> -->
+          <select id="walk_in_unit"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option selected>CHOOSE UNIT</option>
             <option value="unit_1">900</option>
             <option value="unit_2">910</option>
@@ -57,12 +89,76 @@
           </select>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-xs'"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-xs'"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button>
+
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-col items-center mx-4 space-y-3 w-full mb-4" *ngIf="showDrive" @fadeInOut>
+        <div class="w-full">
+          <app-text-input [id]="'drive_in_name'" [labelText]="'NAME'" [placeholder]="'EG. MARCUS DAVIDSON'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+            [value]="'VEEKNESH'"></app-text-input>
+        </div>
+        <div class="flex flex-row justify-between w-full">
+          <div class="w-4/6">
+            <app-text-input [id]="'drive_in_contact'" [placeholder]="'EG. +65 XXXX XXX'" [labelText]="'CONTACT NUMBER'"
+              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [value]="'8021 6095'"></app-text-input>
+          </div>
+          <div class="w-1/4 flex flex-col justify-end">
+            <button id="middle_button"
+              class="bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl rounded">SEARCH</button>
+          </div>
+        </div>
+        <div class="w-full flex flex-row justify-between">
+          <div class="w-[90%]">
+            <app-text-input [id]="'drive_in_vehicle'" [placeholder]="'EG. SAA 2392 T'" [labelText]="'VEHICLE NUMBER'"
+              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [value]="'SNK5424D'"></app-text-input>
+          </div>
+          <div class="flex flex-col justify-end">
+            <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
+          </div>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><u><b>BLOCK</b></u></label>
+          <select id="drive_in_block"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option selected>CHOOSE BLOCK</option>
+            <option value="block_1">BLK 27A</option>
+            <option value="block_2">BLK 28A</option>
+            <option value="block_3" selected>BLK 29A</option>
+            <option value="block_4">BLK 39A</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><u><b>UNIT</b></u></label>
+          <!-- <app-text-input [id]="'drive_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-2xl':true}"></app-text-input> -->
+          <select id="drive_in_unit"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option selected>CHOOSE UNIT</option>
+            <option value="unit_1">900</option>
+            <option value="unit_2">910</option>
+            <option value="unit_3">1000</option>
+            <option value="unit_4" selected>0101</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button>
         </div>
       </div>
     </div>
-    
+
   </div>
-  
+
 </ion-content>

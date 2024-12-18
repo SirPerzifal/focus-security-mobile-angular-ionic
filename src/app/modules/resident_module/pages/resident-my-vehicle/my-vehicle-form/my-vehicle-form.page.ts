@@ -25,14 +25,19 @@ export class MyVehicleFormPage implements OnInit {
   // Data untuk dropdown
   vehicleMakes: any[] = [];
   vehicleTypes: any[] = [];
+  vehicleColours: any[] = [];
   Block: any[] = [];
   Unit: any[] = [];
+  FamilyMember: any[] = [];
+  showDate = '';
 
 
   // State untuk form
   selectedTypeOfApplication: string = '';
   selectedVehicleType: string = '';
+  selectedFamilyMember: string = '';
   selectedVehicleMake: string = '';
+  selectedVehicleColour: string = '';
   selectedBlock: string = '';
   selectedUnit: string = '';
   selectedTemporaryCarReason: string = '';
@@ -46,15 +51,35 @@ export class MyVehicleFormPage implements OnInit {
 
   ngOnInit() {
     this.loadVehicleMakeAndType();
+    this.loadFamilyMember();
     this.loadBlock();
+  }
+
+  loadFamilyMember() {
+    const unitId = 1; // Ganti dengan unit_id yang sesuai
+    this.myVehicleFormService.getFamily(unitId).subscribe({
+      next: (response: any) => {
+        if (response.result.response_code === 200) {
+          this.FamilyMember = response.result.family_data;
+        } else {
+          this.presentToast('Failed to load vehicle data', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading vehicle data', 'danger');
+        console.error('Error:', error);
+      }
+    });
   }
 
   loadVehicleMakeAndType() {
     this.myVehicleFormService.getVehicleMakeAndType().subscribe({
       next: (response: any) => {
         if (response.result.response_code === 200) {
+          console.log(response.result)
           this.vehicleMakes = response.result.vehicle_makes;
           this.vehicleTypes = response.result.vehicle_types;
+          this.vehicleColours = response.result.vehicle_colors;
         } else {
           this.presentToast('Failed to load vehicle data', 'danger');
         }
@@ -144,6 +169,14 @@ export class MyVehicleFormPage implements OnInit {
     this.loadUnit(); // Panggil method load unit
   }
 
+  onFamilyMemberChange(event: any) {
+    this.selectedFamilyMember = event.target.value;
+  }
+
+  onColourChange(event: any) {
+    this.selectedVehicleColour = event.target.value;
+  }
+
   onUnitChange(event: any) {
     this.selectedUnit = event.target.value;
   }
@@ -157,6 +190,8 @@ export class MyVehicleFormPage implements OnInit {
     const inputDate = event.target.value;
     // Format date ke YYYY-MM-DD sesuai kebutuhan Odoo
     this.endDate = inputDate; // Simpan dalam format yang benar
+    const dateParts = this.endDate.split('-');
+    this.showDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
   }
 
   // Tambahkan properti untuk menyimpan tanggal
@@ -166,10 +201,9 @@ export class MyVehicleFormPage implements OnInit {
     // Validasi input
     const vehicleNumber = this.vehicleNumberInput.value;
     const iuNumber = this.iuNumberInput.value;
-    const vehicleColor = this.vehicleColorInput.value;
     const endDate = this.endDate;
     const company_id = 1;
-    const states = 'pending_payment';
+    const states = 'pending_approval';
     const temporaryCarRequest = this.selectedTemporaryCarReason
 
     // Validasi file log
@@ -214,8 +248,13 @@ export class MyVehicleFormPage implements OnInit {
       return;
     }
 
-    if (!vehicleColor) {
-      this.presentToast('Masukkan warna kendaraan', 'danger');
+    if (!this.selectedFamilyMember) {
+      this.presentToast('Pilih keluarga anda', 'danger');
+      return;
+    }
+
+    if (!this.selectedVehicleColour) {
+      this.presentToast('Pilih warna kendaraan', 'danger');
       return;
     }
 
@@ -238,9 +277,10 @@ export class MyVehicleFormPage implements OnInit {
         this.selectedTypeOfApplication,
         this.selectedVehicleType,
         this.selectedVehicleMake,
+        this.selectedVehicleColour,
         this.selectedBlock,
+        this.selectedFamilyMember,
         this.selectedUnit,
-        vehicleColor,
         this.uploadedFileBase64, // Kirim base64
         this.endDate,
         states,
@@ -272,6 +312,7 @@ export class MyVehicleFormPage implements OnInit {
     this.vehicleNumberInput.value = '';
     this.iuNumberInput.value = '';
     this.vehicleColorInput.value = '';
+    this.showDate = '';
     // Reset file
     this.selectedFile = null;
     this.uploadedFileBase64 = null;

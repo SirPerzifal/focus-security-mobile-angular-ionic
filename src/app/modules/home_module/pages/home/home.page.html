@@ -1,41 +1,53 @@
 <ion-content [fullscreen]="true" class="p-8 h-full flex flex-col overflow-scroll scrollbar overflow-y-hidden vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="mt-3 flex flex-col items-center justify-center text-center">
-    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
+    <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
     <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
   </div>
   <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
-    <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP DROP OFF'" [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'" [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'COLLECTION'" [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'" [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true" [routerLink]="['/emergency-module']" [disableClick]="true" />
-    <app-button-icon [customNameIcon]="'faCar'" [text]="'OVERNIGHT PARKING LIST'" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faLocationDot'" [text]="'PICK UP / DROP OFF'" [routerLink]="['/pick-up-page']"
+      [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'"
+      [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/contractor.webp'" [text]="'CONTRACTORS'"
+      [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT RENOVATORS'" [routerLink]="['/move-home']"
+      [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'"
+      [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'COLLECTION'"
+      [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Swimming.webp'" [text]="'COACHES'"
+      [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faTruckMedical'" [text]="'EMERGENCY VEHICLES'" [isActive]="true"
+      [routerLink]="['/emergency-module']" [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faCar'" [text]="'OVERNIGHT PARKING LIST'" [isActive]="true"
+      [disableClick]="true" />
+    <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'"
+      [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" />
     <app-button-icon [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST'" [isActive]="true" [disableClick]="true" />
-    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']" [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
+    <app-button-icon [customImageIcon]="'assets/icon/home-icon/Management.webp'" [routerLink]="['/ma-visitor-list']"
+      [text]="'MA VISITOR LIST'" [isActive]="true" [disableClick]="true" />
   </div>
   <div class="bottom-0 w-full p-4 justify-items-end">
     <div class="grid grid-cols-2 w-full">
-      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/vehicle-records-page']">
+      <ion-button fill="clear"
+        class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] h-20 text-2xl"
+        [routerLink]="['/vehicle-records-page']">
         VEHICLE RECORDS
       </ion-button>
-      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/visitor-records']">
+      <ion-button fill="clear"
+        class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] h-20 text-2xl"
+        [routerLink]="['/visitor-records']">
         VISITOR RECORDS
       </ion-button>
     </div>
     <div class="relative w-full mt-4">
-      <ion-button expand="block" fill="clear" class="w-full fsh-alert-button bg-[red] text-[var(--ion-color-medium-contrast)]" [routerLink]="['/alert-main']">
+      <ion-button expand="block" fill="clear"
+        class="w-full fsh-alert-button bg-[red] text-[var(--ion-color-medium-contrast)] h-20 text-2xl" [routerLink]="['/alert-main']">
         ALERTS
       </ion-button>
       <span class="fsh-badge-button bg-[var(--ion-color-danger)]">

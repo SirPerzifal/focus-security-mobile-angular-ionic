@@ -1,14 +1,10 @@
-<div class="fsc-icon-button-layout">
-  <ion-button 
-    fill="clear" 
-    class="fsc-icon-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]" 
+<div class="fsc-icon-button-layout" *ngIf="!textOnly">
+  <ion-button fill="clear" class="fsc-icon-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]"
     [ngClass]="{
       extraClass: true,
       'bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]': isActive,
-      'bg-[#D0D0D0] text-[#757575]': !isActive
-    }"
-    (click)="onButtonClick()"
-  >
+      'bg-[#D0D0D0] text-white': !isActive
+    }" (click)="onButtonClick()">
     <ng-container *ngIf="showIcon; else imageTemplate">
       <fa-icon class="fsc-icon" [icon]="icon"></fa-icon>
     </ng-container>
@@ -21,4 +17,28 @@
   <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]" [ngClass]="extraTextClass">
     {{text}}
   </span>
+</div>
+
+<div class="fsc-icon-button-layout" *ngIf="textOnly">
+  <ion-button fill="clear" class="fsc-text-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] p-0"
+    [ngClass]="{
+      extraClass: true,
+      'bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)]': isActive,
+      'bg-[#D0D0D0] text-white': !isActive
+    }" (click)="onButtonClick()">
+    <ng-container>
+      <div [ngClass]="{
+        extraClass: true,
+        'text-white': isActive,
+        'text-[#757575]': !isActive,
+        'text-2xl': text != 'PRE REGISTERED',
+        'text-xl': text == 'PRE REGISTERED'
+      }">
+        <b>{{text}}</b>
+      </div>
+    </ng-container>
+  </ion-button>
+  <!-- <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]" [ngClass]="extraTextClass">
+    {{text}}
+  </span> -->
 </div>

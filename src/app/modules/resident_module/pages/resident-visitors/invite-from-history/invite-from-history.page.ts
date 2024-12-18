@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-invite-from-history',
@@ -11,21 +12,26 @@ export class InviteFromHistoryPage implements OnInit {
     {
       name: 'Sunil Jayakumar',
       phone: '085830122464',
-      plate: 'SNK5424D'
+      plate: 'SNK5424D',
+      is_selected: false,
     },
     {
       name: 'Ashwinder',
       phone: '085841233575',
-      plate: 'SNK6535D'
+      plate: 'SNK6535D',
+      is_selected: false,
     },
     {
       name: 'Daniel',
       phone: '085821233575',
-      plate: 'SNK6035D'
+      plate: 'SNK6035D',
+      is_selected: false,
     }
   ];
 
   selectedInvitees: any[] = [];
+
+  faCheck = faCheck
 
   constructor(private router: Router) {}
 
@@ -49,6 +55,7 @@ export class InviteFromHistoryPage implements OnInit {
   }
 
   toggleSelect(invitee: any) {
+    invitee.is_selected = !invitee.is_selected
     const index = this.selectedInvitees.findIndex(
       selected => 
         selected.name === invitee.name && 

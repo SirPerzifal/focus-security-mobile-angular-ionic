@@ -9,6 +9,7 @@ import { ApiService } from '../../../api.service';
 })
 export class MyVehicleFormService extends ApiService{
   private apiUrl = this.baseUrl + '/resident/get/get_car_make_and_type';
+  private apiGetFamiilyUrl = this.baseUrl + '/residential/get/family_member_data';
 
   constructor(http: HttpClient) { 
     super(http);
@@ -26,15 +27,35 @@ export class MyVehicleFormService extends ApiService{
     );
   }
 
+  getFamily(unitId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        unit_id: unitId,
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.apiGetFamiilyUrl}`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   postVehicle(
     vehicleNumber: string, 
     iuNumber: string, 
     typeOfApplication: string, 
     vehicleType: string, 
     vehicleMake: string, 
+    vehicleColour: string,
     blockId: string,
-    unitID: string, 
-    vehicleColor: string, 
+    familyMember: string,
+    unitID: string,
     vehicleLog: string, 
     endDateForTemporaryPass: string | null,
     states: string,
@@ -56,8 +77,9 @@ export class MyVehicleFormService extends ApiService{
         vehicle_type: vehicleType,
         vehicle_make: vehicleMake,
         block_id: blockId,
+        family_id: familyMember,
         unit_id: unitID,
-        vehicle_color: vehicleColor,
+        vehicle_color: vehicleColour,
         vehicle_log_filename: vehicleLogFilename,
         vehicle_log: vehicleLog,
         company_id: company_id,

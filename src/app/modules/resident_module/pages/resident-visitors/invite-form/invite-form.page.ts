@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import { faL, faMotorcycle, faUser } from '@fortawesome/free-solid-svg-icons';
 import { ToastController } from '@ionic/angular';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
@@ -57,6 +57,8 @@ export class InviteFormPage implements OnInit {
     }
   }
 
+  faUser = faUser
+
   ngOnInit() {
     this.isFormInitialized = false;
     // Gunakan setTimeout untuk memastikan rendering
@@ -75,8 +77,7 @@ export class InviteFormPage implements OnInit {
     });
 
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+    
 
     toast.present().then(() => {
       
@@ -145,7 +146,7 @@ export class InviteFormPage implements OnInit {
   backWithState() {
     this.router.navigate(['/resident-visitors'], {
       state: {
-        formData: this.formData,
+        openActive: true,
       }
     });
   }
@@ -175,7 +176,12 @@ export class InviteFormPage implements OnInit {
             // if (res.result.status_code == 200) {
               
               this.presentToast('Success Add Record', 'success');
-              this.router.navigate(['resident-visitors'])
+              console.log("HEY PEOPLES")
+              this.router.navigate(['/resident-visitors'], {
+                queryParams: {
+                  openActive: true,
+                }
+              });
             // } else {
             //   this.presentToast('Failed Add Record', 'danger');
             // }

@@ -3,6 +3,7 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ContractorsService } from 'src/app/service/vms/contrantors/contractors.service';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 @Component({
   selector: 'app-contractor-form',
   templateUrl: './contractor-form.page.html',
@@ -20,13 +21,19 @@ export class ContractorFormPage implements OnInit {
   selectedBlock: string = '';
   selectedUnit: string = '';
 
+  Block: any[] = [];
+  Unit: any[] = [];
+
   constructor(
     private contractorService: ContractorsService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private blockUnitService: BlockUnitService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadBlock()
+  }
 
   onIdentificationTypeChange(event: any) {
     this.identificationType = event.target.value;
@@ -35,6 +42,7 @@ export class ContractorFormPage implements OnInit {
 
   onBlockChange(event: any) {
     this.selectedBlock = event.target.value;
+    this.loadUnit()
     console.log(this.selectedBlock)
   }
 
@@ -164,16 +172,57 @@ export class ContractorFormPage implements OnInit {
       color: color
     });
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
 
     toast.present().then(() => {
       
       
-    });;;
+    });
   }
 
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load vehicle data', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading vehicle data', 'danger');
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  loadUnit() {
+    this.blockUnitService.getUnit(this.selectedBlock).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result; // Simpan data unit
+          console.log(response)
+        } else {
+          this.presentToast('Failed to load unit data', 'danger');
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+      }
+    });
+  }
+
+  vehicle_number = ''
+
   refreshVehicle() {
-    console.log("Vehicle Refresh")
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.contractorVehicleNumberInput.value = randomVhc
+    console.log("Vehicle Refresh", randomVhc)
   }
 }

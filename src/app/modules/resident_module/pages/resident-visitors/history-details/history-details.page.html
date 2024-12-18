@@ -3,9 +3,15 @@
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
     <div class="flex flex-row justify-between mt-4">
-      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowInv()"></app-visitor-button>
-      <app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHired()"></app-visitor-button>
-      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowInv()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowHired()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+				(click)="toggleShowHistory()">
+			</app-visitor-button>
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
@@ -14,70 +20,70 @@
         </div>
         <div class="w-full mt-2">
           <div [class]="historyData.banned ? 'bg-red-400 p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
-            <div class="text-xs font-bold">
-              <div class="text-lg font-bold mb-2">{{historyData.visitor_name}}</div>
+            <div class="text-sm">
+              <div class="text-base font-bold mb-2">{{historyData.purpose === 'Visiting' ? historyData.visitor_name : historyData.vehicle_number}}</div>
               <table>
                 <tr class="h-6">
-                  <td>Purpose</td>
-                  <td>:</td>
-                  <td>{{historyData.purpose}}</td>
+                  <td class="w-[60%]  font-bold">Purpose</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.purpose || '-' }}</td> <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose == 'Delivery'">
-                  <td>Delivery Type</td>
-                  <td>:</td>
-                  <td>{{historyData.delivery_type}}</td>
+                <tr class="h-6" *ngIf="historyData.purpose === 'Delivery'">
+                  <td class="w-[60%]  font-bold">Delivery Type</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.delivery_type || '-' }}</td> <!-- Menampilkan '-' jika delivery_type kosong -->
                 </tr>
                 <tr class="h-6" *ngIf="historyData.purpose === 'Drop Off' || historyData.purpose === 'Pick Up'">
-                  <td>Mode of Vehicle</td>
-                  <td>:</td>
-                  <td>{{historyData.vehicle_type}}</td>
+                  <td class="w-[60%]  font-bold">Mode of Vehicle</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.vehicle_type || '-' }}</td> <!-- Menampilkan '-' jika vehicle_type kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td>Date Of Visit</td>
-                  <td>:</td>
-                  <td>{{historyData.visitor_date}}</td>
+                  <td class="w-[60%]  font-bold">Date Of Visit</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.visitor_date ? (historyData.visitor_date | date: 'dd/MM/yyyy') : '-' }}</td> <!-- Menampilkan '-' jika visitor_date kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td>Entry Time</td>
-                  <td>:</td>
-                  <td>{{historyData.visitor_entry_time}}hrs</td>
+                  <td class="w-[60%]  font-bold">Entry Time</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.visitor_entry_time || '-' }}</td> <!-- Menampilkan '-' jika visitor_entry_time kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td>Exit Time</td>
-                  <td>:</td>
-                  <td>{{historyData.visitor_exit_time}}hrs</td>
+                  <td class="w-[60%]  font-bold">Exit Time</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.visitor_exit_time || '-' }}</td> <!-- Menampilkan '-' jika visitor_exit_time kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting' || historyData.purpose == 'Delivery' ">
-                  <td>Mode of Entry</td>
-                  <td>:</td>
-                  <td>{{historyData.mode_of_entry}}</td>
+                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery' ">
+                  <td class="w-[60%]  font-bold">Mode of Entry</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.mode_of_entry || '-' }}</td> <!-- Menampilkan '-' jika mode_of_entry kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.mode_of_entry != 'Walk In'">
-                  <td>Vehicle No</td>
-                  <td>:</td>
-                  <td>{{historyData.vehicle_number}}</td>
+                <tr class="h-6" *ngIf="historyData.mode_of_entry !== 'Walk In'">
+                  <td class="w-[60%]  font-bold">Vehicle No</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.vehicle_number || '-' }}</td> <!-- Menampilkan '-' jika vehicle_number kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting'">
-                  <td>Point of Entry</td>
-                  <td>:</td>
-                  <td>{{historyData.point_of_entry}}</td>
+                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
+                  <td class="w-[60%]  font-bold">Point of Entry</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.point_of_entry || '-' }}</td> <!-- Menampilkan '-' jika point_of_entry kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose == 'Visiting' || historyData.purpose == 'Delivery'">
-                  <td>Mobile No</td>
-                  <td>:</td>
-                  <td>{{historyData.mobile_number}}</td>
+                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'">
+                  <td class="w-[60%]  font-bold">Mobile No</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.mobile_number || '-' }}</td> <!-- Menampilkan '-' jika mobile_number kosong -->
                 </tr>
               </table>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8'"></app-visitor-button>
-              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-sm'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'"></app-visitor-button>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="!historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="historyData.purpose == 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose == 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8'" *ngIf="historyData.purpose != 'Drop Off'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" *ngIf="historyData.purpose !== 'Drop Off'"></app-visitor-button>
             </div>
           </div>
         </div>

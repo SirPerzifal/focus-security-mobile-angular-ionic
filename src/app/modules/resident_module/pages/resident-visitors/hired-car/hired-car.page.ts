@@ -22,6 +22,7 @@ import { HiredCarService } from 'src/app/service/resident/hired_car/hired-car.se
   ]
 })
 export class HiredCarPage implements OnInit {
+  agreementChecked: boolean = false; // Status checkbox
 
   constructor(private router: Router, private toastController: ToastController, private hiredCarService: HiredCarService)  {}
 
@@ -60,7 +61,7 @@ export class HiredCarPage implements OnInit {
     entry_type: 'pick_up',
     vehicle_type: 'phv_vehicle',
     vehicle_number: '',
-    unit: 0
+    unit: 1
   }
 
   showPick = true;
@@ -119,23 +120,32 @@ export class HiredCarPage implements OnInit {
     this.formData.vehicle_number = value
   }
 
-  onSubmit(){
-    let errMsg = ''
-    console.log(this.formData)
+  onSubmit() {
+    let errMsg = '';
+    console.log(this.formData);
+  
     if (this.formData.vehicle_number == '') {
-      errMsg += 'Please fill the vehicle number!\n'
+      errMsg += 'Please fill the vehicle number!\n';
     }
-    if (errMsg != ''){
-      this.presentToast(errMsg, 'danger')
+  
+    if (!this.agreementChecked) { // Validasi checkbox
+      errMsg += 'You must agree to the terms above!\n';
+    }
+  
+    if (errMsg != '') {
+      this.presentToast(errMsg, 'danger');
     } else {
       try {
-        this.hiredCarService.postCreateExpectedVisitors(
-          this.formData
-        ).subscribe(
+        this.hiredCarService.postCreateExpectedVisitors(this.formData).subscribe(
           res => {
             console.log(res);
             if (res.result.response_code == 200) {
               this.presentToast('Success Add Record', 'success');
+              this.router.navigate(['/resident-visitors'], {
+                queryParams: {
+                  openActive: true,
+                }
+              });
             } else {
               this.presentToast('Failed Add Record', 'danger');
             }

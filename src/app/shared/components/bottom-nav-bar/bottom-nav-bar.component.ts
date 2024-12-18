@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 
 @Component({
   selector: 'app-bottom-nav-bar',
@@ -8,10 +9,29 @@ import { Router } from '@angular/router';
 })
 export class BottomNavBarComponent  implements OnInit {
 
-  constructor(private router: Router,) { }
+  constructor(
+    private router: Router,
+    private navigationService: NavigationService
+  ) { }
+
+  get activeButton() {
+    return this.navigationService.getActiveButton();
+  }
 
   routeTo() {
+    this.navigationService.setActiveButton('resident-homepage');
     this.router.navigate(['/resident-homepage']);
+
+  }
+
+  reportIssue() {
+    this.navigationService.setActiveButton('home');
+    // Lakukan navigasi ke halaman report issue
+  }
+
+  settings() {
+    this.navigationService.setActiveButton('home');
+    // Lakukan navigasi ke halaman settings
   }
 
   ngOnInit() {}

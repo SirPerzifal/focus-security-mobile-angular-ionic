@@ -33,7 +33,6 @@ export class FacilityPlaceBookingPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.facilityId = +params['facilityId'] || 1;
       this.loadFacilityDetail();
-      this.loadRoomSchedule();
     });
   }
 
@@ -50,7 +49,8 @@ export class FacilityPlaceBookingPage implements OnInit {
     });
   }
 
-  loadRoomSchedule() {
+  loadRoomSchedule(event: any) {
+    this.roomId = event.target.value; // Set the roomId to the selected value
     this.facilityService.getRoomById(this.roomId).subscribe({
       next: (response) => {
         this.roomSchedule = response.result.schedule;

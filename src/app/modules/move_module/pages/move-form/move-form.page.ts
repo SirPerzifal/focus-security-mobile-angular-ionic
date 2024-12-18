@@ -93,23 +93,23 @@ export class MoveFormPage implements OnInit {
     }
   }
 
-  // Fungsi submit untuk save record & open barrier
-  async saveRecordAndOpenBarrier() {
-    await this.submitForm(true);
+  // Fungsi submit untuk SAVE RECORD & OPEN BARRIER
+  saveRecordAndOpenBarrier() {
+    this.submitForm(true);
   }
 
   // Fungsi submit untuk save record only
-  async saveRecordOnly() {
-    await this.submitForm(false);
+  saveRecordOnly() {
+    this.submitForm(false);
   }
 
   // Fungsi submit umum
-  async submitForm(openBarrier: boolean = false) {
+  submitForm(openBarrier: boolean = false) {
     // Tampilkan loading
-    const loading = await this.loadingController.create({
-      message: 'Saving Record...'
-    });
-    await loading.present();
+    // const loading = await this.loadingController.create({
+    //   message: 'Saving Record...'
+    // });
+    // await loading.present();
 
     // Kumpulkan data pax sebelum menggunakan subContractors
     this.collectPaxData();
@@ -142,14 +142,12 @@ export class MoveFormPage implements OnInit {
       next: (response) => {
         if (response.result.status_code === 200) {
           this.presentToast('Schedule added successfully', 'success');
-          loading.dismiss();
           this.router.navigate(['home-vms'])
           
           if (openBarrier) {
             // Logika membuka barrier
             console.log('Membuka barrier');
             this.presentToast('Schedule added successfully dan Membuka barrier', 'success');
-            loading.dismiss();
             this.router.navigate(['home-vms'])
           }
         } else {
@@ -171,8 +169,7 @@ export class MoveFormPage implements OnInit {
       color: color
     });
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+    
 
     toast.present().then(() => {
       
@@ -180,7 +177,13 @@ export class MoveFormPage implements OnInit {
     });;;
   }
 
+  vehicle_number = ''
+
   refreshVehicle() {
-    console.log("Vehicle Refresh")
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.vehicle_number = randomVhc
+    console.log("Vehicle Refresh", randomVhc)
   }
 }

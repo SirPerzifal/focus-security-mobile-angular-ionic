@@ -5,20 +5,24 @@ import { AlertController } from '@ionic/angular';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
 
 interface ActiveBooking {
+  id: number;
   facilityName: string;
   eventDate: string;
   startTime: string;
   endTime: string;
   bookedBy: string;
+  statusBooked: string;
 }
 
 // Tambahkan interface ini di bagian atas file TypeScript Anda
 interface BookingResponse {
+  id: number;
   facility_name: string;
   booking_date: string;
   start_datetime: string;
-  stop_datettime: string;
+  stop_datetime: string;
   booked_by: string;
+  booking_status: string;
 }
 
 @Component({
@@ -49,13 +53,16 @@ export class ResidentFacilityBookingsPage implements OnInit {
           if (response.result.response_code === 200) {
             // Map data dengan tipe yang jelas
             this.activeBookings = response.result.active_bookings.map((booking: BookingResponse) => ({
+              id: booking.id,
               facilityName: booking.facility_name,
               eventDate: this.formatDate(booking.booking_date),
               startTime: this.formatTime(booking.start_datetime),
-              endTime: this.formatTime(booking.stop_datettime),
-              bookedBy: booking.booked_by
+              endTime: this.formatTime(booking.stop_datetime),
+              bookedBy: booking.booked_by,
+              statusBooked: booking.booking_status,
             }));
             console.log('Mapped Active Bookings:', this.activeBookings);
+            console.log('Mapped Active Bookings:', response);
           } else {
             this.presentToast('Failed to load booking data', 'danger');
             console.error('Error:', response);
@@ -120,6 +127,44 @@ export class ResidentFacilityBookingsPage implements OnInit {
       'Yes'
     );
   }
+
+  getBookingStatusIcon(status: string): string {
+    switch(status) {
+      case 'approved': return 'checkmark';
+      case 'requested': return 'alert-circle-outline';
+      case 'pending_approval':
+      case 'pending_payment': return 'alert-circle-outline';
+      case 'rejected':
+      case 'cancel': return 'close-outline';
+      default: return 'help-outline';
+    }
+  }
+
+  getBookingStatusLabel(status: string): string {
+    switch(status) {
+      case 'approved': return 'Booking Approved';
+      case 'requested': return 'Booking Requested';
+      case 'pending_approval': return 'Pending Approval';
+      case 'pending_payment': return 'Pending Payment';
+      case 'rejected': return 'Booking Rejected';
+      case 'cancel': return 'Booking Cancelled';
+      default: return status;
+    }
+  }
+
+  // cancelBooking(bookingId: number) {
+  //   // Implementasi logika pembatalan booking
+  //   this.bookingService.cancelBooking(bookingId).subscribe({
+  //     next: (response) => {
+  //       // Refresh daftar booking atau hapus booking dari list
+  //       this.loadActiveBookings();
+  //     },
+  //     error: (error) => {
+  //       // Tangani error
+  //       console.error('Gagal membatalkan booking', error);
+  //     }
+  //   });
+  // }
 
   public async presentCustomAlert(
     header: string = 'Cancel Booking', 

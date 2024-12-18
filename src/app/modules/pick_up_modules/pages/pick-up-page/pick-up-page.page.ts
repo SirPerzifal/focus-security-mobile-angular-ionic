@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
-import { faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
+import { faL, faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
 import { VmsServicePickUp } from 'src/app/service/vms/pick_up/pick-up.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/vms/user/user.service';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -45,6 +46,32 @@ export class PickUpPagePage implements OnInit {
   
   }
 
+  Block: any[] = [];
+
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+          this.presentToast('An error occurred while loading block data!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading block data!', 'danger');
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  onBlockChange(event: any) {
+    this.blkLocation = event.target.value;
+    console.log(this.blkLocation)
+  }
+  
   showPick = false;
   showDrop = false
   showForm = false
@@ -61,7 +88,8 @@ export class PickUpPagePage implements OnInit {
     private vmsService: VmsServicePickUp,
     private toastController: ToastController,
     private userApi: UserService,
-    private router: Router
+    private router: Router,
+    private blockUnitService: BlockUnitService
   ) { }
 
   toggleShowPick() {
@@ -122,21 +150,25 @@ export class PickUpPagePage implements OnInit {
     // Validasi input
     const vehicleNumber = this.vehicleNumber
     const location = this.blkLocation;
-
+    let errMsg = ''
     if (!this.selectedVehicleType) {
-      this.presentToast('Pilih tipe kendaraan terlebih dahulu', 'danger');
-      return;
+      errMsg += 'Vehicle type must be selected! \n'
+      // this.presentToast('You must select a vehicle type before proceeding', 'danger');
     }
 
     if (!vehicleNumber) {
-      this.presentToast('Masukkan nomor kendaraan', 'danger');
+      errMsg += 'Vehicle number is required! \n'
+      // this.presentToast('Masukkan nomor kendaraan', 'danger');
       console.log(this.vehicleNumberInput.value)
-      return;
     }
 
     if (!location) {
-      this.presentToast('Masukkan lokasi', 'danger');
-      return;
+      errMsg += 'Location is required! \n'
+      // this.presentToast('Masukkan lokasi', 'danger');
+    }
+    if (errMsg) {
+      this.presentToast(errMsg, 'danger');
+      return
     }
 
     try {
@@ -150,7 +182,12 @@ export class PickUpPagePage implements OnInit {
         next: (response) => {
           console.log(response)
           if (response.result.status_code === 200) {
-            this.presentToast('Berhasil menyimpan data', 'success');
+            if (openBarrier) {
+              this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
+            } else {
+              this.presentToast('Data has been successfully saved to the system!', 'success');
+            }
+            this.router.navigate(['home-vms'])
             
             // Reset form
             this.vehicleNumberInput.value = '';
@@ -158,26 +195,19 @@ export class PickUpPagePage implements OnInit {
             this.selectedVehicleType = '';
             this.resetVehicleSelection();
             
-            this.router.navigate(['home-vms'])
-            // Tambahkan logika untuk membuka barrier jika openBarrier true
-            if (openBarrier) {
-              // Implementasi logika membuka barrier
-              console.log('Membuka barrier');
-              this.presentToast('Berhasil menyimpan data dan Membuka barrier', 'success');
-              this.router.navigate(['home-vms'])
-            }
+            
           } else {
-            this.presentToast('Gagal menyimpan data', 'danger');
+            this.presentToast('An error occurred while attempting to save the data!', 'danger');
           }
         },
         error: (error) => {
           console.error('Error:', error);
-          this.presentToast('Terjadi kesalahan', 'danger');
+          this.presentToast('An unexpected error has occurred!', 'danger');
         }
       });
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast('Terjadi kesalahan tidak terduga', 'danger');
+      this.presentToast('An unexpected error has occurred!', 'danger');
     }
   }
 
@@ -195,19 +225,23 @@ export class PickUpPagePage implements OnInit {
       color: color
     });
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
 
     toast.present().then(() => {
       
       
-    });;;
+    });
   }
 
   ngOnInit() {
+    this.loadBlock()
   }
+  
+  vehicle_number = ''
 
   refreshVehicle() {
-    console.log("Vehicle Refresh")
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.vehicle_number = randomVhc
   }
 }

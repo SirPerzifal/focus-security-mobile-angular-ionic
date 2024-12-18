@@ -3,80 +3,95 @@
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
     <div class="flex flex-row justify-between mt-4">
-      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowInv()"></app-visitor-button>
-      <app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#CDF8BA] text-black w-24'" (click)="toggleShowHired()"></app-visitor-button>
-      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24'" (click)="toggleShowHistory()"></app-visitor-button>
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowInv()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+				(click)="toggleShowHired()">
+			</app-visitor-button>
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+				(click)="toggleShowHistory()">
+			</app-visitor-button>
     </div>
     <div class="flex flex-row">
       <div class="flex flex-col">
-        <div class="flex flex-row justify-start mt-4">
-          <u class="text-[14px] font-bold">Entry Details</u>
+        <div class="flex flex-row justify-start mt-4 mb-1.5">
+          <p class="text-base font-bold">Entry Details</p>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}" 
-          [value]="formData.vehicle_number"
-          (valueChange)="changeVehicleNumber($event)"></app-text-input>
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-sm font-bold">Entry Vehicle Number</p>
+          </div>
+          <app-text-input [id]="'hired_car_vhcnum'" [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-sm': true}" 
+            [value]="formData.vehicle_number"
+            (valueChange)="changeVehicleNumber($event)"
+          >
+          </app-text-input>
         </div>
         <div class="flex flex-row justify-start mt-4">
-          <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[#C9CC3F] w-24 text-sm text-black' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()" [customStyle]="showPick ? 'border: solid black 2px' : 'border: solid #808080 2px'"></app-visitor-button>
-          <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[#C9CC3F] w-24 ml-2 text-sm text-black' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()" [customStyle]="showDrop ? 'border: solid black 2px' : 'border: solid #808080 2px'"></app-visitor-button>
+          <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] w-24 text-sm text-white' : 'bg-[#D0D0D0] text-[#757575] w-24 text-sm'" (click)="toggleShowPick()"></app-visitor-button>
+          <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-primary)] w-24 ml-2 text-sm text-white' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-sm'" (click)="toggleShowDrop()"></app-visitor-button>
         </div>
         <div class="flex flex-row justify-start items-start mt-4">
           <div class="flex flex-col items-center w-12" (click)="usePhvVehicle()">
-            <button id="shadow_back" [class]="phv_vehicle ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+            <button id="shadow_back" [class]="phv_vehicle ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
               <img
               alt="Grab"
-              src="assets/icon/pick_up-page/Grab_Outline.png" [class]="phv_vehicle ? 'icon-black' : ''"/>
+              src="assets/icon/pick_up-page/Grab_Outline.png" [class]="phv_vehicle ? '' : 'icon-black'"/>
                 <!-- <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon> -->
             </button>
             <div class="text-[10px] flex flex-col relative items-center mt-1">
               <b>PHV</b>
-              <b>Vehicle</b>
+              <b>VEHICLE</b>
             </div>
           </div>
           <div class="flex flex-col items-center w-12 ml-5" (click)="useTaxi()">
-            <button id="shadow_back" [class]="taxi ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
-              <fa-icon [icon]="faTaxi" [class]="taxi ? 'text-[#000000]' : 'text-white'"></fa-icon>
+            <button id="shadow_back" [class]="taxi ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <fa-icon [icon]="faTaxi" [class]="taxi ? 'text-white' : 'text-[#000000]'"></fa-icon>
             </button>
             <div class="text-[10px] flex flex-col relative items-center mt-1">
               <b>TAXI</b>
             </div>
           </div>
           <div class="flex flex-col items-center w-12 ml-5" (click)="usePrivateCar()">
-            <button id="shadow_back" [class]="private_car ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
-              <ion-icon name="car-sport-outline" aria-hidden="true" [color]="private_car ? 'dark' : 'light'" class="w-6 h-6 mt-1"></ion-icon>
+            <button id="shadow_back" [class]="private_car ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <ion-icon name="car-sport-outline" aria-hidden="true" [color]="private_car ? 'light' : 'dark'" class="w-6 h-6 mt-1"></ion-icon>
             </button>
             <div class="text-[10px] flex flex-col relative items-center mt-1">
               <b>PRIVATE</b>
-              <b>Car</b>
+              <b>CAR</b>
             </div>
           </div>
           <div class="flex flex-col items-center w-12 ml-5" (click)="useMotorBike()">
-            <button id="shadow_back" [class]="motor_bike ? 'w-12 h-12 bg-[#C9CC3F] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
-              <fa-icon [icon]="faMotorcycle" [class]="motor_bike ? 'text-[#000000]' : 'text-white'"></fa-icon>
+            <button id="shadow_back" [class]="motor_bike ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+              <fa-icon [icon]="faMotorcycle" [class]="motor_bike ? 'text-white' : 'text-[#000000]'"></fa-icon>
             </button>
             <div class="text-[10px] flex flex-col relative items-center mt-1">
-              <b>Motor</b>
-              <b>Bike</b>
+              <b>MOTOR</b>
+              <b>BIKE</b>
             </div>
           </div>
         </div>
-        <div class="flex flex-col mt-4 text-[12px]">
-          <p class="underline underline-offset-1 font-bold">Temporary Pickup/Drop-off Vehicle Authorization<p>
-              <br>
-          <p>This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit. <br>
-            <br>
-            This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.<br>
-            <br>
-            Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.</p>
+        <div class="flex flex-col mt-4 text-[13px]">
+          <p class="underline underline-offset-1 font-bold mb-2">Temporary Pickup/Drop-off Vehicle Authorization</p>
+          <p class="mb-1.5">This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.</p>
+          <p class="mb-1.5">This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.</p>
+          <p class="mb-1.5">Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.</p>
         </div>
-        <div class="flex flex-row mt-4 text-[12px]">
-          <input type="checkbox" id="agreement" name="agreement" value="1" class="mr-1 rounded text-[var(--ion-color-primary)]" />
-          <b >I agree to the terms above</b>
+        <div class="flex flex-row mt-4 text-[13px]">
+          <app-checkbox-confirmation 
+            [label]="'I agree to the terms above'" 
+            [(checked)]="agreementChecked" 
+            [customClass]="'mr-1 rounded'">
+          </app-checkbox-confirmation>
         </div>
-        <div class="flex flex-row mt-4 text-[12px] w-full">
+        <div class="flex flex-row mt-2 text-[13px] w-full">
           <div class="w-full">
-            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[#CDF8BA] text-black mt-1 w-full text-sm'" (click)="onSubmit()"></app-visitor-button>
+            <app-visitor-button 
+              [text]="'SUBMIT'" 
+              [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm' : 'bg-gray-300 text-gray-500 mt-1 w-full text-sm'" 
+              (click)="onSubmit()">
+            </app-visitor-button>
           </div>
         </div>
       </div>

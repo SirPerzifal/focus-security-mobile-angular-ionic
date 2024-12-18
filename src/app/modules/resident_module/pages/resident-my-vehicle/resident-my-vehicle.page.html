@@ -11,10 +11,10 @@
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
     <div class="flex flex-col gap-1 mt-4 mb-2">
-      <ion-button fill="clear" expand="full" class="flex items-center bg-green-200 rounded-full" 
+      <ion-button fill="clear" expand="full" class="flex items-center bg-[var(--ion-color-primary)] rounded-full" 
                   *ngIf="userRole === 'household'" 
                   [routerLink]="['/my-vehicle-form']">
-        <span class="flex-grow font-bold text-center ml-2 text-xs">Add New Vehicle</span>
+        <span class="flex-grow font-bold text-center ml-2 text-xs text-white">Add New Vehicle</span>
       </ion-button>
       <ion-button fill="clear" expand="full" class="flex items-center bg-gray-200 rounded-full" 
                   *ngIf="userRole !== 'household'" 
@@ -30,9 +30,8 @@
       'bg-yellow-200': vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'
       }" class="bg-green-200 p-3 mb-5 rounded-2xl w-full">
       <p class="font-bold text-lg text-black"> 
-        Vehicle {{ vehicle.unit_id ? (vehicle.unit_id | titlecase) : '' }}
+        {{ vehicle.type_application | titlecase }}
       </p>
-      <p class="font-bold text-sm text-black mb-2">{{ vehicle.type_application | titlecase }}</p>
       <div class="flex justify-between">
         <div class="table w-full">
           <div class="table-row" *ngFor="let field of ['Vehicle No', 'Make', 'Colour', 'Vehicle Type', 'Fees']">

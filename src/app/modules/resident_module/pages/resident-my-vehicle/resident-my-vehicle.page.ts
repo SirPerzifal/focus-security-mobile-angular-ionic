@@ -42,11 +42,12 @@ export class ResidentMyVehiclePage implements OnInit {
   }
 
   loadVehicleDetails() {
-    this.myVehicleService.getVehicleDetail().subscribe(
+    const unitId = 1; // Ganti dengan unit_id yang sesuai
+    this.myVehicleService.getVehicleDetail(unitId).subscribe(
       response => {
         if (response.result.response_code === 200) {
-          this.vehicles = response.result.response_result.map((vehicle: any) => ({
-            unit_id: String(vehicle.id),
+          this.vehicles = response.result.response_result.vehicles.map((vehicle: any) => ({
+            unit_id: String(vehicle.id), // Pastikan id ada di dalam data
             id: vehicle.vehicle_number,
             status: vehicle.states, // Assuming states represent the status
             type_application: vehicle.type_of_application,
@@ -54,10 +55,10 @@ export class ResidentMyVehiclePage implements OnInit {
             make: vehicle.vehicle_make,
             colour: vehicle.vehicle_color,
             type: vehicle.vehicle_type,
-            fees: 'S$0.00' // You can adjust this based on your logic
+            fees: 'S$0.00' // Anda dapat menyesuaikan ini berdasarkan logika Anda
           }));
           this.presentToast('Data fetched successfully!', 'success');
-          console.log("heres the data", response)
+          console.log("heres the data", response);
         } else {
           this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching vehicle details:', response);

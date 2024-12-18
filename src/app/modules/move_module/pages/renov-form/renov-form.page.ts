@@ -92,7 +92,7 @@ export class RenovFormPage implements OnInit {
     }
   }
 
-  // Fungsi submit untuk save record & open barrier
+  // Fungsi submit untuk SAVE RECORD & OPEN BARRIER
   async saveRecordAndOpenBarrier() {
     await this.submitForm(true);
   }
@@ -175,8 +175,7 @@ export class RenovFormPage implements OnInit {
       color: color
     });
     
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
+    
 
     toast.present().then(() => {
       
@@ -184,7 +183,13 @@ export class RenovFormPage implements OnInit {
     });;;
   }
 
+  vehicle_number = ''
+
   refreshVehicle() {
-    console.log("Vehicle Refresh")
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.vehicle_number = randomVhc
+    console.log("Vehicle Refresh", randomVhc)
   }
 }

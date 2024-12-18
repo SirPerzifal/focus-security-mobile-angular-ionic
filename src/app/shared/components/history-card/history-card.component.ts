@@ -6,14 +6,14 @@ import { Router } from '@angular/router';
   templateUrl: './history-card.component.html',
   styleUrls: ['./history-card.component.scss'],
 })
-export class HistoryCardComponent  implements OnInit {
+export class HistoryCardComponent implements OnInit {
 
   constructor(private router: Router) { }
 
   @Input() historyData!: {
     purpose: string;
     visitor_name: string;
-    visitor_date: Date;
+    visitor_date: string; // Ubah tipe menjadi string
     visitor_entry_time: number;
     visitor_exit_time: number;
     mode_of_entry: string;
@@ -38,4 +38,8 @@ export class HistoryCardComponent  implements OnInit {
     });
   }
 
+  formatDate(dateString: string): string {
+    const dateParts = dateString.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
+  }
 }
