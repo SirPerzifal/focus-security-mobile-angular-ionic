@@ -20,7 +20,7 @@ interface BookingResponse {
   facility_name: string;
   booking_date: string;
   start_datetime: string;
-  stop_datetime: string;
+  stop_datettime: string;
   booked_by: string;
   booking_status: string;
 }
@@ -57,7 +57,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
               facilityName: booking.facility_name,
               eventDate: this.formatDate(booking.booking_date),
               startTime: this.formatTime(booking.start_datetime),
-              endTime: this.formatTime(booking.stop_datetime),
+              endTime: this.formatTime(booking.stop_datettime),
               bookedBy: booking.booked_by,
               statusBooked: booking.booking_status,
             }));
