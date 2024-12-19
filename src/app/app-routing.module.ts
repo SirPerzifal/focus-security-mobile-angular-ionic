@@ -218,6 +218,22 @@ const routes: Routes = [
     path: 'alert-main',
     loadChildren: () => import('./modules/alert_module/pages/alert-main/alert-main.module').then( m => m.AlertMainPageModule)
   },
+  {
+    path: 'resident-car-list',
+    loadChildren: () => import('./modules/resident_car_list_module/pages/resident-car-list/resident-car-list.module').then( m => m.ResidentCarListPageModule)
+  },
+  {
+    path: 'resident-car-warning-clamp',
+    loadChildren: () => import('./modules/resident_car_list_module/pages/resident-car-warning-clamp/resident-car-warning-clamp.module').then( m => m.ResidentCarWarningClampPageModule)
+  },
+  {
+    path: 'overnight-parking-list',
+    loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-list/overnight-parking-list.module').then( m => m.OvernightParkingListPageModule)
+  },
+  {
+    path: 'overnight-parking-form',
+    loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-form/overnight-parking-form.module').then( m => m.OvernightParkingFormPageModule)
+  },
 ];
 
 @NgModule({

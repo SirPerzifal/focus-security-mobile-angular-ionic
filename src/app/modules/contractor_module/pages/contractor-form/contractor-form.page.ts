@@ -52,6 +52,7 @@ export class ContractorFormPage implements OnInit {
   }
 
   async saveRecord(openBarrier: boolean = false) {
+    let errMsg = ''
     // Validasi input
     const contractorName = this.contractorNameInput.value;
     const contractorContactNo = this.contractorContactNumberInput.value;
@@ -62,33 +63,33 @@ export class ContractorFormPage implements OnInit {
 
     // Validasi field wajib
     if (!contractorName) {
-      this.presentToast('Masukkan nama contractor', 'danger');
-      return;
+      errMsg += 'Contractor name is required! \n'
+      // this.presentToast('Vehicle number is required', 'danger');
     }
 
     if (!contractorContactNo) {
-      this.presentToast('Masukkan nomor kontak', 'danger');
-      return;
+      errMsg += 'Contact number is required! \n'
+      // this.presentToast('Masukkan nomor kontak', 'danger');
     }
 
     if (!this.identificationType) {
-      this.presentToast('Pilih tipe identifikasi', 'danger');
-      return;
+      errMsg += 'Identification type must be selected! \n'
+      // this.presentToast('Pilih tipe identifikasi', 'danger');
     }
 
     if (!identificationNumber) {
-      this.presentToast('Masukkan nomor identifikasi', 'danger');
-      return;
+      errMsg += 'Identification number is required! \n'
+      // this.presentToast('Masukkan nomor identifikasi', 'danger');
     }
 
-    if (!this.selectedBlock) {
-      this.presentToast('Pilih block', 'danger');
-      return;
+    if (!this.selectedBlock || !this.selectedUnit) {
+      errMsg += 'Block and unit must be selected! \n'
+      // this.presentToast('Pilih block', 'danger');
     }
 
-    if (!this.selectedUnit) {
-      this.presentToast('Pilih unit', 'danger');
-      return;
+    if (errMsg){
+      this.presentToast(errMsg, 'danger')
+      return
     }
 
     try {
@@ -105,7 +106,7 @@ export class ContractorFormPage implements OnInit {
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
-            this.presentToast('Berhasil menyimpan data contractor', 'success');
+            this.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
             this.router.navigate(['home-vms'])
 
             console.log(this.selectedBlock)
@@ -117,24 +118,24 @@ export class ContractorFormPage implements OnInit {
             // Tambahkan logika untuk membuka barrier jika openBarrier true
             if (openBarrier) {
               console.log('Membuka barrier');
-              this.presentToast('Berhasil menyimpan data contractor dan Membuka barrier', 'success');
+              this.presentToast('Contractor data has been successfully saved to the system!', 'success');
               this.router.navigate(['home-vms'])
 
               console.log(this.selectedBlock)
               console.log(this.selectedUnit)
             }
           } else {
-            this.presentToast('Gagal menyimpan data', 'danger');
+            this.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
         },
         error: (error) => {
           console.error('Error:', error.result.status_description);
-          this.presentToast('Terjadi kesalahan', 'danger');
+          this.presentToast('An unexpected error has occurred!', 'danger');
         }
       });
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast('Terjadi kesalahan tidak terduga', 'danger');
+      this.presentToast('An unexpected error has occurred!', 'danger');
     }
   }
 
@@ -187,11 +188,11 @@ export class ContractorFormPage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
+          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
+        this.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -205,12 +206,12 @@ export class ContractorFormPage implements OnInit {
           this.Unit = response.result.result; // Simpan data unit
           console.log(response)
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
+          this.presentToast('An error occurred while loading unit data!', 'danger');
           console.error('Error:', response.result);
         }
       },
       error: (error) => {
-        this.presentToast('Error loading unit data', 'danger');
+        this.presentToast('An error occurred while loading unit data!', 'danger');
         console.error('Error:', error.result);
       }
     });

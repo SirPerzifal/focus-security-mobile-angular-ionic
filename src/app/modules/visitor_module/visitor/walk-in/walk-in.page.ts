@@ -61,16 +61,16 @@ export class WalkInPage implements OnInit {
     console.log(openBarrier)
     let errMsg = ""
     if (!this.formData.visitor_name) {
-      errMsg += 'Please insert visitor name!\n';
+      errMsg += 'Visitor is required!\n';
     }
     if (!this.formData.visitor_contact_no) {
-      errMsg += 'Please insert visitor contact number!\n';
+      errMsg += 'Contact number is required!\n';
     }
     if (!this.formData.visitor_vehicle) {
-      errMsg += 'Please insert visitor vehicle number!\n';
+      errMsg += 'Vehicle number is required!\n';
     }
     if (!this.formData.block || !this.formData.unit) {
-      errMsg += 'Please insert visitor block and unit!\n';
+      errMsg += 'Block and unit must be selected!\n';
     }
     if (errMsg != "") {
       this.presentToast(errMsg, 'danger')
@@ -83,25 +83,25 @@ export class WalkInPage implements OnInit {
           if (res.result.status_code == 200) {
             if (openBarrier){
               console.log("Barrier Opened")
-              this.presentToast('Successfully Insert New Drive In Record and Opened the Barrier', 'success');
+              this.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
             }else {
-              this.presentToast('Successfully Insert New Drive In Record', 'success');
+              this.presentToast('Drive in data has been successfully saved to the system!', 'success');
             }
             
             this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('Failed Insert New Drive In Record', 'danger');
+            this.presentToast('An error occurred while attempting to save drive in data', 'danger');
           }
 
         },
         error => {
           console.error('Error Here:', error);
-          this.presentToast(String(error), 'danger');
+          this.presentToast('An unexpected error has occurred!', 'danger');
         }
       );
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast(String(error), 'danger');
+      this.presentToast('An unexpected error has occurred!', 'danger');
     }
 
   }
@@ -110,13 +110,13 @@ export class WalkInPage implements OnInit {
     console.log(openBarrier)
     let errMsg = ""
     if (!this.formData.visitor_name) {
-      errMsg += 'Please insert visitor name!\n';
+      errMsg += 'Visitor is required!\n';
     }
     if (!this.formData.visitor_contact_no) {
-      errMsg += 'Please select visitor contact number!\n';
+      errMsg += 'Contact number is required!\n';
     }
     if (!this.formData.block || !this.formData.unit) {
-      errMsg += 'Please insert your block and unit!\n';
+      errMsg += 'Block and unit must be selected!\n';
     }
     if (errMsg != "") {
       this.presentToast(errMsg, 'danger')
@@ -130,13 +130,13 @@ export class WalkInPage implements OnInit {
           if (res.result.status_code == 200) {
             if (openBarrier){
               console.log("Barrier Opened")
-              this.presentToast('Successfully Insert New Walk In Record and Opened the Barrier', 'success');
+              this.presentToast('Walk in data has been successfully saved, and the barrier is now open!', 'success');
             }else {
-              this.presentToast('Successfully Insert New Walk In Record', 'success');
+              this.presentToast('Walk in data has been successfully saved to the system!', 'success');
             }
             this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('Failed Insert New Walk In Record', 'danger');
+            this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
           }
         },
         error => {
@@ -145,7 +145,7 @@ export class WalkInPage implements OnInit {
       );
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast(String(error), 'danger');
+      this.presentToast('An unexpected error has occurred!', 'danger');
     }
 
   }
@@ -212,11 +212,11 @@ export class WalkInPage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
+          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
+        this.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -230,12 +230,12 @@ export class WalkInPage implements OnInit {
           this.Unit = response.result.result; // Simpan data unit
           console.log(response)
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
+          this.presentToast('An error occurred while loading unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
       error: (error) => {
-        this.presentToast('Error loading unit data', 'danger');
+        this.presentToast('An error occurred while loading unit data', 'danger');
         console.error('Error:', error.result);
       }
     });

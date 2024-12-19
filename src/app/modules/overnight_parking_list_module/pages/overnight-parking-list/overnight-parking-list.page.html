@@ -1,0 +1,52 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
+        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    
+    <div class="flex flex-row mt-8">    
+      <app-button-icon 
+        [customNameIcon]="'faCar'" 
+        [text]="'OVERNIGHT PARKING LIST'" 
+        [routerLink]="['/home-vms']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />
+    </div>
+
+    <!-- Overnight Parking List Section -->
+    <div class="flex flex-row">
+      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[200px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
+        <span class="text-2xl"><b>APPROVED LIST || FROM {{startDate | date:'dd/MM/yyyy'}} TO {{endDate | date:'dd/MM/yyyy'}}</b></span>
+        <div class="w-full flex self-start mt-5 grid grid-cols-3 gap-4 justify-items-center">
+          <button 
+            *ngFor="let vehicle of parkingVehicles" 
+            (click)="form(vehicle.id, vehicle.vehicleNumber)" 
+            class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-52 text-2xl m-[5px]"
+          >
+            <span><b>{{ vehicle.vehicleNumber }}</b></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ion-content>

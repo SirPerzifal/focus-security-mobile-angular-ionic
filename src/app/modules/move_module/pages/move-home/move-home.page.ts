@@ -62,19 +62,19 @@ export class MoveHomePage implements OnInit, OnDestroy {
           this.moveInSchedules = results.moveIn.result.result;
           console.log(results)
         } else {
-          this.presentToast('Gagal mengambil jadwal Move In/Out', 'warning');
+          this.presentToast('An error occurred while loading Move In / Out schedule!', 'warning');
         }
 
         if (results.renovation.result.status_code === 200) {
           this.renovationSchedules = results.renovation.result.result;
         } else {
-          this.presentToast('Gagal mengambil jadwal Renovasi', 'warning');
+          this.presentToast('An error occurred while loading Renovations schedule!', 'warning');
         }
 
         this.isLoading = false;
       },
       error: (error) => {
-        this.presentToast('Gagal mengambil jadwal', 'danger');
+        this.presentToast('An error occurred while loading Renovations schedule!', 'danger');
         console.error(error);
         this.isLoading = false;
       }

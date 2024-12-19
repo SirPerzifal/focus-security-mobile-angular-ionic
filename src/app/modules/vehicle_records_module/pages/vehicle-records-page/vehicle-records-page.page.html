@@ -16,7 +16,6 @@
       <ion-button @fadeInOut *ngIf="!showSearch" fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
         VEHICLE RECORDS
       </ion-button>
-      <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
     <div class="flex flex-row mt-8">
       <button @fadeInOut *ngIf="!showSearch" class="h-10 rounded-md text-center align-middle font-bold text-md" [ngClass]="show48Hrs ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'" (click)="toggleShow48Hrs()">
@@ -25,11 +24,8 @@
       <button @fadeInOut *ngIf="!showSearch" class="h-10 rounded-md text-center align-middle font-bold text-md" [ngClass]="show24Hrs ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'" (click)="toggleShow24Hrs()">
         24Hrs
       </button>
-      <button class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="showSearch ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowSearch()">
+      <button class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="showSearch ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" [routerLink]="['/resident-car-list']">
         Search By Vehicle No
-      </button>
-      <button @fadeInOut *ngIf="showSearch" class="h-11 rounded-md text-center align-middle font-bold text-md" [ngClass]="'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" >
-        Open Camera
       </button>
       <!-- <app-visitor-button [text]="'PRE REGISTERED'"
         [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"

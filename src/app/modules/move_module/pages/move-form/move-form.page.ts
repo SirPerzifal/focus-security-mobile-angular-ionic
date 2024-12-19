@@ -34,6 +34,7 @@ export class MoveFormPage implements OnInit {
   ngOnInit() {
     // Ambil parameter dari route
     this.route.queryParams.subscribe(params => {
+      console.log(params)
       this.block = params['block'] || '';
       this.unit = params['unit'] || '';
       this.scheduleType = params['schedule_type'] || 'move_in_out';
@@ -141,13 +142,13 @@ export class MoveFormPage implements OnInit {
     ).subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {
-          this.presentToast('Schedule added successfully', 'success');
+          this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
           this.router.navigate(['home-vms'])
           
           if (openBarrier) {
             // Logika membuka barrier
             console.log('Membuka barrier');
-            this.presentToast('Schedule added successfully dan Membuka barrier', 'success');
+            this.presentToast('Data has been successfully saved to the system!', 'success');
             this.router.navigate(['home-vms'])
           }
         } else {

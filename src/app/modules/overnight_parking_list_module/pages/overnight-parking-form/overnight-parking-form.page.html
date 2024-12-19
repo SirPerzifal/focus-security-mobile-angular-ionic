@@ -1,0 +1,77 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="flex flex-col items-center justify-center text-center">
+      <div class="flex flex-row justify-between w-full">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
+        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
+        <div class="w-20"></div>
+      </div>
+      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [customNameIcon]="'faCar'" 
+        [text]="'OVERNIGHT PARKING LIST'" 
+        [routerLink]="['/home-vms']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />    
+    </div>
+    <div class="flex flex-row mx-4">
+      <div class="flex flex-col w-full mt-8 space-y-3 items-center mb-4">
+        <div class="w-full">
+          <app-text-input #ownerNameInput [id]="'owner_name'" [labelText]="'NAME'" [placeholder]="'EG. MIFTAH AKHBAR'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div> 
+        <div class="w-full">
+          <app-text-input #ownerContactNumberInput [id]="'owner_contact_number'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full flex flex-row justify-between">
+          <div class="w-[90%]">
+            <app-text-input #ownerVehicleNumberInput [value]="vehicleNumber" [id]="'owner_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SAA 8298 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          </div>
+          <!-- <div class="w-1/4 h-20 bg-[var(--ion-color-primary)] rounded flex justify-center items-center"> -->
+            <div class="h-25 flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+            </div>
+          <!-- </div> -->
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-2xl"><b><u>BLOCK</u></b></label>
+          <select id="contractor_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" >
+            <option selected>CHOOSE BLOCK</option>
+            <option value="BLOCK_1">BLOCK 1</option>
+            <option value="BLOCK_2">BLOCK 2</option>
+            <option value="BLOCK_3">BLOCK 3</option>
+            <option value="BLOCK_4">BLOCK 4</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><b><u>UNIT</u></b></label>
+          <select id="contractor_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" >
+            <option selected>CHOOSE UNIT</option>
+            <option value="unit_1">UNIT 1</option>
+            <option value="unit_2">UNIT 2</option>
+            <option value="unit_3">UNIT 3</option>
+            <option value="unit_4">UNIT 4</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <app-text-input #startDateInput [id]="'start_date'" [labelText]="'APPROVED START DATE'" [placeholder]="'EG. 01/12/2024'" [customClasses]="{'w-full':true}" [type]="'date'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #endDateInput [id]="'end_date'" [labelText]="'APPROVED END DATE'" [placeholder]="'EG. 01/12/2024'" [customClasses]="{'w-full':true}" [type]="'date'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

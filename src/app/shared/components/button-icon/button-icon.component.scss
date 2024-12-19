@@ -1,7 +1,10 @@
 .fsc-icon-button-layout {
   display: flex;
   flex-direction: column;
-  width: 500px;
+  align-items: center;
+  justify-content: center;
+  width: 155px;
+  // width: 500px;
 }
 .fsc-icon-button {
   padding: 10px;
@@ -49,6 +52,7 @@
 }
 .fsc-icon-button-label {
   margin-top: 5px;
+  text-align: center;
   font-size: 22px;
 }
 
