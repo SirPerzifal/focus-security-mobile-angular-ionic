@@ -4,53 +4,51 @@
     <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="flex flex-row justify-between w-full">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
-        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
-        <div class="w-20"></div>
-      </div>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/visitor-detail'"/>
     </div>
     <div class="flex flex-row mt-8">
-      <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
+      <app-button-icon [customNameIcon]="'faPersonWalkingLuggage'" [text]="'VISITOR RECORDS'"
+        [routerLink]="['/visitor-detail']" [isActive]="true" [disableClick]="true" />
+      <!-- <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
         VISITOR RECORDS
-      </ion-button>
+      </ion-button> -->
       <!-- <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" /> -->
     </div>
-  </div>
-  <div>
+    <div class="flex flex-row mx-4 mb-4">
 
-    <div class="flex flex-col w-full mt-[50px] gap-y-6 items-center">
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_name'" [value]="'VEEKNESH'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center ">
+        <div class="w-full">
+          <app-text-input [labelText]="'NAME'" [id]="'visitor_detail_name'" [value]="'VEEKNESH'" [placeholder]="'NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'CONTACT NUMBER'" [id]="'visitor_detail_number'" [value]="'89436306'" [placeholder]="'CONTACT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'TYPE'" [id]="'visitor_detail_type'" [value]="'DRIVE IN'" [placeholder]="'TYPE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div *ngIf="driveIn" class="w-full">
+          <app-text-input [labelText]="'VEHICLE TYPE'" [id]="'visitor_detail_vehicle_number'" [value]="'SMK 5848K'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'BLOCK'" [id]="'visitor_detail_block'" [value]="'100'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'UNIT'" [id]="'visitor_detail_unit'" [value]="'08-33'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'GATE'" [id]="'visitor_detail_gate'" [value]="'BACK GATE 2'" [placeholder]="'GATE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'LAST ENTRY TIMESTAMP'" [id]="'visitor_detail_last_entry_time_stamp'" [value]="'19/12/2024 09:30:00'" [placeholder]="'ENTRY TIME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [labelText]="'LAST EXIT TIMESTAMP'" [id]="'visitor_detail_last_exit_time_stamp'" [value]="'19/12/2024 12:30:00'" [placeholder]="'EXIT ENTRY'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
       </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_number'" [value]="'89436306'" [placeholder]="'CONTACT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_type'" [value]="'DRIVE IN'" [placeholder]="'TYPE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div *ngIf="driveIn" class="w-11/12">
-        <app-text-input [id]="'visitor_detail_vehicle_number'" [value]="'SMK 5848K'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_block'" [value]="'100'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_unit'" [value]="'08-33'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_gate'" [value]="'BACK GATE 2'" [placeholder]="'GATE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_last_entry_time_stamp'" [value]="'LAST ENTRY TIMESTAMP'" [placeholder]="'ENTRY TIME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
-      <div class="w-11/12">
-        <app-text-input [id]="'visitor_detail_last_exit_time_stamp'" [value]="'LAST EXIT TIMESTAMP'" [placeholder]="'EXIT ENTRY'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
-      </div>
+  
     </div>
-
   </div>
+ 
 
 </ion-content>

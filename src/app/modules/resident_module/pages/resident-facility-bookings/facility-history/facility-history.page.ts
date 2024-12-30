@@ -36,6 +36,8 @@ export class FacilityHistoryPage implements OnInit {
   showDetailContent = false;
   showMainContentTrans = false;
   showDetailContentTrans = false;
+  originalBookingList: any[] = []; // Tambahkan properti untuk menyimpan daftar booking asli
+  filteredBookingList: any[] = []; // Properti untuk menyimpan daftar booking yang difilter
 
   bookingDetails = {
     facilityName: '',
@@ -46,41 +48,98 @@ export class FacilityHistoryPage implements OnInit {
     deposit: 0
   };
 
+  startDate: string = '';
+  endDate: string = '';
   bookingList: any[] = [];
 
   constructor(private router: Router, private facilityBookingService: FacilityBookingsService,) { }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-GB', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      });
+    } catch {
+      return dateString;
+    }
+  }
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDate = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDate = input.value;
+    this.applyDateFilter();
+  }
+  
+  applyDateFilter() {
+    // Pastikan kita menggunakan daftar booking asli untuk filtering
+    if (!this.originalBookingList || this.originalBookingList.length === 0) return;
+
+    // Filter booking berdasarkan rentang tanggal
+    this.bookingList = this.originalBookingList.filter(booking => {
+      const bookingDate = booking.rawDate;
+      
+      // Konversi startDate dan endDate ke Date object jika ada
+      const startDate = this.startDate ? new Date(this.startDate) : null;
+      const endDate = this.endDate ? new Date(this.endDate) : null;
+
+      // Cek kondisi filtering
+      const isAfterStartDate = !startDate || bookingDate >= startDate;
+      const isBeforeEndDate = !endDate || bookingDate <= endDate;
+
+      return isAfterStartDate && isBeforeEndDate;
+    });
+  }
+
+  // Tambahkan method reset filter jika diperlukan
+  resetFilter() {
+    this.startDate = '';
+    this.endDate = '';
+    this.bookingList = [...this.originalBookingList];
+  }
 
   loadHistoryBookings() {
     if (this.unit_id) {
       this.facilityBookingService.getHistoryBookingsServices(this.unit_id).subscribe({
         next: (response: any) => {
-          // Log full response untuk debugging
-          console.log('Full Response:', response);
-  
-          // Pastikan response memiliki active_bookings
           if (response.result && response.result.booking && Array.isArray(response.result.booking)) {
-            this.bookingList = response.result.booking.map((booking: any) => ({
+            // Simpan daftar booking asli
+            this.originalBookingList = response.result.booking.map((booking: any) => ({
               facilityName: booking.facility || 'Unknown Facility',
-              eventDate: booking.event_date || booking.start_datetime.split(' ')[0],
+              eventDate: this.formatDate(booking.event_date || booking.start_datetime.split(' ')[0]),
               eventDay: this.getDayName(new Date(booking.booking_date || booking.start_datetime)),
               bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datetime)}`,
               bookingFee: booking.booking_fee || 0,
               deposit: booking.deposit || 0,
               bookedBy: booking.booked_by || 'Unknown',
               status: booking.state || booking.booking_status,
-              id: booking.id // Tambahkan ID untuk referensi unik
+              id: booking.id,
+              rawDate: new Date(booking.event_date || booking.start_datetime) // Tambahkan raw date untuk filtering
             }));
-  
-            console.log("Mapped Booking List:", this.bookingList);
+
+            // Set booking list awal
+            this.bookingList = [...this.originalBookingList];
+            this.filteredBookingList = [...this.originalBookingList];
           } else {
-            console.warn('No booking data found');
+            this.originalBookingList = [];
             this.bookingList = [];
-            console.log("Mapped Booking List:", this.bookingList);
+            this.filteredBookingList = [];
           }
         },
         error: (error) => {
           console.error('Error fetching history bookings', error);
+          this.originalBookingList = [];
           this.bookingList = [];
+          this.filteredBookingList = [];
         }
       });
     }

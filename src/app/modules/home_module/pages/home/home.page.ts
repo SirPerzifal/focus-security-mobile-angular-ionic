@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   alertColor = 'red'
 
@@ -22,6 +23,12 @@ export class HomePage implements OnInit {
     } else {
       errorSound.play().catch((err) => console.error('Error playing sound:', err));
     } 
+  }
+
+  onClickMoveCustom(type: string){
+    this.router.navigate(['move-home'], {
+      queryParams: {type: type}
+    });
   }
 
 }

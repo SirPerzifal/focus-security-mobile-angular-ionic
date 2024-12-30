@@ -12,4 +12,16 @@ export class BillsHistoryPage implements OnInit {
   ngOnInit() {
   }
 
+  startDateFilter = ''
+  showStartDate = ''
+
+  onChangeStartDate(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    const dateParts = this.startDateFilter.split('-');
+    this.showStartDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
+    console.log(this.showStartDate)
+  }
+  
+
 }

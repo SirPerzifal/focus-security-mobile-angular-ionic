@@ -41,72 +41,47 @@ export class VisitorRecordsPage implements OnInit {
   }
 
   toggleWalkIn(){
-    if (!this.walkIn) {
-      // this.showQrTrans = true
-      // this.showDrive = false;
-      // this.showWalk = false;
-      setTimeout(() => {
-        this.walkIn = true;
-        this.driveIn = false
-        if(this.searchType=='vehicle'){
-          this.searchType = '';
-          this.isSearchTypeSelected = false;
-        }
-      }, 300)
+    this.walkIn = true;
+    this.driveIn = false
+    if(this.searchType=='vehicle'){
+      this.searchType = '';
+      this.isSearchTypeSelected = false;
     }
   }
 
   toggleDriveIn(){
-    if (!this.driveIn) {
-      // this.showQrTrans = true
-      // this.showDrive = false;
-      // this.showWalk = false;
-      setTimeout(() => {
-        this.driveIn = true;
-        this.walkIn = false
-        if(this.searchType=='name'){
-          this.searchType = '';
-          this.isSearchTypeSelected = false;
-        }
-      }, 300)
+    this.driveIn = true;
+    this.walkIn = false
+    if(this.searchType=='name'){
+      this.searchType = '';
+      this.isSearchTypeSelected = false;
     }
   }
 
   toggleShow48Hrs() {
-    if (!this.show48Hrs) {
-      // this.showQrTrans = true
-      // this.showDrive = false;
-      // this.showWalk = false;
-      setTimeout(() => {
         this.show48Hrs = true;
         this.show24Hrs = false
-      }, 300)
-    }
+      
   }
 
   toggleShow24Hrs() {
-    if (!this.show24Hrs) {
-      // this.showWalkTrans = true
-      // this.showDrive = false;
-      // this.showQr = false;
-      setTimeout(() => {
         this.show24Hrs = true;
         this.show48Hrs = false
-      }, 300)
-    }
   }
 
   toggleShowSearch(){
     if (!this.showSearch) {
+      this.showSearch = true;
       setTimeout(() => {
-        this.showSearch = true;
+        
         this.walkIn = true;
         this.driveIn = false
         this.isSearchTypeSelected = false;
       }, 300)
     }else{
+      this.showSearch = false;
       setTimeout(() => {
-        this.showSearch = false;
+        
         this.walkIn = false;
         this.driveIn = true
         this.isSearchTypeSelected = false;

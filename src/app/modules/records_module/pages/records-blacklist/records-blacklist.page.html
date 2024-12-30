@@ -1,0 +1,113 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-main'"/>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [customImageIcon]="'assets/icon-vms/records_menu/Blacklist.png'"
+        [text]="'BLACKLIST'" 
+        [routerLink]="['/records-main']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />  
+    </div>
+    <div class="flex flex-col">
+      <div class="flex mt-8 flex-row space-x-7">
+
+        <app-button-icon [textOnly]="true" [text]="'VISITOR'"
+        (click)="toggleSlide('visitor')" [isActive]="showVisitor" [disableClick]="true"/>
+  
+        <app-button-icon [textOnly]="true" [text]="'VEHICLE'"
+        (click)="toggleSlide('vehicle')" [isActive]="showVehicle" [disableClick]="true" />
+      </div>
+      <div class="flex flex-col mx-4 mb-4">
+
+        <div class="flex flex-col w-full space-y-5 mt-8">
+          <div class="flex flex-col w-full">
+            <div class="w-full flex flex-col">
+              <label class="text-2xl"><u><b>SEARCH BY</b></u></label>
+              <select id="search_option" (change)="onSearchOptionChange($event)"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
+                <option selected disabled hidden>CHOOSE SEARCH BY</option>
+                <option [value]="'date'">DATE</option>
+                <option [value]="'name'" *ngIf="showVisitor">NAME</option>
+                <option [value]="'vehicle'"  *ngIf="showVehicle">VEHICLE NUMBER</option>
+                <option [value]="'contact'">CONTACT NO</option>
+                <option [value]="'all'">ALL</option>
+              </select>
+            </div>
+            <div class="w-full space-y-5" *ngIf="searchOption == 'date' || searchOption == 'all'">
+              <app-text-input 
+                #blacklistSearchDateFilter
+                [id]="'blacklist_search_date_filter'" 
+                [labelText]="'DATE'" [placeholder]="'24/12/2024'" 
+                [customClasses]="{'w-full ':true}" 
+                [type]="'date'"
+                (change)="onDateChange($event)"
+                [(ngModel)]="filter.issue_date"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+            <div class="w-full" *ngIf="(searchOption == 'name' || searchOption == 'all') && pageType == 'visitor'">
+              <app-text-input 
+                #blacklistNameFilter
+                [id]="'blacklist_name_filter'" 
+                [labelText]="'NAME'" [placeholder]="'VHASYA'" 
+                [customClasses]="{'w-full ':true}" 
+                [type]="'text'" 
+                [(ngModel)]="filter.name"
+                (change)="onNameFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+            <div class="w-full" *ngIf="(searchOption == 'vehicle' || searchOption == 'all') && pageType == 'vehicle'">
+              <app-text-input 
+                #blacklistNameFilter
+                [id]="'blacklist_vehicle_filter'" 
+                [labelText]="'VEHICLE NUMBER'" [placeholder]="'SBB 5352 B'" 
+                [customClasses]="{'w-full ':true}" 
+                [type]="'text'" 
+                [(ngModel)]="filter.vehicle_number"
+                (change)="onVehicleFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+            <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
+              <app-text-input 
+                #blacklistContactFilter
+                [id]="'blacklist_contact_filter'" 
+                [labelText]="'CONTACT'" [placeholder]="'+65 7827 323'" 
+                [customClasses]="{'w-full ':true}" 
+                [type]="'text'" 
+                [(ngModel)]="filter.contact"
+                (change)="onContactFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full space-y-5 mt-5">
+          <div class="flex flex-row justify-end w-full">
+            <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle" (click)="onNewData()"></ion-icon>
+          </div>
+          <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let data of blacklistData" >
+            <span class="text-2xl font-bold text-white">{{data.type == 'vehicle' ? data.vehicle_number : data.visitor_name}}</span>
+            <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onClickDetail(data)"></ion-icon>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

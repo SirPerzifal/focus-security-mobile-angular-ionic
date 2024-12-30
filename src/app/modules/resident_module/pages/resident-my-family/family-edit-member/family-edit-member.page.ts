@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class FamilyEditMemberPage implements OnInit {
 
   end_of_tenancy = ''
 
-  constructor(private router: Router, private familyService: FamilyService, private toastController: ToastController) {
+  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean,  };
@@ -40,6 +40,8 @@ export class FamilyEditMemberPage implements OnInit {
     } 
     console.log(this.formData)
   }
+
+  
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
@@ -58,6 +60,23 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   onSubmit() {
+    let errMsg = ''
+    if (this.formData.full_name == '') {
+      errMsg += "Please fill member's full name! \n"
+    }
+    if (this.formData.nickname == '') {
+      errMsg += "Please fill member's nickname! \n"
+    }
+    if (this.formData.mobile_number == '') {
+      errMsg += "Please fill member's mobile number! \n"
+    }
+    if (this.formData.type_of_residence == '') {
+      errMsg += "Please choose member's residence type! \n"
+    }
+    if (errMsg != '') {
+      this.presentToast(errMsg, 'danger')
+      return
+    }
     console.log('Submitting Invitees');
     console.log(
       this.formData.unit_id,
@@ -96,29 +115,84 @@ export class FamilyEditMemberPage implements OnInit {
     }
   }
 
-  onDelete() {
-    console.log(this.formData.unit_id)
-    try {
-      this.familyService.deleteFamilyList(
-        this.formData.unit_id,
-      ).subscribe(
-        res => {
-          console.log(res);
-          if (res.result.response_code == 200) {
-            this.presentToast('Success Delete Record', 'success');
-            this.router.navigate(['resident-my-family']);
-          } else {
-            this.presentToast('Failed Delete Record', 'danger');
+  public async presentCustomAlert(
+    header: string = 'Delete User', 
+    confirmText: string = 'Delete',
+    cancelText: string = 'Cancel', 
+    unitFormData?: any  // Jadikan optional
+  ) {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-family-edit-page',
+      header: header,
+      message: '', 
+      buttons: [
+        {
+          text: confirmText,
+          cssClass: 'confirm-button',
+          handler: () => {
+            console.log('Confirmed');
+            // Logika konfirmasi
+            this.onDelete();
+            // if (invite) {
+            // }
           }
         },
-        error => {
-          console.error('Error:', error);
-        }
-      );
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      this.presentToast(String(error), 'danger');
-    }
+        {
+          text: cancelText,
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan
+          }
+        },
+      ]
+    });
+  
+    await alert.present(); // Tambahkan baris ini
+  }
+
+  async onDelete() {
+    console.log(this.formData.unit_id)
+    const alertButtons = await this.alertController.create({
+      cssClass: 'manage-payment-alert',
+      header: `Are you sure you want to delete ${this.formData.full_name}?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            try {
+              this.familyService.deleteFamilyList(
+                this.formData.unit_id,
+              ).subscribe(
+                res => {
+                  console.log(res);
+                  if (res.result.response_code == 200) {
+                    this.presentToast('Successfully delete this member.', 'success');
+                    this.router.navigate(['resident-my-family']);
+                  } else {
+                    this.presentToast('Error occured while deleting this member.', 'danger');
+                  }
+                },
+                error => {
+                  console.error('Error:', error);
+                }
+              );
+            } catch (error) {
+              console.error('Unexpected error:', error);
+              this.presentToast(String(error), 'danger');
+            }
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    })
+    await alertButtons.present();
   }
 
   onFullNameChange(value: string): void {

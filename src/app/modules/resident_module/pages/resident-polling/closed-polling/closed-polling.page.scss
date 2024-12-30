@@ -1,0 +1,27 @@
+.slide-up-animation {
+    animation: slide-up 0.5s ease-in-out forwards;
+  }
+  
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  table {
+    border-collapse: collapse; /* Ensures that borders are collapsed */
+    width: 100%; /* Full width */
+  }
+  
+  td {
+    padding-left: 10px; /* Add padding to table cells */
+  }
+  
+  td.font-bold {
+    font-weight: bold; /* Keep the font bold for the first column */
+  }

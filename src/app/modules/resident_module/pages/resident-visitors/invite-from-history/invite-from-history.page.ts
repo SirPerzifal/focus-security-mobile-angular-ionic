@@ -14,18 +14,21 @@ export class InviteFromHistoryPage implements OnInit {
       phone: '085830122464',
       plate: 'SNK5424D',
       is_selected: false,
+      is_ban: false
     },
     {
       name: 'Ashwinder',
       phone: '085841233575',
       plate: 'SNK6535D',
       is_selected: false,
+      is_ban: false
     },
     {
       name: 'Daniel',
       phone: '085821233575',
       plate: 'SNK6035D',
       is_selected: false,
+      is_ban: true
     }
   ];
 

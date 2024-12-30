@@ -26,11 +26,13 @@ export class BottomNavBarComponent  implements OnInit {
 
   reportIssue() {
     this.navigationService.setActiveButton('home');
+    this.router.navigate(['/record-app-report']);
     // Lakukan navigasi ke halaman report issue
   }
 
   settings() {
     this.navigationService.setActiveButton('home');
+    this.router.navigate(['/resident-settings-page']);
     // Lakukan navigasi ke halaman settings
   }
 

@@ -9,6 +9,7 @@ import { ApiService } from '../../api.service';
 })
 export class FacilityBookingsService extends ApiService { 
   private apiUrl = this.baseUrl + '/resident/get/facility_book';
+  private urlDeleteBooking = this.baseUrl + '/resident/post/cancel_booking';
   private apiGetHistory = this.baseUrl + '/resident/get/booking_history';
 
   constructor(http: HttpClient) { 
@@ -49,6 +50,25 @@ export class FacilityBookingsService extends ApiService {
 
     // Change to send data in request body
     return this.http.post(`${this.apiGetHistory}`, body, { headers: headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteBooking(booking_id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        booking_id: Number(booking_id),
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.urlDeleteBooking}`, body, { headers: headers }).pipe(
       catchError(this.handleError)
     );
   }

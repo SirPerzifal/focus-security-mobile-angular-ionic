@@ -1,0 +1,66 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-facility'"/>
+    </div>
+    <!-- <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [isHomeButton]="true"
+        [text]="'OVERNIGHT PARKING'" 
+        [routerLink]="['/records-facility']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />    
+    </div> -->
+    <div class="flex flex-row mx-4">
+      <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <label class="text-2xl font-bold">{{record.facility}}</label>
+        <table class="text-2xl">
+          <tr>
+            <td class="font-bold w-2/5">BOOKING DATE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{record.show_date}} (03:00PM - 04:00PM)</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">BOOKED BY</td>
+            <td class="w-[5%]">:</td>
+            <td>{{booked_by}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">RESIDENT NAME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{resident_name}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">RESIDENT CONTACT NO</td>
+            <td class="w-[5%]">:</td>
+            <td>{{contact_no}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">BLOCK & UNIT</td>
+            <td class="w-[5%]">:</td> 
+            <td>{{block_name ? block_name : '-' }} | {{ unit_name  ? unit_name : '-' }}</td>
+          </tr>
+        </table>
+        <div class="flex flex-col justify-around w-full">
+          <div class="flex flex-row w-full justify-around">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 ">CHECK IN</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record)">CHECK OUT</button>
+          </div>
+          <div class="flex flex-row w-full justify-around mb-4">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL RESIDENT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

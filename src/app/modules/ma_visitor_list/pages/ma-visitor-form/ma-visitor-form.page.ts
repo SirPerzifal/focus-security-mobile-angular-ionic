@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ma-visitor-form',
@@ -20,7 +21,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class MaVisitorFormPage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   faUsers = faUsers
 
@@ -62,6 +63,12 @@ export class MaVisitorFormPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.vehicle_number = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  onBackMove() {
+    this.router.navigate(['move-home'], {
+      queryParams: {type: 'ma_visitor'}
+    });
   }
 
 }

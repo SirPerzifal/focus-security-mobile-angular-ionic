@@ -27,39 +27,28 @@ export class VehicleRecordsPagePage implements OnInit {
   showSearch = false;
   show48Hrs = false;
   show24Hrs = false;
+  showBar = false
 
   toggleShow48Hrs() {
-    if (!this.show48Hrs) {
-      // this.showQrTrans = true
-      // this.showDrive = false;
-      // this.showWalk = false;
-      setTimeout(() => {
-        this.show48Hrs = true;
-        this.show24Hrs = false
-      }, 300)
-    }
+    this.show48Hrs = true;
+    this.show24Hrs = false
   }
 
   toggleShow24Hrs() {
-    if (!this.show24Hrs) {
-      // this.showWalkTrans = true
-      // this.showDrive = false;
-      // this.showQr = false;
-      setTimeout(() => {
-        this.show24Hrs = true;
-        this.show48Hrs = false
-      }, 300)
-    }
+    this.show24Hrs = true;
+    this.show48Hrs = false
   }
 
   toggleShowSearch(){
     if (!this.showSearch) {
+      this.showSearch = true;
       setTimeout(() => {
-        this.showSearch = true;
+        this.showBar = true
         this.show24Hrs = false;
         this.show48Hrs = false
       }, 300)
     }else{
+      this.showBar = false      
       setTimeout(() => {
         this.showSearch = false;
         this.show24Hrs = false;

@@ -30,7 +30,7 @@ export class MyVehicleFormPage implements OnInit {
   Unit: any[] = [];
   FamilyMember: any[] = [];
   showDate = '';
-
+  MaximumVehicle = '';
 
   // State untuk form
   selectedTypeOfApplication: string = '';
@@ -38,9 +38,10 @@ export class MyVehicleFormPage implements OnInit {
   selectedFamilyMember: string = '';
   selectedVehicleMake: string = '';
   selectedVehicleColour: string = '';
-  selectedBlock: string = '';
-  selectedUnit: string = '';
+  selectedBlock: string = '1';
+  selectedUnit: string = '1';
   selectedTemporaryCarReason: string = '';
+  isFirstVehicle: boolean = false; // Tambahkan ini
 
   constructor(
     private myVehicleFormService: MyVehicleFormService,
@@ -53,6 +54,14 @@ export class MyVehicleFormPage implements OnInit {
     this.loadVehicleMakeAndType();
     this.loadFamilyMember();
     this.loadBlock();
+    
+    // Ambil data yang dikirim dari halaman sebelumnya
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.MaximumVehicle = navigation.extras.state['maximumVehicle']; // Perbaikan di sini
+      console.log(navigation.extras.state['maximumVehicle'])
+      console.log(this.MaximumVehicle)
+    }
   }
 
   loadFamilyMember() {
@@ -146,9 +155,9 @@ export class MyVehicleFormPage implements OnInit {
   // Method untuk mengupload file (opsional, bisa dihapus jika tidak diperlukan)
   uploadFile() {
     if (this.selectedFile) {
-      this.presentToast(`File ${this.selectedFile.name} siap diunggah`, 'success');
+      this.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
     } else {
-      this.presentToast('Pilih file terlebih dahulu', 'danger');
+      this.presentToast('Choose your file first', 'danger');
     }
   }
 
@@ -202,110 +211,112 @@ export class MyVehicleFormPage implements OnInit {
     const vehicleNumber = this.vehicleNumberInput.value;
     const iuNumber = this.iuNumberInput.value;
     const endDate = this.endDate;
-    const company_id = 1;
+    const vehicle_color = this.vehicleColorInput.value;
     const states = 'pending_approval';
-    const temporaryCarRequest = this.selectedTemporaryCarReason
+    const temporaryCarRequest = this.selectedTemporaryCarReason;
 
     // Validasi file log
     if (!this.uploadedFileBase64) {
-      this.presentToast('Unggah dokumen log kendaraan', 'danger');
-      return;
+        this.presentToast('Upload your vehicle log', 'danger');
+        return;
     }
 
     // Validasi field wajib
     if (!this.selectedTypeOfApplication) {
-      this.presentToast('Pilih tipe aplikasi', 'danger');
-      return;
+        this.presentToast('Choose type of application', 'danger');
+        return;
     }
 
     if (!vehicleNumber) {
-      this.presentToast('Masukkan nomor kendaraan', 'danger');
-      return;
+        this.presentToast('Input your vehicle number', 'danger');
+        return;
     }
 
     if (!iuNumber) {
-      this.presentToast('Masukkan nomor IU', 'danger');
-      return;
+        this.presentToast('Input your I.U number', 'danger');
+        return;
     }
 
     if (!this.selectedVehicleType) {
-      this.presentToast('Pilih tipe kendaraan', 'danger');
-      return;
+        this.presentToast('Choose your vehicle type', 'danger');
+        return;
     }
 
     if (!this.selectedVehicleMake) {
-      this.presentToast('Pilih tipe kendaraan', 'danger');
-      return;
+        this.presentToast('Choose your vehicle make', 'danger');
+        return;
     }
 
     if (!this.selectedBlock) {
-      this.presentToast('Pilih tipe kendaraan', 'danger');
-      return;
+        this.presentToast('Choose your block', 'danger');
+        return;
     }
 
     if (!this.selectedUnit) {
-      this.presentToast('Pilih merek kendaraan', 'danger');
-      return;
+        this.presentToast('Choose your unit', 'danger');
+        return;
     }
 
     if (!this.selectedFamilyMember) {
-      this.presentToast('Pilih keluarga anda', 'danger');
-      return;
+        this.presentToast('Choose your family member', 'danger');
+        return;
     }
 
-    if (!this.selectedVehicleColour) {
-      this.presentToast('Pilih warna kendaraan', 'danger');
-      return;
+    // Validasi untuk isFirstVehicle
+    if (this.selectedTypeOfApplication === 'owned_vehicle' && !this.isFirstVehicle) {
+        this.presentToast('Please confirm if this is the first vehicle', 'danger');
+        return;
     }
 
     // Tambahkan validasi untuk end date jika temporary vehicle
     if (this.selectedTypeOfApplication === 'temporary_vehicle') {
-      if (!this.endDate) {
-        this.presentToast('Pilih tanggal berakhir untuk kendaraan sementara', 'danger');
-        return;
-      }
-      if (!this.selectedTemporaryCarReason) {
-        this.presentToast('Pilih alasan kendaraan sementara', 'danger');
-        return;
-      }
+        if (!this.endDate) {
+            this.presentToast('Choose end date', 'danger');
+            return;
+        }
+        if (!this.selectedTemporaryCarReason) {
+            this.presentToast('Input your reason for temporary vehicle', 'danger');
+            return;
+        }
     }
 
     try {
-      this.myVehicleFormService.postVehicle(
-        vehicleNumber,
-        iuNumber,
-        this.selectedTypeOfApplication,
-        this.selectedVehicleType,
-        this.selectedVehicleMake,
-        this.selectedVehicleColour,
-        this.selectedBlock,
-        this.selectedFamilyMember,
-        this.selectedUnit,
-        this.uploadedFileBase64, // Kirim base64
-        this.endDate,
-        states,
-        company_id,
-        temporaryCarRequest
-      ).subscribe({
-        next: (response: any) => {
-          if (response.result.response_code === 200) {
-            this.presentToast('Berhasil menyimpan data kendaraan', 'success');
-            this.router.navigate(['/resident-my-vehicle']);
-            this.resetForm();
-          } else {
-            this.presentToast('Gagal menyimpan data', 'danger');
-          }
-        },
-        error: (error: any) => {
-          console.error('Error:', error);
-          this.presentToast('Terjadi kesalahan', 'danger');
-        }
-      });
+        this.myVehicleFormService.postVehicle(
+            vehicleNumber,
+            iuNumber,
+            this.selectedTypeOfApplication,
+            this.selectedVehicleType,
+            this.selectedVehicleMake,
+            vehicle_color,
+            this.selectedBlock,
+            this.selectedFamilyMember,
+            this.selectedUnit,
+            this.uploadedFileBase64, // Kirim base64
+            this.endDate,
+            states,
+            temporaryCarRequest,
+            String(this.isFirstVehicle) // Pastikan ini ada
+        ).subscribe({
+            next: (response: any) => {
+                if (response.result.response_code === 200) {
+                    this.presentToast('Success ', 'success');
+                    this.router.navigate(['/resident-my-vehicle']);
+                    this.resetForm();
+                } else {
+                    this.presentToast('Failed', 'danger');
+                    console.error('Error:', response.result.message);
+                }
+            },
+            error: (error: any) => {
+                console.error('Error:', error);
+                this.presentToast('There was an error', 'danger');
+            }
+        });
     } catch (error) {
-      console.error('Unexpected error:', error);
-      this.presentToast('Terjadi kesalahan tidak terduga', 'danger');
+        console.error('Unexpected error:', error);
+        this.presentToast('There was an error', 'danger');
     }
-  }
+}
 
   resetForm() {
     // Reset semua input

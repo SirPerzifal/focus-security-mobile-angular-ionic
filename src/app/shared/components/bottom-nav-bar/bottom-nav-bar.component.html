@@ -1,20 +1,37 @@
-<div class="flex justify-evenly bg-[#D8ECCF] fixed bottom-0 w-full">
-  <ion-button fill="clear" (click)="routeTo()">
+<div class="border border-t-[#BBCDB3] pr-5 pl-5 flex justify-between bg-[#D8ECCF] fixed bottom-0 w-full">
+  <ion-button fill="clear" class="fsc-icon-button" (click)="routeTo()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-3xl mb-2"></ion-icon>
-      <span class="text-[11px] font-bold">Home</span>
+      <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-3xl mb-2 ml-8"></ion-icon>
+      <span class="text-sm font-bold ml-8">Home</span>
     </div>
   </ion-button>
-  <ion-button fill="clear" (click)="reportIssue()">
+  <ion-button fill="clear" class="fsc-icon-button" (click)="reportIssue()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-3xl mb-2"></ion-icon>
-      <span class="text-[11px] font-bold">Report Issue</span>
+      <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-3xl mb-2 ml-3"></ion-icon>
+      <span class="text-sm font-bold ml-3">Report Issue</span>
     </div>
   </ion-button>
-  <ion-button fill="clear" (click)="settings()">
+  <ion-button fill="clear" class="fsc-icon-button" (click)="settings()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-3xl mb-2"></ion-icon>
-      <span class="text-[11px] font-bold">Settings</span>
+      <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-3xl mb-2 mr-5"></ion-icon>
+      <span class="text-sm font-bold mr-5">Settings</span>
     </div>
   </ion-button>
 </div>
+
+<!-- <ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home"></ion-icon>
+      Listen Now
+    </ion-tab-button>
+    <ion-tab-button tab="report">
+      <ion-icon name="alert-circle"></ion-icon>
+      Report Issue
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon name="settings"></ion-icon>
+      Settings
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs> -->

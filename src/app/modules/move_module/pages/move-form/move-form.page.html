@@ -9,20 +9,16 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <!-- Header dan navigasi -->
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="flex flex-row justify-between w-full">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/move-home']"></ion-icon>
-        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
-        <div class="w-20"></div>
-      </div>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/move-home'" [params]="{type: scheduleType}"/>
     </div>
     <div class="flex flex-row mt-8">    
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT'" [routerLink]="['/move-home']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT'" (click)="onBackHome()" [isActive]="true" [disableClick]="true" *ngIf="scheduleType == 'move_in'"/>
+      <app-button-icon [customNameIcon]="'faHammer'" [text]="'RENOVATION'" (click)="onBackHome()" [isActive]="true" [disableClick]="true" *ngIf="scheduleType != 'move_in'"/>
     </div>
 
     <div class="flex flex-row">
-      <div class="flex flex-col w-full mt-8 space-y-3 items-center mx-4 mb-4">
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mx-4 mb-4">
         <!-- Block dan Unit -->
         <div class="w-full flex flex-row space-x-1">
           <div class="w-1/2">
@@ -32,6 +28,7 @@
               [labelText]="'BLOCK'" [placeholder]="'Block'" 
               [customClasses]="{'w-full ':true}" 
               [type]="'text'" 
+              [isReadonly]="true"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
           </div>
@@ -42,6 +39,7 @@
               [labelText]="'UNIT'" [placeholder]="'Unit'" 
               [customClasses]="{'w-full':true}" 
               [type]="'text'" 
+              [isReadonly]="true"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
           </div>
@@ -72,7 +70,7 @@
           </div>
           
         </div>
-        <div class="flex mt-2 mb-2 gap-x-8 flex-row w-full">
+        <!-- <div class="flex mt-2 mb-2 gap-x-8 flex-row w-full">
           <div class="flex flex-row items-center my-2 ml-1">
             <input type="radio" name="SelectedIdentification" id="nric_identification" value="nric" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
             <label class="text-2xl" for="nric_identification">NRIC</label>
@@ -81,12 +79,15 @@
             <input type="radio" name="SelectedIdentification" id="fin_identification" value="fin" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
             <label class="text-2xl" for="fin_identification">FIN</label>
           </div>
+        </div> -->
+        <div class="w-full">
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)"/>
         </div>
         <div class="w-full">
           <app-text-input 
             #textInput
             [id]="'contractor_nric/fin'" 
-            [labelText]="'NRIC / FIN'" [placeholder]="'S6404XXXZ'" 
+            [labelText]="'NRIC / FIN'" [placeholder]="'SXXXX789A'" 
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
@@ -131,7 +132,7 @@
             <app-text-input #textInput [id]="'name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="w-1/2">
-            <app-text-input #textInput [id]="'nric_fin_pax_' + i" [labelText]="'NRIC / FIN'" [placeholder]="'EG. S6214XXXZ'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+            <app-text-input #textInput [id]="'nric_fin_pax_' + i" [labelText]="'NRIC / FIN'" [placeholder]="'EG. SXXXX789A'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
         </div>
         <div class="flex flex-col w-full">
@@ -139,7 +140,7 @@
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'" (click)="saveRecordAndOpenBarrier()"></app-visitor-button>
           </div>
           <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-3 text-2xl h-20'" (click)="saveRecordOnly()"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-5 text-2xl h-20'" (click)="saveRecordOnly()"></app-visitor-button>
           </div>
         </div>
         

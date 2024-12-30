@@ -59,40 +59,39 @@ export class MyVehicleFormService extends ApiService{
     vehicleLog: string, 
     endDateForTemporaryPass: string | null,
     states: string,
-    company_id: number,
     temporaryCarRequest: string | null,
-    vehicleLogFilename?: string
-  ): Observable<any> {
+    isFirstVehicle: string, // Pastikan ini adalah parameter wajib
+    vehicleLogFilename?: string, // Ini adalah parameter opsional
+): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
     });
     
     const body = {
-      jsonrpc: '2.0',
-      params: {
-        vehicle_number: vehicleNumber,
-        IU_number: iuNumber,
-        type_of_application: typeOfApplication,
-        vehicle_type: vehicleType,
-        vehicle_make: vehicleMake,
-        block_id: blockId,
-        family_id: familyMember,
-        unit_id: unitID,
-        vehicle_color: vehicleColour,
-        vehicle_log_filename: vehicleLogFilename,
-        vehicle_log: vehicleLog,
-        company_id: company_id,
-        states: states,
-        end_date_for_temporary_pass: typeOfApplication === 'temporary_vehicle' ? endDateForTemporaryPass : null,
-        temporary_car_request: typeOfApplication === 'temporary_vehicle' ? temporaryCarRequest : null
-      }
+        jsonrpc: '2.0',
+        params: {
+            vehicle_number: vehicleNumber,
+            IU_number: iuNumber,
+            type_of_application: typeOfApplication,
+            vehicle_type: vehicleType,
+            vehicle_make: vehicleMake,
+            vehicle_color: vehicleColour,
+            unit_id: unitID,
+            block_id: blockId,
+            family_id: familyMember,
+            vehicle_log_filename: vehicleLogFilename,
+            vehicle_log: vehicleLog,
+            is_first_vehicle: isFirstVehicle,
+            states: states,
+            end_date_for_temporary_pass: typeOfApplication === 'temporary_vehicle' ? endDateForTemporaryPass : null,
+            temporary_car_request: typeOfApplication === 'temporary_vehicle' ? temporaryCarRequest : null
+        }
     };
 
     return this.http.post(`${this.baseUrl}/resident/post/post_vehicle`, body, { headers: headers }).pipe(
-      catchError(this.handleError));
-  }
-
+        catchError(this.handleError));
+}
   private handleError(error: any) {
     console.error('An error occurred:', error);
     

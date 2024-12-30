@@ -1,4 +1,4 @@
-<div class="flex flex-row w-full items-end">
+<div class="flex flex-row w-full items-end justify-between h-25">
   <input 
     type="file" 
     #fileInput 
@@ -7,11 +7,11 @@
     accept="image/*"
   />
 
-  <div [ngClass]="'w-4/6 rounded-md px-3 outline-[#BDBDBD] h-fit text-xl flex flex-col'">
+  <div [ngClass]="'w-4/6 rounded-md outline-[#BDBDBD] h-fit text-2xl flex flex-col'">
     <label class="text-2xl" *ngIf="labelText"><b><u>{{labelText}}</u></b></label>
     <div [ngClass]="'w-full'">
-      <input  
-        [ngClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xl'" 
+      <input style="border: #6B7280 1px solid;"
+        [ngClass]="'w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" 
         type="text" 
         [placeholder]="customPlaceholder" 
         [(ngModel)]="selectedFileName"
@@ -23,9 +23,9 @@
   
   <button 
     (click)="triggerFileInput()" 
-    class="bg-[var(--ion-color-primary)] text-white w-[30%] text-xl h-10" [ngClass]="extraButtonClass" [style]="customButtonStyle"
+    class="bg-[var(--ion-color-primary)] text-white w-1/4 text-2xl h-20 " [ngClass]="extraButtonClass" [style]="customButtonStyle"
   >
-    {{buttonText}}
+    <b>{{buttonText}}</b>
   </button>
   
 </div>

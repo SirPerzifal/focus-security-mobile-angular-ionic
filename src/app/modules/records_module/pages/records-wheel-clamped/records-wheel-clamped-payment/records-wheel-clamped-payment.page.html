@@ -1,0 +1,53 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-wheel-clamped-detail'" [homeRoute]="true" [params]="params"/>
+    </div>
+    <div class="flex flex-row mx-4">
+      <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <table class="text-2xl">
+          <tr>
+            <td class="font-bold w-1/2">VEHICLE NUMBER</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ vehicle.vehicle_number }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">OFFENCE NO</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ vehicle.name }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">WHEEL CLAMP CHARGES</td>
+            <td class="w-[5%]">:</td>
+            <td>S${{ vehicle.wheel_clamp_charges.toFixed(2) }}</td>
+          </tr>
+          <tr *ngIf="vehicle.tax_total != 0">
+            <td class="font-bold w-2/5">GST</td>
+            <td class="w-[5%]">:</td>
+            <td>S${{ vehicle.wheel_clamp_tax_total.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">TOTAL PAYABLE</td>
+            <td class="w-[5%]">:</td>
+            <td>S${{ vehicle.wheel_clamp_subtotal.toFixed(2) }}</td>
+          </tr>
+        </table>
+        <div class="w-full flex flex-col items-center mt-8">
+          <img [src]="qr_code">
+        </div>
+        <div class="flex flex-row justify-center w-full mt-5 mb-8">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">UPLOAD RECEIPT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

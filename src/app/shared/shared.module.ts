@@ -8,13 +8,15 @@ import { ButtonIconComponent } from './components/button-icon/button-icon.compon
 import { BottomNavBarComponent } from './components/bottom-nav-bar/bottom-nav-bar.component';
 import { MultiLineButtonComponent } from './components/multi-line-button/multi-line-button.component';
 import { CheckboxConfirmationComponent } from './components/checkbox-confirmation/checkbox-confirmation.component';
+import { VotingGraphComponent } from './components/voting-graph/voting-graph.component';
 
 @NgModule({
   declarations: [
     ButtonIconComponent,
     BottomNavBarComponent,
     MultiLineButtonComponent,
-    CheckboxConfirmationComponent
+    CheckboxConfirmationComponent,
+    VotingGraphComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import { CheckboxConfirmationComponent } from './components/checkbox-confirmatio
     FontAwesomeModule,
     BottomNavBarComponent,
     MultiLineButtonComponent,
-    CheckboxConfirmationComponent
+    CheckboxConfirmationComponent,
+    VotingGraphComponent
   ]
 })
 export class SharedModule { }

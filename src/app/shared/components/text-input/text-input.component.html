@@ -1,14 +1,48 @@
 <div [class]="'flex flex-col ' + getFilteredClasses(customClasses)">
   <label class="text-2xl" *ngIf="labelText"><b><u>{{labelText}}</u></b></label>
+  <label [class]="labelResidentClass" *ngIf="labelResidentText">{{labelResidentText}}</label>
+  
+  <!-- Displayed Input -->
+  <div class="flex flex-row items-center">
+    <input 
+    *ngIf="type !== 'date'"
+      [id]="id" 
+      [class]="getFilteredCustomClasses(customInputClasses)" 
+      [type]="type" 
+      [placeholder]="placeholder" 
+      [(ngModel)]="value"
+      (keyup)="onKeyUp($event)"
+      [name]="name"
+      [readonly]="isReadonly" 
+      [min]="type === 'date' ? min : null"
+      style="border: 1px solid #6B7280;"
+    />
+    <input 
+    *ngIf="type === 'date'"
+      [id]="id"
+      [class]="getFilteredCustomClasses(customInputClasses)"
+      type="text"
+      [placeholder]="placeholder"
+      [(ngModel)]="value"
+      (keyup)="onKeyUp($event)"
+      [name]="name"
+      [readonly]="isReadonly"
+      (click)="onDisplayInputClick()"
+      [min]="type === 'date' ? min : null"
+      style="border: 1px solid #6B7280; cursor: pointer;"
+    />
+    <ion-icon *ngIf="type === 'date'" name="calendar-clear-outline" class="positioning-calendar-icon"></ion-icon>
+  </div>
+  
+  <!-- Hidden Date Picker -->
   <input 
-    [id]="id" 
-    [class]="getFilteredClasses(customInputClasses)" 
-    [type]="type" 
-    [placeholder]="placeholder" 
-    [(ngModel)]="value"
-    (keyup)="onKeyUp($event)"
-    [name]="name"
-    [readonly]="isReadonly" 
-    [min]="type === 'date' ? min : null"
+    *ngIf="type === 'date'"
+    [id]="id + '-date-picker'"
+    type="date"
+    [min]="min"
+    [ngModel]="hiddenDateValue"
+    (ngModelChange)="value = $event"
+    (change)="onDateInputChange($event)"
+    style="position: absolute; opacity: 0; pointer-events: none;"
   />
 </div>

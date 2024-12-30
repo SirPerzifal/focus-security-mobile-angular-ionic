@@ -16,6 +16,8 @@ export class RenovFormPage implements OnInit {
   paxCount = 1;
   block = '';
   unit = '';
+  block_id = '';
+  unit_id = '';
   scheduleType = '';
   identificationType = '';
 
@@ -35,12 +37,17 @@ export class RenovFormPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.block = params['block'] || '';
       this.unit = params['unit'] || '';
+      this.block_id = params['block_id'] || '';
+      this.unit_id = params['unit_id'] || '';
       this.scheduleType = params['schedule_type'] || 'move_in_out';
   
       // Setel nilai input secara manual
+      console.log()
       setTimeout(() => {
         this.setInputValue('block', this.block);
         this.setInputValue('unit', this.unit);
+        this.setInputValue('block_id', this.block_id);
+        this.setInputValue('unit_id', this.unit_id);
       });
     });
   }
@@ -102,13 +109,18 @@ export class RenovFormPage implements OnInit {
     await this.submitForm(false);
   }
 
+  onIdentificationTypeChange(event: any) {
+    this.identificationType = event.target.value;
+    console.log(this.identificationType)
+  }
+
   // Fungsi submit umum
   async submitForm(openBarrier: boolean = false) {
     // Tampilkan loading
-    const loading = await this.loadingController.create({
-      message: 'Saving Record...'
-    });
-    await loading.present();
+    // const loading = await this.loadingController.create({
+    //   message: 'Saving Record...'
+    // });
+    // await loading.present();
 
     // Kumpulkan data pax sebelum menggunakan subContractors
     this.collectPaxData();
@@ -131,18 +143,18 @@ export class RenovFormPage implements OnInit {
       this.getInputValue('contractor_name'),
       this.getInputValue('contractor_contact'),
       this.getInputValue('contractor_company_name'),
-      this.getIdentificationType(), // Misalnya 'NRIC', 'Passport', dll
+      this.identificationType, // Misalnya 'NRIC', 'Passport', dll
       this.getInputValue('contractor_nric/fin'),
       this.scheduleType, // 'move_in', 'move_out', dll
       this.getInputValue('contractor_vc'), // Nomor kendaraan
-      this.getInputValue('block'),
-      this.getInputValue('unit'),
+      this.block_id,
+      this.unit_id,
       subContractors
     ).subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {
-          this.presentToast('Schedule added successfully', 'success');
-          loading.dismiss();
+          this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
+          // loading.dismiss();
           this.router.navigate(['home-vms'])
           console.log("subcon", subContractors)
           console.log("paxdata", this.paxData)
@@ -150,7 +162,7 @@ export class RenovFormPage implements OnInit {
           if (openBarrier) {
             // Logika membuka barrier
             console.log('Membuka barrier');
-            loading.dismiss();
+            // loading.dismiss();
             this.router.navigate(['home-vms'])
             console.log("subcon", subContractors)
             console.log("paxdata", this.paxData)
@@ -161,7 +173,7 @@ export class RenovFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error adding schedule', 'danger');
+        this.presentToast('An error occurred while attempting to save the data!', 'danger');
         console.error(error);
       }
     });

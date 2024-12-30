@@ -7,33 +7,30 @@
         [routerLink]="['/resident-my-family']"></ion-icon>
     </div>
     <div class="flex flex-col justify-between mt-2">
-      <div class="w-full text-sm">
+      <div class="w-full text-base">
         Name of Tenant: {{this.formData.full_name}}
       </div>
-      <div class="w-full text-sm">
-        Current End Date: {{this.formData.tenancies.end_of_tenancy_aggrement}}
+      <div class="w-full text-base">
+        Current End Date: {{this.end_date}}
       </div>
       <!-- <div class="w-full flex flex-row justify-between"> -->
-      <div class="w-full flex flex-col">
-        <!-- <div class="w-4/6">
-          <app-text-input [id]="'tenancy_agreement'" [placeholder]="'Tenancy Agreement'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true,'mt-1': true, 'text-sm': true}"></app-text-input>
-        </div>
-        <button id="middle_button" class="bg-[var(--ion-color-secondary)] text-white w-[30%] h-12 text-sm mt-1 rounded"><b>Upload</b></button> -->
-        <label for="tenant_file" class="w-full h-12 mt-1 border rounded px-3 text-sm flex flex-col justify-center"
-          style="border: solid #6B7280 1px;" *ngIf="!fileCheck"><b>Select Tenant Agreement File</b></label>
-        <input type="file" id="tenant_file" class="w-full h-12 mt-1 border rounded py-2 px-3 text-sm"
+      <div class="w-full flex flex-col mt-3">
+        <label class="text-base font-bold mb-[-3px]"><u>Tenant Agreement File</u></label>
+        <label for="tenant_file" class="w-full h-14 border rounded px-3 text-base flex flex-col justify-center"
+          style="border: solid #6B7280 1px;" *ngIf="!fileCheck">Select Tenant Agreement File</label>
+        <input type="file" id="tenant_file" class="w-full h-14 mt-1 border rounded py-2 px-3 text-base"
           (change)="onTenanciesChange($event)" style="border: #6B7280 solid 1px;"
           [ngClass]="{'hidden': !fileCheck}" />
       </div>
-      <div class="w-full">
-        <app-text-input [id]="'tenancies_end_of_tenancy_aggrement'" [placeholder]="'End Date of Tenancy Agreement'"
-          [customClasses]="{'w-full': true}" [type]="'date'"
-          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'mt-1': true, 'text-sm': true}"
+      <div class="w-full mt-3">
+        <app-text-input #tenantExtendDate [labelResidentText]="'End Of Tenancy Agreement'" [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'tenancies_end_of_tenancy_aggrement'" [placeholder]="'DD/MM/YYYY'"
+          [customClasses]="{'w-full': true}" [type]="'date'" [min]="dateNow"
+          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
           [value]="formData.tenancies.end_of_tenancy_aggrement"
           (valueChange)="onEndOfTenancyAgreementChange($event)"></app-text-input>
       </div>
       <div class="w-full">
-        <button class="bg-[#d3f8d3] text-black mt-4 w-full text-sm rounded h-10 font-bold" (click)="onSubmit()">Submit
+        <button class="bg-[var(--ion-color-primary)] text-white mt-6 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Submit
           for Approval</button>
 
       </div>

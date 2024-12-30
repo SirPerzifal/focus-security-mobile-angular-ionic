@@ -1,0 +1,109 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-main'"/>
+    </div>
+    
+    <div class="flex flex-row mt-8">    
+      <app-button-icon 
+        [customImageIcon]="'assets/icon-vms/records_menu/Facility_Bookings.png'"
+        [text]="'FACILITY BOOKINGS'" 
+        [routerLink]="['/records-main']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />
+    </div>
+    <div class="flex mt-8 flex-row space-x-7">
+
+      <app-button-icon [textOnly]="true" [text]="'TODAY'"
+      (click)="toggleSlide('day')" [isActive]="showDayTrans || showDay" [disableClick]="true"/>
+      <app-button-icon [textOnly]="true" [text]="'UPCOMING'"
+      (click)="toggleSlide('upcoming')" [isActive]="showUpcomingTrans || showUpcoming" [disableClick]="true"/>
+      <app-button-icon [textOnly]="true" [text]="'HISTORY'"
+      (click)="toggleSlide('history')" [isActive]="showHistoryTrans || showHistory" [disableClick]="true" />
+    </div>
+    <!-- Overnight Parking List Section -->
+    <div class="flex flex-col mx-4 mt-8 space-y-5">
+      <!-- <div class="w-full flex flex-col" *ngIf="showHistory" @fadeInOut> 
+        <div class="w-full flex flex-col">
+          <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
+          <select id="search_option" (change)="onSearchOptionChange($event)"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
+            style="border: 1px solid #6B7280;">
+            <option selected disabled hidden>CHOOSE SEARCH BY</option>
+            <option [value]="'date'">DATE</option>
+            <option [value]="'block'">BLOCK</option>
+            <option [value]="'both'">BOTH</option>
+          </select>
+        </div>
+        <div class="flex flex-row space-x-1 w-full" *ngIf="searchOption == 'date' || searchOption == 'both'">
+          <div class="w-1/2">
+            <app-text-input #overnightDateStartFilter [id]="'overnight_date_start_filter'" [labelText]="'DATE FROM'"
+              [placeholder]="'24/11/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
+              (change)="onDateStartChange($event)" [(ngModel)]="startDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+            </app-text-input>
+          </div>
+          <div class="w-1/2">
+            <app-text-input #overnightDateEndFilter [id]="'overnight_date_end_filter'" [labelText]="'DATE TO'"
+              [placeholder]="'25/11/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
+              (change)="onDateEndChange($event)" [min]="startDateFilter" [(ngModel)]="endDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="w-full" *ngIf="searchOption == 'block' || searchOption == 'both'">
+          <label class="text-2xl"><b><u>BLOCK</u></b></label>
+          <select id="pick_up_location"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+            (change)="onBlockChange($event)">
+            <option selected>CHOOSE BLOCK</option>
+            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+          </select>
+        </div>
+      </div> -->
+      <div class="flex flex-col w-full space-y-5" *ngIf="showHistory" @fadeInOut>
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of historySchedules" >
+          <div class="flex flex-col">
+            <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
+            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+          </div>
+          
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
+        </div>
+      </div>
+      <div class="flex flex-col w-full space-y-5" *ngIf="showUpcoming" @fadeInOut>
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of upcomingSchedules" >
+          <div class="flex flex-col">
+            <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
+            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+          </div>
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
+        </div>
+      </div>
+      <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of daySchedules" >
+          <div class="flex flex-col">
+            <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
+            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+          </div>
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ion-content>

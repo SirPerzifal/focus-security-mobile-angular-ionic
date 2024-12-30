@@ -1,0 +1,8 @@
+.fsc-icon-button {
+  display: flex;
+  align-items: center;
+    &::part(native) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+}

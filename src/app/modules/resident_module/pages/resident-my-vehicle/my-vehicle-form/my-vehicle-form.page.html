@@ -1,5 +1,6 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'My Vehicle'"/>
+  <app-resident-header [text]="'My Vehicle'" [text_second]="'Add Vehicle'" />
+  
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
     <div class="w-full mt-2">
       <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-vehicle']"></ion-icon>
@@ -7,94 +8,124 @@
     <div class="flex flex-col justify-between mt-2">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1 mt-1">
-          <p class="text-sm font-bold">Choose Type Application</p>
+          <p class="text-base font-bold">Type of Application</p>
         </div>
-        <select id="type_of_application" (change)="onTypeOfApplicationChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-10 text-[#6B7280]">
-          <option selected>Type of Application</option>
-          <option value="first_vehicle">First Vehicle</option>
-          <option value="second_vehicle">Second Vehicle</option>
+        <select id="type_of_application" (change)="onTypeOfApplicationChange($event)" placeholder="Type Of Application" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280]">
+          <option selected disabled hidden>Choose Type of Application</option>
+          <option value="owned_vehicle">First Vehicle</option>
           <option value="temporary_vehicle">Temporary Vehicle</option>
         </select>
       </div>
+      <div class="w-full flex flex-row justify-between items-center mt-4 mb-2">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">Primary Vehicle</p>
+        </div>
+        <div class="flex items-center ml-4">
+          <input 
+            id="is_first_vehicle" 
+            type="checkbox"
+            [(ngModel)]="isFirstVehicle" 
+            class="w-7 h-7 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded dark:bg-gray-700 dark:border-gray-600">
+        </div>
+      </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Family Member</p>
+          <p class="text-base font-bold">Owned By</p>
         </div>
-        <select id="rv_unit" (change)="onFamilyMemberChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-sm text-[#6B7280]">
-          <option selected>Choose Family</option>
+        <select id="rv_unit" (change)="onFamilyMemberChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
+          <option selected disabled hidden>Choose Family</option>
           <option *ngFor="let fm of FamilyMember" [value]="fm.id">{{ fm.full_name }}</option>
         </select>
       </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Entry Vehicle Number</p>
+          <p class="text-base font-bold">Vehicle Number</p>
         </div>
-        <app-text-input #vehicleNumberInput [placeholder]="'Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        <app-text-input #vehicleNumberInput [placeholder]="'Input Vehicle Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true,'mt-1': true, 'text-base': true}"></app-text-input>
       </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Entry IU Number</p>
+          <p class="text-base font-bold">IU Number</p>
         </div>
-        <app-text-input #iuNumberInput [placeholder]="'IU Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true,'mt-1': true, 'text-sm': true}"></app-text-input>
+        <app-text-input #iuNumberInput [placeholder]="'Input IU Number'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true,'!border-[#BDBDBD]':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true,'mt-1': true, 'text-base': true}"></app-text-input>
       </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Type of Your Vehicle</p>
+          <p class="text-base font-bold">Type of Vehicle</p>
         </div>
-        <select id="vehicle_type" (change)="onVehicleTypeChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-10 text-[#6B7280] mt-1">
-          <option selected>Type of Vehicle</option>
+        <select id="vehicle_type" (change)="onVehicleTypeChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280] mt-1">
+          <option selected disabled hidden>Choose Type of Vehicle</option>
           <option *ngFor="let type of vehicleTypes" [value]="type.id">{{ type.name }}</option>
         </select>
       </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Who's Making Your Vehicle</p>
+          <p class="text-base font-bold">Vehicle Make</p>
         </div>
-        <select id="vehicle_make" (change)="onVehicleMakeChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-10 text-[#6B7280] mt-1">
-          <option selected>Vehicle Make</option>
+        <select id="vehicle_make" (change)="onVehicleMakeChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280] mt-1">
+          <option selected disabled hidden>Choose Vehicle Make</option>
           <option *ngFor="let make of vehicleMakes" [value]="make.id">{{ make.name }}</option>
         </select>
       </div>
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Colour of Your Vehicle</p>
+          <p class="text-base font-bold">Vehicle Colour</p>
         </div>
-        <select id="rv_unit" (change)="onColourChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-sm text-[#6B7280]">
-          <option selected>Choose Colour of Your Vehicle</option>
-          <option *ngFor="let vc of vehicleColours" [value]="vc.id">{{ vc.name }}</option>
-        </select>
+        <app-text-input #vehicleColorInput [placeholder]="'Vehicle Colour'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true,'!border-[#BDBDBD]':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true,'mt-1': true, 'text-base': true}"></app-text-input>
       </div>
+
       <!-- Ganti input text dengan input file -->
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Upload Your Vehicle Log</p>
+          <p class="text-base font-bold">Vehicle Log</p>
         </div>
         <div class="w-full flex flex-row justify-between ">
           <div class="w-4/6">
-            <input 
+            <input
               #vehicleLogInput
               placeholder="Pilih file"
-              type="file" 
+              type="file"
               (change)="onFileSelected($event)"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm text-transparent h-10 text-[#6B7280] mt-1 file:bg-transparent file:border-none file:text-transparent"
+              class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-10 text-[#6B7280] mt-1 file:bg-transparent file:border-none file:text-transparent"
             />
           </div>
-          <button 
-            id="middle_button" 
+          <button
+            id="middle_button"
             (click)="uploadFile()"
-            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-10 text-sm rounded"
+            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-[inherit] text-base rounded font-bold"
           >
             Upload
           </button>
         </div>
       </div>
+
+      <div class="w-full mt-1">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Block</p>
+        </div>
+        <select id="rv_block" (change)="onBlockChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280] my-1">
+          <option selected disabled hidden>Choose Block</option>
+          <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+        </select>
+      </div>
+
+      <div class="w-full mt-1">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Unit</p>
+        </div>
+        <select id="rv_unit" (change)="onUnitChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
+          <option selected disabled hidden>Choose Unit</option>
+          <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+        </select>
+      </div>
+
       <div *ngIf="selectedTypeOfApplication === 'temporary_vehicle'">
-        <div class="w-full mt-1">
+        <div class="w-full mt-1.5">
           <div class="flex flex-row justify-start mb-1">
-            <p class="text-sm font-bold">Choose Reason for Your Temporary Car</p>
+            <p class="text-base font-bold">Temporary Car Reason</p>
           </div>
-          <select id="temporary_car_reason" (change)="onTemporaryCarReasonChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-sm h-12 text-[#6B7280] mt-1">
-            <option selected>Reason For Temporary Car</option>
+          <select id="temporary_car_reason" (change)="onTemporaryCarReasonChange($event)" placeholder="Temporary Car Reason" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mt-1">
+            <option value="" selected disabled hidden>Choose Temporary Car Reason</option>
             <option value="car_at_workshop">Car at Workshop</option>
             <option value="rental_car">Rental Car</option>
             <option value="work_vehicle">Work Vehicle</option>
@@ -103,46 +134,37 @@
         </div>
         <div class="w-full mt-1">
           <div class="flex flex-row justify-start mb-1">
-            <p class="text-sm font-bold">When This Temporary End?</p>
+            <p class="text-base font-bold">Temporary End Date</p>
           </div>
-          <div class="flex flex-row items-center justify-between border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm">
-            <input
+          <div class="w-full">
+            <app-text-input #temporaryVehicleEndDate [id]="'temporary_vehicle_end_date'" [placeholder]="'Temporary End Date'"
+            [customClasses]="{'w-full':true}" [type]="'date'"
+            [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}" (change)="onEndDateChange($event)" (value)="showDate"
+            ></app-text-input>
+          </div>
+          <!-- <div class="flex flex-row items-center justify-between border border-[#BDBDBD] w-full rounded py-2 outline-[#BDBDBD] h-12 text-base"> -->
+            
+ 
+            <!-- <input
+            </div>
+             
               type="text"
               placeholder="Temporary End Date"
               value="{{showDate}}"
               class="w-[100px]"
               readonly
             />
-            <input 
+            <input
               #endDateInput
-              type="date" 
+              type="date"
               (change)="onEndDateChange($event)"
-              class="rounded py-2 px-3 bg-transparent text-sm h-12 text-[#6B7280] mt-1 w-[40px]"
+              class="rounded py-2 px-3 bg-transparent text-base h-12 text-[#6B7280] mt-1 w-[40px]"
               placeholder="End Date of Tenancy Agreement"
-            />
-          </div>
+            /> -->
+          <!-- </div> -->
         </div>
       </div>
-      <div class="w-full mt-1">
-        <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Your Block</p>
-        </div>
-        <select id="rv_block" (change)="onBlockChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-sm text-[#6B7280] my-1">
-          <option selected>Choose Block</option>
-          <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-        </select>
-      </div>
-      
-      <div class="w-full mt-1">
-        <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Choose Your Unit</p>
-        </div>
-        <select id="rv_unit" (change)="onUnitChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-sm text-[#6B7280]">
-          <option selected>Choose Unit</option>
-          <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-        </select>
-      </div>
-      <button (click)="saveRecord()" class="bg-[var(--ion-color-primary)]  text-white mt-4 w-full text-sm rounded h-10 font-bold">Submit For Approval</button>
+      <button (click)="saveRecord()" class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-10 font-bold">Submit for Approval</button>
     </div>
     <div class="flex flex-row w-full"></div>
   </div>

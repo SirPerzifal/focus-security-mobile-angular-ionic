@@ -1,0 +1,101 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Upcoming Events'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="flex flex-row mt-4 justify-between w-full">
+      <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      <app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'" (click)="toggleDirecttoHis()"></app-visitor-button>
+    </div>
+    
+    <div class="mt-3 space-y-2 text-left">
+      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg">
+        <h2 class="font-bold text-lg">
+          BBQ Pit 2
+        </h2>
+        <table class="w-full">
+          <tr>
+            <td class="font-bold">
+              Event Date
+            </td>
+            <td>
+              : 05/09/2024
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Booked By
+            </td>
+            <td>
+              : Ashok
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Refunded Date
+            </td>
+            <td>
+              : 08/09/2024
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Status
+            </td>
+            <td>
+              : Cancelled
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg">
+        <h2 class="font-bold text-lg">
+          Function Room 1
+        </h2>
+        <table class="w-full">
+          <tr>
+            <td class="font-bold">
+              Event Date
+            </td>
+            <td>
+              : 05/09/2024
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Booked By
+            </td>
+            <td>
+              : Ashok
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Refunded Date
+            </td>
+            <td>
+              : 08/09/2024
+            </td>
+          </tr>
+          <tr>
+            <td class="font-bold">
+              Status
+            </td>
+            <td>
+              : Completed
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #noHistory>
+      <div class="w-full bg-transparent p-4 text-center rounded-lg mt">
+        <p class="text-gray-600">You have no active History.....</p>
+        <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
+        <p class="text-gray-600"><strong><a routerLink="/facility-new-upcomingEvent">Click Here</a></strong> to make a new upcoming event now.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

@@ -1,0 +1,86 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Upcoming Events'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="flex flex-row mt-4 justify-between w-full">
+      <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" (click)="toggleDirecttoHis()"></app-visitor-button>
+    </div>
+    
+    <!-- Display upcoming events -->
+    <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
+      <div *ngFor="let upcomingEvent of upcomingEvents; let i = index" [ngClass]="{
+          'bg-[var(--ion-color-tertiary)]': upcomingEvent.statusBooked === 'Approved',
+          'bg-sky-100': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
+          'bg-[#E3787E]': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
+          'bg-[#F8F1BA]': upcomingEvent.statusBooked === 'Requested',
+        }" class="bg-[var(--ion-color-tertiary)] rounded-2xl px-4 py-2 mt-4 w-full">
+        <h2 [ngClass]="{
+          'text-green-500': upcomingEvent.statusBooked === 'Approved',
+          'text-sky-500': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
+          'text-red-700': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
+          'text-yellow-400': upcomingEvent.statusBooked === 'Requested',
+        }" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
+          <ion-icon 
+            [name]="upcomingEvent.statusBooked === 'Approved' ? 'checkmark' : 
+                    upcomingEvent.statusBooked === 'Pending Approval' ? 'time' : 
+                    upcomingEvent.statusBooked === 'Pending Payment' ? 'time' : 
+                    upcomingEvent.statusBooked === 'Rejected' ? 'close' : 
+                    upcomingEvent.statusBooked === 'Cancelled' ? 'close' : 
+                    upcomingEvent.statusBooked === 'Requested' ? 'help-circle' : 
+                    'help-circle'"
+            [ngClass]="{
+              'bg-green-500': upcomingEvent.statusBooked === 'Approved',
+              'bg-sky-500': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
+              'bg-red-700': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
+              'bg-yellow-500': upcomingEvent.statusBooked === 'Requested'
+            }"
+            class="mr-2 p-1 rounded-full text-white text-[18px]">
+          </ion-icon>
+          {{ getupcomingEventStatusLabel(upcomingEvent.statusBooked) }}
+        </h2>
+        <p class="font-bold text-base text-black text-left">{{ upcomingEvent.facilityName }}</p>
+        <div class="table w-full text-left">
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Event Date</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.eventDate }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Upcoming Event Start Time</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.startTime }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Upcoming Event End Time</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.endTime }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Booked By</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.bookedBy }}</p>
+          </div>
+        </div>
+        <div class="flex mt-2 space-x-2">
+          <div *ngIf="upcomingEvent.statusBooked === 'Requested' || upcomingEvent.statusBooked === 'Pending Approval'" class="flex w-full space-x-2">
+            <ion-button fill="clear" class="button-card-facility flex items-center font-bold text-xs text-black">
+              <ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-2 w-5 rounded-full text-white text-base"></ion-icon>
+              Add to Calendar
+            </ion-button>
+            <ion-button fill="clear" class="button-card-facility flex items-center font-bold text-xs text-black" (click)="cancelupcomingEvent()">
+              <ion-icon name="close-outline" class="mr-0.5 bg-red-400 p-2 w-5 rounded-full text-white text-base"></ion-icon>
+              Cancel upcoming Event
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noupcomingEvents>
+      <div class="w-full bg-transparent p-4 text-center rounded-lg mt">
+        <p class="text-gray-600">You have no active upcoming events.....</p>
+        <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
+        <p class="text-gray-600"><strong><a routerLink="/facility-new-upcomingEvent">Click Here</a></strong> to make a new upcoming event now.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

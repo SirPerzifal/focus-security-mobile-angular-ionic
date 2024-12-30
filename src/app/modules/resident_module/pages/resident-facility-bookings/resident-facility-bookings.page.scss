@@ -16,3 +16,9 @@
     top: 28px;
     right: 20px;
 }
+.button-card-facility {
+    &::part(native) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+}

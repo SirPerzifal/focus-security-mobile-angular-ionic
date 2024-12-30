@@ -3,22 +3,23 @@
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
-  <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>IFS360</b></span>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+  <div class="flex flex-col relative mt-2 mx-4 mb-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon *ngIf="showNricConfirm" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / SEARCH VEHICLE'" [isActive]="false" [disableClick]="true" />
-      <app-button-icon (click)="onClickBackToMain()" *ngIf="!showNricConfirm" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / SEARCH VEHICLE'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon *ngIf="showNricConfirm" [isHomeButton]="true" [text]="'SEARCH VEHICLE'"
+        [isActive]="false" [disableClick]="true" [routerLink]="['/home-vms']"/>
+      <app-button-icon (click)="onClickBackToMain()" *ngIf="!showNricConfirm" [isHomeButton]="true"
+        [text]="'SEARCH VEHICLE'" [isActive]="true"
+        [disableClick]="true" />
     </div>
-    <div class="flex flex-row mt-8">
-      <button @fadeInOut *ngIf="showSearch" class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="showSearch ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'">
-        Search By Vehicle No
-      </button>
-      <button @fadeInOut *ngIf="showSearch" class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" >
-        Open Camera
-      </button>
+    <div class="flex mt-8 flex-row space-x-7">
+      <app-button-icon [customNameIcon]="'faSearch'" [text]="'SEARCH BY VEHICLE NO'"
+        [isActive]="showSearch" [disableClick]="true" />
+
+      <app-button-icon [customNameIcon]="'faCamera'" [text]="'OPEN CAMERA'" *ngIf="showSearch" [isActive]="false"
+        [disableClick]="true" />
       <!-- <app-visitor-button [text]="'PRE REGISTERED'"
         [extraClass]="showQrTrans || showQr ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
         (click)="toggleShowQr()"></app-visitor-button> -->
@@ -29,22 +30,36 @@
         [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'"
         (click)="toggleShowDrive()"></app-visitor-button> -->
     </div>
-    <div @fadeInOut class="flex flex-col" *ngIf="showSearch">
-      <div class="flex flex-row justify-center items-end w-full mt-12 gap-x-6">
+    <div @fadeInOut class="flex flex-row" *ngIf="showSearch">
+      <div class="flex flex-row justify-between w-full mt-8 gap-x-6 mx-4">
+        <div class="w-4/6">
+          <app-text-input [id]="'search_by_vehicle_no'" [labelText]="'VEHICLE NO'" [placeholder]="'EG. SAA 9222 V'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="flex flex-col justify-end w-1/4 ">
+          <button id="middle_button"
+            class="bg-[var(--ion-color-primary)] w-full text-white text-2xl font-bold rounded h-20"
+            (click)="toggleShowSearch()">SEARCH</button>
+        </div>
+
+      </div>
+      <!-- <div class="flex flex-row justify-center items-end w-full mt-8 gap-x-6">
         <div class="w-4/6">
           <app-text-input [id]="'search_by_vehicle_no'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SAA 8289 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-15':true, 'text-2xl':true}"></app-text-input>
         </div>
         <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-2xl rounded-md h-12" (click)="toggleShowSearch()">SEARCH</button>
-      </div>
+      </div> -->
     </div>
 
-    <div @fadeInOut class="flex flex-col" *ngIf="showWarning">
-      <div class="flex flex-col justify-center w-full mt-12 gap-6 items-center">
-        <div class="flex flex-row justify-center w-[95%]">
+    <div @fadeInOut class="flex flex-row mx-4" *ngIf="showWarning">
+      <div class="flex flex-col justify-center w-full mt-8 gap-6 items-center">
+        <div class="flex flex-row justify-center w-full">
           <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
           <div class="flex flex-col w-full">
-            <label class="text-2xl"><b><u>Reason for Warning</u></b></label>
-            <select id="warning_reason" [disabled]="showNricConfirm" [(ngModel)]="selectedReason" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xl text-[#6B7280]">
+            <label class="text-2xl"><b><u>REASON OF WARNING</u></b></label>
+            <select id="warning_reason" [disabled]="showNricConfirm" [(ngModel)]="selectedReason" 
+              class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected hidden>EG. PARKING VIOLATION</option>
               <option value="reason_1">REASON 1</option>
               <option value="reason_2">REASON 2</option>
@@ -53,24 +68,20 @@
             </select>
           </div>
         </div>
-        <app-file-input class="w-full h-fit ml-2"
-          [labelText]="'IMAGE'"
-          [buttonText]="'Upload'" 
-          [extraButtonClass]="'rounded-md'"
-          [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onWarningImageFileSelected($event)"
-          [disableUpload]="showNricConfirm"
-          ></app-file-input>
+        <app-file-input class="w-full h-25" [labelText]="'IMAGE'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onWarningImageFileSelected($event)" [disableUpload]="showNricConfirm"></app-file-input>
       </div>
     </div>
 
-    <div @fadeInOut class="flex flex-col" *ngIf="showClamp">
-      <div class="flex flex-col justify-center w-full mt-12 gap-6 items-center">
-        <div class="flex flex-row justify-center w-[95%]">
+    <div @fadeInOut class="flex flex-row mx-4" *ngIf="showClamp">
+      <div class="flex flex-col justify-center w-full mt-8 gap-6 items-center">
+        <div class="flex flex-row justify-center w-full">
           <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
           <div class="flex flex-col w-full">
-            <label class="text-2xl"><b><u>Reason for Warning</u></b></label>
-            <select id="clamping_reason" [disabled]="showNricConfirm" [(ngModel)]="selectedReason" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xl text-[#6B7280]">
+            <label class="text-2xl"><b><u>REASON OF WARNING</u></b></label>
+            <select id="clamping_reason" [disabled]="showNricConfirm" [(ngModel)]="selectedReason"
+              class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected hidden>EG. PARKING VIOLATION</option>
               <option value="reason_1">REASON 1</option>
               <option value="reason_2">REASON 2</option>
@@ -79,116 +90,201 @@
             </select>
           </div>
         </div>
-        <app-file-input class="w-full h-fit ml-2"
-          [labelText]="'IMAGE BEFORE CLAMPING'"
-          [buttonText]="'Upload'" 
-          [extraButtonClass]="'rounded-md'"
-          [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onBeforeClampImageFileSelected($event)"
-          ></app-file-input>
-          <app-file-input class="w-full h-fit ml-2"
-          [labelText]="'IMAGE AFTER CLAMPING'"
-          [buttonText]="'Upload'" 
-          [extraButtonClass]="'rounded-md'"
-          [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onAfterClampImageFileSelected($event)"
-          ></app-file-input>
+        <app-file-input class="w-full h-25" [labelText]="'BEFORE CLAMP IMAGE'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onBeforeClampImageFileSelected($event)" [disableUpload]="showNricConfirm"></app-file-input>
+          <app-file-input class="w-full h-25" [labelText]="'AFTER CLAMP IMAGE'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onAfterClampImageFileSelected($event)" [disableUpload]="showNricConfirm"></app-file-input>
+
+        <!-- <app-file-input [labelText]="'IMAGE BEFORE CLAMPING'" [buttonText]="'Upload'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
+        <app-file-input [labelText]="'IMAGE AFTER CLAMPING'" [buttonText]="'Upload'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input> -->
       </div>
     </div>
 
-    <div @fadeInOut class="flex flex-row justify-center items-center gap-x-3 mt-12" *ngIf="showWarning">
-      <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="(selectedReason && imageWarningInput) ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="onSubmitImage()" >
-        Submit
+    <div @fadeInOut class="flex flex-row justify-between mt-8 mx-4" *ngIf="showWarning">
+      <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl"
+        [ngClass]="(selectedReason && imageWarningInput) ? 'bg-[var(--ion-color-primary)] text-white w-[48%]' : 'bg-[#D0D0D0] text-[#757575] w-[48%]'"
+        (click)="onSubmitImage()">
+        SUBMIT
       </button>
-      <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="'bg-[var(--ion-color-primary)] text-white w-48 mx-5'" (click)="onCancelWarning()" >
-        Cancel
-      </button>
-    </div>
-
-    <div @fadeInOut class="flex flex-row justify-center items-center gap-x-3 mt-12" *ngIf="showClamp">
-      <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="(selectedReason && beforeClampImageFile && afterClampImageFile) ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="onSubmitImage()" >
-        Submit
-      </button>
-      <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="'bg-[var(--ion-color-primary)] text-white w-48 mx-5'" (click)="onCancelClamp()" >
-        Cancel
+      <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl"
+        [ngClass]="'bg-[var(--ion-color-primary)] text-white w-[48%]'" (click)="onCancelWarning()">
+        CANCEL
       </button>
     </div>
 
-    <div *ngIf="showNricConfirm" class="flex w-full justify-center items-center mt-6">
-      <div class="flex flex-col justify-center items-center gap-y-3 text-xl w-4/6 bg-[var(--ion-color-tertiary)] pt-6 px-6 rounded-lg pb-2">
-        <span class="font-extrabold text-3xl text-black">Officer NRIC No</span>
-        <div class="w-4/6 h-fit text-black">
-          <app-text-input [id]="'officer_nric_no'" (valueChange)="onNricConfirmChange($event)" [placeholder]="''" [customClasses]="{'w-full':true,'h-fit':true}" [type]="'text'" [customInputClasses]="{'border':true,'h-fit':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-3xl':true}"></app-text-input>
+    <div @fadeInOut class="flex flex-row justify-between mt-8 mx-4" *ngIf="showClamp">
+      <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl"
+        [ngClass]="(selectedReason && beforeClampImageFile && afterClampImageFile) ? 'bg-[var(--ion-color-primary)] text-white w-[48%]' : 'bg-[#D0D0D0] text-[#757575] w-[48%]'"
+        (click)="onSubmitImage()">
+        SUBMIT
+      </button>
+      <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl"
+        [ngClass]="'bg-[var(--ion-color-primary)] text-white w-[48%]'" (click)="onCancelClamp()">
+        CANCEL
+      </button>
+    </div>
+
+    <div *ngIf="showNricConfirm" class="flex w-full justify-center items-center mt-8">
+      <div
+        class="flex flex-col justify-center items-center gap-y-3 text-2xl w-4/6 bg-[var(--ion-color-tertiary)] p-6 rounded-lg ">
+        <span class="font-extrabold text-2xl text-black">OFFICER NRIC NO</span>
+        <div class="w-4/6 text-black">
+          <app-text-input [id]="'officer_nric_no'" (valueChange)="onNricConfirmChange($event)" [placeholder]="''"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-3xl':true}"></app-text-input>
         </div>
-        <div class="flex flex-row justify-center items-center gap-x-3" >
-          <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="(canNricConfirm) ? 'bg-[var(--ion-color-primary)] text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="onSubmitNric()">
-            Submit
+        <div class="flex flex-row justify-between items-center w-4/6">
+          <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl w-[48%]"
+            [ngClass]="(canNricConfirm) ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-[#D0D0D0] text-[#757575]'"
+            (click)="onSubmitNric()">
+            SUBMIT
           </button>
-          <button @fadeInOut class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="'bg-[var(--ion-color-primary)] text-white w-48 mx-5'" (click)="onCancelNricConfirm()" >
-            Cancel
+          <button @fadeInOut class="h-20 rounded-md text-center align-middle font-bold text-2xl w-[48%]"
+            [ngClass]="'bg-[var(--ion-color-primary)] text-white'" (click)="onCancelNricConfirm()">
+            CANCEL
           </button>
         </div>
       </div>
     </div>
 
-    <div @fadeInOut class="flex flex-col" *ngIf="showList">
-      <div *ngFor="let record of vehicleRecords" class="move_in_box flex flex-col mt-[50px] self-start rounded-xl border-2 w-[100%] h-fit p-[10px] overflow-scroll scrollbar overflow-x-hidden" [ngClass]="(record.clamp.beforeImage && record.clamp.afterImage) ? 'bg-red-400 border-bg-red-400' : (record.firstWarning.image || record.secondWarning.image) ? 'bg-yellow-400 border-bg-yellow-400' : 'bg-[var(--ion-color-primary)] border-[var(--ion-color-primary)]'">
-        <div class="flex flex-col ml-3 gap-y-3 text-white text-xl">
-          <table>
-            <tr class="h-9">
-              <td class="w-[25%]">Name</td>
-              <td>:</td>
-              <td>{{record.name}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Contact</td>
-              <td>:</td>
-              <td>{{record.contact}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Block</td>
-              <td>:</td>
-              <td>{{record.block}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Unit</td>
-              <td>:</td>
-              <td>{{record.unit}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Vehicle</td>
-              <td>:</td>
-              <td>{{record.vehicle}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Vehicle Type</td>
-              <td>:</td>
-              <td>{{record.vehicleType}}</td>
-            </tr>
-            <tr class="h-9">
-              <td class="w-[25%]">Last Entry</td>
-              <td>:</td>
-              <td>{{record.lastEntry}}</td>
-            </tr>
-          </table>
-          <!-- <span class="text-[18px]"><b>Renovations</b></span>
-          <span class="text-[18px]"><b>Renovations</b></span>
-          <span class="text-[18px]"><b>Renovations</b></span>
-          <span class="text-[18px]"><b>Renovations</b></span> -->
+    <div @fadeInOut class="flex flex-row mx-4" *ngIf="showList">
+      <div class="flex flex-col w-full">
+        <div *ngFor="let record of vehicleRecords"
+          class="move_in_box flex flex-col mt-8 self-start rounded-xl border-2 w-[100%] p-[10px] overflow-scroll scrollbar overflow-x-hidden"
+          [ngClass]="{ 
+            ' bg-[var(--ion-color-vms-alert)] border-[var(--ion-color-vms-alert)] !text-white': (record.clamp.beforeImage && record.clamp.afterImage),
+            ' bg-[#E3787E] border-[#E3787E] text-black ': (record.secondWarning.image && !record.clamp.beforeImage && !record.clamp.afterImage),
+            ' bg-[#F8F1BA] border-[#F8F1BA] text-black ': (record.firstWarning.image && !record.secondWarning.image),
+            ' bg-[var(--ion-color-primary)] border-[var(--ion-color-primary)] text-white ': !(record.firstWarning.image || record.secondWarning.image)}"
+            >
+          <div class="flex flex-col ml-3 gap-y-3 text-2xl">
+            <table>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">NAME</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.name}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">CONTACT</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.contact}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">BLOCK</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.block}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">UNIT</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.unit}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">VEHICLE</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.vehicle}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">VEHICLE TYPE</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.vehicleType}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">LAST ENTRY</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.lastEntry}}</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
-      <div *ngIf="vehicleRecords.length == 1" class="flex flex-col mt-8 gap-y-4">
-        <button class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="vehicleRecords[0].firstWarning.image ? 'bg-yellow-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowFirstWarning(vehicleRecords[0])">
-          Issue 1st Warning
+    </div>
+    <div @fadeInOut class="flex flex-row mx-4 w-full" *ngIf="showList">
+      <div *ngIf="vehicleRecords.length == 1" class="flex flex-col mt-8 gap-y-4 w-full">
+        <button class="h-20 rounded-md text-center align-middle font-bold text-2xl px-1 w-1/3" 
+        [ngClass]="{
+          ' bg-[#F8F1BA] text-black ': vehicleRecords[0].firstWarning.image,
+          ' bg-[var(--ion-color-primary)] text-white ': !vehicleRecords[0].firstWarning.image}" (click)="toggleShowFirstWarning(vehicleRecords[0])">
+          ISSUE 1ST WARNING
         </button>
-        <button class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="vehicleRecords[0].secondWarning.image ? 'bg-yellow-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowSecondWarning(vehicleRecords[0])">
-          Issue 2nd Warning
+        <button class="h-20 rounded-md text-center align-middle font-bold text-2xl px-1 w-1/3" 
+        [ngClass]="{
+          ' bg-[#E3787E] text-black ': vehicleRecords[0].secondWarning.image, 
+          ' bg-[var(--ion-color-primary)] text-white ': vehicleRecords[0].firstWarning.image && !vehicleRecords[0].secondWarning.image,
+          ' bg-[#D0D0D0] text-[#757575] ': !vehicleRecords[0].firstWarning.image && !vehicleRecords[0].secondWarning.image}" (click)="toggleShowSecondWarning(vehicleRecords[0])">
+          ISSUE 2ND WARNING
         </button>
-        <button class="h-11 rounded-md text-center align-middle font-bold text-xl" [ngClass]="(vehicleRecords[0].clamp.afterImage && vehicleRecords[0].clamp.beforeImage) ? 'bg-red-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleClampVehicle(vehicleRecords[0])">
-          Clamp Vehicle
+        <button class="h-20 rounded-md text-center align-middle font-bold text-2xl px-1 w-1/3" 
+        [ngClass]="{
+          ' bg-[var(--ion-color-vms-alert)] text-white  ': (vehicleRecords[0].clamp.afterImage && vehicleRecords[0].clamp.beforeImage),
+          ' bg-[var(--ion-color-primary)] text-white ': vehicleRecords[0].secondWarning.image,
+          ' bg-[#D0D0D0] text-[#757575] ': !(vehicleRecords[0].clamp.afterImage && vehicleRecords[0].clamp.beforeImage) && !vehicleRecords[0].secondWarning.image}" (click)="toggleClampVehicle(vehicleRecords[0])">
+          CLAMP VEHICLE
         </button>
       </div>
     </div>
+
+    <!-- <div class="flex flex-col w-full">
+        <div *ngFor="let record of vehicleRecords" class="flex flex-col mt-8 self-start rounded-xl border-2 w-[100%] h-fit p-[10px] overflow-scroll scrollbar overflow-x-hidden mx-4" [ngClass]="(record.clamp.beforeImage && record.clamp.afterImage) ? 'bg-red-400 border-bg-red-400' : (record.firstWarning.image || record.secondWarning.image) ? 'bg-yellow-400 border-bg-yellow-400' : 'bg-[var(--ion-color-primary)] border-[var(--ion-color-primary)]'">
+          <div class="flex flex-col ml-3 gap-y-3 text-white text-2xl">
+            <table>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Name</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.name}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Contact</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.contact}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Block</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.block}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Unit</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.unit}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Vehicle</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.vehicle}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Vehicle Type</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.vehicleType}}</td>
+              </tr>
+              <tr class="h-9">
+                <td class="w-1/5 font-bold">Last Entry</td>
+                <td class="w-[2%]">:</td>
+                <td>{{record.lastEntry}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div *ngIf="vehicleRecords.length == 1" class="flex flex-col mt-8 gap-y-4">
+          <button class="h-11 rounded-md text-center align-middle font-bold text-2xl" [ngClass]="vehicleRecords[0].firstWarning.image ? 'bg-yellow-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowFirstWarning(vehicleRecords[0])">
+            Issue 1st Warning
+          </button>
+          <button class="h-11 rounded-md text-center align-middle font-bold text-2xl" [ngClass]="vehicleRecords[0].secondWarning.image ? 'bg-yellow-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleShowSecondWarning(vehicleRecords[0])">
+            Issue 2nd Warning
+          </button>
+          <button class="h-11 rounded-md text-center align-middle font-bold text-2xl" [ngClass]="(vehicleRecords[0].clamp.afterImage && vehicleRecords[0].clamp.beforeImage) ? 'bg-red-400 text-white w-48 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-48 mx-5'" (click)="toggleClampVehicle(vehicleRecords[0])">
+            Clamp Vehicle
+          </button>
+        </div>
+      </div> -->
+
 
   </div>
 

@@ -16,6 +16,8 @@ export class MoveFormPage implements OnInit {
   maxPax = 10;
   paxCount = 1;
   block = '';
+  block_id = '1';
+  unit_id = '1';
   unit = '';
   scheduleType = '';
   identificationType = '';
@@ -37,12 +39,16 @@ export class MoveFormPage implements OnInit {
       console.log(params)
       this.block = params['block'] || '';
       this.unit = params['unit'] || '';
+      this.block_id = params['block_id'] || '';
+      this.unit_id = params['unit_id'] || '';
       this.scheduleType = params['schedule_type'] || 'move_in_out';
   
       // Setel nilai input secara manual
       setTimeout(() => {
         this.setInputValue('block', this.block);
         this.setInputValue('unit', this.unit);
+        this.setInputValue('block_id', this.block_id);
+        this.setInputValue('unit_id', this.unit_id);
       });
     });
   }
@@ -104,6 +110,11 @@ export class MoveFormPage implements OnInit {
     this.submitForm(false);
   }
 
+  onIdentificationTypeChange(event: any) {
+    this.identificationType = event.target.value;
+    console.log(this.identificationType)
+  }
+
   // Fungsi submit umum
   submitForm(openBarrier: boolean = false) {
     // Tampilkan loading
@@ -132,31 +143,30 @@ export class MoveFormPage implements OnInit {
       this.getInputValue('contractor_name'),
       this.getInputValue('contractor_contact'),
       this.getInputValue('contractor_company_name'),
-      this.getIdentificationType(), // Misalnya 'NRIC', 'Passport', dll
+      this.identificationType, // Misalnya 'NRIC', 'Passport', dll
       this.getInputValue('contractor_nric/fin'),
-      this.scheduleType, // 'move_in', 'move_out', dll
+      this.scheduleType == 'move_in' ? 'move_in_out' : 'renovation', // 'move_in', 'move_out', dll
       this.getInputValue('contractor_vc'), // Nomor kendaraan
-      this.getInputValue('block'),
-      this.getInputValue('unit'),
+      this.block_id,
+      this.unit_id,
       subContractors
     ).subscribe({
       next: (response) => {
-        if (response.result.status_code === 200) {
-          this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
-          this.router.navigate(['home-vms'])
-          
+        if (response.result.status_code === 200) {       
           if (openBarrier) {
             // Logika membuka barrier
-            console.log('Membuka barrier');
+            this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
+            this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
+          } else {
             this.presentToast('Data has been successfully saved to the system!', 'success');
-            this.router.navigate(['home-vms'])
+            this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
           }
         } else {
           this.presentToast(response.result.status_description, 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Error adding schedule', 'danger');
+        this.presentToast('An error occurred while attempting to save the data!', 'danger');
         console.error(error);
       }
     });
@@ -170,12 +180,8 @@ export class MoveFormPage implements OnInit {
       color: color
     });
     
-    
-
     toast.present().then(() => {
-      
-      
-    });;;
+    });
   }
 
   vehicle_number = ''
@@ -186,5 +192,9 @@ export class MoveFormPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.vehicle_number = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  onBackHome() {
+    this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
   }
 }

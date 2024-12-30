@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HistoryService } from 'src/app/service/resident/history/history.service';
 
 @Component({
@@ -167,6 +168,14 @@ export class HistoryPage implements OnInit {
         }
       }
     });
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
 }

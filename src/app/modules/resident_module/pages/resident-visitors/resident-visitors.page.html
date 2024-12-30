@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Visitors'" [text_second]="'Daily Invite'" />
 	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4">
+	<div class="flex flex-col relative mt-2 mx-4 mb-32">
 		<div class="flex flex-row justify-between mt-4">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
-				(click)="toggleShowInv()">
+			<app-visitor-button [text]="'Daily Invite'"
+				[extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'" (click)="toggleShowInv()">
 			</app-visitor-button>
 			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
 				(click)="toggleShowHired()">
@@ -20,8 +20,8 @@
 						[extraClass]="showNewInv ? 'bg-[var(--ion-color-primary)] text-white w-28 text-base' : 'bg-[#D0D0D0] text-[#757575] w-28 text-base'"
 						(click)="toggleShowNewInv()">
 					</app-visitor-button>
-					<app-visitor-button [text]="'Active Invites'"
-						[extraClass]="showActInv ? 'bg-[var(--ion-color-primary)] text-white w-28 text-[14.7px]' : 'bg-[#D0D0D0] text-[#757575] w-28 text-[14.7px]'"
+					<app-visitor-button [text]="'Active'"
+						[extraClass]="showActInv ? 'bg-[var(--ion-color-primary)] text-white w-28 text-base' : 'bg-[#D0D0D0] text-[#757575] w-28 text-base'"
 						(click)="toggleShowActInv()">
 					</app-visitor-button>
 					<div class="w-28"></div>
@@ -29,73 +29,83 @@
 				<div class="flex flex-row w-full">
 					<div class="w-full" *ngIf="showNewInv" @fadeInOut>
 						<div class="flex flex-row justify-start mt-4 mb-1.5">
-							<p class="text-base font-bold">Entry Details</p>
+							<u class="text-base font-bold">Entry Details</u>
 						</div>
 						<div class="w-full">
 							<div class="flex flex-row justify-start mb-1">
-								<p class="text-sm font-bold">Entry Date</p>
+								<p class="text-base font-bold">Entry Date</p>
 							</div>
-							<div class="flex flex-row items-center  justify-between border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm">
+							<div class="w-full">
+								<app-text-input #newEntryDateInput [id]="'new_entry_input_date'" [placeholder]="'01/12/2024'"
+									[customClasses]="{'w-full':true}" [type]="'date'"
+									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+									(change)="onDateOfInviteChange($event)"></app-text-input>
+							</div>
+							<!-- <div class="flex flex-row justify-between items-center border w-full rounded py-2 border-black h-12 text-base" (click)="onClickOpenDate()">
 								<input
 									type="text"
-									placeholder=" Date of Invitation"
+									placeholder="Date of Invitation"
 									value="{{formattedDate}}"
-									class="w-5/6"
+									class="w-40 text-base"
 									readonly
 								/>
-								<app-text-input 
-									[id]="'visitor_vhcnum'" 
-									[placeholder]="'dd-mm-yyyy'"
-									[customClasses]="{'w-[40px]': true}"
-									[type]="'date'"
-									[min]="getTodayDate()"
-									[customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-10':true, 'text-sm': true, 'text-transparent': true, 'focus:ring-0': true}"
-									(valueChange)="onDateOfInviteChange($event)" 
-									[value]="formData.dateOfInvite">
-								</app-text-input>
-							</div>
+								<input #inputDateVisitor type="date" [min]="minDate" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent" (change)="onDateOfInviteChange($event)">
+							</div> -->
 						</div>
-						<div class="flex flex-row mt-4 text-[12px]">
-							<input type="checkbox" id="one_time_entry" name="entry" class="mr-1 accent-black rounded "
-								(change)="onEntryTypeChange('one_time_entry')" [checked]="formData.entryType === 'one_time_entry'">
+						<div class="flex flex-row mt-4">
+							<input type="checkbox" id="one_time_entry" name="entry"
+								class="mr-1 accent-black rounded text-base" (change)="onEntryTypeChange('one_time_entry')"
+								[checked]="formData.entryType === 'one_time_entry'">
 							<b>One-Time Entry</b>
-							<input type="checkbox" id="multiple_entry" name="entry" class="mr-1 accent-black rounded ml-4"
-								(change)="onEntryTypeChange('multiple_entry')" [checked]="formData.entryType === 'multiple_entry'">
+							<input type="checkbox" id="multiple_entry" name="entry"
+								class="mr-1 accent-black rounded ml-4 text-base"
+								(change)="onEntryTypeChange('multiple_entry')"
+								[checked]="formData.entryType === 'multiple_entry'">
 							<b>Multiple Entry</b>
 						</div>
 						<div class="flex flex-col mt-4">
-							<p class="text-base font-bold mb-1.5">Invitation Details</p>
+							<u class="text-base font-bold mb-1.5">Invitation Details</u>
 							<div class="space-y-2">
 								<div class="w-full">
 									<div class="flex flex-row justify-start mb-1">
-										<p class="text-sm font-bold">Title of Invitation</p>
+										<p class="text-base font-bold">Title of Invitation</p>
 									</div>
+									<!-- <input
+										id="visitor_entry_title"
+										type="text"
+										placeholder="Invitation Title (E.g Alex's 1st Birthday Party)"
+										class="border-0 w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
+										(input)="entryTitleChange(($event.target as HTMLInputElement).value)"
+										[value]="formData.entryTitle"
+									/> -->
 									<app-text-input [id]="'visitor_entry_title'"
 										[placeholder]="'Invitation Title (E.g Alexs 1st Birthday Party)'"
 										[customClasses]="{'w-full':true}" [type]="'text'"
-										[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-sm': true}" (valueChange)="entryTitleChange($event)" [value]="formData.entryTitle">
+										[customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+										(valueChange)="entryTitleChange($event)" [value]="formData.entryTitle">
 									</app-text-input>
 								</div>
 								<div class="w-full">
 									<div class="flex flex-row justify-start mb-1">
-										<p class="text-sm font-bold">Message for Invitation</p>
+										<p class="text-base font-bold">Message for Invitation</p>
 									</div>
 									<textarea id="visitor_entry_message" placeholder="Invitation Message"
-										class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+										class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
 										type="text" [(ngModel)]="formData.entryMessage" name="entryMessage">
 									</textarea>
 								</div>
 							</div>
 						</div>
-						<div class="flex flex-row mt-4 text-[12px]">
-							<input type="checkbox" id="inv_agreement" name="inv_agreement" value="1" (change)="onProvideUnitChange()" [checked]="formData.isProvideUnit"
+						<div class="flex flex-row mt-4">
+							<input type="checkbox" id="inv_agreement" name="inv_agreement" value="1"
+								(change)="onProvideUnitChange()" [checked]="formData.isProvideUnit"
 								class="mr-1 accent-black rounded">
-							<b>Provide my unit number to visitor</b>
+							<b class="text-base">Provide my unit number to visitor</b>
 						</div>
-						<div class="flex flex-row mt-2 text-[12px] w-full">
+						<div class="flex flex-row mt-2 text-[13px] w-full">
 							<div class="w-full">
 								<app-visitor-button [text]="'Next'"
-									[extraClass]="formData.isProvideUnit ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-sm' : 'bg-[#D0D0D0] text-[#757575] mt-1 w-full text-sm'" 
+									[extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
 									(click)="onSubmitNext()">
 								</app-visitor-button>
 							</div>
@@ -104,24 +114,24 @@
 					<div class="w-full mb-20" *ngIf="showActInv" @fadeInOut>
 						<div *ngIf="activeInvites.length > 0; else noInvites">
 							<div *ngFor="let invite of activeInvites"
-								class="w-full bg-[#CDF8BA] p-2 my-2 rounded-lg flex justify-between items-center">
+								class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex justify-between items-center">
 								<div>
-									<h2 class="text-base font-bold text-gray-800">
-										{{ invite.name }}
+									<h2 class="ml-1 text-base font-bold text-gray-800">
+										<u>{{ invite.name }}</u>
 									</h2>
 									<div>
 										<table>
-											<tr class="text-sm text-gray-800 h-1">
+											<tr class="text-base text-gray-800 h-1">
 												<td class="font-bold">Date of Invite</td>
 												<td>:</td>
 												<td>{{invite.dateOfInvite}}</td>
 											</tr>
-											<tr class="text-sm text-gray-800 h-1">
+											<tr class="text-base text-gray-800 h-1">
 												<td class="font-bold">Vehicle No</td>
 												<td>:</td>
 												<td>{{invite.vehicleNo}}</td>
 											</tr>
-											<tr class="text-sm text-gray-800 h-1">
+											<tr class="text-base text-gray-800 h-1">
 												<td class="font-bold">Type of Entry</td>
 												<td>:</td>
 												<td>{{invite.entryType}}</td>
@@ -129,9 +139,10 @@
 										</table>
 									</div>
 								</div>
-								<button class="bg-red-200 text-red-800 px-3 py-2 text-sm rounded-md font-bold" (click)="presentCustomAlert('Cancel Invite', 'Cancel', 'Confirm', invite)">
+								<button class="bg-[#E3787E] text-black px-3 py-2 text-base rounded-md font-bold"
+									(click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)">
 									Cancel Invite
-								  </button>
+								</button>
 							</div>
 						</div>
 						<!-- Template untuk kondisi tidak ada invite -->

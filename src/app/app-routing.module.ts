@@ -234,6 +234,190 @@ const routes: Routes = [
     path: 'overnight-parking-form',
     loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-form/overnight-parking-form.module').then( m => m.OvernightParkingFormPageModule)
   },
+  {
+    path: 'renovation-home',
+    loadChildren: () => import('./modules/move_module/pages/renovation-home/renovation-home.module').then( m => m.RenovationHomePageModule)
+  },
+  {
+    path: 'alert-paynow',
+    loadChildren: () => import('./modules/alert_module/pages/alert-paynow/alert-paynow.module').then( m => m.AlertPaynowPageModule)
+  },
+  {
+    path: 'overnight-parking-detail',
+    loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-detail/overnight-parking-detail.module').then( m => m.OvernightParkingDetailPageModule)
+  },
+  {
+    path: 'records-main',
+    loadChildren: () => import('./modules/records_module/pages/records-main/records-main.module').then( m => m.RecordsMainPageModule)
+  },
+  {
+    path: 'records-wheel-clamped',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-wheel-clamped.module').then( m => m.RecordsWheelClampedPageModule)
+  },
+  {
+    path: 'records-wheel-clamped-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-detail/records-wheel-clamped-detail.module').then( m => m.RecordsWheelClampedDetailPageModule)
+  },
+  {
+    path: 'records-wheel-clamped-payment',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-payment/records-wheel-clamped-payment.module').then( m => m.RecordsWheelClampedPaymentPageModule)
+  },
+  {
+    path: 'records-wheel-clamped-new',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-new/records-wheel-clamped-new.module').then( m => m.RecordsWheelClampedNewPageModule)
+  },
+  {
+    path: 'move-detail',
+    loadChildren: () => import('./modules/move_module/pages/move-detail/move-detail.module').then( m => m.MoveDetailPageModule)
+  },
+  {
+    path: 'records-warning-history',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-warning-history/records-warning-history.module').then( m => m.RecordsWarningHistoryPageModule)
+  },
+  {
+    path: 'records-warning-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-warning-detail/records-warning-detail.module').then( m => m.RecordsWarningDetailPageModule)
+  },
+  {
+    path: 'overnight-parking-modal',
+    loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.module').then( m => m.OvernightParkingModalPageModule)
+  },
+  {
+    path: 'records-blacklist',
+    loadChildren: () => import('./modules/records_module/pages/records-blacklist/records-blacklist.module').then( m => m.RecordsBlacklistPageModule)
+  },
+  {
+    path: 'records-blacklist-form',
+    loadChildren: () => import('./modules/records_module/pages/records-blacklist/records-blacklist-form/records-blacklist-form.module').then( m => m.RecordsBlacklistFormPageModule)
+  },
+  {
+    path: 'records-blacklist-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-blacklist/records-blacklist-detail/records-blacklist-detail.module').then( m => m.RecordsBlacklistDetailPageModule)
+  },
+  {
+    path: 'records-visitor',
+    loadChildren: () => import('./modules/records_module/pages/records-visitor/records-visitor.module').then( m => m.RecordsVisitorPageModule)
+  },
+  {
+    path: 'records-visitor-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-visitor/records-visitor-detail/records-visitor-detail.module').then( m => m.RecordsVisitorDetailPageModule)
+  },
+  {
+    path: 'records-facility',
+    loadChildren: () => import('./modules/records_module/pages/records-facility/records-facility.module').then( m => m.RecordsFacilityPageModule)
+  },
+  {
+    path: 'records-facility-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-facility/records-facility-detail/records-facility-detail.module').then( m => m.RecordsFacilityDetailPageModule)
+  },
+  {
+    path: 'records-facility-check-out',
+    loadChildren: () => import('./modules/records_module/pages/records-facility/records-facility-check-out/records-facility-check-out.module').then( m => m.RecordsFacilityCheckOutPageModule)
+  },
+  {
+    path: 'resident-notification',
+    loadChildren: () => import('./modules/resident_module/pages/resident-notification/resident-notification.module').then( m => m.ResidentNotificationPageModule)
+  },
+  {
+    path: 'resident-quick-dials',
+    loadChildren: () => import('./modules/resident_module/pages/resident-quick-dials/resident-quick-dials.module').then( m => m.ResidentQuickDialsPageModule)
+  },
+  {
+    path: 'resident-polling',
+    loadChildren: () => import('./modules/resident_module/pages/resident-polling/resident-polling.module').then( m => m.ResidentPollingPageModule)
+  },
+  {
+    path: 'upcoming-polling',
+    loadChildren: () => import('./modules/resident_module/pages/resident-polling/upcoming-polling/upcoming-polling.module').then( m => m.UpcomingPollingPageModule)
+  },
+  {
+    path: 'closed-polling',
+    loadChildren: () => import('./modules/resident_module/pages/resident-polling/closed-polling/closed-polling.module').then( m => m.ClosedPollingPageModule)
+  },
+  {
+    path: 'resident-house-rules',
+    loadChildren: () => import('./modules/resident_module/pages/resident-house-rules/resident-house-rules.module').then( m => m.ResidentHouseRulesPageModule)
+  },
+  {
+    path: 'resident-report-an-issue',
+    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-issue/resident-report-an-issue.module').then( m => m.ResidentReportAnIssuePageModule)
+  },
+  {
+    path: 'record',
+    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-issue/record/record.module').then( m => m.RecordPageModule)
+  },
+  {
+    path: 'resident-report-an-app-issue',
+    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-app-issue/resident-report-an-app-issue.module').then( m => m.ResidentReportAnAppIssuePageModule)
+  },
+  {
+    path: 'record-app-report',
+    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-app-issue/record-app-report/record-app-report.module').then( m => m.RecordAppReportPageModule)
+  },
+  {
+    path: 'resident-upcoming-event',
+    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/resident-upcoming-event.module').then( m => m.ResidentUpcomingEventPageModule)
+  },
+  {
+    path: 'history-upcoming-event',
+    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/history-upcoming-event/history-upcoming-event.module').then( m => m.HistoryUpcomingEventPageModule)
+  },
+  {
+    path: 'resident-door-access',
+    loadChildren: () => import('./modules/resident_module/pages/resident-door-access/resident-door-access.module').then( m => m.ResidentDoorAccessPageModule)
+  },
+  {
+    path: 'resident-deals-page',
+    loadChildren: () => import('./modules/resident_module/pages/resident-deals-page/resident-deals-page.module').then( m => m.ResidentDealsPagePageModule)
+  },
+  {
+    path: 'resident-announcement-page',
+    loadChildren: () => import('./modules/resident_module/pages/resident-announcement-page/resident-announcement-page.module').then( m => m.ResidentAnnouncementPagePageModule)
+  },
+  {
+    path: 'favourite-announcement',
+    loadChildren: () => import('./modules/resident_module/pages/resident-announcement-page/favourite-announcement/favourite-announcement.module').then( m => m.FavouriteAnnouncementPageModule)
+  },
+  {
+    path: 'resident-find-a-service-provider',
+    loadChildren: () => import('./modules/resident_module/pages/resident-find-a-service-provider/resident-find-a-service-provider.module').then( m => m.ResidentFindAServiceProviderPageModule)
+  },
+  {
+    path: 'resident-raise-a-request',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule)
+  },
+  {
+    path: 'rejected-request',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/rejected-request/rejected-request.module').then( m => m.RejectedRequestPageModule)
+  },
+  {
+    path: 'resident-settings-page',
+    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/resident-settings-page.module').then( m => m.ResidentSettingsPagePageModule)
+  },
+  {
+    path: 'setting-notification',
+    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/setting-notification/setting-notification.module').then( m => m.SettingNotificationPageModule)
+  },
+  {
+    path: 'resident-my-profile',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/resident-my-profile.module').then( m => m.ResidentMyProfilePageModule)
+  },
+  {
+    path: 'my-profile-family-member',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-family-member/my-profile-family-member.module').then( m => m.MyProfileFamilyMemberPageModule)
+  },
+  {
+    path: 'my-profile-house-employee',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-house-employee/my-profile-house-employee.module').then( m => m.MyProfileHouseEmployeePageModule)
+  },
+  {
+    path: 'my-profile-my-pets',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-my-pets/my-profile-my-pets.module').then( m => m.MyProfileMyPetsPageModule)
+  },
+  {
+    path: 'my-profile-estate',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-estate/my-profile-estate.module').then( m => m.MyProfileEstatePageModule)
+  },
 ];
 
 @NgModule({

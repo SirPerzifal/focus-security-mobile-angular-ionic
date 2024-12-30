@@ -8,17 +8,34 @@ import { ApiService } from 'src/app/service/api.service';
   providedIn: 'root'
 })
 export class MoveInOutService extends ApiService{
-  private apiUrl = this.baseUrl + '/vms/get/move_in_out_schedule'
+  
 
   constructor(http: HttpClient) {super(http)}
 
   getMoveInOutSchedules(): Observable<any> {
+    let apiUrl = this.baseUrl + '/vms/get/move_in_out_schedule'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    return this.http.post(this.apiUrl, {}, { headers }).pipe(
+    console.log(this.http.post(apiUrl, {}, { headers }))
+
+    return this.http.post(apiUrl, {}, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getMoveInOutSchedulesHistory(): Observable<any> {
+    let apiUrl = this.baseUrl + '/vms/get/move_in_out_schedule_history'
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    console.log(this.http.post(apiUrl, {}, { headers }))
+
+    return this.http.post(apiUrl, {}, { headers }).pipe(
       catchError(this.handleError)
     );
   }

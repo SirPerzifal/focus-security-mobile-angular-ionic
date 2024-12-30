@@ -3,20 +3,14 @@
     <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="flex flex-row justify-between w-full">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20"
-          [routerLink]="['/home-vms']"></ion-icon>
-        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
-        <div class="w-20"></div>
-      </div>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/truck-clock.webp'" [text]="'DELIVERIES'"
+      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-rowspace-x-4 space-x-7">
+    <div class="flex mt-8 flex-row space-x-7">
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodBar.webp'" [text]="'FOOD DELIVERY'"
         (click)="toggleFoodDeliveries()" [isActive]="buttonStates.foodDeliveries" [disableClick]="true" />
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Package.webp'" [text]="'PACKAGE DELIVERIES'"
@@ -30,16 +24,16 @@
         <div class="w-full">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
           <div class="flex flex-col">
-            <div class="flex flex-rowspace-x-4 flex-wrap space-x-7">
+            <div class="flex flex-row flex-wrap">
               <div *ngFor="let button of foodDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image ? button.image : ''" [text]="button.text"
-                  [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)"/>
+                  [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-7'"/>
               </div>
             </div>
-            <div class="flex flex-rowspace-x-4 space-x-7 mt-6" *ngIf="food_delivery_id" @fadeInOut>
+            <div class="flex flex-row flex-wrap mt-6" *ngIf="food_delivery_id" @fadeInOut>
               <div *ngFor="let deliveriesButton of deliveriesType">
                 <app-button-icon [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''" [text]="deliveriesButton.text"
-                  [isActive]="deliveriesButton.isActive" (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" />
+                  [isActive]="deliveriesButton.isActive" (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" [extraParentClass]="'mr-7'"/>
               </div>
             </div>
           </div>
@@ -58,10 +52,10 @@
             </div>
           </div> -->
           <div class="flex flex-row mt-6">
-            <div class="flex flex-col justify-around items-center w-full space-y-3 mx-4">
+            <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
-                <input id="contact_number" placeholder="EG. +65 XXXX XXX" type="text"
+                <input id="contact_number" placeholder="EG. +65 XXXX XXX" type="text" style="border: 1px solid #6B7280;"
                   class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                   [(ngModel)]="formData.contact_number" name="contact_number">
 
@@ -69,7 +63,7 @@
               <div *ngIf="food_delivery_type == 'drive_in'" class=" w-full flex flex-row justify-between" @fadeInOut>
                 <div class="w-[90%] flex flex-col">
                   <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
-                  <input id="vehicle_number" placeholder="EG. SBA 2241 B" type="text"
+                  <input id="vehicle_number" placeholder="EG. SBA 2241 B" type="text" style="border: 1px solid #6B7280;"
                     class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                     [(ngModel)]="formData.vehicle_number" name="vehicle_number">
                 </div>
@@ -81,16 +75,16 @@
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
                 <select id="rv_block" (change)="onBlockChange($event)"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1">
-                  <option selected>CHOOSE BLOCK</option>
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
+                  <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
               </div>
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>UNIT</b></u></label>
                 <select id="rv_unit" (change)="onUnitChange($event)"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-                  <option selected>CHOOSE UNIT</option>
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
+                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
                   <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
                 </select>
               </div>
@@ -105,7 +99,7 @@
                   SAVE RECORD ONLY
                 </ion-button> -->
                 <app-visitor-button [text]="'SAVE RECORD ONLY'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-3 w-full text-2xl h-20'"
+                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-5 w-full text-2xl h-20'"
                   (click)="onSubmitFood()"></app-visitor-button>
               </div>
             </div>
@@ -116,7 +110,7 @@
       <form class="justify-between items-center mb-4 w-full" #packageForm="ngForm" *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="flex flex-rowspace-x-4 flex-wrap space-x-7">
+          <div class="flex flex-row flex-wrap space-x-7">
             <div *ngFor="let button of packageDeliveryButtons">
               <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
                 [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" />
@@ -131,17 +125,17 @@
             </div>
           </div> -->
           <div class="flex flex-row mt-6">
-            <div class="flex flex-col justify-between items-center w-full space-y-3 mx-4">
+            <div class="flex flex-col justify-between items-center w-full space-y-5 mx-4">
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
-                <input id="contact_number" placeholder="EG. +65 XXXX XXX" type="text"
+                <input id="contact_number" placeholder="EG. +65 XXXX XXX" type="text" style="border: 1px solid #6B7280;"
                   class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                   [(ngModel)]="formData.contact_number" name="contact_number">
               </div>
               <div class="w-full  flex flex-row justify-between">
                 <div class="flex flex-col w-[90%]">
                   <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
-                  <input id="vehicle_number" placeholder="VEHICLE NUMBER" type="text"
+                  <input id="vehicle_number" placeholder="VEHICLE NUMBER" type="text" style="border: 1px solid #6B7280;"
                   class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                   [(ngModel)]="formData.vehicle_number" name="vehicle_number">
                 </div>
@@ -151,7 +145,7 @@
               </div>
               <div class="w-full flex  gap-x-8">
                 <div class="flex items-center me-4 ml-1 my-2">
-                  <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
+                  <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group" 
                     (change)="onUnitTypeChange('multiple')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
                   <label for="inline-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Multiple
                     Units</label>
@@ -167,7 +161,7 @@
                 <form class="mx-auto flex flex-col">
                   <label class="text-2xl"><u><b>NUMBER OF UNITS</b></u></label>
                   <select id="number_pax"
-                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;"
                     [(ngModel)]="formData.pax" name="pax">
                     <option value="0" selected hidden>CHOOSE NUMBER OF UNITS</option>
                     <option value="1">1</option>
@@ -184,23 +178,23 @@
               <div class="w-full flex flex-col" *ngIf="showRemarks" @fadeInOut>
                 <label class="text-2xl"><u><b>REMARKS</b></u></label>
                 <textarea id="remarks" rows="4"
-                  class="bg-transparent border border-[#BDBDBD] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                  class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                   placeholder="Enter your remarks here..." [(ngModel)]="formData.remarks"></textarea>
               </div>
              
               <div class="w-full flex flex-col" *ngIf="showBlock" @fadeInOut>
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
-                <select id="rv_block" (change)="onBlockChange($event)"
+                <select id="rv_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;"
                   class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1">
-                  <option selected>CHOOSE BLOCK</option>
+                  <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
               </div>
               <div class="w-full flex flex-col" *ngIf="showUnit" @fadeInOut>
                 <label class="text-2xl"><u><b>UNIT</b></u></label>
-                <select id="rv_unit" (change)="onUnitChange($event)"
+                <select id="rv_unit" (change)="onUnitChange($event)" style="border: 1px solid #6B7280;"
                   class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-                  <option selected>CHOOSE UNIT</option>
+                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
                   <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
                 </select>
               </div>
@@ -216,7 +210,7 @@
                   [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
                   (click)="onSubmitPackage(true)"></app-visitor-button>
                 <app-visitor-button [text]="'SAVE RECORD ONLY'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-3 w-full text-2xl h-20'"
+                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-5 w-full text-2xl h-20'"
                   (click)="onSubmitPackage()"></app-visitor-button>
               </div>
             </div>

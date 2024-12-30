@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { trigger, state, style, animate, transition} from '@angular/animations';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ToastController } from '@ionic/angular';
 
 @Component({
@@ -24,42 +24,42 @@ export class ResidentCarListPage implements OnInit {
     private toastController: ToastController,
   ) { }
 
-  searchType: string = ''; 
+  searchType: string = '';
 
   vehicleRecords = [
     {
-      id:43, 
-      name:'Ashwinder',
-      contact:'89436309',
-      block:'100',
-      unit:'08-33',
-      vehicle: 'SMK 5848D', 
-      vehicleType: '1st Vehicle', 
-      lastEntry: '03/12/2024, 1710 Hrs', 
-      firstWarning:{
-        reason:'',
-        image:null as File | null
+      id: 43,
+      name: 'Ashwinder',
+      contact: '89436309',
+      block: '100',
+      unit: '08-33',
+      vehicle: 'SMK 5848D',
+      vehicleType: '1st Vehicle',
+      lastEntry: '03/12/2024, 1710 Hrs',
+      firstWarning: {
+        reason: '',
+        image: null as File | null
       },
-      secondWarning:{
-        reason:'',
-        image:null as File | null
+      secondWarning: {
+        reason: '',
+        image: null as File | null
       },
-      clamp:{
-        reason:'',
-        beforeImage:null as File | null,
-        afterImage:null as File | null
+      clamp: {
+        reason: '',
+        beforeImage: null as File | null,
+        afterImage: null as File | null
       }
     },
-      
+
   ];
-  showSearch:boolean = true;
-  showList:boolean = false;
-  showWarning:boolean = false;
-  showClamp:boolean = false;
-  showNricConfirm:boolean = false;
-  nricConfirm:string='';
-  activeRecord:number=0;
-  currentActiveIssue:string='';
+  showSearch: boolean = true;
+  showList: boolean = false;
+  showWarning: boolean = false;
+  showClamp: boolean = false;
+  showNricConfirm: boolean = false;
+  nricConfirm: string = '';
+  activeRecord: number = 0;
+  currentActiveIssue: string = '';
   currentWarningFile = null as File | null;
   beforeClampImageFile = null as File | null;
   afterClampImageFile = null as File | null;
@@ -70,9 +70,9 @@ export class ResidentCarListPage implements OnInit {
   imageWarningInput: string = '';
   imageBeforeClampInput: string = '';
   imageAfterClampInput: string = '';
-  canNricConfirm:boolean = false;
+  canNricConfirm: boolean = false;
 
-  onClickBackToMain(){
+  onClickBackToMain() {
     this.selectedReason = '';
     this.imageWarningInput = '';
     this.imageBeforeClampInput = '';
@@ -83,9 +83,9 @@ export class ResidentCarListPage implements OnInit {
     this.showWarning = false;
     this.showClamp = false;
     this.showNricConfirm = false;
-    this.nricConfirm='';
-    this.activeRecord=0;
-    this.currentActiveIssue='';
+    this.nricConfirm = '';
+    this.activeRecord = 0;
+    this.currentActiveIssue = '';
     this.currentWarningFile = null as File | null;
     this.beforeClampImageFile = null as File | null;
     this.afterClampImageFile = null as File | null;
@@ -93,7 +93,7 @@ export class ResidentCarListPage implements OnInit {
 
   onButtonPress() {
     console.log('onButtonPressonButtonPressonButtonPressonButtonPress');
-    
+
     this.isButtonPressed = true;
   }
 
@@ -103,14 +103,14 @@ export class ResidentCarListPage implements OnInit {
   }
 
 
-  toggleShowSearch(){
+  toggleShowSearch() {
     setTimeout(() => {
       this.showSearch = true;
       this.showList = true;
     }, 300)
   }
 
-  toggleShowFirstWarning(selectedRecord:any){
+  toggleShowFirstWarning(selectedRecord: any) {
     this.showWarning = true;
     this.showSearch = false;
     this.showList = false;
@@ -118,28 +118,32 @@ export class ResidentCarListPage implements OnInit {
     this.currentActiveIssue = 'first_warning'
   }
 
-  toggleShowSecondWarning(currentRecord:any){
-    if(currentRecord.firstWarning.image!=null){
+  toggleShowSecondWarning(currentRecord: any) {
+    if (currentRecord.firstWarning.image != null) {
       this.showWarning = true;
       this.showSearch = false;
       this.showList = false;
       this.activeRecord = currentRecord.id
-    this.currentActiveIssue = 'second_warning'
-  }else{
-      this.presentToast("Car must be only issued with just first warning before issueing second warning!","danger")
+      this.currentActiveIssue = 'second_warning'
+    } else {
+      this.presentToast("Car must be only issued with just first warning before issueing second warning!", "danger")
     }
   }
 
-  toggleClampVehicle(currentRecord:any){
-    this.showClamp = true;
-    this.showSearch = false;
-    this.showList = false;
-    this.activeRecord = currentRecord.id
-    this.currentActiveIssue = 'clamp'
+  toggleClampVehicle(currentRecord: any) {
+    if (currentRecord.firstWarning.image != null) {
+      this.showClamp = true;
+      this.showSearch = false;
+      this.showList = false;
+      this.activeRecord = currentRecord.id
+      this.currentActiveIssue = 'clamp'
+    } else {
+      this.presentToast("Car must be issued with second warning before running the clamp vehicle!", "danger")
+    }
   }
 
-  onCancelWarning(){
-    if(!this.showNricConfirm){
+  onCancelWarning() {
+    if (!this.showNricConfirm) {
       this.showWarning = false;
       this.showSearch = true;
       this.showList = true;
@@ -155,16 +159,16 @@ export class ResidentCarListPage implements OnInit {
       duration: 2000,
       color: color
     });
-    
+
 
     toast.present().then(() => {
-      
-      
+
+
     });
   }
 
-  onCancelClamp(){
-    if(!this.showNricConfirm){
+  onCancelClamp() {
+    if (!this.showNricConfirm) {
       this.showClamp = false;
       this.showSearch = true;
       this.showList = true;
@@ -173,24 +177,24 @@ export class ResidentCarListPage implements OnInit {
     }
   }
 
-  onSubmitImage(){
-    if(this.showWarning && this.selectedReason && this.imageWarningInput && !this.showNricConfirm){
-      this.showNricConfirm=true;
-    }else if(this.showClamp && this.selectedReason && this.beforeClampImageFile && this.afterClampImageFile && !this.showNricConfirm){
-      this.showNricConfirm=true;
+  onSubmitImage() {
+    if (this.showWarning && this.selectedReason && this.imageWarningInput && !this.showNricConfirm) {
+      this.showNricConfirm = true;
+    } else if (this.showClamp && this.selectedReason && this.beforeClampImageFile && this.afterClampImageFile && !this.showNricConfirm) {
+      this.showNricConfirm = true;
     }
   }
 
-  onSubmitNric(){
-    if(this.showNricConfirm && this.nricConfirm){
-      this.showNricConfirm=false;
-      this.showWarning=false;
-      this.showClamp=false;
+  onSubmitNric() {
+    if (this.showNricConfirm && this.nricConfirm) {
+      this.showNricConfirm = false;
+      this.showWarning = false;
+      this.showClamp = false;
       this.showList = true;
-      
-      
-      
-      
+
+
+
+
       // this.vehicleRecords.filter(record => {
       //   record.id===this.activeRecord
       // }).map(record => {return {
@@ -217,13 +221,13 @@ export class ResidentCarListPage implements OnInit {
       //   }
       // }})
       var chosenRecord = this.vehicleRecords.map(record => record.id).indexOf(this.activeRecord)
-      if(this.currentActiveIssue=='first_warning'){
+      if (this.currentActiveIssue == 'first_warning') {
         this.vehicleRecords[chosenRecord].firstWarning.reason = this.selectedReason
         this.vehicleRecords[chosenRecord].firstWarning.image = this.currentWarningFile
-      }else if(this.currentActiveIssue=='second_warning'){
+      } else if (this.currentActiveIssue == 'second_warning') {
         this.vehicleRecords[chosenRecord].secondWarning.reason = this.selectedReason
         this.vehicleRecords[chosenRecord].secondWarning.image = this.currentWarningFile
-      }else if(this.currentActiveIssue=='clamp'){
+      } else if (this.currentActiveIssue == 'clamp') {
         this.vehicleRecords[chosenRecord].clamp.reason = this.selectedReason
         this.vehicleRecords[chosenRecord].clamp.beforeImage = this.beforeClampImageFile
         this.vehicleRecords[chosenRecord].clamp.afterImage = this.afterClampImageFile
@@ -241,40 +245,40 @@ export class ResidentCarListPage implements OnInit {
 
       console.log(this.vehicleRecords);
       console.log("this.vehicleRecordsthis.vehicleRecordsthis.vehicleRecordsthis.vehicleRecordsthis.vehicleRecordsthis.vehicleRecords");
-      
+
     }
   }
 
   ngOnInit() {
   }
 
-  onCancelNricConfirm(){
-    this.showNricConfirm=false;
-    this.nricConfirm='';
-    this.canNricConfirm=false;
+  onCancelNricConfirm() {
+    this.showNricConfirm = false;
+    this.nricConfirm = '';
+    this.canNricConfirm = false;
   }
 
-  onNricConfirmChange(event:string){
+  onNricConfirmChange(event: string) {
     this.nricConfirm = event
-    if(this.nricConfirm){
+    if (this.nricConfirm) {
       this.canNricConfirm = true
-    }else{
+    } else {
       this.canNricConfirm = false
     }
-    
-    
+
+
   }
 
   onWarningImageFileSelected(file: File) {
     // Convert File to a usable format if needed
     this.currentWarningFile = file;
     this.imageWarningInput = file.name; // Or file.path if you need the full path
-    
+
     // If you need to handle the file further
     // For example, prepare for upload
     const formData = new FormData();
     formData.append('image', file);
-    
+
     // You can now use this formData for upload or further processing
   }
 
@@ -284,13 +288,13 @@ export class ResidentCarListPage implements OnInit {
     this.imageBeforeClampInput = file.name; // Or file.path if you need the full path
     console.log(this.imageBeforeClampInput);
     console.log('imageBeforeClampInputimageBeforeClampInputimageBeforeClampInputimageBeforeClampInput');
-    
-    
+
+
     // If you need to handle the file further
     // For example, prepare for upload
     const formData = new FormData();
     formData.append('image', file);
-    
+
     // You can now use this formData for upload or further processing
   }
 
@@ -300,12 +304,12 @@ export class ResidentCarListPage implements OnInit {
     this.imageAfterClampInput = file.name; // Or file.path if you need the full path
     console.log(this.imageAfterClampInput);
     console.log('this.imageAfterClampInputthis.imageAfterClampInputthis.imageAfterClampInputthis.imageAfterClampInput');
-    
+
     // If you need to handle the file further
     // For example, prepare for upload
     const formData = new FormData();
     formData.append('image', file);
-    
+
     // You can now use this formData for upload or further processing
   }
 

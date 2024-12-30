@@ -1,0 +1,47 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-facility-detail'"/>
+    </div>
+    <!-- <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [isHomeButton]="true"
+        [text]="'OVERNIGHT PARKING'" 
+        [routerLink]="['/records-facility']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />    
+    </div> -->
+    <div class="flex flex-row mx-4">
+      <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <label class="text-2xl font-bold">{{record.facility}} - CHECK IN FORM</label>
+        <div class="flex flex-col justify-around w-full mt-80">
+          <div class="flex flex-row w-full justify-between">
+            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 h-14 flex flex-col">
+              <div class="h-20 w-20"><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
+              <hr class="border-t border-white w-full" />
+              <div>SIGN HERE (RESIDENT)</div>
+            </div>
+            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 h-14 flex flex-col">
+              <div class="h-20 w-20"><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
+              <hr class="border-t border-white w-full" />
+              <div>SIGN HERE (OFFICER)</div>
+            </div>
+          </div>
+          <div class="flex flex-row w-full justify-around mb-4 mt-4">
+            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14">CHECK IN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

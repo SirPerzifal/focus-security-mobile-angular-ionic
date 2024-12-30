@@ -20,18 +20,27 @@ export class FamilyService extends ApiService{
     email_address: string,
     mobile_number: string,
     type_of_residence: string,
-    tenancies: Record<string, any>
+    tenancies: Record<string, any>,
+    helper_work_permit?: string // Tambahkan parameter ini
   ): Observable<any> {
-    
-    return this.http.post<any>(`${this.baseUrl}/resident/post/post_family_detail`, {jsonrpc: '2.0', params: {
+    // Buat objek params
+    const params: any = {
       full_name,
       nickname,
       email_address,
       mobile_number,
       type_of_residence,
       tenancies,
-      unit: 1
-    }})
+      unit: 1,
+      helper_work_permit: ''
+    };
+  
+    // Jika type_of_residence adalah 'helper', tambahkan helper_work_permit ke params
+    if (type_of_residence === 'helper') {
+      params.helper_work_permit = helper_work_permit;
+    }
+  
+    return this.http.post<any>(`${this.baseUrl}/resident/post/post_family_detail`, { jsonrpc: '2.0', params });
   }
 
   updateFamilyDetail(

@@ -1,36 +1,36 @@
-<div [class]="warning ? 'bg-red-400 p-4 rounded-lg w-full mb-2 relative' : 'bg-green-100 p-4 rounded-lg w-full mb-2 relative'">
+<div [class]="warning ? 'bg-[#E3787E] p-4 rounded-lg w-full mb-2 relative' : 'bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full mb-2 relative'">
   <div class="absolute w-full flex flex-col items-center ml-0">
     <img
     alt="IFS360"
-    class="w-20 h-20 mr-[-25px]"
+    class="w-24 h-24 mr-[-25px]"
     src="assets/icon/resident-icon/payment-paid.png"
   />
   </div>
   <div class="flex flex-row justify-between font-bold items-center">
     <div class="flex flex-col w-4/6">
-      <div class="text-base font-extrabold">
+      <div class="text-base font-extrabold ml-1">
         {{title}}
       </div>
-      <div *ngIf="desc_title" class="text-[10px] flex flex-col">
-        <div>
+      <div *ngIf="desc_title" class="text-base flex flex-col">
+        <div class="ml-1">
           {{desc_title}}
         </div>
-        <div class="text-black">
+        <div class="text-base">
           <table>
             <tr *ngIf="vehicle_no" class="h-1">
               <td >Vehicle No</td>
               <td>:</td>
-              <td>{{vehicle_no}}</td>
+              <td class="font-thin">{{vehicle_no}}</td>
             </tr>
             <tr class="h-1">
               <td>Date of Violation</td>
               <td>:</td>
-              <td>{{violation_date}}</td>
+              <td class="font-thin">{{violation_date}}</td>
             </tr>
             <tr *ngIf="paid_on" class="h-1">
               <td>Paid On</td>
               <td>:</td>
-              <td>{{paid_on}}</td>
+              <td class="font-thin">{{paid_on}}</td>
             </tr>
           </table>
         </div>
@@ -46,11 +46,11 @@
       </div>
       
     </div>
-    <div class="flex flex-col w-1/4 items-center">
-      <div>
+    <div class="flex flex-col w-1/4 items-center mr-1">
+      <div class="text-base">
         {{total}}
       </div>
-      <button class="bg-[var(--ion-color-primary)] text-white py-2 text-sm rounded-md font-bold w-full">
+      <button class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full">
         Pay Now
       </button>
       

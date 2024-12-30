@@ -1,44 +1,35 @@
 <ion-content [fullscreen]="true">
-  <div class="header fixed top-0">
-    <div class="flex flex-col justify-start">
-      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-    </div>
-    <div class="logo">
-      <h1 class="text-[22px] font-bold text-[black]">
-        {{ facilityDetail?.facility_name || 'Facility Booking' }}
-      </h1>
-    </div>
-  </div>
+  <app-resident-header [text]="facilityDetail?.facility_name || 'Court Detail'" />
 
   <div class="flex flex-col relative mt-2 mb-32">
     <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
         <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
         <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
-    <div class="flex flex-row w-full bg-green-100 my-4 m-0">
-      <ion-button class="w1/5 mr-1.5 flex flex-row justify-center items-center icon" fill="clear" [routerLink]="['/facility-new-booking']">
-        <div class="flex flex-col items-center text-black">
-          <ion-icon name="arrow-back"></ion-icon>
-        </div>
-      </ion-button>
-      <div class="w-4/5 flex flex-col justify-center items-center text-black text-center">
-        <h2 class="text-lg font-bold text-black">
+    <div class="flex flex-row w-full bg-[#CDF8DA] my-4 m-0 py-2">
+      <div class="w-full flex flex-col justify-center items-center text-black text-center">
+        <h2 class="text-base font-bold text-black">
           {{ facilityDetail?.facility_name || 'Place Name' }}
         </h2>
-        <p class="text-sm text-black">
-          Total Facilities: {{ facilityDetail?.total_facilities || 0 }}
+        <p class="text-base text-black">
+         ( {{ facilityDetail?.total_facilities || 0 }} Facilities )
         </p>
       </div>
     </div>
-
+    
     <div class="mx-4 flex flex-col relative">
-      <div class="my-4">
-        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      <div class="flex flex-row items-center mb-4">
+        <ion-button class="w1/5 mr-1.5 flex flex-row justify-center items-center icon" fill="clear" [routerLink]="['/facility-new-booking']">
+          <div class="flex flex-col items-center text-black">
+            <ion-icon name="arrow-back"></ion-icon>
+          </div>
+        </ion-button>
+        <ion-datetime-button class="w-4/5 mt-0.5" datetime="datetime"></ion-datetime-button>
         <ion-modal keep-contents-mounted="true">
           <ng-template>
             <ion-datetime 
@@ -59,10 +50,21 @@
 
       <div class="flex flex-row justify-center space-x-3 w-full mb-3">
         <select id="ch_room" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
-          <option selected>CHOOSE ROOM</option>
+          <option selected disabled hidden>CHOOSE ROOM</option>
           <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.room_name }}</option>
         </select>
       </div>
+
+      <!-- <div class="grid grid-cols-3 gap-2 mb-4">
+        <button 
+          *ngFor="let timeSlot of roomSchedule"
+          [ngClass]="getTimeSlotClass(timeSlot)"
+          (click)="selectTimeSlot(timeSlot)"
+          class="py-2 rounded"
+        >
+          {{ timeSlot.start_time }} - {{ timeSlot.end_time }}
+        </button>
+      </div> -->
 
       <div class="grid grid-cols-3 gap-2 mb-4">
         <button 
@@ -76,20 +78,21 @@
       </div>
 
       <div class="flex items-start mb-4">
-        <input class="mr-2 mt-1" type="checkbox"/>
-        <p class="text-xs">
+        <input 
+          class="mr-2 mt-1" 
+          type="checkbox" 
+          [(ngModel)]="isTermsAccepted" 
+        />
+        <p class="text-base font-bold">
           By clicking "Book Now," I acknowledge that I have read and agree to the
-          <a class="text-blue" href="#">
-            Terms and Conditions
-          </a>
-          for using this facility.
+          Terms and Conditions for using this facility.
         </p>
       </div>
 
       <div class="text-center mb-4">
         <app-visitor-button 
           [text]="'Book Now'" 
-          [extraClass]="'bg-[#10421d] text-[white] w-full'"
+          [extraClass]="isTermsAccepted ? 'bg-[#10421d] text-[white] w-full text-base' : 'bg-[#D0D0D0] text-[#757575] w-full text-base cursor-not-allowed'"
           (click)="uploadFacilityBooking()"
         ></app-visitor-button>
       </div>

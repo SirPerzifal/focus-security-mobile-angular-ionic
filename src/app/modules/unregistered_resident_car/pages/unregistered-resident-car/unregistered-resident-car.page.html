@@ -7,21 +7,16 @@
     />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="flex flex-row justify-between w-full">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20" [routerLink]="['/home-vms']"></ion-icon>
-        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
-        <div class="w-20"></div>
-      </div>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
     <div class="flex flex-row mt-8">
       <div class="flex flex-col items-center">
-        <app-button-icon [customNameIcon]="'faCar'" [text]="'UNREGISTERED RESIDENT CAR'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       </div>
     </div>
     <div class="flex flex-row">
-      <div class="mt-8 flex flex-col items-center mx-4 space-y-3 w-full mb-4">
+      <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4">
         <div class="w-full">
           <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. MARCO ZHABIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
@@ -42,7 +37,7 @@
         <div class="w-full">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option selected>CHOOSE BLOCK</option>
+            <option value="" selected disabled hidden>CHOOSE BLOCK</option>
             <option value="block_1">BLOCK 1</option>
             <option value="block_2">BLOCK 2</option>
             <option value="block_3">BLOCK 3</option>
@@ -52,7 +47,7 @@
         <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option selected>CHOOSE UNIT</option>
+            <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option value="unit_1">UNIT 1</option>
             <option value="unit_2">UNIT 2</option>
             <option value="unit_3">UNIT 3</option>

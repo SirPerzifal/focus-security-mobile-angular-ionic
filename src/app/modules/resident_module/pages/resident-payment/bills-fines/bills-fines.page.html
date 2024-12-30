@@ -6,13 +6,34 @@
       <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-payment']"></ion-icon>
     </div>
     <div class="flex flex-row justify-between mt-2">
-      <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
-      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'" ></app-visitor-button>
-      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'" [routerLink]="['/bills-history']"></app-visitor-button>
+      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base'"></app-visitor-button>
+      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-history']"></app-visitor-button>
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
+          <div class="flex flex-col mb-3">
+            <div class="flex flex-row justify-between items-center">
+              <div class="flex flex-col font-bold text-base">
+                Auto-Pay with Registered Card
+              </div>
+              <div class="flex flex-col">
+                <label class="switch-button">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="flex flex-col text-base">
+              <div>
+                Current Outstanding will be 
+              </div>
+              <div>
+                automatically deducted on the ____ date of each month
+              </div>
+            </div>
+          </div>
           <div clas="flex flex-col w-full justify-start">
             <app-small-bills-card-detailed [title]="'Current Outstanding'" [desc_title]="'Wheel Clamped'" [vehicle_no]="'SBS1234A'" [violation_date]="'27/10/2024'" [total]="'S$250.00'"  ></app-small-bills-card-detailed>
           </div>

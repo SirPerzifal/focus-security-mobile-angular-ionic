@@ -154,8 +154,7 @@ export class InviteFormPage implements OnInit {
   onSubmit() {
     const isValid = this.inviteeFormList.every(invitee => 
       invitee.name.trim() !== '' && 
-      invitee.mobile_number.trim() !== '' && 
-      invitee.car_number.trim() !== ''
+      invitee.mobile_number.trim() !== ''
     );
 
     if (isValid) {

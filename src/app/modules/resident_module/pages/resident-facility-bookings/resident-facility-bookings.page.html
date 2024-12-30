@@ -1,19 +1,12 @@
 <ion-content [fullscreen]="true">
 	<div class="scrollale-content">
-		<div class="header fixed top-0">
-		  <div class="flex flex-col justify-start">
-			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-		  </div>
-		  <div class="logo">
-			<h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
-		  </div>
-		</div>
+		<app-resident-header [text]="'Facility Booking'" [text_second]="'Active Booking'" />
 		
 		<!-- CONTENT -->
 		<div class="flex flex-col relative mt-2 mx-4 mb-52">
 		  <div class="flex flex-row mt-4 justify-between w-full">
-			<app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
-			<app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+			<app-visitor-button [text]="'Active Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 leading-none'" (click)="toggleShowActBk()"></app-visitor-button>
+			<app-visitor-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-visitor-button>
 			<app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
 			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
 		  </div>
@@ -23,15 +16,15 @@
 			<div *ngFor="let booking of activeBookings; let i = index" [ngClass]="{
 				'bg-green-100': booking.statusBooked === 'Approved',
 				'bg-sky-100': booking.statusBooked === 'Pending Approval' || booking.statusBooked === 'Pending Payment',
-				'bg-red-200': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
-				'bg-yellow-200': booking.statusBooked === 'Requested',
+				'bg-[#E3787E]': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
+				'bg-[#F8F1BA]': booking.statusBooked === 'Requested',
 				}" class="bg-green-100 rounded-2xl px-4 py-2 mt-4 w-full" >
 			  <h2 [ngClass]="{
 				'text-green-500': booking.statusBooked === 'Approved',
 				'text-sky-500': booking.statusBooked === 'Pending Approval' || booking.statusBooked === 'Pending Payment',
-				'text-red-500': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
-				'text-yellow-500': booking.statusBooked === 'Requested',
-				}" class="flex text-lg font-bold mb-2 justify-items-center items-center text-center">
+				'text-red-700': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
+				'text-yellow-400': booking.statusBooked === 'Requested',
+				}" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
 				<ion-icon 
 					[name]="booking.statusBooked === 'Approved' ? 'checkmark' : 
 							booking.statusBooked === 'Pending Approval' ? 'time' : 
@@ -43,47 +36,41 @@
 					[ngClass]="{
 					'bg-green-500': booking.statusBooked === 'Approved',
 					'bg-sky-500': booking.statusBooked === 'Pending Approval' || booking.statusBooked === 'Pending Payment',
-					'bg-red-500': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
+					'bg-red-700': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
 					'bg-yellow-500': booking.statusBooked === 'Requested'
 					}"
-					class="mr-0.5 p-1 rounded-full text-white text-[18px]">
+					class="mr-2 p-1 rounded-full text-white text-[18px]">
 				</ion-icon>
 				{{ getBookingStatusLabel(booking.statusBooked) }}
 			  </h2>
-			  <p class="font-bold text-lg text-black">{{ booking.facilityName }}</p>
+			  <p class="font-bold text-base text-black">{{ booking.facilityName }}</p>
 			  <div class="table w-full">
 				<div class="table-row">
-				  <p class="font-bold table-cell text-sm text-black">Event Date</p>
-				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.eventDate }}</p>
+				  <p class="font-bold table-cell text-base text-black">Event Date</p>
+				  <p class="ml-2 table-cell text-base text-black">: {{ booking.eventDate }}</p>
 				</div>
 				<div class="table-row">
-				  <p class="font-bold table-cell text-sm text-black">Booking Start Time</p>
-				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.startTime }}</p>
+				  <p class="font-bold table-cell text-base text-black">Booking Start Time</p>
+				  <p class="ml-2 table-cell text-base text-black">: {{ booking.startTime }}</p>
 				</div>
 				<div class="table-row">
-				  <p class="font-bold table-cell text-sm text-black">Booking End Time</p>
-				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.endTime }}</p>
+				  <p class="font-bold table-cell text-base text-black">Booking End Time</p>
+				  <p class="ml-2 table-cell text-base text-black">: {{ booking.endTime }}</p>
 				</div>
 				<div class="table-row">
-				  <p class="font-bold table-cell text-sm text-black">Booked By</p>
-				  <p class="ml-2 table-cell text-sm text-black">: {{ booking.bookedBy }}</p>
+				  <p class="font-bold table-cell text-base text-black">Booked By</p>
+				  <p class="ml-2 table-cell text-base text-black">: {{ booking.bookedBy }}</p>
 				</div>
 			  </div>
-			  <div class="flex justify-between mt-2">
-				<div *ngIf="booking.statusBooked === 'Requested' || booking.statusBooked === 'Pending Approval'" class="flex justify-between w-full">
-				  <ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black">
-					<ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-1 rounded-full text-white text-[18px]"></ion-icon>
+			  <div class="flex mt-2 space-x-2">
+				<div *ngIf="booking.statusBooked === 'Requested' || booking.statusBooked === 'Pending Approval'" class="flex w-full space-x-2">
+				  <ion-button fill="clear" class="button-card-facility flex items-center font-bold text-xs text-black">
+					<ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-1 rounded-full text-white text-base"></ion-icon>
 					Add to Calendar
 				  </ion-button>
-				  <ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black" (click)="cancelBooking()">
-					<ion-icon name="close-outline" class="mr-0.5 bg-red-400 p-1 rounded-full text-white text-[18px]"></ion-icon>
+				  <ion-button fill="clear" class="button-card-facility flex items-center font-bold text-xs text-black" (click)="cancelBooking(booking.id)">
+					<ion-icon name="close-outline" class="mr-0.5 bg-red-400 p-1 rounded-full text-white text-base"></ion-icon>
 					Cancel Booking
-				  </ion-button>
-				</div>
-				<div *ngIf="booking.statusBooked !== 'Requested' && booking.statusBooked !== 'Pending Approval'">
-				  <ion-button fill="clear" class="flex items-center font-bold text-[10px] text-black">
-					<ion-icon name="calendar-outline" class="mr-0.5 bg-sky-300 p-1 rounded-full text-white text-[18px]"></ion-icon>
-					Add to Calendar
 				  </ion-button>
 				</div>
 			  </div>

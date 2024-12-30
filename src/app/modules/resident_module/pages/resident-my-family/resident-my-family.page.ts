@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class ResidentMyFamilyPage implements OnInit {
   constructor(private familyService: FamilyService, private router: Router) { }
 
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', end_date: new Date() }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
   ];
 
   getFamilyList() {
@@ -30,15 +31,17 @@ export class ResidentMyFamilyPage implements OnInit {
             mobile: item['family_mobile_number'], 
             nickname: item['family_nickname'], 
             email: item['family_email'], 
-            head_type: item['type'] == 'tenants' ? 'Tenants' : 'Family',
-            end_date: item['end_of_tenancy_aggrement'] });
+            head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
+            end_date: item['end_of_tenancy_aggrement'],
+            status: item['states'],
+            tenancy_agreement: item['tenancy_aggrement'] });
         });
       },
       error => {
         console.log(error)
       }
     )
-    console.log(this.familyData)
+    console.log("tes", this.familyData)
   }
 
   ngOnInit() {
@@ -55,6 +58,14 @@ export class ResidentMyFamilyPage implements OnInit {
       }
     });
   
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
 }

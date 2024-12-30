@@ -1,87 +1,115 @@
 <ion-content [fullscreen]="true">
-  <div class="header fixed top-0">
-    <div class="flex flex-col justify-start">
-      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-    </div>
-    <div class="logo">
-      <h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
-    </div>
-  </div>
+  <app-resident-header [text]="'Facility Booking'" [text_second]="'Booking History'" />
 
   <div class="flex flex-col relative mt-2 mb-16">
     <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
         <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
-        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowHis()"></app-visitor-button>
+        <app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
     <!-- Konten Utama -->
-    <ng-container *ngIf="showMainContent">
-      <div @fadeInOut class="p-4">
-        <div class="flex mb-2 justify-end items-end">
-          <button class="bg-yellow-400 py-2 px-4 rounded mb-2 text-xs">All Records</button>
-        </div>
-        <div class="flex justify-center gap-2 mb-5">
-          <input type="date" placeholder="Start Date" class="py-2 px-4 rounded-lg border border-gray-300">
-          <input type="date" placeholder="End Date" class="py-2 px-4 rounded-lg border border-gray-300">
-        </div>
-        <div *ngFor="let booking of bookingList" [ngClass]="{
-          'bg-green-100': booking.status === 'Approved',
-          'bg-sky-100': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
-          'bg-red-200': booking.status === 'Rejected' || booking.status === 'Cancelled',
-          'bg-yellow-200': booking.status === 'Requested',
-          }" class="bg-[#E9F5E1] rounded-2xl p-5 m-5 flex justify-between items-center">
-          <div class="max-w-[80%]">
-            <div [ngClass]="{
-              'bg-green-300': booking.status === 'Approved',
-              'bg-sky-300': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
-              'bg-red-400': booking.status === 'Rejected' || booking.status === 'Cancelled',
-              'bg-yellow-400': booking.status === 'Requested',
-              }" class="bg-[#A3D9A5] text-white py-1 px-2 rounded-md font-bold inline-block">{{ booking.status }}</div>
-            <h2 class="text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
-            <div class="text-black text-xs">
-              <table>
-                <tr class="h-1">
-                  <td >Event Date</td>
-                  <td>:</td>
-                  <td>{{ booking.eventDate }}</td>
-                </tr>
-                <tr class="h-1">
-                  <td>Booked By</td>
-                  <td>:</td>
-                  <td>{{ booking.bookedBy }}</td>
-                </tr>
-                <tr class="h-1">
-                  <td>Deposit Status</td>
-                  <td>:</td>
-                  <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending Payment' }}</td>
-                </tr>
-              </table>
-            </div>
-            <!-- <p class="text-black">Event Date : {{ booking.eventDate }}</p>
-            <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
-            <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p> -->
-          </div>
-          <ion-button class="flex flex-row justify-center items-center absolute right-16 icon" fill="clear" (click)="toDetail(booking)">
-            <div class="flex flex-col items-center text-black">
-              <ion-icon name="arrow-forward"></ion-icon>
-            </div>
-          </ion-button>
-        </div>
+    <div class="my-4" *ngIf="showMainContent" @fadeInOut>
+      <div class="flex mb-2 justify-end items-end mr-4">
+        <button class="bg-yellow-500 py-2 px-4 rounded mb-2 text-base text-black" (click)="resetFilter()">All Records</button>
       </div>
-    </ng-container>
+      <div class="flex flex-row space-x-2 ml-4 mr-4">
+        <div class="w-1/2">
+          <app-text-input 
+            #facilityHistoryStartDateInput 
+            [id]="'facility_history_start_date_input'" 
+            [placeholder]="'Start Filter Date'"
+            [customClasses]="{'w-full':true}" 
+            [type]="'date'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+            (change)="onStartDateChange($event)"
+          ></app-text-input>        
+        </div>
+        <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+          <input
+            type="text"
+            placeholder="Start Filter Date"
+            class="w-[97px] border-none border-0"
+            readonly
+          />
+          <input 
+            type="date" 
+            class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent"
+          >
+        </div> -->
+        <div class="w-1/2">
+          <app-text-input 
+            #facilityHistoryEndDateInput
+            [id]="'facility_history_end_date_input'" 
+            [placeholder]="'End Filter Date'"
+            [customClasses]="{'w-full':true}" 
+            [type]="'date'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+            (change)="onEndDateChange($event)"
+            [min]="startDate"
+          ></app-text-input>
+        </div>
+        <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+          <input
+            type="text"
+            placeholder="End Filter Date"
+            class="w-[97px] border-none border-0"
+            readonly
+          />
+          <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent">
+        </div> -->
+      </div>
+      <div *ngFor="let booking of bookingList" class="bg-[#D8ECCF] rounded-2xl p-5 m-5 flex justify-between items-center">
+        <div class="max-w-[100%]">
+          <div [ngClass]="{
+            'bg-green-300': booking.status === 'Approved',
+            'bg-sky-300': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
+            'bg-[#E3787E]': booking.status === 'Rejected' || booking.status === 'Cancelled',
+            'bg-yellow-500': booking.status === 'Requested',
+            }" class="bg-[#A3D9A5] text-black py-1 px-2 rounded-md font-bold inline-block ml-1">{{ booking.status }}</div>
+          <h2 class="ml-1 text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
+          <div class="text-black text-base">
+            <table>
+              <tr class="h-1">
+                <td class="font-bold">Event Date</td>
+                <td>:</td>
+                <td>{{ booking.eventDate }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Booked By</td>
+                <td>:</td>
+                <td>{{ booking.bookedBy }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Deposit Status</td>
+                <td>:</td>
+                <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending Payment' }}</td>
+              </tr>
+            </table>
+          </div>
+          <!-- <p class="text-black">Event Date : {{ booking.eventDate }}</p>
+          <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
+          <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p> -->
+        </div>
+        <ion-button class="flex flex-row justify-center items-center absolute right-16 icon" fill="clear" (click)="toDetail(booking)">
+          <div class="flex flex-col items-center text-black">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </ion-button>
+      </div>
+    </div>
 
     <!-- Konten Detail Booking -->
-    <ng-container *ngIf="showDetailContent">
-      <div @fadeInOut class="w-full bg-green-100 text-center mt-4 m-0 p-2">
-        <h2 class="text-lg font-bold text-black">
+    <div *ngIf="showDetailContent" @fadeInOut>
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-2">
+        <h2 class="text-base font-bold text-black">
           {{ bookingDetails.facilityName }} Booking details
         </h2>
       </div>
-
+  
       <div class="flex flex-col relative mx-4">
         <ion-button
           class="flex flex-row justify-center items-center w-full icon my-2" 
@@ -91,20 +119,29 @@
             <ion-icon name="arrow-back"></ion-icon>
           </div>
         </ion-button>
-
-        <div>
-          <p><strong>Facility</strong>: {{ bookingDetails.facilityName }}</p>
-          <p><strong>Event Date</strong>: {{ bookingDetails.eventDate }}, {{ bookingDetails.eventDay }}</p>
-          <p><strong>Booking Time</strong>: {{ bookingDetails.bookingTime }}</p>
-        </div>
-
-        <div class="mt-4">
-          <p class="font-bold">Payment Breakdown</p>
-          <div class="flex justify-between">
+  
+        <table style="width: 70%; border-collapse: collapse;">
+          <tr>
+            <td><strong>Facility</strong></td>
+            <td>: {{ bookingDetails.facilityName }}</td>
+          </tr>
+          <tr>
+            <td><strong>Event Date</strong></td>
+            <td>: {{ bookingDetails.eventDate }}, {{ bookingDetails.eventDay }}</td>
+          </tr>
+          <tr>
+            <td><strong>Booking Time</strong></td>
+            <td>: {{ bookingDetails.bookingTime }}</td>
+          </tr>
+        </table>
+  
+        <div class="ml-1 mt-4">
+          <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
+          <div class="flex justify-between font-bold">
             <p>Booking Fee</p>
             <p>${{ bookingDetails.bookingFee.toFixed(2) }}</p>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between font-bold">
             <p>Deposit</p>
             <p>${{ bookingDetails.deposit.toFixed(2) }}</p>
           </div>
@@ -114,7 +151,7 @@
             <p>${{ calculateTotal().toFixed(2) }}</p>
           </div>
         </div>
-
+  
         <!-- Tombol Proceed to Payment -->
         <div class="text-center mb-4">
           <app-visitor-button
@@ -124,7 +161,7 @@
           </app-visitor-button>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 
   <app-bottom-nav-bar></app-bottom-nav-bar>

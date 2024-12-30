@@ -1,25 +1,18 @@
 <ion-content [fullscreen]="true">
-  <div class="header fixed top-0">
-    <div class="flex flex-col justify-start">
-      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-    </div>
-    <div class="logo">
-      <h1 class="text-[22px] font-bold text-[black]">Vehicle Details</h1>
-    </div>
-    <ion-buttons>
-      <ion-back-button defaultHref="/resident-my-vehicle"></ion-back-button>
-    </ion-buttons>
-  </div>
+  <app-resident-header [text]="'My Vehicle'" [text_second]="'Vehicle Detail'" />
 
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24" *ngIf="vehicle">
+    <div class="w-full mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-vehicle']"></ion-icon>
+    </div>
     <div [ngClass]="{
-      'bg-green-200': vehicle.status === 'approved' || vehicle.status === 'Approved',
-      'bg-red-200': vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval',
-      'bg-yellow-200': vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'
+      'bg-[var(--ion-color-tertiary)]': vehicle.status === 'approved' || vehicle.status === 'Approved',
+      'bg-[#E3787E]': vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval',
+      'bg-[#F8F1BA]': vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'
     }" class="p-3 mb-5 rounded-2xl w-full">
       <div class="flex justify-between items-center mb-4">
-        <p class="font-bold text-lg text-black">Vehicle {{ vehicle.unit_id }}</p>
+        <p class="font-bold text-base text-black">{{ vehicle.type_application }}</p>
         <div class="flex items-center">
           <ion-icon 
             [ngClass]="getStatusLabel().color"
@@ -32,27 +25,25 @@
         </div>
       </div>
 
-      <p class="font-bold text-sm text-black mb-2">{{ vehicle.type_application }}</p>
-
       <div class="grid grid-cols-2 gap-2">
         <div class="flex flex-col">
-          <p class="text-sm font-semibold text-gray-600">Vehicle No</p>
+          <p class="text-base font-semibold text-gray-600">Vehicle No</p>
           <p class="text-base font-bold">{{ vehicle.vehicleNo }}</p>
         </div>
         <div class="flex flex-col">
-          <p class="text-sm font-semibold text-gray-600">Make</p>
+          <p class="text-base font-semibold text-gray-600">Make</p>
           <p class="text-base font-bold">{{ vehicle.make }}</p>
         </div>
         <div class="flex flex-col">
-          <p class="text-sm font-semibold text-gray-600">Colour</p>
+          <p class="text-base font-semibold text-gray-600">Colour</p>
           <p class="text-base font-bold">{{ vehicle.colour }}</p>
         </div>
         <div class="flex flex-col">
-          <p class="text-sm font-semibold text-gray-600">Vehicle Type</p>
+          <p class="text-base font-semibold text-gray-600">Vehicle Type</p>
           <p class="text-base font-bold">{{ vehicle.type }}</p>
         </div>
         <div class="flex flex-col">
-          <p class="text-sm font-semibold text-gray-600">Fees</p>
+          <p class="text-base font-semibold text-gray-600">Fees</p>
           <p class="text-base font-bold">{{ vehicle.fees }}</p>
         </div>
       </div>

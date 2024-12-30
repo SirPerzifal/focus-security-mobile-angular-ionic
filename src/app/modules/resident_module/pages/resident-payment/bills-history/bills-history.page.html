@@ -6,15 +6,12 @@
       <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-payment']"></ion-icon>
     </div>
     <div class="flex flex-row justify-between mt-2">
-      <app-visitor-button [text]="'Maintenance Fees'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'"
-        [routerLink]="['/bills-maintenance']"></app-visitor-button>
-      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-24'"
-        [routerLink]="['/bills-fines']"></app-visitor-button>
-      <app-visitor-button [text]="'Payment History'"
-        [extraClass]="'px-1 bg-[#CDF8BA] text-black w-24'"></app-visitor-button>
+      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-fines']"></app-visitor-button>
+      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base'"></app-visitor-button>
     </div>
-    <div class="w-full mt-4">
-      <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+    <div class="w-full mt-4 mb-3">
+      <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]">
         <option selected>Type of Invite History</option>
         <option value="unit_1">UNIT 1</option>
         <option value="unit_2">UNIT 2</option>
@@ -22,11 +19,24 @@
         <option value="unit_4">UNIT 4</option>
       </select>
     </div>
-    <div class="flex flex-row w-full mt-1 items-center">
-      <input type="date" class="border w-32 rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
-      <u class="ml-2 text-xs font-bold ">Clear Filter</u>
+    <div class="flex flex-row w-full mt-1 mb-3 items-center">
+      <app-text-input #billsDateHistory [id]="'bills_history_date'" [placeholder]="'End Filter Date'"
+        [customClasses]="{'w-full':true}" [type]="'date'"
+        [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+        (change)="onChangeStartDate($event)" (value)="showStartDate"></app-text-input>
+      <!-- <div class="flex flex-row items-center justify-between border border-black w-1/2 rounded py-2 pr-3 outline-[#BDBDBD] h-12 text-base">
+        <input
+          type="text"
+          placeholder="Month / Year"
+          value="{{showStartDate}}"
+          class="w-[160px] text-base"
+          readonly
+        />
+        <input type="date" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-7 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
+      </div> -->
+      <u class="ml-3 text-base font-bold ">Clear Filter</u>
     </div>
-    <div class="w-full text-xs font-bold text-justify mt-2">
+    <div class="w-full text-base text-justify mt-2">
       The app provides payment history for up to 13 months from the
       current date. For invoices older than this period, please contact
       MA for assistance.

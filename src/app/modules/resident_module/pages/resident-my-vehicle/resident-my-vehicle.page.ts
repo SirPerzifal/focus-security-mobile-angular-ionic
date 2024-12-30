@@ -23,6 +23,7 @@ interface Vehicle {
 export class ResidentMyVehiclePage implements OnInit {
   userRole: string = 'household';
 
+  MaximumVehicle: boolean = false;
   vehicles: Vehicle[] = [];
 
   constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router) { }
@@ -41,6 +42,15 @@ export class ResidentMyVehiclePage implements OnInit {
     });
   }
 
+  navigateToAddNewVehicle() {
+    // Gunakan NavigationExtras untuk membawa data
+    this.router.navigate(['/my-vehicle-form'], {
+      state: {
+       maximumVehicle: this.MaximumVehicle
+      }
+    });
+  }
+
   loadVehicleDetails() {
     const unitId = 1; // Ganti dengan unit_id yang sesuai
     this.myVehicleService.getVehicleDetail(unitId).subscribe(
@@ -53,14 +63,15 @@ export class ResidentMyVehiclePage implements OnInit {
             type_application: vehicle.type_of_application,
             vehicleNo: vehicle.vehicle_number,
             make: vehicle.vehicle_make,
-            colour: vehicle.vehicle_color,
+            colour: vehicle.vehicle_color || '-',
             type: vehicle.vehicle_type,
             fees: 'S$0.00' // Anda dapat menyesuaikan ini berdasarkan logika Anda
           }));
-          this.presentToast('Data fetched successfully!', 'success');
+          this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
+          // this.presentToast('Data fetched successfully!', 'success');
           console.log("heres the data", response);
         } else {
-          this.presentToast('Data fetched failed!', 'danger');
+          // this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching vehicle details:', response);
           console.error('Error fetching vehicle details result:', response.result);
         }

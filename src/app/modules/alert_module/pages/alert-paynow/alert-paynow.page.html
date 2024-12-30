@@ -1,0 +1,53 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4 mb-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/alert-main'" />
+    </div>
+    <div class="flex flex-col mt-8">
+      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [routerLink]="['/alert-main']" [isActive]="true"
+        [disableClick]="true" [isWarning]="1" />
+      <!-- <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/alert-main']" [isActive]="true" [disableClick]="true" /> -->
+    </div>
+    <div class="flex flex-col mx-4 mt-8">
+      <div class="w-full flex flex-col">
+        <div *ngFor="let alert of alertsIssues"
+          class="w-full bg-[var(--ion-color-primary)] p-4 rounded-lg flex justify-between items-center ">
+          <div class="w-4/5">
+            <span class="text-2xl font-bold text-white">
+              {{ alert.name }} (S{{ total_amount }})
+            </span>
+            <div>
+              <table class="w-full table-fixed">
+                <tr class="text-xl text-white h-1">
+                  <td class="w-[30%] font-bold"><b>Vehicle No</b></td>
+                  <td class="w-[3%]">:</td>
+                  <td>{{alert.vehicleNo}}</td>
+                </tr>
+                <tr class="text-xl text-white h-1">
+                  <td class="w-[30%] font-bold"><b>Date of Violation</b></td>
+                  <td class="w-[3%]">:</td>
+                  <td>{{alert.dateOfViolation}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="w-full mt-8 flex flex-col justify-center items-center">
+          <img src="assets/barcode.png" class="w-72 h-72" />
+        </div>
+        <div class="w-full mt-8">
+          <app-file-input class="w-full h-25" [labelText]="'PAYMENT IMAGE'" [buttonText]="'UPLOAD'"
+            [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. UPLOAD.png'"
+            (fileSelected)="onFileUpload($event)"></app-file-input>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</ion-content>

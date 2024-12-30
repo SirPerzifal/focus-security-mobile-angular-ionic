@@ -1,0 +1,57 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Report app Issue'" [text_second]="'Record of Report'"/>
+
+  <div class="p-5 text-center mb-20">
+    <!-- Reported Issues Button -->
+    <div class="mb-4 flex justify-start">
+      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold" [routerLink]="['/resident-report-an-app-issue']">
+        Reported Issues
+      </button>
+    </div>
+    <!-- Issues List -->
+    <div class="space-y-4">
+      <!-- Issue 1 -->
+      <div class="bg-[#E3787E] p-4 rounded shadow">
+        <h2 class="font-bold text-left">Renovation Form not approved</h2>
+        <table class="w-full text-left border-collapse mt-2">
+          <tbody>
+            <tr>
+              <td class="font-bold">Reported Issue On</td>
+              <td>: 09/10/2024</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Issue Resolved On</td>
+              <td>: N/A</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Ticket Status</td>
+              <td>: Closed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Issue 2 -->
+      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded shadow">
+        <h2 class="font-bold text-left">Renovation Form approved</h2>
+        <table class="w-full text-left border-collapse mt-2">
+          <tbody>
+            <tr>
+              <td class="font-bold">Reported Issue On</td>
+              <td>: 09/10/2024</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Issue Resolved On</td>
+              <td>: 10/10/24</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Ticket Status</td>
+              <td>: Closed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

@@ -11,7 +11,7 @@ export class ManagePaymentMethodPage implements OnInit {
 
   constructor(private router: Router, private alertController: AlertController) { }
 
-  visa = false
+  visa = true
   master = false
 
   public updateSelectedCard(selected: string){

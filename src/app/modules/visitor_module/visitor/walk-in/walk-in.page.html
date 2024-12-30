@@ -4,20 +4,14 @@
     <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="flex flex-row justify-between w-full">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20"
-          [routerLink]="['/home-vms']"></ion-icon>
-        <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px] flex flex-row items-center"><b>IFS360</b></span>
-        <div class="w-20"></div>
-      </div>
-      <span class="text-[16px] sm:text-[30px] md:text-[42px] lg:text-[54px]"><b>VISITOR MANAGEMENT SYSTEM</b></span>
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon/home-icon/people.webp'" [text]="'VISITORS'"
+      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-rowspace-x-4 space-x-7">
+    <div class="flex mt-8 flex-row space-x-7">
       <!-- <app-button-icon [textOnly]="true" [text]="'PRE REGISTERED'"
         (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true" /> -->
       <!-- <app-visitor-button [text]="'PRE REGISTERED'"
@@ -52,18 +46,18 @@
       </div>
 
       <form class="justify-between items-center w-full mx-4" #walkInForm="ngForm" *ngIf="showWalk" @fadeInOut>
-        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-3 mb-4">
+        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5 mb-4">
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>NAME</u></b></label>
             <input id="walk_in_name" placeholder="EG. JASON MICHAEL" type="text"
-              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
               [(ngModel)]="formData.visitor_name" name="visitor_name">
           </div>
           <div class="flex flex-row justify-between w-full">
             <div class="w-4/6 flex flex-col">
               <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
               <input id="walk_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
-                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
                 [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
             </div>
             <div class="h-25 flex flex-col justify-end w-1/4">
@@ -74,7 +68,7 @@
             <label class="text-2xl"><b><u>BLOCK</u></b></label>
             <select id="rv_block" (change)="onBlockChange($event)"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option selected>CHOOSE BLOCK</option>
+              <option value="" selected disabled hidden>CHOOSE BLOCK</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
@@ -82,7 +76,7 @@
             <label class="text-2xl"><b><u>UNIT</u></b></label>
             <select id="rv_unit" (change)="onUnitChange($event)"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option selected>CHOOSE UNIT</option>
+              <option value="" selected disabled hidden>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>
@@ -98,18 +92,18 @@
       </form>
 
       <form class="justify-between items-center w-full mx-4" #driveInForm="ngForm" *ngIf="showDrive" @fadeInOut>
-        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-3  mb-4">
+        <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5  mb-4">
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>NAME</u></b></label>
             <input id="drive_in_name" placeholder="EG. BRIAN REINER" type="text"
-              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
               [(ngModel)]="formData.visitor_name" name="visitor_name">
           </div>
           <div class="flex flex-row justify-between w-full">
             <div class="w-4/6 flex flex-col">
               <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
               <input id="drive_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
-                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20"
+                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
                 [(ngModel)]="formData.visitor_contact_no" name="visitor_contact_no">
             </div>
             <div class="h-25 flex flex-col justify-end w-1/4">
@@ -120,7 +114,7 @@
             <div class="w-[90%] flex flex-col">
               <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
               <input id="drive_in_vehicle" placeholder="EG. SBA 8888 V" type="text"
-                class="border-[1px] py-2 px-3 outline-[#DBDBD] text-2xl rounded h-20"
+                class="border-[1px] py-2 px-3 outline-[#DBDBD] text-2xl rounded h-20" style="border: 1px solid #6B7280;"
                 [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
             </div>
             <div class="h-25 flex flex-col justify-end">
@@ -131,7 +125,7 @@
             <label class="text-2xl"><b><u>BLOCK</u></b></label>
             <select id="rv_block" (change)="onBlockChange($event)"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option selected>CHOOSE BLOCK</option>
+              <option value="" selected disabled hidden>CHOOSE BLOCK</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
@@ -139,7 +133,7 @@
             <label class="text-2xl"><b><u>UNIT</u></b></label>
             <select id="rv_unit" (change)="onUnitChange($event)"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option value="0" selected>CHOOSE UNIT</option>
+              <option value="" selected disabled hidden>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div>

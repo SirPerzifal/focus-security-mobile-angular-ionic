@@ -21,9 +21,11 @@ export class FamilyAddMemberPage implements OnInit {
     tenancies: {
       tenancy_aggrement: '',
       end_of_tenancy_aggrement: ''
-    }
+    },
+    helper_work_permit: '' // Tambahkan ini
   }
   fileCheck = false
+  dateNow = new Date().toISOString().slice(0, 10);
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
@@ -46,6 +48,9 @@ export class FamilyAddMemberPage implements OnInit {
     if (this.formData.full_name == '') {
       errMsg += "Please fill member's full name! \n"
     }
+    if (this.formData.nickname == '') {
+      errMsg += "Please fill member's nickname! \n"
+    }
     if (this.formData.mobile_number == '') {
       errMsg += "Please fill member's mobile number! \n"
     }
@@ -60,6 +65,9 @@ export class FamilyAddMemberPage implements OnInit {
         errMsg += "Please fill the tenancy end date! \n"
       }
     }
+    if (this.formData.type_of_residence === 'helper' && !this.formData.helper_work_permit) {
+      errMsg += "Please upload the helper work permit! \n";
+    }
     if (errMsg != '') {
       this.presentToast(errMsg, 'danger')
 
@@ -71,7 +79,8 @@ export class FamilyAddMemberPage implements OnInit {
           this.formData.email_address,
           this.formData.mobile_number,
           this.formData.type_of_residence,
-          this.formData.type_of_residence == 'tenants' ? this.formData.tenancies : {},
+          this.formData.type_of_residence === 'tenants' ? this.formData.tenancies : {},
+          this.formData.type_of_residence === 'helper' ? this.formData.helper_work_permit : '' // Tambahkan ini
         ).subscribe(
           res => {
             console.log(res);
@@ -111,6 +120,10 @@ export class FamilyAddMemberPage implements OnInit {
   }
 
   onTenanciesChange(value: any): void {
+    console.log(value)
+    console.log(value.target)
+    console.log(value.target.files)
+    console.log(value.target.files[0])
     let data = value.target.files[0];
     if (data){
       this.convertToBase64(data).then((base64: string) => {
@@ -123,6 +136,22 @@ export class FamilyAddMemberPage implements OnInit {
       });
     } else {
       this.fileCheck = false
+    }
+  }
+
+  onHelperChange(value: any): void {
+    const file = value.target.files[0];
+    if (file) {
+      this.convertToBase64(file).then((base64: string) => {
+        console.log('Base64 conversion successful');
+        this.formData.helper_work_permit = base64.split(',')[1]; // Simpan base64 ke dalam formData
+        this.fileCheck = true; // Menandakan bahwa file telah di-upload
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+        this.fileCheck = false; // Reset jika ada error
+      });
+    } else {
+      this.fileCheck = false; // Reset jika tidak ada file
     }
   }
 

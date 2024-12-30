@@ -21,6 +21,7 @@ export class FacilityPlaceBookingPage implements OnInit {
   isLoading = true;
   errorMessage: string = '';
   selectedDate: string = new Date().toISOString();
+  isTermsAccepted: boolean = false; // Menyimpan status checkbox
 
   constructor(
     private route: ActivatedRoute, 
@@ -51,7 +52,8 @@ export class FacilityPlaceBookingPage implements OnInit {
 
   loadRoomSchedule(event: any) {
     this.roomId = event.target.value; // Set the roomId to the selected value
-    this.facilityService.getRoomById(this.roomId).subscribe({
+    const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
+    this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
       next: (response) => {
         this.roomSchedule = response.result.schedule;
         console.log('Room Id:', this.roomId);
@@ -65,11 +67,15 @@ export class FacilityPlaceBookingPage implements OnInit {
   }
 
   getTimeSlotClass(timeSlot: any): string {
+    if (timeSlot.isSelected) {
+      return 'bg-[#C9CC3F]'; // Kelas untuk slot waktu yang dipilih
+    }
+
     switch(timeSlot.status) {
       case 'booked':
-        return 'bg-red-200 text-gray-500 cursor-not-allowed';
+        return 'bg-[#E3787E] text-white cursor-not-allowed';
       case 'active':
-        return 'bg-green-200 text-black cursor-pointer hover:bg-green-300';
+        return 'bg-[#D8ECCF] text-black cursor-pointer hover:bg-[#C9CC3F]';
       default:
         return 'bg-[#D0D0D0] text-[#757575]';
     }
@@ -79,6 +85,12 @@ export class FacilityPlaceBookingPage implements OnInit {
   selectTimeSlot(timeSlot: any) {
     if (timeSlot.status === 'active') {
       this.selectedTimeSlot = timeSlot;
+      // Tandai semua slot waktu sebagai tidak terpilih
+      this.roomSchedule.forEach(slot => {
+        slot.isSelected = false;
+      });
+      // Tandai slot waktu yang dipilih
+      timeSlot.isSelected = true;
       console.log('Selected Time Slot:', this.selectedTimeSlot);
     }
   }
@@ -90,22 +102,30 @@ export class FacilityPlaceBookingPage implements OnInit {
       return;
     }
 
+    if (!this.isTermsAccepted) {
+      this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
+      return;
+    }  
+
     // Format tanggal sesuai kebutuhan API
     const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
-    const startTime = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
-    const endTime = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
-    
+    const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
+    const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
+
     this.facilityService.postFacilityBook(
       this.roomId,
-      startTime,
-      endTime,
+      startTimeString,
+      endTimeString,
       this.unitId,
       this.partnerId
     ).subscribe({
       next: (response) => {
-        this.roomSchedule = response.result.schedule;
-        this.presentToast('Success add data', 'success');
+        this.roomSchedule = response.result.success;
+        const message = response.result.message;
+        this.presentToast(message, 'success');
         console.log('Room Schedule:', this.roomSchedule);
+        this.resetForm();
+        this.router.navigate(['/resident-facility-bookings'])
       },
       error: (error) => {
         this.errorMessage = 'Failed to load room schedule';
@@ -147,6 +167,32 @@ export class FacilityPlaceBookingPage implements OnInit {
         errorSound.play().catch((err) => console.error('Error playing sound:', err));
       }
     });
+  }
+
+  resetForm() {
+    // Reset semua input
+    this.facilityId = 1;
+    this.roomId = 1;
+    this.selectedTimeSlot = null;
+    this.unitId = 1; // Sesuaikan dengan unit ID pengguna
+    this.partnerId = 1;
+    this.roomSchedule = [];
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.selectedDate = new Date().toISOString();
+    this.isTermsAccepted = false; // Menyimpan status checkbox
+
+    // Reset radio button
+    const nricRadio = document.getElementById('nric_identification') as HTMLInputElement;
+    const finRadio = document.getElementById('fin_identification') as HTMLInputElement;
+    if (nricRadio) nricRadio.checked = false;
+    if (finRadio) finRadio.checked = false;
+
+    // Reset select
+    const blockSelect = document.getElementById('contractor_block') as HTMLSelectElement;
+    const unitSelect = document.getElementById('contractor_unit') as HTMLSelectElement;
+    if (blockSelect) blockSelect.selectedIndex = 0;
+    if (unitSelect) unitSelect.selectedIndex = 0;
   }
 
 }

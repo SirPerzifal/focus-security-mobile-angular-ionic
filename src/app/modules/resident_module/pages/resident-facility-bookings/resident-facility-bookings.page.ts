@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
 
@@ -33,6 +33,7 @@ interface BookingResponse {
 export class ResidentFacilityBookingsPage implements OnInit {
   activeBookings: ActiveBooking[] = [];
   unit_id: number = 1;
+  bookingId = '';
   
   constructor(
     private router:Router, 
@@ -44,35 +45,43 @@ export class ResidentFacilityBookingsPage implements OnInit {
   
   ngOnInit() {
     this.loadActiveBookings();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event['url'] == '/resident-facility-bookings'){
+          this.activeBookings = []
+          this.loadActiveBookings();
+        }
+         // Panggil fungsi lagi saat halaman dibuka
+      }
+    });
   }
 
   loadActiveBookings() {
     this.facilityBookingsService.getActiveFacilityBookingsServices(this.unit_id.toString())
-      .subscribe({
-        next: (response: any) => {
-          if (response.result.response_code === 200) {
-            // Map data dengan tipe yang jelas
-            this.activeBookings = response.result.active_bookings.map((booking: BookingResponse) => ({
-              id: booking.id,
-              facilityName: booking.facility_name,
-              eventDate: this.formatDate(booking.booking_date),
-              startTime: this.formatTime(booking.start_datetime),
-              endTime: this.formatTime(booking.stop_datettime),
-              bookedBy: booking.booked_by,
-              statusBooked: booking.booking_status,
-            }));
-            console.log('Mapped Active Bookings:', this.activeBookings);
-            console.log('Mapped Active Bookings:', response);
-          } else {
-            this.presentToast('Failed to load booking data', 'danger');
-            console.error('Error:', response);
-          }
-        },
-        error: (error) => {
-          this.presentToast('Error loading active booking data', 'danger');
-          console.error('Error:', error);
+      .subscribe({next: (response: any) => {
+        if (response.result.response_code === 200) {
+          // Map data dengan tipe yang jelas
+          this.activeBookings = response.result.active_bookings.map((booking: BookingResponse) => ({
+            id: booking.id,
+            facilityName: booking.facility_name,
+            eventDate: this.formatDate(booking.booking_date),
+            startTime: this.formatTime(booking.start_datetime),
+            endTime: this.formatTime(booking.stop_datettime),
+            bookedBy: booking.booked_by,
+            statusBooked: booking.booking_status,
+          }));
+          console.log('Mapped Active Bookings:', this.activeBookings);
+          console.log('Mapped Active Bookings:', response);
+        } else {
+          this.presentToast('Failed to load booking data', 'danger');
+          console.error('Error:', response);
         }
-      });
+      },
+      error: (error) => {
+        this.presentToast('Error loading active booking data', 'danger');
+        console.error('Error:', error);
+      }
+    });
   }
   
   // Update format methods untuk menangani variasi format tanggal
@@ -120,11 +129,12 @@ export class ResidentFacilityBookingsPage implements OnInit {
     this.router.navigate(['facility-history']);
   }
 
-  cancelBooking() {
+  cancelBooking(bookingId: number) {
+    this.bookingId = bookingId.toString(); // Set bookingId
     this.presentCustomAlert(
       'Cancel Booking', 
-      'No', 
-      'Yes'
+      'Cancel', 
+      'Confirm'
     );
   }
 
@@ -168,13 +178,13 @@ export class ResidentFacilityBookingsPage implements OnInit {
 
   public async presentCustomAlert(
     header: string = 'Cancel Booking', 
-    cancelText: string = 'No', 
-    confirmText: string = 'Yes'
+    cancelText: string = 'Cancel', 
+    confirmText: string = 'Confirm'
   ) {
     const alert = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
       header: header,
-      message: '', 
+      message: '1. Any booking fees, if applicable, will be refunded to the credit card originally charged.<br> 2. Any deposit associated with this booking will be returned to your deposit balance.', 
       buttons: [
         {
           text: cancelText,
@@ -189,8 +199,8 @@ export class ResidentFacilityBookingsPage implements OnInit {
           cssClass: 'confirm-button',
           handler: () => {
             this.confirmBookingCancellation();
-          }
-        }
+          },
+        },
       ]
     });
   
@@ -200,10 +210,29 @@ export class ResidentFacilityBookingsPage implements OnInit {
   confirmBookingCancellation() {
     // Logika untuk membatalkan booking
     console.log('Booking cancelled');
-    
+    this.deleteBooking();
+    // Reload the page
+    // window.location.reload();
     // Contoh: Tampilkan toast atau navigasi
     // this.presentToast('Booking successfully cancelled');
     // this.router.navigate(['/booking-list']);
+  }
+
+  deleteBooking() {
+    this.facilityBookingsService.deleteBooking(this.bookingId)
+      .subscribe({next: (response: any) => {
+        if (response.result.response_code === 200) {
+          console.log('work')
+        } else {
+          this.presentToast('Failed to delete booking data', 'danger');
+          console.error('Error:', response);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error deleting active booking data', 'danger');
+        console.error('Error:', error);
+      }
+    });
   }
 
   // Opsional: Tambahkan metode presentToast jika diperlukan

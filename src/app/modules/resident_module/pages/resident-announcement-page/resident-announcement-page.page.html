@@ -1,0 +1,111 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Notice'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="flex flex-row mt-4 justify-between w-full">
+      <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'"></app-visitor-button>
+      <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" [routerLink]="['/favourite-announcement']"></app-visitor-button>
+    </div>
+
+    <div class="w-full space-y-3 mt-3 text-left">
+      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
+        <h2 class="font-bold">
+         Renovation Alert
+        </h2>
+        <p>
+         Blk 100, #08-33 will be having renovation works.
+        </p>
+        <table>
+         <tr>
+          <td class="pr-2">
+           Start
+          </td>
+          <td>
+           : 09/09/24
+          </td>
+         </tr>
+         <tr>
+          <td class="pr-2">
+           End
+          </td>
+          <td>
+           : 10/12/24
+          </td>
+         </tr>
+        </table>
+        <div class="flex justify-end">
+         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
+         </ion-icon>
+        </div>
+       </div>
+       <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
+        <h2 class="font-bold">
+         Carpark Closure
+        </h2>
+        <p>
+         Carpark closure due to painting works
+        </p>
+        <table>
+         <tr>
+          <td class="pr-2">
+           Start
+          </td>
+          <td>
+           : 10/11/24
+          </td>
+         </tr>
+         <tr>
+          <td class="pr-2">
+           End
+          </td>
+          <td>
+            : 15/12/24
+          </td>
+         </tr>
+        </table>
+        <div class="flex justify-end">
+         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
+         </ion-icon>
+        </div>
+       </div>
+       <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
+        <h2 class="font-bold">
+         11th Council Meeting
+        </h2>
+        <table>
+          <tr>
+            <td class="pr-2">
+              Venue
+             </td>
+             <td>
+              : Function Room 2
+             </td>
+          </tr>
+         <tr>
+          <td class="pr-2">
+           Start
+          </td>
+          <td>
+          : 10/11/24, 1700Hrs
+          </td>
+         </tr>
+         <tr>
+          <td class="pr-2">
+           End
+          </td>
+          <td>
+           : 15/12/24, 1930Hrs
+          </td>
+         </tr>
+        </table>
+        <div class="flex justify-end">
+         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
+         </ion-icon>
+        </div>
+       </div>
+    </div>
+
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

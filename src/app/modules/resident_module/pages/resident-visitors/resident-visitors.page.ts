@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+import { Subscription } from 'rxjs';
 
 interface FormData {
   dateOfInvite: string;
@@ -33,6 +34,7 @@ interface FormData {
 })
 export class ResidentVisitorsPage implements OnInit {
   
+  minDate: string = this.getTodayDate(); // Set tanggal minimum saat inisialisasi
   formattedDate: string = '';
   showNewInv = true;
   showActInv = false;
@@ -90,8 +92,8 @@ export class ResidentVisitorsPage implements OnInit {
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
     const yyyy = today.getFullYear();
-    return `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
-  }
+    return `${dd}-${mm}-${yyyy}`; // Format yyyy-mm-dd
+}
 
   onEntryTypeChange(value: string): void {
     this.formData.entryType = this.formData.entryType === value ? '' : value;
@@ -101,17 +103,18 @@ export class ResidentVisitorsPage implements OnInit {
     this.formData.isProvideUnit = !this.formData.isProvideUnit;
   }
 
-  onDateOfInviteChange(value: string) {
-    // Simpan nilai dalam format yyyy-mm-dd
-    this.formData.dateOfInvite = value;
+  onDateOfInviteChange(event: Event) {
+    const input = event.target as HTMLInputElement; // Ambil elemen input
+    this.formData.dateOfInvite = input.value; // Ambil nilai dari input
 
     // Konversi ke format dd/mm/yyyy untuk ditampilkan
-    const dateParts = value.split('-');
+    const dateParts = input.value.split('-');
     if (dateParts.length === 3) {
         this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // dd/mm/yyyy
     } else {
         this.formattedDate = ''; // Reset jika format tidak valid
     }
+    console.log(this.formattedDate, this.formData.dateOfInvite)
   }
 
   entryTitleChange(value: string) {
@@ -119,10 +122,6 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   onSubmitNext() {
-    if (!this.formData.isProvideUnit) {
-      this.presentToast('Please provide your unit number to proceed.', 'danger');
-      return; // Hentikan eksekusi jika checkbox tidak dicentang
-    }
     
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
@@ -213,8 +212,8 @@ export class ResidentVisitorsPage implements OnInit {
 
   public async presentCustomAlert(
     header: string = 'Cancel Invite', 
-    cancelText: string = 'Cancel', 
     confirmText: string = 'Confirm',
+    cancelText: string = 'Cancel', 
     invite?: any  // Jadikan optional
   ) {
     const alert = await this.alertController.create({
@@ -222,14 +221,6 @@ export class ResidentVisitorsPage implements OnInit {
       header: header,
       message: '', 
       buttons: [
-        {
-          text: cancelText,
-          cssClass: 'cancel-button',
-          handler: () => {
-            console.log('Canceled');
-            // Logika pembatalan
-          }
-        },
         {
           text: confirmText,
           cssClass: 'confirm-button',
@@ -240,7 +231,15 @@ export class ResidentVisitorsPage implements OnInit {
               this.confirmCancel(invite);
             }
           }
-        }
+        },
+        {
+          text: cancelText,
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan
+          }
+        },
       ]
     });
   
@@ -270,9 +269,15 @@ export class ResidentVisitorsPage implements OnInit {
      }
   }
 
+  @ViewChild('inputDateVisitor') inputDateVisitor!: ElementRef;
+
+  onClickOpenDate(): void {
+    this.inputDateVisitor.nativeElement.focus(); // Fokus ke elemen input
+  }
+
+
   ngOnInit() {
     this.getActiveInvites()
-    this.formattedDate = this.getTodayDate(); // Set tanggal hari ini
     // Inisialisasi formattedDate jika ada tanggal yang sudah ada
     if (this.formData.dateOfInvite) {
       const dateParts = this.formData.dateOfInvite.split('-');
@@ -298,5 +303,13 @@ export class ResidentVisitorsPage implements OnInit {
       }
     });
   
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 }

@@ -43,6 +43,8 @@ export class FamilyTenantExtendPage implements OnInit {
     });;
   }
 
+  dateNow = new Date().toISOString().slice(0, 10);
+
   onTenanciesChange(value: any): void {
     let data = value.target.files[0];
     if (data){
@@ -57,6 +59,7 @@ export class FamilyTenantExtendPage implements OnInit {
     } else {
       this.fileCheck = false
     }
+    console.log(this.fileCheck)
   }
 
   convertToBase64(file: File): Promise<string> {
@@ -88,7 +91,7 @@ export class FamilyTenantExtendPage implements OnInit {
       this.formData.email_address= state.email
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
       this.formData.tenancies.tenancy_aggrement = state.tenant
-      this.end_date = new Date(state.end_date).toISOString().split('T')[0];
+      this.end_date = this.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]);
     } 
   }  
 
@@ -146,7 +149,11 @@ export class FamilyTenantExtendPage implements OnInit {
     this.formData.tenancies.end_of_tenancy_aggrement = value;
   }
 
-
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+  }
+  
 
   ngOnInit() {
   }

@@ -19,8 +19,8 @@
           <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-8" [routerLink]="['/history']"></ion-icon>
         </div>
         <div class="w-full mt-2">
-          <div [class]="historyData.banned ? 'bg-red-400 p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
-            <div class="text-sm">
+          <div [class]="historyData.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
+            <div class="text-base">
               <div class="text-base font-bold mb-2">{{historyData.purpose === 'Visiting' ? historyData.visitor_name : historyData.vehicle_number}}</div>
               <table>
                 <tr class="h-6">
@@ -76,14 +76,14 @@
               </table>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-sm'"></app-visitor-button>
-              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'"></app-visitor-button>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="!historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-sm'" *ngIf="historyData.purpose !== 'Drop Off'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" *ngIf="historyData.purpose !== 'Drop Off'"></app-visitor-button>
             </div>
           </div>
         </div>

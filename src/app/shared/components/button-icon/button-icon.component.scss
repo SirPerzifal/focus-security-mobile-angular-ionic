@@ -3,18 +3,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 155px;
+  width: 215px;
   // width: 500px;
 }
 .fsc-icon-button {
-  padding: 10px;
+  padding: 20px 10px 20px 10px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 124px;
-  height: 110px;
+  width: 180px;
+  height: 180px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   &::part(native) {
@@ -22,12 +22,13 @@
   }
 }
 .fsc-icon {
-  font-size: 60px;
+  font-size: 70px;
   width: 70px;
   height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 5px;
 
   img {
     width: 1050px;
@@ -45,16 +46,27 @@
 
 .fsc-icon-wrapper {
   img {
-    width: 70px;  // Sesuaikan dengan ukuran yang Anda inginkan
-    height: 80px; // Sesuaikan dengan ukuran yang Anda inginkan
+    width: 80px;  // Sesuaikan dengan ukuran yang Anda inginkan
+    height: 90px; // Sesuaikan dengan ukuran yang Anda inginkan
     object-fit: contain;
   }
 }
-.fsc-icon-button-label {
-  margin-top: 5px;
-  text-align: center;
-  font-size: 22px;
+
+.custom-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    object-fit: contain;
+  }
 }
+// .fsc-icon-button-label {
+//   margin-top: 5px;
+//   color: white;
+//   text-align: center;
+//   font-size: 22px;
+// }
 
 .fsc-text-button {
   border-radius: 10px;
@@ -62,8 +74,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 124px;
-  height: 110px;
+  width: 180px;
+  height: 180px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: 'Comic Neue', serif;
   font-weight: 500;
@@ -77,4 +89,22 @@
 .text-only {
   font-family: 'Comic Neue', serif;
   font-weight: 500;
+}
+
+.mirrored-icon {
+  transform: scaleX(-1);
+}
+
+.fsh-badge-button {
+  position: absolute;
+  top: -15px;
+  right: 0px;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-weight: bold;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

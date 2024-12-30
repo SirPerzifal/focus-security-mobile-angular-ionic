@@ -47,7 +47,7 @@ export class NewBookingService extends ApiService {
     );
   }
 
-  getRoomById(roomId: number): Observable<any> {
+  getRoomById(roomId: number, date: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -57,6 +57,7 @@ export class NewBookingService extends ApiService {
       jsonrpc: '2.0',
       params: {
         room_id: Number(roomId),
+        booking_date: date
       }
     };
 

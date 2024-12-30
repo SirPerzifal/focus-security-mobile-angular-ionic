@@ -9,17 +9,30 @@ import { ApiService } from 'src/app/service/api.service';
 })
 export class RenovatorsService extends ApiService{
 
-  private apiUrl = this.baseUrl + '/vms/get/renovation_schedule'
+  
 
   constructor(http: HttpClient) { super(http) }
 
   getRenovationSchedules(): Observable<any> {
+    let apiUrl = this.baseUrl + '/vms/get/renovation_schedule'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    return this.http.post(this.apiUrl, {}, { headers }).pipe(
+    return this.http.post(apiUrl, {}, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getRenovationSchedulesHistory(): Observable<any> {
+    let apiUrl = this.baseUrl + '/vms/get/renovation_schedule_history'
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    return this.http.post(apiUrl, {}, { headers }).pipe(
       catchError(this.handleError)
     );
   }

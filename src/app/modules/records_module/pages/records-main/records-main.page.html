@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <img
+      alt="IFS360"
+      src="assets/img/focus_logo-removebg.png"
+      class="object-contain w-full h-full"
+    />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'"/>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [isHomeButton]="true"
+        [text]="'RECORDS'" 
+        [routerLink]="['/home-vms']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+      />    
+    </div>
+    <div class="flex flex-col">
+      <div class="grid grid-cols-3 gap-4 justify-between mt-8">
+        <div *ngFor="let records of recordsMenu">
+          <app-button-icon [customImageIcon]="records.icon" [text]="records.text" [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''"
+            [isActive]="records.isActive" (buttonClick)="toggleRecordsButton(records, records.params)" [extraParentClass]="'mr-7'"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

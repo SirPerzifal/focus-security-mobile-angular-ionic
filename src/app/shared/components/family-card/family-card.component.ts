@@ -6,28 +6,28 @@ import { Router } from '@angular/router';
   templateUrl: './family-card.component.html',
   styleUrls: ['./family-card.component.scss'],
 })
-export class FamilyCardComponent  implements OnInit {
+export class FamilyCardComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  @Input() id: Number=0
-  @Input() type: string=""
-  @Input() hard_type: string=""
-  @Input() name: string=""
-  @Input() mobile: string=""
-  @Input() head_type: string=""
-  @Input() nickname: string=""
-  @Input() email: string=""
-  @Input() end_date: Date=new Date()
-  @Input() tenant: boolean=false
-  @Input() warning: boolean=false
+  @Input() id: Number = 0;
+  @Input() type: string = "";
+  @Input() hard_type: string = "";
+  @Input() name: string = "";
+  @Input() mobile: string = "";
+  @Input() head_type: string = "";
+  @Input() nickname: string = "";
+  @Input() email: string = "";
+  @Input() end_date: Date = new Date();
+  @Input() tenant: boolean = false;
+  @Input() warning: boolean = false;
+  @Input() status: string = ""; // Tambahkan ini
 
   ngOnInit() {}
 
   openDetails() {
-    console.log(this.end_date)
+    console.log(this.end_date);
     this.router.navigate(['/family-edit-member'], {
-      
       state: {
         id: this.id,
         type: this.type,
@@ -40,8 +40,8 @@ export class FamilyCardComponent  implements OnInit {
         end_date: this.end_date,
         tenant: this.tenant,
         warning: this.warning,
+        status: this.status, // Tambahkan ini jika perlu
       }
     });
   }
-
 }

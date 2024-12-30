@@ -64,9 +64,9 @@ export class FacilityNewBookingPage implements OnInit {
   // Fungsi untuk mendapatkan gambar placeholder berdasarkan nama fasilitas
   getFacilityImage(facilityName: string): string {
     const facilityImages: { [key: string]: string } = {
-      'Tennis Court': 'https://placehold.co/300x150?text=Tennis+Court',
-      'Function Room': 'https://placehold.co/300x150?text=Function+Room',
-      'BBQ Pit': 'https://placehold.co/300x150?text=BBQ+Pit'
+      'Tennis Court': 'https://res.cloudinary.com/dkxor4kjf/image/upload/v1734627238/8359777b67cde0a93a91ac5d424f2e68fb78c4d4_e7aaid.png',
+      'Function Room': 'https://res.cloudinary.com/dkxor4kjf/image/upload/v1734627254/images_qmbk9h.jpg',
+      'BBQ Pit': 'https://res.cloudinary.com/dkxor4kjf/image/upload/v1734627257/e3b3eb7817776a6d2c3fea6b72a9b7ab8eac028c_uwbiub.png'
     };
     return facilityImages[facilityName] || this.placeholderImage;
   }

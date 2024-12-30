@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Service provider'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
+      <div *ngFor="let dial of quickDials" class="w-full flex flex-col items-center bg-[#D0D0D0] h-18 rounded-2xl relative py-2" [ngClass]="{'bg-[#D8ECCF]': selectedQuickDial === dial}">
+        <ion-button fill="clear" (click)="selectQuickDial(dial)">
+          <img class="w-12 h-12" [src]="'assets/icon/resident-icon/find_service/' + dial.name + '.png'" [alt]="'Icon for ' + dial.name"/>
+        </ion-button>
+        <span class="text-sm font-bold text-[black] text-center">{{ dial.name }}</span>
+      </div>
+    </div>
+    <div class="mt-12 flex flex-col items-center" *ngIf="selectedQuickDial">
+      <div class="bg-[#D8ECCF] p-4 rounded-lg w-full max-w-xs text-center" [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}">
+        <p class="text-lg font-bold mb-4">
+          Call {{ selectedQuickDial.name }} Via 
+        </p>
+        <p class="text-md mb-4">{{ selectedQuickDial.number }}</p>
+        <div class="flex justify-between space-x-2">
+          <button class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full">
+            Whatsapp
+          </button>
+          <button class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full" (click)="closePopup()">
+            Phone Call
+          </button>
+        </div>
+        <div class="flex justify-between mt-3 space-x-2">
+          <button class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full">
+            Whatsapp chat
+          </button>
+          <button class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full" (click)="closePopup()">
+            SMS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

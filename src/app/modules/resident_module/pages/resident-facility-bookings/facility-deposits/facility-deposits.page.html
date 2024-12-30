@@ -1,27 +1,20 @@
 <ion-content [fullscreen]="true">
-  <div class="header fixed top-0">
-    <div class="flex flex-col justify-start">
-      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-    </div>
-    <div class="logo">
-      <h1 class="text-[22px] font-bold text-[black]">Facility Booking</h1>
-    </div>
-  </div>
+  <app-resident-header [text]="'Facility Booking'" [text_second]="'Deposits'" />
 
   <div class="flex flex-col relative mt-2 mb-16">
     <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowNewBk()"></app-multi-line-button>
-        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#CDF8BA] text-black w-20'" (click)="toggleShowDep()"></app-visitor-button>
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20'" (click)="toggleShowDep()"></app-visitor-button>
         <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
     <!-- Konten Utama Deposits -->
-    <ng-container *ngIf="showMainContent" @fadeInOut>
+    <div *ngIf="showMainContent" @fadeInOut>
       <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-2">
-        <h2 class="text-md font-bold text-black absolute">
+        <h2 class="text-base font-bold text-black absolute">
           Refunded deposits
         </h2>
         <ion-button class="flex flex-row justify-center items-center absolute right-2 icon" fill="clear" (click)="showDepositHistoryPage()">
@@ -30,33 +23,35 @@
           </div>
         </ion-button>
       </div>
-      <div class="w-full bg-green-200 text-center mt-2 m-0 p-3">
-        <h2 class="text-md font-bold text-black">
+      <div class="w-full bg-[#D8ECCF] text-center mt-2 m-0 p-3">
+        <h2 class="text-base font-bold text-black">
           Active Deposits History
         </h2>
       </div>
       <div class="flex flex-col relative mx-4">
-        <div class="bg-green-200 p-4 mt-4 rounded-lg text-left font-bold text-black">
-          <h3>Current Deposit Balance</h3>
-          <h4>S$ 40.00</h4>
+        <div class="bg-[#D8ECCF] p-4 mt-4 rounded-lg text-left font-bold text-black">
+          <h3 class="ml-2 text-green-700 underline underline-offset-1 text-base">Current Deposit Balance</h3>
+          <h4 class="ml-2 text-base">S$ 40.00</h4>
         </div>
-        <div class="bg-green-200 p-4 mt-2 rounded-lg">
-            <div class="text-green-700 font-bold text-black"><a href="#">BBQ Pit 2</a></div>
-            <div class="font-bold text-black">S$ 40.00</div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold underline underline-offset-1 text-base"><a href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black text-base">S$ 40.00</div>
+          </div>
             <div class="text-black">
               <table>
                 <tr class="h-1">
-                  <td >Deposited On</td>
+                  <td class="font-bold text-base">Deposited On</td>
                   <td>:</td>
                   <td>24/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Event Date</td>
+                  <td class="font-bold text-base">Event Date</td>
                   <td>:</td>
                   <td>26/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Expected Refund Date</td>
+                  <td class="font-bold text-base">Expected Refund Date</td>
                   <td>:</td>
                   <td>29/10/2024</td>
                 </tr>
@@ -66,12 +61,12 @@
             <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
         </div>
       </div>
-    </ng-container>
+    </div>
 
     <!-- Konten Deposit History -->
-    <ng-container *ngIf="showDepositHistory" @fadeInOut>
-      <div class="w-full bg-green-200 text-center mt-2 m-0 p-3">
-        <h2 class="text-md font-bold text-black">
+    <div *ngIf="showDepositHistory" @fadeInOut>
+      <div class="w-full bg-[#D8ECCF] text-center mt-2 m-0 p-3">
+        <h2 class="text-base font-bold text-black">
           Deposits History
         </h2>
       </div>
@@ -83,34 +78,67 @@
             </div>
           </ion-button>
           <div class="flex flex-col items-end">
-              <button class="bg-yellow-400 py-2 px-4 rounded mb-2 text-xs">All Records</button>
-              <div class="flex space-x-2">
-                  <input type="date" placeholder="Start Date" class="py-2 px-4 rounded border text-xs border-gray-300">
-                  <input type="date" placeholder="End Date" class="py-2 px-4 rounded border text-xs border-gray-300">
-              </div>
+              <button class="bg-yellow-500 py-2 px-4 rounded mb-2 text-base">All Records</button>
+            </div>
           </div>
-        </div>
+          <div class="flex flex-row space-x-2 mb-4">
+            <div class="w-1/2">
+              <app-text-input #facilityDepositStartDate [id]="'facility_deposit_start_date'" [placeholder]="'Start Filter Date'"
+                [customClasses]="{'w-full':true}" [type]="'date'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                ></app-text-input>
+            </div>
+            <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+              <input
+                type="text"
+                placeholder="Start Filter Date"
+                class="w-[97px] border-none border-0"
+                readonly
+              />
+              <input 
+                type="date" 
+                class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent"
+              >
+            </div> -->
+            <div class="w-1/2">
+              <app-text-input #facilityDepositEndDateInput [id]="'facility_deposit_end_date'" [placeholder]="'End Filter Date'"
+                [customClasses]="{'w-full':true}" [type]="'date'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                ></app-text-input>
+            </div>
+            <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+              <input
+                type="text"
+                placeholder="End Filter Date"
+                class="w-[97px] border-none border-0"
+                readonly
+              />
+              <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent">
+            </div> -->
+          </div>
         <div class="bg-sky-200 p-4 rounded-lg text-left font-bold text-black mb-4">
-            Refunded Deposit Till Date<br>
-            S$60.00
+            <p class="ml-2 underline underline-offset-1 text-base">Refunded Deposit Till Date</p>
+            <p class="ml-2 text-base">S$60.00</p>
         </div>
-        <div class="bg-green-200 p-4 mt-2 rounded-lg">
-            <div class="text-green-700 font-bold text-black"><a href="#">BBQ Pit 2</a></div>
-            <div class="font-bold text-black">S$ 40.00</div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold"><a class="underline underline-offset-1 text-base" href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black text-base">S$ 40.00</div>
+          </div>
             <div class="text-black">
               <table>
                 <tr class="h-1">
-                  <td >Deposited On</td>
+                  <td class="font-bold">Deposited On</td>
                   <td>:</td>
                   <td>24/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Event Date</td>
+                  <td class="font-bold">Event Date</td>
                   <td>:</td>
                   <td>26/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Expected Refund Date</td>
+                  <td class="font-bold">Expected Refund Date</td>
                   <td>:</td>
                   <td>29/10/2024</td>
                 </tr>
@@ -120,23 +148,25 @@
             <div class="text-black">Event Date : 26/10/2024</div>
             <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
         </div>
-        <div class="bg-green-200 p-4 mt-2 rounded-lg">
-            <div class="text-green-700 font-bold text-black"><a href="#">BBQ </a></div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold"><a class="underline underline-offset-1" href="#">BBQ </a></div>
             <div class="font-bold text-black">S$ 40.00</div>
+          </div>
             <div class="text-black">
               <table>
                 <tr class="h-1">
-                  <td >Deposited On</td>
+                  <td class="font-bold">Deposited On</td>
                   <td>:</td>
                   <td>24/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Event Date</td>
+                  <td class="font-bold">Event Date</td>
                   <td>:</td>
                   <td>26/10/2024</td>
                 </tr>
                 <tr class="h-1">
-                  <td>Expected Refund Date</td>
+                  <td class="font-bold">Expected Refund Date</td>
                   <td>:</td>
                   <td>29/10/2024</td>
                 </tr>
@@ -147,7 +177,7 @@
             <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 
   <app-bottom-nav-bar></app-bottom-nav-bar>
