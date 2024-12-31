@@ -12,6 +12,11 @@
             </select>
           </div>
         </div>
+        <div class="w-full">
+          <app-text-input [id]="'reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'ILLEGAL PARKING'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reason"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (BEFORE)'" [buttonText]="'UPLOAD'"
           [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
           (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
@@ -47,6 +52,11 @@
               <option value="second_warning">2ND WARNING</option>
             </select>
           </div>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'ILLEGAL PARKING'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reason"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE'" [buttonText]="'UPLOAD'"
           [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"

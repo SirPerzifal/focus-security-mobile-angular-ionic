@@ -2,6 +2,9 @@
   <app-resident-header [text]="'Payment'" />
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-1/6 flex items-start mr-10">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+			</div>
     <div class="flex flex-col space-y-3 mt-4">
       <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[var(--ion-color-tertiary)] rounded-full "
         [routerLink]="['/manage-add']">

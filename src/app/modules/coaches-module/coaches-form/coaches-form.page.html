@@ -49,7 +49,7 @@
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="walk_in_block" (change)="onBlockChange($event)"
+          <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="schedule.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option [value]="''" selected disabled hidden >CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
@@ -57,26 +57,18 @@
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <select id="walk_in_unit" (change)="onUnitChange($event)" *ngIf="!isLoadingUnit"
+          <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="schedule.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option value="" selected disabled hidden>CHOOSE UNIT</option>
-            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-          </select>
-          <select id="walk_in_unit" (change)="onUnitChange($event)" *ngIf="isLoadingUnit"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option value="" selected disabled hidden>STILL LOADING UNIT</option>
+            <option value="" selected disabled hidden>{{ isLoadingUnit ? 'LOADING UNIT' : 'CHOOSE UNIT' }}</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>COACH TYPE</b></u></label>
-          <select id="walk_in_coach"
+          <select id="walk_in_coach"  (change)="onCoachChange($event)" [(ngModel)]="schedule.coach_type_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option selected>SELECT COACH TYPE</option>
-            <option value="swim">SWIMMING COACH</option>
-            <option value="yoga">YOGA COACH</option>
-            <option value="tennis">TENNIS COACH</option>
-            <option value="athletic">ATHLETICS COACH</option>
+            <option value="" selected disabled hidden>SELECT COACH TYPE</option>
+            <option *ngFor="let coach of Coach" [value]="coach.id">{{ coach.name }}</option>
           </select>
         </div>
         <div class="w-full">

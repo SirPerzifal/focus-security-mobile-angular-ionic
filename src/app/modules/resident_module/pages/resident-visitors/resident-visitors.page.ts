@@ -152,6 +152,7 @@ export class ResidentVisitorsPage implements OnInit {
         res => {
           var result = res.result['response_result'];
           this.activeInvites = [];
+          console.log(result)
           result.forEach((item: any) => {
             // Memformat dateOfInvite
             const visitDate = item['visit_date'];

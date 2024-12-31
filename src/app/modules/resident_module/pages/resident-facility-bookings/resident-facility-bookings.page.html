@@ -4,6 +4,9 @@
 		
 		<!-- CONTENT -->
 		<div class="flex flex-col relative mt-2 mx-4 mb-52">
+			<div class="w-1/6 flex items-start mr-10">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+			</div>
 		  <div class="flex flex-row mt-4 justify-between w-full">
 			<app-visitor-button [text]="'Active Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 leading-none'" (click)="toggleShowActBk()"></app-visitor-button>
 			<app-visitor-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-visitor-button>

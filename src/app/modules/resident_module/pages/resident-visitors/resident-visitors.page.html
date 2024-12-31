@@ -2,6 +2,9 @@
 	<app-resident-header [text]="'Visitors'" [text_second]="'Daily Invite'" />
 	<!-- CONTENT -->
 	<div class="flex flex-col relative mt-2 mx-4 mb-32">
+		<div class="w-1/6 flex items-start mr-10">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
 		<div class="flex flex-row justify-between mt-4">
 			<app-visitor-button [text]="'Daily Invite'"
 				[extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'" (click)="toggleShowInv()">

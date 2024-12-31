@@ -15,8 +15,9 @@
     </div>
 
     <div class="mt-4 space-y-4">
-      <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-        <strong>{{ notification.title }}</strong>: {{ notification.body }}
+      <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg text-start">
+        <p><strong>{{ notification.title }}</strong></p>
+        <p>{{ notification.body }}</p>
       </div>
     </div>
   </div>

@@ -474,11 +474,11 @@ export class DeliveriesPage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
+          this.presentToast('Failed to load block data', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
+        this.presentToast('Error loading block data', 'danger');
         console.error('Error:', error);
       }
     });

@@ -2,6 +2,9 @@
 	<app-resident-header [text]="'Service provider'"/>
 
   <div class="p-5 text-center mb-20">
+    <div class="w-1/6 flex items-start mr-10 mb-2">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
     <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
       <div *ngFor="let dial of quickDials" class="w-full flex flex-col items-center bg-[#D0D0D0] h-18 rounded-2xl relative py-2" [ngClass]="{'bg-[#D8ECCF]': selectedQuickDial === dial}">
         <ion-button fill="clear" (click)="selectQuickDial(dial)">

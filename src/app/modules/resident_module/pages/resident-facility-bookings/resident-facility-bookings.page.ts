@@ -223,6 +223,8 @@ export class ResidentFacilityBookingsPage implements OnInit {
       .subscribe({next: (response: any) => {
         if (response.result.response_code === 200) {
           console.log('work')
+          this.activeBookings = []
+          this.loadActiveBookings();
         } else {
           this.presentToast('Failed to delete booking data', 'danger');
           console.error('Error:', response);

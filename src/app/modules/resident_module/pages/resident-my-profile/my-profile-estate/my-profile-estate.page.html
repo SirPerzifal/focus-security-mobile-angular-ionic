@@ -1,13 +1,94 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>my-profile-estate</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-profile-estate</ion-title>
-    </ion-toolbar>
-  </ion-header>
+	<app-resident-header [text]="'My Family'" [text_second]="'Estate'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="w-full flex items-start mb-3">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-profile']"></ion-icon>
+    </div>
+     <div class="space-y-4">
+      <div class="bg-[#D8ECCF] border rounded-lg p-4 flex items-center">
+       <img alt="Profile Picture" class="rounded-full h-12 w-12 mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/wcWTcs8trE5XOBeYeh0RrehPtAzAxfXAJ1LqSjMFJWDc62ffE.jpg" width="50"/>
+       <div class="flex-1">
+        <p class="font-bold">
+         ABC Condominium
+        </p>
+        <p>
+         Veeknesh K
+        </p>
+        <p>
+         Owner
+        </p>
+        <p>
+         Block 100, #08-33
+        </p>
+       </div>
+       <ion-icon class="text-green-500 text-2xl" name="checkmark-circle">
+       </ion-icon>
+      </div>
+      <div class="bg-[#D8ECCF] border rounded-lg p-4 flex items-center">
+       <img alt="Profile Picture" class="rounded-full h-12 w-12 mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/wcWTcs8trE5XOBeYeh0RrehPtAzAxfXAJ1LqSjMFJWDc62ffE.jpg" width="50"/>
+       <div class="flex-1">
+        <p class="font-bold">
+         XYZ Condominium
+        </p>
+        <p>
+         Veeknesh K
+        </p>
+        <p>
+         Owner
+        </p>
+        <p>
+         Block 98, #02-01
+        </p>
+       </div>
+       <ion-icon class="text-red-500 text-2xl" name="close-circle">
+       </ion-icon>
+      </div>
+      <div class="bg-[#D8ECCF] border rounded-lg p-4 flex items-center">
+       <img alt="Profile Picture" class="rounded-full h-12 w-12 mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/wcWTcs8trE5XOBeYeh0RrehPtAzAxfXAJ1LqSjMFJWDc62ffE.jpg" width="50"/>
+       <div class="flex-1">
+        <p class="font-bold">
+         XYZ Condominium
+        </p>
+        <p>
+         Veeknesh K
+        </p>
+        <p>
+         Tenant
+        </p>
+        <p>
+         Block 98, #02-01
+        </p>
+       </div>
+       <ion-icon class="text-red-500 text-2xl" name="close-circle">
+       </ion-icon>
+      </div>
+      <div class="bg-[#D8ECCF] border rounded-lg p-4 flex items-center">
+       <img alt="Profile Picture" class="rounded-full h-12 w-12 mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/wcWTcs8trE5XOBeYeh0RrehPtAzAxfXAJ1LqSjMFJWDc62ffE.jpg" width="50"/>
+       <div class="flex-1">
+        <p class="font-bold">
+         Eunos Condominium
+        </p>
+        <p>
+         Veeknesh K
+        </p>
+        <p>
+         Tenant
+        </p>
+        <p>
+         Block 98, #02-01
+        </p>
+        <p class="text-red-500">
+         Pending Approval
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="flex flex-row mt-4 justify-between items-center w-full space-x-3">
+      <app-visitor-button [text]="'Add'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'" [routerLink]="['/my-profile-add-estate']"></app-visitor-button>
+      <app-visitor-button [text]="'Remove'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32'"></app-visitor-button>
+    </div>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

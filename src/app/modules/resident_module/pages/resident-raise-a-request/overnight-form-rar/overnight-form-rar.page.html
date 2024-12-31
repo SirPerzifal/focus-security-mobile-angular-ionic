@@ -1,0 +1,163 @@
+<ion-content [fullscreen]="true" [formGroup]="form">
+	<app-resident-header [text]="'Raise A Request'" [text_second]="'New Overnight Request'" />
+
+  <div class="p-5 text-center mb-20">
+		<div class="w-1/6 flex items-start mr-10">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+    </div>
+    <div class="flex flex-col justify-between mt-2">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Name of Resident Applying</p>
+        </div>
+        <app-text-input [id]="'name_of_resident'"
+          [placeholder]="'KingsMan Condominium'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
+        </app-text-input>
+      </div>
+      <div class="flex flex-row items-center space-x-2">
+        <div class="w-full mt-1">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Block</p>
+          </div>
+          <select id="of_block" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280] my-1">
+            <option value="1" selected disabled hidden>1</option>
+            <!-- <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option> -->
+          </select>
+        </div>
+
+        <div class="w-full mt-1">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Unit</p>
+          </div>
+          <select id="of_unit" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
+            <option value="1" selected disabled hidden>1</option>
+            <!-- <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option> -->
+          </select>
+        </div>
+      </div>
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Contact Number of Resident</p>
+        </div>
+        <app-text-input [id]="'phone_number'"
+          [placeholder]="'085830122464'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
+        </app-text-input>
+      </div>
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold text-start">For whom are you applying the overnight parking for?
+        </div>
+        <div class="flex flex-row mt-1">
+          <input type="radio" id="myself" name="for_who" (change)="onOptionChange('myself')"
+            class="mr-1 accent-black rounded text-base">
+          <b>MySelf</b>
+          <input type="radio" id="visitor" name="for_who" (change)="onOptionChange('visitor')"
+            class="mr-1 accent-black rounded ml-4 text-base">
+          <b>Visitor</b>
+        </div>
+      </div>
+      <div id="visitor" class="w-full mt-2" *ngIf="selectedOption === 'visitor'">
+        <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
+          <thead>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="border border-gray-300 px-4 py-2 w-16"> </th>
+              <th class="border border-gray-300 px-4 py-2">Visitor Name</th>
+              <th class="border border-gray-300 px-4 py-2">Visitor Contact No</th>
+              <th class="border border-gray-300 px-4 py-2">Visitor Vehicle Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let visitor of expectedVisitors">
+              <td class="border border-gray-300 px-4 py-2 text-center">
+                <input id="visitor_data_{{visitor.id}}" (change)="onVisitorSelect(visitor.id)" name="vd" type="radio" class="w-4 h-4">
+              </td>
+              <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.name }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.contact || 'No Contact' }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-gray-700">
+                {{ visitor.vehicle || 'No Vehicle Number' }}
+                <span *ngIf="!visitor.vehicle">
+                  <a href="#" class="text-blue-500 underline">Add A Vehicle</a>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>No Visitors? <a [routerLink]="['/resident-visitors']">Invite Now</a></p>
+      </div>
+      <div id="myself" class="w-full mt-2" *ngIf="selectedOption === 'myself'">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Vehicle Number</p>
+          </div>
+          <app-text-input [id]="'vehicle_number'"
+            [placeholder]="'e.g xxxxxxxxx'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+            [formControlName]="'vehicleNumber'"> <!-- Bind to form control -->
+          </app-text-input>
+        </div>
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Purpose of Parking</p>
+          </div>
+          <app-text-input [id]="'purpose_parking'"
+            [placeholder]="'e.g. rent for tomorrow'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+            [formControlName]="'purposeOfParking'"> <!-- Bind to form control -->
+          </app-text-input>
+        </div>
+        <div class="w-full mt-1">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Vehicle Log</p>
+          </div>
+          <div class="w-full flex flex-row justify-between items-center">
+            <div class="w-4/6">
+              <input
+                placeholder="Pilih file"
+                type="file"
+                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-12 text-[#6B7280] mt-1 file:bg-transparent file:border-none file:text-transparent"
+                (change)="onFileChange($event)"
+              />
+            </div>
+            <button
+              id="middle_button"
+              class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-base rounded font-bold"
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-row mt-4">
+          <input type="checkbox" id="inv_agreement" name="inv_agreement" 
+                 (change)="onGSTChange($event)" 
+                 [checked]="GST" 
+                 class="mr-1 accent-black rounded">
+          <b class="text-base">Include GST</b>
+        </div>
+      </div>
+      <div class="flex flex-row mt-4 text-base">
+        <app-checkbox-confirmation 
+          [label]="'I agree to the terms above'" 
+          [(checked)]="agreementChecked" 
+          [customClass]="'mr-1 rounded font-bold'">
+        </app-checkbox-confirmation>
+      </div>
+      <button 
+        [disabled]="!agreementChecked" 
+        (click)="onSubmit()"
+        [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+        class="mt-4 w-full text-base rounded h-10 font-bold">
+        Submit for Approval
+      </button>
+    </div>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

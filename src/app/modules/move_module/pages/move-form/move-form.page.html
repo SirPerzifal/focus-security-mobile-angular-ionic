@@ -13,8 +13,10 @@
       <app-vms-header [urlCustom]="'/move-home'" [params]="{type: scheduleType}"/>
     </div>
     <div class="flex flex-row mt-8">    
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'MOVE IN / OUT'" (click)="onBackHome()" [isActive]="true" [disableClick]="true" *ngIf="scheduleType == 'move_in'"/>
-      <app-button-icon [customNameIcon]="'faHammer'" [text]="'RENOVATION'" (click)="onBackHome()" [isActive]="true" [disableClick]="true" *ngIf="scheduleType != 'move_in'"/>
+      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" [routerLink]="['/home-vms']" [isActive]="true"
+        [disableClick]="true" *ngIf="scheduleType == 'move_in'" />
+        <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" [routerLink]="['/home-vms']" [isActive]="true"
+        [disableClick]="true" *ngIf="scheduleType == 'renov'" />
     </div>
 
     <div class="flex flex-row">

@@ -14,7 +14,7 @@ interface Notification {
   styleUrls: ['./resident-notification.page.scss'],
 })
 export class ResidentNotificationPage implements OnInit {
-  partnerId = 5;
+  partnerId = 1;
   unitId = 1;
 
   notifications: Notification[] = []; // Ubah ke array of Notification
@@ -69,8 +69,7 @@ export class ResidentNotificationPage implements OnInit {
 
   searchNotifications() {
     this.filteredNotifications = this.notifications.filter(notification =>
-      notification.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
-      notification.body.toLowerCase().includes(this.searchTerm.toLowerCase())
+      notification.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 

@@ -16,10 +16,14 @@
           <img [src]="customImageIcon" class="fsc-icon " alt="icon" >
         </div>
       </ng-template>
-      <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]"
-        [ngClass]="extraTextClass ? extraTextClass + ' mt-[5px] text-white text-center ' : 'mt-[5px] text-white text-center text-[22px]'">
+      <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]" *ngIf="!isDoubleText">
         {{text}}
       </span>
+      <div class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white] flex flex-col" *ngIf="isDoubleText">
+        <span>{{text}}</span>
+        <span>{{secondText}}</span>
+        
+    </div>
     </div>
 
   </ion-button>

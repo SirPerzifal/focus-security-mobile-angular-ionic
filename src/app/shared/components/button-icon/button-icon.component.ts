@@ -32,6 +32,8 @@ import {
 export class ButtonIconComponent implements OnInit {
 
   @Input() text: string = '';
+  @Input() isDoubleText: boolean = false;
+  @Input() secondText: string = '';
   @Input() textOnly: boolean = false;
   @Input() extraClass: string = '';
   @Input() extraTextClass: string = '';
@@ -69,13 +71,15 @@ export class ButtonIconComponent implements OnInit {
       switch (this.text) {
         case 'PICK UP / DROP OFF':
           this.customImageIcon = 'assets/icon-vms/Homepage/Pick_Up.png';
+          this.isDoubleText = true
+          this.text = 'PICK UP /'
+          this.secondText = 'DROP OFF'
           break;
         case 'VISITORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Visitors.png';
           break;
         case 'CONTRACTORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Contractors.png';
-          this.extraTextClass = 'text-[19px]'
           break;
         case 'MOVE IN / OUT':
           this.customImageIcon = 'assets/icon-vms/Homepage/Move_In.png';
@@ -100,7 +104,6 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'UNREGISTERED RESIDENT CAR':
           this.customImageIcon = 'assets/icon-vms/Homepage/Unregistered_Resident_Car.png';
-          this.extraTextClass = 'text-[18px]'
           break;
         case 'OVERNIGHT PARKING':
           this.customImageIcon = 'assets/icon-vms/Homepage/Overnight_Parking.png';

@@ -398,7 +398,15 @@ input:checked + .slider:before {
 }
 
 .record-modal{
-  --height: 700px;
+  --height: 90%;
   --border-radius: 4px;
-  --width: 80%
+  --padding: 20px;
+  --width: 80%;
+}
+
+.record-modal-notice{
+  --height: 80%;
+  --border-radius: 4px;
+  --padding: 20px;
+  --width: 80%;
 }

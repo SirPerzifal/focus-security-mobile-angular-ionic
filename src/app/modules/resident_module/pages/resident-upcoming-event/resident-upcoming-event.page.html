@@ -2,7 +2,10 @@
   <app-resident-header [text]="'Upcoming Events'"/>
 
   <div class="p-5 text-center mb-20">
-    <div class="flex flex-row mt-4 justify-between w-full">
+    <div class="w-1/6 flex items-start mr-10 mb-2">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
+    <div class="flex flex-row mt-4 justify-center items-center w-full space-x-3">
       <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
       <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" (click)="toggleDirecttoHis()"></app-visitor-button>
     </div>

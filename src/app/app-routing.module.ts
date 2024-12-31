@@ -418,6 +418,14 @@ const routes: Routes = [
     path: 'my-profile-estate',
     loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-estate/my-profile-estate.module').then( m => m.MyProfileEstatePageModule)
   },
+  {
+    path: 'my-profile-add-estate',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-add-estate/my-profile-add-estate.module').then( m => m.MyProfileAddEstatePageModule)
+  },
+  {
+    path: 'overnight-form-rar',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule)
+  },
 ];
 
 @NgModule({

@@ -17,27 +17,27 @@
           <tr>
             <td class="font-bold w-2/5">VEHICLE NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.vehicle_number }}</td>
+            <td>{{ returnFalse(vehicle.vehicle_number) }}</td>
           </tr>
           <tr *ngIf="pageType == 'wheel_clamp'">
             <td class="font-bold w-2/5">OFFENCE NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.name }}</td>
+            <td>{{ returnFalse(vehicle.name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">NAME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.offender_name }}</td>
+            <td>{{ returnFalse(vehicle.offender_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">CONTACT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.contact_number }}</td>
+            <td>{{ returnFalse(vehicle.contact_number) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ISSUED DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.issue_date }}</td>
+            <td>{{ vehicle.issue_date ? convertToDDMMYYYY(vehicle.issue_date) : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ISSUED TIME</td>
@@ -47,22 +47,22 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE & TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.entry_datetime }}</td>
+            <td>{{ vehicle.entry_datetime ? convertToDDMMYYYY(vehicle.entry_datetime.split(' ')[0]) + ' ' + vehicle.entry_datetime.split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">TYPE OF ENTRY</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.type_of_entry }}</td>
+            <td>{{ returnFalse(vehicle.type_of_entry) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.block_name }} | {{ vehicle.unit_name }}</td>
+            <td>{{ returnFalse(vehicle.block_name) }} | {{ returnFalse(vehicle.unit_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">REASON OF ISSUANCE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.reason_for_issueance }}</td>
+            <td>{{ returnFalse(vehicle.reason_for_issueance) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ISSUING OFFICER</td>

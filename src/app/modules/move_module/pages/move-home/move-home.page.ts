@@ -82,12 +82,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
       if (type === 'today') {
         this.moveInOutService.getMoveInOutSchedules().subscribe({
           next: (results) => {
-            console.log(results)
+            console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.daySchedules = results.result.result;
               console.log(results)
             } else {
-              this.presentToast('An error occurred while loading Move In / Out schedule!', 'warning');
+              this.presentToast('There is no move in data for today!', 'warning');
             }
 
             this.isLoading = false;
@@ -101,13 +101,13 @@ export class MoveHomePage implements OnInit, OnDestroy {
       } else {
         this.moveInOutService.getMoveInOutSchedulesHistory().subscribe({
           next: (results) => {
-            console.log(results)
+            console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.historySchedules = results.result.result;
               this.filteredHistorySchedules = this.historySchedules
               console.log(results)
             } else {
-              this.presentToast('An error occurred while loading Move In / Out schedule!', 'warning');
+              this.presentToast('There is no move in data!', 'warning');
             }
 
             this.isLoading = false;
@@ -123,11 +123,11 @@ export class MoveHomePage implements OnInit, OnDestroy {
       if (type == 'today') {
         this.renovatorsService.getRenovationSchedules().subscribe({
           next: (results) => {
-            console.log(results)
+            console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.daySchedules = results.result.result;
             } else {
-              this.presentToast('An error occurred while loading Renovations schedule!', 'warning');
+              this.presentToast('There is no renovation data for today!', 'warning');
             }
 
             this.isLoading = false;
@@ -141,12 +141,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
       } else {
         this.renovatorsService.getRenovationSchedulesHistory().subscribe({
           next: (results) => {
-            console.log(results)
+            console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.historySchedules = results.result.result;
               this.filteredHistorySchedules = this.historySchedules
             } else {
-              this.presentToast('An error occurred while loading Renovations schedule!', 'warning');
+              this.presentToast('There is no renovation data!', 'warning');
             }
 
             this.isLoading = false;
@@ -161,34 +161,32 @@ export class MoveHomePage implements OnInit, OnDestroy {
     } else if (this.pageType === 'coach') {
       let url = ''
       if (type == 'today') {
-        url = 'vms/get/coaches'
+        url = '/vms/get/coaches'
       } else {
-        url = 'vms/get/coaches'
+        url = '/vms/get/coaches'
       }
       this.mainVmsService.getApi([], url).subscribe({
         next: (results) => {
+          console.log(results.result)
           if (results.result.response_code === 200) {
-            console.log(results.result.response_result)
-            if (type === 'today') {
-              this.daySchedules = results.result.response_result
-            } else {
-              this.historySchedules = results.result.response_result
-              this.filteredHistorySchedules = this.historySchedules
-            }
+            this.daySchedules = results.result.response_result
+            this.historySchedules = results.result.response_result
+            this.filteredHistorySchedules = this.historySchedules
+
           } else {
-            this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+            this.presentToast('There is no coaches data!', 'danger');
           }
 
           // this.isLoading = false;
         },
         error: (error) => {
-          this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+          this.presentToast('An error occurred while loading coaches data!', 'danger');
           console.error(error);
           // this.isLoading = false;
         }
       });
     } else if (this.pageType === 'ma_visitor') {
-      this.moveInSchedules = [{
+      this.historySchedules = [{
         id: 0,
         block_name: 'Block 1',
         unit_name: 'Unit 1',
@@ -196,8 +194,8 @@ export class MoveHomePage implements OnInit, OnDestroy {
         unit_id: '',
         schedule_date: '',
       }]
-      this.daySchedules = this.moveInSchedules
-      this.historySchedules = this.moveInSchedules
+      this.daySchedules = this.historySchedules
+      this.filteredHistorySchedules = this.historySchedules
     }
   }
 
@@ -217,11 +215,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   applyFilters() {
-    this.historySchedules = this.moveInSchedules.filter(item => {
+    this.filteredHistorySchedules = this.historySchedules.filter(item => {
       const visitorDate = new Date(item.schedule_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
       // Convert the selected start and end dates to Date objects
+      console.log(visitorDate, this.startDateFilter, this.endDateFilter)
       const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
       const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
@@ -238,7 +237,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
       return typeMatches && dateMatches;
     });
-    console.log(this.historySchedules)
+    console.log(this.filteredHistorySchedules)
   }
 
   form(block: string, unit: string, block_id: string = '1', unit_id: string = '1') {
@@ -318,9 +317,14 @@ export class MoveHomePage implements OnInit, OnDestroy {
       }
       if (type == 'history') {
         this.showHistoryTrans = true
+        this.searchOption = ''
+        this.startDateFilter = ''
+        this.endDateFilter = ''
+        this.choosenBlock = ''
+        this.applyFilters()
         if (this.historySchedules.length == 0) {
           this.loadSchedulesHistory('history')
-        }
+        } 
         setTimeout(() => {
           this.showHistory = true;
           this.showHistoryTrans = false
@@ -384,6 +388,10 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
+    this.applyFilters()
     console.log(event.target.value)
   }
 }

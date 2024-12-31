@@ -10,16 +10,16 @@ export class OffensesService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
 
-  getOfffenses(type: string): Observable<any> {
+  getOfffenses(type: string, is_active: boolean = true): Observable<any> {
     let apiUrl = '/vms/get/offenses'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    console.log(this.http.post(apiUrl, {}, { headers }))
+    console.log(apiUrl, type)
 
-    return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: {alert_type: type, is_active: true}}, { headers }).pipe(
+    return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: {alert_type: type, is_active: is_active}}, { headers }).pipe(
       catchError(this.handleError)
     );
   }

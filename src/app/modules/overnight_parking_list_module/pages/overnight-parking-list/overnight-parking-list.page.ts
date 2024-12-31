@@ -98,11 +98,11 @@ export class OvernightParkingListPage implements OnInit {
   async loadOvernight(type: string = 'today') {
     let url = ''
     if (type === 'today') { 
-      url = 'vms/get/overnight_parking_list'
+      url = '/vms/get/overnight_parking_list'
     } else if (type === 'upcoming') {
-      url = 'vms/get/overnight_parking_list_upcoming'
+      url = '/vms/get/overnight_parking_list_upcoming'
     } else {
-      url = 'vms/get/overnight_parking_list_history'
+      url = '/vms/get/overnight_parking_list_history'
     }
     this.mainVmsService.getApi([], url ).subscribe({
       next: (results) => {
@@ -117,7 +117,7 @@ export class OvernightParkingListPage implements OnInit {
             this.filteredHistorySchedules = this.historySchedules
           }   
         } else {
-          this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+          this.presentToast('There is no overnight parking data!', 'danger');
         }
 
         // this.isLoading = false;
@@ -168,8 +168,11 @@ export class OvernightParkingListPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
+        this.searchOption = ''
         this.startDateFilter = ''
+        this.endDateFilter = ''
         this.choosenBlock = ''
+        this.applyFilters()
         this.showHistoryTrans = true
         if (this.historySchedules.length == 0) {
           this.loadOvernight('history')
@@ -187,7 +190,7 @@ export class OvernightParkingListPage implements OnInit {
 
   applyFilters() {
     this.filteredHistorySchedules = this.historySchedules.filter(item => {
-      const visitorDate = new Date(item.approved_date);
+      const visitorDate = new Date(item.approved_date.split(' ')[0]);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
       // Convert the selected start and end dates to Date objects
@@ -279,6 +282,10 @@ export class OvernightParkingListPage implements OnInit {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
+    this.applyFilters()
     console.log(event.target.value)
   }
 

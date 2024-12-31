@@ -125,7 +125,7 @@ export class AlertMainPage implements OnInit {
       needSize: true,
       type: 'unregistered',
       isWarning: 0,
-      extraTextClass: 'text-[18px]'
+      extraTextClass: ''
     },
     {
       text: 'TICKETS',
@@ -188,6 +188,10 @@ export class AlertMainPage implements OnInit {
       this.selectedMenu = this.recordsMenu.filter(item => item.type === records.type)
     }
     console.log(this.active_type, records.type)
+  }
+
+  onBackDetail() {
+    this.main = !this.main
   }
 
 }

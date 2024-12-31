@@ -7,22 +7,6 @@ import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { RecordsWheelClampedNewPage } from './records-wheel-clamped-new/records-wheel-clamped-new.page'; 
 import { Subscription } from 'rxjs';
 
-// interface Vehicles {
-//   id: number;
-//   vehicle_number: string;
-//   issue_date: Date;
-//   issue_date: string;
-//   block_id: string;
-//   unit_id: string;
-// }
-
-// interface sortVehicle {
-//   date: Date;
-//   issue_date: string;
-//   data: any[];
-//   vehicle_number: string;
-// }
-
 @Component({
   selector: 'app-records-wheel-clamped',
   templateUrl: './records-wheel-clamped.page.html',
@@ -81,7 +65,6 @@ export class RecordsWheelClampedPage implements OnInit {
             this.loadRecordsWheelClamp();
           })
         }
-         // Panggil fungsi lagi saat halaman dibuka
       }
     });
 
@@ -117,14 +100,22 @@ export class RecordsWheelClampedPage implements OnInit {
       this.showActiveTrans = false;
       this.showHistoryTrans = false;
       if (type == 'active') {
+        this.is_active = true
         this.showActiveTrans = true
+        if (this.activeVehicles.length == 0){
+          this.loadRecordsWheelClamp()
+        }
         setTimeout(() => {
           this.showActive = true;
           this.showActiveTrans = false
         }, 300)
       }
       if (type == 'history') {
+        this.is_active = false
         this.showHistoryTrans = true
+        if (this.historyVehicles.length == 0){
+          this.loadRecordsWheelClamp()
+        }
         setTimeout(() => {
           this.showHistory = true;
           this.showHistoryTrans = false
@@ -139,6 +130,7 @@ export class RecordsWheelClampedPage implements OnInit {
   sortVehicle: any[] = []
   selectedRadio: string | null = null
   searchOption: string | null = null
+  is_active: boolean = true
 
   onRadioClick(value: string): void {
     if (this.selectedRadio === value) {
@@ -286,15 +278,19 @@ export class RecordsWheelClampedPage implements OnInit {
   loadRecordsWheelClamp() {
     // this.isLoading = false;
 
-    this.offensesService.getOfffenses(this.pageType).subscribe({
+    this.offensesService.getOfffenses(this.pageType, this.is_active).subscribe({
       next: (results) => {
+        console.log(results.result)
         if (results.result.response_code === 200) {
-          this.vehicleData = results.result.response_result;
-          console.log(this.vehicleData)
-          this.activeVehicles = this.vehicleData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-          this.historyVehicles = this.vehicleData
+          if (this.is_active){
+            this.activeVehicles = results.result.response_result;
+          } else {
+            this.vehicleData = results.result.response_result;
+            this.historyVehicles = this.vehicleData
+          }
+          
         } else {
-          this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
+          this.presentToast('There is no data in the system!', 'danger');
         }
 
         // this.isLoading = false;

@@ -46,6 +46,16 @@ export class CoachesFormPage implements OnInit {
   ngOnInit() {
     console.log(this.schedule)
     this.loadBlock()
+    if (this.schedule.block_id){
+      this.loadUnit()
+    }
+    if (!this.schedule.unit_id) {
+      this.schedule.unit_id = ''
+    }
+    if (!this.schedule.coach_type_id) {
+      this.schedule.coach_type_id = ''
+    }
+    this.loadType()
     // Initialize with a default number of pax entries
   }
 
@@ -112,25 +122,47 @@ export class CoachesFormPage implements OnInit {
 
   Block: any
   Unit: any
+  Coach: any
 
   onBlockChange(event: any) {
-    this.block = event.target.value;
-    console.log(this.block)
+    this.schedule.block_id = event.target.value;
+    this.schedule.unit_id = ''
+    console.log(this.schedule.block_id)
     this.loadUnit(); // Panggil method load unit
   }
 
   onUnitChange(event: any) {
-    this.unit = event.target.value;
-    console.log(this.unit)
+    this.schedule.unit_id = event.target.value;
+    console.log(this.schedule.unit_id)
+  }
+
+  onCoachChange(event: any) {
+    this.schedule.coach_type_id = event.target.value;
+    console.log(this.schedule.coach_type_id)
+  }
+
+  loadType() {
+    this.mainVmsService.getApi([], '/vms/get/get_coach_type' ).subscribe({
+      next: (results) => {
+        if (results.result.response_code === 200) {
+          this.Coach = results.result.coaches_type;
+          console.log(results)
+        } else {
+          this.presentToast('Failed to load vehicle data', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('Failed to load vehicle data', 'danger');
+        console.error(error);
+      }
+    });
   }
 
   loadBlock() {
-    console.log('hey this is block')
     this.blockUnitService.getBlock().subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
-          console.log(response)
         } else {
           this.presentToast('Failed to load vehicle data', 'danger');
         }
@@ -140,17 +172,15 @@ export class CoachesFormPage implements OnInit {
         console.error('Error:', error);
       }
     });
-    console.log(this.Block)
   }
 
   isLoadingUnit = false
   loadUnit() {
     this.isLoadingUnit = true
-    this.blockUnitService.getUnit(this.block).subscribe({
+    this.blockUnitService.getUnit(this.schedule.block_id).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Unit = response.result.result; // Simpan data unit
-          console.log(response)
           this.isLoadingUnit = false
         } else {
           this.presentToast('Failed to load unit data', 'danger');
@@ -176,28 +206,43 @@ export class CoachesFormPage implements OnInit {
   }
 
   onSubmitRecord(isOpenBarrier: boolean = false) {
-    let params = {
-      coach_id: this.schedule.coach_id,
-      name: this.coachName,
-      contact_number: this.schedule.contact_number,
-      block_id: this.block,
-      unit_id: this.unit,
-      selection_type: '1',
+    let errMsg = ''
+    if (!this.coachName){
+      errMsg += 'Coach name is missing! \n'
     }
-    console.log(params)
-    this.mainVmsService.getApi(params, 'vms/post/add_coaches' ).subscribe({
-      next: (results) => {
-        console.log(results)
-        if (results.result.response_code === 200) {
-          this.presentToast('Coach data successfully submitted!', 'success');
-        } else {
-          this.presentToast('An error occurred while submitting coach data!', 'danger');
-        }
-      },
-      error: (error) => {
-        this.presentToast('An error occurred while submitting coach data!', 'danger');
-        console.error(error);
+    if (!this.schedule.contact_number) {
+      errMsg += 'Contact number is missing! \n'
+    }
+    if (!this.schedule.block_id || !this.schedule.unit_id) {
+      errMsg += 'Block and unit must be selected! \n'
+    }
+    if (errMsg) {
+      this.presentToast(errMsg, 'danger');
+    } else {
+      let params = {
+        coach_id: this.schedule.coach_id,
+        name: this.coachName,
+        contact_number: this.schedule.contact_number,
+        block_id: this.schedule.block_id,
+        unit_id: this.schedule.unit_id,
+        selection_type: this.schedule.coach_type_id,
       }
-    });
+      console.log(params)
+      this.mainVmsService.getApi(params, '/vms/post/add_coaches' ).subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.presentToast('Coach data successfully submitted!', 'success');
+            this.onBackMove()
+          } else {
+            this.presentToast('An error occurred while submitting coach data!', 'danger');
+          }
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while submitting coach data!', 'danger');
+          console.error(error);
+        }
+      });
+    }
   }
 }

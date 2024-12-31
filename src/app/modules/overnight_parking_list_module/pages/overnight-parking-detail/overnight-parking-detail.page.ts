@@ -29,7 +29,7 @@ export class OvernightParkingDetailPage implements OnInit {
   async presentModal(issue: string= 'wheel_clamp', vehicle: any = this.vehicle) {
     const modal = await this.modalController.create({
       component: OvernightParkingModalPage,
-      cssClass: 'record-modal',
+      cssClass: issue == 'wheel_clamp' ? 'record-modal' : 'record-modal-notice',
       componentProps: {
         issue: issue,
         vehicle: vehicle

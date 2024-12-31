@@ -2,6 +2,9 @@
 	<app-resident-header [text]="'Polling'" [text_second]="'Open Polling'"/>
 
   <div class="p-5 text-center mb-20">
+    <div class="w-1/6 flex items-start mr-10 mb-2">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
     <div class="flex flex-row justify-between">
 			<app-visitor-button [text]="'Open'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"></app-visitor-button>
 			<app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"  [routerLink]="['/upcoming-polling']"></app-visitor-button>

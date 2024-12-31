@@ -27,6 +27,10 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     })
   }
 
+  returnFalse(data: any){
+    return data ? data : '-'
+  }
+
   params: any
   pageType = 'wheel_clamp'
 
@@ -43,6 +47,11 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   unit = 'UNIT 0101'
   reason = 'ILLEGAL PARKING'
   officer = 'Aiden'
+
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+  }
   
   onPaymentClick() {
     this.router.navigate(['records-wheel-clamped-payment'], {

@@ -37,20 +37,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="mt-1 grid grid-cols-4 gap-4 justify-items-center w-full">
-            <div *ngFor="let button of foodDeliveryButtons" class="flex flex-col items-center">
-              <app-button-icon [customImageIcon]="button.image ? button.image : ''"
-                [text]="button.text" [isActive]="button.isActive" [id]="button.id"
-                (buttonClick)="toggleDeliveryButton(button)" />
-            </div>
-          </div>
-          <div class="mt-1 grid grid-cols-4 gap-4 justify-items-center w-full">
-            <div *ngFor="let deliveriesButton of deliveriesType" class="flex flex-col items-center">
-              <app-button-icon [customImageIcon]="deliveriesButton.image ? deliveriesButton.image : ''"
-                [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''" [text]="deliveriesButton.text" [isActive]="deliveriesButton.isActive"
-                (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" />
-            </div>
-          </div> -->
           <div class="flex flex-row mt-6">
             <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
               <div class="w-full flex flex-col">
@@ -110,10 +96,10 @@
       <form class="justify-between items-center mb-4 w-full" #packageForm="ngForm" *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="flex flex-row flex-wrap space-x-7">
+          <div class="flex flex-row flex-wrap">
             <div *ngFor="let button of packageDeliveryButtons">
               <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
-                [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" />
+                [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-7'"/>
             </div>
           </div>
           <!-- <div class="mt-1 flex flex-row space-x-7 w-full">

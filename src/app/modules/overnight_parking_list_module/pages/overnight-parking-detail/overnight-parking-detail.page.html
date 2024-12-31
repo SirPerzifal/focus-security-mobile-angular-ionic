@@ -37,12 +37,12 @@
           <tr>
             <td class="font-bold w-2/5">RESIDENT NAME</td>
             <td class="w-[5%]">:</td>
-            <td>-</td>
+            <td>{{vehicle.requestor_name ? vehicle.requestor_name : '-'}}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">RESIDENT CONTACT NO</td>
             <td class="w-[5%]">:</td>
-            <td>-</td>
+            <td>{{vehicle.requestor_phone ? vehicle.requestor_phone : '-'}}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">BLOCK</td>

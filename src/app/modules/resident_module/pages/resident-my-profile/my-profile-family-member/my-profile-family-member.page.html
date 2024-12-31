@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>my-profile-family-member</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-profile-family-member</ion-title>
-    </ion-toolbar>
-  </ion-header>
+	<app-resident-header [text]="'My Family'" [text_second]="'Family Members'"/>
+
+  <div class="p-5 text-center mb-20">
+    <div class="w-full flex items-start mb-3">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-profile']"></ion-icon>
+    </div>
+    <div class="space-y-4">
+      <div class="flex bg-[#D8ECCF] items-center p-4 border rounded-lg">
+       <img alt="Profile picture of Maria" class="h-16 w-16 rounded-full" height="50" src="https://storage.googleapis.com/a1aa/image/9JdnqAwDMOK3EVlZu6gxlisUaMDIL5Ze63RDaROdwJN4sefnA.jpg" width="50"/>
+       <div class="ml-4">
+        <h2 class="text-lg font-bold">
+         Maria
+        </h2>
+       </div>
+      </div>
+      <div class="flex bg-[#D8ECCF] items-center p-4 border rounded-lg">
+       <img alt="Profile picture of Albert" class="h-16 w-16 rounded-full" height="50" src="https://storage.googleapis.com/a1aa/image/7TKNYdcSdh4uHpzWH5ZddMkmccjFQTe9oKXKLmWobyQ2sefnA.jpg" width="50"/>
+       <div class="ml-4">
+        <h2 class="text-lg font-bold">
+         Albert
+        </h2>
+       </div>
+      </div>
+      <div class="flex bg-[#D8ECCF] items-center p-4 border rounded-lg">
+       <img alt="Profile picture of Angie" class="h-16 w-16 rounded-full" height="50" src="https://storage.googleapis.com/a1aa/image/v9OQnQF4TLIkP5RYuvQgWazNd8we0Bfx1YuI8MvdShlqZ9fnA.jpg" width="50"/>
+       <div class="ml-4">
+        <h2 class="text-lg font-bold">
+         Angie
+        </h2>
+       </div>
+      </div>
+     </div>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

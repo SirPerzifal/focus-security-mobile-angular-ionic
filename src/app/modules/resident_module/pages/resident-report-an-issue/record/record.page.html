@@ -2,10 +2,16 @@
   <app-resident-header [text]="'Report an Issue'" [text_second]="'Record of Report'"/>
 
   <div class="p-5 text-center mb-20">
+    <div class="w-1/6 flex items-start mr-10 mb-2">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
     <!-- Reported Issues Button -->
-    <div class="mb-4 flex justify-start">
-      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold" [routerLink]="['/resident-report-an-issue']">
+    <div class="mb-4 flex justify-between">
+      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold">
         Reported Issues
+      </button>
+      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold" [routerLink]="['/resident-report-an-issue']">
+        Report an Issues
       </button>
     </div>
     <!-- Issues List -->

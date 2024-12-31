@@ -2,7 +2,10 @@
 	<app-resident-header [text]="'Raise A Request'" [text_second]="'New Request'" />
 
   <div class="p-5 text-center mb-20">
-    <div class="flex flex-row mt-4 justify-between w-full">
+		<div class="w-1/6 flex items-start mr-10">
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+		  </div>
+    <div class="flex flex-row justify-center items-center w-full space-x-3">
       <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-[150px] leading-none'"></app-visitor-button>
       <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-[150px]'" [routerLink]="['/rejected-request']"></app-visitor-button>
     </div>
@@ -14,41 +17,39 @@
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 2.webp" alt="Icon for Rectangle 2"/>
           </ion-button>
           <span class="text-sm font-bold text-[black] text-center">Access Card Application</span>
-          <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2">1</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/resident-announcement-page']">
+          <ion-button fill="clear" [routerLink]="['/overnight-form-rar']">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 3.webp" alt="Icon for Upcoming Events"/>
           </ion-button>
           <span class="text-[13px] font-bold text-[black] text-center">Apply Overnight Parking</span>
-          <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2">1</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/resident-polling']">
+          <ion-button fill="clear">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 5.webp" alt="Icon for Polling"/>
           </ion-button>
           <span class="text-sm font-bold text-[black] text-center">Bicycle Tag Application</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/resident-house-rules']">
+          <ion-button fill="clear">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 4.webp" alt="Icon for House Rules"/>
           </ion-button>
           <span class="text-sm font-bold text-[black] text-center">Coach Registration</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/record']">
+          <ion-button fill="clear">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 6.webp" alt="Icon for Report an Issue"/>
           </ion-button>
           <span class="text-sm font-bold text-[black] text-center">Move In / Out Permit</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/resident-upcoming-event']">
+          <ion-button fill="clear">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 7.webp" alt="Icon for Upcoming Events"/>
           </ion-button>
           <span class="text-[13px] font-bold text-[black] text-center">Pet Registration</span>
         </div>
         <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-          <ion-button fill="clear" [routerLink]="['/resident-upcoming-event']">
+          <ion-button fill="clear">
             <img class="w-16 h-13" src="assets/icon/resident-icon/raise_request/Rectangle 8.webp" alt="Icon for Upcoming Events"/>
           </ion-button>
           <span class="text-[13px] font-bold text-[black] text-center">Renovation Work Permit</span>

@@ -39,6 +39,7 @@ export class OvernightParkingModalPage implements OnInit {
   imageBeforeClampInput: string = '';
   imageAfterClampInput: string = '';
   issueOfficer = ''
+  reason = ''
 
   onBeforeClampImageFileSelected(file: File): void {
     let data = file;
@@ -90,8 +91,11 @@ export class OvernightParkingModalPage implements OnInit {
         errMsg += 'You must select a notice! \n'
       }
     }
+    if (!this.reason) {
+      errMsg += 'You must provide an issue reason! \n'
+    }
     if (!this.beforeClampImageFile) {
-      errMsg += 'Before clamp image is required! \n'
+      errMsg += this.issue == 'wheel_clamp' ? 'Before clamp image is required! \n' : 'You must upload an evidence image! \n'
     }
     if (this.issue == 'wheel_clamp') {
       if (!this.afterClampImageFile) {
@@ -107,18 +111,20 @@ export class OvernightParkingModalPage implements OnInit {
       console.log(this.afterClampImageFile, this.imageAfterClampInput, this.beforeClampImageFile, this.imageBeforeClampInput, this.selectedNotice, this.issueOfficer);
       let params = {
         vehicle_number: this.vehicle.vehicle_numbers, 
-        resident_name: this.vehicle.visitor_name, 
+        visitor_name: this.vehicle.visitor_name, 
         block_id: this.vehicle.block_id, 
         unit_id: this.vehicle.unit_id, 
-        resident_contact: false, 
+        contact_number: this.vehicle.contact_number,
         type_notice: this.selectedNotice, 
         issuing_officer_name: this.issueOfficer,
+        type: 'Drive In',
+        reason: this.reason,
         notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
         before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
         after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
       }
       console.log(params)
-      this.mainVmsService.getApi(params, 'vms/create/offenses' ).subscribe({
+      this.mainVmsService.getApi(params, '/vms/create/offenses' ).subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
