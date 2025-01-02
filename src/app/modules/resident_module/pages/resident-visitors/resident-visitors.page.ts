@@ -150,24 +150,31 @@ export class ResidentVisitorsPage implements OnInit {
     try {
       this.residentVisitorService.getActiveInvites().subscribe(
         res => {
-          var result = res.result['response_result'];
-          this.activeInvites = [];
+          var result = res.result['response_status'];
           console.log(result)
-          result.forEach((item: any) => {
-            // Memformat dateOfInvite
-            const visitDate = item['visit_date'];
-            const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
-  
-            this.activeInvites.push({
-              name: item['visitor_name'],
-              dateOfInvite: formattedDate, // Menggunakan tanggal yang sudah diformat
-              vehicleNo: item['vehicle_number'],
-              entryType: item['entry_type'],
-              invite_id: item['invite_id'],
-              is_entry: item['is_entry']
+          if (result === 400) {
+            console.log(result);
+            this.activeInvites = [];
+            return;
+          } else if (result === 200) {
+            var result_data = res.result['response_result']
+            this.activeInvites = [];
+            result_data.forEach((item: any) => {
+              // Memformat dateOfInvite
+              const visitDate = item['visit_date'];
+              const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+              const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
+    
+              this.activeInvites.push({
+                name: item['visitor_name'],
+                dateOfInvite: formattedDate, // Menggunakan tanggal yang sudah diformat
+                vehicleNo: item['vehicle_number'],
+                entryType: item['entry_type'],
+                invite_id: item['invite_id'],
+                is_entry: item['is_entry']
+              });
             });
-          });
+          }
         },
         error => {
           console.log(error);

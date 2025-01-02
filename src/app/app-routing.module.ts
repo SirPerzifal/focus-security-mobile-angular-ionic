@@ -426,6 +426,10 @@ const routes: Routes = [
     path: 'overnight-form-rar',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule)
   },
+  {
+    path: 'resident-homepage',
+    loadChildren: () => import('./modules/resident_pages_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule)
+  },
 ];
 
 @NgModule({

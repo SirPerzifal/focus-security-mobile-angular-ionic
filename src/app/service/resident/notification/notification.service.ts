@@ -9,6 +9,7 @@ import { ApiService } from '../../api.service';
 })
 export class NotificationService extends ApiService {
   private apiUrl = this.baseUrl + '/resident/get/notifications';
+  private regisNotification = this.baseUrl + '/app/add_device_token';
 
   constructor(http: HttpClient) { 
     super(http);
@@ -30,6 +31,25 @@ export class NotificationService extends ApiService {
 
     // Change to send data in request body
     return this.http.post(`${this.apiUrl}`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  registerNotification(fcm_token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        fcm_token: fcm_token
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.regisNotification}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
