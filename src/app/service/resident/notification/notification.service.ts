@@ -10,6 +10,7 @@ import { ApiService } from '../../api.service';
 export class NotificationService extends ApiService {
   private apiUrl = this.baseUrl + '/resident/get/notifications';
   private regisNotification = this.baseUrl + '/app/add_device_token';
+  private countNotification = this.baseUrl + '/resident/get/notifications_count';
 
   constructor(http: HttpClient) { 
     super(http);
@@ -50,6 +51,26 @@ export class NotificationService extends ApiService {
 
     // Change to send data in request body
     return this.http.post(`${this.regisNotification}`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  countNotifications(unitId: number, partnerId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        unit_id: unitId,
+        partner_id: partnerId,
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.countNotification}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

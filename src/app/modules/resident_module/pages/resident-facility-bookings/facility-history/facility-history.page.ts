@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
 
@@ -144,6 +144,15 @@ export class FacilityHistoryPage implements OnInit {
       });
     }
   }
+
+  navigateToHistoryDetail(booking: BookingData) {
+    // Gunakan NavigationExtras untuk membawa data
+    this.router.navigate(['/facility-history-form'], {
+      state: {
+        bookingData: booking
+      }
+    });
+  }
   
   // Utility method untuk memformat waktu
   formatTime(datetime: string): string {
@@ -177,6 +186,16 @@ export class FacilityHistoryPage implements OnInit {
   ngOnInit() {
     console.log('tes')
     this.loadHistoryBookings();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event['url'] == '/facility-history'){
+          console.log('tes')
+          this.bookingList = []
+          this.loadHistoryBookings();
+        }
+         // Panggil fungsi lagi saat halaman dibuka
+      }
+    });
   }
 
   toggleShowActBk() {

@@ -1,10 +1,13 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Raise A Request'" [text_second]="'History Request'"/>
+  <div class="w-full flex items-start ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20">
-    <div class="flex flex-row mt-4 justify-center items-center w-full space-x-3">
-      <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-[150px] leading-none'" [routerLink]="['/resident-raise-a-request']"></app-visitor-button>
-      <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-[150px]'" [routerLink]="['/rejected-request']"></app-visitor-button>
+  <div class="px-5 text-center mb-20">
+    <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
+      <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32 leading-none cw-4:text-sm'" [routerLink]="['/resident-raise-a-request']"></app-visitor-button>
+      <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 cw-4:text-sm'" [routerLink]="['/rejected-request']"></app-visitor-button>
     </div>
 
     <div class="space-y-4 w-full mt-3">
@@ -22,7 +25,7 @@
             'bg-sky-100': hisrotyRequest.statusBooked === 'Pending Approval' || hisrotyRequest.statusBooked === 'Pending Payment',
             'bg-[#E3787E]': hisrotyRequest.statusBooked === 'Rejected' || hisrotyRequest.statusBooked === 'Cancelled',
             'bg-[#F8F1BA]': hisrotyRequest.statusBooked === 'Requested',
-          }" class="bg-[var(--ion-color-tertiary)] rounded-2xl px-4 py-2 mt-4 w-full">
+          }" class="bg-[var(--ion-color-tertiary)] rounded-2xl p-5 my-4 mt-4 w-full">
           <h2 [ngClass]="{
             'text-green-500': hisrotyRequest.statusBooked === 'Approved',
             'text-sky-500': hisrotyRequest.statusBooked === 'Pending Approval' || hisrotyRequest.statusBooked === 'Pending Payment',

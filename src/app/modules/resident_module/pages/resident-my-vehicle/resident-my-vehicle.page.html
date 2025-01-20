@@ -1,11 +1,11 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'My Vehicle'"/>
 
+  <div class="w-full flex items-start ml-3 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
-		<div class="w-1/6 flex items-start mr-10">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
     <div class="flex flex-col gap-1 mb-2">
       <!-- <ion-button fill="clear" expand="full" class="flex items-center bg-[var(--ion-color-secondary)] rounded-full" 
                   *ngIf="userRole === 'household'" 
@@ -14,12 +14,8 @@
       </ion-button> -->
 
       <!-- <button class="bg-[var(--ion-color-secondary)] text-black mt-1 w-full text-base rounded-full h-10 font-bold" *ngIf="userRole === 'household'" [routerLink]="['/my-vehicle-form']">Add New Vehicle</button> -->
-      <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" *ngIf="userRole === 'household'" [routerLink]="['/my-vehicle-form']" (click)="navigateToAddNewVehicle()">Add New Vehicle</button>
-      <ion-button fill="clear" expand="full" class="flex items-center bg-gray-200 rounded-full" 
-                  *ngIf="userRole !== 'household'" 
-                  disabled>
-        <span class="flex-grow font-bold text-center ml-2 text-gray-600 text-xs">Add New Vehicle</span>
-      </ion-button>
+      <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" *ngIf="userRole === 'household' && MaximumVehicle !== true" [routerLink]="['/my-vehicle-form']" (click)="navigateToAddNewVehicle()">Add New Vehicle</button>
+      <button class="bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base" *ngIf="userRole !== 'household' || MaximumVehicle === true" disabled>Add New Vehicle</button>
       <div *ngIf="userRole !== 'household'" class="text-center text-base white:text-black mx-5 mb-2"> "Please contact your primary or secondary contact of the household to add a new vehicle" </div>
     </div>
 
@@ -28,11 +24,29 @@
       'bg-[#F8F1BA]': vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval',
       'bg-[#E3787E]': vehicle.status === 'Rejected' || vehicle.status === 'rejected',
       'bg-sky-100': vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'
-      }" class="bg-[var(--ion-color-tertiary)] p-3 mt-5 rounded-2xl w-full ">
+      }" class="bg-[var(--ion-color-tertiary)] p-3 mt-3 rounded-2xl w-full ">
+      <div class="flex flex-row items-center justify-start mb-2">
+        <ng-container *ngIf="vehicle.status === 'approved' || vehicle.status === 'Approved'">
+          <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
+          <p class="text-[var(--ion-color-primary)] font-bold text-base">Approved</p>
+        </ng-container>
+        <ng-container *ngIf="vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval'">
+          <ion-icon name="alert-circle-outline" class=" bg-yellow-500 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
+          <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+        </ng-container>
+        <ng-container *ngIf="vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'">
+          <ion-icon name="alert-circle-outline" class="bg-blue-500 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
+          <p class="text-blue-500 font-bold text-base">Pending Payment</p>
+        </ng-container>
+        <ng-container *ngIf="vehicle.status === 'rejected' || vehicle.status === 'Rejected'">
+          <ion-icon name="close" class="bg-red-700 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
+          <p class="text-red-700 font-bold text-base">Rejected</p>
+        </ng-container>
+      </div>
       <p class="font-bold text-base text-black"> 
         {{ vehicle.type_application | titlecase }}
       </p>
-      <div class="flex justify-between w-full">
+      <div class="flex flex-col justify-between w-full">
         <!-- <div class="table w-full">
           <div class="flex" *ngFor="let field of ['Vehicle No', 'Make', 'Colour', 'Vehicle Type', 'Fees']">
             <p class="font-bold w-[auto] text-[11px] text-black">{{ field }}</p>
@@ -41,45 +55,36 @@
           </div> -->
           <div class="w-full">
             <table class="w-full">
-              <tr class="text-base text-black h-1" *ngFor="let field of ['Vehicle No', 'Make', 'Colour', 'Vehicle Type', 'Fees']">
-                <td class="font-bold text-[13px] w-[50%]">{{ field }}</td>
-                <td class="font-bold text-[13px] w-[5%]">:</td>
-                <td class="text-[13px] text-black">{{ getVehicleValue(vehicle, field) }}</td>
+              <tr class="text-base text-black" *ngFor="let field of ['Vehicle Number', 'Vehicle Make', 'Vehicle Colour', 'Vehicle Type', 'Fees']">
+                <td class="font-bold text-base w-[40%]">{{ field }}</td>
+                <td class="font-bold text-base">:</td>
+                <td class="text-base text-black">{{ getVehicleValue(vehicle, field) }}</td>
               </tr>
             </table>
           </div>
         <!-- </div> -->
-        <div class="flex flex-col mt-1 w-full">
+        <div class="flex mt-2 space-x-2">
+          <div class="flex flex-row items-center w-full space-x-2">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" *ngIf="vehicle.status !== 'approved' && vehicle.status !== 'Approved' && vehicle.status !== 'pending_approval' && vehicle.status !== 'Pending Approval' && vehicle.status !== 'Rejected' && vehicle.status !== 'rejected'">
+              Pay Now
+            </button>
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" (click)="navigateToVehicleDetail(vehicle)">
+              View Details
+            </button>
+          </div>
+          
+        </div>
+        <!-- <div class="flex flex-col mt-1 w-full">
           <div class="flex items-end justify-end" (click)="navigateToVehicleDetail(vehicle)">
             <ion-icon 
               class="icon bg-[var(--ion-color-primary)] rounded-full p-2 font-xs text-white" 
               name="arrow-forward"
             ></ion-icon>
           </div>
-          
-          <div class="flex flex-row items-center justify-end mt-2">
-            <ng-container *ngIf="vehicle.status === 'approved' || vehicle.status === 'Approved'">
-              <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
-              <p class="text-[var(--ion-color-primary)] font-bold text-[13px]">Approved</p>
-            </ng-container>
-            <ng-container *ngIf="vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval'">
-              <ion-icon name="alert-circle-outline" class=" bg-yellow-500 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
-              <p class="text-yellow-500 font-bold text-[13px]">Pending Approval</p>
-            </ng-container>
-            <ng-container *ngIf="vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'">
-              <ion-icon name="alert-circle-outline" class="bg-blue-500 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
-              <p class="text-blue-500 font-bold text-[13px]">Pending Payment</p>
-            </ng-container>
-            <ng-container *ngIf="vehicle.status === 'rejected' || vehicle.status === 'Rejected'">
-              <ion-icon name="close" class="bg-red-700 mr-3 p-1 rounded-full text-white text-[18px]"></ion-icon>
-              <p class="text-red-700 font-bold text-[13px]">Rejected</p>
-            </ng-container>
-          </div>
-          
-          <div class="flex justify-end items-end mt-2" *ngIf="vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'">
+                    <div class="flex justify-end items-end mt-2" *ngIf="vehicle.status === 'pending_payment' && vehicle.status === 'Pending Payment'">
             <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-base rounded-md">Pay Now</button>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

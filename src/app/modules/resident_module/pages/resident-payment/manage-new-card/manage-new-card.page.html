@@ -1,11 +1,11 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'Payments'" [text_second]="'Add New Card'"/>
   <!-- CONTENT -->
-  <div class="flex flex-col mt-2 w-full px-4">
-    <div class="w-full mt-2">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10"
-        [routerLink]="['/manage-add']"></ion-icon>
-    </div>
+  <div class="w-full mt-2 ml-[10px]">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/manage-add']"></ion-icon>
+  </div>
+  <div class="flex flex-col w-full px-4">
     <div class="w-full justify-around flex">
       <img src="assets/icon/resident-icon/payment-visa.png" class="w-1/3"/>
     </div>
@@ -26,7 +26,7 @@
       </div>
       <div class="flex flex-row items-end mt-1 ">
         <div class="w-1/4">
-          <app-text-input [id]="'cvv_card'" [labelResidentText]="'CVV'" [labelResidentClass]="'text-base font-bold'" [placeholder]="'000'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base': true}"></app-text-input>
+          <app-text-input [id]="'cvv_card'" [labelResidentText]="'CVV'" [labelResidentClass]="'text-base font-bold'" [placeholder]="'000'" [customClasses]="{'w-full':true}" [type]="'number'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base': true}"></app-text-input>
         </div>
         <div class="w-1/4 ml-3 h-12 items-center flex flex-row">
           <ion-icon name="help-circle" size="large" class="text-[var(--ion-color-primary)] size-10 "

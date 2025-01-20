@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { RecordsResidentsModalPage } from '../records-residents/records-residents-modal/records-residents-modal.page';
 
 @Component({
   selector: 'app-records-main',
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class RecordsMainPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private modalController: ModalController) { }
 
   ngOnInit() {
   }
@@ -17,9 +19,9 @@ export class RecordsMainPage implements OnInit {
     {
       text: 'VISITOR LOGS',
       icon: 'assets/icon-vms/records_menu/Visitor_Logs.png',
-      isActive: false,
       route: '/records-visitor',
       needSize: false,
+      sizeClass: '',
       params: {
         type: 'visitor'
       }
@@ -27,9 +29,9 @@ export class RecordsMainPage implements OnInit {
     {
       text: 'VEHICLE LOGS',
       icon: 'assets/icon-vms/records_menu/Vehicle_Logs.png',
-      isActive: false,
       route: '/records-visitor',
       needSize: true,
+      sizeClass: 'w-[130px] h-[90px] object-contain',
       params: {
         type: 'vehicle'
       }
@@ -37,16 +39,16 @@ export class RecordsMainPage implements OnInit {
     {
       text: 'FACILITY BOOKINGS',
       icon: 'assets/icon-vms/records_menu/Facility_Bookings.png',
-      isActive: false,
       route: '/records-facility',
       needSize: true,
+      sizeClass: 'w-[130px] h-[90px] object-contain',
     },
     {
       text: '1ST WARNING',
       icon: 'assets/icon-vms/records_menu/First_Warning.png',
-      isActive: false,
       route: '/records-wheel-clamped',
       needSize: false,
+      sizeClass: '',
       params: {
         type: 'first_warning'
       }
@@ -54,9 +56,9 @@ export class RecordsMainPage implements OnInit {
     {
       text: '2ND WARNING',
       icon: 'assets/icon-vms/records_menu/Second_Warning.png',
-      isActive: false,
       route: '/records-wheel-clamped',
       needSize: false,
+      sizeClass: '',
       params: {
         type: 'second_warning'
       }
@@ -64,9 +66,9 @@ export class RecordsMainPage implements OnInit {
     {
       text: 'WHEEL CLAMPED',
       icon: 'assets/icon-vms/records_menu/Wheel_Clamped.png',
-      isActive: false,
       route: '/records-wheel-clamped',
       needSize: false,
+      sizeClass: '',
       params: {
         type: 'wheel_clamp'
       }
@@ -74,19 +76,51 @@ export class RecordsMainPage implements OnInit {
     {
       text: 'BLACKLIST',
       icon: 'assets/icon-vms/records_menu/Blacklist.png',
-      isActive: false,
       route: '/records-blacklist',
       needSize: false,
+      sizeClass: '',
     },
+    // {
+    //   text: 'RESIDENTS',
+    //   icon: 'assets/icon-vms/records_menu/Residents.png',
+    //   route: '/records-residents',
+    //   needSize: true,
+    //   sizeClass: 'mt-[5px] w-[130px] h-[90px] object-contain',
+    //   params: {
+    //     newOpen: true
+    //   }
+    // },
   ]
 
   toggleRecordsButton(records: any, params: any = false) {
-    this.recordsMenu.forEach(item => item.isActive = false)
-    records.isActive = !records.isActive
-    if (!params) {
-      this.router.navigate([records.route])
+    if (records.text == 'RESIDENTS'){
+      this.presentModal()
     } else {
-      this.router.navigate([records.route], {queryParams: params})
+      if (!params) {
+        this.router.navigate([records.route])
+      } else {
+        this.router.navigate([records.route], {queryParams: params})
+      }
     }
+  }
+  
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: RecordsResidentsModalPage,
+      cssClass: 'record-resident-modal',
+      componentProps: {}
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if(result.data){
+          console.log("SUCCEED")
+        }
+      }
+    });
+
+    return await modal.present();
   }
 }

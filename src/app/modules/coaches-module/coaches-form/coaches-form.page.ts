@@ -175,7 +175,7 @@ export class CoachesFormPage implements OnInit {
   }
 
   isLoadingUnit = false
-  loadUnit() {
+  async loadUnit() {
     this.isLoadingUnit = true
     this.blockUnitService.getUnit(this.schedule.block_id).subscribe({
       next: (response: any) => {
@@ -219,6 +219,11 @@ export class CoachesFormPage implements OnInit {
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
     } else {
+      if (isOpenBarrier){
+        console.log("OPEN BARRIER")
+      } else {
+        console.log("BARRIER NOT OPENED");
+      }
       let params = {
         coach_id: this.schedule.coach_id,
         name: this.coachName,
@@ -243,6 +248,17 @@ export class CoachesFormPage implements OnInit {
           console.error(error);
         }
       });
+    }
+  }
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      this.coachName = contactData.visitor_name
+      this.vehicle_number = contactData.vehicle_number
+      this.schedule.block_id = contactData.block_id
+      this.loadUnit().then(() => {
+        this.schedule.unit_id = contactData.unit_id
+      })
     }
   }
 }

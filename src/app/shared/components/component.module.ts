@@ -15,6 +15,8 @@ import { FamilyCardComponent } from './family-card/family-card.component';
 import { FileInputComponent } from "./file-input/file-input.component";
 import { NricFinSelectionComponent } from './nric-fin-selection/nric-fin-selection.component';
 import { VmsHeaderComponent } from './vms-header/vms-header.component';
+import { VmsBackgroundComponent } from './vms-background/vms-background.component';
+import { VmsContactInputComponent } from './vms-contact-input/vms-contact-input/vms-contact-input.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { VmsHeaderComponent } from './vms-header/vms-header.component';
     FileInputComponent,
     NricFinSelectionComponent,
     VmsHeaderComponent,
+    VmsBackgroundComponent,
+    VmsContactInputComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +53,8 @@ import { VmsHeaderComponent } from './vms-header/vms-header.component';
     FileInputComponent,
     NricFinSelectionComponent,
     VmsHeaderComponent,
+    VmsBackgroundComponent,
+    VmsContactInputComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

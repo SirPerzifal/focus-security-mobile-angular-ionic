@@ -5,7 +5,49 @@
   <!-- Displayed Input -->
   <div class="flex flex-row items-center">
     <input 
-    *ngIf="type !== 'date'"
+      *ngIf="type === 'month' && !isMonthPickerActive"
+      [id]="id + '-display'" 
+      [class]="getFilteredCustomClasses(customInputClasses)" 
+      type="text" 
+      [placeholder]="placeholder"
+      [value]="_displayValue || placeholder"
+      readonly
+      (click)="showMonthPicker()"
+      style="border: 1px solid #6B7280; cursor: pointer;"
+    />
+  
+    <!-- Hidden month picker -->
+    <input 
+      *ngIf="type === 'month'"
+      [id]="id" 
+      [class]="getFilteredCustomClasses(customInputClasses)" 
+      type="month" 
+      [(ngModel)]="value"
+      (change)="onMonthInputChange($event)"
+      [name]="name"
+      [readonly]="isReadonly"
+      [style.position]="!isMonthPickerActive ? 'absolute' : 'static'"
+      [style.opacity]="!isMonthPickerActive ? '0' : '1'"
+      [style.pointerEvents]="!isMonthPickerActive ? 'none' : 'auto'"
+      style="border: 1px solid #6B7280;"
+    />
+    <input 
+      *ngIf="type === 'time'"
+      [id]="id" 
+      [class]="getFilteredCustomClasses(customInputClasses)" 
+      type="time" 
+      [placeholder]="placeholder" 
+      [(ngModel)]="value"
+      (keyup)="onKeyUp($event)"
+      [name]="name"
+      [readonly]="isReadonly" 
+      [min]="minTime"
+      [max]="maxTime"
+      (click)="onDisplayInputClick()"
+      style="border: 1px solid #6B7280;"
+    />
+    <input 
+      *ngIf="type !== 'date' && type !== 'time' && type !== 'month'"
       [id]="id" 
       [class]="getFilteredCustomClasses(customInputClasses)" 
       [type]="type" 
@@ -18,7 +60,7 @@
       style="border: 1px solid #6B7280;"
     />
     <input 
-    *ngIf="type === 'date'"
+      *ngIf="type === 'date'"
       [id]="id"
       [class]="getFilteredCustomClasses(customInputClasses)"
       type="text"
@@ -26,10 +68,10 @@
       [(ngModel)]="value"
       (keyup)="onKeyUp($event)"
       [name]="name"
-      [readonly]="isReadonly"
       (click)="onDisplayInputClick()"
       [min]="type === 'date' ? min : null"
-      style="border: 1px solid #6B7280; cursor: pointer;"
+      style="border: 1px solid #6B7280; cursor: pointer; background-color: white;"
+      readonly
     />
     <ion-icon *ngIf="type === 'date'" name="calendar-clear-outline" class="positioning-calendar-icon"></ion-icon>
   </div>

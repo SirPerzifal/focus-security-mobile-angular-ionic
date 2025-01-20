@@ -5,7 +5,7 @@
     <div class="w-1/6 flex items-start mr-10">
 			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
 			</div>
-    <div class="flex flex-col space-y-3 mt-4">
+    <div class="flex flex-col space-y-3 mt-1">
       <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[var(--ion-color-tertiary)] rounded-full "
         [routerLink]="['/manage-add']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/payment-manage.png" alt="Icon for Visitors" />
@@ -16,6 +16,12 @@
         [routerLink]="['/bills-maintenance']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/payment-bills.png" alt="Icon for Facility Bookings" />
         <span class="flex-grow font-bold text-start ml-2 text-[15px]">My Bills</span>
+        <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[var(--ion-color-tertiary)] rounded-full "
+        [routerLink]="['/payment-deposits']">
+        <img class="w-8 h-8" src="assets/icon/resident-icon/payment-bills.png" alt="Icon for Facility Bookings" />
+        <span class="flex-grow font-bold text-start ml-2 text-[15px]">Deposits</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
     </div>

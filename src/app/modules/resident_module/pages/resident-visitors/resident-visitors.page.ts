@@ -125,7 +125,7 @@ export class ResidentVisitorsPage implements OnInit {
     
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
-      errMsg += 'Please fill vehicle number! \n';
+      errMsg += 'Please fill date of invite! \n';
     }
     if (this.formData.entryType == "") {
       errMsg += "Please choose entry type! \n";
@@ -285,6 +285,12 @@ export class ResidentVisitorsPage implements OnInit {
 
 
   ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: FormData };
+    if (state) {
+      this.formData = state.formData;
+      console.log('tes', this.formData);
+    }
     this.getActiveInvites()
     // Inisialisasi formattedDate jika ada tanggal yang sudah ada
     if (this.formData.dateOfInvite) {
@@ -306,6 +312,28 @@ export class ResidentVisitorsPage implements OnInit {
       console.log(params);
       if (params['openActive']) {
         this.toggleShowActInv()
+        this.formattedDate = '';
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          isProvideUnit: false,
+          hiredCar: "",
+          unit: 0,
+        }
+      } else if (params['formData']) {
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          isProvideUnit: false,
+          hiredCar: "",
+          unit: 0,
+        }
       } else {
         this.toggleShowNewInv()
       }
@@ -319,5 +347,11 @@ export class ResidentVisitorsPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  extend_mb = false
+
+  testAddMb(status: boolean = false) {
+    this.extend_mb = status
   }
 }

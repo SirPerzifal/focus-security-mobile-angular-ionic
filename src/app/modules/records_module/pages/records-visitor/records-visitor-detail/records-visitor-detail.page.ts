@@ -13,9 +13,10 @@ export class RecordsVisitorDetailPage implements OnInit {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { record: any[]};
+    const state = navigation?.extras.state as { logs: any[]};
     if (state) {
-      this.record = state.record
+      this.record = state.logs
+      console.log(this.record)
     } 
    }
 

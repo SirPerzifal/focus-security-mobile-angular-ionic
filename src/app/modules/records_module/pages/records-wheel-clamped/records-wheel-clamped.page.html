@@ -1,77 +1,62 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-main'"/>
+      <app-vms-header [urlCustom]="'/records-main'" />
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon 
-        [customImageIcon]="'assets/icon-vms/records_menu/Wheel_Clamped.png'"
-        [text]="'WHEEL CLAMPED'" 
-        [routerLink]="['/records-main']" 
-        [isActive]="true" 
-        [disableClick]="true" 
-        *ngIf="pageType == 'wheel_clamp'"
-      />   
-      <app-button-icon 
-        [customImageIcon]="'assets/icon-vms/records_menu/First_Warning.png'"
-        [text]="'1ST WARNING'" 
-        [routerLink]="['/records-main']" 
-        [isActive]="true" 
-        [disableClick]="true" 
-        *ngIf="pageType == 'first_warning'"
-      />  
-      <app-button-icon 
-        [customImageIcon]="'assets/icon-vms/records_menu/Second_Warning.png'"
-        [text]="'2ND WARNING'" 
-        [routerLink]="['/records-main']" 
-        [isActive]="true" 
-        [disableClick]="true" 
-        *ngIf="pageType == 'second_warning'"
-      />   
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Wheel_Clamped.png'" [text]="'WHEEL CLAMPED'"
+        [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'wheel_clamp'" />
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/First_Warning.png'" [text]="'1ST WARNING'"
+        [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'first_warning'" />
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Second_Warning.png'" [text]="'2ND WARNING'"
+        [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'second_warning'" />
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-7">
+      <div class="flex mt-8 flex-row space-x-1">
 
-        <app-button-icon [textOnly]="true" [text]="'ACTIVE'"
-        (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true"/>
-  
-        <app-button-icon [textOnly]="true" [text]="'HISTORY'"
-        (click)="toggleSlide('history')" [isActive]="showHistoryTrans || showHistory" [disableClick]="true" />
+        <app-button-icon [textOnly]="true" [text]="'ACTIVE'" (click)="toggleSlide('active')"
+          [isActive]="showActiveTrans || showActive" [disableClick]="true" />
+
+        <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"
+          [isActive]="showHistoryTrans || showHistory" [disableClick]="true" />
       </div>
       <div class="flex flex-col mx-4 mb-4">
 
         <div class="flex flex-col w-full space-y-5 mt-8" *ngIf="showHistory" @fadeInOut>
           <div class="flex flex-row w-full justify-between">
             <div class="flex flex-row items-center">
-              <input id="wheel_clamped_sort_date" type="radio" name="history_filter" class="size-6 text-[var(--ion-color-primary)]" 
-                value="sort_date" [(ngModel)]="selectedRadio" (click)="onRadioClick('sort_date')">
+              <input id="wheel_clamped_sort_date" type="radio" name="history_filter"
+                class="size-6 text-[var(--ion-color-primary)]" value="sort_date" [(ngModel)]="selectedRadio"
+                (click)="onRadioClick('sort_date')">
               <label for="wheel_clamped_sort_date" class="text-2xl font-bold ml-2">SORT BY DATE</label>
             </div>
             <div class="flex flex-row items-center">
-              <input id="wheel_clamped_sort_vhnum" type="radio" name="history_filter" class="size-6 text-[var(--ion-color-primary)]"
-                value="sort_vehicle" [(ngModel)]="selectedRadio" (click)="onRadioClick('sort_vehicle')">
+              <input id="wheel_clamped_sort_vhnum" type="radio" name="history_filter"
+                class="size-6 text-[var(--ion-color-primary)]" value="sort_vehicle" [(ngModel)]="selectedRadio"
+                (click)="onRadioClick('sort_vehicle')">
               <label for="wheel_clamped_sort_vhnum" class="text-2xl font-bold ml-2">SORT BY VEHICLE</label>
             </div>
             <div class="flex flex-row items-center">
-              <input id="wheel_clamped_search" type="radio" name="history_filter" class="size-6 text-[var(--ion-color-primary)]"
-                value="search" [(ngModel)]="selectedRadio" (click)="onRadioClick('search')">
+              <input id="wheel_clamped_search" type="radio" name="history_filter"
+                class="size-6 text-[var(--ion-color-primary)]" value="search" [(ngModel)]="selectedRadio"
+                (click)="onRadioClick('search')">
               <label for="wheel_clamped_search" class="text-2xl font-bold ml-2">SEARCH</label>
             </div>
           </div>
 
           <div class="flex flex-col w-full" *ngIf="selectedRadio == 'search'">
             <div class="w-full flex flex-col">
-              <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
+              <div class="w-full justify-between flex flex-row">
+                <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
+                <label class="text-2xl" (click)="clearFilters()"><u><b>CLEAR SEARCH</b></u></label>
+              </div>
               <select id="search_option" (change)="onSearchOptionChange($event)"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
+                style="border: 1px solid #6B7280;">
                 <option selected disabled hidden>CHOOSE SEARCH BY</option>
                 <option [value]="'date'">DATE</option>
                 <option [value]="'vehicle_no'">VEHICLE NUMBER</option>
@@ -79,66 +64,87 @@
                 <option [value]="'all'">ALL</option>
               </select>
             </div>
-            <div class="w-full space-y-5" *ngIf="searchOption == 'date' || searchOption == 'all'">
-              <app-text-input 
-                #wheelClampedSearchDateFilter
-                [id]="'wheel_clamped_search_date_filter'" 
-                [labelText]="'DATE'" [placeholder]="'24/12/2024'" 
-                [customClasses]="{'w-full ':true}" 
-                [type]="'date'"
-                (change)="onDateChange($event)"
-                [(ngModel)]="filter.issue_date"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-              </app-text-input>
+            <div class="w-full flex-row space-x-1 flex justify-between"
+              *ngIf="searchOption == 'date' || searchOption == 'all'">
+              <div class="w-1/2">
+                <app-text-input #wheelClampedSearchDateFilter [id]="'wheel_clamped_search_date_filter'"
+                  [labelText]="'DATE FROM'" [placeholder]="'24/12/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
+                  (change)="onDateChange($event)" [(ngModel)]="filter.issue_date"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
+              <div class="w-1/2">
+                <app-text-input #wheelClampedSearchDateEndFilter [id]="'wheel_clamped_search_date_end_filter'"
+                  [labelText]="'DATE TO'" [placeholder]="'24/12/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
+                  (change)="onEndDateChange($event)" [(ngModel)]="filter.end_issue_date"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
             </div>
-            <div class="w-full flex flex-col" *ngIf="searchOption == 'block' || searchOption == 'all'">
-              <label class="text-2xl"><u><b>BLOCK</b></u></label>
-              <select id="rv_block" (change)="onBlockChange($event)" [(ngModel)]="filter.block"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
-                <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-                <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-              </select>
+            <div class="w-full flex-row space-x-1 flex justify-between" *ngIf="searchOption == 'block' || searchOption == 'all'">
+              <div class="w-1/2 flex-col">
+                <label class="text-2xl"><u><b>BLOCK</b></u></label>
+                <select id="rv_block" (change)="onBlockChange($event)" [(ngModel)]="filter.block"
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                  style="border: 1px solid #6B7280;">
+                  <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+                  <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+                </select>
+              </div>
+              <div class="w-1/2 flex-col">
+                <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
+                <select id="rv_unit" (change)="onUnitChange($event)" [(ngModel)]="filter.unit"
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                  style="border: 1px solid #6B7280;">
+                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
+                  <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+                </select> -->
+                <app-text-input #wheelClampedUnitFilter [id]="'wheel_clamped_unit_filter'"
+                  [labelText]="'UNIT'" [placeholder]="'UNIT 0101'" [customClasses]="{'w-full ':true}"
+                  [type]="'text'" [(ngModel)]="filter.unit" (change)="onUnitChange($event)" [isReadonly]="!filter.block"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
             </div>
-            <div class="w-full flex flex-col" *ngIf="searchOption == 'block' || searchOption == 'all'">
-              <label class="text-2xl"><u><b>UNIT</b></u></label>
-              <select id="rv_unit" (change)="onUnitChange($event)"  [(ngModel)]="filter.unit"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
-                <option value="" selected disabled hidden>CHOOSE UNIT</option>
-                <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-              </select>
-            </div>
+            
             <div class="w-full" *ngIf="searchOption == 'vehicle_no' || searchOption == 'all'">
-              <app-text-input 
-                #wheelClamperVehicleNumberFilter
-                [id]="'wheel_clamped_vehicle_number_filter'" 
-                [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" 
-                [customClasses]="{'w-full ':true}" 
-                [type]="'text'" 
-                [(ngModel)]="filter.vehicle_number"
-                (change)="onVehicleFilterChange($event)"
+              <app-text-input #wheelClamperVehicleNumberFilter [id]="'wheel_clamped_vehicle_number_filter'"
+                [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
+                [type]="'text'" [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div>
           </div>
 
-          <div class="flex flex-col w-full space-y-5" *ngIf="selectedRadio == null || selectedRadio == 'search'">
-            <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of historyVehicles" >
-              <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{ convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1]  }}</span>
-              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onArrowClick(vehicle)"></ion-icon>
+          <div class="flex flex-col w-full space-y-5"
+            *ngIf="(selectedRadio == null || selectedRadio == 'search') && (filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number)">
+            <div
+              class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+              *ngFor="let vehicle of historyVehicles">
+              <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
+                convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
+              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
+                (click)="onArrowClick(vehicle)"></ion-icon>
             </div>
           </div>
-          <div class="flex flex-col w-full space-y-5" *ngIf="selectedRadio == 'sort_date' || selectedRadio == 'sort_vehicle'">
+          <div class="flex flex-col w-full space-y-5"
+            *ngIf="(selectedRadio == 'sort_date' || selectedRadio == 'sort_vehicle') && (filter.block || filter.unit || filter.issue_date || filter.end_issue_date)">
             <div class="flex flex-col" *ngFor="let vehicleDate of sortVehicle">
-              <span class="text-2xl font-bold">{{ selectedRadio == 'sort_date'? vehicleDate.issue_date : vehicleDate.vehicle_number }}</span>
+              <span class="text-2xl font-bold">{{ selectedRadio == 'sort_date'? vehicleDate.issue_date :
+                vehicleDate.vehicle_number }}</span>
               <div class="flex flex-col w-full space-y-5 pl-4 mt-5">
-                <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of vehicleDate.data">
-                  <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{ convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1]  }}</span>
-                  <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onArrowClick(vehicle)"></ion-icon>
+                <div
+                  class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+                  *ngFor="let vehicle of vehicleDate.data">
+                  <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
+                    convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
+                  <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
+                    (click)="onArrowClick(vehicle)"></ion-icon>
                 </div>
               </div>
-              
+
             </div>
-            
+
           </div>
         </div>
 
@@ -146,16 +152,20 @@
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
           <div class="flex flex-row justify-end w-full">
-            <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle" (click)="presentModal()"></ion-icon>
+            <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle"
+              (click)="presentModal()"></ion-icon>
           </div>
-          <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of activeVehicles" >
-            <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{ convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1]  }}</span>
-            <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onArrowClick(vehicle)"></ion-icon>
+          <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+            *ngFor="let vehicle of activeVehicles">
+            <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
+              convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
+            <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
+              (click)="onArrowClick(vehicle)"></ion-icon>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
-  
+
 </ion-content>

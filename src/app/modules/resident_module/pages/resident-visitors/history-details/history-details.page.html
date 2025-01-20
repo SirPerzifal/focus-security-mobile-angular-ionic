@@ -1,23 +1,25 @@
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Visitors'" [text_second]="'History'" />
+	<app-resident-header [text]="'Visitors'" [text_second]="'History Detail'" />
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="flex flex-row justify-between mt-4">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/history']"></ion-icon>
+  </div>
+  <!-- <div class="my-2 mx-4">
+    <div class="flex flex-row justify-between">
+      <app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
     </div>
+  </div> -->
+  <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
-        <div class="w-full mt-4">
-          <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-8" [routerLink]="['/history']"></ion-icon>
-        </div>
         <div class="w-full mt-2">
           <div [class]="historyData.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
             <div class="text-base">

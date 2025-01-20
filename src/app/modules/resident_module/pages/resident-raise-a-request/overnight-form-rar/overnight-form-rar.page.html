@@ -1,11 +1,11 @@
 <ion-content [fullscreen]="true" [formGroup]="form">
 	<app-resident-header [text]="'Raise A Request'" [text_second]="'New Overnight Request'" />
+  <div class="w-full flex items-start ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20">
-		<div class="w-1/6 flex items-start mr-10">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
-    </div>
-    <div class="flex flex-col justify-between mt-2">
+  <div class="px-5 text-center mb-20">
+    <div class="flex flex-col justify-between">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Name of Resident Applying</p>
@@ -18,17 +18,17 @@
         </app-text-input>
       </div>
       <div class="flex flex-row items-center space-x-2">
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Block</p>
           </div>
-          <select id="of_block" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280] my-1">
+          <select id="of_block" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
             <option value="1" selected disabled hidden>1</option>
             <!-- <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option> -->
           </select>
         </div>
 
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Unit</p>
           </div>
@@ -51,24 +51,24 @@
       </div>
       <div class="w-full mt-2">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold text-start">For whom are you applying the overnight parking for?
+          <p class="text-base font-bold text-start">For whom are you applying the overnight parking for?</p>
         </div>
-        <div class="flex flex-row mt-1">
+        <div class="flex flex-row mt-2">
           <input type="radio" id="myself" name="for_who" (change)="onOptionChange('myself')"
-            class="mr-1 accent-black rounded text-base">
-          <b>MySelf</b>
+            class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+          <label for="myself"><b>MySelf</b></label>
           <input type="radio" id="visitor" name="for_who" (change)="onOptionChange('visitor')"
-            class="mr-1 accent-black rounded ml-4 text-base">
-          <b>Visitor</b>
+            class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
+          <label for="visitor"><b>Visitor</b></label>
         </div>
       </div>
-      <div id="visitor" class="w-full mt-2" *ngIf="selectedOption === 'visitor'">
+      <div id="visitor" class="w-full mt-2 overflow-x-auto pb-1" *ngIf="selectedOption === 'visitor'">
         <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
           <thead>
             <tr class="bg-gray-200 text-gray-700">
               <th class="border border-gray-300 px-4 py-2 w-16"> </th>
               <th class="border border-gray-300 px-4 py-2">Visitor Name</th>
-              <th class="border border-gray-300 px-4 py-2">Visitor Contact No</th>
+              <!-- <th class="border border-gray-300 px-4 py-2">Visitor Contact No</th> -->
               <th class="border border-gray-300 px-4 py-2">Visitor Vehicle Number</th>
             </tr>
           </thead>
@@ -78,7 +78,7 @@
                 <input id="visitor_data_{{visitor.id}}" (change)="onVisitorSelect(visitor.id)" name="vd" type="radio" class="w-4 h-4">
               </td>
               <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.name }}</td>
-              <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.contact || 'No Contact' }}</td>
+              <!-- <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.contact || 'No Contact' }}</td> -->
               <td class="border border-gray-300 px-4 py-2 text-gray-700">
                 {{ visitor.vehicle || 'No Vehicle Number' }}
                 <span *ngIf="!visitor.vehicle">
@@ -88,7 +88,7 @@
             </tr>
           </tbody>
         </table>
-        <p>No Visitors? <a [routerLink]="['/resident-visitors']">Invite Now</a></p>
+        <p *ngIf="!expectedVisitors">No Visitors? <a [routerLink]="['/resident-visitors']">Invite Now</a></p>
       </div>
       <div id="myself" class="w-full mt-2" *ngIf="selectedOption === 'myself'">
         <div class="w-full">
@@ -113,16 +113,16 @@
             [formControlName]="'purposeOfParking'"> <!-- Bind to form control -->
           </app-text-input>
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="flex flex-row justify-start mb-1">
-            <p class="text-base font-bold">Vehicle Log</p>
+            <p class="text-base font-bold">Screenshot of Vehicle Rental Agreement</p>
           </div>
           <div class="w-full flex flex-row justify-between items-center">
             <div class="w-4/6">
               <input
                 placeholder="Pilih file"
                 type="file"
-                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-12 text-[#6B7280] mt-1 file:bg-transparent file:border-none file:text-transparent"
+                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-12 text-[#6B7280] mt-2 file:bg-transparent file:border-none file:text-transparent"
                 (change)="onFileChange($event)"
               />
             </div>
@@ -138,8 +138,8 @@
           <input type="checkbox" id="inv_agreement" name="inv_agreement" 
                  (change)="onGSTChange($event)" 
                  [checked]="GST" 
-                 class="mr-1 accent-black rounded">
-          <b class="text-base">Include GST</b>
+                 class="mr-1 accent-black text-[var(--ion-color-primary)] rounded">
+          <label for="inv_agreement"><b class="">Include GST</b></label>
         </div>
       </div>
       <div class="flex flex-row mt-4 text-base">

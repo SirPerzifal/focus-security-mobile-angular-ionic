@@ -1,21 +1,18 @@
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Visitors'" [text_second]="'Daily Invite'" />
+	<app-resident-header [text]="'Visitors'" [text_second]="'Invite From History'" />
+	<div class="w-full flex items-start justify-start mt-2 ml-3">
+		<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/invite-form']"></ion-icon>
+	</div>
 	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4">
-    <ion-button class="flex flex-row justify-center items-center w-full icon" fill="clear" [routerLink]="['/invite-form']">
-			<div class="flex flex-col items-center text-black">
-        <ion-icon name="arrow-back"></ion-icon>
-			</div>
-		</ion-button>
-
-    <div class="flex flex-col mt-2">
-      <p class="text-[14px] font-bold">Invitee History List</p>
+	<div class="flex flex-col relative mx-4 mb-24">
+    <div class="flex flex-col mt-3">
+      <u class="text-ls font-bold">Invitee History List</u>
       <div id="data">
-        <div *ngFor="let invitee of historyData" class="w-full flex justify-between flex-row mt-4">
+        <div *ngFor="let invitee of historyData" class="w-full flex justify-between flex-row mt-2">
           <div class="w-11/12">
-            <div class="flex flex-row justify-start mt-4">
+            <!-- <div class="flex flex-row justify-start">
               <p class="text-base font-bold">Name on the List</p>
-            </div>
+            </div> -->
             <div class="flex">
               <app-text-input 
                 [id]="'invf_name'" 
@@ -35,15 +32,18 @@
                   'text-grey-100': invitee.is_ban,
                   'outline-grey-100': invitee.is_ban
                 }" 
-                [value]="invitee.name" 
+                [value]="invitee.visitor_name" 
                 [isReadonly]="true">
               </app-text-input>
               <div class="flex items-center ml-4">
                 <input 
-                  id="checked-checkbox" 
-                  type="checkbox" 
-                  [disabled]="invitee.is_ban" 
-                  class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  id="checked-checkbox"
+                  (change)="toggleSelect(invitee)"
+                  type="checkbox"
+                  [disabled]="invitee.is_ban"
+                  [ngModel]="isInviteeExisted(invitee)"
+                  class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
               </div>
             </div>
           </div>

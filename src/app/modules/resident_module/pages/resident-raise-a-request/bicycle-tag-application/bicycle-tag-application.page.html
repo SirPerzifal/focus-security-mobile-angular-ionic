@@ -1,0 +1,159 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Raise A Request'" [text_second]="'Bicycle Tag Application'" />
+  <div class="w-full flex items-start ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+  </div>
+
+  <div class="px-5 text-center mb-20">
+    <div class="flex flex-col justify-between mt-2">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Name of Resident Applying</p>
+        </div>
+        <app-text-input [id]="'name_of_resident'"
+          [placeholder]="'KingsMan Condominium'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
+        </app-text-input>
+      </div>
+    </div>
+    <div class="flex flex-row items-center space-x-2">
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Block</p>
+        </div>
+        <select id="of_block" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
+          <option value="1" selected disabled hidden>1</option>
+          <!-- <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option> -->
+        </select>
+      </div>
+
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Unit</p>
+        </div>
+        <select id="of_unit" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-base text-[#6B7280]">
+          <option value="1" selected disabled hidden>1</option>
+          <!-- <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option> -->
+        </select>
+      </div>
+    </div>
+    <div class="w-full">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Contact Number of Resident</p>
+      </div>
+      <app-text-input [id]="'phone_number'"
+        [placeholder]="'085830122464'"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [isReadonly]="true">
+      </app-text-input>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold text-start">What purpose you applying this?</p>
+      </div>
+      <div class="flex flex-row">
+        <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')"
+          class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+        <label for="new_application"><b>New Application</b></label>
+        <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')"
+          class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
+        <label for="replacement"><b>Replacement</b></label>
+      </div>
+    </div>
+
+    <!-- Replacement -->
+    <div class="w-full mt-2" *ngIf="selectedOption === 'replacement'">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold text-start">Which Card Would you want a replacement for?</p>
+        </div>
+        <div class="flex flex-row mt-1">
+          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[50%] text-sm text-left bg-white">
+            <thead>
+              <tr class="bg-gray-200 text-gray-700">
+                <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Card Number</th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Assigned resident name</th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let card of expectedCards">
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                  <input id="card_data_{{card.id}}" (change)="oncardSelect(card)" name="card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                </td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_number }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.assigned_resident_name }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_status }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p *ngIf="!expectedCards">No cards? <a [routerLink]="['/manage-new-card']">Make one now</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Application -->
+    <div class="w-full mt-2" *ngIf="selectedOption === 'new_application'">
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Type Brand</p>
+        </div>
+        <app-text-input [id]="'brand'"
+          [placeholder]="'brand'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+        </app-text-input>
+      </div>
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Type Colour</p>
+        </div>
+        <app-text-input [id]="'colour'"
+          [placeholder]="'colour'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+        </app-text-input>
+      </div>
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Upload Image for Bicycle</p>
+        </div>
+        <app-text-input [id]="'image'"
+          [placeholder]="'image'"
+          [customClasses]="{'w-full':true}" [type]="'file'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+        </app-text-input>
+      </div>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Amount Payable</p>
+      </div>
+      <app-text-input [id]="'amount_payable'"
+        [placeholder]="'$$____'"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+      </app-text-input>
+    </div>
+
+    <div class="flex flex-row mt-4 text-base">
+      <app-checkbox-confirmation 
+        [label]="'I agree to the terms above'" 
+        [(checked)]="agreementChecked" 
+        [customClass]="'mr-1 rounded font-bold'">
+      </app-checkbox-confirmation>
+    </div>
+    <button 
+      [disabled]="!agreementChecked"
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+      class="mt-2 w-full text-base rounded h-10 font-bold">
+      Submit for Approval
+    </button>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

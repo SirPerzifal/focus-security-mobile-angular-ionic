@@ -9,6 +9,7 @@ import { BottomNavBarComponent } from './components/bottom-nav-bar/bottom-nav-ba
 import { MultiLineButtonComponent } from './components/multi-line-button/multi-line-button.component';
 import { CheckboxConfirmationComponent } from './components/checkbox-confirmation/checkbox-confirmation.component';
 import { VotingGraphComponent } from './components/voting-graph/voting-graph.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { VotingGraphComponent } from './components/voting-graph/voting-graph.com
     BottomNavBarComponent,
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
-    VotingGraphComponent
+    VotingGraphComponent,
+    CalendarComponent
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,8 @@ import { VotingGraphComponent } from './components/voting-graph/voting-graph.com
     BottomNavBarComponent,
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
-    VotingGraphComponent
+    VotingGraphComponent,
+    CalendarComponent
   ]
 })
 export class SharedModule { }

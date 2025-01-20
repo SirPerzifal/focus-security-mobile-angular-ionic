@@ -4,6 +4,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { VisitorService } from 'src/app/service/vms/visitor/visitor.service';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-walk-in',
@@ -223,7 +224,7 @@ export class WalkInPage implements OnInit {
     console.log(this.Block)
   }
 
-  loadUnit() {
+  async loadUnit() {
     this.blockUnitService.getUnit(this.formData.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -259,6 +260,24 @@ export class WalkInPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.formData.visitor_vehicle = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      this.formData.visitor_name = contactData.visitor_name
+      this.formData.visitor_vehicle = contactData.vehicle_number
+      this.formData.block = contactData.block_id
+      this.loadUnit().then(() => {
+        this.formData.unit = contactData.unit_id
+      })
+    }
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
 }

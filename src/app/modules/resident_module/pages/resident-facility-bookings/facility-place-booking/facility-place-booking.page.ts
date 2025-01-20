@@ -22,6 +22,7 @@ export class FacilityPlaceBookingPage implements OnInit {
   errorMessage: string = '';
   selectedDate: string = new Date().toISOString();
   isTermsAccepted: boolean = false; // Menyimpan status checkbox
+  selectedRoom: string = 'default' ;
 
   constructor(
     private route: ActivatedRoute, 
@@ -37,6 +38,13 @@ export class FacilityPlaceBookingPage implements OnInit {
     });
   }
 
+  onDateChange(event: any) {
+    // Reset room selection saat tanggal diubah
+    this.selectedRoom = 'default'; // Kembalikan ke opsi default
+    this.loadRoomSchedule(event)
+  }
+  
+
   loadFacilityDetail() {
     this.facilityService.getFacilityById(this.facilityId).subscribe({
       next: (response) => {
@@ -51,7 +59,11 @@ export class FacilityPlaceBookingPage implements OnInit {
   }
 
   loadRoomSchedule(event: any) {
-    this.roomId = event.target.value; // Set the roomId to the selected value
+    // Jika event ada, ambil roomId dari event
+    if (event) {
+      this.roomId = event.target.value; // Set the roomId to the selected value
+    }
+    
     const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
     this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
       next: (response) => {

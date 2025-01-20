@@ -199,7 +199,7 @@ export class ContractorFormPage implements OnInit {
     console.log(this.Block)
   }
 
-  loadUnit() {
+  async loadUnit() {
     this.blockUnitService.getUnit(this.selectedBlock).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -225,5 +225,21 @@ export class ContractorFormPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.contractorVehicleNumberInput.value = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  formData = {
+    contractor_name: '',
+    contractor_vehicle: '',
+  };
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      this.formData.contractor_name = contactData.visitor_name
+      this.formData.contractor_vehicle = contactData.vehicle_number
+      this.selectedBlock = contactData.block_id
+      this.loadUnit().then(() => {
+        this.selectedUnit = contactData.unit_id
+      })
+    }
   }
 }

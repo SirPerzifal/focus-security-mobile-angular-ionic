@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -15,7 +15,7 @@
       </ion-button> -->
       <!-- <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" /> -->
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/48_hours_white.png'" [text]="'48HRS'" *ngIf="!showSearch"
         @fadeInOut (click)="toggleShow48Hrs()" [isActive]="show48Hrs" [disableClick]="true" />
 
@@ -87,33 +87,20 @@
         <div class="flex flex-row items-center my-2 ml-1" *ngIf="walkIn">
           <input type="radio" name="SelectedIdentification" id="name_identification" value="name"
             (change)="onSearchTypeChange($event)" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
-          <label for="contractor_nric_identification" class="text-2xl">NAME</label>
+          <label for="name_identification" class="text-2xl">NAME</label>
         </div>
 
         <div class="flex flex-row items-center my-2 ml-1" *ngIf="driveIn">
           <input type="radio" name="SelectedIdentification" id="vehicle_identification" value="vehicle"
             (change)="onSearchTypeChange($event)" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
-          <label for="contractor_fin_identification" class="text-2xl">VEHICLE NUMBER</label>
+          <label for="vehicle_identification" class="text-2xl">VEHICLE NUMBER</label>
         </div>
 
         <div class="flex flex-row items-center">
           <input type="radio" name="SelectedIdentification" id="contact_identification" value="contact"
             (change)="onSearchTypeChange($event)" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
-          <label for="contractor_fin_identification" class="text-2xl">CONTACT NUMBER</label>
+          <label for="contact_identification" class="text-2xl">CONTACT NUMBER</label>
         </div>
-
-        <!-- <div *ngIf="walkIn">
-          <input type="radio" name="SelectedIdentification" id="name_identification" value="name" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
-          <label for="name">Name</label>
-        </div>
-        <div *ngIf="driveIn">
-          <input  type="radio" name="SelectedIdentification" id="vehicle_identification" value="vehicle" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
-          <label for="vehicle">Vehicle No</label>
-        </div>
-        <div>
-          <input type="radio" name="SelectedIdentification" id="contact_identification" value="contact" class="mr-[5px]" (change)="onSearchTypeChange($event)" />
-          <label for="contact">Contact No.</label>
-        </div> -->
       </div>
       <div class="flex flex-row ">
         <div class="flex flex-row justify-between w-full gap-x-6 mt-3 mx-4 items-end">

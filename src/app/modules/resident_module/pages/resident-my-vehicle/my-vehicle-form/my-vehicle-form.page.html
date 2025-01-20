@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'My Vehicle'" [text_second]="'Add Vehicle'" />
+  <div class="w-full flex items-start ml-3 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-vehicle']"></ion-icon>
+  </div>
   
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="w-full mt-2">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-vehicle']"></ion-icon>
-    </div>
+  <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-col justify-between mt-2">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1 mt-1">
@@ -12,7 +12,7 @@
         </div>
         <select id="type_of_application" (change)="onTypeOfApplicationChange($event)" placeholder="Type Of Application" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280]">
           <option selected disabled hidden>Choose Type of Application</option>
-          <option value="owned_vehicle">First Vehicle</option>
+          <option value="owned_vehicle">Permanent Vehicle</option>
           <option value="temporary_vehicle">Temporary Vehicle</option>
         </select>
       </div>
@@ -86,20 +86,20 @@
               placeholder="Pilih file"
               type="file"
               (change)="onFileSelected($event)"
-              class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-10 text-[#6B7280] mt-1 file:bg-transparent file:border-none file:text-transparent"
+              class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280] text-left pl-[0.75rem] mt-1 file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
             />
           </div>
           <button
             id="middle_button"
             (click)="uploadFile()"
-            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-[inherit] text-base rounded font-bold"
+            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-[inherit] mt-1 text-base rounded font-bold"
           >
             Upload
           </button>
         </div>
       </div>
 
-      <div class="w-full mt-1">
+      <!-- <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Block</p>
         </div>
@@ -117,7 +117,7 @@
           <option selected disabled hidden>Choose Unit</option>
           <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
         </select>
-      </div>
+      </div> -->
 
       <div *ngIf="selectedTypeOfApplication === 'temporary_vehicle'">
         <div class="w-full mt-1.5">

@@ -2,22 +2,25 @@
   <app-resident-header [text]="'Facility Booking'" [text_second]="'Booking History'" />
 
   <div class="flex flex-col relative mt-2 mb-16">
-    <div class="w-1/6 flex items-start mr-10">
+    <div class="w-1/6 flex items-start ml-3">
 			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
 			</div>
     <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
-        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
-        <app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20'" (click)="toggleShowHis()"></app-visitor-button>
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <!-- <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowDep()"></app-visitor-button> -->
+        <app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
     <!-- Konten Utama -->
     <div class="my-4" *ngIf="showMainContent" @fadeInOut>
-      <div class="flex mb-2 justify-end items-end mr-4">
-        <button class="bg-yellow-500 py-2 px-4 rounded mb-2 text-base text-black" (click)="resetFilter()">All Records</button>
+      <!-- <div class="flex mb-2 justify-end items-end mr-4">
+        <button class="bg-[var(--ion-color-primary)] py-2 px-4 rounded mb-2 text-white text-base" (click)="resetFilter()">All Records</button>
+      </div> -->
+      <div class="flex flex-row space-x-2 ml-4 mr-4">
+        <p class="text-base font-bold">Filter Date</p>
       </div>
       <div class="flex flex-row space-x-2 ml-4 mr-4">
         <div class="w-1/2">
@@ -27,6 +30,7 @@
             [placeholder]="'Start Filter Date'"
             [customClasses]="{'w-full':true}" 
             [type]="'date'"
+            [(ngModel)]="startDate"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
             (change)="onStartDateChange($event)"
           ></app-text-input>        
@@ -50,6 +54,7 @@
             [placeholder]="'End Filter Date'"
             [customClasses]="{'w-full':true}" 
             [type]="'date'"
+            [(ngModel)]="endDate"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
             (change)="onEndDateChange($event)"
             [min]="startDate"
@@ -65,7 +70,10 @@
           <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent">
         </div> -->
       </div>
-      <div *ngFor="let booking of bookingList" class="bg-[#D8ECCF] rounded-2xl p-5 m-5 flex justify-between items-center">
+      <div class="flex flex-row-reverse mt-4 space-x-2 ml-4 mr-4">
+        <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+      </div>
+      <div *ngFor="let booking of bookingList" class="bg-[#D8ECCF] rounded-2xl p-5 m-4 flex flex-col space-y-2">
         <div class="max-w-[100%]">
           <div [ngClass]="{
             'bg-green-300': booking.status === 'Approved',
@@ -73,22 +81,22 @@
             'bg-[#E3787E]': booking.status === 'Rejected' || booking.status === 'Cancelled',
             'bg-yellow-500': booking.status === 'Requested',
             }" class="bg-[#A3D9A5] text-black py-1 px-2 rounded-md font-bold inline-block ml-1">{{ booking.status }}</div>
-          <h2 class="ml-1 text-xl text-black font-bold mt-2">{{ booking.facilityName }}</h2>
+          <h2 class="ml-1 text-xl bg-[#D8ECCF] font-bold mt-2">{{ booking.facilityName }}</h2>
           <div class="text-black text-base">
-            <table>
+            <table class="w-full table-fixed">
               <tr class="h-1">
                 <td class="font-bold">Event Date</td>
-                <td>:</td>
+                <td class="w-[5%]">:</td>
                 <td>{{ booking.eventDate }}</td>
               </tr>
               <tr class="h-1">
                 <td class="font-bold">Booked By</td>
-                <td>:</td>
+                <td class="w-[5%]">:</td>
                 <td>{{ booking.bookedBy }}</td>
               </tr>
               <tr class="h-1">
                 <td class="font-bold">Deposit Status</td>
-                <td>:</td>
+                <td class="w-[5%]">:</td>
                 <td>{{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending Payment' }}</td>
               </tr>
             </table>
@@ -97,11 +105,9 @@
           <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
           <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p> -->
         </div>
-        <ion-button class="flex flex-row justify-center items-center absolute right-16 icon" fill="clear" (click)="toDetail(booking)">
-          <div class="flex flex-col items-center text-black">
-            <ion-icon name="arrow-forward"></ion-icon>
-          </div>
-        </ion-button>
+        <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-3 w-[45%]" (click)="navigateToHistoryDetail(booking)">
+          View Details
+        </button>
       </div>
     </div>
 

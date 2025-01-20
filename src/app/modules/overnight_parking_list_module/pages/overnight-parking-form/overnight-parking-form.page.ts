@@ -130,7 +130,7 @@ export class OvernightParkingFormPage implements OnInit {
   
   //   this.moveFormService.addSchedule(
   //     this.getInputValue('contractor_name'),
-  //     this.getInputValue('contractor_contact'),
+  //     this.getInputValue('owner_contact_number'),
   //     this.getInputValue('contractor_company_name'),
   //     this.getIdentificationType(), // Misalnya 'NRIC', 'Passport', dll
   //     this.getInputValue('contractor_nric/fin'),

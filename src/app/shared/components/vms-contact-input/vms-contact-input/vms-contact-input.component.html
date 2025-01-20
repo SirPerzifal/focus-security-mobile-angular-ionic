@@ -1,0 +1,44 @@
+<div class="w-full flex flex-row justify-between" *ngIf="vmsPage">
+  <div class="w-[20%] flex flex-col justify-start">
+    <label class="text-2xl"><b><u>CODE</u></b></label>
+    <select [id]="id" [class]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" [(ngModel)]="selectedCode"
+      [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >
+      <option hidden selected disabled value="+65">SG +65</option>
+      <option *ngFor="let code of countryCodes" [value]="code.code">{{ code.country }} +{{ code.code }}</option>
+    </select>
+    <!-- <input [id]="id" [class]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" [type]="'number'"
+      [placeholder]="'+65'" [(ngModel)]="value" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
+      style="border: 1px solid #6B7280;" /> -->
+  </div>
+  <div class="w-[50%] flex flex-col justify-start">
+    <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
+    <input [id]="id" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl" type="text"
+      [placeholder]="'821 7263 112'" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
+      style="border: 1px solid #6B7280;" />
+  </div>
+  <div class="h-25 flex flex-col justify-end w-1/4">
+    <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 rounded font-bold" (click)="getContactInformation()">SEARCH</button>
+  </div>
+</div>
+
+<input hidden [(ngModel)]="value" />
+
+<div class="w-full flex flex-row justify-between" *ngIf="!vmsPage">
+  <div class="w-[30%] flex flex-col justify-start">
+    <label [class]="labelClass"><b><u>Code</u></b></label>
+    <select [id]="id" [class]="inputClass + ' resident-selection'" [(ngModel)]="selectedCode"
+      [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >
+      <option hidden selected disabled value="+65">SG +65</option>
+      <option *ngFor="let code of countryCodes" [value]="code.code">{{ code.country }} +{{ code.code }}</option>
+    </select>
+  </div>
+  <div class="w-[65%] flex flex-col justify-start">
+    <label [class]="labelClass"><b><u>{{ contactLabel }}</u></b></label>
+    <input [id]="id" [class]="inputClass" type="text"
+      [placeholder]="'EG. 8217822137'" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
+      style="border: 1px solid #6B7280;" />
+  </div>
+  <!-- <div class="flex flex-col justify-end w-1/4">
+    <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 rounded font-bold">SEARCH</button>
+  </div> -->
+</div>

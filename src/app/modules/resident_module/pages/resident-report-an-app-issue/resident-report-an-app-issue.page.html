@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Report app Issue'"/>
+  <app-resident-header [text]="'Report app Issue'" [text_second]="'Add App Report'"/>
+  <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20 ">
-    <div class="mb-3 flex justify-start">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/record-app-report']"></ion-icon>
-    </div>
+  <div class="px-5 text-center mb-20">
     <div class="flex flex-col">
       <div class="w-full mb-2">
         <div class="flex flex-row justify-start mb-1 mt-1">

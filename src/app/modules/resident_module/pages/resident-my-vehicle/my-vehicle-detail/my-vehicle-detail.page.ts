@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MyVehicleDetailService } from 'src/app/service/resident/my-vehicle/my-vehicle-detail/my-vehicle-detail.service';
+import { AlertController } from '@ionic/angular';
 
 interface Vehicle {
   unit_id: string;
-  id: string;
+  id: 0;
   type_application: string;
   status: string;
   vehicleNo: string;
@@ -21,7 +23,7 @@ interface Vehicle {
 export class MyVehicleDetailPage implements OnInit {
   vehicle: Vehicle | null = null;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private myVehicleDetailService: MyVehicleDetailService, private alertController: AlertController,) { }
 
   ngOnInit() {
     // Ambil data yang dikirim dari halaman sebelumnya
@@ -34,6 +36,64 @@ export class MyVehicleDetailPage implements OnInit {
     if (!this.vehicle) {
       this.router.navigate(['/resident-my-vehicle']);
     }
+  }
+
+  backToVehicle() {
+    this.vehicle = null;
+    this.router.navigate(['/resident-my-vehicle']);
+  }
+
+  public async deleteVehicle(
+    header: string = 'Cancel', 
+    confirmText: string = 'Confirm',
+    cancelText: string = 'Cancel', 
+    vehicleId?: number  // Jadikan optional
+  ) {
+    console.log(vehicleId)
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: header,
+      message: 'Are you sure you want to delete this vehicle?', // Tambahkan pesan konfirmasi
+      buttons: [
+        {
+          text: confirmText,
+          cssClass: 'confirm-button',
+          handler: () => {
+            console.log('Confirmed');
+            // Logika konfirmasi
+            if (vehicleId) {
+              this.myVehicleDetailService.deleteVehicle(vehicleId).subscribe(
+                response => {
+                  if (response.result.response_code === 200) {
+                    console.log("Vehicle deleted successfully", response);
+                    this.backToVehicle();
+                  } else {
+                    console.error('Error deleting vehicle:', response);
+                    // Tampilkan pesan kesalahan kepada pengguna
+                  }
+                },
+                error => {
+                  console.error('HTTP Error:', error);
+                  // Tampilkan pesan kesalahan kepada pengguna
+                }
+              );
+            } else {
+              console.error('Vehicle ID is not provided');
+              // Tampilkan pesan kesalahan kepada pengguna
+            }
+          }
+        },
+        {
+          text: cancelText,
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+          }
+        },
+      ]
+    });
+  
+    await alert.present();
   }
 
   // Method untuk mendapatkan label status

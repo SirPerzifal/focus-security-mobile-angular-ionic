@@ -30,12 +30,28 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
 
   private _value: string = '';
-  private _displayValue: string = '';
+  _displayValue: string = '';
   showDatePicker: boolean = false;
+  isMonthPickerActive: boolean = false;
+
+  // Tambahkan properti baru untuk menyimpan waktu
+  private formatTimeForInput(time: string): string {
+    return time; // Format waktu sesuai kebutuhan, jika perlu
+  }
+
+  private formatTimeForDisplay(time: string): string {
+    return time; // Format waktu untuk ditampilkan, jika perlu
+  }
+
+  @Input() minTime: string | null = null; // Untuk batasan waktu minimum
+  @Input() maxTime: string | null = null; // Untuk batasan waktu maksimum
 
   @Input()
   set value(val: string | Date) {
-    if (this.type === 'date') {
+    if (this.type === 'month') {
+      this._value = val?.toString() || '';
+      this._displayValue = this._value;
+    }else if (this.type === 'date') {
       if (val instanceof Date) {
         this._value = this.formatDateForInput(val);
         this._displayValue = this.formatDateForDisplay(val);
@@ -46,6 +62,11 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
           this._displayValue = this.formatDateForDisplay(date);
         }
       }
+    } else if (this.type === 'time') {
+      this._value = val?.toString() || '';
+      this._displayValue = this._value ? this.formatTimeForDisplay(this._value) : this.placeholder; // Show placeholder if no value
+      this.onChange(this._value);
+      this.valueChange.emit(this._value);
     } else {
       this._value = val?.toString() || '';
       this._displayValue = this._value;
@@ -96,6 +117,13 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
         }
       }, 0);
     }
+    if (this.type === 'time' && !this.isReadonly) {
+      // Logic to open the time picker
+      const timeInput = document.getElementById(`${this.id}`) as HTMLInputElement;
+      if (timeInput) {
+        timeInput.showPicker(); // This will open the time picker
+      }
+    }
   }
 
   onChange: (value: string) => void = () => {};
@@ -122,6 +150,8 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
     // Handle input disabling if needed
   }
 
+  
+
   constructor() { }
 
   getFilteredClasses(classes: { [key: string]: boolean }) {
@@ -130,6 +160,51 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
 
   getFilteredCustomClasses(classes: { [key: string]: boolean }) {
     return Object.keys(classes).filter(cls => classes[cls]);
+  }
+
+  reset() {
+    this._value = '';
+    this._displayValue = '';
+    this.onChange('');
+    this.valueChange.emit('');
+  }
+
+  showMonthPicker() {
+    if (!this.isReadonly) {
+      this.isMonthPickerActive = true;
+      setTimeout(() => {
+        const monthInput = document.getElementById(this.id) as HTMLInputElement;
+        if (monthInput) {
+          monthInput.showPicker();
+          // Hide picker and show display input when the picker is closed
+          monthInput.addEventListener('blur', () => {
+            this.isMonthPickerActive = false;
+          }, { once: true });
+        }
+      }, 0);
+    }
+  }
+
+  // Add method to handle month type specifically
+  clearMonthInput() {
+    this._value = '';
+    this._displayValue = '';
+    this.isMonthPickerActive = false;
+    this.onChange('');
+    this.valueChange.emit('');
+  }
+
+  onMonthInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this._value = input.value;
+    // Format the display value as needed
+    const date = new Date(input.value + '-01'); // Add day for proper date parsing
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    this._displayValue = `${month} ${year}`;
+    this.onChange(this._value);
+    this.valueChange.emit(this._value);
+    this.isMonthPickerActive = false;
   }
 
   ngOnInit() {}

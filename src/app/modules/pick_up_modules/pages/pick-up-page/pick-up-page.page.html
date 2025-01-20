@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="vms-main-body flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -13,21 +13,15 @@
           [isActive]="true" [disableClick]="true" />
       </div>
     </div>
-    <div id="entry_type" class="flex mt-8 flex-row space-x-7">
+    <div id="entry_type" class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customImageIcon]="'assets/img/Pick_Up_Inner.png'" [text]="'PICK UP'" (click)="toggleShowPick()"
         [isActive]="showPick" [disableClick]="true" />
-      <!-- <app-visitor-button [text]="'PICK UP'"
-        [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'"
-        (click)="toggleShowPick()"></app-visitor-button> -->
       <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DROP OFF'" (click)="toggleShowDrop()"
         [isActive]="showDrop" [disableClick]="true" />
-      <!-- <app-visitor-button [text]="'DROP OFF'"
-        [extraClass]="showDrop ? 'bg-[var(--ion-color-primary)] text-white w-32  text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'"
-        (click)="toggleShowDrop()"></app-visitor-button> -->
     </div>
     <div class="mt-8 flex flex-row mb-4">
       <div class="flex flex-col w-full" *ngIf="showForm" @fadeInOut>
-        <div id="vehicle_type" class="flex w-full flex-row space-x-7">
+        <div id="vehicle_type" class="flex w-full flex-row space-x-1">
           <app-button-icon [customNameIcon]="'faTaxi'" [text]="'Taxi'" (click)="useVehicle('taxi')"
             [isActive]="valTaxi" [disableClick]="true" />
           <app-button-icon [customImageIcon]="'assets/icon/pick_up-page/Grab_Outline.png'" [text]="'PHV CAR'"
@@ -37,7 +31,7 @@
           <!-- <app-button-icon [customNameIcon]="'faMotorcycle'" [text]="'MOTORBIKE'" (click)="useVehicle('bike')"
             [isActive]="valBike" [disableClick]="true" /> -->
         </div>
-        <div class="w-full mt-6 space-y-5 mx-4">
+        <div class=" mt-6 space-y-5 mx-4">
           <div class="w-full flex flex-row justify-between">
             <div class="w-[90%] flex flex-col">
               <app-text-input #vehicleNumberInput [id]="'pick_up_vhcnum'" [placeholder]="'EG. SBA 8892 A'"
@@ -62,18 +56,17 @@
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-        </div>
-
-        <div class="w-full mx-4">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
-            (click)="saveRecord(true)"></app-visitor-button>
-        </div>
-        <!-- <div class="w-full">
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
+              (click)="saveRecord(true)"></app-visitor-button>
+          </div>
+          <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD ONLY'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'"
               (click)="saveRecord(false)"></app-visitor-button>
-          </div> -->
+          </div>
+        </div>
 
       </div>
     </div>

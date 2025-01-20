@@ -1,11 +1,11 @@
 <ion-content [fullscreen]="true" class="p-8 h-full flex flex-col overflow-scroll scrollbar overflow-y-hidden vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-3">
     <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>RIVERTREE RESIDENCES</b></span>
+      <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>ABC RESIDENCES</b></span>
       <span
         class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] flex flex-row items-center text-[var(--ion-color-primary)]"><b>iFS360 VISITOR MANAGEMENT SYSTEM</b></span>
       
@@ -54,7 +54,7 @@
         [routerLink]="['/records-main']" />
 
       <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" 
-        [routerLink]="['/alert-main']" [isWarning]="7"/>
+        [routerLink]="['/alert-main']" [isWarning]="alertTotal"/>
 
 
     </div>

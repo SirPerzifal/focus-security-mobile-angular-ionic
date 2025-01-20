@@ -1,10 +1,6 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -13,71 +9,36 @@
     <div class="flex flex-row mt-8">
       <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
         (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
         <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
         (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
-
-      <!-- <app-button-icon [textOnly]="true" [text]="'WALK IN'"
-        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
-        <app-button-icon [textOnly]="true" [text]="'DRIVE IN'"
-        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" /> -->
-      <!-- <app-visitor-button [text]="'WALK IN'" [extraClass]="showWalkTrans || showWalk ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'" (click)="toggleShowWalk()"></app-visitor-button>
-      <app-visitor-button [text]="'DRIVE IN'" [extraClass]="showDriveTrans || showDrive ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'" (click)="toggleShowDrive()"></app-visitor-button> -->
     </div>
 
     <div class="flex flex-row">
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showWalk" @fadeInOut>
         <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" (valueChange)="onWalkInNameChange($event)" [labelText]="'NAME'" [placeholder]="'EG. KANAN ATHARV'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input [id]="'walk_in_name'" [(ngModel)]="walkInFormData.visitor_name" [labelText]="'NAME'" [placeholder]="'EG. KANAN ATHARV'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'walk_in_contact'" (valueChange)="onWalkInContactChange($event)" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-          </div>
-          <div class="flex flex-col justify-end w-1/4">
-            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20">SEARCH</button>
-          </div>
-         
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="walkInFormData.visitor_contact_no" [id]="'walk_in_contact_collection'" (contactInfo)="getWalkInContactInfo($event)"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select *ngIf="!isLoadingBlock" id="walk_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
+          <select id="walk_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)" [(ngModel)]="walkInFormData.block" name="collection_walk_in_unit">
+            <!-- <option value="" selected disabled hidden>{{ isLoadingBlock ? 'STILL LOADING BLOCK' : 'CHOOSE BLOCK'}}</option> -->
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-            <!-- <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option> -->
-          </select>
-          <select *ngIf="isLoadingBlock" id="walk_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
-            <option value="" selected disabled hidden>STILL LOADING BLOCK</option>
-            <!-- <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option> -->
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select *ngIf="!isLoadingUnit" id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)">
+          <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="walkInFormData.unit" name="collection_walk_in_unit">
+            <!-- <option value="" selected disabled hidden>{{ isLoadingUnit ? 'STILL LOADING UNIT' : 'CHOOSE UNIT'}}</option> -->  
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-            <!-- <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option> -->
-          </select>
-          <select *ngIf="isLoadingUnit" id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)">
-            <option value="" selected disabled hidden>STILL LOADING UNIT</option>
-            <!-- <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option> -->
           </select>
         </div>
         <div class="w-full">
@@ -87,65 +48,39 @@
   
       <div class="mt-8 flex flex-col items-center w-full space-y-5 mx-4 mb-4" *ngIf="showDrive" @fadeInOut>
         <div class="w-full">
-          <app-text-input [id]="'drive_in_name'" (valueChange)="onDriveInNameChange($event)" [labelText]="'NAME'" [placeholder]="'EG. ARTHUR VOYAGE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input [id]="'drive_in_name'" [(ngModel)]="driveInFormData.visitor_name" [labelText]="'NAME'" [placeholder]="'EG. ARTHUR VOYAGE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'drive_in_contact'" (valueChange)="onDriveInContactChange($event)" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-          </div>
-          <div class="flex flex-col justify-end w-1/4">
-            <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20">SEARCH</button>
-          </div>
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="driveInFormData.visitor_contact_no" [id]="'drive_in_contact_collection'" (contactInfo)="getDriveInContactInfo($event)"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
-            <app-text-input [id]="'drive_in_vehicle'" (valueChange)="onDriveInVehicleChange($event)" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+            <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'"  [(ngModel)]="driveInFormData.visitor_vehicle" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
         </div>
         <div class="w-full">
-          <!-- <app-text-input [id]="'drive_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
+          
            <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select *ngIf="!isLoadingBlock" id="drive_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
+          <select *ngIf="!isLoadingBlock" id="collection_drive_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)"  [(ngModel)]="driveInFormData.block"  name="collection_drive_in_block">
+           <!-- <option value="" selected disabled hidden>{{ isLoadingBlock ? 'STILL LOADING BLOCK' : 'CHOOSE BLOCK'}}</option> -->
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-            <!-- <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option> -->
-          </select>
-          <select *ngIf="isLoadingBlock" id="drive_in_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
-            <option value="" selected disabled hidden>STILL LOADING BLOCK</option>
-            <!-- <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option> -->
           </select>
         </div>
         <div class="w-full">
-          <!-- <app-text-input [id]="'drive_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <select *ngIf="!isLoadingUnit" id="drive_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)">
+          <select *ngIf="!isLoadingUnit" id="collection_drive_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="driveInFormData.unit"  name="collection_drive_in_unit">
+             <!-- <option value="" selected disabled hidden>{{ isLoadingUnit ? 'STILL LOADING UNIT' : 'CHOOSE UNIT'}}</option> -->  
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-            <!-- <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option> -->
-          </select>
-          <select *ngIf="isLoadingUnit" id="drive_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)">
-            <option value="" selected disabled hidden>STILL LOADING UNIT</option>
-            <!-- <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option> -->
           </select>
         </div>
         <div class="w-full">
-          <!-- <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'"></app-visitor-button> -->
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'" (click)="onSubmitDriveIn()"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'" (click)="onSubmitDriveIn(true)"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'" (click)="onSubmitDriveIn(false)"></app-visitor-button>
         </div>
       </div>
     </div>

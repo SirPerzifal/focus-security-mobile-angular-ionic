@@ -1,23 +1,27 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'Notification'"/>
-
-  <div class="p-5 text-center mb-20" *ngIf="notifications.length > 0; else noNotification">
-    <div class="w-full flex flex-row justify-between items-center">
-      <div class="w-1/6 flex items-start mr-10">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-      </div>
-      <div class="w-5/6 flex flex-row justify-end items-center">
-        <u class="w-32 text-base font-bold items-end mr-2" (click)="clearFilter()">Clear Filter</u>
-        <div class="w-full">
-          <input type="text" id="simple-search" [(ngModel)]="searchTerm" (input)="searchNotifications()" class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search notification" required />
-        </div>
+  <div class="mt-2 pr-5 pl-4 w-full flex flex-row justify-between items-center">
+    <div class="w-1/6 flex items-start mr-10">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    </div>
+    <div class="w-5/6 flex flex-row justify-end items-center">
+      <u class="w-32 text-base cw-1:text-xs font-bold items-end mr-2" (click)="clearFilter()">Clear Filter</u>
+      <div class="w-full">
+        <input type="text" id="simple-search" [(ngModel)]="searchTerm" (input)="searchNotifications()" class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search notification" required />
       </div>
     </div>
+  </div>
+
+  <div class="px-5 text-center mb-20" *ngIf="notifications.length > 0; else noNotification">
 
     <div class="mt-4 space-y-4">
-      <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg text-start">
-        <p><strong>{{ notification.title }}</strong></p>
-        <p>{{ notification.body }}</p>
+      <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
+        <div class="flex justify-between mb-1 text-sm">
+          <p class="italic">{{ notification.date }}</p>
+          <p class="italic">{{ notification.time }}</p>
+        </div>
+        <p class="text-left"><strong>{{ notification.title }}</strong></p>
+        <p class="text-left">{{ notification.body }}</p>
       </div>
     </div>
   </div>

@@ -1,11 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   
   <!-- Loading Spinner -->
@@ -27,9 +23,9 @@
         [disableClick]="true" 
       />
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
 
-      <app-button-icon [textOnly]="true" [text]="'TODAY'"
+      <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
       (click)="toggleSlide('day')" [isActive]="showDayTrans || showDay" [disableClick]="true"/>
       <app-button-icon [textOnly]="true" [text]="'UPCOMING'"
       (click)="toggleSlide('upcoming')" [isActive]="showUpcomingTrans || showUpcoming" [disableClick]="true"/>

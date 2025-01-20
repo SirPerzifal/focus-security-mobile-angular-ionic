@@ -84,6 +84,7 @@ export class CollectionModulePage implements OnInit {
 
   onWalkInContactChange(event:string){
     this.walkInFormData.visitor_contact_no = event
+    console.log(this.walkInFormData.visitor_contact_no)
   }
 
   onDriveInNameChange(event:string){
@@ -120,7 +121,7 @@ export class CollectionModulePage implements OnInit {
   }
 
   isLoadingUnit = false
-  loadUnit() {
+  async loadUnit() {
     var blockUnittoGet = this.showWalk ? this.walkInFormData.block : this.showDrive ? this.driveInFormData.block : "0"
     this.blockUnitService.getUnit(blockUnittoGet).subscribe({
       next: (response: any) => {
@@ -224,7 +225,7 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
-  onSubmitDriveIn(){
+  onSubmitDriveIn(openBarrier: boolean = true){
     let errMsg = ""
     if (!this.driveInFormData.visitor_name) {
       errMsg += 'Visitor is required!\n';
@@ -242,7 +243,11 @@ export class CollectionModulePage implements OnInit {
       this.presentToast(errMsg, 'danger')
       return
     }
-    
+    if (openBarrier){
+      console.log("OPEN BARRIER")
+    } else {
+      console.log("BARRIER NOT OPENED");
+    }
     try {
       this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit).subscribe(
         res => {
@@ -306,6 +311,28 @@ export class CollectionModulePage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.vehicle_number = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  getDriveInContactInfo(contactData: any){
+    if (contactData) {
+      this.driveInFormData.visitor_name = contactData.visitor_name
+      this.driveInFormData.visitor_vehicle = contactData.vehicle_number
+      this.driveInFormData.block = contactData.block_id
+      this.loadUnit().then(() => {
+        this.driveInFormData.unit = contactData.unit_id
+      })
+    }
+  }
+
+  getWalkInContactInfo(contactData: any){
+    if (contactData) {
+      this.walkInFormData.visitor_name = contactData.visitor_name
+      this.walkInFormData.visitor_vehicle = contactData.vehicle_number
+      this.walkInFormData.block = contactData.block_id
+      this.loadUnit().then(() => {
+        this.walkInFormData.unit = contactData.unit_id
+      })
+    }
   }
 
 }

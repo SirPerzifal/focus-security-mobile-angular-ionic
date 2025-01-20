@@ -1,10 +1,10 @@
   <ion-content [fullscreen]="true">
     <app-resident-header [text]="'My Family'" [text_second]="'Add Member'"/>
+    <div class="flex flex-col justify-between mt-2 ml-3">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-family']"></ion-icon>
+    </div>
     <!-- CONTENT -->
-    <div class="flex flex-col relative mt-2 mx-4 mb-24">
-      <div class="w-full mt-2">
-        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-my-family']"></ion-icon>
-      </div>
+    <div class="flex flex-col relative mx-4 mb-24">
       <form (ngSubmit)="onSubmit()">
         <div class="flex flex-col justify-between mt-2 space-y-3">
           <div class="w-full">
@@ -45,8 +45,12 @@
               (valueChange)="onEmailAddressChange($event)"
             ></app-text-input>
           </div>
-          
           <div class="w-full">
+            <app-vms-contact-input [(value)]="formData.mobile_number" [id]="'add_family_contact_number'" [vmsPage]="false"
+            [contactLabel]="'Mobile Number'" [labelClass]="'text-base'" [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"
+            ></app-vms-contact-input>
+          </div>
+          <!-- <div class="w-full">
             <app-text-input
             [labelResidentText]="'Mobile Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
               [id]="'mobile_number'"
@@ -57,7 +61,7 @@
               [value]="formData.mobile_number"
               (valueChange)="onMobileNumberChange($event)"
             ></app-text-input>
-          </div>
+          </div> -->
           
           <div class="w-full mt-1">
             <label class="text-base font-bold mb-[-4px]">Type Of Residence</label>

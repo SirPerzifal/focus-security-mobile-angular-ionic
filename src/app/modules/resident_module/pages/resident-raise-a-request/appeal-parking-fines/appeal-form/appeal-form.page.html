@@ -1,0 +1,61 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Raise A Request'" [text_second]="'Appeal Form'" />
+  <div class="w-full flex items-start ml-[15px] mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToAppealParkingFines()"></ion-icon>
+  </div>
+
+  <div class="px-5 text-center mb-20" *ngIf="appealDataForm">
+    <div class="w-full">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Report No</p>
+      </div>
+      <app-text-input [id]="'rp_no'"
+        [placeholder]="appealDataForm.ReportNo"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [isReadonly]="true">
+      </app-text-input>
+    </div>
+    <div class="w-full">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Vehicle No</p>
+      </div>
+      <app-text-input [id]="'vhc_no'"
+        [placeholder]="appealDataForm.VehicleNo"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [isReadonly]="true">
+      </app-text-input>
+    </div>
+    <div class="w-full">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Offence Date</p>
+      </div>
+      <app-text-input [id]="'ofc_date'"
+        [placeholder]="appealDataForm?.OffenceDate"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [isReadonly]="true">
+      </app-text-input>
+    </div>
+    <div class="w-full">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Reason for Appeal</p>
+      </div>
+      <textarea id="reason_for_appeal" placeholder="Reason for Appeal"
+        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+        [(ngModel)]="reasonForAppeal">
+    </textarea>
+    </div>
+    <div class="flex flex-row mt-2 text-[13px] w-full">
+      <div class="w-full">
+        <app-visitor-button [text]="'Submit'"
+          [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+          (click)="onSubmit()">
+      </app-visitor-button>
+      </div>
+    </div>
+  </div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

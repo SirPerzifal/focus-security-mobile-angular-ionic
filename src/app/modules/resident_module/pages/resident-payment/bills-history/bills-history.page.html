@@ -1,29 +1,36 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Payments'" [text_second]="'My Bills'" />
+  <app-resident-header [text]="'Payments'" [text_second]="'Bills History'" />
+  <div class="w-full mt-2 ml-[10px]">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-payment']"></ion-icon>
+  </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="w-full mt-2">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-payment']"></ion-icon>
-    </div>
     <div class="flex flex-row justify-between mt-2">
-      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
-      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-fines']"></app-visitor-button>
-      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base'"></app-visitor-button>
+      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/bills-maintenance']"></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/bills-fines']"></app-visitor-button>
+      <app-visitor-button [text]="'Payment History'" [extraClass]="'leading-none px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"></app-visitor-button>
     </div>
     <div class="w-full mt-4 mb-3">
-      <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]">
-        <option selected>Type of Invite History</option>
-        <option value="unit_1">UNIT 1</option>
+      <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]" (change)="onChangePaymentHistoryType($event)" [(ngModel)]="typeFilter">
+        <option hidden disabled selected value="">Type of Payment History</option>
+        <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="All">All</option>
+        <option value="Maintenance Fee">Maintenance Fee</option>
+        <option value="Wheel Clamped">Wheel Clamped</option>
+        <!-- <option value="unit_1">UNIT 1</option>
         <option value="unit_2">UNIT 2</option>
         <option value="unit_3">UNIT 3</option>
-        <option value="unit_4">UNIT 4</option>
+        <option value="unit_4">UNIT 4</option> -->
       </select>
     </div>
-    <div class="flex flex-row w-full mt-1 mb-3 items-center">
-      <app-text-input #billsDateHistory [id]="'bills_history_date'" [placeholder]="'End Filter Date'"
-        [customClasses]="{'w-full':true}" [type]="'date'"
+    <div class="flex flex-row w-full mt-1 mb-3 items-center gap-x-2">
+      <app-text-input #billsStartDateHistory [id]="'bills_history_start_date'" [placeholder]="'--------/----'"
+        [customClasses]="{'w-full':true}" [type]="'month'"
         [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-        (change)="onChangeStartDate($event)" (value)="showStartDate"></app-text-input>
+        (change)="onChangeStartDate($event)" [(ngModel)]="showStartDate" (value)="showStartDate"></app-text-input>
+        <!-- <app-text-input #billsEndDateHistory [id]="'bills_history_end_date'" [placeholder]="'End Date'"
+          [customClasses]="{'w-full':true}" [type]="'date'"
+          [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+          (change)="onChangeEndDate($event)" (value)="showEndDate"></app-text-input> -->
       <!-- <div class="flex flex-row items-center justify-between border border-black w-1/2 rounded py-2 pr-3 outline-[#BDBDBD] h-12 text-base">
         <input
           type="text"
@@ -34,7 +41,9 @@
         />
         <input type="date" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-7 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
       </div> -->
-      <u class="ml-3 text-base font-bold ">Clear Filter</u>
+      <div (click)="clearFilter()" >
+        <u class="ml-3 text-base font-bold" >Clear Filter</u>
+      </div>
     </div>
     <div class="w-full text-base text-justify mt-2">
       The app provides payment history for up to 13 months from the
@@ -45,7 +54,22 @@
       <div class="flex flex-col w-full">
         <div class="w-full mt-3">
           <div clas="flex flex-col w-full justify-start">
-            <div class="font-bold m-1">SEPTEMBER 2024</div>
+            <div class="space-y-4">
+              <ng-container *ngFor="let month of getMonthGroups()">
+                <div class="font-bold m-1">{{month}}</div>
+                <ng-container *ngFor="let bill of groupedPayments[month]">
+                  <app-small-bills-card-detailed 
+                    [title]="bill.title"
+                    [desc_title]="bill.desc_title"
+                    [vehicle_no]="bill.vehicle_number"
+                    [violation_date]="formatDateTime(bill.violation_date)"
+                    [paid_on]="formatDateTime(bill.paid_on)"
+                    [total]="bill.total">
+                  </app-small-bills-card-detailed>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- <div class="font-bold m-1">SEPTEMBER 2024</div>
             <app-small-bills-card-detailed [title]="'Parking Violation'" [desc_title]="'Wheel Clamped'"
               [vehicle_no]="'SBS1234A'" [violation_date]="'27/09/2024'" [paid_on]="'27/09/2024, 0830am'"
               [total]="'S$250.00'"></app-small-bills-card-detailed>
@@ -55,7 +79,7 @@
               [total]="'S$450.00'"></app-small-bills-card-detailed>
             <app-small-bills-card-detailed [title]="'Maintenance Fee'" [desc_title]="'Monthly Maintenance Fee'"
               [violation_date]="'01/08/2024'" [paid_on]="'25/09/2024, 0830am'"
-              [total]="'S$250.00'"></app-small-bills-card-detailed>
+              [total]="'S$250.00'"></app-small-bills-card-detailed> -->
           </div>
         </div>
       </div>

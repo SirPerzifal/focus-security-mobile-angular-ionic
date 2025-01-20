@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
+import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 interface Visitor {
   id: number;
@@ -34,7 +36,7 @@ export class OvernightFormRarPage implements OnInit {
 
   @ViewChild('vehicleNumberInput') vehicleNumberInput!: TextInputComponent;
 
-  constructor(private requestService: RaiseARequestService, private fb: FormBuilder) {
+  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router) {
     this.form = this.fb.group({
       residentName: this.nameOfResident,
       block: this.blokId,
@@ -123,7 +125,7 @@ export class OvernightFormRarPage implements OnInit {
         const visitorId = applicantType === 'visitor' ? formData.visitorId : null; // Only if applying for a visitor
         const purpose = applicantType === 'myself' ? formData.purposeOfParking : null; // Only if applying for myself
         const rentalAgreement = formData.agreement; // Convert boolean to string
-        const familyId = 14; // Replace with actual family ID logic if needed
+        const familyId = 1; // Replace with actual family ID logic if needed
     
         this.requestService.postOvernightFormCar(
           blockId,
@@ -139,6 +141,8 @@ export class OvernightFormRarPage implements OnInit {
           (response) => {
             console.log('Response from server:', response);
             // Handle success response (e.g., show a success message)
+            this.presentToast('Request submitted successfully!', 'success');
+            this.router.navigate(['resident-raise-a-request'])
           },
           (error) => {
             console.error('Error submitting form:', error);
@@ -165,5 +169,14 @@ export class OvernightFormRarPage implements OnInit {
 
       reader.readAsDataURL(file);
     });
+  }
+
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color
+    });
+    toast.present();
   }
 }

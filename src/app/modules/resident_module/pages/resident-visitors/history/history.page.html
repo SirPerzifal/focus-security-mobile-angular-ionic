@@ -1,44 +1,44 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Visitors'" [text_second]="'History'" />
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="w-1/6 flex items-start mr-10">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-    </div>
-    <div class="flex flex-row justify-between mt-4">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+	<div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
+  <div class="flex flex-col relative mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-2">
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="flex flex-row justify-start mt-4">
-          <p class="text-base font-bold">Filter for Type History</p>
+          <p class="text-base font-bold">Group By</p>
         </div>
         <div class="w-full mt-1">
-            <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
-              <option value="" selected disabled hidden>Type of Invite History</option>
+            <select id="walk_in_unit" [(ngModel)]="typeFilter"  class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
+              <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
+              <option value="All" selected>All</option >
               <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="Visiting">Visiting</option>
               <option value="Delivery">Delivery</option>
               <option value="Pick Off">Pick Off</option>
               <option value="Drop Off">Drop Off</option>
             </select>
         </div>
-        <div class="flex flex-row w-full mt-4 items-center">
+        <div class="flex flex-row w-full mt-2 items-center">
           <div class="w-full flex flex-col items-center">
             <div class="flex flex-row justify-between items-center w-full mb-1">
               <p class="text-base font-bold">Filter Date</p>
-              <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
             </div>
             <div class="flex flex-row space-x-2 w-full">
               <div class="w-1/2">
-								<app-text-input #startVisitorHistoryDateInput [id]="'start_visitor_history_date'" [placeholder]="'Start Filter Date'"
+								<app-text-input #startVisitorHistoryDateInput [id]="'start_visitor_history_date'" [placeholder]="'Start Filter Date'" [(ngModel)]="startDateFilter"
 									[customClasses]="{'w-full':true}" [type]="'date'"
 									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
 									(change)="onChangeStartDate($event)"></app-text-input>
@@ -55,7 +55,7 @@
                 <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
               </div> -->
               <div class="w-1/2">
-								<app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter"
+								<app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter" [(ngModel)]="endDateFilter"
 									[customClasses]="{'w-full':true}" [type]="'date'"
 									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
 									(change)="onChangeEndDate($event)"></app-text-input>
@@ -73,6 +73,9 @@
               </div> -->
             </div>
           </div>
+        </div>
+        <div class="flex flex-row-reverse w-full mt-4">
+          <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">

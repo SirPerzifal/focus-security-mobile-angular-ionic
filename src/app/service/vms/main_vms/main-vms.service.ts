@@ -15,7 +15,6 @@ export class MainVmsService extends ApiService{
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
-    console.log(params, apiUrl);
     return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
       catchError(this.handleError)
     );

@@ -36,7 +36,7 @@ export class HistoryPage implements OnInit {
   endDateFilter = '';
   showDate = ''
   dateFilter = ''
-  typeFilter = ''
+  typeFilter = 'All'
 
   getHistoryList() {
     this.historyData.pop()
@@ -109,7 +109,7 @@ export class HistoryPage implements OnInit {
     this.showEndDate = '';
     this.startDateFilter = '';
     this.endDateFilter = '';
-    this.typeFilter = '';
+    this.typeFilter = 'All';
     this.dateFilter = '';
     this.showDate = '';
     this.applyFilters();
@@ -117,6 +117,7 @@ export class HistoryPage implements OnInit {
   
   onChangeVisitorType(event: Event) {
     const target = event.target as HTMLInputElement;
+    console.log("typefilter", target.value)
     this.typeFilter = target.value;
   
     this.applyFilters();
@@ -141,7 +142,7 @@ export class HistoryPage implements OnInit {
   
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) &&
                           (!selectedEndDate || visitorDate <= selectedEndDate);
-      const typeMatches = this.typeFilter ? item.purpose === this.typeFilter : true;
+      const typeMatches = this.typeFilter && this.typeFilter !== 'All' ? item.purpose === this.typeFilter : true;
   
       return dateMatches && typeMatches;
     });

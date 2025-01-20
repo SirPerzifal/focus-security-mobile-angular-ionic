@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <app-vms-background />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/records-main'"/>
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon 
+        [customImageIcon]="'assets/icon-vms/records_menu/Residents.png'"
+        [text]="'RESIDENTS'" 
+        [routerLink]="['/records-main']" 
+        [isActive]="true" 
+        [disableClick]="true" 
+        [extraImageClass]="'mt-[5px] w-[130px] h-[90px] object-contain'"
+      /> 
+    </div>
+    <div class="flex flex-col">
+      <div class="flex flex-col mx-4 mb-4">
+        <div class="flex flex-col w-full space-y-5 mt-8" >
+          <button class="float-start bg-[var(--ion-color-primary)] text-white text-2xl font-bold w-[205px] h-20 rounded" (click)="clearFilter()">
+            CLEAR FILTER
+          </button>
+          <div class="flex flex-row w-full space-x-1 ">
+            <div class="w-1/2 flex flex-col">
+              <label class="text-2xl"><u><b>BLOCK</b></u></label>
+              <select id="record_resident_block_filter" (change)="onBlockChange($event)" [(ngModel)]="filter.block"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
+                <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+                <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+              </select>
+            </div>
+            <div class="w-1/2 flex flex-col">
+              <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
+              <select id="rv_unit" (change)="onUnitChange($event)"  [(ngModel)]="filter.unit"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
+                <option value="" selected disabled hidden>CHOOSE UNIT</option>
+                <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+              </select> -->
+              <app-text-input #recordResidentUnitFilter [id]="'record_resident_unit_filter'"
+                  [labelText]="'UNIT'" [placeholder]="'UNIT 0101'" [customClasses]="{'w-full ':true}"
+                  [type]="'text'" [(ngModel)]="filter.unit" (change)="onUnitChange($event)" [isReadonly]="!filter.block"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full space-y-5">
+            <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let log of historyVehicles" >
+              <span class="text-2xl font-bold text-white">{{ log.resident_name }}</span>
+              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onArrowClick(log)"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+  
+</ion-content>

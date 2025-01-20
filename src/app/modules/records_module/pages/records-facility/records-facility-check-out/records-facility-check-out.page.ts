@@ -13,9 +13,10 @@ export class RecordsFacilityCheckOutPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { record: any };
+    const state = navigation?.extras.state as { record: any, purpose: string };
     if (state) {
       this.record = state.record
+      this.purpose = state.purpose
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     }
   }
@@ -23,6 +24,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   faPenFancy = faPenFancy
 
   record: any
+  purpose: string = 'check_in'
 
   ngOnInit() {
   }

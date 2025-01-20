@@ -44,6 +44,8 @@ export class MoveHomePage implements OnInit, OnDestroy {
   // Subject untuk mengelola subscription
   private refreshInterval: any;
 
+  todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
+
   constructor(
     private router: Router,
     private moveInOutService: MoveInOutService,
@@ -212,6 +214,13 @@ export class MoveHomePage implements OnInit, OnDestroy {
     console.log(event.target.value)
     this.endDateFilter = event.target.value
     this.applyFilters()
+  }
+
+  clearFilters() {
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
+    this.applyFilters() 
   }
 
   applyFilters() {
@@ -388,9 +397,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
-    this.startDateFilter = ''
-    this.endDateFilter = ''
-    this.choosenBlock = ''
+    if (this.searchOption == 'block') {
+      this.startDateFilter = ''
+      this.endDateFilter = ''
+    } else if (this.searchOption == 'date') {
+      this.choosenBlock = ''
+    } else {}
     this.applyFilters()
     console.log(event.target.value)
   }

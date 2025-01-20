@@ -1,18 +1,18 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Visitors'" [text_second]="'Hired Car'" />
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="w-1/6 flex items-start mr-10">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-    </div>
-    <div class="flex flex-row justify-between mt-4">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+	<div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
+  <div class="flex flex-col relative mx-4 mb-24">
+    <div class="flex flex-row justify-between mt-2">
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
     </div>
@@ -37,10 +37,10 @@
         </div>
         <div class="flex flex-row justify-start items-start mt-4">
           <div class="flex flex-col items-center w-12" (click)="usePhvVehicle()">
-            <button id="shadow_back" [class]="phv_vehicle ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl'">
+            <button id="shadow_back" [class]="phv_vehicle ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl flex flex-row items-center justify-center' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl flex flex-row items-center justify-center'">
               <img
               alt="Grab"
-              src="assets/icon/pick_up-page/Grab_Outline.png" [class]="phv_vehicle ? '' : 'icon-black'"/>
+              src="assets/icon/pick_up-page/Grab_Outline.png" [class]="phv_vehicle ? 'w-[80%]' : 'icon-black w-[80%]'"/>
                 <!-- <ion-icon name="location" aria-hidden="true" color="light" class="w-6 h-6 mt-1"></ion-icon> -->
             </button>
             <div class="text-[12px] flex flex-col relative items-center mt-1">

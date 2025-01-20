@@ -1,5 +1,6 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-voting-graph',
@@ -7,11 +8,13 @@ import { Chart, registerables } from 'chart.js';
   styleUrls: ['./voting-graph.component.scss'],
 })
 export class VotingGraphComponent implements AfterViewInit {
+  @Input() chartData: any; // Input property to receive data
   chart: any;
 
   constructor() {
     // Register all necessary components
     Chart.register(...registerables);
+    Chart.register(ChartDataLabels); // Register the Data Labels plugin
   }
 
   ngAfterViewInit() {
@@ -19,23 +22,19 @@ export class VotingGraphComponent implements AfterViewInit {
   }
 
   createChart() {
+    if (!this.chartData) {
+      console.error('No chart data provided!');
+      return;
+    }
+    
     this.chart = new Chart('votingChart', {
       type: 'bar',
       data: {
-        labels: ['Option A', 'Option B', 'Option C'],
+        labels: this.chartData.forChart.labels, // Use the labels from the input data
         datasets: [{
-          label: 'Votes',
-          data: [12, 19, 3], // Example data
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-          ],
+          data: this.chartData.forChart.datasets.data, // Use the data from the input data
+          backgroundColor: this.chartData.forChart.datasets.backgroundColor,
+          borderColor: this.chartData.forChart.datasets.borderColor,
           borderWidth: 1
         }]
       },
@@ -43,6 +42,19 @@ export class VotingGraphComponent implements AfterViewInit {
         scales: {
           y: {
             beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          datalabels: {
+            anchor: 'center', // Position the label in the center of the bar
+            align: 'center', // Align the label in the center of the bar
+            formatter: (value) => {
+              return value; // Display the value
+            },
+            color: 'black' // Change the color of the label
           }
         }
       }

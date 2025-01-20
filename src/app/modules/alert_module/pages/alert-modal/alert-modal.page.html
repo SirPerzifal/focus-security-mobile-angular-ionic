@@ -1,0 +1,20 @@
+<ion-content class="">
+  <div class="flex flex-col p-4 justify-center items-center h-full ">
+    <div class="w-[80%]">
+      <div class="flex flex-col justify-center w-full">
+        <div class="w-full flex flex-col items-center mb-4" *ngIf="showImage">
+          <img [src]="showImage" class="max-w-full max-h-96 rounded">
+          <div class="bg-[var(--ion-color-danger)] fsh-badge-button" (click)="onDeleteImage()">
+            <ion-icon name="trash-outline" size="large" class="text-white "/>
+          </div>
+        </div>
+        <div class="flex flex-row w-full justify-between space-x-1">
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="takePicture()">
+            {{ showImage ? 'CHANGE IMAGE' :'UPLOAD VEHICLE IMAGE'}}
+          </button>
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" *ngIf="showImage" (click)="showAlertButtons()">SUBMIT IMAGE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

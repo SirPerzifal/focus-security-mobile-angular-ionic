@@ -1,11 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <!-- Header dan navigasi -->
@@ -13,9 +9,9 @@
       <app-vms-header [urlCustom]="'/move-home'" [params]="{type: scheduleType}"/>
     </div>
     <div class="flex flex-row mt-8">    
-      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" [routerLink]="['/home-vms']" [isActive]="true"
+      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onBackHome()" [isActive]="true"
         [disableClick]="true" *ngIf="scheduleType == 'move_in'" />
-        <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" [routerLink]="['/home-vms']" [isActive]="true"
+        <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onBackHome()" [isActive]="true"
         [disableClick]="true" *ngIf="scheduleType == 'renov'" />
     </div>
 
@@ -48,6 +44,7 @@
         </div> 
         <div class="w-full">
           <app-text-input 
+            [(ngModel)]="requestor_name"
             #textInput
             [id]="'contractor_name'" 
             [labelText]="'NAME'" [placeholder]="'EG. KEVIN MARCH'" 
@@ -56,7 +53,10 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
-        <div class="flex flex-row justify-between w-full">
+        <div class="w-full">
+          <app-vms-contact-input [id]="'move_contact'"  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+        </div>
+        <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
             <app-text-input 
               #textInput
@@ -71,16 +71,6 @@
             <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl rounded font-bold h-20" (click)="saveRecordAndOpenBarrier()">SEARCH</button>
           </div>
           
-        </div>
-        <!-- <div class="flex mt-2 mb-2 gap-x-8 flex-row w-full">
-          <div class="flex flex-row items-center my-2 ml-1">
-            <input type="radio" name="SelectedIdentification" id="nric_identification" value="nric" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
-            <label class="text-2xl" for="nric_identification">NRIC</label>
-          </div>
-          <div class="flex flex-row items-center my-2">
-            <input type="radio" name="SelectedIdentification" id="fin_identification" value="fin" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]" />
-            <label class="text-2xl" for="fin_identification">FIN</label>
-          </div>
         </div> -->
         <div class="w-full">
           <app-nric-fin-selection (change)="onIdentificationTypeChange($event)"/>
@@ -98,6 +88,7 @@
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
             <app-text-input 
+            [(ngModel)]="requestor_vehicle"
             #textInput
             [id]="'contractor_vc'" 
             [labelText]="'VEHICLE NUMBER'" [placeholder]="'SBA 7282 U'" 
@@ -124,8 +115,8 @@
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>NUMBER OF PAX</b></u></label>
           <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onPaxCountChange($event)">
-            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i + 1">
-              NO OF PAX {{ i + 1 }}
+            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i" [selected]="i == 1">
+              NO OF PAX {{ i }}
             </option>  
           </select>
         </div>

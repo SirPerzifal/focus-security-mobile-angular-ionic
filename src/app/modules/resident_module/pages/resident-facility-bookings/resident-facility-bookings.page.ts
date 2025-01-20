@@ -265,4 +265,41 @@ export class ResidentFacilityBookingsPage implements OnInit {
       }
     });
   }
+
+  addToCalendar(booking: ActiveBooking) {
+    console.log(booking);
+    const eventTitle = encodeURIComponent(booking.facilityName);
+    const bookedBy = encodeURIComponent(booking.bookedBy);
+  
+    // Ubah format tanggal dari MM/DD/YYYY ke YYYY-MM-DD
+    const [day, month, year] = booking.eventDate.split('/');
+    const formattedDate = `${year}-${month}-${day}`; // YYYY-MM-DD
+  
+    const startTime = booking.startTime; // Format: HH:MM AM/PM
+    const endTime = booking.endTime; // Format: HH:MM AM/PM
+  
+    // Gabungkan tanggal dan waktu
+    const startDateTimeString = `${formattedDate} ${startTime}`;
+    const endDateTimeString = `${formattedDate} ${endTime}`;
+  
+    // Buat objek Date
+    const startDateTime = new Date(startDateTimeString);
+    const endDateTime = new Date(endDateTimeString);
+  
+    // Periksa apakah objek Date valid
+    if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
+      console.error('Invalid date or time value:', startDateTimeString, endDateTimeString);
+      return; // Keluar dari fungsi jika ada nilai yang tidak valid
+    }
+  
+    // Format ke dalam format yang sesuai untuk Google Calendar
+    const startDateTimeISO = startDateTime.toISOString().replace(/-|:|\.\d\d\d/g, "");
+    const endDateTimeISO = endDateTime.toISOString().replace(/-|:|\.\d\d\d/g, "");
+  
+    // URL untuk Google Calendar
+    const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${startDateTimeISO}/${endDateTimeISO}&details=Booked%20by%3A%20${bookedBy}`;
+  
+    // Buka URL di jendela baru
+    window.open(googleCalendarUrl, '_blank');
+  }
 }

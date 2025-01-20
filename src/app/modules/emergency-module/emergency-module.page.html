@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -8,31 +8,31 @@
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true"
-        [routerLink]="['/home-vms']" [disableClick]="true" />
+      [routerLink]="['/home-vms']"  [disableClick]="true" />
     </div>
     <div class="flex mt-8 flex-row w-full flex-wrap">
       <app-button-icon [customImageIcon]="'assets/img/Singapore_Police.png'" [isActive]="showPoliceTrans || showPolice"
-        [extraParentClass]="'mr-7'"
+        [extraParentClass]="'mr-1'"
         [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [text]="'POLICE'" [disableClick]="true" (click)="toggleShowPolice()" />
-      <app-button-icon [customImageIcon]="'assets/img/SCDF.png'" [isActive]="showSCDFTrans || showSCDF"
+      <app-button-icon [customImageIcon]="'assets/img/SCDF.png'" [isActive]="showSCDFTrans || showSCDF" 
+      [extraImageClass]="'w-[110px] h-[110px] object-contain'"
         [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
-        [extraParentClass]="'mr-7'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()" />
+        [extraParentClass]="'mr-1'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()" />
       <app-button-icon [customImageIcon]="'assets/img/Ambulance.png'" [isActive]="showAmbulanceTrans || showAmbulance"
         [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
-        [extraParentClass]="'mr-7'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()" />
+        [extraParentClass]="'mr-1'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()" />
       <app-button-icon [customImageIcon]="'assets/img/Government.png'" [isActive]="showOthersTrans || showOthers"
         [extraClass]="showOthersTrans || showOthers ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [text]="'OTHER GOVT AGENCY'" [disableClick]="true" (click)="toggleShowOthers()" />
-      <!-- <app-button-icon [customNameIcon]="''" [isActive]="showOthers" [text]="'OTHERS'" (click)="toggleShowOthers()" /> -->
     </div>
 
     <div class="flex flex-row">
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showAmbulance" @fadeInOut>
         <div class="w-full flex flex-row">
           <div class="w-[90%]">
-            <app-text-input [id]="'contact_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
-              [customClasses]="{'w-full':true}" [type]="'text'" [value]="vehicle_number"
+            <app-text-input [id]="'vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
+              [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.vehicle_number"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
@@ -40,61 +40,56 @@
           </div>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'STATION & DIVISION'"
+          <app-text-input [id]="'station_division'" [labelText]="'STATION & DIVISION'" [(ngModel)]="formData.station_devision"
             [placeholder]="'EG. CENTRAL DIVISION'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="deliveries_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+          <select id="deliveries_block" [(ngModel)]="formData.block_id"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
+            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="deliveries_unit"
+          <select id="deliveries_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
+            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-          <textarea id="purpose" rows="4"
-            class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+          <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            [routerLink]="['/home-vms']"></app-visitor-button>
-          <!-- <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" [routerLink]="['/home-vms']"></app-visitor-button> -->
+            (click)="onSubmit(true)"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
         </div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showPolice" @fadeInOut>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'RANK AND NAME'"
+          <app-text-input [id]="'rank_name'" [labelText]="'RANK AND NAME'" [(ngModel)]="formData.officer_name"
             [placeholder]="'EG. SENIOR STAFF SERGANT WONG JUN WEI'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
+          <app-vms-contact-input [id]="'police_contact_number'" (contactInfo)="getContactInfo($event)" [(value)]="formData.contact_number"></app-vms-contact-input>
+        </div>
+        <!-- <div class="w-full">
           <app-text-input [id]="'contact_number'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'"
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-        </div>
+        </div> -->
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'STATION & DIVISION'"
+          <app-text-input [id]="'station_division'" [labelText]="'STATION & DIVISION'" [(ngModel)]="formData.station_devision"
             [placeholder]="'EG. CENTRAL DIVISION'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
@@ -103,7 +98,7 @@
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'"
               [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="vehicle_number"></app-text-input>
+              [value]="formData.vehicle_number"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -115,56 +110,46 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> -->
         <div class="w-full">
-          <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="deliveries_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+          <select id="emergency_police_block" [(ngModel)]="formData.block_id"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
+           <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
         <div class="w-full mb-5">
-          <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <select id="deliveries_unit"
+          <select id="emergency_police_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
+           <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-          <textarea id="purpose" rows="4"
-            class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+          <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            [routerLink]="['/home-vms']"></app-visitor-button>
-          <!-- <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" [routerLink]="['/home-vms']"></app-visitor-button> -->
+            (click)="onSubmit(true)"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
         </div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showOthers" @fadeInOut>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'NAME'" [placeholder]="'EG. LEE HAO MIN'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
+          <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. LEE HAO MIN'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.officer_name"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-vms-contact-input [id]="'others_contact_number'" (contactInfo)="getContactInfo($event)" [(value)]="formData.contact_number"></app-vms-contact-input>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'GOVT AGENCY NAME'"
+          <app-text-input [id]="'contact_number'" [labelText]="'GOVT AGENCY NAME'" [(ngModel)]="formData.govtAgency"
             [placeholder]="'EG. NATIONAL ENVIRONMENT AGENCY'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
@@ -173,7 +158,7 @@
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'"
               [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="vehicle_number"></app-text-input>
+              [value]="formData.vehicle_number"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -185,48 +170,40 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> -->
         <div class="w-full">
-          <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="deliveries_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+          <select id="emergency_other_block" [(ngModel)]="formData.block_id"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
+           <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
         <div class="w-full">
-          <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <select id="deliveries_unit"
+          <select id="emergency_other_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
+           <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-          <textarea id="purpose" rows="4"
-            class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+          <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            [routerLink]="['/home-vms']"></app-visitor-button>
-          <!-- <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" [routerLink]="['/home-vms']"></app-visitor-button> -->
+            (click)="onSubmit(true)"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
         </div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showSCDF" @fadeInOut>
         <div class="w-full flex flex-row">
           <div class="w-[90%]">
-            <app-text-input [id]="'contact_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
-              [customClasses]="{'w-full':true}" [type]="'text'" [value]="vehicle_number"
+            <app-text-input [id]="'emergency_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
+              [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.vehicle_number"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
@@ -234,45 +211,37 @@
           </div>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'contact_number'" [labelText]="'STATION & DIVISION'"
+          <app-text-input [id]="'emergency_station_division'" [labelText]="'STATION & DIVISION'" [(ngModel)]="formData.station_devision"
             [placeholder]="'EG. CENTRAL DIVISION'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <!-- <app-text-input [id]="'deliveries_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="deliveries_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+          <select id="deliveries_block" [(ngModel)]="formData.block_id"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-            <option value="block_1">BLOCK 1</option>
-            <option value="block_2">BLOCK 2</option>
-            <option value="block_3">BLOCK 3</option>
-            <option value="block_4">BLOCK 4</option>
+            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
         <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <!-- <app-text-input [id]="'deliveries_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="deliveries_unit"
+          <select id="deliveries_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
-            <option value="unit_1">UNIT 1</option>
-            <option value="unit_2">UNIT 2</option>
-            <option value="unit_3">UNIT 3</option>
-            <option value="unit_4">UNIT 4</option>
+            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-          <textarea id="purpose" rows="4"
-            class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+          <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            [routerLink]="['/home-vms']"></app-visitor-button>
-          <!-- <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" [routerLink]="['/home-vms']"></app-visitor-button> -->
+            (click)="onSubmit(true)"></app-visitor-button>
+            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
         </div>
       </div>
     </div>

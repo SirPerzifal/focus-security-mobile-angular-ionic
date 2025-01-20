@@ -63,8 +63,8 @@ export class FamilyService extends ApiService{
     }})
   }
 
-  deleteFamilyList(unit_id: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/post/delete_family`, {jsonrpc: '2.0', params: {unit_id}})
+  deleteFamilyList(unit_id: number, targeted_family_id?: number, type_of_residence?: string ): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/resident/post/delete_family`, {jsonrpc: '2.0', params: {unit_id, targeted_family_id, type_of_residence}})
   }
 
   testFamilyList(tenancies: any): Observable<any> {

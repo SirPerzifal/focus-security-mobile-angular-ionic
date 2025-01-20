@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { MyVehicleService } from 'src/app/service/resident/my-vehicle/my-vehicle.service';
 
 interface Vehicle {
@@ -29,6 +29,15 @@ export class ResidentMyVehiclePage implements OnInit {
   constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router) { }
 
   ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event['url'] == '/resident-my-vehicle'){
+          this.vehicles = [];
+          this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
+        }
+         // Panggil fungsi lagi saat halaman dibuka
+      }
+    });
     this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
   }
 
@@ -58,7 +67,7 @@ export class ResidentMyVehiclePage implements OnInit {
         if (response.result.response_code === 200) {
           this.vehicles = response.result.response_result.vehicles.map((vehicle: any) => ({
             unit_id: String(vehicle.id), // Pastikan id ada di dalam data
-            id: vehicle.vehicle_number,
+            id: vehicle.vehicle_id,
             status: vehicle.states, // Assuming states represent the status
             type_application: vehicle.type_of_application,
             vehicleNo: vehicle.vehicle_number,
@@ -85,9 +94,9 @@ export class ResidentMyVehiclePage implements OnInit {
 
   getVehicleValue(vehicle: Vehicle, field: string): string {
     const fieldMap: { [key: string]: keyof Vehicle } = {
-      'vehicle no': 'vehicleNo',
-      'make': 'make',
-      'colour': 'colour',
+      'vehicle number': 'vehicleNo',
+      'vehicle make': 'make',
+      'vehicle colour': 'colour',
       'vehicle type': 'type',
       'fees': 'fees'
     };

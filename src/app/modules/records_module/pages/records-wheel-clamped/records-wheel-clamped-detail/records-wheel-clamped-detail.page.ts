@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 
 @Component({
   selector: 'app-records-wheel-clamped-detail',
@@ -11,7 +13,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   vehicle: any = {};
   issue_time = ''
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private modalController: ModalController) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any[]};
     if (state) {
@@ -69,5 +71,33 @@ export class RecordsWheelClampedDetailPage implements OnInit {
       },
       queryParams: this.params
     });
+  }
+
+  async presentModal(issue: string = 'wheel_clamp', vehicle: any = []) {
+    console.log("TRY OPEN MODAL")
+    const modal = await this.modalController.create({
+      component: OvernightParkingModalPage,
+      cssClass: issue == 'second_warning' ? 'record-modal' : 'record-modal-notice',
+      componentProps: {
+        issue: issue == 'second_warning' ? 'wheel_clamp' : 'first_warning',
+        vehicle: vehicle,
+        alert: true
+      }
+
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if (result.data) {
+          console.log("SUCCEED")
+          this.router.navigate(['records-wheel-clamped'], {
+            queryParams: this.params
+          });
+        }
+      }
+    });
+
+    return await modal.present();
   }
 }

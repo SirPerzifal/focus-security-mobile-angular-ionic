@@ -2,14 +2,14 @@
   <app-resident-header [text]="facilityDetail?.facility_name || 'Court Detail'" />
 
   <div class="flex flex-col relative mt-2 mb-32">
-    <div class="mx-4">
+    <!-- <div class="mx-4">
       <div class="flex flex-row mt-4 justify-between w-full">
         <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
         <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
         <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
         <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
-    </div>
+    </div> -->
 
     <div class="flex flex-row w-full bg-[#CDF8DA] my-4 m-0 py-2">
       <div class="w-full flex flex-col justify-center items-center text-black text-center">
@@ -36,6 +36,7 @@
               id="datetime" 
               presentation="date" 
               [(ngModel)]="selectedDate"
+              (ionChange)="onDateChange($event)"
               [formatOptions]="{
                 date: {
                   day: '2-digit',
@@ -49,8 +50,8 @@
       </div>
 
       <div class="flex flex-row justify-center space-x-3 w-full mb-3">
-        <select id="ch_room" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
-          <option selected disabled hidden>CHOOSE ROOM</option>
+        <select id="ch_room" [(ngModel)]="selectedRoom" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
+          <option [value]="'default'" disabled hidden>Choose {{ facilityDetail?.facility_name || 'Room' }}</option>
           <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.room_name }}</option>
         </select>
       </div>
@@ -79,14 +80,15 @@
 
       <div class="flex items-start mb-4">
         <input 
+        id="termsCheckbox"
           class="mr-2 mt-1" 
           type="checkbox" 
           [(ngModel)]="isTermsAccepted" 
         />
-        <p class="text-base font-bold">
+        <label for="termsCheckbox" class="text-base font-bold">
           By clicking "Book Now," I acknowledge that I have read and agree to the
           Terms and Conditions for using this facility.
-        </p>
+        </label>
       </div>
 
       <div class="text-center mb-4">

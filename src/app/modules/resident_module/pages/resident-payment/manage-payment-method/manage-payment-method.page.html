@@ -8,27 +8,31 @@
     </div>
     <div class="flex flex-col space-y-3 mt-2">
       <div class="flex justify-between items-center bg-[var(--ion-color-tertiary)] rounded-full w-full px-4 py-2 h-14">
-        <div class="flex flew-row items-center">
-          <input type="radio" class="text-[var(--ion-color-primary)]" name="cardSelect" (click)="updateSelectedCard('visa')">
-          <img class="w-[3rem] h-8 ml-3" src="assets/icon/resident-icon/payment-visa-card.png" alt="Icon for Visitors" />
-          <div class="flex flex-col ml-2">
-            <span class="font-bold text-base" *ngIf="visa">Primary Card</span>
-            <span class="text-[15px]">Ending with 3921</span>
+        <label>
+          <div class="flex flew-row items-center">
+            <input type="radio" class="text-[var(--ion-color-primary)]" name="cardSelect" (click)="updateSelectedCard('visa')">
+            <img class="w-[3rem] h-8 ml-3" src="assets/icon/resident-icon/payment-visa-card.png" alt="Icon for Visitors" />
+            <div class="flex flex-col ml-2">
+              <span class="font-bold text-base" *ngIf="visa">Primary Card</span>
+              <span class="text-[15px]">Ending with 3921</span>
+            </div>
           </div>
-        </div>
+        </label>
         <div>
           <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-base rounded-md" (click)="showAlertButtons('3921')">Delete</button>
         </div>
       </div>
       <div class="flex justify-between items-center bg-[var(--ion-color-tertiary)] rounded-full w-full px-4 py-2 h-14">
-        <div class="flex flew-row items-center">
-          <input type="radio" class="text-[var(--ion-color-primary)]" name="cardSelect" value="master" (click)="updateSelectedCard('master')">
-          <img class="w-[3rem] h-8 ml-3" src="assets/icon/resident-icon/payment-master-card.png" alt="Icon for Visitors" />
-          <div class="flex flex-col ml-2">
-            <span class="font-bold text-base" *ngIf="master">Primary Card</span>
-            <span class="text-[15px]">Ending with 1991</span>
+        <label>
+          <div class="flex flew-row items-center">
+            <input type="radio" class="text-[var(--ion-color-primary)]" name="cardSelect" value="master" (click)="updateSelectedCard('master')">
+            <img class="w-[3rem] h-8 ml-3" src="assets/icon/resident-icon/payment-master-card.png" alt="Icon for Visitors" />
+            <div class="flex flex-col ml-2">
+              <span class="font-bold text-base" *ngIf="master">Primary Card</span>
+              <span class="text-[15px]">Ending with 1991</span>
+            </div>
           </div>
-        </div>
+        </label>
         <div>
           <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-base rounded-md" (click)="showAlertButtons('1991')">Delete</button>
         </div>

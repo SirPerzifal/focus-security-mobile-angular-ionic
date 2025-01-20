@@ -68,6 +68,15 @@ export class OvernightParkingListPage implements OnInit {
 
   // Subject untuk mengelola subscription
   private refreshInterval: any;
+  dateNow = new Date()
+  todayDate = this.convertToDDMMYYYY(this.dateNow.toISOString().split('T')[0])
+
+  showTomorrowdate = ''
+
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+  }
 
   constructor(
     private router: Router,
@@ -77,6 +86,10 @@ export class OvernightParkingListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    let tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    this.showTomorrowdate = this.convertToDDMMYYYY(tomorrowDate.toISOString().split('T')[0]);
+
     this.loadOvernight('today')
     this.loadBlock()
   }
@@ -188,6 +201,13 @@ export class OvernightParkingListPage implements OnInit {
   startDateFilter = ''
   endDateFilter = ''
 
+  clearFilters() {
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
+    this.applyFilters() 
+  }
+
   applyFilters() {
     this.filteredHistorySchedules = this.historySchedules.filter(item => {
       const visitorDate = new Date(item.approved_date.split(' ')[0]);
@@ -221,11 +241,9 @@ export class OvernightParkingListPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          // this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
-        // this.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });

@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -14,7 +14,7 @@
       <app-button-icon [customNameIcon]="'facar'" [text]="'VEHICLE RECORDS'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       <!-- </ion-button> -->
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <!-- <app-button-icon [textOnly]="true" [text]="'PRE REGISTERED'"
         (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true" /> -->
       <!-- <app-visitor-button [text]="'PRE REGISTERED'"

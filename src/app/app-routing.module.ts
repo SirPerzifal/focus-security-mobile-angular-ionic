@@ -427,8 +427,68 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule)
   },
   {
-    path: 'resident-homepage',
-    loadChildren: () => import('./modules/resident_pages_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule)
+    path: 'records-residents',
+    loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents.module').then( m => m.RecordsResidentsPageModule)
+  },
+  {
+    path: 'records-residents-detail',
+    loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents-detail/records-residents-detail.module').then( m => m.RecordsResidentsDetailPageModule)
+  },
+  {
+    path: 'move-in-out-permit',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/move-in-out-permit/move-in-out-permit.module').then( m => m.MoveInOutPermitPageModule)
+  },
+  // {
+  //   path: 'client-main-app',
+  //   loadChildren: () => import('./modules/resident_module/pages/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule)
+  // },
+  {
+    path: 'upcoming-event-calendar-view',
+    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/upcoming-event-calendar-view/upcoming-event-calendar-view.module').then( m => m.UpcomingEventCalendarViewPageModule)
+  },
+  {
+    path: 'renovation-permit',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/renovation-permit/renovation-permit.module').then( m => m.RenovationPermitPageModule)
+  },
+  {
+    path: 'records-residents-modal',
+    loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents-modal/records-residents-modal.module').then( m => m.RecordsResidentsModalPageModule)
+  },
+  {
+    path: 'appeal-parking-fines',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-parking-fines.module').then( m => m.AppealParkingFinesPageModule)
+  },
+  {
+    path: 'appeal-form',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-form/appeal-form.module').then( m => m.AppealFormPageModule)
+  },
+  {
+    path: 'alert-modal',
+    loadChildren: () => import('./modules/alert_module/pages/alert-modal/alert-modal.module').then( m => m.AlertModalPageModule)
+  },
+  {
+    path: 'payment-deposits',
+    loadChildren: () => import('./modules/resident_module/pages/resident-payment/payment-deposits/payment-deposits.module').then( m => m.PaymentDepositsPageModule)
+  },
+  {
+    path: 'facility-history-form',
+    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history-form/facility-history-form.module').then( m => m.FacilityHistoryFormPageModule)
+  },
+  {
+    path: 'access-card-application',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/access-card-application/access-card-application.module').then( m => m.AccessCardApplicationPageModule)
+  },
+  {
+    path: 'bicycle-tag-application',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/bicycle-tag-application/bicycle-tag-application.module').then( m => m.BicycleTagApplicationPageModule)
+  },
+  {
+    path: 'coach-registration',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/coach-registration/coach-registration.module').then( m => m.CoachRegistrationPageModule)
+  },
+  {
+    path: 'pet-registration',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule)
   },
 ];
 

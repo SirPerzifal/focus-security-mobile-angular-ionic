@@ -1,20 +1,20 @@
-<div class="border border-t-[#BBCDB3] pr-5 pl-5 flex justify-between bg-[#D8ECCF] fixed bottom-0 w-full">
-  <ion-button fill="clear" class="fsc-icon-button" (click)="routeTo()">
+<div class="border border-t-[#BBCDB3] flex justify-between bg-[#D8ECCF] fixed bottom-0 w-full z-50">
+  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="routeTo()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-3xl mb-2 ml-8"></ion-icon>
-      <span class="text-sm font-bold ml-8">Home</span>
+      <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-2xl mb-2"></ion-icon>
+      <span class="text-[13px] font-bold">Home</span>
     </div>
   </ion-button>
-  <ion-button fill="clear" class="fsc-icon-button" (click)="reportIssue()">
+  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="reportIssue()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-3xl mb-2 ml-3"></ion-icon>
-      <span class="text-sm font-bold ml-3">Report Issue</span>
+      <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-2xl mb-2"></ion-icon>
+      <span class="text-[13px] font-bold">App Issues</span>
     </div>
   </ion-button>
-  <ion-button fill="clear" class="fsc-icon-button" (click)="settings()">
+  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="settings()">
     <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-3xl mb-2 mr-5"></ion-icon>
-      <span class="text-sm font-bold mr-5">Settings</span>
+      <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-2xl mb-2"></ion-icon>
+      <span class="text-[13px] font-bold">Settings</span>
     </div>
   </ion-button>
 </div>

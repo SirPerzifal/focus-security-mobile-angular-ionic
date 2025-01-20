@@ -1,14 +1,14 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Payments'" [text_second]="'My Bills'" />
+  <div class="w-full mt-2 ml-[10px]">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-payment']"></ion-icon>
+  </div>
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-    <div class="w-full mt-2">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-10" [routerLink]="['/resident-payment']"></ion-icon>
-    </div>
+  <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-row justify-between mt-2">
-      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base'" ></app-visitor-button>
-      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-fines']"></app-visitor-button>
-      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base'" [routerLink]="['/bills-history']"></app-visitor-button>
+      <app-visitor-button [text]="'My Bills'" [extraClass]="'px-1 bg-[var(--ion-color-primary)] text-white w-28 h-12 text-base cw-3:text-sm cw-1:w-24 cw-3:w-[88px]'" ></app-visitor-button>
+      <app-visitor-button [text]="'Fines'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base cw-3:text-sm cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/bills-fines']"></app-visitor-button>
+      <app-visitor-button [text]="'Payment History'" [extraClass]="'px-1 bg-[#D0D0D0] text-[#757575] w-28 h-12 text-base cw-3:text-sm cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/bills-history']"></app-visitor-button>
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">

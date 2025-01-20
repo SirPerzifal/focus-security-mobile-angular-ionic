@@ -32,7 +32,10 @@ export class RecordsVisitorPage implements OnInit {
     private route: ActivatedRoute
   ) { }
 
+  todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
+
   initTemp(type: string) {
+    this.logsData = [];
     if (type === 'visitor') {
       this.logsData = [
         {
@@ -43,6 +46,9 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '1234567890',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '9876543210',
         },
         {
           visitor_name: 'John',
@@ -52,6 +58,9 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '2345678901',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '8765432109',
         },
         {
           visitor_name: 'Emma',
@@ -61,6 +70,9 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '3456789012',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '7654321098',
         },
         {
           visitor_name: 'Sophia',
@@ -70,8 +82,11 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '4567890123',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '6543210987',
         },
-      ]
+      ];
     } else if (type === 'vehicle') {
       this.logsData = [
         {
@@ -82,6 +97,10 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '5678901234',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '5432109876',
+          warning_issued: 'Parked in a no-parking zone',
         },
         {
           vehicle_number: 'SAA 7827 B',
@@ -91,15 +110,23 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '6789012345',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '4321098765',
+          warning_issued: 'Exceeded visitor time limit',
         },
         {
           vehicle_number: 'SAA 7827 B',
           date: '2024-12-29',
           time: '09:15AM',
-          blocblock_id: '1',
+          block_id: '1',
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '7890123456',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '3210987654',
+          warning_issued: 'Blocked another vehicle',
         },
         {
           vehicle_number: 'SAA 7827 B',
@@ -109,9 +136,14 @@ export class RecordsVisitorPage implements OnInit {
           block_name: 'Block 1',
           unit_id: '1',
           unit_name: 'Unit 1',
+          contact_number: '8901234567',
+          resident_name: 'RIVERTREE RESIDENT',
+          resident_contact: '2109876543',
+          warning_issued: 'Engine left running while parked',
         },
-      ]
+      ];
     }
+
     this.activeVehicles = this.logsData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
     this.historyVehicles = this.logsData
   }
@@ -224,6 +256,12 @@ export class RecordsVisitorPage implements OnInit {
     this.applyFilters()
   }
 
+  onEndDateChange(event: any) {
+    console.log(event.target.value)
+    this.filter.end_issue_date = event.target.value;
+    this.applyFilters()
+  }
+
   onVehicleFilterChange(event: any) {
     this.filter.vehicle_number = event.target.value
     this.applyFilters()
@@ -236,7 +274,8 @@ export class RecordsVisitorPage implements OnInit {
     block: '',
     unit: '',
     vehicle_number: '',
-    issue_date: ''
+    issue_date: '',
+    end_issue_date: ''
   }
 
   loadBlock() {
@@ -288,14 +327,24 @@ export class RecordsVisitorPage implements OnInit {
 
   startDateFilter = ''
 
+  clearFilters() {
+    this.filter.issue_date = ''
+    this.filter.end_issue_date = ''
+    this.filter.block = ''
+    this.filter.vehicle_number = ''
+    this.filter.unit = ''
+    this.applyFilters() 
+  }
+
   applyFilters() {
     this.historyVehicles = this.logsData.filter(item => {  
-      const dateMatches = this.filter.issue_date ? item.date == this.filter.issue_date : true;
+      const dateMatches = this.filter.issue_date ? item.date >= this.filter.issue_date : true;
+      const endDateMatches = this.filter.end_issue_date ? item.date <= this.filter.end_issue_date : true;
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number == this.filter.vehicle_number : true;
+      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) : true;
+      const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
   
-      return blockMatches && dateMatches && unitMatches && vehicleMatches;
+      return blockMatches && dateMatches && unitMatches && vehicleMatches && endDateMatches;
     });
     console.log(this.historyVehicles)
   }

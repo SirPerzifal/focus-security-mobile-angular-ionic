@@ -1,10 +1,6 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -20,12 +16,15 @@
         <div class="w-full">
           <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. MARCO ZHABIN'" [customClasses]="{'w-full':true}" [type]="'text'"  [(ngModel)]="formData.name"[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-full">  <!-- if want to add search button, change class to w-4/6 -->
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="formData.contact_number" [id]="'unregistered_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+        </div>
+        <!-- <div class="flex flex-row justify-between w-full">
+          <div class="w-full"> 
             <app-text-input [id]="'contact'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"  [(ngModel)]="formData.contact_number"></app-text-input>
           </div>
-          <!-- <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-2xl">SEARCH</button> -->
-        </div>
+          <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-1/4 text-2xl">SEARCH</button>
+        </div> -->
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
             <app-text-input [id]="'vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 7772 V'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
@@ -53,12 +52,12 @@
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="remarks" rows="4"
-            class="bg-transparent border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="A SHORT MEETING WITH THE CLIENT..." [(ngModel)]="formData.reason"></textarea>
         </div>
-        <div class="w-full">
-          <!-- <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'"></app-visitor-button> -->
-          <app-visitor-button (click)="onSubmit()" [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl mt-6 h-20'"></app-visitor-button>
+        <div class="w-full">          
+          <app-visitor-button (click)="onSubmit(true)" [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl mt-6 h-20'"></app-visitor-button>
+          <app-visitor-button (click)="onSubmit(false)" [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'"></app-visitor-button>
         </div>
       </div>
     </div>

@@ -186,6 +186,12 @@ export class RecordsWheelClampedPage implements OnInit {
     this.applyFilters()
   }
 
+  onEndDateChange(event: any) {
+    console.log(event.target.value)
+    this.filter.end_issue_date = event.target.value;
+    this.applyFilters()
+  }
+
   onVehicleFilterChange(event: any) {
     this.filter.vehicle_number = event.target.value
     this.applyFilters()
@@ -198,7 +204,8 @@ export class RecordsWheelClampedPage implements OnInit {
     block: '',
     unit: '',
     vehicle_number: '',
-    issue_date: ''
+    issue_date: '',
+    end_issue_date: ''
   }
 
   loadBlock() {
@@ -249,15 +256,26 @@ export class RecordsWheelClampedPage implements OnInit {
   }
 
   startDateFilter = ''
+  
+  clearFilters() {
+    this.filter.issue_date = ''
+    this.filter.end_issue_date = ''
+    this.filter.block = ''
+    this.filter.vehicle_number = ''
+    this.filter.unit = ''
+    this.applyFilters() 
+  }
 
   applyFilters() {
     this.historyVehicles = this.vehicleData.filter(item => {  
-      const dateMatches = this.filter.issue_date ? item.issue_date == this.filter.issue_date : true;
+      const dateMatches = this.filter.issue_date ? item.issue_date >= this.filter.issue_date : true;
+      const endDateMatches = this.filter.end_issue_date ? item.issue_date <= this.filter.end_issue_date : true;
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number == this.filter.vehicle_number : true;
-  
-      return blockMatches && dateMatches && unitMatches && vehicleNumberMatches;
+      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) && item.block_id == this.filter.block : true;
+      const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
+      
+      console.log(item.vehicle_number, this.filter.vehicle_number)
+      return endDateMatches && blockMatches && dateMatches && unitMatches && vehicleNumberMatches;
     });
     console.log(this.historyVehicles)
   }

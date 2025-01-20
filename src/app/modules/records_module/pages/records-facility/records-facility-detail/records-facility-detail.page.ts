@@ -36,11 +36,12 @@ export class RecordsFacilityDetailPage implements OnInit {
 
   booked_by = 'RIVERTREE RESIDENT'
 
-  onCheckOut(record: any) {
+  onCheckOut(record: any, purpose: string = 'check_in') {
     // Navigasi ke halaman form dengan parameter
     this.router.navigate(['records-facility-check-out'], {
       state: {
         record: record,
+        purpose: purpose
       }
     });
   }

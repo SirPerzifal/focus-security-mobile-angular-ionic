@@ -13,17 +13,17 @@
       </ng-container>
       <ng-template #imageTemplate>
         <div class="" [ngClass]="extraImageClass ? 'custom-icon-wrapper '+ extraImageClass : 'fsc-icon-wrapper'">
-          <img [src]="customImageIcon" class="fsc-icon " alt="icon" >
+          <img [src]="customImageIcon" class="fsc-icon " alt="icon">
         </div>
       </ng-template>
       <span class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white]" *ngIf="!isDoubleText">
         {{text}}
       </span>
-      <div class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white] flex flex-col" *ngIf="isDoubleText">
+      <div class="fsc-icon-button-label break-words font-bold text-[black] dark:text-[white] flex flex-col"
+        *ngIf="isDoubleText">
         <span>{{text}}</span>
         <span>{{secondText}}</span>
-        
-    </div>
+      </div>
     </div>
 
   </ion-button>
@@ -47,7 +47,14 @@
         'text-2xl': text != 'PRE REGISTERED',
         'text-xl': text == 'PRE REGISTERED'
       }">
-        <b>{{text}}</b>
+      <span class="font-bold text-[white]" *ngIf="!isDoubleText">
+        {{text}}
+      </span>
+      <div class="font-bold text-[white] flex flex-col"
+        *ngIf="isDoubleText">
+        <span>{{text}}</span>
+        <span>{{secondText}}</span>
+      </div>
       </div>
     </ng-container>
   </ion-button>

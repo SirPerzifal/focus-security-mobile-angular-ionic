@@ -1,8 +1,11 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Docs'"/>
+  <div class="w-full mt-2 flex items-start ml-4">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20">
-    <div class="flex flex-row mt-4 justify-center items-center w-full space-x-3">
+  <div class="px-5 text-center mb-20">
+    <div class="flex flex-row mt-2 justify-start items-center w-full space-x-3">
       <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" [routerLink]="['/resident-announcement-page']"></app-visitor-button>
       <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'"></app-visitor-button>
     </div>

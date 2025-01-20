@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4 mb-4">
     <div class="w-full">
@@ -14,7 +14,7 @@
         [text]="'SEARCH VEHICLE'" [isActive]="true"
         [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customNameIcon]="'faSearch'" [text]="'SEARCH BY VEHICLE NO'"
         [isActive]="showSearch" [disableClick]="true" />
 
@@ -156,7 +156,7 @@
     <div @fadeInOut class="flex flex-row mx-4" *ngIf="showList">
       <div class="flex flex-col w-full">
         <div *ngFor="let record of vehicleRecords"
-          class="move_in_box flex flex-col mt-8 self-start rounded-xl border-2 w-[100%] p-[10px] overflow-scroll scrollbar overflow-x-hidden"
+          class="move_in_box flex flex-col mt-8 self-start rounded border-2 w-[100%] p-[10px] overflow-scroll scrollbar overflow-x-hidden"
           [ngClass]="{ 
             ' bg-[var(--ion-color-vms-alert)] border-[var(--ion-color-vms-alert)] !text-white': (record.clamp.beforeImage && record.clamp.afterImage),
             ' bg-[#E3787E] border-[#E3787E] text-black ': (record.secondWarning.image && !record.clamp.beforeImage && !record.clamp.afterImage),
@@ -166,41 +166,47 @@
           <div class="flex flex-col ml-3 gap-y-3 text-2xl">
             <table>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">NAME</td>
+                <td class="w-2/5 font-bold">NAME</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.name}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">CONTACT</td>
+                <td class="w-2/5 font-bold">CONTACT</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.contact}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">BLOCK</td>
+                <td class="w-2/5 font-bold">BLOCK</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.block}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">UNIT</td>
+                <td class="w-2/5 font-bold">UNIT</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.unit}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">VEHICLE</td>
+                <td class="w-2/5 font-bold">VEHICLE</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.vehicle}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">VEHICLE TYPE</td>
+                <td class="w-2/5 font-bold">VEHICLE TYPE</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.vehicleType}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-1/5 font-bold">LAST ENTRY</td>
+                <td class="w-2/5 font-bold">LAST ENTRY</td>
                 <td class="w-[2%]">:</td>
                 <td>{{record.lastEntry}}</td>
               </tr>
             </table>
+            <div class="w-full flex flex-col items-center mb-4 mt-5">
+              <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                CHECKOUT
+              </button>
+            </div>
+            
           </div>
         </div>
       </div>

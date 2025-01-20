@@ -1,24 +1,20 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'Report app Issue'" [text_second]="'Record of Report'"/>
+  <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20">
-    <div class="w-1/6 flex items-start mr-10 mb-2">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
+  <div class="px-5 text-center mb-20">
     <!-- Reported Issues Button -->
-    <div class="mb-4 flex justify-between">
-      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold">
-        Reported Issues
-      </button>
-      <button class="bg-[var(--ion-color-primary)] text-white py-2 px-4 rounded font-bold" [routerLink]="['/resident-report-an-app-issue']">
-        Report an Issues
-      </button>
+    <div class="flex flex-row mt-4 justify-start items-center w-full space-x-3 mb-4">
+      <app-visitor-button [text]="'Reported Issues'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-sm w-32'" ></app-visitor-button>
+      <app-visitor-button [text]="'Report an Issues'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-sm w-32'" [routerLink]="['/resident-report-an-app-issue']"></app-visitor-button>
     </div>
     <!-- Issues List -->
     <div class="space-y-4">
       <!-- Issue 1 -->
       <div class="bg-[#E3787E] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Renovation Form not approved</h2>
+        <h2 class="font-bold text-left">Report Issue - Slow App Loading</h2>
         <table class="w-full text-left border-collapse mt-2">
           <tbody>
             <tr>
@@ -38,7 +34,7 @@
       </div>
       <!-- Issue 2 -->
       <div class="bg-[var(--ion-color-tertiary)] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Renovation Form approved</h2>
+        <h2 class="font-bold text-left">Improvement - House Rule </h2>
         <table class="w-full text-left border-collapse mt-2">
           <tbody>
             <tr>

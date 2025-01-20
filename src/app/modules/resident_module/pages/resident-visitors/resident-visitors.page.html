@@ -1,18 +1,18 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Visitors'" [text_second]="'Daily Invite'" />
 	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4 mb-32">
-		<div class="w-1/6 flex items-start mr-10">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
-		<div class="flex flex-row justify-between mt-4">
+	<div class="w-full flex items-start justify-start mt-2 ml-3">
+		<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+	</div>
+	<div class="flex flex-col relative mx-4 mb-32">
+		<div class="flex flex-row justify-between mt-2">
 			<app-visitor-button [text]="'Daily Invite'"
-				[extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'" (click)="toggleShowInv()">
+				[extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
 		</div>
@@ -20,14 +20,14 @@
 			<div class="flex flex-col w-full">
 				<div class="flex flex-row justify-between mt-4">
 					<app-visitor-button [text]="'New Invite'"
-						[extraClass]="showNewInv ? 'bg-[var(--ion-color-primary)] text-white w-28 text-base' : 'bg-[#D0D0D0] text-[#757575] w-28 text-base'"
+						[extraClass]="showNewInv ? 'bg-[var(--ion-color-primary)] text-white w-28 cw-1:w-24 cw-3:w-[88px] text-base cw-3:text-sm' : 'bg-[#D0D0D0] text-[#757575] w-28 cw-1:w-24 cw-3:w-[88px] text-base cw-3:text-sm'"
 						(click)="toggleShowNewInv()">
 					</app-visitor-button>
 					<app-visitor-button [text]="'Active'"
-						[extraClass]="showActInv ? 'bg-[var(--ion-color-primary)] text-white w-28 text-base' : 'bg-[#D0D0D0] text-[#757575] w-28 text-base'"
+						[extraClass]="showActInv ? 'bg-[var(--ion-color-primary)] text-white w-28 cw-1:w-24 cw-3:w-[88px] text-base cw-3:text-sm' : 'bg-[#D0D0D0] text-[#757575] w-28 cw-1:w-24 cw-3:w-[88px] text-base cw-3:text-sm'"
 						(click)="toggleShowActInv()">
 					</app-visitor-button>
-					<div class="w-28"></div>
+					<div class="w-28 cw-1:w-24 cw-3:w-[88px]"></div>
 				</div>
 				<div class="flex flex-row w-full">
 					<div class="w-full" *ngIf="showNewInv" @fadeInOut>
@@ -39,7 +39,7 @@
 								<p class="text-base font-bold">Entry Date</p>
 							</div>
 							<div class="w-full">
-								<app-text-input #newEntryDateInput [id]="'new_entry_input_date'" [placeholder]="'01/12/2024'"
+								<app-text-input #newEntryDateInput [id]="'new_entry_input_date'" [placeholder]="'Choose Date'" [(ngModel)]="formattedDate"
 									[customClasses]="{'w-full':true}" [type]="'date'"
 									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
 									(change)="onDateOfInviteChange($event)"></app-text-input>
@@ -57,14 +57,14 @@
 						</div>
 						<div class="flex flex-row mt-4">
 							<input type="checkbox" id="one_time_entry" name="entry"
-								class="mr-1 accent-black rounded text-base" (change)="onEntryTypeChange('one_time_entry')"
+								class="mr-1 accent-black text-[var(--ion-color-primary)] rounded text-base" (change)="onEntryTypeChange('one_time_entry')"
 								[checked]="formData.entryType === 'one_time_entry'">
-							<b>One-Time Entry</b>
+							<label for="one_time_entry"><b>One-Time Entry</b></label>
 							<input type="checkbox" id="multiple_entry" name="entry"
-								class="mr-1 accent-black rounded ml-4 text-base"
+								class="mr-1 accent-black text-[var(--ion-color-primary)] rounded ml-4 text-base"
 								(change)="onEntryTypeChange('multiple_entry')"
 								[checked]="formData.entryType === 'multiple_entry'">
-							<b>Multiple Entry</b>
+								<label for="multiple_entry"><b>Multiple Entry</b></label>
 						</div>
 						<div class="flex flex-col mt-4">
 							<u class="text-base font-bold mb-1.5">Invitation Details</u>
@@ -92,7 +92,7 @@
 									<div class="flex flex-row justify-start mb-1">
 										<p class="text-base font-bold">Message for Invitation</p>
 									</div>
-									<textarea id="visitor_entry_message" placeholder="Invitation Message"
+									<textarea id="visitor_entry_message" placeholder="Invitation Message" (focus)="testAddMb(true)" (blur)="testAddMb(false)"
 										class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
 										type="text" [(ngModel)]="formData.entryMessage" name="entryMessage">
 									</textarea>
@@ -100,10 +100,10 @@
 							</div>
 						</div>
 						<div class="flex flex-row mt-4">
-							<input type="checkbox" id="inv_agreement" name="inv_agreement" value="1"
+							<input type="checkbox" id="inv_agreement_visitor" name="inv_agreement_visitor" value="1"
 								(change)="onProvideUnitChange()" [checked]="formData.isProvideUnit"
-								class="mr-1 accent-black rounded">
-							<b class="text-base">Provide my unit number to visitor</b>
+								class="mr-1 accent-black text-[var(--ion-color-primary)] rounded">
+							<label for="inv_agreement_visitor"><b>Provide my unit number to visitor</b></label>
 						</div>
 						<div class="flex flex-row mt-2 text-[13px] w-full">
 							<div class="w-full">
@@ -116,10 +116,9 @@
 					</div>
 					<div class="w-full mb-20" *ngIf="showActInv" @fadeInOut>
 						<div *ngIf="activeInvites.length > 0; else noInvites">
-							<div *ngFor="let invite of activeInvites"
-								class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex justify-between items-center">
+							<div *ngFor="let invite of activeInvites" class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex justify-between items-center">
 								<div>
-									<h2 class="ml-1 text-base font-bold text-gray-800">
+									<h2 class="ml-1 text-lg font-bold text-gray-800">
 										<u>{{ invite.name }}</u>
 									</h2>
 									<div>
@@ -141,11 +140,16 @@
 											</tr>
 										</table>
 									</div>
+									<div class="space-x-2">
+										<button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm">
+											Resend Invite
+										</button>
+										<button class="bg-[#E3787E] text-black px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm"
+											(click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)">
+											Cancel Invite
+										</button>
+									</div>
 								</div>
-								<button class="bg-[#E3787E] text-black px-3 py-2 text-base rounded-md font-bold"
-									(click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)">
-									Cancel Invite
-								</button>
 							</div>
 						</div>
 						<!-- Template untuk kondisi tidak ada invite -->
@@ -162,6 +166,7 @@
 				</div>
 			</div>
 		</div>
+		<div class="h-96" *ngIf="extend_mb"></div>
 	</div>
 	<!-- ############################### -->
 	<app-bottom-nav-bar></app-bottom-nav-bar>

@@ -1,14 +1,14 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Polling'" [text_second]="'Upcoming Polling'"/>
+  <div class="w-full mt-2 flex items-start ml-4">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20">
-    <div class="w-1/6 flex items-start mr-10 mb-2">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
+  <div class="px-5 mt-2 text-center mb-20">
     <div class="flex flex-row justify-between">
-			<app-visitor-button [text]="'Open'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'" [routerLink]="['/resident-polling']"></app-visitor-button>
-			<app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"></app-visitor-button>
-			<app-visitor-button [text]="'Closed'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'" [routerLink]="['/closed-polling']"></app-visitor-button>
+			<app-visitor-button [text]="'Open'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/resident-polling']"></app-visitor-button>
+			<app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'"></app-visitor-button>
+			<app-visitor-button [text]="'Closed'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/closed-polling']"></app-visitor-button>
 		</div>
     <div class="w-full mt-4">
       <div class="bg-[var(--ion-color-tertiary)] rounded p-4 flex justify-between items-center">

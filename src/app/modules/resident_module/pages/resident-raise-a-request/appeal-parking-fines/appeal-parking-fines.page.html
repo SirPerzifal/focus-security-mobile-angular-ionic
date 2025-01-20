@@ -1,0 +1,67 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Raise A Request'" [text_second]="'Appeal Parking Fines'" />
+  <div class="w-full flex items-start ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+  </div>
+
+  <div class="px-5 text-start mb-20">
+    <div id="visitor" class="w-full mt-2 overflow-x-auto pb-1">
+      <div *ngFor="let ad of appealData" [ngClass]="{
+          'bg-[var(--ion-color-tertiary)]': ad.Status === 'Approved',
+          'bg-[#F8F1BA]': ad.Status === 'Pending Approval',
+          'bg-[#E3787E]': ad.Status === 'Rejected' || ad.Status === 'Cancelled',
+          'bg-sky-100': ad.Status === 'Pending Payment' || ad.Status === 'Requested'
+        }" class="p-4 rounded-xl w-full mb-3 relative">
+        <div class="flex flex-col justify-start items-start ml-2 mb-2">
+          <div class="flex flex-row items-center justify-end mt-2">
+            <ng-container *ngIf="ad.Status === 'approved' || ad.Status === 'Approved'">
+              <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+              <p class="text-[var(--ion-color-primary)] font-bold text-base">Approved</p>
+            </ng-container>
+            <ng-container *ngIf="ad.Status === 'pending_approval' || ad.Status === 'Pending Approval'">
+              <ion-icon name="alert-circle-outline" class=" bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+              <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+            </ng-container>
+            <ng-container *ngIf="ad.Status === 'pending_payment' || ad.Status === 'Pending Payment'">
+              <ion-icon name="alert-circle-outline" class="bg-blue-500y mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+              <p class="text-blue-500 font-bold text-base">Pending Payment</p>
+            </ng-container>
+            <ng-container *ngIf="ad.Status === 'rejected' || ad.Status === 'Rejected'">
+              <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+              <p class="text-red-700 font-bold text-base">Rejected</p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex flex-row justify-between font-bold items-center">
+          <div class="flex flex-col w-[100%]">
+            <div class="text-base font-extrabold ml-2">
+              {{ ad.Status }}
+            </div>
+            <div class="text-base flex flex-col">
+              <table class="w-full table-fixed">
+                <tr>
+                  <td>Vehicle No</td>
+                  <td class="w-[5%]">:</td>
+                  <td class="font-thin">{{ ad.VehicleNo }}</td>
+                </tr>
+                <tr>
+                  <td>Offence Date</td>
+                  <td class="w-[5%]">:</td>
+                  <td class="font-thin">{{ ad.OffenceDate }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="button-card-facility flex items-center font-bold w-1/2 ml-[4.5px] mt-2 mb-2">
+          <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" (click)="navigateToAppealForm(ad)">
+            Appeal Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

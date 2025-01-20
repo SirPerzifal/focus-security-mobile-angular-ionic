@@ -33,7 +33,7 @@ export class ResidentQuickDialsPage implements OnInit {
   selectQuickDial(dial: QuickDial) {
     if (this.selectedQuickDial === dial) {
       // If the same dial is clicked, close the popup
-      this.closePopup();
+      this.closePopup(dial.number);
     } else {
       // If a different dial is clicked, animate the popdown first
       this.isAnimating = true;
@@ -44,7 +44,10 @@ export class ResidentQuickDialsPage implements OnInit {
     }
   }
 
-  closePopup() {
+  closePopup(phoneNumber?: string) {
+    if (phoneNumber) {
+      window.open(`tel:${phoneNumber}`, '_system');
+    }
     this.isAnimating = true;
     setTimeout(() => {
       this.selectedQuickDial = null;

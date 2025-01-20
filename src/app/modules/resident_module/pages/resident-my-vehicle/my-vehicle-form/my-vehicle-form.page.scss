@@ -1,0 +1,12 @@
+input[type="file"] {
+  text-align: left; /* Align text to the left */
+  padding-left: 10px; /* Add padding for better spacing */
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden; /* Hide the default button */
+}
+
+input[type="file"]::file-selector-button {
+  visibility: hidden; /* For Firefox and other browsers */
+}

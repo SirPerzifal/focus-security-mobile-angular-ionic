@@ -17,8 +17,6 @@ export class OffensesService extends ApiService{
       'Accept': 'application/json'
     });
 
-    console.log(apiUrl, type)
-
     return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: {alert_type: type, is_active: is_active}}, { headers }).pipe(
       catchError(this.handleError)
     );

@@ -1,50 +1,62 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Polling'" [text_second]="'Closed Polling'"/>
+  <div class="w-full mt-2 flex items-start ml-4" *ngIf="!showGraph">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
 
-  <div class="p-5 text-center mb-20" *ngIf="!showGraph">
-    <div class="w-1/6 flex items-start mr-10 mb-2">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
-    <div class="flex flex-row justify-between mt-4">
-      <app-visitor-button [text]="'Open'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'" [routerLink]="['/resident-polling']"></app-visitor-button>
-      <app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-28'" [routerLink]="['/upcoming-polling']"></app-visitor-button>
-      <app-visitor-button [text]="'Closed'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-28'"></app-visitor-button>
+  <div class="px-5 mt-2 text-center mb-20" *ngIf="!showGraph">
+    <div class="flex flex-row justify-between">
+      <app-visitor-button [text]="'Open'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/resident-polling']"></app-visitor-button>
+      <app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/upcoming-polling']"></app-visitor-button>
+      <app-visitor-button [text]="'Closed'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'"></app-visitor-button>
     </div>
-    <div class="w-full mt-4">
-      <div class="bg-[var(--ion-color-tertiary)] rounded p-4 flex justify-between items-center">
-        <div class="flex justify-between items-center w-full">
+    <div class="w-full mt-4 space-y-2">
+      <div class="bg-[var(--ion-color-tertiary)] rounded p-3 py-5 flex justify-between items-center" *ngFor="let vd of voteData">
+        <div class="flex justify-start flex-col items-start w-full">
           <div class="flex flex-col items-start">
-            <h2 class="font-bold mb-2 ml-2.5">Block colour voting</h2>
+            <h2 class="font-bold mb-2 ml-2.5">{{ vd.title }}</h2>
             <table class="w-full text-left">
               <tbody>
                 <tr>
                   <td class="font-bold">Closed</td>
-                  <td>: 12/12/24</td>
+                  <td class="truncate">: {{ vd.time_close }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Voted</td>
-                  <td>: Option B</td>
+                  <td class="truncate">: {{ vd.you_vote }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Results</td>
-                  <td>: Option A win</td>
+                  <td class="truncate">: Option {{ vd.result }} win</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <button class="bg-[var(--ion-color-primary)] text-white font-bold px-4 py-2 rounded mr-2.5" (click)="toggleGraph()">
-            VIEW
+          <button class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded ml-2.5" (click)="toggleGraph(vd)">
+            View Detail
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div *ngIf="showGraph" class="p-5 text-center mb-20 slide-up-animation">
-    <div class="w-1/6 flex items-start mr-10">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="toggleGraph()"></ion-icon>
+  <div class="w-full mt-2 flex items-start ml-4" *ngIf="showGraph">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="toggleGraph()"></ion-icon>
+  </div>
+  <div *ngIf="showGraph" class="px-5 text-center mb-20" [ngClass]="{'slide-up-animation': openingGraph, 'slide-down-animation': closingGraph}">
+    <div>
+      <h2 class="font-bold mb-2 ml-2.5">{{ dataForGraph.title }}</h2>
     </div>
-    <app-voting-graph></app-voting-graph>
+    <app-voting-graph [chartData]="dataForGraph"></app-voting-graph> <!-- Pass data to the graph component -->
+    <div>
+      <div class="flex flex-col text-start">
+        <div class="flex flex-col justify-start space-y-1 w-full">
+          <p class="text-[var(--ion-color-danger)]"><strong>Polling Status:</strong> Close</p>
+          <p><strong>Winning Response:</strong> {{ dataForGraph.result }}</p>
+          <p><strong>You voted for:</strong> {{ dataForGraph.you_vote }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>

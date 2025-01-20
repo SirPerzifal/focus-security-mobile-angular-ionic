@@ -59,8 +59,8 @@ export class DeliveriesPage implements OnInit {
       other: 'Test Others',
       delivery_option: 'single'
     }, 
-    block: '1', 
-    unit: '1',
+    block: '', 
+    unit: '',
     pax:'0',
     remarks: ''
   };
@@ -485,7 +485,7 @@ export class DeliveriesPage implements OnInit {
     console.log(this.Block)
   }
 
-  loadUnit() {
+  async loadUnit() {
     this.blockUnitService.getUnit(this.formData.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -555,5 +555,16 @@ export class DeliveriesPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.formData.vehicle_number = randomVhc
     console.log("Vehicle Refresh", this.formData.vehicle_number)
+  }
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      console.log(contactData)
+      this.formData.vehicle_number = contactData.vehicle_number
+      this.formData.block = contactData.block_id
+      this.loadUnit().then(() => {
+        this.formData.unit = contactData.unit_id
+      })
+    }
   }
 }

@@ -1,11 +1,11 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'My Family'" />
+  <div class="w-1/6 flex items-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+  </div>
   <!-- CONTENT -->
-  <div class="flex flex-col relative mt-2 mx-4 mb-24">
-		<div class="w-1/6 flex items-start mr-10">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-		  </div>
-    <div class="flex flex-col justify-between mt-2">
+  <div class="flex flex-col relative mx-4 mb-24">
+    <div class="flex flex-col justify-between mt-1">
       <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" [routerLink]="['/family-add-member']">Add New Family Member</button>
       <!-- <button class="bg-[#D0D0D0] text-[#757575] mt-1 w-full text-base rounded-full h-10 font-bold" >Add New Card</button> -->
     </div>

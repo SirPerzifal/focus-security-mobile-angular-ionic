@@ -61,36 +61,42 @@ export class RecordsBlacklistPage implements OnInit {
     {
       visitor_name: 'Jhonson',
       vehicle_number: '',
+      contact_number: '6582719273',
       type: 'visitor',
       date_time: '2024-12-25'
     },
     {
       visitor_name: 'Thompson',
       vehicle_number: '',
+      contact_number: '6582719273',
       type: 'visitor',
       date_time: '2024-12-24'
     },
     {
       visitor_name: 'Jhonson',
       vehicle_number: 'SBS 7820 X',
+      contact_number: '6582719273',
       type: 'vehicle',
       date_time: '2024-12-25'
     },
    {
       visitor_name: 'Jhonson',
       vehicle_number: 'SBS 7820 X',
+      contact_number: '6582719273',
       type: 'vehicle',
       date_time: '2024-12-24'
     },
    {
       visitor_name: 'Jhonson',
       vehicle_number: 'SBS 9020 X',
+      contact_number: '6582719273',
       type: 'vehicle',
       date_time: '2024-12-25'
     },
    {
       visitor_name: 'Jhonson',
       vehicle_number: 'SBS 1111 X',
+      contact_number: '6582719273',
       type: 'vehicle',
       date_time: '2024-12-24'
     },
@@ -183,13 +189,21 @@ export class RecordsBlacklistPage implements OnInit {
 
   startDateFilter = ''
 
+  clearFilters() {
+    this.filter.name = ''
+    this.filter.vehicle_number = ''
+    this.filter.contact = ''
+    this.applyFilters() 
+  }
+
+
   applyFilters() {
     this.blacklistData = this.existData.filter(item => {
       const typeMatches = this.pageType ? item.type == this.pageType : false;
-      const dateMatches = this.filter.issue_date ? item.date_time == this.filter.issue_date : true;
-      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_number == this.filter.vehicle_number : true ) : ( this.filter.name ? item.visitor_name == this.filter.name : true );
+      const contactMatches = this.filter.contact ? item.contact_number.toLowerCase().includes(this.filter.contact.toLowerCase()) : true;
+      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
 
-      return typeMatches && dateMatches && ( vehicleNumberMatches);
+      return typeMatches && contactMatches && ( vehicleNumberMatches);
     });
     console.log(this.blacklistData)
   }

@@ -20,18 +20,37 @@ export class OvernightParkingModalPage implements OnInit {
   ) {
     this.issue = this.navParams.get('issue')
     this.vehicle = this.navParams.get('vehicle')
-    if ( this.issue == 'wheel_clamped') {
+    this.alert = this.navParams.get('alert') ? true : false
+    if (this.alert && this.issue == 'first_warning') {
+      this.selectedNotice = 'second_warning'
+      this.url = '/vms/post/issue_second_warning'
+    }
+    if ( this.issue == 'wheel_clamp') {
       this.selectedNotice = 'wheel_clamp'
+      if (this.alert){
+        this.url = '/vms/post/issue_wheel_clamp'
+        console.log('TOP', this.selectedNotice)
+      }
+    }
+    if (this.alert) {
+      this.isReadonly = true
+      this.reason = this.vehicle.reason_for_issueance
     }
     console.log(this.issue)
     console.log(this.vehicle)
+    console.log(this.alert)
   }
 
+  alert: boolean = false
   vehicle: any
-  issue = 'wheel_clamped'
+  issue = 'wheel_clamp'
+  isReadonly = false
 
   ngOnInit() {
+    this.loadOfficer()
   }
+
+  url = '/vms/create/offenses'
 
   selectedNotice = ''
   beforeClampImageFile: string = '';
@@ -108,23 +127,33 @@ export class OvernightParkingModalPage implements OnInit {
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
     } else {
-      console.log(this.afterClampImageFile, this.imageAfterClampInput, this.beforeClampImageFile, this.imageBeforeClampInput, this.selectedNotice, this.issueOfficer);
-      let params = {
-        vehicle_number: this.vehicle.vehicle_numbers, 
-        visitor_name: this.vehicle.visitor_name, 
-        block_id: this.vehicle.block_id, 
-        unit_id: this.vehicle.unit_id, 
-        contact_number: this.vehicle.contact_number,
-        type_notice: this.selectedNotice, 
-        issuing_officer_name: this.issueOfficer,
-        type: 'Drive In',
-        reason: this.reason,
-        notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
-        before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
-        after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
+      let params = {}
+      if (this.alert){
+        params = {
+          offence_id: this.vehicle.id, 
+          issuing_officer: this.issueOfficer,
+          notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
+          before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
+          after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
+        }
+      } else {
+        params = {
+          vehicle_number: this.vehicle.vehicle_numbers, 
+          visitor_name: this.vehicle.visitor_name, 
+          block_id: this.vehicle.block_id, 
+          unit_id: this.vehicle.unit_id, 
+          contact_number: this.vehicle.contact_number,
+          type_notice: this.selectedNotice, 
+          issuing_officer_name: this.issueOfficer,
+          type: 'Drive In',
+          reason: this.reason,
+          notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
+          before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
+          after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
+        }
       }
       console.log(params)
-      this.mainVmsService.getApi(params, '/vms/create/offenses' ).subscribe({
+      this.mainVmsService.getApi(params, this.url ).subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -157,6 +186,28 @@ export class OvernightParkingModalPage implements OnInit {
 
   onCancel() {
     this.modalController.dismiss(false);
+  }
+
+  Officer: any[] = []
+
+  loadOfficer() {
+    // this.mainVmsService.getApi([], '/vms/get/issuing_officer' ).subscribe({
+    //   next: (results) => {
+    //     if (results.result.response_code === 200) {
+    //       console.log(results.result.response_result)
+    //       this.Officer = results.result.response_result
+    //     } else {
+    //       this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+    //     console.error(error);
+    //   }
+    // });
+    this.Officer = [
+      {id: 'ERIC', name: 'ERIC'}
+    ]
   }
 
 }

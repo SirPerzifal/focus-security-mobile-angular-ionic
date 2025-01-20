@@ -41,6 +41,12 @@ export class RecordsFacilityPage implements OnInit {
     this.loadBlock()
   }
 
+  todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+  }
+  
   facilityRecords: any[] = [];
   daySchedules: any[] = [];
   upcomingSchedules: any[] = [];

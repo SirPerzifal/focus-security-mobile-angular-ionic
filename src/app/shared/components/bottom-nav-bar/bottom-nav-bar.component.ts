@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 
 @Component({
@@ -7,7 +7,7 @@ import { NavigationService } from 'src/app/service/global/navigation-service/nav
   templateUrl: './bottom-nav-bar.component.html',
   styleUrls: ['./bottom-nav-bar.component.scss'],
 })
-export class BottomNavBarComponent  implements OnInit {
+export class BottomNavBarComponent implements OnInit {
 
   constructor(
     private router: Router,
@@ -19,23 +19,39 @@ export class BottomNavBarComponent  implements OnInit {
   }
 
   routeTo() {
-    this.navigationService.setActiveButton('resident-homepage');
+    this.navigationService.setActiveButton('home');
     this.router.navigate(['/resident-homepage']);
-
   }
 
   reportIssue() {
-    this.navigationService.setActiveButton('home');
+    this.navigationService.setActiveButton('report');
     this.router.navigate(['/record-app-report']);
-    // Lakukan navigasi ke halaman report issue
   }
 
   settings() {
-    this.navigationService.setActiveButton('home');
+    this.navigationService.setActiveButton('settings');
     this.router.navigate(['/resident-settings-page']);
-    // Lakukan navigasi ke halaman settings
   }
 
-  ngOnInit() {}
-
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        const url = event['url'].split('?')[0];
+        console.log(url);
+        console.log(event)
+        if (url !== '/resident-homepage' && url !== '/record-app-report' && url !== '/resident-settings-page') {
+          this.navigationService.setActiveButton('');
+        }
+        if (url === '/resident-homepage') {
+          this.navigationService.setActiveButton('home');
+        }
+        if (url === '/record-app-report') {
+          this.navigationService.setActiveButton('report');
+        }
+        if (url === '/resident-settings-page') {
+          this.navigationService.setActiveButton('settings');
+        }
+      }
+    });
+  }
 }

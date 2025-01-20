@@ -31,7 +31,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     reason: ''
   }
 
-  onSubmit() {
+  onSubmit(isOpenBarrier: boolean = false) {
     let errMsg = ''
     if (!this.formData.name) {
       errMsg += 'Name is missing! \n'
@@ -51,6 +51,12 @@ export class UnregisteredResidentCarPage implements OnInit {
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
     } else {
+      if (isOpenBarrier){
+        console.log("OPEN BARRIER");
+      } else {
+        console.log("BARRIER NOT OPENED");
+        
+      }
       console.log(this.formData)
       this.mainVmsService.getApi(this.formData, '/vms/post/unregistered_resident_car').subscribe({
         next: (results) => {
@@ -106,7 +112,7 @@ export class UnregisteredResidentCarPage implements OnInit {
   }
 
   isLoadingUnit = false
-  loadUnit() {
+  async loadUnit() {
     this.isLoadingUnit = true
     this.blockUnitService.getUnit(this.formData.block_id).subscribe({
       next: (response: any) => {
@@ -142,6 +148,17 @@ export class UnregisteredResidentCarPage implements OnInit {
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.formData.vehicle_number = randomVhc
     console.log("Vehicle Refresh", randomVhc)
+  }
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      this.formData.name = contactData.visitor_name
+      this.formData.vehicle_number = contactData.vehicle_number
+      this.formData.block_id = contactData.block_id
+      this.loadUnit().then(() => {
+        this.formData.unit_id = contactData.unit_id
+      })
+    }
   }
 
 }

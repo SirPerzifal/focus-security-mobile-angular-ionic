@@ -1,73 +1,52 @@
 <ion-content class="">
   <div class="flex flex-col p-4 justify-center items-center h-full">
     <div class="flex flex-row w-[80%]">
-      <div class="flex flex-col justify-center w-full gap-4 items-center" *ngIf="issue == 'wheel_clamp'">
-        <div class="flex flex-row justify-center w-full">
-          <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <div class="flex flex-col w-full">
-            <label class="text-2xl"><b><u>WHEEL CLAMP NOTICE</u></b></label>
-            <select id="clamping_reason" [(ngModel)]="selectedNotice"
-              class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option value="" selected>WHEEL CLAMP</option>
-            </select>
-          </div>
+      <div class="flex flex-col justify-center w-full gap-4 items-center">
+        <div class="flex flex-col w-full" *ngIf="issue == 'wheel_clamp'">
+          <label class="text-2xl"><b><u>WHEEL CLAMP NOTICE</u></b></label>
+          <select id="clamping_reason" [(ngModel)]="selectedNotice" [disabled]="isReadonly"
+            class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option value="wheel_clamp" selected>WHEEL CLAMP</option>
+          </select>
+        </div>
+        <div class="flex flex-col w-full" *ngIf="issue == 'first_warning'">
+          <label class="text-2xl"><b><u>TYPE OF NOTICE</u></b></label>
+          <select id="clamping_reason" [(ngModel)]="selectedNotice" [disabled]="isReadonly"
+            class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option *ngIf="!this.alert" value="" selected hidden>EG. PARKING VIOLATION</option>
+            <option *ngIf="!this.alert" value="first_warning">1ST WARNING</option>
+            <option value="second_warning">2ND WARNING</option>
+          </select>
         </div>
         <div class="w-full">
           <app-text-input [id]="'reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'ILLEGAL PARKING'"
-            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reason"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reason" [isReadonly]="isReadonly"
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (BEFORE)'" [buttonText]="'UPLOAD'"
+
+        <app-file-input class="w-full h-25" [labelText]="issue == 'wheel_clamp' ? 'UPLOAD IMAGE (BEFORE)' : 'UPLOAD IMAGE' " [buttonText]="'UPLOAD'"
           [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
           (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="issue == 'wheel_clamp'"
           (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
-        <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [labelText]="'ISSUING OFFICER NAME'" [placeholder]="'EG. MEGAN'"
-            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueOfficer"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-        </div>
-        <div class="w-full flex flex-row justify-between">
-          <button class="h-20 rounded-md text-center align-middle font-bold text-2xl bg-[var(--ion-color-primary)] text-white w-[48%]"
-            (click)="onSubmit()">
-            SUBMIT
-          </button>
-          <button class="h-20 rounded-md text-center align-middle font-bold text-2xl"
-            [ngClass]="'bg-[var(--ion-color-primary)] text-white w-[48%]'" (click)="onCancel()">
-            CANCEL
-          </button>
-        </div>
-      </div>
 
-      <div class="flex flex-col justify-center w-full gap-4 items-center" *ngIf="issue == 'first_warning'">
-        <div class="flex flex-row justify-center w-full">
-          <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
-          <div class="flex flex-col w-full">
-            <label class="text-2xl"><b><u>TYPE OF NOTICE</u></b></label>
-            <select id="clamping_reason" [(ngModel)]="selectedNotice"
-              class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option value="" selected hidden>EG. PARKING VIOLATION</option>
-              <option value="first_warning">1ST WARNING</option>
-              <option value="second_warning">2ND WARNING</option>
-            </select>
-          </div>
-        </div>
+        <!-- <div class="flex flex-col w-full">
+          <label class="text-2xl"><b><u>ISSUING OFFICER NAME</u></b></label>
+          <select id="issuing_officer" [(ngModel)]="issueOfficer"
+            class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option value="" selected hidden>SELECT OFFICER NAME</option>
+            <option *ngFor="let officer of Officer" [value]="officer.id">{{ officer.name }}</option>
+          </select>
+        </div> -->
         <div class="w-full">
-          <app-text-input [id]="'reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'ILLEGAL PARKING'"
-            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reason"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-        </div>
-        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
-        <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [labelText]="'ISSUING OFFICER NAME'" [placeholder]="'EG. MEGAN'"
+          <app-text-input [id]="'issuing_officer'" [labelText]="'ISSUING OFFICER NAME'" [placeholder]="'FANNY'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueOfficer"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full flex flex-row justify-between">
-          <button class="h-20 rounded-md text-center align-middle font-bold text-2xl bg-[var(--ion-color-primary)] text-white w-[48%]"
+          <button
+            class="h-20 rounded-md text-center align-middle font-bold text-2xl bg-[var(--ion-color-primary)] text-white w-[48%]"
             (click)="onSubmit()">
             SUBMIT
           </button>

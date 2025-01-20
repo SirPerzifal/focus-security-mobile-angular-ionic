@@ -263,10 +263,10 @@ export class MyVehicleFormPage implements OnInit {
     }
 
     // Validasi untuk isFirstVehicle
-    if (this.selectedTypeOfApplication === 'owned_vehicle' && !this.isFirstVehicle) {
-        this.presentToast('Please confirm if this is the first vehicle', 'danger');
-        return;
-    }
+    // if (this.selectedTypeOfApplication === 'owned_vehicle' && !this.isFirstVehicle) {
+    //     this.presentToast('Please confirm if this is the first vehicle', 'danger');
+    //     return;
+    // }
 
     // Tambahkan validasi untuk end date jika temporary vehicle
     if (this.selectedTypeOfApplication === 'temporary_vehicle') {
@@ -336,8 +336,8 @@ export class MyVehicleFormPage implements OnInit {
     // Reset pilihan
     this.selectedTypeOfApplication = '';
     this.selectedVehicleType = '';
-    this.selectedBlock = '';
-    this.selectedUnit = '';
+    // this.selectedBlock = '';
+    // this.selectedUnit = '';
     this.selectedVehicleMake = '';
     this.selectedTemporaryCarReason = '';
 

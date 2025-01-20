@@ -1,0 +1,178 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Payments'" [text_second]="'Deposits'" />
+
+  <div class="flex flex-col relative mt-2 mb-16">
+    <div class="w-1/6 flex items-start ml-3">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    </div>
+    <!-- Konten Utama Deposits -->
+    <div *ngIf="showMainContent" @fadeInOut>
+      <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-4">
+        <h2 class="text-base font-bold text-black absolute">
+          Refunded deposits
+        </h2>
+        <ion-button class="flex flex-row justify-center items-center absolute right-2 icon" fill="clear" (click)="showDepositHistoryPage()">
+          <div class="flex flex-col items-center text-black">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </ion-button>
+      </div>
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
+        <h2 class="text-base font-bold text-black">
+          Active Deposits History
+        </h2>
+      </div>
+      <div class="flex flex-col relative mx-4 mt-4">
+        <div class="bg-[#D8ECCF] p-4 rounded-lg text-left font-bold text-black">
+          <h3 class="ml-2 text-green-700 underline underline-offset-1 text-base">Current Deposit Balance</h3>
+          <h4 class="ml-2 text-base">S$ 40.00</h4>
+        </div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold underline underline-offset-1 text-base"><a href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black text-base">S$ 40.00</div>
+          </div>
+            <div class="text-black">
+              <table>
+                <tr class="h-1">
+                  <td class="font-bold text-base">Deposited On</td>
+                  <td>:</td>
+                  <td>24/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold text-base">Event Date</td>
+                  <td>:</td>
+                  <td>26/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold text-base">Expected Refund Date</td>
+                  <td>:</td>
+                  <td>29/10/2024</td>
+                </tr>
+              </table>
+            </div>
+            <!-- <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Konten Deposit History -->
+    <div *ngIf="showDepositHistory" @fadeInOut>
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
+        <h2 class="text-base font-bold text-black">
+          Deposits History
+        </h2>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between mb-4">
+          <ion-button class="flex flex-row justify-center items-center icon" fill="clear" (click)="backToMainDeposits()">
+            <div class="flex flex-col items-center text-black">
+              <ion-icon name="arrow-back"></ion-icon>
+            </div>
+          </ion-button>
+          <div class="flex flex-col items-end">
+              <button class="bg-[var(--ion-color-primary)] py-2 px-4 rounded mb-2 text-white text-base">All Records</button>
+            </div>
+          </div>
+          <div class="flex flex-row space-x-2 mb-4">
+            <div class="w-1/2">
+              <app-text-input #facilityDepositStartDate [id]="'facility_deposit_start_date'" [placeholder]="'Start Filter Date'"
+                [customClasses]="{'w-full':true}" [type]="'date'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                ></app-text-input>
+            </div>
+            <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+              <input
+                type="text"
+                placeholder="Start Filter Date"
+                class="w-[97px] border-none border-0"
+                readonly
+              />
+              <input 
+                type="date" 
+                class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent"
+              >
+            </div> -->
+            <div class="w-1/2">
+              <app-text-input #facilityDepositEndDateInput [id]="'facility_deposit_end_date'" [placeholder]="'End Filter Date'"
+                [customClasses]="{'w-full':true}" [type]="'date'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                ></app-text-input>
+            </div>
+            <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
+              <input
+                type="text"
+                placeholder="End Filter Date"
+                class="w-[97px] border-none border-0"
+                readonly
+              />
+              <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-base text-[#6B7280] bg-transparent">
+            </div> -->
+          </div>
+        <div class="bg-sky-200 p-4 rounded-lg text-left font-bold text-black mb-4">
+            <p class="ml-2 underline underline-offset-1 text-base">Refunded Deposit Till Date</p>
+            <p class="ml-2 text-base">S$60.00</p>
+        </div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold"><a class="underline underline-offset-1 text-base" href="#">BBQ Pit 2</a></div>
+            <div class="font-bold text-black text-base">S$ 40.00</div>
+          </div>
+            <div class="text-black">
+              <table>
+                <tr class="h-1">
+                  <td class="font-bold">Deposited On</td>
+                  <td>:</td>
+                  <td>24/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold">Event Date</td>
+                  <td>:</td>
+                  <td>26/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold">Expected Refund Date</td>
+                  <td>:</td>
+                  <td>29/10/2024</td>
+                </tr>
+              </table>
+            </div>
+            <!-- <div class="text-black">Deposited On : 24/10/2024</div>
+            <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
+        </div>
+        <div class="bg-[#D8ECCF] p-4 mt-2 rounded-lg">
+          <div class="ml-2">
+            <div class="text-green-700 font-bold"><a class="underline underline-offset-1" href="#">BBQ </a></div>
+            <div class="font-bold text-black">S$ 40.00</div>
+          </div>
+            <div class="text-black">
+              <table>
+                <tr class="h-1">
+                  <td class="font-bold">Deposited On</td>
+                  <td>:</td>
+                  <td>24/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold">Event Date</td>
+                  <td>:</td>
+                  <td>26/10/2024</td>
+                </tr>
+                <tr class="h-1">
+                  <td class="font-bold">Expected Refund Date</td>
+                  <td>:</td>
+                  <td>29/10/2024</td>
+                </tr>
+              </table>
+            </div>
+            <!-- <div class="text-black">Deposited On : 24/10/2024</div>
+            <div class="text-black">Event Date : 26/10/2024</div>
+            <div class="text-black">Expected Refund Date : 29/10/2024</div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

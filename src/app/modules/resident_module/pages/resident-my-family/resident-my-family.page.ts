@@ -10,6 +10,8 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 })
 export class ResidentMyFamilyPage implements OnInit {
 
+  isModalFamilyEditOpen: boolean = false; // Status modal
+
   constructor(private familyService: FamilyService, private router: Router) { }
 
   familyData = [

@@ -28,26 +28,24 @@ export class LoginProcessPage implements OnInit {
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration', async (token: Token) => {
-      await Preferences.get({key: 'USER_INFO'}).then(({value}) => {
-        if (value) {
-          // const notificationParams = {
-          //   jsonrpc: '2.0',
-          //   params: {
-          //     partner_id: 1,
-          //     fcm_token: token.value,
-          //   },
-          // };
-          this.notificationService.registerNotification(token.value).subscribe({
-            next: (res) => {
-              this.presentToast('It Works!', 'success');
-              this.router.navigate(['resident-homepage']);
-            },
-            error: (err) => {
-              this.presentToast('An error occurred while registering token push notification', 'danger');
-            }
-          });
-        }
-      })
+      if (token.value) {
+        // const notificationParams = {
+        //   jsonrpc: '2.0',
+        //   params: {
+        //     partner_id: 1,
+        //     fcm_token: token.value,
+        //   },
+        // };
+        this.notificationService.registerNotification(token.value).subscribe({
+          next: (res) => {
+            this.presentToast('It Works!', 'success');
+            this.router.navigate(['resident-homepage']);
+          },
+          error: (err) => {
+            this.presentToast('An error occurred while registering token push notification', 'danger');
+          }
+        });
+      }
     });
   }
 

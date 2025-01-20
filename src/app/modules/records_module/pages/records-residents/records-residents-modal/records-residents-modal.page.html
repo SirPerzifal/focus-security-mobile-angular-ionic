@@ -1,0 +1,24 @@
+<ion-content class="">
+  <div class="flex flex-col p-4 justify-center items-center h-full">
+    <div class="flex flex-row w-[80%]">
+      <div class="flex flex-col justify-center w-full gap-4 items-center">
+        <div class="w-full">
+          <app-text-input [id]="'nric_resident'" [labelText]="'NRIC'" [placeholder]="'S1728XXXX'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="nric_resident" 
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full flex flex-row justify-between">
+          <button
+            class="h-20 rounded-md text-center align-middle font-bold text-2xl bg-[var(--ion-color-primary)] text-white w-[48%]"
+            (click)="onSubmit()">
+            SUBMIT
+          </button>
+          <button class="h-20 rounded-md text-center align-middle font-bold text-2xl"
+            [ngClass]="'bg-[var(--ion-color-primary)] text-white w-[48%]'" (click)="onCancel()">
+            CANCEL
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

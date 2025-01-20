@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -10,7 +10,28 @@ import { catchError } from 'rxjs/operators';
 export class VisitorService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
+  private inviteeFormList: any = [];
 
+  getInviteeFormList(): any {
+    return this.inviteeFormList;
+  }
+
+  addInvitees(invitees: any): void {
+    invitees.forEach((invitee: any) => {
+      const exists = this.inviteeFormList.some((existingInvitee: any) => 
+        existingInvitee.visitor_name === invitee.visitor_name &&
+        existingInvitee.contact_number === invitee.contact_number &&
+        existingInvitee.vehicle_number === invitee.vehicle_number
+      );
+      if (!exists) {
+        this.inviteeFormList.push(invitee);
+      }
+    });
+  }
+
+  clearInviteeFormList(): void {
+    this.inviteeFormList = [];
+  }
   postCreateExpectedVisitors(
     date_of_visit: Date, 
     entry_type: string, 
@@ -79,5 +100,37 @@ export class VisitorService extends ApiService{
     
     console.log(res)
     return res
+  }
+  getDistinctInviteHistory(unitId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        unit_id: unitId,
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.baseUrl}/resident/get/distinct_visitor_history`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    
+    if (error.error instanceof ErrorEvent) {
+      console.error('Client-side error:', error.error.message);
+    } else {
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`
+      );
+    }
+
+    return throwError(() => new Error('Something went wrong; please try again later.'));
   }
 }

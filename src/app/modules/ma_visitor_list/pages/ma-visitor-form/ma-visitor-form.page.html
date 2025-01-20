@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -10,7 +10,7 @@
       <app-button-icon [isHomeButton]="true" (click)="onBackMove()"
         [text]="'MA VISITOR'" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <!-- <app-button-icon [textOnly]="true" [text]="'WALK IN'"
         (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
         <app-button-icon [textOnly]="true" [text]="'DRIVE IN'"
@@ -38,7 +38,10 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
             [value]="'VEEKNESH'"></app-text-input>
         </div>
-        <div class="flex flex-row justify-between w-full">
+        <div class="w-full">
+          <app-vms-contact-input [id]="'ma_contact_walk_in'"></app-vms-contact-input>
+        </div>
+        <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
             <app-text-input [id]="'walk_in_contact'" [placeholder]="'EG. +65 XXXX XXX'" [labelText]="'CONTACT NUMBER'"
               [customClasses]="{'w-full':true}" [type]="'text'"
@@ -49,7 +52,7 @@
             <button id="middle_button"
               class="bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl rounded">SEARCH</button>
           </div>
-        </div>
+        </div> -->
         <!-- <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
             <app-text-input [id]="'walk_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [value]="'SNK5424D'"></app-text-input>
@@ -97,17 +100,8 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
             [value]="'VEEKNESH'"></app-text-input>
         </div>
-        <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'drive_in_contact'" [placeholder]="'EG. +65 XXXX XXX'" [labelText]="'CONTACT NUMBER'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="'8021 6095'"></app-text-input>
-          </div>
-          <div class="w-1/4 flex flex-col justify-end">
-            <button id="middle_button"
-              class="bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl rounded">SEARCH</button>
-          </div>
+        <div class="w-full">
+          <app-vms-contact-input [id]="'ma_contact_drive_in'"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
@@ -146,8 +140,8 @@
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"></app-visitor-button>
-          <!-- <app-visitor-button [text]="'SAVE RECORD'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button> -->
+          <app-visitor-button [text]="'SAVE RECORD ONLY'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button>
         </div>
       </div>
     </div>

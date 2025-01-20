@@ -2,21 +2,21 @@
   <app-resident-header [text]="'Facility Booking'" [text_second]="'Deposits'" />
 
   <div class="flex flex-col relative mt-2 mb-16">
-    <div class="w-1/6 flex items-start mr-10">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-			</div>
+    <div class="w-1/6 flex items-start ml-3">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    </div>
     <div class="mx-4">
-      <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
-        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20'" (click)="toggleShowDep()"></app-visitor-button>
-        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
+      <div class="flex flex-row mt-2 justify-between w-full">
+        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <!-- <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowDep()"></app-visitor-button> -->
+        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
     <!-- Konten Utama Deposits -->
     <div *ngIf="showMainContent" @fadeInOut>
-      <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-2">
+      <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-4">
         <h2 class="text-base font-bold text-black absolute">
           Refunded deposits
         </h2>
@@ -26,13 +26,13 @@
           </div>
         </ion-button>
       </div>
-      <div class="w-full bg-[#D8ECCF] text-center mt-2 m-0 p-3">
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
         <h2 class="text-base font-bold text-black">
           Active Deposits History
         </h2>
       </div>
-      <div class="flex flex-col relative mx-4">
-        <div class="bg-[#D8ECCF] p-4 mt-4 rounded-lg text-left font-bold text-black">
+      <div class="flex flex-col relative mx-4 mt-4">
+        <div class="bg-[#D8ECCF] p-4 rounded-lg text-left font-bold text-black">
           <h3 class="ml-2 text-green-700 underline underline-offset-1 text-base">Current Deposit Balance</h3>
           <h4 class="ml-2 text-base">S$ 40.00</h4>
         </div>
@@ -68,7 +68,7 @@
 
     <!-- Konten Deposit History -->
     <div *ngIf="showDepositHistory" @fadeInOut>
-      <div class="w-full bg-[#D8ECCF] text-center mt-2 m-0 p-3">
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
         <h2 class="text-base font-bold text-black">
           Deposits History
         </h2>
@@ -81,7 +81,7 @@
             </div>
           </ion-button>
           <div class="flex flex-col items-end">
-              <button class="bg-yellow-500 py-2 px-4 rounded mb-2 text-base">All Records</button>
+              <button class="bg-[var(--ion-color-primary)] py-2 px-4 rounded mb-2 text-white text-base">All Records</button>
             </div>
           </div>
           <div class="flex flex-row space-x-2 mb-4">

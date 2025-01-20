@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img alt="IFS360" src="assets/img/focus_logo-removebg.png" class="object-contain w-full h-full" />
+    <app-vms-background />
   </div>
 
   <!-- Loading Spinner -->
@@ -26,9 +26,9 @@
     </div>
 
     <!-- Move In / Out Section -->
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
 
-      <app-button-icon [textOnly]="true" [text]="'TODAY'" (click)="toggleSlide('day')"
+      <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true" (click)="toggleSlide('day')"
         [isActive]="showDayTrans || showDay" [disableClick]="true" />
 
       <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"
@@ -38,7 +38,11 @@
     <div class="flex flex-col mx-4 mt-8 space-y-5">
       <div class="w-full flex flex-col" *ngIf="showHistory" @fadeInOut>
         <div class="w-full flex flex-col">
-          <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
+          <div class="w-full justify-between flex flex-row">
+            <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
+            <label class="text-2xl" (click)="clearFilters()"><u><b>CLEAR SEARCH</b></u></label>
+          </div>
+          
           <select id="search_option" (change)="onSearchOptionChange($event)"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
             style="border: 1px solid #6B7280;">
@@ -66,10 +70,6 @@
         </div>
         <div class="w-full" *ngIf="searchOption == 'block' || searchOption == 'both'">
           <label class="text-2xl"><b><u>BLOCK</u></b></label>
-          <!-- <app-text-input #locationInput [id]="'pick_up_location'" [placeholder]="'EG. BLK / PICK UP POINT'" [labelText]="'LOCATION'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl': true}"
-            (valueChange)="onVehicleBlkChange($event)"></app-text-input> -->
           <select id="pick_up_location" 
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
             (change)="onBlockChange($event)">
@@ -78,7 +78,7 @@
           </select>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-5" *ngIf="showHistory" @fadeInOut>
+      <div class="flex flex-col w-full space-y-5" *ngIf="showHistory && (choosenBlock || startDateFilter || endDateFilter)">
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
           *ngFor="let schedule of filteredHistorySchedules">
           <span class="text-2xl font-bold text-white">{{schedule.block_name  ? schedule.block_name : '-' }}, {{ schedule.unit_name  ? schedule.unit_name : '-' }}</span>

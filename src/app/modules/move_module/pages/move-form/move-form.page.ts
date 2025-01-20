@@ -141,7 +141,7 @@ export class MoveFormPage implements OnInit {
   
     this.moveFormService.addSchedule(
       this.getInputValue('contractor_name'),
-      this.getInputValue('contractor_contact'),
+      this.getInputValue('move_contact'),
       this.getInputValue('contractor_company_name'),
       this.identificationType, // Misalnya 'NRIC', 'Passport', dll
       this.getInputValue('contractor_nric/fin'),
@@ -196,5 +196,16 @@ export class MoveFormPage implements OnInit {
 
   onBackHome() {
     this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
+  }
+
+  requestor_name = ''
+  requestor_vehicle = ''
+  
+
+  getContactInfo(contactData: any){
+    if (contactData) {
+      this.requestor_name = contactData.visitor_name
+      this.requestor_vehicle = contactData.vehicle_number
+    }
   }
 }

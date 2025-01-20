@@ -49,12 +49,12 @@ export class ResidentUpcomingEventPage implements OnInit {
 
   toggleDirecttoActiveEvent() {
     // Logic to toggle to active events
-    this.router.navigate(['']);
+    this.router.navigate(['resident-upcoming-event']);
   }
 
   toggleDirecttoHis() {
     // Logic to toggle to history
-    this.router.navigate(['history-upcoming-event']);
+    this.router.navigate(['upcoming-event-calendar-view']);
   }
 
   cancelupcomingEvent() {

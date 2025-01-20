@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faL, faMotorcycle, faUser } from '@fortawesome/free-solid-svg-icons';
-import { ToastController } from '@ionic/angular';
+import { faAddressBook, faL, faMotorcycle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { ToastController, AlertController } from '@ionic/angular';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+import { Contacts } from '@capacitor-community/contacts';
 
 interface Invitee {
-  name: string;
-  mobile_number: string;
-  car_number: string;
+  visitor_name: string;
+  vehicle_number: string;
+  contact_number: string;
 }
 
 interface FormData {
@@ -28,9 +29,11 @@ interface FormData {
   styleUrls: ['./invite-form.page.scss'],
 })
 export class InviteFormPage implements OnInit {
-  inviteeFormList: Invitee[] = [];
+  inviteeFormList: any = [];
   addInviteeText: string = 'Add Invitee';
+  isModalOpen: boolean = false; // Status modal
   isFormInitialized: boolean = false;
+  isFormVisible: boolean = false; // New variable to control form visibility
 
   formData = {
     dateOfInvite: new Date(),
@@ -43,21 +46,84 @@ export class InviteFormPage implements OnInit {
     unit: 0,
   }
 
+  nameFromContact = '';
+  phoneFromContact = '';
+
+  faAddressBook = faAddressBook
+  currentInviteeIndex: number | null = null; // Track the index of the invitee being edited
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private residentVisitorService: VisitorService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private alertController: AlertController,
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: FormData };
+    const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
+  
     if (state) {
       this.formData = state.formData;
-      console.log(this.formData)
+  
+      if (state.selectedInvitees) {
+        this.inviteeFormList = state.selectedInvitees; // Update local list
+        this.isFormVisible = true; // Show form if there are invitees
+        this.addInviteeText = 'Add More Invitees'; // Update button text
+        console.log('tes110', state.selectedInvitees)
+      }
+      console.log('tes1', this.formData);
+    }
+  }
+
+  backToVisitors() {
+    this.router.navigate(['resident-visitors'], {
+      state: {
+        formData: this.formData,
+      }
+    });
+  }
+
+  async fetchContacts() {
+    const result = await Contacts.pickContact({
+      projection: {
+        name: true,
+        phones: true
+      }
+    });
+  
+    if (result && result.contact) {
+      const contactName = result.contact.name;
+      const displayName = contactName?.display || '';
+      const givenName = contactName?.given || '';
+  
+      // Format the name as display_name(given_name)
+      const nameFromContact = `${displayName}(${givenName})`.trim();
+      const phoneFromContact = result.contact.phones?.[0].number || '';
+  
+      if (this.currentInviteeIndex !== null) {
+        // Populate the fields of the currently selected invitee
+        this.inviteeFormList[this.currentInviteeIndex].visitor_name = nameFromContact;
+        this.inviteeFormList[this.currentInviteeIndex].contact_number = phoneFromContact;
+      } else {
+        // If no invitee is selected, create a new one
+        const newInvitee: Invitee = {
+          visitor_name: nameFromContact,
+          contact_number: phoneFromContact,
+          vehicle_number: '' // Set this as needed
+        };
+        this.inviteeFormList.push(newInvitee);
+      }
+  
+      this.isFormVisible = true; // Show form if there are invitees
+      this.addInviteeText = 'Add More Invitees'; // Update button text
     }
   }
 
   faUser = faUser
+
+  showTimeInfo() {
+    this.isModalOpen = true; // Membuka modal
+  }
 
   ngOnInit() {
     this.isFormInitialized = false;
@@ -65,8 +131,8 @@ export class InviteFormPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
     });
-    console.log(this.isFormInitialized)
-    console.log(this.inviteeFormList)
+    console.log('tes111', this.isFormInitialized)
+    console.log('tes110', this.inviteeFormList)
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -75,14 +141,48 @@ export class InviteFormPage implements OnInit {
       duration: 4000,
       color: color
     });
-
-    
-    
-
     toast.present().then(() => {
-      
-      
     });;
+  }
+
+  removeInvitee(index: number) {
+    this.inviteeFormList.splice(index, 1); // Menghapus invitee dari list
+    if (this.inviteeFormList.length === 0) {
+      this.isFormVisible = false; // Sembunyikan form jika tidak ada invitee
+    }
+  }
+
+  public async presentCustomAlert(
+    index: number,
+    header: string = 'Remove this form?', 
+    confirmText: string = 'Confirm',
+    cancelText: string = 'Cancel',
+  ) {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: header,
+      message: 'Are you sure you want to remove this invitee?', 
+      buttons: [
+        {
+          text: confirmText,
+          cssClass: 'confirm-button',
+          handler: () => {
+            console.log('Confirmed');
+            this.removeInvitee(index); // Panggil metode untuk menghapus invitee
+          }
+        },
+        {
+          text: cancelText,
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan (jika ada)
+          }
+        },
+      ]
+    });
+  
+    await alert.present();
   }
 
   initializeInviteeForm(params?: any) {
@@ -109,16 +209,16 @@ export class InviteFormPage implements OnInit {
     // Proses data invitee
     if (selectedInvitees && selectedInvitees.length > 0) {
       this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
-        name: invitee.name || '',
-        mobile_number: invitee.mobile_number || '',
-        car_number: invitee.car_number || ''
+        visitor_name: invitee.visitor_name || '',
+        contact_number: invitee.contact_number || '',
+        vehicle_number: invitee.vehicle_number || ''
       }));
       this.addInviteeText = 'Add More Invitees';
     }
 
     // Jika tidak ada data, tambahkan form kosong
-    if (this.inviteeFormList.length === 0) {
-      this.addInvitee();
+    if (this.inviteeFormList.length > 0) {
+      this.isFormVisible = true; // Show form if there are invitees
     }
 
     // Tandai form sudah diinisialisasi
@@ -127,13 +227,14 @@ export class InviteFormPage implements OnInit {
 
   addInvitee() {
     const newInvitee: Invitee = { 
-      name: '', 
-      mobile_number: '', 
-      car_number: '' 
+      visitor_name: '', 
+      contact_number: '', 
+      vehicle_number: '' 
     };
     
     this.inviteeFormList.push(newInvitee);
     this.addInviteeText = 'Add More Invitees';
+    this.isFormVisible = true; // Show form when an invitee is added
   }
 
   navigateToInviteFormHistory() {
@@ -152,9 +253,9 @@ export class InviteFormPage implements OnInit {
   }
 
   onSubmit() {
-    const isValid = this.inviteeFormList.every(invitee => 
-      invitee.name.trim() !== '' && 
-      invitee.mobile_number.trim() !== ''
+    const isValid = this.inviteeFormList.every((invitee:any) => 
+      invitee.visitor_name.trim() !== '' && 
+      invitee.contact_number.trim() !== ''
     );
 
     if (isValid) {
@@ -173,12 +274,24 @@ export class InviteFormPage implements OnInit {
           res => {
             console.log(res);
             // if (res.result.status_code == 200) {
-              
               this.presentToast('Success Add Record', 'success');
               console.log("HEY PEOPLES")
+              this.inviteeFormList = [];
+              this.inviteeFormList = null;
+              this.formData = {
+                dateOfInvite: new Date(),
+                vehicleNumber: "",
+                entryType: "",
+                entryTitle: "",
+                entryMessage: "",
+                isProvideUnit: false,
+                hiredCar: "",
+                unit: 0,
+              }
               this.router.navigate(['/resident-visitors'], {
                 queryParams: {
                   openActive: true,
+                  formData: null
                 }
               });
             // } else {
@@ -198,8 +311,8 @@ export class InviteFormPage implements OnInit {
     }
   }
 
-  // Kontrol rendering form
+  // Control rendering form
   shouldShowForm(): boolean {
-    return this.isFormInitialized && this.inviteeFormList.length > 0;
+    return this.isFormVisible; // Use the new variable to control visibility
   }
 }

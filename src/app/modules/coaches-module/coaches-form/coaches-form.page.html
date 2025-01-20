@@ -1,10 +1,6 @@
 <ion-content [fullscreen]="true" class="vms-body">
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <img
-      alt="IFS360"
-      src="assets/img/focus_logo-removebg.png"
-      class="object-contain w-full h-full"
-    />
+    <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
@@ -15,7 +11,7 @@
         [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" (click)="onBackMove()"/>
     </div>
 
-    <div class="flex mt-8 flex-row space-x-7">
+    <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
         (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
         <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
@@ -28,7 +24,10 @@
           <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="coachName"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <div class="flex flex-row justify-between w-full">
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="schedule.contact_number" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+        </div>
+        <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
             <app-text-input [id]="'walk_in_contact'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}"
               [type]="'text'" [(ngModel)]="schedule.contact_number"
@@ -38,7 +37,7 @@
             <button id="middle_button"
             class="bg-[var(--ion-color-primary)] text-white w-full text-2xl rounded font-bold h-20">SEARCH</button>
           </div>
-        </div>
+        </div> -->
         <div class="w-full flex flex-row justify-between" *ngIf="showDrive">
           <div class="w-[90%]">
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [value]="vehicle_number"></app-text-input>
@@ -72,9 +71,9 @@
           </select>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD'" *ngIf="showWalk" (click)="onSubmitRecord()"
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="showDrive" (click)="onSubmitRecord(true)"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="showDrive" (click)="onSubmitRecord()"
+            <app-visitor-button [text]="'SAVE RECORD' + (showDrive ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
         </div>
       </div>
