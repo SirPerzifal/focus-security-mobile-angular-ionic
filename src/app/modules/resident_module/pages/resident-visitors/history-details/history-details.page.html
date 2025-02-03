@@ -78,14 +78,14 @@
               </table>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base'"></app-visitor-button>
-              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"></app-visitor-button>
             </div>
             <div class="w-full flex flex-row justify-around mt-6" *ngIf="!historyData.banned">
-              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
-              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base'" *ngIf="historyData.purpose !== 'Drop Off'"></app-visitor-button>
+              <app-visitor-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Ban Visitor'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-visitor-button>
+              <app-visitor-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'" *ngIf="historyData.purpose !== 'Drop Off'"></app-visitor-button>
             </div>
           </div>
         </div>
@@ -94,4 +94,31 @@
   </div>
   <!-- ############################### -->
   <app-bottom-nav-bar></app-bottom-nav-bar>
+  <ion-modal id="upload-reason-ban-modal" [isOpen]="isModalReasonBanOpen" (didDismiss)="isModalReasonBanOpen = false">
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Image for Banning</p>
+          </div>
+          <div class="bg-white p-3 rounded">
+            <input class="w-full rounded text-base hidden" type="file" name="image_for_reason" id="image_for_reason" (change)="onFileChange($event)" accept="image/*">
+            <label class="w-full" [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'" for="image_for_reason">
+              {{ selectedFileName ? selectedFileName : 'Upload Image for Banning' }} <!-- Update label text -->
+            </label>
+          </div>
+        </div>
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Reason for Banning</p>
+          </div>
+          <textarea id="reason_ban_entry_message" placeholder="Type Your Reason for Banning"
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
+            type="text" name="reasonForbanning" [(ngModel)]="formData.reason">
+          </textarea>
+        </div>
+        <app-visitor-button [text]="'Send'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-24 rounded border border-black font-bold'" (click)="onSubmitReasonBan()"></app-visitor-button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

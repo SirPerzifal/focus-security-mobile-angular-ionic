@@ -55,6 +55,7 @@ export class AlertMainPage implements OnInit {
     this.loadRecordsWheelClamp('wheel_clamp')
     this.loadRecordsWheelClamp('first_warning')
     this.loadRecordsWheelClamp('second_warning')
+    this.loadUnregisteredCar()
   }
 
   private routerSubscription!: Subscription;
@@ -95,7 +96,7 @@ export class AlertMainPage implements OnInit {
             console.log(this.showIssues)
           }
         } else {
-          this.presentToast('There is no data in the system!', 'danger');
+          // this.presentToast('There is no data in the system!', 'danger');
         }
 
         // this.isLoading = false;
@@ -104,6 +105,30 @@ export class AlertMainPage implements OnInit {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
         // this.isLoading = false;
+      }
+    });
+  }
+
+  loadUnregisteredCar(){
+    this.mainVmsService.getApi({}, '/vms/get/unregistered_car_list').subscribe({
+      next: (results) => {
+        console.log('unregistered', results)
+        if (results.result.response_code === 200) {
+          this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result })
+          this.unregisteredTotal = results.result.response_result.length
+
+          this.recordAction();
+          this.actionTotalIssue()
+          if (!this.main) {
+            console.log("HEY THIS WORK")
+            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            console.log(this.showIssues)
+          }
+        } 
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading unregistered car data!', 'danger');
+        console.error(error);
       }
     });
   }
@@ -230,23 +255,26 @@ export class AlertMainPage implements OnInit {
       is_release: type != 'checkout'
     }
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
-      next: (results) => {
-        console.log(results)
-        if (results.result.response_code === 200) {
-          this.presentToast(`Successfully ${type} vehicle!`, 'success');
-          this.loadRecordsWheelClamp(this.active_type)
-        } else {
-          this.presentToast(`Failed to ${type} vehicle!`, 'danger');
+    if (this.active_type == 'first_warning' || this.active_type == 'second_warning') {
+      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.presentToast(`Successfully ${type} vehicle!`, 'success');
+            this.loadRecordsWheelClamp(this.active_type)
+          } else {
+            this.presentToast(`Failed to ${type} vehicle!`, 'danger');
+          }
+          
+  
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while processin function!', 'danger');
+          console.error(error);
         }
-        
-
-      },
-      error: (error) => {
-        this.presentToast('An error occurred while submitting coach data!', 'danger');
-        console.error(error);
-      }
-    });
+      });
+    }
+    
   }
 
   async presentModal(issue: string = this.active_type, vehicle: any = []) {
@@ -255,7 +283,7 @@ export class AlertMainPage implements OnInit {
       component: OvernightParkingModalPage,
       cssClass: issue == 'second_warning' ? 'record-modal' : 'record-modal-notice',
       componentProps: {
-        issue: issue == 'second_warning' ? 'wheel_clamp' : 'first_warning',
+        issue: issue == 'none' ? issue : (issue == 'second_warning' ? 'wheel_clamp' : 'first_warning'),
         vehicle: vehicle,
         alert: true
       }
@@ -337,6 +365,10 @@ export class AlertMainPage implements OnInit {
     }
     )
     await alertButtons.present();
+  }
+
+  backHome() {
+    this.router.navigate(['/home-vms'])
   }
 
 }

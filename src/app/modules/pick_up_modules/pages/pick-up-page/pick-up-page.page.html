@@ -31,7 +31,7 @@
           <!-- <app-button-icon [customNameIcon]="'faMotorcycle'" [text]="'MOTORBIKE'" (click)="useVehicle('bike')"
             [isActive]="valBike" [disableClick]="true" /> -->
         </div>
-        <div class=" mt-6 space-y-5 mx-4">
+        <div class=" mt-6 space-y-5 mx-4" *ngIf="selectedVehicleType" @fadeInOut>
           <div class="w-full flex flex-row justify-between">
             <div class="w-[90%] flex flex-col">
               <app-text-input #vehicleNumberInput [id]="'pick_up_vhcnum'" [placeholder]="'EG. SBA 8892 A'"

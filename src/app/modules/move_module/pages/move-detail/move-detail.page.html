@@ -23,32 +23,32 @@
           <tr>
             <td class="font-bold w-2/5">CONTRACTOR NAME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ contractor_name }}</td>
+            <td>{{ record.contractor_name }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">COMPANY NAME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ company_name }}</td>
+            <td>{{ record.company_name }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">VEHICLE NUMBER</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle_number }}</td>
+            <td>{{ record.vehicle_number }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">CONTACT NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ contact_no }}</td>
+            <td>{{ record.contact_number }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">CONTRACTOR PASS NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ contractor_pass_no }}</td>
+            <td>{{ record.contractor_pass_no }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE & TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ entry_date }}</td>
+            <td>{{ functionMain.convertToDDMMYYYY(record.schedule_date.split(' ')[0]) + ' ' + record.schedule_date.split(' ')[1]}}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">EXIT DATE & TIME</td>
@@ -59,7 +59,7 @@
             <td class="font-bold w-2/5">ACCOMPANIED BY</td>
             <td class="w-[5%]">:</td>
             <td class="flex flex-row justify-between items-center">
-              <div class="font-bold" (click)="onAccompanyDetail()"><u>{{ accompanied_by }} PERSON</u></div>
+              <div class="font-bold" (click)="onAccompanyDetail()"><u>{{ record.subcon_total }} PERSON</u></div>
 
             </td>
           </tr>
@@ -82,18 +82,18 @@
 
       <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded"
         *ngIf="!main">
-        <label class="text-2xl font-bold mb-5">NUMBER OF PAX ENTERED: {{ number_of_pax }}</label>
+        <label class="text-2xl font-bold mb-5">NUMBER OF PAX ENTERED: {{ record.subcon_total }}</label>
         <div class="border-2 p-1 w-full mb-5">
           <table class="text-xl w-full">
             <tr class="font-bold">
-              <td class="">SERIAL NUMBER</td>
-              <td class="">NAME</td>
-              <td>LAST 4 CHARACTERS OF IC</td>
+              <!-- <td class="">SERIAL NUMBER</td> -->
+              <td class="w-2/5">NAME</td>
+              <td class="w-3/5">LAST 4 CHARACTERS OF IC</td>
             </tr>
-            <tr *ngFor="let item of pax_array">
-              <td>{{ item.serial_number }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.identity }}</td>
+            <tr *ngFor="let subcon of record.subcon_member">
+              <!-- <td>{{ subcon.serial_number }}</td> -->
+              <td>{{ subcon.contractor_name }}</td>
+              <td>{{ subcon.identification_number[0] + 'XXXX' + subcon.identification_number.slice(-4) }}</td>
             </tr>
           </table>
         </div>

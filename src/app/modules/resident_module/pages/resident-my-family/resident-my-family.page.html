@@ -12,7 +12,7 @@
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
-          <div clas="flex flex-col w-full justify-start">
+          <div class="flex flex-col w-full justify-start space-y-2">
             <div *ngFor="let data of familyData">
               <app-family-card 
                 [id]="data.id"
@@ -25,6 +25,7 @@
                 [head_type]="data.head_type"
                 [end_date]="data.end_date"
                 [status]="data.status"
+                [profile_image]="data.family_photo"
               />
             </div>
           </div>

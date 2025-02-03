@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 
@@ -8,6 +8,8 @@ import { NavigationService } from 'src/app/service/global/navigation-service/nav
   styleUrls: ['./bottom-nav-bar.component.scss'],
 })
 export class BottomNavBarComponent implements OnInit {
+
+  @Input() clientRoute: boolean = false
 
   constructor(
     private router: Router,
@@ -20,25 +22,23 @@ export class BottomNavBarComponent implements OnInit {
 
   routeTo() {
     this.navigationService.setActiveButton('home');
-    this.router.navigate(['/resident-homepage']);
+    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-homepage']);
   }
 
   reportIssue() {
     this.navigationService.setActiveButton('report');
-    this.router.navigate(['/record-app-report']);
+    this.router.navigate([this.clientRoute ? '/client-main-app' : '/record-app-report']);
   }
 
   settings() {
     this.navigationService.setActiveButton('settings');
-    this.router.navigate(['/resident-settings-page']);
+    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-settings-page']);
   }
 
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
-        console.log(url);
-        console.log(event)
         if (url !== '/resident-homepage' && url !== '/record-app-report' && url !== '/resident-settings-page') {
           this.navigationService.setActiveButton('');
         }

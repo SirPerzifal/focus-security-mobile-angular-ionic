@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
@@ -13,8 +14,28 @@ export class HomePage implements OnInit {
 
   alertColor = 'red'
 
+  private routerSubscription!: Subscription;
   ngOnInit() {
-    this.onLoadCount()
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        console.log(event['url'], 'from homeeeeeee')
+        if (event['url'].split('?')[0] == '/home-vms'){
+          this.onLoadCount()
+        } 
+      } else {
+        
+      }
+    });
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    // this.onLoadCount()
+  }
+  
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   pingSound = new Audio('assets/sound/Ping Alert.mp3');
@@ -40,13 +61,11 @@ export class HomePage implements OnInit {
     let params = {}
     this.mainVmsService.getApi(params, '/vms/get/offenses_count').subscribe({
       next: (results) => {
-        console.log(results)
         if (results.result.response_code === 200) {
-          this.alertTotal = results.result.response_result[0].total_offences
+          this.alertTotal = results.result.response_result[0].total_alerts
         } else {
           this.alertTotal = 0
         }
-        console.log(this.alertTotal)
         this.playSound()
       },
       error: (error) => {

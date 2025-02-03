@@ -147,7 +147,7 @@ export class RecordsResidentsPage implements OnInit {
   applyFilters() {
     this.historyVehicles = this.logsData.filter(item => {  
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_nametoLowerCase().includes(this.filter.unit.toLowerCase()) : true;
+      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) : true;
   
       return blockMatches && unitMatches;
     });

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-visitor',
@@ -29,133 +30,69 @@ export class RecordsVisitorPage implements OnInit {
     private toastController: ToastController, 
     private router: Router, 
     private modalController: ModalController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private mainVmsService: MainVmsService
   ) { }
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
 
-  initTemp(type: string) {
+  loadLogs(type: string, today: boolean = true) {
     this.logsData = [];
     if (type === 'visitor') {
-      this.logsData = [
-        {
-          visitor_name: 'Ricky',
-          date: '2024-12-27',
-          time: '07:30AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '1234567890',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '9876543210',
-        },
-        {
-          visitor_name: 'John',
-          date: '2024-12-28',
-          time: '08:00AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '2345678901',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '8765432109',
-        },
-        {
-          visitor_name: 'Emma',
-          date: '2024-12-29',
-          time: '09:15AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '3456789012',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '7654321098',
-        },
-        {
-          visitor_name: 'Sophia',
-          date: '2024-12-30',
-          time: '10:00AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '4567890123',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '6543210987',
-        },
-      ];
+      
     } else if (type === 'vehicle') {
-      this.logsData = [
-        {
-          vehicle_number: 'SAA 7827 B',
-          date: '2024-12-27',
-          time: '07:30AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '5678901234',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '5432109876',
-          warning_issued: 'Parked in a no-parking zone',
-        },
-        {
-          vehicle_number: 'SAA 7827 B',
-          date: '2024-12-28',
-          time: '08:00AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '6789012345',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '4321098765',
-          warning_issued: 'Exceeded visitor time limit',
-        },
-        {
-          vehicle_number: 'SAA 7827 B',
-          date: '2024-12-29',
-          time: '09:15AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '7890123456',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '3210987654',
-          warning_issued: 'Blocked another vehicle',
-        },
-        {
-          vehicle_number: 'SAA 7827 B',
-          date: '2024-12-30',
-          time: '10:00AM',
-          block_id: '1',
-          block_name: 'Block 1',
-          unit_id: '1',
-          unit_name: 'Unit 1',
-          contact_number: '8901234567',
-          resident_name: 'RIVERTREE RESIDENT',
-          resident_contact: '2109876543',
-          warning_issued: 'Engine left running while parked',
-        },
-      ];
+      
     }
+    this.mainVmsService.getApi({is_today: today, log_type: type}, '/vms/get/visitor_log').subscribe({
+      next: (results) => {
+        console.log(results.result)
+        if (results.result.response_code === 200) {
+          if (today){
+            this.activeVehicles = results.result.response_result;
+          } else {
+            this.logsData = results.result.response_result;
+            this.historyVehicles = this.logsData
+          }
+          
+        } else {
+          this.presentToast('There is no data in the system!', 'danger');
+        }
 
-    this.activeVehicles = this.logsData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-    this.historyVehicles = this.logsData
+        // this.isLoading = false;
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
+        console.error(error);
+        // this.isLoading = false;
+      }
+    });
   }
 
   ngOnInit() {
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     console.log(event.url, 'from record visitoorrrrr')
+    //     if (event.url.split('?')[0] == '/records-visitor'){
+    //       this.route.queryParams.subscribe(params => {
+    //         this.pageType = params['type']
+    //         this.params = params
+    //         console.log(this.pageType)
+    //       })
+    //       this.loadLogs(this.pageType, true)
+    //       this.loadBlock()
+    //     } else {
+    //       console.log("THIS WORK")          
+    //     }
+    //   } 
+    // });
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
       this.params = params
+      console.log(this.pageType)
     })
-    console.log(this.pageType)
-    this.initTemp(this.pageType)
+    this.loadLogs(this.pageType, true)
     this.loadBlock()
+    
   }
 
   private routerSubscription!: Subscription;
@@ -180,6 +117,9 @@ export class RecordsVisitorPage implements OnInit {
       this.showHistoryTrans = false;
       if (type == 'active') {
         this.showActiveTrans = true
+        if (this.activeVehicles.length == 0){
+          this.loadLogs(this.pageType, true)
+        }
         setTimeout(() => {
           this.showActive = true;
           this.showActiveTrans = false
@@ -187,6 +127,9 @@ export class RecordsVisitorPage implements OnInit {
       }
       if (type == 'history') {
         this.showHistoryTrans = true
+        if (this.logsData.length == 0){
+          this.loadLogs(this.pageType, false)
+        }
         setTimeout(() => {
           this.showHistory = true;
           this.showHistoryTrans = false
@@ -338,8 +281,8 @@ export class RecordsVisitorPage implements OnInit {
 
   applyFilters() {
     this.historyVehicles = this.logsData.filter(item => {  
-      const dateMatches = this.filter.issue_date ? item.date >= this.filter.issue_date : true;
-      const endDateMatches = this.filter.end_issue_date ? item.date <= this.filter.end_issue_date : true;
+      const dateMatches = this.filter.issue_date ? item.entry_datetime >= this.filter.issue_date : true;
+      const endDateMatches = this.filter.end_issue_date ? item.entry_datetime <= this.filter.end_issue_date : true;
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
       const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) : true;
       const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;

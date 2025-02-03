@@ -21,18 +21,19 @@
     <div class="flex flex-row w-full ">
       <div class="mt-8 flex flex-col items-center w-full space-y-5 mx-4 mb-4">
         <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="coachName"
+          <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="schedule.coach_name"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
-          <app-vms-contact-input [(value)]="schedule.contact_number" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input [(value)]="contactNumber" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
         </div>
+        <!-- <div class="w-full">
+          <app-text-input [id]="'walk_in_contact'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}"
+            [type]="'text'" [(ngModel)]="schedule.contact_number"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div> -->
         <!-- <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'walk_in_contact'" [labelText]="'CONTACT NUMBER'" [placeholder]="'EG. +65 XXXX XXX'" [customClasses]="{'w-full':true}"
-              [type]="'text'" [(ngModel)]="schedule.contact_number"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
-          </div>
+          
           <div class="w-1/4 flex flex-col justify-end">
             <button id="middle_button"
             class="bg-[var(--ion-color-primary)] text-white w-full text-2xl rounded font-bold h-20">SEARCH</button>
@@ -49,7 +50,7 @@
         <div class="w-full">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="schedule.block_id"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
             <option [value]="''" selected disabled hidden >CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
@@ -57,7 +58,7 @@
         <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="schedule.unit_id"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
             <option value="" selected disabled hidden>{{ isLoadingUnit ? 'LOADING UNIT' : 'CHOOSE UNIT' }}</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
@@ -65,7 +66,7 @@
         <div class="w-full">
           <label class="text-2xl"><u><b>COACH TYPE</b></u></label>
           <select id="walk_in_coach"  (change)="onCoachChange($event)" [(ngModel)]="schedule.coach_type_id"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
             <option value="" selected disabled hidden>SELECT COACH TYPE</option>
             <option *ngFor="let coach of Coach" [value]="coach.id">{{ coach.name }}</option>
           </select>

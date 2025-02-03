@@ -39,7 +39,7 @@
         </select>
       </div>
     </div>
-    <div class="w-full">
+    <div class="w-full mt-2">
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Contact Number of Resident</p>
       </div>
@@ -68,30 +68,27 @@
     <div class="w-full mt-2" *ngIf="selectedOption === 'replacement'">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold text-start">Which Card Would you want a replacement for?</p>
+          <p class="text-base font-bold text-start">Which Tag Would you want a replacement for?</p>
         </div>
         <div class="flex flex-row mt-1">
-          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[50%] text-sm text-left bg-white">
+          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[100%] text-sm text-left bg-white">
             <thead>
               <tr class="bg-gray-200 text-gray-700">
                 <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Card Number</th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Assigned resident name</th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Status</th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Tag Number</th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Bicycle Brand, Colour</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let card of expectedCards">
+              <tr *ngFor="let bicycle of expectedBicycle">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_{{card.id}}" (change)="oncardSelect(card)" name="card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="bicycle_data_{{bicycle.id}}" (change)="onBicycleSelect(bicycle)" name="bicycle" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
                 </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_number }}</td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.assigned_resident_name }}</td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_status }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ bicycle.bicycle_tag }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ bicycle.bicycle_brand }}, {{ bicycle.bicycle_colour }}</td>
               </tr>
             </tbody>
           </table>
-          <p *ngIf="!expectedCards">No cards? <a [routerLink]="['/manage-new-card']">Make one now</a></p>
         </div>
       </div>
     </div>
@@ -103,9 +100,11 @@
           <p class="text-base font-bold">Type Brand</p>
         </div>
         <app-text-input [id]="'brand'"
-          [placeholder]="'brand'"
+          [placeholder]="'Brand'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [(ngModel)]="formData.bicycle_brand"
+        >
         </app-text-input>
       </div>
       <div class="w-full mt-2">
@@ -113,20 +112,23 @@
           <p class="text-base font-bold">Type Colour</p>
         </div>
         <app-text-input [id]="'colour'"
-          [placeholder]="'colour'"
+          [placeholder]="'Colour'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [(ngModel)]="formData.bicycle_colour"
+        >
         </app-text-input>
       </div>
       <div class="w-full mt-2">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold">Upload Image for Bicycle</p>
+          <p class="text-base font-bold">Upload Image</p>
         </div>
-        <app-text-input [id]="'image'"
-          [placeholder]="'image'"
-          [customClasses]="{'w-full':true}" [type]="'file'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
-        </app-text-input>
+        <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+          <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onFileChange($event)" accept="image/*">
+          <label class="w-full" [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'" for="image">
+            {{ selectedFileName ? selectedFileName : 'Upload your bicycle Image' }} <!-- Update label text -->
+          </label>
+        </div>
       </div>
     </div>
     <div class="w-full mt-2">
@@ -134,9 +136,11 @@
         <p class="text-base font-bold">Amount Payable</p>
       </div>
       <app-text-input [id]="'amount_payable'"
-        [placeholder]="'$$____'"
+        [placeholder]="'$$'"
         [customClasses]="{'w-full':true}" [type]="'text'"
-        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [(ngModel)]="formData.amount_payable"
+      >
       </app-text-input>
     </div>
 
@@ -144,16 +148,20 @@
       <app-checkbox-confirmation 
         [label]="'I agree to the terms above'" 
         [(checked)]="agreementChecked" 
+        (click)="onCheck(false)"
         [customClass]="'mr-1 rounded font-bold'">
       </app-checkbox-confirmation>
     </div>
     <button 
       [disabled]="!agreementChecked"
       [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-      class="mt-2 w-full text-base rounded h-10 font-bold">
+      class="mt-2 w-full text-base rounded h-10 font-bold"
+      (click)="onSubmit()"
+    >
       Submit for Approval
     </button>
   </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

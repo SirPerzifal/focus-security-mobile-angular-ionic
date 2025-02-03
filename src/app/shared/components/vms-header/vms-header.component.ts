@@ -13,18 +13,21 @@ export class VmsHeaderComponent  implements OnInit {
   @Input() urlCustom: string = '/home-vms'; 
   @Input() homeRoute: boolean = false; 
   @Input() params: any = false
+  @Input() customBack: boolean = false
 
   ngOnInit() {
-    console.log(this.urlCustom)
   }
 
   onRouterClick() {
     console.log(this.params)
-    if (!this.params){
-      this.router.navigate([this.urlCustom])
-    } else {
-      this.router.navigate([this.urlCustom], {queryParams: this.params})
+    if (!this.customBack) {
+      if (!this.params){
+        this.router.navigate([this.urlCustom])
+      } else {
+        this.router.navigate([this.urlCustom], {queryParams: this.params})
+      }
     }
+    
     
   }
 

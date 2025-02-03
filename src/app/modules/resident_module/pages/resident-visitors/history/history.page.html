@@ -18,64 +18,66 @@
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
-        <div class="flex flex-row justify-start mt-4">
-          <p class="text-base font-bold">Group By</p>
-        </div>
-        <div class="w-full mt-1">
-            <select id="walk_in_unit" [(ngModel)]="typeFilter"  class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
-              <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
-              <option value="All" selected>All</option >
-              <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="Visiting">Visiting</option>
-              <option value="Delivery">Delivery</option>
-              <option value="Pick Off">Pick Off</option>
-              <option value="Drop Off">Drop Off</option>
-            </select>
-        </div>
-        <div class="flex flex-row w-full mt-2 items-center">
-          <div class="w-full flex flex-col items-center">
-            <div class="flex flex-row justify-between items-center w-full mb-1">
-              <p class="text-base font-bold">Filter Date</p>
-            </div>
-            <div class="flex flex-row space-x-2 w-full">
-              <div class="w-1/2">
-								<app-text-input #startVisitorHistoryDateInput [id]="'start_visitor_history_date'" [placeholder]="'Start Filter Date'" [(ngModel)]="startDateFilter"
-									[customClasses]="{'w-full':true}" [type]="'date'"
-									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-									(change)="onChangeStartDate($event)"></app-text-input>
-							</div>
-              <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
-                <input
-                  type="text"
-                  placeholder="Start Filter Date"
-                  value="{{showStartDate}}"
-                  class="w-[140px] border-none border-0 text-base"
-                  style="background-color: transparent;"
-                  readonly
-                />
-                <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
-              </div> -->
-              <div class="w-1/2">
-								<app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter" [(ngModel)]="endDateFilter"
-									[customClasses]="{'w-full':true}" [type]="'date'"
-									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-									(change)="onChangeEndDate($event)"></app-text-input>
-							</div>
-              <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
-                <input
-                  type="text"
-                  placeholder="End Filter Date"
-                  value="{{showEndDate}}"
-                  class="w-[140px] border-none border-0 text-base"
-                  style="background-color: transparent;"
-                  readonly
-                />
-                <input type="date" min="{{startDateFilter}}" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeEndDate($event)">
-              </div> -->
+        <div *ngIf="hideFilter !== 'ban'">
+          <div class="flex flex-row justify-start mt-4">
+            <p class="text-base font-bold">Group By</p>
+          </div>
+          <div class="w-full mt-1">
+              <select id="walk_in_unit" [(ngModel)]="typeFilter"  class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
+                <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
+                <option value="All" selected>All</option >
+                <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="Visiting">Visiting</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Pick Off">Pick Off</option>
+                <option value="Drop Off">Drop Off</option>
+              </select>
+          </div>
+          <div class="flex flex-row w-full mt-2 items-center">
+            <div class="w-full flex flex-col items-center">
+              <div class="flex flex-row justify-between items-center w-full mb-1">
+                <p class="text-base font-bold">Filter Date</p>
+              </div>
+              <div class="flex flex-row space-x-2 w-full">
+                <div class="w-1/2">
+                  <app-text-input #startVisitorHistoryDateInput [id]="'start_visitor_history_date'" [placeholder]="'Start Filter Date'" [(ngModel)]="startDateFilter"
+                    [customClasses]="{'w-full':true}" [type]="'date'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                    (change)="onChangeStartDate($event)"></app-text-input>
+                </div>
+                <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
+                  <input
+                    type="text"
+                    placeholder="Start Filter Date"
+                    value="{{showStartDate}}"
+                    class="w-[140px] border-none border-0 text-base"
+                    style="background-color: transparent;"
+                    readonly
+                  />
+                  <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
+                </div> -->
+                <div class="w-1/2">
+                  <app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter" [(ngModel)]="endDateFilter"
+                    [customClasses]="{'w-full':true}" [type]="'date'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                    (change)="onChangeEndDate($event)"></app-text-input>
+                </div>
+                <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
+                  <input
+                    type="text"
+                    placeholder="End Filter Date"
+                    value="{{showEndDate}}"
+                    class="w-[140px] border-none border-0 text-base"
+                    style="background-color: transparent;"
+                    readonly
+                  />
+                  <input type="date" min="{{startDateFilter}}" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeEndDate($event)">
+                </div> -->
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex flex-row-reverse w-full mt-4">
-          <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
+          <div class="flex flex-row-reverse w-full mt-4">
+            <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
+          </div>
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">

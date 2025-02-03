@@ -3,9 +3,9 @@
 
   <div class="p-5 text-center mb-20">
     <div class="flex flex-col justify-center w-full items-center">
-      <div class="rounded-full overflow-hidden w-32 h-32 mb-4 flex flex-col justify-start">
+      <div class="rounded-full overflow-hidden w-32 h-32 mb-4 flex flex-col justify-start relative">
         <img alt="Profile picture of a man wearing a hat" class="w-full h-full object-cover" height="128" src="https://storage.googleapis.com/a1aa/image/poewGqkRRRzQfEWv2tOg3taVzSTeX7aRUmmg0kV3KzpOIM9nA.jpg" width="128"/>
-        <ion-icon class="absolute top-48 drop-shadow-xl right-36 text-4xl bg-white rounded-full p-1" name="pencil" [routerLink]="['/my-profile-my-profile']">
+        <ion-icon class="absolute top-24 right-4 drop-shadow-xl text-4xl bg-white rounded-full p-1 z-50" name="pencil">
         </ion-icon>
       </div>
       <h2 class="text-xl font-bold mb-6">
@@ -20,7 +20,8 @@
         <app-text-input [id]="'my_profile_name'"
           [placeholder]="'KingsMan Condominium'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
       <div class="w-full">
@@ -30,7 +31,8 @@
         <app-text-input [id]="'my_profile_status'"
           [placeholder]="'Owner'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
       <div class="w-full">
@@ -40,7 +42,8 @@
         <app-text-input [id]="'my_profile_block'"
           [placeholder]="'1'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
       <div class="w-full">
@@ -50,7 +53,8 @@
         <app-text-input [id]="'my_profile_unit'"
           [placeholder]="'1'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
       <div class="w-full">
@@ -60,7 +64,8 @@
         <app-text-input [id]="'my_profile_Email'"
           [placeholder]="'email@example.com'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
       <div class="w-full">
@@ -70,43 +75,44 @@
         <app-text-input [id]="'my_profile_contact'"
           [placeholder]="'67778378733'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [isReadonly]="true">
         </app-text-input>
       </div>
     </div>
     <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/my-profile-family-member']">
         <ion-button fill="clear" [routerLink]="['/my-profile-family-member']">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Add User Group Woman Man.webp" alt="Icon for Family Member"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Family Member</span>
         <!-- <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2">1</span> -->
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/my-profile-house-employee']">
         <ion-button fill="clear" [routerLink]="['/my-profile-house-employee']">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Furniture.webp" alt="Icon for House Employee"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">House Employee</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/my-profile-estate']">
         <ion-button fill="clear" [routerLink]="['/my-profile-estate']">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Home.png" alt="Icon for Estate"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Estate</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
-        <ion-button fill="clear" [routerLink]="['/history']">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toHistoryInVisitorJustBan()">
+        <ion-button fill="clear" (click)="toHistoryInVisitorJustBan()">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/No User.webp" alt="Icon for Ban Visitor"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Ban Visitor</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/my-profile-my-pets']">
         <ion-button fill="clear" [routerLink]="['/my-profile-my-pets']">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Pets.webp" alt="Icon for Registered Pets"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Registered Pets</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/resident-my-vehicle']">
         <ion-button fill="clear" [routerLink]="['/resident-my-vehicle']">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Oncoming Automobile.webp" alt="Icon for Registered Vehicle"/>
         </ion-button>

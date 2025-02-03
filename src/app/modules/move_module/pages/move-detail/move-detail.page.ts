@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MoveHomePage } from '../move-home/move-home.page';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-move-detail',
@@ -9,13 +10,12 @@ import { MoveHomePage } from '../move-home/move-home.page';
 })
 export class MoveDetailPage implements OnInit {
 
-  constructor(private router: Router, private moveHome: MoveHomePage, private route: ActivatedRoute) {
+  constructor(private router: Router, private moveHome: MoveHomePage, private route: ActivatedRoute, public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { id: number, schedule_date: string};
+    const state = navigation?.extras.state as { record: any};
     if (state) {
-      this.id = state.id
-      this.entry_date = state.schedule_date ? moveHome.convertToDDMMYYYY(state.schedule_date.split(' ')[0]) : ''
-      let temp_schedule = new Date(state.schedule_date)
+      this.record = state.record
+      console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     } 
    }
@@ -27,6 +27,7 @@ export class MoveDetailPage implements OnInit {
   }
 
   pageType = 'move_in'
+  record: any
 
   id = 0
   contractor_name ='JACK';
@@ -44,34 +45,5 @@ export class MoveDetailPage implements OnInit {
     this.main = !this.main
   }
 
-  number_of_pax = 5
   main = true
-
-  pax_array = [
-    {
-      serial_number: 'SN001',
-      identity: 'SXXXX789A',
-      name: 'Mr. John Doe',
-    },
-    {
-      serial_number: 'SN002',
-      identity: 'SXXXX723A',
-      name: 'Mrs. Jane Smith',
-    },
-    {
-      serial_number: 'SN003',
-      identity: 'SXXXX902A',
-      name: 'Mr. Alex Brown',
-    },
-    {
-      serial_number: 'SN004',
-      identity: 'SXXXX019B',
-      name: 'Ms. Emily Davis',
-    },
-    {
-      serial_number: 'SN004',
-      identity: 'SXXXX019B',
-      name: 'Ms. Emily Davis',
-    },
-  ];
 }

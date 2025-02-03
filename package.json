@@ -46,7 +46,9 @@
     "date-fns": "^4.1.0",
     "ionic2-calendar": "^2.5.0",
     "ionicons": "^7.4.0",
+    "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.11.17",
+    "signature_pad": "^5.0.4",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

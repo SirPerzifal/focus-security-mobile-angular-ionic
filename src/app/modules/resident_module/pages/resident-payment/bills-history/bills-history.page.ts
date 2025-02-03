@@ -63,6 +63,9 @@ export class BillsHistoryPage implements OnInit {
   showStartDate = ''
   showEndDate = ''
   typeFilter = 'All'
+  isDatePickerOpen: boolean = false; // Menyimpan status modal
+  viewDate: Date | null = null; // Tanggal yang akan ditampilkan
+  viewDateForDatet: string | null = null; // Tanggal yang akan ditampilkan dalam
 
   // onChangeStartDate(value: Event) {
   //   const input = value.target as HTMLInputElement;
@@ -74,17 +77,66 @@ export class BillsHistoryPage implements OnInit {
   //   this.groupBills()
   // }
 
+  onDateChange(event: any) {
+    this.viewDate = new Date(event.detail.value);
+    this.startDateFilter = event.detail.value;
+
+    if (!this.startDateFilter) {
+      // Handle clear scenario
+      this.usableFilterDate = '';
+      this.showStartDate = '';
+      this.groupBills();
+      return;
+    }
+
+    const day = String(this.viewDate.getDate()).padStart(2, '0'); // Get day and pad with zero if needed
+    const month = String(this.viewDate.getMonth() + 1).padStart(2, '0'); // Get month (0-indexed) and pad
+    const year = this.viewDate.getFullYear();
+    // const date = new Date(year, month, day);
+    
+    this.usableFilterDate = `${day}/${month}/${year}`;
+    this.showStartDate = this.viewDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+    this.groupBills();
+  }
+
+  openDatePicker() {
+    this.isDatePickerOpen = true; // Membuka modal pemilih tanggal
+  }
+
   onChangeStartDate(value: Event) {
+    console.log(value);
+    console.log('valuevaluevaluevaluevaluevaluevalue');
+    
     const input = value.target as HTMLInputElement;
     this.startDateFilter = input.value;
+
+    if (!this.startDateFilter) {
+      // Handle clear scenario
+      this.usableFilterDate = '';
+      this.showStartDate = '';
+      this.groupBills();
+      return;
+    }
+
     const dateParts = this.startDateFilter.split('-');
     const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1; // Month is zero-based
-    const day = parseInt(dateParts[2] || "1", 10); // Default day is 1 if undefined
+    const month = parseInt(dateParts[1], 10) - 1;
+    const day = parseInt(dateParts[2] || "1", 10);
     const date = new Date(year, month, day);
+    
     this.usableFilterDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
     this.showStartDate = date.toLocaleString("en-US", { month: "long", year: "numeric" });
     this.groupBills();
+    // const input = value.target as HTMLInputElement;
+    // this.startDateFilter = input.value;
+    // const dateParts = this.startDateFilter.split('-');
+    // const year = parseInt(dateParts[0], 10);
+    // const month = parseInt(dateParts[1], 10) - 1; // Month is zero-based
+    // const day = parseInt(dateParts[2] || "1", 10); // Default day is 1 if undefined
+    // const date = new Date(year, month, day);
+    // this.usableFilterDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    // this.showStartDate = date.toLocaleString("en-US", { month: "long", year: "numeric" });
+    // this.groupBills();
   }
 
   onChangeEndDate(value: Event){
@@ -142,6 +194,8 @@ export class BillsHistoryPage implements OnInit {
 
   clearFilter() {
     console.log('clearFilterclearFilterclearFilterclearFilter');
+    this.viewDate = null
+    this.viewDateForDatet = '---- / -----'
     
     this.showStartDate = '';
     this.usableFilterDate = '';

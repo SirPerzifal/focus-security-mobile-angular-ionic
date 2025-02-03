@@ -46,4 +46,10 @@ export class RecordsFacilityDetailPage implements OnInit {
     });
   }
 
+  getBookingTime(record: any) {
+    let [year, month, day] = record.start_datetime.split(' ')[0].split('-'); 
+    const startDate = `${day}/${month}/${year}`; 
+    return `${startDate} (${record.start_datetime.split(' ')[1]} - ${record.stop_datettime.split(' ')[1]})` 
+  }
+
 }

@@ -44,6 +44,18 @@
           (valueChange)="onEmailAddressChange($event)"
         ></app-text-input>
       </div>
+
+      <!-- <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Upload Profile Image</p>
+        </div>
+        <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start h-14">
+          <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onImageChange($event)" accept="image/*">
+          <label class="w-full text-start" [ngClass]="(selectedImageName) ? 'text-black' : 'text-gray-400'" for="image">
+            {{ selectedImageName ? selectedImageName : 'Upload your profile image' }}
+          </label>
+        </div>
+      </div> -->
       
       <div class="w-full">
         <app-vms-contact-input [(value)]="mobile_temp" [id]="'edit_family_contact_number'" [vmsPage]="false" [valueExist]="formData.mobile_number"

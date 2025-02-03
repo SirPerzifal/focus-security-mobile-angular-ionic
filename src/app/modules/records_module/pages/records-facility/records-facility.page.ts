@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { Subscription } from 'rxjs';
+// import { SignaturePadModule } from 'angular-signaturepad';
 
 @Component({
   selector: 'app-records-facility',
@@ -33,12 +36,14 @@ export class RecordsFacilityPage implements OnInit {
   constructor(
     private router: Router,
     private toastController: ToastController,
-    private blockUnitService: BlockUnitService
+    private blockUnitService: BlockUnitService,
+    private mainVmsService: MainVmsService,
+    // private signaturePad: SignaturePadModule
   ) { }
 
   ngOnInit() {
-    this.tempDataInit()
     this.loadBlock()
+    this.getFacilityData()
   }
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
@@ -53,57 +58,55 @@ export class RecordsFacilityPage implements OnInit {
   historySchedules: any[] = []
 
   tempDataInit() {
-    this.facilityRecords = [
-      {
-        id: 1,
-        facility: 'Tennis Court 2',
-        vehicleNumber: 'SBA 1234 A',
-        block_id: '1',
-        unit_id: '1',
-        parking_date: '2024-12-27',
-        show_date: '27/12/2024',
-      },
-      {
-        id: 2,
-        facility: 'Tennis Court 1',
-        vehicleNumber: 'SBP 1818 T',
-        block_id: '1',
-        unit_id: '1',
-        parking_date: '2024-12-27',
-        show_date: '27/12/2024',
-      },
-      {
-        id: 3,
-        facility: 'Function Room 2',
-        vehicleNumber: 'XB 1234 A',
-        block_id: '1',
-        unit_id: '1',
-        parking_date: '2024-12-28',
-        show_date: '28/12/2024',
-      },
-      {
-        id: 4,
-        facility: 'Swimming Pool 2',
-        vehicleNumber: 'SDN 7484 U',
-        block_id: '1',
-        unit_id: '1',
-        parking_date: '2024-12-28',
-        show_date: '28/12/2024',
-      },
-      {
-        id: 5,
-        facility: 'Swimming Pool 1',
-        vehicleNumber: 'SJD 6534 Y',
-        block_id: '1',
-        unit_id: '1',
-        parking_date: '2024-12-28',
-        show_date: '28/12/2024',
-      },
-    ]
-    console.log(this.facilityRecords)
-    this.daySchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-    this.upcomingSchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0))
-    this.historySchedules = this.facilityRecords
+    this.getFacilityData()
+    // this.daySchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
+    // this.upcomingSchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0))
+    // this.historySchedules = this.facilityRecords
+  }
+
+  getFacilityData(){
+    if (this.showDay){
+      if (this.daySchedules.length == 0){
+        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/facility_book' ).subscribe({
+          next: (results) => {
+            if (results.result.response_code == 200) {
+              // this.presentToast('Coach data successfully submitted!', 'success');
+              this.facilityRecords = results.result.active_bookings
+              this.daySchedules = this.facilityRecords
+              console.log(this.daySchedules.length)
+            } else {
+              this.presentToast('There is no active booking data!', 'danger');
+            }
+          },
+          error: (error) => {
+            this.presentToast('An error occurred while loading booking data!', 'danger');
+            console.error(error);
+          }
+        });
+      }
+    } else if (this.showUpcoming) {
+
+    } else if (this.showHistory) {
+      console.log(this.historySchedules)
+      if (this.historySchedules.length == 0) {
+        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/booking_history' ).subscribe({
+          next: (results) => {
+            console.log(results)
+            if (results.result.success) {
+              // this.presentToast('!', 'success');
+              this.facilityRecords = results.result.booking
+              this.historySchedules = this.facilityRecords
+            } else {
+              this.presentToast('There is no booking data!', 'danger');
+            }
+          },
+          error: (error) => {
+            this.presentToast('An error occurred while loading booking data!', 'danger');
+            console.error(error);
+          }
+        });
+      }
+    }
   }
 
   showDay = true;
@@ -126,6 +129,7 @@ export class RecordsFacilityPage implements OnInit {
         this.showDayTrans = true
         setTimeout(() => {
           this.showDay = true;
+          this.getFacilityData()
           this.showDayTrans = false
         }, 300)
       }
@@ -133,6 +137,7 @@ export class RecordsFacilityPage implements OnInit {
         this.showUpcomingTrans = true
         setTimeout(() => {
           this.showUpcoming = true;
+          this.getFacilityData()
           this.showUpcomingTrans = false
         }, 300)
       }
@@ -142,9 +147,11 @@ export class RecordsFacilityPage implements OnInit {
         this.showHistoryTrans = true
         setTimeout(() => {
           this.showHistory = true;
+          this.getFacilityData()
           this.showHistoryTrans = false
         }, 300)
       }
+      
     }
   }
 
@@ -184,13 +191,12 @@ export class RecordsFacilityPage implements OnInit {
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
-          console.log(response)
         } else {
           // this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
-        // this.presentToast('An error occurred while loading block data!', 'danger');
+        this.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -198,24 +204,13 @@ export class RecordsFacilityPage implements OnInit {
   }
 
   onBlockChange(event: any) {
-    console.log(event.target.value)
     this.choosenBlock = event.target.value;
-    console.log(this.choosenBlock)
-    console.log(new Date('2024-12-24'))
     this.applyFilters()
   }
 
   onChangeDate(event: any) {
-    console.log(event.target.value)
     this.startDateFilter = event.target.value
     this.applyFilters()
-  }
-
-  // Penting: hapus interval saat komponen di destroy
-  ngOnDestroy() {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-    }
   }
 
   form(record: any) {
@@ -256,6 +251,19 @@ export class RecordsFacilityPage implements OnInit {
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
     console.log(event.target.value)
+  }
+
+  getBookingTime(record: any) {
+    let [year, month, day] = record.start_datetime.split(' ')[0].split('-'); 
+    const startDate = `${day}/${month}/${year}`; 
+    return `${startDate} (${record.start_datetime.split(' ')[1]} - ${record.stop_datettime.split(' ')[1]})` 
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
 }

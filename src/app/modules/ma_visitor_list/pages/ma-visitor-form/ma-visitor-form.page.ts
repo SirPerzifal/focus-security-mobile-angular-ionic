@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-ma-visitor-form',
@@ -21,48 +22,19 @@ import { Router } from '@angular/router';
 })
 export class MaVisitorFormPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public functionMain: FunctionMainService) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { schedule: any};
+    if (state) {
+      this.record = state.schedule
+      console.log(this.record);
+    } 
+   }
 
   faUsers = faUsers
+  record: any
 
   ngOnInit() {
-  }
-
-  showWalk = true;
-  showDrive = false;
-  showWalkTrans = false;
-  showDriveTrans = false;
-
-  toggleShowWalk() {
-    if (!this.showDriveTrans) {
-      this.showWalkTrans = true
-      this.showDrive = false;
-      setTimeout(() => {
-        this.showWalk = true;
-        this.showWalkTrans = false
-      }, 300)
-    }
-  }
-
-  toggleShowDrive() {
-    if (!this.showWalkTrans) {
-      this.showDriveTrans = true
-      this.showWalk = false;
-      setTimeout(() => {
-        this.showDrive = true;
-        this.showDriveTrans = false
-      }, 300)
-    }
-  }
-
-  vehicle_number = ''
-
-  refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicle_number = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
   }
 
   onBackMove() {

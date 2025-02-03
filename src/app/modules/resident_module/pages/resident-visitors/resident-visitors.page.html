@@ -42,7 +42,8 @@
 								<app-text-input #newEntryDateInput [id]="'new_entry_input_date'" [placeholder]="'Choose Date'" [(ngModel)]="formattedDate"
 									[customClasses]="{'w-full':true}" [type]="'date'"
 									[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-									(change)="onDateOfInviteChange($event)"></app-text-input>
+									(change)="onDateOfInviteChange($event)">
+								</app-text-input>
 							</div>
 							<!-- <div class="flex flex-row justify-between items-center border w-full rounded py-2 border-black h-12 text-base" (click)="onClickOpenDate()">
 								<input

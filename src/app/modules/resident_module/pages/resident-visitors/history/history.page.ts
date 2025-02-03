@@ -10,7 +10,15 @@ import { HistoryService } from 'src/app/service/resident/history/history.service
 })
 export class HistoryPage implements OnInit {
 
-  constructor(private router: Router, private historyService: HistoryService) { }
+  constructor(private router: Router, private historyService: HistoryService) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { from: any};
+    if (state) {
+      // console.log(state.from);
+      this.hideFilter = state.from;
+      this.cardIfJustBan = state.from;
+    } 
+  }
 
   historyData: Array<{
     purpose: string;
@@ -38,40 +46,84 @@ export class HistoryPage implements OnInit {
   dateFilter = ''
   typeFilter = 'All'
 
+  hideFilter: string = '';
+  cardIfJustBan: string = '';
+
   getHistoryList() {
     this.historyData.pop()
     this.historyService.getHistoryList().subscribe(
       res => {
+        console.log(res);
         var result = res.result['response_result']
         this.historyData = []
-        result.forEach((item: any) => {
-          const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
-          const entryDate = new Date();
-          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
-          entryDate.setHours(entryDate.getHours() + 1);
-          const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
-          const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
-          const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-
-          this.historyData.push({
-            purpose: item['purpose'],
-            visitor_name: item['visitor_name'],
-            visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
-            visitor_entry_time: item['entry_time'],
-            visitor_exit_time: exitTime,
-            mode_of_entry: item['mode_of_entry'],
-            vehicle_number: item['vehicle_number'],
-            point_of_entry: item['point_of_entry'],
-            mobile_number: item['contact_number'],
-            delivery_type: item['delivery_type'],
-            vehicle_type: item['vehicle_type'],
-            banned: false,
-            id: item['id']
-          });
-        });
+        if (res.result.response_status === 400) {
+          console.log('Failed to load history data');
+          return;
+        } else {
+          if (this.cardIfJustBan === 'ban') {
+            console.log("tes9", this.cardIfJustBan);
+            
+            // Filter data yang is_banned true
+            const bannedItems = result.filter((item: any) => item['is_banned'] === true);
+            
+            bannedItems.forEach((item: any) => {
+              const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
+              const entryDate = new Date();
+              entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+              entryDate.setHours(entryDate.getHours() + 1);
+              const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
+              const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
+              const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+              const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+          
+              this.historyData.push({
+                purpose: item['purpose'],
+                visitor_name: item['visitor_name'],
+                visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
+                visitor_entry_time: item['entry_time'],
+                visitor_exit_time: exitTime,
+                mode_of_entry: item['mode_of_entry'],
+                vehicle_number: item['vehicle_number'],
+                point_of_entry: item['point_of_entry'],
+                mobile_number: item['contact_number'],
+                delivery_type: item['delivery_type'],
+                vehicle_type: item['vehicle_type'],
+                banned: item['is_banned'],
+                id: item['id']
+              });
+            });
+          } else {
+            result.forEach((item: any) => {
+              const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
+              const entryDate = new Date();
+              entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+              entryDate.setHours(entryDate.getHours() + 1);
+              const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
+              const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
+              const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+              const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    
+              this.historyData.push({
+                purpose: item['purpose'],
+                visitor_name: item['visitor_name'],
+                visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
+                visitor_entry_time: item['entry_time'],
+                visitor_exit_time: exitTime,
+                mode_of_entry: item['mode_of_entry'],
+                vehicle_number: item['vehicle_number'],
+                point_of_entry: item['point_of_entry'],
+                mobile_number: item['contact_number'],
+                delivery_type: item['delivery_type'],
+                vehicle_type: item['vehicle_type'],
+                banned: item['is_banned'],
+                id: item['id']
+              });
+            });
+          }
+        }
         this.filteredData = [...this.historyData];
-        console.log(this.filteredData)
+        // console.log('tes', this.filteredData)
+        // console.log('tes2', result)
       },
       error => {
         console.log(error)
@@ -164,7 +216,8 @@ export class HistoryPage implements OnInit {
     this.getHistoryList()
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        if (event['url'] == '/history-page'){
+        if (event['url'] == '/history'){
+          this.historyData = [];
           this.getHistoryList();
         }
       }

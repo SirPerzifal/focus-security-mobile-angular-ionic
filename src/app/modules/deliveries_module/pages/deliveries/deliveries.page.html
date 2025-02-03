@@ -64,7 +64,7 @@
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
                 <select id="delivery_food_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="delivery_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black my-1" style="border: 1px solid #6B7280;">
                   <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
@@ -72,7 +72,7 @@
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>UNIT</b></u></label>
                 <select id="delivery_food_unit" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="delivery_food_unit"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" style="border: 1px solid #6B7280;">
                   <option value="" selected disabled hidden>CHOOSE UNIT</option>
                   <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
                 </select>
@@ -98,7 +98,7 @@
                 [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'"/>
             </div>
           </div>
-          <div class="flex flex-row mt-6">
+          <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
             <div class="flex flex-col justify-between items-center w-full space-y-5 mx-4">
               <div class="w-full">
                 <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
@@ -138,7 +138,7 @@
                 <form class="mx-auto flex flex-col">
                   <label class="text-2xl"><u><b>NUMBER OF UNITS</b></u></label>
                   <select id="number_pax"
-                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" style="border: 1px solid #6B7280;"
                     [(ngModel)]="formData.pax" name="number_pax">
                     <option value="0" selected hidden>CHOOSE NUMBER OF UNITS</option>
                     <option value="1">1</option>
@@ -162,7 +162,7 @@
               <div class="w-full flex flex-col" *ngIf="showBlock" @fadeInOut>
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
                 <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;" [(ngModel)]="formData.block" name="package_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1">
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black my-1">
                   <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
@@ -170,7 +170,7 @@
               <div class="w-full flex flex-col" *ngIf="showUnit" @fadeInOut>
                 <label class="text-2xl"><u><b>UNIT</b></u></label>
                 <select id="package_food_unit" (change)="onUnitChange($event)" style="border: 1px solid #6B7280;" [(ngModel)]="formData.unit" name="package_food_unit"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
                   <option value="" selected disabled hidden>CHOOSE UNIT</option>
                   <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
                 </select>

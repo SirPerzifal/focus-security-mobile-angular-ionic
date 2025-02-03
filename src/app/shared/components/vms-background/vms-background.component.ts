@@ -22,7 +22,6 @@ export class VmsBackgroundComponent  implements OnInit {
     }
     this.mainVmsService.getApi(params, '/vms/get/project_background').subscribe({
       next: (results) => {
-        console.log(results)
         if (results.result.status_code === 200) {
           this.showImage = `data:image/png;base64,${results.result.response_result}`
         } else {

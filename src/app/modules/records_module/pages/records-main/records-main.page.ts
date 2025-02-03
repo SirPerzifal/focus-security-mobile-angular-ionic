@@ -80,16 +80,16 @@ export class RecordsMainPage implements OnInit {
       needSize: false,
       sizeClass: '',
     },
-    // {
-    //   text: 'RESIDENTS',
-    //   icon: 'assets/icon-vms/records_menu/Residents.png',
-    //   route: '/records-residents',
-    //   needSize: true,
-    //   sizeClass: 'mt-[5px] w-[130px] h-[90px] object-contain',
-    //   params: {
-    //     newOpen: true
-    //   }
-    // },
+    {
+      text: 'RESIDENTS',
+      icon: 'assets/icon-vms/records_menu/Residents.png',
+      route: '/records-residents',
+      needSize: true,
+      sizeClass: 'mt-[5px] w-[130px] h-[90px] object-contain',
+      params: {
+        newOpen: true
+      }
+    },
   ]
 
   toggleRecordsButton(records: any, params: any = false) {

@@ -5,6 +5,11 @@ import { VisitorService } from 'src/app/service/vms/visitor/visitor.service';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { Subscription } from 'rxjs';
+import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+// import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
+// import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-walk-in',
@@ -29,6 +34,8 @@ export class WalkInPage implements OnInit {
     private visitorService: VisitorService, 
     private toastController: ToastController, 
     private router: Router,
+    private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
     private blockUnitService: BlockUnitService) { }
 
   formData = {
@@ -279,5 +286,95 @@ export class WalkInPage implements OnInit {
       this.routerSubscription.unsubscribe();
     }
   }
+
+  fileInput: any
+
+  async takePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        source: CameraSource.Camera,
+        allowEditing: true,
+        resultType: CameraResultType.Base64
+      });
+      console.log(image)
+      this.fileInput = image.base64String;
+      await this.searchImageId(1).then(() => {
+      })
+
+      // this.showImage = `data:image/png;base64,${this.fileInput}`
+      
+    } catch (error) {
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as { message: string }).message;
+        if (errorMessage === 'User cancelled photos app') {
+          return;
+        }
+      }
+  
+      this.functionMain.presentToast('Error taking photo', 'danger')
+    }
+    
+  };
+
+  searchData: any
+
+  async searchImageId(id: number) {
+    console.log(id);
+    
+    this.mainVmsService.getApi({id: id}, '/vms/get/search_expected_visitor').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.searchData = results.result.result[0]
+          this.functionMain.presentToast('Expected visitor loaded!', 'success');
+          
+          this.formData.visitor_name = this.searchData.visitor_name
+          this.formData.visitor_contact_no = this.searchData.contact_number
+          this.formData.visitor_type = this.searchData.visitor_type
+          this.formData.visitor_vehicle = this.searchData.vehicle_number
+          this.formData.block = this.searchData.block_id[0]
+          console.log(this.formData);
+          
+          this.loadUnit().then(() => {
+            this.formData.unit = this.searchData.unit_id[0]
+            if (this.formData.visitor_type == 'walk_in') {
+              this.toggleShowWalk()
+            } else {
+              this.toggleShowDrive()
+            }
+          })
+          
+        } else {
+          this.functionMain.presentToast('Expected visitor not found!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  // barcodes: any[] = [];
+
+  // async scan(): Promise<void> {
+  //   if (Capacitor.isNativePlatform()) {
+  //     const { barcodes } = await BarcodeScanner.scan();
+  //     this.barcodes.push(...barcodes);
+  //   } else {
+  //     // Mock barcode data for unsupported platforms
+  //     const mockBarcodes = [{ format: 'QR_CODE', rawValue: 'MOCK_BARCODE' }];
+  //     this.barcodes.push(...mockBarcodes);
+  //     console.warn('Barcode Scanner is not available on this platform. Using mock data.');
+  //   }
+  
+  // }
+
+  // async requestPermissions(): Promise<boolean> {
+  //   const { camera } = await BarcodeScanner.requestPermissions();
+  //   return camera === 'granted' || camera === 'limited';
+  // }
+
 
 }

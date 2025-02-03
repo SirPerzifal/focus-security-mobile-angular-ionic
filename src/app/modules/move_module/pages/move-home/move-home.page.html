@@ -73,7 +73,7 @@
           <select id="pick_up_location" 
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
             (change)="onBlockChange($event)">
-            <option selected>CHOOSE BLOCK</option>
+            <option selected disabled hidden>CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
@@ -81,57 +81,24 @@
       <div class="flex flex-col w-full space-y-5" *ngIf="showHistory && (choosenBlock || startDateFilter || endDateFilter)">
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
           *ngFor="let schedule of filteredHistorySchedules">
-          <span class="text-2xl font-bold text-white">{{schedule.block_name  ? schedule.block_name : '-' }}, {{ schedule.unit_name  ? schedule.unit_name : '-' }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType != 'coach'"
-            (click)="onScheduleClick(schedule.id, schedule.schedule_date)"></ion-icon>
-            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach'"
+          <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name : '-') : (schedule.block_name  ? schedule.block_name : '-') }}, {{ pageType == 'ma_visitor' ? (schedule.company_name ? schedule.company_name : '-') : (schedule.unit_name  ? schedule.unit_name : '-') }}</span>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
+            (click)="onScheduleClick(schedule)"></ion-icon>
+            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
             (click)="coachForm(schedule)"></ion-icon>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
           *ngFor="let schedule of daySchedules">
-          <span class="text-2xl font-bold text-white">{{schedule.block_name  ? schedule.block_name : '-' }}, {{ schedule.unit_name  ? schedule.unit_name : '-' }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType != 'coach'"
+          <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name : '-') : (schedule.block_name  ? schedule.block_name : '-') }}, {{ pageType == 'ma_visitor' ? (schedule.company_name ? schedule.company_name : '-') : (schedule.unit_name  ? schedule.unit_name : '-') }}</span>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"  *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
             (click)="form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)"></ion-icon>
-            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach'"
+            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
             (click)="coachForm(schedule)"></ion-icon>
         </div>
       </div>
     </div>
-
-    <!-- <div class="flex flex-row">
-      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[285px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
-        <span class="text-2xl"><b>MOVING IN / OUT</b></span>
-        <div class="w-[100%] flex self-start mt-5 grid grid-cols-4 gap-4 justify-items-start">
-          <button 
-            *ngFor="let schedule of moveInSchedules" 
-            (click)="form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)" 
-            class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-40 text-2xl m-[5px]"
-          >
-            <span><b>{{ schedule.block_name }}</b></span>
-            <span><b>{{ schedule.unit_name }}</b></span>
-          </button>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- Renovations Section -->
-    <!-- <div class="flex flex-row">
-      <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[285px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">
-        <span class="text-2xl"><b>RENOVATIONS</b></span>
-        <div class="w-[100%] flex self-start mt-5 grid grid-cols-4 gap-4 justify-items-start">
-          <button 
-            *ngFor="let schedule of renovationSchedules" 
-            (click)="renov_form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)" 
-            class="flex flex-col bg-[--ion-color-primary] text-[white] rounded-lg p-[10px] items-center w-40 text-2xl m-[5px]"
-          >
-          <span><b>{{ schedule.block_name }}</b></span>
-          <span><b>{{ schedule.unit_name }}</b></span>
-          </button>
-        </div>
-      </div>
-    </div> -->
 
   </div>
 </ion-content>

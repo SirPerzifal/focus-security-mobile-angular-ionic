@@ -54,7 +54,7 @@
           </app-text-input>
         </div> 
         <div class="w-full">
-          <app-vms-contact-input [id]="'move_contact'"  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input [id]="'move_contact'" [(value)]="contact_number" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
         </div>
         <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">

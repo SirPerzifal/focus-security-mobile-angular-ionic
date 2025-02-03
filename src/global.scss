@@ -311,7 +311,7 @@ select:focus>option:checked:before {
       background: var(--ion-color-vms-alert);
       border-radius: 0.5rem;
       width: 24rem;
-      padding: 1.25rem;
+      padding: 20px 0px 20px 0px;
       text-align: center;
   }
   .alert-title{
@@ -329,11 +329,11 @@ select:focus>option:checked:before {
   }
   .alert-button{
       background: white;
-      font-size: 1.25rem;
-      // border: solid black 1px;
+      font-size: 20px;
       border-radius: 6px;
       height: 56px;
-      min-width: 45% !important;
+      min-width: 42% !important;
+      margin-right: 0px;
   }
   .alert-button-inner{
       font-weight: 700;
@@ -440,6 +440,14 @@ input:checked + .slider:before {
   --border-radius: 4px;
   --padding: 20px;
   --width: 80%;
+}
+
+.nric-confirmation-modal{
+  --border: black 1px solid;
+  --height: 40%;
+  --border-radius: 4px;
+  --padding: 20px;
+  --width: 60%;
 }
 
 .record-modal-notice{

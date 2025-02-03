@@ -22,6 +22,7 @@ export class FamilyCardComponent implements OnInit {
   @Input() tenant: boolean = false;
   @Input() warning: boolean = false;
   @Input() status: string = ""; // Tambahkan ini
+  @Input() profile_image: string = "";
 
   ngOnInit() {}
 
@@ -41,6 +42,7 @@ export class FamilyCardComponent implements OnInit {
         tenant: this.tenant,
         warning: this.warning,
         status: this.status, // Tambahkan ini jika perlu
+        profile_image: this.profile_image
       }
     });
   }

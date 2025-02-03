@@ -17,6 +17,8 @@ import { NricFinSelectionComponent } from './nric-fin-selection/nric-fin-selecti
 import { VmsHeaderComponent } from './vms-header/vms-header.component';
 import { VmsBackgroundComponent } from './vms-background/vms-background.component';
 import { VmsContactInputComponent } from './vms-contact-input/vms-contact-input/vms-contact-input.component';
+import { SignaturePadComponent } from './signature-pad/signature-pad.component';
+import SignaturePad from 'signature_pad';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { VmsContactInputComponent } from './vms-contact-input/vms-contact-input/
     VmsHeaderComponent,
     VmsBackgroundComponent,
     VmsContactInputComponent,
+    SignaturePadComponent,
   ],
   imports: [
     CommonModule,
@@ -55,9 +58,16 @@ import { VmsContactInputComponent } from './vms-contact-input/vms-contact-input/
     VmsHeaderComponent,
     VmsBackgroundComponent,
     VmsContactInputComponent,
+    SignaturePadComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
+  ],
+  providers: [
+    {
+      provide: SignaturePad,
+      useValue: SignaturePad
+    }
   ]
 })
 export class ComponentsModule { }

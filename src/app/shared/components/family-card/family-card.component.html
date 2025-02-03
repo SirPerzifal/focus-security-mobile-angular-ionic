@@ -1,4 +1,4 @@
-<div [ngClass]="{
+<!-- <div [ngClass]="{
   'bg-[var(--ion-color-tertiary)]': status === 'approved' || status === 'Approved',
   'bg-[#F8F1BA]': status === 'pending_approval' || status === 'Pending Approval',
   'bg-[#E3787E]': status === 'Rejected' || status === 'rejected',
@@ -32,18 +32,18 @@
       <div class="text-base flex flex-col">
         <table class="w-full table-fixed">
           <tr class="">
-            <td>Name</td>
+            <td class="w-[40%]">Name</td>
             <td class="w-[5%]">:</td>
             <td class="font-thin">{{name}}</td>
           </tr>
           <tr class="">
             <td>Mobile</td>
-            <td class="w-[5%]">:</td>
+            <td>:</td>
             <td class="font-thin">{{mobile}}</td>
           </tr>
           <tr class="">
             <td>Type</td>
-            <td class="w-[5%]">:</td>
+            <td>:</td>
             <td class="font-thin">{{head_type}}</td>
           </tr>
         </table>
@@ -51,6 +51,30 @@
     </div>
   </div>
   <div fill="clear" class="button-card-facility flex items-center font-bold w-1/2 ml-[4.5px] mt-2 mb-2">
+    <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" (click)="openDetails()">
+      View Details
+    </button>
+  </div>
+</div> -->
+
+<div [ngClass]="{
+  'bg-[var(--ion-color-tertiary)]': status === 'approved' || status === 'Approved',
+  'bg-[#F8F1BA]': status === 'pending_approval' || status === 'Pending Approval',
+  'bg-[#E3787E]': status === 'Rejected' || status === 'rejected',
+  'bg-sky-100': status === 'pending_payment' || status === 'Pending Payment'
+  }" [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col'">
+  <div class="flex flex-row">
+    <img alt="Profile picture of {{name}}" class="h-16 w-16 rounded-full" height="50" src="data:image/png;base64,{{profile_image}}" width="50"/>
+    <div class="ml-4 text-start">
+     <h2 class="text-lg font-bold">
+      {{name}}
+     </h2>
+     <p class="text-sm text-gray-600">
+      {{head_type}} ({{type}})
+      </p>
+    </div>
+  </div>
+  <div fill="clear" class="button-card-facility flex items-center font-bold w-1/2 mt-2">
     <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" (click)="openDetails()">
       View Details
     </button>

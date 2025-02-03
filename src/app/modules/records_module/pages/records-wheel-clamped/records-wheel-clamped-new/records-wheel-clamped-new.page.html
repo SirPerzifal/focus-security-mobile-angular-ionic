@@ -1,11 +1,11 @@
 <ion-content class="">
-  <div class="flex flex-col p-4 justify-center items-center h-full">
-    <div class="flex flex-row w-[80%]">
-      <div class="flex flex-col justify-center w-full gap-4 items-center">
+  <div class="flex flex-col p-4 justify-center items-center h-full over">
+    <div class="flex flex-row w-[80%] overflow-auto max-h-[80%] pr-3">
+      <div class="flex flex-col justify-start w-full gap-4 items-center">
         <div class="flex flex-row justify-center w-full">
           <!-- <app-text-input [id]="'walk_in_block'" [placeholder]="'BLOCK'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input> -->
           <div class="flex flex-col w-full">
-            <label class="text-2xl"><b><u>WHEEL CLAMP NOTICE</u></b></label>
+            <label class="text-2xl"><b><u>{{ showType }}</u></b></label>
             <select id="clamping_reason" [(ngModel)]="selectedNotice"
               class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected hidden>EG. PARKING VIOLATION</option>
@@ -16,14 +16,66 @@
             </select>
           </div>
         </div>
-        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (BEFORE)'" [buttonText]="'UPLOAD'"
+        <app-file-input class="w-full h-25" [labelText]="type == 'wheel_clamp' ? 'UPLOAD IMAGE (BEFORE)' : 'UPLOAD IMAGE'" [buttonText]="'UPLOAD'"
           [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
           (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="type == 'wheel_clamp'"
           (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
+        <!-- <div class="w-full">
+          <app-text-input [id]="'record_issue_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SAA 7872 A'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="vehicleNumber"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div> -->
+        <div class="w-full flex flex-row justify-between">
+          <div class="w-[90%]">
+            <app-text-input [id]="'record_issue_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [value]="vehicleNumber"></app-text-input>
+          </div>
+          <div class="flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+            </div>
+        </div>
         <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. MEGAN'"
+          <app-text-input [id]="'record_issue_name'" [labelText]="'NAME'" [placeholder]="'EG. RICK'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueName"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <!-- <div class="w-full">
+          <app-text-input [id]="'record_issue_contact'" [labelText]="'CONTACT'" [placeholder]="'EG. +65 7821 222'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueContact"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div> -->
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="issueContact" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'record_issue_type'" [labelText]="'TYPE OF ENTRY'" [placeholder]="'EG. DRIVE IN'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="typeOfEntry"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><u><b>BLOCK</b></u></label>
+          <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="blockId"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option [value]="''" selected disabled hidden >CHOOSE BLOCK</option>
+            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><u><b>UNIT</b></u></label>
+          <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="unitId"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+            <option value="" selected disabled hidden>CHOOSE UNIT</option>
+            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'record_issue_reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'EG. ILLEGAL PARKING'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reasonOfIssuance"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'record_issue_name'" [labelText]="'ISSUING OFFICER NAME'" [placeholder]="'EG. MEGAN'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueOfficer"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>

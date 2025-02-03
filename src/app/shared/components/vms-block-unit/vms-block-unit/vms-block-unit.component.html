@@ -1,0 +1,8 @@
+<div class="w-full">
+  <label class="text-2xl"><u><b>BLOCK</b></u></label>
+  <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="schedule.block_id"
+    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+    <option [value]="''" selected disabled hidden >CHOOSE BLOCK</option>
+    <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+  </select>
+</div>

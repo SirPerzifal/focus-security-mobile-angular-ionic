@@ -1,0 +1,77 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Register a Visitor'" [text_second]="''"/>
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/client-main-app']"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4 mb-24">
+    <form (ngSubmit)="onSubmit()">
+      <div class="flex flex-col justify-between mt-2 space-y-3">
+        <div class="w-full">
+          <app-text-input
+          [labelResidentText]="'Visitor Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'register_visitor_name'"
+            [name]="'register_visitor_name'"
+            [placeholder]="'EG. Kevin Antonio'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="formData.name"
+          ></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input
+          [labelResidentText]="'Company Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'register_company_name'"
+            [name]="'register_company_name'"
+            [placeholder]="'EG. Antonio, Inc.'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="formData.company_name"
+          ></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-vms-contact-input [(value)]="formData.contact_number" [id]="'regiter_contact_number'" [vmsPage]="false"
+          [contactLabel]="'Contact Number'" [labelClass]="'text-base'" [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"
+          ></app-vms-contact-input>
+        </div>
+        <div class="w-full mt-1">
+          <label class="text-base font-bold mb-[-4px]">Visitor Type</label>
+          <select
+            id="register_visitor_type"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] "
+            [(ngModel)]="formData.selection_type" name="visitorType"
+          >
+          <option selected hidden disabled value="">Choose Visitor Type</option>
+            <option [value]="'walk_in'">Walk In</option>
+            <option [value]="'drive_in'">Drive in</option>
+          </select>
+        </div>
+        <div class="w-full" *ngIf="formData.selection_type == 'drive_in'">
+          <app-text-input
+          [labelResidentText]="'Vehicle Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'register_vehicle_number'"
+            [name]="'register_vehicle_number'"
+            [placeholder]="'EG. SAA 7827 V'"
+            [customClasses]="{'w-full': true}"
+            [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="formData.vehicle_number"
+          ></app-text-input>
+        </div>
+        
+       
+        
+        <div class="w-full">
+          <button class="bg-[var(--ion-color-primary)] text-white mt-3 w-full text-base rounded h-14 font-bold" type="submit">Register Visitor</button>
+        </div>
+        
+      </div>
+    </form>
+    <div class="flex flex-row w-full">
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

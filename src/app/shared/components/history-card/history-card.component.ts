@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
 @Component({
   selector: 'app-history-card',
@@ -8,7 +10,10 @@ import { Router } from '@angular/router';
 })
 export class HistoryCardComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private alertController: AlertController, private router: Router, private visitorService: VisitorService) { }
+
+  unitId: number = 1;
+  blockId: number = 1;
 
   @Input() historyData!: {
     purpose: string;
@@ -41,5 +46,45 @@ export class HistoryCardComponent implements OnInit {
   formatDate(dateString: string): string {
     const dateParts = dateString.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
     return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
+  }
+
+  public async showAlertButtons(headerName: string, className: string, historyData: any) {
+    const alertButtons = await this.alertController.create({
+      cssClass: className,
+      header: headerName + " this visitor?",
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.reinstateProcess(historyData);
+            // console.log(historyData);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Alert cancel');
+          },
+        },
+      ]
+    });
+    await alertButtons.present ();
+  }
+
+  reinstateProcess(historyData: any) {
+    console.log("tes");
+    this.visitorService.postReinstate(
+      this.blockId,
+      this.unitId,
+      historyData.mobile_number,
+      historyData.vehicle_number
+    ).subscribe(
+      (response) => {
+        console.log('Success:', response);
+        this.router.navigate(['resident-my-profile']);
+      },
+    )
   }
 }

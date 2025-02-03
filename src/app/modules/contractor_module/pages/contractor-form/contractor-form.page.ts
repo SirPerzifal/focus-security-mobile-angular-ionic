@@ -29,7 +29,7 @@ export class ContractorFormPage implements OnInit {
     private toastController: ToastController,
     private router: Router,
     private blockUnitService: BlockUnitService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadBlock()
@@ -87,7 +87,7 @@ export class ContractorFormPage implements OnInit {
       // this.presentToast('Pilih block', 'danger');
     }
 
-    if (errMsg){
+    if (errMsg) {
       this.presentToast(errMsg, 'danger')
       return
     }
@@ -106,24 +106,14 @@ export class ContractorFormPage implements OnInit {
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
-            this.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
-            this.router.navigate(['home-vms'])
-
-            console.log(this.selectedBlock)
-            console.log(this.selectedUnit)
-            
-            // Reset form
-            this.resetForm();
-
-            // Tambahkan logika untuk membuka barrier jika openBarrier true
             if (openBarrier) {
-              console.log('Membuka barrier');
-              this.presentToast('Contractor data has been successfully saved to the system!', 'success');
+              this.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
               this.router.navigate(['home-vms'])
-
-              console.log(this.selectedBlock)
-              console.log(this.selectedUnit)
-            }
+            } else {
+              this.presentToast('Contractor data has been successfully saved to the system!', 'success');
+            } 
+            this.router.navigate(['home-vms'])
+            this.resetForm();
           } else {
             this.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
@@ -147,7 +137,7 @@ export class ContractorFormPage implements OnInit {
     this.contractorVehicleNumberInput.value = '';
     this.contractorCompanyNameInput.value = '';
     this.remarksInput.value = '';
-    
+
     // Reset pilihan
     this.identificationType = '';
     this.selectedBlock = '';
@@ -172,11 +162,11 @@ export class ContractorFormPage implements OnInit {
       duration: 2000,
       color: color
     });
-    
+
 
     toast.present().then(() => {
-      
-      
+
+
     });
   }
 
@@ -232,7 +222,7 @@ export class ContractorFormPage implements OnInit {
     contractor_vehicle: '',
   };
 
-  getContactInfo(contactData: any){
+  getContactInfo(contactData: any) {
     if (contactData) {
       this.formData.contractor_name = contactData.visitor_name
       this.formData.contractor_vehicle = contactData.vehicle_number

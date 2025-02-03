@@ -23,10 +23,16 @@
       </select>
     </div>
     <div class="flex flex-row w-full mt-1 mb-3 items-center gap-x-2">
-      <app-text-input #billsStartDateHistory [id]="'bills_history_start_date'" [placeholder]="'--------/----'"
-        [customClasses]="{'w-full':true}" [type]="'month'"
+      <div *ngIf="viewDate" class="w-2/3 min-h-8 border border-black rounded-md bg-[#D0D0D0] flex items-center justify-center mb-2 mt-2 font-bold text-lg" (click)="openDatePicker()">
+        {{ viewDate | date:'MMMM y' }} <!-- Menampilkan bulan dan tahun -->
+      </div>
+      <div *ngIf="!viewDate" class="w-2/3 min-h-8 border border-black rounded-md bg-[#D0D0D0] flex items-center justify-center mb-2 mt-2 font-bold text-lg" (click)="openDatePicker()">
+        {{ '-------- / ----' }} <!-- Menampilkan bulan dan tahun -->
+      </div>
+      <!-- <app-text-input #billsStartDateHistory [id]="'bills_history_start_date'" [placeholder]="'--------/----'"
+        [customClasses]="{'w-3/4':true}" [type]="'month'"
         [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-        (change)="onChangeStartDate($event)" [(ngModel)]="showStartDate" (value)="showStartDate"></app-text-input>
+        (change)="onChangeStartDate($event)" [(ngModel)]="showStartDate" (value)="showStartDate"></app-text-input> -->
         <!-- <app-text-input #billsEndDateHistory [id]="'bills_history_end_date'" [placeholder]="'End Date'"
           [customClasses]="{'w-full':true}" [type]="'date'"
           [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
@@ -41,7 +47,7 @@
         />
         <input type="date" class="w-[40px] rounded py-2 px-3 outline-[#BDBDBD] h-7 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
       </div> -->
-      <div (click)="clearFilter()" >
+      <div class="" (click)="clearFilter()" >
         <u class="ml-3 text-base font-bold" >Clear Filter</u>
       </div>
     </div>
@@ -85,6 +91,22 @@
       </div>
     </div>
   </div>
+  <ion-modal id="choose-date-modal" keep-contents-mounted="true" [isOpen]="isDatePickerOpen" (didDismiss)="isDatePickerOpen = false">
+    <ng-template>
+      <ion-datetime
+        presentation="month-year" 
+        [(ngModel)]="viewDateForDatet"
+        (ionChange)="onDateChange($event)"
+        [formatOptions]="{
+          date: {
+            day: '2-digit',
+            weekday: 'short',
+            month: 'long',
+          },
+        }"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
   <!-- ############################### -->
   <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

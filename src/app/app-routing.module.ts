@@ -438,10 +438,10 @@ const routes: Routes = [
     path: 'move-in-out-permit',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/move-in-out-permit/move-in-out-permit.module').then( m => m.MoveInOutPermitPageModule)
   },
-  // {
-  //   path: 'client-main-app',
-  //   loadChildren: () => import('./modules/resident_module/pages/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule)
-  // },
+  {
+    path: 'client-main-app',
+    loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule)
+  },
   {
     path: 'upcoming-event-calendar-view',
     loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/upcoming-event-calendar-view/upcoming-event-calendar-view.module').then( m => m.UpcomingEventCalendarViewPageModule)
@@ -489,6 +489,18 @@ const routes: Routes = [
   {
     path: 'pet-registration',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule)
+  },
+  {
+    path: 'make-an-event',
+    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/make-an-event/make-an-event.module').then( m => m.MakeAnEventPageModule)
+  },
+  {
+    path: 'client-register-visitor',
+    loadChildren: () => import('./modules/client_app/client-register-visitor/client-register-visitor.module').then( m => m.ClientRegisterVisitorPageModule)
+  },
+  {
+    path: 'search-nric-confirmation',
+    loadChildren: () => import('./modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.module').then( m => m.SearchNricConfirmationPageModule)
   },
 ];
 

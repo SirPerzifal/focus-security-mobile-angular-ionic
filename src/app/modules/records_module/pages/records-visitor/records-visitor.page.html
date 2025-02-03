@@ -101,25 +101,22 @@
               class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let log of historyVehicles">
               <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number :
-                log.visitor_name }}, {{ log.date }} {{ log.time }}</span>
+                (log.visitor_name ? log.visitor_name : '-') }}, {{ convertToDDMMYYYY(log.entry_datetime.split(' ')[0]) }} {{ log.entry_datetime.split(' ')[1] }}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
                 (click)="onArrowClick(log)"></ion-icon>
             </div>
           </div>
         </div>
 
-
-
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
           <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
             *ngFor="let log of activeVehicles">
-            <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number : log.visitor_name
-              }}, {{ log.date }} {{ log.time }}</span>
+            <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number : (log.visitor_name ? log.visitor_name : '-')
+              }}, {{ convertToDDMMYYYY(log.entry_datetime.split(' ')[0]) }} {{ log.entry_datetime.split(' ')[1] }}</span>
             <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
               (click)="onArrowClick(log)"></ion-icon>
           </div>
         </div>
-
       </div>
     </div>
   </div>

@@ -24,47 +24,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class OvernightParkingListPage implements OnInit {
 
-  parkingVehicles: any[] = [
-    {
-      id: 1,
-      vehicleNumber: 'SBA 1234 A',
-      block_id: '1',
-      unit_id: '1',
-      parking_date: '2024-12-24',
-    },
-    {
-      id: 2,
-      vehicleNumber: 'SBP 1818 T',
-      block_id: '1',
-      unit_id: '1',
-      parking_date: '2024-12-24',
-    },
-    {
-      id: 3,
-      vehicleNumber: 'XB 1234 A',
-      block_id: '1',
-      unit_id: '1',
-      parking_date: '2024-12-2',
-    },
-    {
-      id: 4,
-      vehicleNumber: 'SDN 7484 U',
-      block_id: '1',
-      unit_id: '1',
-      parking_date: '2024-12-2',
-    },
-    {
-      id: 5,
-      vehicleNumber: 'SJD 6534 Y',
-      block_id: '1',
-      unit_id: '1',
-      parking_date: '2024-12-2',
-    },
-  ];
-  // renovationSchedules: any[] = [];
   isLoading: boolean = false;
-  startDate: Date = new Date('2024-01-01')
-  endDate: Date = new Date()
 
   // Subject untuk mengelola subscription
   private refreshInterval: any;

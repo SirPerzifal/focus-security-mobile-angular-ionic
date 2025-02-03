@@ -52,13 +52,15 @@
     </div>
     <div class="w-full mt-2">
       <div class="flex flex-row justify-start mb-1">
-        <p class="text-base font-bold text-start">What type of this move?
+        <p class="text-base font-bold text-start">What type of this move?</p>
       </div>
       <div class="flex flex-row mt-2">
-        <input type="radio" id="move_in" name="for_what" class="mr-1 accent-black text-[var(--ion-color-primary)] text-base" (change)="moveInOutForm.patchValue({ move_type: 'move_in' })">
+        <input type="radio" id="move_in" name="for_what" class="mr-1 accent-black text-[var(--ion-color-primary)] text-base" (change)="onChangeTypeMove('move_in')">
         <label for="move_in"><b>Move In</b></label>
-        <input type="radio" id="move_out" name="for_what" class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base" (change)="moveInOutForm.patchValue({ move_type: 'move_out' })">
+        <input type="radio" id="move_out" name="for_what" class="mr-1 accent-black text-[var(--ion-color-primary)] ml-1.5 text-base" (change)="onChangeTypeMove('move_out')">
         <label for="move_out"><b>Move Out</b></label>
+        <input type="radio" id="bulky_item" name="for_what" class="mr-1 accent-black text-[var(--ion-color-primary)] ml-1.5 text-base" (change)="onChangeTypeMove('bulky_item')">
+        <label for="bulky_item"><b>Bulky Item</b></label>
       </div>
     </div>
     <div class="w-full mt-2">
@@ -67,7 +69,7 @@
       </div>
       <div class="w-full">
         <div class="w-full">
-          <app-text-input [id]="'move_in_out_date'" [placeholder]="'Move In / Out Date'"
+          <app-text-input [id]="'move_in_out_date'" [placeholder]="'Move In / Out / Bulky Item'"
             [customClasses]="{'w-full':true}" [type]="'date'"
             [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
             formControlName="move_date"
@@ -105,21 +107,121 @@
           </div>
         </ng-template>
       </ion-modal>
-      <div class="flex flex-row mt-4 text-base">
-        <app-checkbox-confirmation 
-          [label]="'I agree to the terms above'" 
-          [(checked)]="agreementChecked" 
-          [customClass]="'mr-1 rounded font-bold'">
-        </app-checkbox-confirmation>
-      </div>
-      <button 
-        [disabled]="!agreementChecked"
-        [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-        class="mt-4 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
-        Submit for Approval
-      </button>
     </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold text-start">Contact Person
+      </div>
+      <div class="flex flex-row mt-2">
+        <input type="radio" id="same_as_above" name="contact_person" class="mr-1 accent-black text-[var(--ion-color-primary)] text-base" (change)="onContactPersonChange('same_as_above')">
+        <label for="same_as_above"><b>Same as above</b></label>
+        <input type="radio" id="appoint_another" name="contact_person" class="mr-1 accent-black text-[var(--ion-color-primary)] ml-2 text-base" (change)="onContactPersonChange('appoint_another')">
+        <label for="appoint_another"><b>Appoint another family member</b></label>
+      </div>
+    </div>
+    <div class="flex flex-row mt-2 w-full" *ngIf="contactPerson === 'appoint_another'">
+      <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Name</th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Phone</th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ef of expectedFamilyMember">
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <input id="ef_data_{{ef.id}}" (change)="onSelect(ef)" name="ef" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+            </td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ ef.name }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ ef.mobile }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"><u (click)="navigateToEditFamily(ef)" class="text-blue-400">edit</u></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="w-full mt-2" *ngIf="moveType === 'move_in' || moveType === 'move_out'">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Contact Person</p>
+        </div>
+        <app-text-input [id]="'contact_person_movers'"
+          [placeholder]="'Type phone number'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          formControlName="contractor_contact_person"
+        >
+        </app-text-input>
+      </div>
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Contact Number</p>
+        </div>
+        <app-text-input [id]="'contact_number_movers'"
+          [placeholder]="'Type contact number'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          formControlName="contractor_contact_number"
+        >
+        </app-text-input>
+      </div>
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Company Name</p>
+        </div>
+        <app-text-input [id]="'company_name'"
+          [placeholder]="'Type company name'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          formControlName="contractor_company_name"
+        >
+        </app-text-input>
+      </div>
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Vehicle Number</p>
+        </div>
+        <app-text-input [id]="'company_name'"
+          [placeholder]="'Type vehicle number'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          formControlName="contractor_vehicle_number"
+        >
+        </app-text-input>
+      </div>
+    </div>
+    <div class="w-full mt-2" *ngIf="moveType === 'bulky_item'">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Company Name</p>
+        </div>
+        <app-text-input [id]="'company_name_bulky'"
+          [placeholder]="'Type company name'"
+          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          formControlName="contractor_company_name"
+        >
+        </app-text-input>
+      </div>
+    </div>
+
+    <div class="flex flex-row mt-4 text-base">
+      <app-checkbox-confirmation 
+        [label]="'I agree to the terms above'" 
+        [(checked)]="agreementChecked" 
+        (click)="onCheck(false)"
+        [customClass]="'mr-1 rounded font-bold'">
+      </app-checkbox-confirmation>
+    </div>
+    <button 
+      [disabled]="!agreementChecked"
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+      class="mt-4 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
+      Submit for Approval
+    </button>
   </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

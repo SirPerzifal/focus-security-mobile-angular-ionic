@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { MoveInOutService } from 'src/app/service/vms/move_in_out_renovators/move_in_out/move-in-out.service';
 import { RenovatorsService } from 'src/app/service/vms/move_in_out_renovators/renovators/renovators.service';
 import { ToastController } from '@ionic/angular';
@@ -35,10 +35,10 @@ interface Schedule {
   ]
 })
 export class MoveHomePage implements OnInit, OnDestroy {
-  moveInSchedules: Schedule[] = [];
-  daySchedules: Schedule[] = [];
-  historySchedules: Schedule[] = []
-  filteredHistorySchedules: Schedule[] = []
+  moveInSchedules: any = [];
+  daySchedules: any;
+  historySchedules: any = []
+  filteredHistorySchedules: any = []
   isLoading: boolean = true;
 
   // Subject untuk mengelola subscription
@@ -58,6 +58,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   pageType = 'move_in'
 
+  private routerSubscription!: Subscription;
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
@@ -65,8 +66,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       this.loadBlock()
     })
   }
-
-  private routerSubscription!: Subscription;
+  
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
@@ -161,22 +161,31 @@ export class MoveHomePage implements OnInit, OnDestroy {
         });
       }
     } else if (this.pageType === 'coach') {
-      let url = ''
-      if (type == 'today') {
-        url = '/vms/get/coaches'
-      } else {
-        url = '/vms/get/coaches'
+      if (type == 'today' && this.daySchedules.length >= 1) {
+        return
       }
-      this.mainVmsService.getApi([], url).subscribe({
+      if (type != 'today' && this.filteredHistorySchedules.length >= 1) {
+        return
+      }
+      let url = '/vms/get/coaches'
+      let params = {}
+      if (type == 'today') {
+        params = { is_today: true}
+      } else {
+        params = { is_today: false}
+      }
+      this.mainVmsService.getApi(params, url).subscribe({
         next: (results) => {
           console.log(results.result)
           if (results.result.response_code === 200) {
-            this.daySchedules = results.result.response_result
-            this.historySchedules = results.result.response_result
-            this.filteredHistorySchedules = this.historySchedules
-
+            if (type == 'today') {
+              this.daySchedules = results.result.response_result
+            } else {
+              this.historySchedules = results.result.response_result
+              this.filteredHistorySchedules = this.historySchedules
+            }
           } else {
-            this.presentToast('There is no coaches data!', 'danger');
+            this.presentToast('There is no coaches data!', 'warning');
           }
 
           // this.isLoading = false;
@@ -188,16 +197,41 @@ export class MoveHomePage implements OnInit, OnDestroy {
         }
       });
     } else if (this.pageType === 'ma_visitor') {
-      this.historySchedules = [{
-        id: 0,
-        block_name: 'Block 1',
-        unit_name: 'Unit 1',
-        block_id: '',
-        unit_id: '',
-        schedule_date: '',
-      }]
-      this.daySchedules = this.historySchedules
-      this.filteredHistorySchedules = this.historySchedules
+      if (type == 'today' && this.daySchedules.length >= 1) {
+        return
+      }
+      if (type != 'today' && this.filteredHistorySchedules.length >= 1) {
+        return
+      }
+      let url = '/client/get/ma_visitor'
+      let params = {}
+      if (type == 'today') {
+        params = { is_today: true}
+      } else {
+        params = { is_today: false}
+      }
+      this.mainVmsService.getApi(params, url).subscribe({
+        next: (results) => {
+          console.log(results.result)
+          if (results.result.response_code === 200) {
+            if (type == 'today') {
+              this.daySchedules = results.result.response_result
+            } else {
+              this.historySchedules = results.result.response_result
+              this.filteredHistorySchedules = this.historySchedules
+            }
+          } else {
+            this.presentToast('There is no visitor data for today!', 'warning');
+          }
+
+          // this.isLoading = false;
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while loading visitor data!', 'danger');
+          console.error(error);
+          // this.isLoading = false;
+        }
+      });
     }
   }
 
@@ -224,12 +258,11 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   applyFilters() {
-    this.filteredHistorySchedules = this.historySchedules.filter(item => {
+    this.filteredHistorySchedules = this.historySchedules.filter((item: any) => {
       const visitorDate = new Date(item.schedule_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
       // Convert the selected start and end dates to Date objects
-      console.log(visitorDate, this.startDateFilter, this.endDateFilter)
       const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
       const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
@@ -270,7 +303,8 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   coachForm(schedule: any) {
-    this.router.navigate(['/coaches-form'], {
+    let url = this.pageType == 'ma_visitor' ? '/ma-visitor-form' : '/coaches-form'
+    this.router.navigate([url], {
       state: {
         schedule: schedule
       }
@@ -364,21 +398,10 @@ export class MoveHomePage implements OnInit, OnDestroy {
     this.applyFilters()
   }
 
-  onScheduleClick(id: number, schedule_date: string) {
-    // if (this.pageType == 'ma_visitor') {
-    //   this.router.navigate(['/ma-visitor-form'], {
-    //     state: {
-    //       id: id,
-    //       schedule_date: schedule_date
-    //     }
-    //   })
-    // } else if (this.pageType == 'coach') {
-    //   this.router.navigate(['/coaches-form'], {})
-    // } else {
+  onScheduleClick(record: any) {
     this.router.navigate(['/move-detail'], {
       state: {
-        id: id,
-        schedule_date: schedule_date
+        record: record
       },
       queryParams: {
         type: this.pageType

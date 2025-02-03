@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
+import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -28,13 +29,18 @@ export class OvernightFormRarPage implements OnInit {
   GST: boolean = false;
   idVisitor: number = 0;
   uploadedFileBase64: string | null = null;
+  selectedRentAgreement: string | null = null;
+  extend_mb = false
 
   form: FormGroup;
   expectedVisitors: Visitor[] = [];
   selectedOption: string = ''; // Default selected option
   agreementChecked: boolean = false; // Status checkbox
+  isModalAddVehicleNumberOpen: boolean = false;
 
-  @ViewChild('vehicleNumberInput') vehicleNumberInput!: TextInputComponent;
+  formData = {
+    visitor_id: 0,
+  }
 
   constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router) {
     this.form = this.fb.group({
@@ -77,11 +83,15 @@ export class OvernightFormRarPage implements OnInit {
   }
 
   onOptionChange(option: string) {
+    this.extend_mb = true
     this.selectedOption = option; // Update the selected option
     this.form.patchValue({ forWhom: option }); // Update the form control for 'forWhom'
     if (option === 'myself') {
       this.form.patchValue({ visitorId: null }); // Update the form control for 'visitorId'
+      this.form.patchValue({ vehicleNumber: [''] })
+      this.agreementChecked = false;
     } else if (option === 'visitor') {
+      this.agreementChecked = false;
       this.form.patchValue({ vehicleNumber: [''] })
       this.form.patchValue({ purposeOfParking: [''] })
       this.form.patchValue({ agreement: null }); // Update the form control
@@ -92,6 +102,7 @@ export class OvernightFormRarPage implements OnInit {
   onFileChange(value: any): void {
     let data = value.target.files[0];
     if (data){
+      this.selectedRentAgreement = data.name;
       this.convertToBase64(data).then((base64: string) => {
         console.log('Base64 successed');
         this.uploadedFileBase64 = base64.split(',')[1];
@@ -100,13 +111,43 @@ export class OvernightFormRarPage implements OnInit {
         console.error('Error converting to base64', error);
       });
     } else {
+      this.selectedRentAgreement = '';
     }
-    
   }
 
   onVisitorSelect(visitorId: number) {
     this.idVisitor = visitorId; // Update the local variable
     this.form.patchValue({ visitorId: visitorId }); // Update the form control for 'visitorId'
+  }
+
+  openModalVehicle(visitor: any) {
+    this.isModalAddVehicleNumberOpen = true;
+    // console.log(visitor);
+    // this.idVisitor = visitor.id; // Update the local variable
+    this.formData.visitor_id = visitor.id;
+  }
+
+  onVehicleNumberSubmit() {
+    const formData = this.form.value;
+    const vehicleNumber = formData.vehicleNumber;
+    if (formData && vehicleNumber) {
+      this.requestService.postUpdateVehicleNumber(
+        this.formData.visitor_id,
+        vehicleNumber
+      ).subscribe(
+        (response) => {
+          console.log('Vehicle number updated successfully:', response);
+          this.expectedVisitors = []
+          if (this.expectedVisitors = []) {
+            this.fetchExpectedVisitors();
+          }
+          this.isModalAddVehicleNumberOpen = false;
+        },
+        (error) => {
+          console.error('Error updating vehicle number:', error);
+        }
+      )
+    }
   }
 
   onSubmit() {
@@ -140,9 +181,14 @@ export class OvernightFormRarPage implements OnInit {
         ).subscribe(
           (response) => {
             console.log('Response from server:', response);
-            // Handle success response (e.g., show a success message)
-            this.presentToast('Request submitted successfully!', 'success');
-            this.router.navigate(['resident-raise-a-request'])
+            if (response.result.response_code === 400) {
+              // Handle error response (e.g., show an error message)
+              this.presentToast(response.result.error_message, 'danger');
+            } else {
+              this.presentToast('Request submitted successfully!', 'success');
+              this.OnDestroy();
+              this.router.navigate(['/resident-raise-a-request']);
+            }
           },
           (error) => {
             console.error('Error submitting form:', error);
@@ -152,6 +198,14 @@ export class OvernightFormRarPage implements OnInit {
       } else {
         console.log('Form is invalid');
       }
+    }
+  }
+
+  private routerSubscription!: Subscription;
+  OnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
     }
   }
 
@@ -178,5 +232,13 @@ export class OvernightFormRarPage implements OnInit {
       color: color
     });
     toast.present();
+  }
+
+  onCheck(focus: any) {
+    this.extend_mb = focus
+    this.agreementChecked = true;
+    if (this.agreementChecked = true) {
+      this.agreementChecked = false;
+    }
   }
 }

@@ -1,0 +1,20 @@
+<ion-content class="">
+  <div class="flex flex-col p-4 justify-center items-center h-full border-2">
+    <div class="w-[80%]">
+      <div class="flex flex-col justify-center w-full">
+        <div class="w-full mb-4">
+          <app-text-input [id]="'search_nric_confirm_input'" [name]="'search_nric_confirm_input'" [labelText]="'NRIC CONFIRMATION'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="nric_confirmation"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="flex flex-row w-full justify-between space-x-1">
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="onConfirm()">
+            CONFIRM
+          </button>
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="onCancel()">
+            CANCEL
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

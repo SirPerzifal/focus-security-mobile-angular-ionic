@@ -147,24 +147,20 @@ export class PickUpPagePage implements OnInit {
   }
 
   async saveRecord(openBarrier: boolean = false) {
-    // Validasi input
     const vehicleNumber = this.vehicleNumber
     const location = this.blkLocation;
     let errMsg = ''
     if (!this.selectedVehicleType) {
       errMsg += 'Vehicle type must be selected! \n'
-      // this.presentToast('You must select a vehicle type before proceeding', 'danger');
     }
 
     if (!vehicleNumber) {
       errMsg += 'Vehicle number is required! \n'
-      // this.presentToast('Masukkan nomor kendaraan', 'danger');
       console.log(this.vehicleNumberInput.value)
     }
 
     if (!location) {
       errMsg += 'Location is required! \n'
-      // this.presentToast('Masukkan lokasi', 'danger');
     }
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
@@ -191,7 +187,7 @@ export class PickUpPagePage implements OnInit {
             
             // Reset form
             this.vehicleNumberInput.value = '';
-            this.locationInput.value = '';
+            // this.locationInput.value = '';
             this.selectedVehicleType = '';
             this.resetVehicleSelection();
             

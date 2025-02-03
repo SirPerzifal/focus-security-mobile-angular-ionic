@@ -4,6 +4,7 @@ import { MoveFormService } from 'src/app/service/vms/move_in_out_renovators/move
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-move-form',
@@ -115,6 +116,8 @@ export class MoveFormPage implements OnInit {
     console.log(this.identificationType)
   }
 
+  contact_number = ''
+
   // Fungsi submit umum
   submitForm(openBarrier: boolean = false) {
     // Tampilkan loading
@@ -141,7 +144,7 @@ export class MoveFormPage implements OnInit {
   
     this.moveFormService.addSchedule(
       this.getInputValue('contractor_name'),
-      this.getInputValue('move_contact'),
+      this.contact_number,
       this.getInputValue('contractor_company_name'),
       this.identificationType, // Misalnya 'NRIC', 'Passport', dll
       this.getInputValue('contractor_nric/fin'),
@@ -206,6 +209,13 @@ export class MoveFormPage implements OnInit {
     if (contactData) {
       this.requestor_name = contactData.visitor_name
       this.requestor_vehicle = contactData.vehicle_number
+    }
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
     }
   }
 }

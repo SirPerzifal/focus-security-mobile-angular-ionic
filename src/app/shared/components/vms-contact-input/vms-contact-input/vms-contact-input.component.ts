@@ -55,10 +55,19 @@ export class VmsContactInputComponent  implements OnInit {
 
   @Input()
   set value(val: string) {
-    this.selectedCode = this.selectedCode;
-    this.contactValue = this.contactValue || '';
-    this.onChange(this.combinedValue);
-    this.valueChange.emit(this.combinedValue);
+    if(val) {
+      const cleanedValue = val.replace(/\+/g, '');
+      if (val[0] == '0') {
+        this.selectedCode = '65';
+        this.contactValue = cleanedValue.substring(1);
+      } else {
+        this.selectedCode = cleanedValue.substring(0, 2);
+        this.contactValue = cleanedValue.substring(2);
+      }
+      this.onChange(this.combinedValue);
+      this.valueChange.emit(this.combinedValue);
+    }
+    
   }
 
   get value(): string {
@@ -73,11 +82,20 @@ export class VmsContactInputComponent  implements OnInit {
   ngOnInit() {
     this.getCode()
     setTimeout(() => {
-      if (this.valueExist){
-        this.valueExist = this.valueExist.replace(/\+/g, "")
-        this.selectedCode = this.valueExist.substring(0,2)
-        this.contactValue = this.valueExist.substring(2)
+      if (this.valueExist) {
+        const cleanedValue = this.valueExist.replace(/\+/g, '');
+        if (this.valueExist[0] == '0') {
+          this.selectedCode = '65';
+          this.contactValue = cleanedValue.substring(1);
+        } else {
+          this.selectedCode = cleanedValue.substring(0, 2);
+          this.contactValue = cleanedValue.substring(2);
+        }
+        
+        this.onChange(this.combinedValue);
+        this.valueChange.emit(this.combinedValue);
       }
+    
     }, 0);
   }
 
@@ -105,15 +123,15 @@ export class VmsContactInputComponent  implements OnInit {
     this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
       next: (results) => {
         if (results.result.status_code === 200) {
-          this.presentToast('Success!', 'success');
+          this.presentToast('Succesfully get data!', 'success');
           console.log(results.result.result)
           this.contactInfo.emit(results.result.result)
         } else {
-          this.presentToast('Failed!', 'danger');
+          this.presentToast('Failed to get data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Failed!', 'danger');
+        this.presentToast('Failed to get data!', 'danger');
         console.error(error);
       }
     });

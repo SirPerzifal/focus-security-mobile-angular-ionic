@@ -63,33 +63,58 @@
         </div>
       </div>
       <div id="visitor" class="w-full mt-2 overflow-x-auto pb-1" *ngIf="selectedOption === 'visitor'">
-        <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
-          <thead>
-            <tr class="bg-gray-200 text-gray-700">
-              <th class="border border-gray-300 px-4 py-2 w-16"> </th>
-              <th class="border border-gray-300 px-4 py-2">Visitor Name</th>
-              <!-- <th class="border border-gray-300 px-4 py-2">Visitor Contact No</th> -->
-              <th class="border border-gray-300 px-4 py-2">Visitor Vehicle Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let visitor of expectedVisitors">
-              <td class="border border-gray-300 px-4 py-2 text-center">
-                <input id="visitor_data_{{visitor.id}}" (change)="onVisitorSelect(visitor.id)" name="vd" type="radio" class="w-4 h-4">
-              </td>
-              <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.name }}</td>
-              <!-- <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.contact || 'No Contact' }}</td> -->
-              <td class="border border-gray-300 px-4 py-2 text-gray-700">
-                {{ visitor.vehicle || 'No Vehicle Number' }}
-                <span *ngIf="!visitor.vehicle">
-                  <a href="#" class="text-blue-500 underline">Add A Vehicle</a>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p *ngIf="!expectedVisitors">No Visitors? <a [routerLink]="['/resident-visitors']">Invite Now</a></p>
+        <div *ngIf="expectedVisitors.length > 0; else noVisitors">
+          <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
+            <thead>
+              <tr class="bg-gray-200 text-gray-700">
+                <th class="border border-gray-300 px-4 py-2 w-16"> </th>
+                <th class="border border-gray-300 px-4 py-2">Visitor Name</th>
+                <th class="border border-gray-300 px-4 py-2">Visitor Vehicle Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let visitor of expectedVisitors">
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                  <input id="visitor_data_{{visitor.id}}" (change)="onVisitorSelect(visitor.id)" name="vd" type="radio" class="w-4 h-4">
+                </td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700">{{ visitor.name }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700">
+                  {{ visitor.vehicle || 'No Vehicle Number' }}
+                  <span *ngIf="visitor.vehicle === 'No Vehicle Number'">
+                    <u class="text-blue-500 underline" (click)="openModalVehicle(visitor)">Add A Vehicle</u>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noVisitors>
+          <p class="text-gray-700">No visitors available at the moment.</p>
+          <p class="text-base font-bold text-start">Want to invite someone? <a [routerLink]="['/resident-visitors']">Invite Now</a></p>
+        </ng-template>
       </div>
+
+      <ion-modal id="add-vehicle-number" [isOpen]="isModalAddVehicleNumberOpen" (didDismiss)="isModalAddVehicleNumberOpen = false">
+        <ng-template>
+          <div class="wrapper">
+            <div class="w-full">
+              <div class="flex flex-row justify-start mb-1">
+                <p class="text-base font-bold">Add Vehicle Number</p>
+              </div>
+              <app-text-input [id]="'add_vehicle_number'"
+                [placeholder]="'Type vehicle number you want to add'"
+                [customClasses]="{'w-full':true}"
+                [type]="'text'"
+                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true, 'cw-3:text-xs': true}"
+                [formControlName]="'vehicleNumber'"
+              >
+              </app-text-input>
+            </div>
+            <app-visitor-button [text]="'Submit'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-24 rounded border border-black font-bold mt-2'" (click)="onVehicleNumberSubmit()"></app-visitor-button>
+          </div>
+        </ng-template>
+      </ion-modal>
+
       <div id="myself" class="w-full mt-2" *ngIf="selectedOption === 'myself'">
         <div class="w-full">
           <div class="flex flex-row justify-start mb-1">
@@ -115,23 +140,15 @@
         </div>
         <div class="w-full mt-2">
           <div class="flex flex-row justify-start mb-1">
-            <p class="text-base font-bold">Screenshot of Vehicle Rental Agreement</p>
+            <p class="text-start text-base font-bold">Screenshot of Rental Agreement</p>
           </div>
-          <div class="w-full flex flex-row justify-between items-center">
-            <div class="w-4/6">
-              <input
-                placeholder="Pilih file"
-                type="file"
-                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-transparent h-12 text-[#6B7280] mt-2 file:bg-transparent file:border-none file:text-transparent"
-                (change)="onFileChange($event)"
-              />
+          <div class="w-full">
+            <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+              <input class="w-full rounded text-base hidden" type="file" name="agreement_rent" (change)="onFileChange($event)" id="agreement_rent">
+              <label class="w-full text-start" [ngClass]="(selectedRentAgreement) ? 'text-black' : 'text-gray-400'" for="agreement_rent">
+                {{ selectedRentAgreement ? selectedRentAgreement : 'Upload your rent agreement' }}
+              </label>
             </div>
-            <button
-              id="middle_button"
-              class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-base rounded font-bold"
-            >
-              Upload
-            </button>
           </div>
         </div>
         <div class="flex flex-row mt-4">
@@ -145,7 +162,8 @@
       <div class="flex flex-row mt-4 text-base">
         <app-checkbox-confirmation 
           [label]="'I agree to the terms above'" 
-          [(checked)]="agreementChecked" 
+          [(checked)]="agreementChecked"
+          (click)="onCheck(false)"
           [customClass]="'mr-1 rounded font-bold'">
         </app-checkbox-confirmation>
       </div>
@@ -153,11 +171,12 @@
         [disabled]="!agreementChecked" 
         (click)="onSubmit()"
         [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-        class="mt-4 w-full text-base rounded h-10 font-bold">
+        class="mt-2 w-full text-base rounded h-10 font-bold">
         Submit for Approval
       </button>
     </div>
   </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

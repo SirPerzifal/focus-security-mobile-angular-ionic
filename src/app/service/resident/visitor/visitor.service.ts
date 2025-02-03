@@ -119,6 +119,66 @@ export class VisitorService extends ApiService{
       catchError(this.handleError)
     );
   }
+  postBanVisitor(
+    reason: string,
+    block_id: number,
+    unit_id: number,
+    contact_no: string,
+    vehicle_no: string,
+    visitor_name: string,
+    last_entry_date_time: string, 
+    image: string,
+  ) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        reason: reason,
+        block_id: block_id,
+        unit_id: unit_id,
+        contact_no: contact_no,
+        vehicle_no: vehicle_no,
+        visitor_name: visitor_name,
+        last_entry_date_time: last_entry_date_time, 
+        image: image,
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.baseUrl}/resident/post/ban_visitor`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  postReinstate(
+    block_id: number,
+    unit_id: number,
+    contact_no: string,
+    vehicle_no: string,
+  ) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        block_id: block_id,
+        unit_id: unit_id,
+        contact_no: contact_no,
+        vehicle_number: vehicle_no
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.baseUrl}/resident/post/reinstate_visitor`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
   private handleError(error: any) {
     console.error('An error occurred:', error);
     

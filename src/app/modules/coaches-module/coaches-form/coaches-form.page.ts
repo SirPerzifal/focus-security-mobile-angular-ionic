@@ -42,9 +42,11 @@ export class CoachesFormPage implements OnInit {
   }
 
   schedule: any
+  contactNumber = ''
 
   ngOnInit() {
     console.log(this.schedule)
+    this.contactNumber = this.schedule.contact_number ? this.schedule.contact_number : ''
     this.loadBlock()
     if (this.schedule.block_id){
       this.loadUnit()
@@ -142,7 +144,7 @@ export class CoachesFormPage implements OnInit {
   }
 
   loadType() {
-    this.mainVmsService.getApi([], '/vms/get/get_coach_type' ).subscribe({
+    this.mainVmsService.getApi({}, '/vms/get/get_coach_type' ).subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           this.Coach = results.result.coaches_type;
@@ -207,7 +209,7 @@ export class CoachesFormPage implements OnInit {
 
   onSubmitRecord(isOpenBarrier: boolean = false) {
     let errMsg = ''
-    if (!this.coachName){
+    if (!this.schedule.coach_name){
       errMsg += 'Coach name is missing! \n'
     }
     if (!this.schedule.contact_number) {
@@ -226,7 +228,7 @@ export class CoachesFormPage implements OnInit {
       }
       let params = {
         coach_id: this.schedule.coach_id,
-        name: this.coachName,
+        name: this.schedule.coach_name,
         contact_number: this.schedule.contact_number,
         block_id: this.schedule.block_id,
         unit_id: this.schedule.unit_id,

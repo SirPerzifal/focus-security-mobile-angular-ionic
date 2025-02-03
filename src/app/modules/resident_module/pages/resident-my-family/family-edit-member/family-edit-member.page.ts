@@ -19,6 +19,7 @@ export class FamilyEditMemberPage implements OnInit {
     full_name: '',
     nickname: '',
     email_address: '',
+    image_family: '',
     mobile_number: '',
     type_of_residence: "primary_contact",
     tenancies: {
@@ -28,11 +29,12 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   end_of_tenancy = ''
+  selectedImageName: string = ''; // New property to hold the selected file name
 
   constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean,  };
+    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, };
     if (state) {
       this.formData.unit_id = state.id,
       this.formData.type_of_residence = state.hard_type
@@ -41,6 +43,7 @@ export class FamilyEditMemberPage implements OnInit {
       this.formData.nickname= state.nickname
       this.formData.email_address= state.email
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
+      this.formData.image_family = state.profile_image
     } 
     console.log(this.formData)
   }
@@ -61,6 +64,37 @@ export class FamilyEditMemberPage implements OnInit {
       
       
     });;
+  }
+
+  onImageChange(value: any): void {
+    let data = value.target.files[0];
+    if (data) {
+      this.selectedImageName = data.name; // Store the selected file name
+      this.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } else {
+      this.selectedImageName = ''; // Reset if no file is selected
+    }
+  }
+
+  convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   onSubmit() {

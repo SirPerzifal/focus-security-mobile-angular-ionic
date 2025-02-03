@@ -15,7 +15,7 @@ export class ResidentMyFamilyPage implements OnInit {
   constructor(private familyService: FamilyService, private router: Router) { }
 
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '' }
   ];
 
   getFamilyList() {
@@ -36,7 +36,9 @@ export class ResidentMyFamilyPage implements OnInit {
             head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
             end_date: item['end_of_tenancy_aggrement'],
             status: item['states'],
-            tenancy_agreement: item['tenancy_aggrement'] });
+            tenancy_agreement: item['tenancy_aggrement'],
+            family_photo: item['family_photo']
+          });
         });
       },
       error => {

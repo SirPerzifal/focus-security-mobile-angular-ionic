@@ -19,6 +19,7 @@ export class FamilyService extends ApiService{
     nickname: string,
     email_address: string,
     mobile_number: string,
+    profile_image: string,
     type_of_residence: string,
     tenancies: Record<string, any>,
     helper_work_permit?: string // Tambahkan parameter ini
@@ -29,6 +30,7 @@ export class FamilyService extends ApiService{
       nickname,
       email_address,
       mobile_number,
+      profile_image,
       type_of_residence,
       tenancies,
       unit: 1,

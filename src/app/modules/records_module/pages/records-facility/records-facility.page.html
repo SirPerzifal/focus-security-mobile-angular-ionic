@@ -76,7 +76,7 @@
         <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of historySchedules" >
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
-            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+            <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
           </div>
           
           <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
@@ -86,7 +86,7 @@
         <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of upcomingSchedules" >
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
-            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+            <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
           </div>
           <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
         </div>
@@ -94,8 +94,8 @@
       <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
         <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of daySchedules" >
           <div class="flex flex-col">
-            <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
-            <span class="text-2xl font-sans text-white">{{ record.show_date }} (03:00PM - 04:00PM)</span>
+            <span class="text-2xl font-bold text-white">{{ record.facility_name }}</span>
+            <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
           </div>
           <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
         </div>

@@ -6,143 +6,41 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/move-home'" [params]="{type: 'ma_visitor'}"/>
     </div>
-    <div class="flex flex-row mt-8">
+    <!-- <div class="flex flex-row mt-8">
       <app-button-icon [isHomeButton]="true" (click)="onBackMove()"
         [text]="'MA VISITOR'" [isActive]="true" [disableClick]="true" />
-    </div>
-    <div class="flex mt-8 flex-row space-x-1">
-      <!-- <app-button-icon [textOnly]="true" [text]="'WALK IN'"
-        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
-        <app-button-icon [textOnly]="true" [text]="'DRIVE IN'"
-        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" /> -->
-        <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
-        (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
-        <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
-        (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
+    </div> -->
 
-
-      <!-- <app-visitor-button [text]="'WALK IN'"
-        [extraClass]="showWalk ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28 mr-2' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28 mr-2'"
-        (click)="toggleShowWalk()"></app-visitor-button>
-      <app-visitor-button [text]="'DRIVE IN'"
-        [extraClass]="showDrive ? 'bg-[var(--ion-color-primary)] text-white w-32 text-2xl h-28' : 'bg-[#D0D0D0] text-[#757575] w-32 text-2xl h-28'"
-        (click)="toggleShowDrive()"></app-visitor-button>
-      <div class="w-1/3"></div> -->
-    </div>
-
-    <div class="flex flex-row">
-      <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4" *ngIf="showWalk" @fadeInOut>
-        <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [placeholder]="'EG. HANA CHLOE'" [labelText]="'NAME'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-            [value]="'VEEKNESH'"></app-text-input>
-        </div>
-        <div class="w-full">
-          <app-vms-contact-input [id]="'ma_contact_walk_in'"></app-vms-contact-input>
-        </div>
-        <!-- <div class="flex flex-row justify-between w-full">
-          <div class="w-4/6">
-            <app-text-input [id]="'walk_in_contact'" [placeholder]="'EG. +65 XXXX XXX'" [labelText]="'CONTACT NUMBER'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="'8021 6095'"></app-text-input>
-          </div>
-          <div class="w-1/4 flex flex-col justify-end">
-            <button id="middle_button"
-              class="bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl rounded">SEARCH</button>
-          </div>
-        </div> -->
-        <!-- <div class="w-full flex flex-row justify-between">
-          <div class="w-[90%]">
-            <app-text-input [id]="'walk_in_vehicle'" [placeholder]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [value]="'SNK5424D'"></app-text-input>
-          </div>
-          <div class="h-25 flex flex-col justify-end">
-              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
-            </div>
-        </div> -->
-        <div class="w-full">
-          <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="walk_in_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            
-            <option value="block_1">BLK 27A</option>
-            <option value="block_2">BLK 28A</option>
-            <option value="block_3" selected>BLK 29A</option>
-            <option value="block_4">BLK 39A</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <!-- <app-text-input [id]="'walk_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="walk_in_unit"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            
-            <option value="unit_1">900</option>
-            <option value="unit_2">910</option>
-            <option value="unit_3">1000</option>
-            <option value="unit_4" selected>0101</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <!-- <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"></app-visitor-button> -->
-          <app-visitor-button [text]="'SAVE RECORD'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button>
-
-        </div>
-      </div>
-
-      <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4" *ngIf="showDrive" @fadeInOut>
-        <div class="w-full">
-          <app-text-input [id]="'drive_in_name'" [labelText]="'NAME'" [placeholder]="'EG. MARCUS DAVIDSON'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-            [value]="'VEEKNESH'"></app-text-input>
-        </div>
-        <div class="w-full">
-          <app-vms-contact-input [id]="'ma_contact_drive_in'"></app-vms-contact-input>
-        </div>
-        <div class="w-full flex flex-row justify-between">
-          <div class="w-[90%]">
-            <app-text-input [id]="'drive_in_vehicle'" [placeholder]="'EG. SAA 2392 T'" [labelText]="'VEHICLE NUMBER'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="'SNK5424D'"></app-text-input>
-          </div>
-          <div class="flex flex-col justify-end">
-            <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
-          </div>
-        </div>
-        <div class="w-full">
-          <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="drive_in_block"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            
-            <option value="block_1">BLK 27A</option>
-            <option value="block_2">BLK 28A</option>
-            <option value="block_3" selected>BLK 29A</option>
-            <option value="block_4">BLK 39A</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <!-- <app-text-input [id]="'drive_in_unit'" [placeholder]="'UNIT'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-2xl':true}"></app-text-input> -->
-          <select id="drive_in_unit"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            
-            <option value="unit_1">900</option>
-            <option value="unit_2">910</option>
-            <option value="unit_3">1000</option>
-            <option value="unit_4" selected>0101</option>
-          </select>
-        </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD ONLY'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"></app-visitor-button>
-        </div>
+    <div class="flex flex-row mx-4">
+      <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <!-- <label class="text-2xl font-bold mb-5">NUMBER OF PAX ENTERED: {{ number_of_pax }}</label> -->
+          <table class="text-2xl">
+            <tr class="font-bold">
+              <td class="font-bold w-2/5">NAME</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ functionMain.returnNone(record.name) }}</td>
+            </tr>
+            <tr class="font-bold">
+              <td class="font-bold w-2/5">COMPANY NAME</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ functionMain.returnNone(record.company_name) }}</td>
+            </tr>
+            <tr class="font-bold">
+              <td class="font-bold w-2/5">CONTACT NUMBER</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ functionMain.returnNone(record.contact_no) }}</td>
+            </tr>
+            <tr class="font-bold">
+              <td class="font-bold w-2/5">VISITOR TYPE</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ record.selection_type == 'walk_in' ? 'Walk In' : 'Drive In' }}</td>
+            </tr>
+            <tr class="font-bold" *ngIf="record.selection_type == 'drive_in'">
+              <td class="font-bold w-2/5">VEHICLE NUMBER</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ functionMain.returnNone(record.vehicle_number) }}</td>
+            </tr>
+          </table>
       </div>
     </div>
 

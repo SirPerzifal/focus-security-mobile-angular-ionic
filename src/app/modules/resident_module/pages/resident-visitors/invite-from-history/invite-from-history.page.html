@@ -29,8 +29,8 @@
                   'h-12': true, 
                   'mt-1': true, 
                   'text-base': true, 
-                  'text-grey-100': invitee.is_ban,
-                  'outline-grey-100': invitee.is_ban
+                  'text-grey-100': invitee.is_banned,
+                  'outline-grey-100': invitee.is_banned
                 }" 
                 [value]="invitee.visitor_name" 
                 [isReadonly]="true">
@@ -40,7 +40,7 @@
                   id="checked-checkbox"
                   (change)="toggleSelect(invitee)"
                   type="checkbox"
-                  [disabled]="invitee.is_ban"
+                  [disabled]="invitee.is_banned"
                   [ngModel]="isInviteeExisted(invitee)"
                   class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />

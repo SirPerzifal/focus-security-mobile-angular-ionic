@@ -3,17 +3,17 @@
 
   <div class="flex flex-col relative mt-2 mb-16">
     <div class="w-1/6 flex items-start ml-3">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-payment']"></ion-icon>
     </div>
     <!-- Konten Utama Deposits -->
     <div *ngIf="showMainContent" @fadeInOut>
-      <div class="w-full bg-sky-200 relative flex items-center justify-center p-5 mt-4">
+      <div class="w-full bg-sky-200 relative flex items-center justify-center p-7 mt-4" (click)="showDepositHistoryPage()">
         <h2 class="text-base font-bold text-black absolute">
           Refunded deposits
         </h2>
-        <ion-button class="flex flex-row justify-center items-center absolute right-2 icon" fill="clear" (click)="showDepositHistoryPage()">
+        <ion-button class="flex flex-row justify-center items-center absolute right-2.5 icon icon bg-[var(--ion-color-primary)] p-5" fill="clear" (click)="showDepositHistoryPage()">
           <div class="flex flex-col items-center text-black">
-            <ion-icon name="arrow-forward"></ion-icon>
+            <ion-icon name="arrow-forward" size="large" class="text-[var(--ion-color-primary)] size-7"></ion-icon>
           </div>
         </ion-button>
       </div>
@@ -66,9 +66,9 @@
       </div>
       <div class="p-4">
         <div class="flex justify-between mb-4">
-          <ion-button class="flex flex-row justify-center items-center icon" fill="clear" (click)="backToMainDeposits()">
+          <ion-button class="flex flex-row justify-center items-center icon bg-[var(--ion-color-primary)] p-5" fill="clear" (click)="backToMainDeposits()">
             <div class="flex flex-col items-center text-black">
-              <ion-icon name="arrow-back"></ion-icon>
+              <ion-icon name="arrow-back" size="large" class="text-[var(--ion-color-primary)] size-7"></ion-icon>
             </div>
           </ion-button>
           <div class="flex flex-col items-end">
@@ -79,7 +79,7 @@
             <div class="w-1/2">
               <app-text-input #facilityDepositStartDate [id]="'facility_deposit_start_date'" [placeholder]="'Start Filter Date'"
                 [customClasses]="{'w-full':true}" [type]="'date'"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
                 ></app-text-input>
             </div>
             <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">
@@ -97,7 +97,7 @@
             <div class="w-1/2">
               <app-text-input #facilityDepositEndDateInput [id]="'facility_deposit_end_date'" [placeholder]="'End Filter Date'"
                 [customClasses]="{'w-full':true}" [type]="'date'"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
                 ></app-text-input>
             </div>
             <!-- <div class="flex flex-row items-center border w-1/2 rounded py-2 px-3 outline-[#BDBDBD] h-8 text-base">

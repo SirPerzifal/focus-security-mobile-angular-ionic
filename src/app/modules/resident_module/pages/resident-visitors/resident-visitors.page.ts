@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular
 import { AlertController, ToastController } from '@ionic/angular';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 import { Subscription } from 'rxjs';
+import { Preferences } from '@capacitor/preferences';
 
 interface FormData {
   dateOfInvite: string;
@@ -153,7 +154,7 @@ export class ResidentVisitorsPage implements OnInit {
           var result = res.result['response_status'];
           console.log(result)
           if (result === 400) {
-            console.log(result);
+            console.log(res);
             this.activeInvites = [];
             return;
           } else if (result === 200) {
@@ -285,6 +286,12 @@ export class ResidentVisitorsPage implements OnInit {
 
 
   ngOnInit() {
+    Preferences.get({key: 'ACTIVE_UNIT'}).then((value)=>{
+      console.log(value)
+      console.log('valuevaluevaluevaluevaluevalue')
+      console.log(value.value)
+      console.log("value.valuevalue.valuevalue.valuevalue.value")
+    })
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: FormData };
     if (state) {

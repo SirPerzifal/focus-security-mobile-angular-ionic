@@ -11,12 +11,12 @@ export class FileInputComponent  implements OnInit {
 
   ngOnInit() {}
 
-  @Input() buttonText:string='';
+  @Input() buttonText: string='';
   @Input() extraButtonClass: string='';
   @Input() customButtonStyle: string='';
   @Input() customPlaceholder: string='';
   @Input() disableUpload:boolean = false;
-  @Input() labelText:string='';
+  @Input() labelText: string='';
 
   @Output() fileSelected = new EventEmitter<File>();
   

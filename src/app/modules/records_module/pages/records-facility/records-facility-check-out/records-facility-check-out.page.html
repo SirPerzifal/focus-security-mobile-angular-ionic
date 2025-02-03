@@ -9,22 +9,38 @@
     </div>
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
-        <label class="text-2xl font-bold">{{record.facility}} - {{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}} FORM</label>
-        <div class="flex flex-col justify-around w-full mt-80">
+        <label class="text-2xl font-bold">{{record.facility_name ? record.facility_name : (record.facility ? record.facility : '-')}} | {{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}} FORM</label>
+        <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-between">
-            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 h-14 flex flex-col">
-              <div class="h-20 w-20"><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
-              <hr class="border-t border-white w-full" />
-              <div>SIGN HERE (RESIDENT)</div>
+            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 flex flex-col">
+              <app-signature-pad #residentSignContainer id="resident_sign" (signatureOutput)="onResidentSign($event)" [value]="residentSign" *ngIf="!isResidentSigned"></app-signature-pad>
+              <img [src]="showImageResident">
+              <div class="h-14">
+                <div class="flex flex-row justify-between relative mt-[-26px]">
+                  <div class=""><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
+                  <div class=""><fa-icon [icon]="faEraser" class="w-full h-full" (click)="onClear()"></fa-icon></div>
+                </div>
+               
+                <hr class="border-t border-white w-full" />
+                <div>SIGN HERE (RESIDENT)</div>
+              </div>
+              
             </div>
-            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 h-14 flex flex-col">
-              <div class="h-20 w-20"><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
-              <hr class="border-t border-white w-full" />
-              <div>SIGN HERE (OFFICER)</div>
+            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 flex flex-col">
+              <app-signature-pad #officerSignContainer id="officer_sign" (signatureOutput)="onOfficerSign($event)" [value]="officerSign" *ngIf="!isOfficerSigned"></app-signature-pad>
+              <img [src]="showImageOfficer">
+              <div class="h-14">
+                <div class="flex flex-row justify-between relative mt-[-26px]">
+                  <div class=""><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
+                  <div class=""><fa-icon [icon]="faEraser" class="w-full h-full" (click)="onClear(false)"></fa-icon></div>
+                </div>
+                <hr class="border-t border-white w-full" />
+                <div>SIGN HERE (OFFICER)</div>
+              </div>
             </div>
           </div>
           <div class="flex flex-row w-full justify-around mb-4 mt-4">
-            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14">{{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}}</button>
+            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="onSubmit()">{{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}}</button>
           </div>
         </div>
       </div>

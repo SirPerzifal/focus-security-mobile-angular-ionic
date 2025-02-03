@@ -16,4 +16,13 @@ export class FunctionMainService {
     });
     toast.present();
   }
+
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+  }
+
+  returnNone(params: any) {
+    return params ? params : '-'
+  }
 }

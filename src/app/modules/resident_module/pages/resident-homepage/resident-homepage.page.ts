@@ -7,6 +7,8 @@ import { HouseRulesService } from 'src/app/service/resident/house-rules/house-ru
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
+import { Preferences } from '@capacitor/preferences';
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
   selector: 'app-resident-homepage',
@@ -20,12 +22,50 @@ export class ResidentHomepagePage implements OnInit {
   houseRules: { title: string, base64Doc: string }[] = [];
   searchTerm: string = '';
 
-  constructor(private notificationService: NotificationService, private route: Router, private toastController: ToastController, private houseRulesService: HouseRulesService) { }
+  constructor(
+    private notificationService: NotificationService, 
+    private route: Router, 
+    private toastController: ToastController, 
+    private houseRulesService: HouseRulesService,
+    private authService: AuthService
+  ) { }
   
   ngOnInit() {
-    this.loadHouseRules();
-    this.loadCountNotification();
-    this.fetchContacts();
+    Preferences.get({key:'USER_INFO'}).then(async (value)=>{
+      if(value?.value){
+        const chosenUnit = await Preferences.get({key:'ACTIVE_UNIT'})
+        
+        if(chosenUnit.value){
+          var accessToken = this.authService.parseJWTParams(value.value)
+          
+          this.loadHouseRules();
+          this.loadCountNotification();
+          this.fetchContacts();
+
+
+        }else{
+          // await Preferences.set({
+          //   key: 'ACTIVE_UNIT',
+          //   value: '1',
+          // })
+          
+          // var accessToken = this.authService.parseJWTParams(value.value)
+  
+          
+          // this.loadHouseRules();
+          // this.loadCountNotification();
+          // this.fetchContacts();
+          this.route.navigate(['/my-profile-estate'])
+        }
+        // var parseResult = value ? JSON.parse(value.value) : null
+        // console.log();
+      }else{
+        this.loadHouseRules();
+        this.loadCountNotification();
+        this.fetchContacts();
+        // this.route.navigate(['/login-end-user'])
+      }
+    })
   }
   
   async fetchContacts() {

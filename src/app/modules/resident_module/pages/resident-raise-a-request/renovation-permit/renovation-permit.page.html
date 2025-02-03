@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true"  [formGroup]="renovationForm">
 	<app-resident-header [text]="'Raise A Request'" [text_second]="'Renovation Permit'" />
   <div class="w-full flex items-start ml-4 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
@@ -56,11 +56,15 @@
       </div>
       <div class="w-full">
         <div class="w-full">
-          <app-text-input [id]="'move_in_out_date'" [placeholder]="'Move In / Out Date'"
-            [customClasses]="{'w-full':true}" [type]="'date'"
+          <app-text-input 
+            [id]="'move_in_out_date'" 
+            [placeholder]="'Move In / Out Date'"
+            [customClasses]="{'w-full':true}" 
+            [type]="'date'"
             [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
-            [min]="dateNow">
-          </app-text-input>
+            [min]="dateNow"
+            formControlName="renovation_date"
+          ></app-text-input>
         </div>
       </div>
     </div>
@@ -77,12 +81,12 @@
               [placeholder]="'Move In / Out Time'"
               [customClasses]="{'w-full':true}" 
               [type]="'time'"
-              [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
-            </app-text-input>
+              [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+              formControlName="renovation_time"
+            ></app-text-input>
           </div>
         </div>
       </div>
-    
       <ion-modal id="time-info" [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
         <ng-template>
           <div class="wrapper p-4">
@@ -92,21 +96,69 @@
           </div>
         </ng-template>
       </ion-modal>
-      <div class="flex flex-row mt-4 text-base">
-        <app-checkbox-confirmation 
-          [label]="'I agree to the terms above'" 
-          [(checked)]="agreementChecked" 
-          [customClass]="'mr-1 rounded font-bold'">
-        </app-checkbox-confirmation>
-      </div>
-      <button 
-        [disabled]="!agreementChecked"
-        [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-        class="mt-4 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
-        Submit for Approval
-      </button>
     </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold text-start">Contact Person
+      </div>
+      <div class="flex flex-row mt-2">
+        <input type="radio" id="same_as_above_renovation" name="contact_person" class="mr-1 accent-black text-[var(--ion-color-primary)] text-base" (change)="onContactPersonChange('same_as_above')">
+        <label for="same_as_above_renovation"><b>Same as above</b></label>
+        <input type="radio" id="appoint_another_renovation" name="contact_person" class="mr-1 accent-black text-[var(--ion-color-primary)] ml-2 text-base" (change)="onContactPersonChange('appoint_another')">
+        <label for="appoint_another_renovation"><b>Appoint another family member</b></label>
+      </div>
+    </div>
+    <div class="flex flex-row mt-2 w-full" *ngIf="contactPerson === 'appoint_another'">
+      <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Name</th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Phone</th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ef of expectedFamilyMember">
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <input id="ef_data_{{ef.id}}" (change)="onSelect(ef)" name="ef" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+            </td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ ef.name }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ ef.mobile }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"><u (click)="navigateToEditFamily(ef)" class="text-blue-400">edit</u></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold text-start">Sign here
+      </div>
+      <app-signature-pad #renovationSignContainer id="renovation_sign" (signatureOutput)="onRenovationSign($event)" [value]="renovationSigned" *ngIf="!isRenovationSigned" [penColor]="'black'"></app-signature-pad>
+      <!-- <img [src]="showImageResident"> -->
+      <div class="h-14">
+        <div class="flex flex-row justify-between relative mt-[-26px]">
+          <div class=""><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
+          <div class=""><fa-icon [icon]="faEraser" class="w-full h-full" (click)="onClear()"></fa-icon></div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-row mt-4 text-base">
+      <app-checkbox-confirmation 
+        [label]="'I agree to the terms above'" 
+        [(checked)]="agreementChecked" 
+        (click)="onCheck(false)"
+        [customClass]="'mr-1 rounded font-bold'">
+      </app-checkbox-confirmation>
+    </div>
+    <button 
+      [disabled]="!agreementChecked"
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+      class="mt-4 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
+      Submit for Approval
+    </button>
   </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

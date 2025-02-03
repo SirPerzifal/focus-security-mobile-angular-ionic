@@ -55,10 +55,10 @@
         <p class="text-base font-bold text-start">What purpose you applying this?</p>
       </div>
       <div class="flex flex-row">
-        <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')"
+        <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')" [checked]="selectedOption === 'replacement'"
           class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
         <label for="replacement"><b>Replacement</b></label>
-        <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')"
+        <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')" [checked]="selectedOption === 'new_application'"
           class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
         <label for="new_application"><b>New Application</b></label>
       </div>
@@ -67,31 +67,33 @@
     <!-- Replacement -->
     <div class="w-full mt-2" *ngIf="selectedOption === 'replacement'">
       <div class="w-full">
-        <div class="flex flex-row justify-start mb-1">
+        <div *ngIf="expectedCards.length > 0" class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold text-start">Which Card Would you want a replacement for?</p>
         </div>
         <div class="flex flex-row mt-1">
-          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[50%] text-sm text-left bg-white">
+          <table *ngIf="expectedCards.length > 0" class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[50%] text-sm text-left bg-white">
             <thead>
               <tr class="bg-gray-200 text-gray-700">
                 <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
                 <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Card Number</th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Assigned resident name</th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Assigned Resident Name</th>
                 <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Status</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let card of expectedCards">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_{{card.id}}" (change)="oncardSelect(card)" name="card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_{{card.access_card_id}}" (change)="onCardSelect(card)" name="card" type="checkbox" class="w-4 h-4 cw-3:w-2 cw-3:h-2" [checked]="formData.card_id === card.access_card_id">
                 </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_number }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.access_card_number }}</td>
                 <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.assigned_resident_name }}</td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.card_status }}</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ card.access_card_status }}</td>
               </tr>
             </tbody>
           </table>
-          <p *ngIf="!expectedCards">No cards? <a [routerLink]="['/manage-new-card']">Make one now</a></p>
+          <ng-container *ngIf="expectedCards.length === 0">
+            <p class="text-gray-700">Now there are still no cards or no one has been approved yet. <u (click)="onOptionChange('new_application')" class="text-blue-500 underline">Make one now</u> or wait until approve</p>
+          </ng-container>
         </div>
       </div>
       <div class="w-full mt-2">
@@ -101,7 +103,9 @@
         <app-text-input [id]="'reason_for_replacement'"
           [placeholder]="'Lost / Damaged / Others: __________________'"
           [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
+          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+          [(ngModel)]="formData.reason"
+        >
         </app-text-input>
       </div>
     </div>
@@ -113,7 +117,7 @@
           <p class="text-base font-bold text-start">Who are you applying for?</p>
         </div>
         <div class="flex flex-row mt-1">
-          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[50%] text-sm text-left bg-white">
+          <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
             <thead>
               <tr class="bg-gray-200 text-gray-700">
                 <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
@@ -123,13 +127,13 @@
             <tbody>
               <tr>
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_member_or_family" (change)="onNewCardSelect('member_family')" name="new_card_for_member_or_family" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_member_or_family" (change)="onNewCardSelect('member_family')" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
                 </td>
                 <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">xxxxx (Member, Family)</td>
               </tr>
               <tr>
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_tenant" (change)="onNewCardSelect('tenant')" name="new_card_for_tenant" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_tenant" (change)="onNewCardSelect('tenant')" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
                 </td>
                 <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">xxxxx (Tenant)</td>
               </tr>
@@ -164,17 +168,18 @@
     <div class="flex flex-row mt-4 text-base">
       <app-checkbox-confirmation 
         [label]="'I agree to the terms above'" 
-        [(checked)]="agreementChecked" 
+        [(checked)]="agreementChecked"
+        (click)="onCheck(false)"
         [customClass]="'mr-1 rounded font-bold'">
       </app-checkbox-confirmation>
     </div>
-    <button 
-      [disabled]="!agreementChecked"
+    <button
       [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-      class="mt-2 w-full text-base rounded h-10 font-bold">
+      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
       Submit for Approval
     </button>
   </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
 
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

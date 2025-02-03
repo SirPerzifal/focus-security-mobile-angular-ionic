@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OvernightParkingListPage } from '../overnight-parking-list/overnight-parking-list.page';
+import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 
 @Component({
   selector: 'app-overnight-parking-modal',
@@ -16,11 +17,25 @@ export class OvernightParkingModalPage implements OnInit {
     private modalController: ModalController, 
     private navParams: NavParams, 
     private mainVmsService: MainVmsService,
-    private toastController: ToastController
-  ) {
+    private toastController: ToastController,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  alert: boolean = false
+  search: boolean = false
+  vehicle: any
+  issue = 'wheel_clamp'
+  isReadonly = false
+  isReadonlyIssue = false
+
+  ngOnInit() {
     this.issue = this.navParams.get('issue')
     this.vehicle = this.navParams.get('vehicle')
     this.alert = this.navParams.get('alert') ? true : false
+    if (this.alert && this.issue == 'none') {
+      this.selectedNotice = 'first_warning'
+      this.url = '/vms/create/offenses'
+    }
     if (this.alert && this.issue == 'first_warning') {
       this.selectedNotice = 'second_warning'
       this.url = '/vms/post/issue_second_warning'
@@ -34,19 +49,21 @@ export class OvernightParkingModalPage implements OnInit {
     }
     if (this.alert) {
       this.isReadonly = true
+      this.isReadonlyIssue = true
       this.reason = this.vehicle.reason_for_issueance
+      if (this.selectedNotice == 'first_warning') {
+        this.isReadonly = false
+      }
+    }
+    if (this.search) {
+      this.selectedNotice = this.navParams.get('issue')
+      this.isReadonlyIssue = true
+      this.isReadonly = false
+      this.issue = this.navParams.get('issue')
     }
     console.log(this.issue)
     console.log(this.vehicle)
     console.log(this.alert)
-  }
-
-  alert: boolean = false
-  vehicle: any
-  issue = 'wheel_clamp'
-  isReadonly = false
-
-  ngOnInit() {
     this.loadOfficer()
   }
 
@@ -138,10 +155,10 @@ export class OvernightParkingModalPage implements OnInit {
         }
       } else {
         params = {
-          vehicle_number: this.vehicle.vehicle_numbers, 
+          vehicle_number: this.vehicle.vehicle_numbers ? this.vehicle.vehicle_numbers : this.vehicle.vehicle_number, 
           visitor_name: this.vehicle.visitor_name, 
-          block_id: this.vehicle.block_id, 
-          unit_id: this.vehicle.unit_id, 
+          block_id: this.search ? this.vehicle.block_id[0] : this.vehicle.block_id, 
+          unit_id: this.search ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
           contact_number: this.vehicle.contact_number,
           type_notice: this.selectedNotice, 
           issuing_officer_name: this.issueOfficer,
@@ -157,10 +174,10 @@ export class OvernightParkingModalPage implements OnInit {
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
-            this.presentToast('Issue notice successfully submitted!', 'success');
+            this.presentToast('Issue notice successfully updated!', 'success');
             this.modalController.dismiss(true);
           } else {
-            this.presentToast('An error occurred while submitting issue notice!', 'danger');
+            this.presentToast('An error occurred while updating issue notice!', 'danger');
           }
   
           // this.isLoading = false;
@@ -209,5 +226,31 @@ export class OvernightParkingModalPage implements OnInit {
       {id: 'ERIC', name: 'ERIC'}
     ]
   }
+
+  async presentModalNric() {
+    if (this.search){
+      console.log("TRY OPEN MODAL")
+      const modal = await this.modalController.create({
+        component: SearchNricConfirmationPage,
+        cssClass: 'nric-confirmation-modal',
+  
+      });
+  
+      modal.onDidDismiss().then((result) => {
+        if (result) {
+          console.log(result.data)
+          if (result.data) {
+            this.onSubmit()
+          }
+        }
+      });
+  
+      return await modal.present();
+    } else {
+      this.onSubmit()
+    }
+    
+  }
+
 
 }

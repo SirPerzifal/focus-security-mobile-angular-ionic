@@ -38,7 +38,10 @@ export class RecordsWheelClampedPage implements OnInit {
   async presentModal() {
     const modal = await this.modalController.create({
       component: RecordsWheelClampedNewPage,
-      cssClass: 'record-modal'
+      cssClass: 'record-modal',
+      componentProps: {
+        type: this.pageType
+      }
     });
 
     modal.onDidDismiss().then((result) => {

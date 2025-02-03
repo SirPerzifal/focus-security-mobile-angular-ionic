@@ -40,7 +40,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
   pageType = 'wheel_clamp'
 
   alert = false
-  home_url = 'home-vms'
+  home_url = 'records-wheel-clamped'
   back_url = '/records-wheel-clamped-detail'
   qr_code = ''
 
@@ -79,7 +79,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
         if (results.result.response_code === 200) {
           console.log(results)
           this.presentToast('Successfully upload receipt!', 'success');
-          this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : {} );
+          this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : { queryParams: { type: 'wheel_clamp'} } );
         } else {
           this.presentToast('Failed to load vehicle data', 'danger');
         }

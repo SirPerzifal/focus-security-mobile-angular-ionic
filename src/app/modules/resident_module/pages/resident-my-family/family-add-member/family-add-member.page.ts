@@ -11,12 +11,14 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 export class FamilyAddMemberPage implements OnInit {
 
   constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router) { }
+  selectedImageName: string = ''; // New property to hold the selected file name
   selectedFile = new FormData()
   formData = {
     full_name: '',
     nickname: '',
     email_address: '',
     mobile_number: '',
+    image_family: '',
     type_of_residence: "primary_contact",
     tenancies: {
       tenancy_aggrement: '',
@@ -78,6 +80,7 @@ export class FamilyAddMemberPage implements OnInit {
           this.formData.nickname,
           this.formData.email_address,
           this.formData.mobile_number,
+          this.formData.image_family,  // Tambahkan ini
           this.formData.type_of_residence,
           this.formData.type_of_residence === 'tenants' ? this.formData.tenancies : {},
           this.formData.type_of_residence === 'helper' ? this.formData.helper_work_permit : '' // Tambahkan ini
@@ -113,6 +116,21 @@ export class FamilyAddMemberPage implements OnInit {
 
   onEmailAddressChange(value: string): void {
     this.formData.email_address = value;
+  }
+
+  onImageChange(value: any): void {
+    let data = value.target.files[0];
+    if (data) {
+      this.selectedImageName = data.name; // Store the selected file name
+      this.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } else {
+      this.selectedImageName = ''; // Reset if no file is selected
+    }
   }
 
   onMobileNumberChange(value: string): void {

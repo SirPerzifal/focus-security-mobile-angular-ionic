@@ -74,6 +74,12 @@ export class UpcomingEventCalendarViewPage implements OnInit {
         end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0), // 1:00 PM
         title: 'Event 2',
         color: { primary: '#1e90ff', secondary: '#D1E8FF' },
+      },
+      {
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0), // 12:00 PM
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0), // 1:00 PM
+        title: 'Event 3',
+        color: { primary: '#1e90ff', secondary: '#D1E8FF' },
       }
     ];
   }
@@ -130,39 +136,44 @@ export class UpcomingEventCalendarViewPage implements OnInit {
   }
 
   handleClickDay(day: any) {
-    this.viewDateForDay = day.date; // Mengambil tanggal yang di-click
+    // this.viewDateForDay = day.date; // Mengambil tanggal yang di-click
   
-    // Mendapatkan nama hari dalam singkatan
-    const optionsWeekday: Intl.DateTimeFormatOptions = { 
-      weekday: 'short' // Mengambil singkatan hari
-    };
-    const shortWeekday = this.viewDateForDay.toLocaleDateString('en-US', optionsWeekday);
+    // // Mendapatkan nama hari dalam singkatan
+    // const optionsWeekday: Intl.DateTimeFormatOptions = { 
+    //   weekday: 'short' // Mengambil singkatan hari
+    // };
+    // const shortWeekday = this.viewDateForDay.toLocaleDateString('en-US', optionsWeekday);
   
-    // Mendapatkan tanggal
-    const optionsDate: Intl.DateTimeFormatOptions = { 
-        day: 'numeric' // Mengambil tanggal
-      };
-    const dayNumber = this.viewDateForDay.toLocaleDateString('en-US', optionsDate);
+    // // Mendapatkan tanggal
+    // const optionsDate: Intl.DateTimeFormatOptions = { 
+    //     day: 'numeric' // Mengambil tanggal
+    //   };
+    // const dayNumber = this.viewDateForDay.toLocaleDateString('en-US', optionsDate);
   
-    const optionsMonth: Intl.DateTimeFormatOptions = { 
-        month: 'long',
-      };      
-    const longMonth = this.viewDateForDay.toLocaleDateString('en-US', optionsMonth)
+    // const optionsMonth: Intl.DateTimeFormatOptions = { 
+    //     month: 'long',
+    //   };      
+    // const longMonth = this.viewDateForDay.toLocaleDateString('en-US', optionsMonth)
   
-    const optionsYear: Intl.DateTimeFormatOptions = { 
-      year: 'numeric',
-    };      
-    const longYear = this.viewDateForDay.toLocaleDateString('en-US', optionsYear)
+    // const optionsYear: Intl.DateTimeFormatOptions = { 
+    //   year: 'numeric',
+    // };      
+    // const longYear = this.viewDateForDay.toLocaleDateString('en-US', optionsYear)
     
-    // Menggabungkan singkatan hari dan tanggal
-    this.showDate = `${shortWeekday}, ${dayNumber} ${longMonth} ${longYear}`;
+    // // Menggabungkan singkatan hari dan tanggal
+    // this.showDate = `${shortWeekday}, ${dayNumber} ${longMonth} ${longYear}`;
     
-    // Menggunakan map untuk mendapatkan array judul event
-    this.eventDayClick = day.events.map((event: any) => event); // Mengambil hanya judul dari setiap event
-    // console.log(this.eventDayClick.title)
-    console.log(this.showDate);
-    this.isDayClick = true;
-    console.log('Day Click', day);
+    // // Menggunakan map untuk mendapatkan array judul event
+    // this.eventDayClick = day.events.map((event: any) => event); // Mengambil hanya judul dari setiap event
+    // // console.log(this.eventDayClick.title)
+    // console.log(this.showDate);
+    // this.isDayClick = true;
+    // console.log('Day Click', day);
+    this.router.navigate(['make-an-event'], {
+      state: {
+        day: day,
+      }
+    })
   }
 
   handleEvent(event: CalendarEvent) {

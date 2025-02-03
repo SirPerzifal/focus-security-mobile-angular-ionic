@@ -31,7 +31,7 @@
             [customClasses]="{'w-full':true}" 
             [type]="'date'"
             [(ngModel)]="startDate"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
             (change)="onStartDateChange($event)"
           ></app-text-input>        
         </div>
@@ -55,7 +55,7 @@
             [customClasses]="{'w-full':true}" 
             [type]="'date'"
             [(ngModel)]="endDate"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
             (change)="onEndDateChange($event)"
             [min]="startDate"
           ></app-text-input>

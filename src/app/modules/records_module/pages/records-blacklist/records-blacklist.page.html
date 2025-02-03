@@ -52,14 +52,14 @@
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div> -->
-            <div class="w-full" *ngIf="(searchOption == 'name' || searchOption == 'all') && pageType == 'visitor'">
+            <div class="w-full" *ngIf="pageType == 'visitor'">
               <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelText]="'NAME'"
                 [placeholder]="'VHASYA'" [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.name"
                 (change)="onNameFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div>
-            <div class="w-full" *ngIf="(searchOption == 'vehicle' || searchOption == 'all') && pageType == 'vehicle'">
+            <div class="w-full" *ngIf="pageType == 'vehicle'">
               <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'" [labelText]="'VEHICLE NUMBER'"
                 [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
                 [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
