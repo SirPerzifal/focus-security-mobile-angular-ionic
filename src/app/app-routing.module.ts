@@ -502,6 +502,10 @@ const routes: Routes = [
     path: 'search-nric-confirmation',
     loadChildren: () => import('./modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.module').then( m => m.SearchNricConfirmationPageModule)
   },
+  {
+    path: 'my-pets-detail',
+    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-my-pets/my-pets-detail/my-pets-detail.module').then( m => m.MyPetsDetailPageModule)
+  },
 ];
 
 @NgModule({

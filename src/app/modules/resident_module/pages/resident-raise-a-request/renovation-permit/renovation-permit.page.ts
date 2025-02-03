@@ -21,6 +21,7 @@ export class RenovationPermitPage implements OnInit {
   renovationForm: FormGroup;
   agreementChecked: boolean = false; // Status checkbox
   extend_mb = true
+  unitId: number = 1; // Replace with actual unit ID
   isModalOpen: boolean = false; // Status modal
   dateNow = new Date().toISOString().slice(0, 10);
   contactPerson: string = '';
@@ -32,7 +33,7 @@ export class RenovationPermitPage implements OnInit {
 
   constructor(private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private route: Router) {
     this.renovationForm = this.fb.group({
-      requestorId: [1],
+      requestorId: [36],
       name_of_resident: ['KingsMan Condominium'],
       phone_number: ['085830122464'],
       renovation_date: ['', Validators.required],
@@ -63,6 +64,21 @@ export class RenovationPermitPage implements OnInit {
   ngOnInit() {
     console.log('tes')
     this.loadExpectedFamily();
+  }
+
+  loadCards() {
+    this.renovationService.getCardFamilyMember(this.unitId).subscribe(
+      (response) => {
+        if (response) {
+          this.renovationForm.value.requestorId = response.result.family_data[0].id;
+        } else {
+          this.presentToast('Failed to load card data', 'danger');
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
   loadExpectedFamily() {

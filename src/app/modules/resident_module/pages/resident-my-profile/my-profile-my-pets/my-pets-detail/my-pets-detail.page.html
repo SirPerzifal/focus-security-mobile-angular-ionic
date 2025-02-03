@@ -1,0 +1,84 @@
+<ion-content [fullscreen]="true">
+	<app-resident-header [text]="'Raise A Request'" [text_second]="'Pet Registration'" />
+  <div class="w-full flex items-start ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/my-profile-my-pets']"></ion-icon>
+  </div>
+
+  <div class="px-5 text-center mb-20">
+    <div class="w-full mt-2 flex items-center justify-center">
+      <img alt="Profile picture of Maria" class="h-24 w-24 rounded-full" height="50" src="data:image/png;base64,{{formData.pet_image}}" width="50"/>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Type of Pet</p>
+      </div>
+      <app-text-input [id]="'type_of_pet'"
+        [placeholder]="'Type of Pet (e.g. Dog, Cat)'"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [(ngModel)]="formData.type_of_pet"
+      >
+      </app-text-input>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Breed</p>
+      </div>
+      <app-text-input [id]="'breed'"
+        [placeholder]="'Type your pet breed'"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [(ngModel)]="formData.pet_breed"
+      >
+      </app-text-input>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Change Licence <u class="text-blue-500" (click)="seeLicence()">(Current licence)</u></p>
+      </div>
+      <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+        <input class="w-full rounded text-base hidden" type="file" name="licence" (change)="onLicenceChange($event)" id="licence">
+        <label class="w-full text-start" [ngClass]="(selectedLicencName) ? 'text-black' : 'text-gray-400'" for="licence">
+          {{ selectedLicencName ? selectedLicencName : 'Upload your new pet licence' }}
+        </label>
+      </div>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Change Pet Image</p>
+      </div>
+      <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+        <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onImageChange($event)" accept="image/*">
+        <label class="w-full text-start" [ngClass]="(selectedImageName) ? 'text-black' : 'text-gray-400'" for="image">
+          {{ selectedImageName ? selectedImageName : 'Upload your new pet image' }}
+        </label>
+      </div>
+    </div>
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Notes for Management</p>
+      </div>
+      <textarea id="notes_for_management" placeholder="Notes for Management"
+        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+        type="text" name="notes_for_management" [(ngModel)]="formData.notes">
+      </textarea>
+    </div>
+    <div class="flex flex-row mt-3 text-base">
+      <app-checkbox-confirmation 
+        [label]="'I agree to the terms above'" 
+        [(checked)]="agreementChecked" 
+        (click)="onCheck(false)"
+        [customClass]="'mr-1 rounded font-bold'">
+      </app-checkbox-confirmation>
+    </div>
+    <button 
+      [disabled]="!agreementChecked"
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
+      Edit pet details
+    </button>
+  </div>
+  <div class="h-96" *ngIf="extend_mb === true"></div>
+
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-content>

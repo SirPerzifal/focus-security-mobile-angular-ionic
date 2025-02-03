@@ -10,25 +10,27 @@
         <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" [routerLink]="['/pet-registration']">Add New Pet</button>
         <!-- <button class="bg-[#D0D0D0] text-[#757575] mt-1 w-full text-base rounded-full h-10 font-bold" >Add New Card</button> -->
       </div>
-      <div class="flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col">
-        <div class="flex flex-row">
-          <img alt="Profile picture of Maria" class="h-16 w-16 rounded-full" height="50" src="https://storage.googleapis.com/a1aa/image/9JdnqAwDMOK3EVlZu6gxlisUaMDIL5Ze63RDaROdwJN4sefnA.jpg" width="50"/>
-          <div class="ml-4 text-start">
-           <h2 class="text-lg font-bold">
-            Maria
-           </h2>
-           <p class="text-sm text-gray-600">
-             Chihuahua
-            </p>
+      <div *ngFor="let pet of petList">
+        <div class="flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col">
+          <div class="flex flex-row">
+            <img alt="Profile picture of Maria" class="h-16 w-16 rounded-full" height="50" src="data:image/png;base64,{{pet.pet_image}}" width="50"/>
+            <div class="ml-4 text-start">
+             <h2 class="text-lg font-bold">
+              {{ pet.type_of_pet }}
+             </h2>
+             <p class="text-sm text-gray-600">
+               {{ pet.pet_breed }}
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="flex flex-row space-x-1">
-          <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-3">
-            View Details
-          </button>
-          <button class="bg-[var(--ion-color-primary)] text-white px-8 py-2 text-base rounded-md font-bold mt-3">
-            Delete
-          </button>
+          <div class="flex flex-row space-x-1">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-3" (click)="navigateToDetailpets(pet)">
+              View Details
+            </button>
+            <button class="bg-[var(--ion-color-primary)] text-white px-8 py-2 text-base rounded-md font-bold mt-3" (click)="deletePets(pet.id)">
+              Delete
+            </button>
+          </div>
         </div>
       </div>
      </div>

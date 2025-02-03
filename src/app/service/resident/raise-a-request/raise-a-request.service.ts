@@ -214,6 +214,9 @@ export class RaiseARequestService extends ApiService  {
 
   // Pet API methods
   private postApiPet = this.baseUrl + '/resident/post/request_pet_registration';
+  private getApiPet = this.baseUrl + '/resident/get/pet_registration';
+  private updateApiPet = this.baseUrl + '/resident/update/pet_registration';
+  private deleteApiPet = this.baseUrl + '/resident/delete/pet_registration';
   postPetAPI(
     block_id: number,
     unit_id: number,
@@ -242,6 +245,75 @@ export class RaiseARequestService extends ApiService  {
     };
 
     return this.http.post(`${this.postApiPet}`, body, { headers }).pipe(
+        catchError(this.handleError)
+    );
+  }
+  getPets(
+    unit_id: number,
+    block_id: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          unit_id: unit_id,
+          block_id: block_id,
+        },
+    };
+
+    return this.http.post(`${this.getApiPet}`, body, { headers }).pipe(
+        catchError(this.handleError)
+    );
+  }
+  updatePet(
+    pet_id: number,
+    type_of_pet: string,
+    pet_breed: string,
+    pet_license: string,
+    pet_image: string,
+    notes: string,
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          pet_id: pet_id,
+          type_of_pet: type_of_pet,
+          pet_breed: pet_breed,
+          pet_license: pet_license,
+          pet_image: pet_image,
+          notes: notes,
+        },
+    };
+
+    return this.http.post(`${this.updateApiPet}`, body, { headers }).pipe(
+        catchError(this.handleError)
+    );
+  }
+  deletePet(
+    pet_id: number,
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          pet_id: pet_id,
+        },
+    };
+
+    return this.http.post(`${this.deleteApiPet}`, body, { headers }).pipe(
         catchError(this.handleError)
     );
   }
