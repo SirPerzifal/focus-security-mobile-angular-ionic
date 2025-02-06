@@ -251,6 +251,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   clearFilters() {
+    this.searchOption = ''
     this.startDateFilter = ''
     this.endDateFilter = ''
     this.choosenBlock = ''
@@ -409,6 +410,22 @@ export class MoveHomePage implements OnInit, OnDestroy {
     })
     // }
 
+  }
+
+  onClickHistory(record: any) {
+    if (this.pageType != 'coach' && this.pageType != 'ma_visitor'){
+      this.onScheduleClick(record)
+    } else if (this.pageType == 'coach' || this.pageType == 'ma_visitor') {
+      this.coachForm(record)
+    }
+  }
+
+  onClickDay(record: any) {
+    if (this.pageType != 'coach' && this.pageType != 'ma_visitor'){
+      this.form(record.block_name, record.unit_name, record.block_id, record.unit_id)
+    } else if (this.pageType == 'coach' || this.pageType == 'ma_visitor') {
+      this.coachForm(record)
+    }
   }
 
   convertToDDMMYYYY(dateString: string): string {

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { Router } from '@angular/router';
 import { Contacts } from '@capacitor-community/contacts';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
 import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { EstateModalPage } from './estate-modal/estate-modal.page';
+import { NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-resident-homepage',
@@ -21,51 +23,122 @@ export class ResidentHomepagePage implements OnInit {
   paramForBadgeNotification: number = 0;
   houseRules: { title: string, base64Doc: string }[] = [];
   searchTerm: string = '';
+  condominiumName: string=';'
+  isLoading: boolean = true;
 
   constructor(
     private notificationService: NotificationService, 
     private route: Router, 
     private toastController: ToastController, 
     private houseRulesService: HouseRulesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalController: ModalController, 
+    private router: Router,
   ) { }
   
   ngOnInit() {
+    
+    this.isLoading = true;
     Preferences.get({key:'USER_INFO'}).then(async (value)=>{
       if(value?.value){
         const chosenUnit = await Preferences.get({key:'ACTIVE_UNIT'})
         
-        if(chosenUnit.value){
-          var accessToken = this.authService.parseJWTParams(value.value)
-          
-          this.loadHouseRules();
-          this.loadCountNotification();
-          this.fetchContacts();
+        var accessToken = this.authService.parseJWTParams(value.value)
+        await this.presentModal(accessToken?.email);
+        
+        this.loadHouseRules();
+        this.fetchContacts();
+        this.loadPreferenceProjectName();
+        this.router.events.subscribe(event => {
+          if (event instanceof NavigationStart) {
+            if (event['url'] == '/record'){
+              this.paramForBadgeNotification = 0
+              this.loadCountNotification();
+            }
+             // Panggil fungsi lagi saat halaman dibuka
+          }
+        });
+        // if(chosenUnit.value){
 
 
-        }else{
-          // await Preferences.set({
-          //   key: 'ACTIVE_UNIT',
-          //   value: '1',
-          // })
+        // }else{
+        //   // await Preferences.set({
+        //   //   key: 'ACTIVE_UNIT',
+        //   //   value: '1',
+        //   // })
           
-          // var accessToken = this.authService.parseJWTParams(value.value)
+        //   // var accessToken = this.authService.parseJWTParams(value.value)
   
           
-          // this.loadHouseRules();
-          // this.loadCountNotification();
-          // this.fetchContacts();
-          this.route.navigate(['/my-profile-estate'])
-        }
+        //   // this.loadHouseRules();
+        //   // this.loadCountNotification();
+        //   // this.fetchContacts();
+        //   // this.route.navigate(['/my-profile-estate'])
+        //   this.loadPreferenceProjectName()
+        // }
+
         // var parseResult = value ? JSON.parse(value.value) : null
         // console.log();
       }else{
+        await this.presentModal('jenvel@gmail.com');
         this.loadHouseRules();
-        this.loadCountNotification();
         this.fetchContacts();
+        this.loadPreferenceProjectName();
+        this.router.events.subscribe(event => {
+          if (event instanceof NavigationStart) {
+            if (event['url'] == '/record'){
+              this.paramForBadgeNotification = 0
+              this.loadCountNotification();
+            }
+             // Panggil fungsi lagi saat halaman dibuka
+          }
+        });
+
         // this.route.navigate(['/login-end-user'])
       }
     })
+  }
+
+  ionViewWillEnter(){
+    this.loadPreferenceProjectName()
+  }
+
+  async presentModal(email: string= '') {
+    console.log(email);
+    console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: EstateModalPage,
+      cssClass: 'record-modal',
+      componentProps: {
+        // email: email
+        email: email
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        this.loadPreferenceProjectName()
+        this.isLoading = false;
+        console.log(result.data)
+        if(result.data){
+          console.log("SUCCEED")
+        }
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async loadPreferenceProjectName(){
+    const projectName = await Preferences.get({key: 'PROJECT_NAME'})
+    console.log(projectName);
+    console.log('projectNameprojectNameprojectNameprojectName');
+    
+    if(projectName?.value){
+      this.condominiumName = projectName.value
+    }
   }
   
   async fetchContacts() {
@@ -77,6 +150,9 @@ export class ResidentHomepagePage implements OnInit {
 
 
   loadCountNotification() {
+    console.log(this.partner_id);
+    console.log('this.partner_idthis.partner_idthis.partner_idthis.partner_id');
+    
     this.notificationService.countNotifications(this.unit_id, this.partner_id)
       .subscribe({next: (response: any) => {
         if (response.result.response_code === 200) {
@@ -115,22 +191,29 @@ export class ResidentHomepagePage implements OnInit {
   }
 
   loadHouseRules() {
-    this.houseRulesService.getHouseRules(1).subscribe(
-      response => {
-        if (response.result.response_code === 200) {
-          console.log("heres the data", response);
-          this.houseRules = response.result.result.map((item: any) => ({
-            title: item.name,
-            base64Doc: item.documents // Pastikan item.documents adalah string base64
-          }));
-        } else {
-          console.error('Error fetching notifications:', response);
-        }
-      },
-      error => {
-        console.error('HTTP Error:', error);
+    Preferences.get({key: 'ACTIVE_PROJECT'}).then((value)=>{
+      if(value.value){
+        this.houseRulesService.getHouseRules(parseInt(value.value)).subscribe(
+          response => {
+            if (response.result.response_code === 200) {
+              console.log("heres the data", response);
+              this.houseRules = response.result.result.map((item: any) => ({
+                title: item.name,
+                base64Doc: item.documents // Pastikan item.documents adalah string base64
+              }));
+            } else {
+              console.error('Error fetching notifications:', response);
+            }
+          },
+          error => {
+            console.error('HTTP Error:', error);
+          }
+        );
+      }else{
+        console.error('No Active Project');
+        console.log(value);
       }
-    );
+    })
   }
 
   async downloadDocument(base64Doc: string, title: string) {

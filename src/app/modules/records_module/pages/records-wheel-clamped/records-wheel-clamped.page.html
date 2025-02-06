@@ -120,11 +120,11 @@
             *ngIf="(selectedRadio == null || selectedRadio == 'search') && (filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number)">
             <div
               class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-              *ngFor="let vehicle of historyVehicles">
+              *ngFor="let vehicle of historyVehicles" (click)="onArrowClick(vehicle)">
               <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
                 convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-                (click)="onArrowClick(vehicle)"></ion-icon>
+                ></ion-icon>
             </div>
           </div>
           <div class="flex flex-col w-full space-y-5"
@@ -135,11 +135,11 @@
               <div class="flex flex-col w-full space-y-5 pl-4 mt-5">
                 <div
                   class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-                  *ngFor="let vehicle of vehicleDate.data">
+                  *ngFor="let vehicle of vehicleDate.data" (click)="onArrowClick(vehicle)">
                   <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
                     convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
                   <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-                    (click)="onArrowClick(vehicle)"></ion-icon>
+                    ></ion-icon>
                 </div>
               </div>
 
@@ -156,11 +156,11 @@
               (click)="presentModal()"></ion-icon>
           </div>
           <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-            *ngFor="let vehicle of activeVehicles">
+            *ngFor="let vehicle of activeVehicles" (click)="onArrowClick(vehicle)">
             <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
               convertToDDMMYYYY(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
             <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-              (click)="onArrowClick(vehicle)"></ion-icon>
+              ></ion-icon>
           </div>
         </div>
 

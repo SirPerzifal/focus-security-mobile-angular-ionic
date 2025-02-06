@@ -20,7 +20,8 @@ export class ContractorsService extends ApiService {
     contractorVehicle: string, 
     block: string, 
     unit: string, 
-    remarks: string
+    remarks: string,
+    subContractors: any[]
   ): Observable<any> {
     const body = {
       jsonrpc: '2.0',
@@ -33,7 +34,8 @@ export class ContractorsService extends ApiService {
         contractor_vehicle: contractorVehicle,
         block: block,
         unit: unit,
-        remarks: remarks
+        remarks: remarks,
+        sub_contractors: subContractors
       }
     };
 

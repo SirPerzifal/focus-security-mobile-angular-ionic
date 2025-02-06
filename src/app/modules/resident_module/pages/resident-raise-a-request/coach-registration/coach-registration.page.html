@@ -57,9 +57,9 @@
             </div>
             <select id="sex" (change)="onCoachSexChange($event)" placeholder="Sex" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]">
               <option selected disabled hidden>Choose coach sex</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="not_say">Rather not say</option>
+              <option [selected]="this.formData.coach_sex === 'male'" value="male">Male</option>
+              <option [selected]="this.formData.coach_sex === 'female'" value="female">Female</option>
+              <option [selected]="this.formData.coach_sex === 'not_say'" value="not_say">Rather not say</option>
             </select>
           </div>
         </div>
@@ -71,8 +71,8 @@
             <div class="flex flex-col w-full">
               <select id="nationality" placeholder="nationality" (change)="onCoachNationalityChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1">
                 <option selected disabled hidden>Choose coach nationality</option>
-                <option value="Singaporean">Singaporean</option>
-                <option value="others">Others</option>
+                <option [selected]="this.formData.nationality === 'Singaporean'" value="Singaporean">Singaporean</option>
+                <option [selected]="this.formData.nationality !== 'Singaporean'" value="others">Others</option>
               </select>
               <app-text-input [id]="'nationality'"
                 [placeholder]="'Others________'"

@@ -49,6 +49,14 @@ export class HistoryPage implements OnInit {
   hideFilter: string = '';
   cardIfJustBan: string = '';
 
+  directTo() {
+    if (this.cardIfJustBan === 'ban') {
+      this.router.navigate(['/resident-my-profile']);
+    } else {
+      this.router.navigate(['/resident-homepage'])
+    }
+  }
+
   getHistoryList() {
     this.historyData.pop()
     this.historyService.getHistoryList().subscribe(

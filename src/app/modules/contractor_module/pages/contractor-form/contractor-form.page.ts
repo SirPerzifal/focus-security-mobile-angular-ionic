@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, QueryList, ViewChildren  } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ContractorsService } from 'src/app/service/vms/contrantors/contractors.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 @Component({
   selector: 'app-contractor-form',
   templateUrl: './contractor-form.page.html',
@@ -16,23 +17,61 @@ export class ContractorFormPage implements OnInit {
   @ViewChild('contractorVehicleNumberInput') contractorVehicleNumberInput!: TextInputComponent;
   @ViewChild('contractorCompanyNameInput') contractorCompanyNameInput!: TextInputComponent;
   @ViewChild('remarksInput') remarksInput!: TextInputComponent;
+  @ViewChildren('textInput') textInputs!: QueryList<TextInputComponent>;
 
   identificationType: string = '';
+  maxPax = 10;
+  paxCount = 1;
   selectedBlock: string = '';
   selectedUnit: string = '';
 
   Block: any[] = [];
   Unit: any[] = [];
 
+  // Array untuk menyimpan data pax
+  paxData: any[] = [];
+
   constructor(
     private contractorService: ContractorsService,
     private toastController: ToastController,
     private router: Router,
-    private blockUnitService: BlockUnitService
+    private blockUnitService: BlockUnitService,
+    private functionMain: FunctionMainService
   ) { }
 
+  // Ambil nilai dari input
+  getInputValue(id: string): string {
+    const input = this.textInputs.find(input => input.id === id);
+    return input ? input.value : '';
+  }
+
+  // Update jumlah pax
+  onPaxCountChange(event: any) {
+    this.paxCount = parseInt(event.target.value, 10);
+    // Reset pax data
+    this.paxData = Array.from({ length: this.paxCount }, () => ({ contractor_name: '', identification_number: '' }));
+    this.collectPaxData();
+  }
+  
+  collectPaxData() {
+    this.paxData = [];
+    for (let i = 0; i < this.paxCount; i++) {
+      const name = this.getInputValue(`contractor_name_pax_${i}`);
+      const nric = this.getInputValue(`contractor_nric_fin_pax_${i}`);
+      
+      // Validasi input
+      if (name && nric) {
+        this.paxData.push({
+          contractor_name: name,
+          identification_number: nric
+        });
+      }
+    }
+  }
+
   ngOnInit() {
-    this.loadBlock()
+    this.loadBlock();
+    this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
   }
 
   onIdentificationTypeChange(event: any) {
@@ -51,45 +90,49 @@ export class ContractorFormPage implements OnInit {
     console.log(this.selectedUnit)
   }
 
-  async saveRecord(openBarrier: boolean = false) {
+  async saveRecord(openBarrier: boolean = false) {  
     let errMsg = ''
     // Validasi input
     const contractorName = this.contractorNameInput.value;
     const contractorContactNo = this.contractorContactNumberInput.value;
-    const identificationNumber = this.contractorIdentificationNumberInput.value;
+    const identificationNumber = this.nric_value;
     const contractorVehicle = this.contractorVehicleNumberInput.value;
     const companyName = this.contractorCompanyNameInput.value;
     const remarks = this.remarksInput.value;
 
-    // Validasi field wajib
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
-      // this.presentToast('Vehicle number is required', 'danger');
     }
-
     if (!contractorContactNo) {
       errMsg += 'Contact number is required! \n'
-      // this.presentToast('Masukkan nomor kontak', 'danger');
     }
-
     if (!this.identificationType) {
       errMsg += 'Identification type must be selected! \n'
-      // this.presentToast('Pilih tipe identifikasi', 'danger');
     }
-
     if (!identificationNumber) {
       errMsg += 'Identification number is required! \n'
-      // this.presentToast('Masukkan nomor identifikasi', 'danger');
     }
-
     if (!this.selectedBlock || !this.selectedUnit) {
       errMsg += 'Block and unit must be selected! \n'
-      // this.presentToast('Pilih block', 'danger');
     }
-
     if (errMsg) {
       this.presentToast(errMsg, 'danger')
       return
+    }
+
+    this.collectPaxData();
+
+    const subContractors = this.paxData.map(pax => ({
+      contractor_name: pax.contractor_name, // Pastikan ini sesuai dengan nama property yang benar
+      identification_number: pax.identification_number // Pastikan ini sesuai dengan nama property yang benar
+    }));
+
+    console.log("subcon", subContractors);
+    console.log("paxdata", this.paxData);
+
+    if (!subContractors.length) {      
+      console.log("No subcontractors found");
+      return;
     }
 
     try {
@@ -102,7 +145,8 @@ export class ContractorFormPage implements OnInit {
         contractorVehicle,
         this.selectedBlock,
         this.selectedUnit,
-        remarks
+        remarks,
+        subContractors
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -231,5 +275,10 @@ export class ContractorFormPage implements OnInit {
         this.selectedUnit = contactData.unit_id
       })
     }
+  }
+
+  nric_value = ''
+  onNricInput(event: any) {
+    this.nric_value = this.functionMain.nricChange(event.target.value)
   }
 }

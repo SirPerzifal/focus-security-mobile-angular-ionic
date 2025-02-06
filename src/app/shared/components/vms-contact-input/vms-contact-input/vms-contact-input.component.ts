@@ -117,24 +117,26 @@ export class VmsContactInputComponent  implements OnInit {
   }
 
   getContactInformation(){
-    let params = {
-      contact_number: this.combinedValue
-    }
-    this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
-      next: (results) => {
-        if (results.result.status_code === 200) {
-          this.presentToast('Succesfully get data!', 'success');
-          console.log(results.result.result)
-          this.contactInfo.emit(results.result.result)
-        } else {
-          this.presentToast('Failed to get data!', 'danger');
-        }
-      },
-      error: (error) => {
-        this.presentToast('Failed to get data!', 'danger');
-        console.error(error);
+    if (!this.isReadonly){
+      let params = {
+        contact_number: this.combinedValue
       }
-    });
+      this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
+        next: (results) => {
+          if (results.result.status_code === 200) {
+            this.presentToast('Succesfully get data!', 'success');
+            console.log(results.result.result)
+            this.contactInfo.emit(results.result.result)
+          } else {
+            this.presentToast('Failed to get data!', 'danger');
+          }
+        },
+        error: (error) => {
+          this.presentToast('Failed to get data!', 'danger');
+          console.error(error);
+        }
+      });
+    }
   }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {

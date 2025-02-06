@@ -93,17 +93,33 @@ export class PickUpPagePage implements OnInit {
   ) { }
 
   toggleShowPick() {
+    if(this.showDrop){
+      this.resetForm()
+    }
     this.showForm = true;
     this.showDrop = false;
     this.showPick = true;
     this.entryType = 'pick_up';
   }
 
+  resetForm() {
+    this.valPhv = false
+    this.valCar = false
+    this.valTaxi = false
+    this.valBike = false
+  }
+
   toggleShowDrop() {
+    if(this.showPick){
+      this.resetForm()
+    }
     this.showForm = true;
     this.showPick = false;
     this.showDrop = true;
     this.entryType = 'drop_off';
+    this.vehicleNumber = ''
+    this.blkLocation = ''
+    this.selectedVehicleType = ''
   }
 
   useVehicle(val: string) {
@@ -134,12 +150,6 @@ export class PickUpPagePage implements OnInit {
 
   vehicleNumber: string = ''; // Tambahkan properti untuk menyimpan nomor kendaraan
   blkLocation: string = ''; // Tambahkan properti untuk menyimpan nomor kendaraan
-
-  // Tambahkan method untuk menangkap perubahan value
-  onVehicleNumberChange(value: string) {
-    this.vehicleNumber = value;
-    console.log('Vehicle Number:', this.vehicleNumber); // Untuk debugging
-  }
 
   onVehicleBlkChange(value: string) {
     this.blkLocation = value;
@@ -238,6 +248,6 @@ export class PickUpPagePage implements OnInit {
     let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
     let front = ['SBA', 'SBS', 'SAA']
     let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicle_number = randomVhc
+    this.vehicleNumber = randomVhc
   }
 }

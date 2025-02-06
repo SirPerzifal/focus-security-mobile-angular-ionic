@@ -219,6 +219,7 @@ export class FamilyEditMemberPage implements OnInit {
         this.formData.email_address,
         this.formData.mobile_number,
         this.formData.type_of_residence,
+        this.formData.image_family,
         this.formData.type_of_residence == 'tenants' ? this.formData.tenancies : {},
       ).subscribe(
         res => {
@@ -389,6 +390,7 @@ export class FamilyEditMemberPage implements OnInit {
         mobile: this.formData.mobile_number,
         nickname: this.formData.nickname,
         email: this.formData.email_address,
+        profile_image: this.formData.image_family,
         end_date: this.formData.tenancies.end_of_tenancy_aggrement,
         tenant: this.formData.tenancies.tenancies,
       }
@@ -396,6 +398,8 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("tes");
+    
   }
 
   private routerSubscription!: Subscription;

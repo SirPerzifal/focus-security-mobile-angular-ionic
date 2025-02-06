@@ -13,7 +13,7 @@
           <label class="text-2xl"><b><u>TYPE OF NOTICE</u></b></label>
           <select id="clamping_reason" [(ngModel)]="selectedNotice" [disabled]="isReadonlyIssue"
             class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-            <option *ngIf="!this.alert" value="" selected hidden>EG. PARKING VIOLATION</option>
+            <option *ngIf="!this.alert" value="" selected hidden>EG. 1ST WARNING</option>
             <option value="first_warning">1ST WARNING</option>
             <option value="second_warning">2ND WARNING</option>
             <option *ngIf="this.search" value="wheel_clamp">WHEEL CLAMP</option>

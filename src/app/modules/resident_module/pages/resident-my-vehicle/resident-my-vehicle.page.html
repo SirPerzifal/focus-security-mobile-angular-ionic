@@ -2,7 +2,7 @@
 	<app-resident-header [text]="'My Vehicle'"/>
 
   <div class="w-full flex items-start ml-3 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
   </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
@@ -56,7 +56,7 @@
           <div class="w-full">
             <table class="w-full">
               <tr class="text-base text-black" *ngFor="let field of ['Vehicle Number', 'Vehicle Make', 'Vehicle Colour', 'Vehicle Type', 'Fees']">
-                <td class="font-bold text-base w-[40%]">{{ field }}</td>
+                <td class="font-bold text-base w-[40%] cw-3:w-[50%]">{{ field }}</td>
                 <td class="font-bold text-base">:</td>
                 <td class="text-base text-black">{{ getVehicleValue(vehicle, field) }}</td>
               </tr>

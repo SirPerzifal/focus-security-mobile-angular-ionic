@@ -6,48 +6,33 @@
 
   <div class="px-5 mt-2 text-center mb-20">
     <!-- Reported Issues Button -->
-    <div class="flex flex-row mt-3 justify-start items-center w-full space-x-3 mb-4">
-      <app-visitor-button [text]="'Reported Issues'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-sm w-38 px-3'" ></app-visitor-button>
-      <app-visitor-button [text]="'Report an Issues'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-sm w-38 px-3'" [routerLink]="['/resident-report-an-issue']"></app-visitor-button>
+    <div class="flex flex-row mt-4 justify-start items-center w-full space-x-3 mb-4">
+      <app-visitor-button [text]="'Reported Issues'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-sm w-32'" ></app-visitor-button>
+      <app-visitor-button [text]="'Report an Issues'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-sm w-32'" [routerLink]="['/resident-report-an-issue']"></app-visitor-button>
     </div>
     <!-- Issues List -->
     <div class="space-y-4">
-      <!-- Issue 1 -->
-      <div class="bg-[#E3787E] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Cleaning - Basement full of trash</h2>
+      <div *ngFor="let report of allData" [ngClass]="{
+        'bg-[var(--ion-color-tertiary)]': report.ticket_status === 'Solved',
+        'bg-[#F8F1BA]': report.ticket_status === 'New',
+        'bg-[#E3787E]': report.ticket_status === 'Canceled',
+        'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
+        }" class="bg-[#F8F1BA] p-4 rounded shadow"
+      >
+        <h2 class="font-bold text-left">{{ report.ticket_name }} - {{ report.ticket_type }}</h2>
         <table class="w-full text-left border-collapse mt-2">
           <tbody>
             <tr>
-              <td class="font-bold">Reported Issue On</td>
-              <td>: 09/10/2024</td>
+              <td class="font-bold">Reported On</td>
+              <td class="cw-3:text-sm">: {{ report.issued_on }}</td>
             </tr>
             <tr>
-              <td class="font-bold">Issue Resolved On</td>
-              <td>: N/A</td>
-            </tr>
-            <tr>
-              <td class="font-bold">Ticket Status</td>
-              <td>: Closed</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- Issue 2 -->
-      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Security - Noisy Neighbor </h2>
-        <table class="w-full text-left border-collapse mt-2">
-          <tbody>
-            <tr>
-              <td class="font-bold">Reported Issue On</td>
-              <td>: 09/10/2024</td>
-            </tr>
-            <tr>
-              <td class="font-bold">Issue Resolved On</td>
-              <td>: 10/10/24</td>
+              <td class="font-bold">Resolved On</td>
+              <td class="cw-3:text-sm">: {{ report.solved_on || 'N/A' }}</td>
             </tr>
             <tr>
               <td class="font-bold">Ticket Status</td>
-              <td>: Closed</td>
+              <td class="cw-3:text-sm">: {{ report.ticket_status }}</td>
             </tr>
           </tbody>
         </table>

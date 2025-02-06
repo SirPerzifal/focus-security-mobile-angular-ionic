@@ -123,6 +123,14 @@ export class MyProfileMyPetsPage implements OnInit {
     })
   }
 
+  toWhere() {
+    this.router.navigate(['/pet-registration'], {
+      state: {
+        from: 'profile'
+      }
+    })
+  }
+
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
       message: message,

@@ -19,9 +19,9 @@ export class SearchNricConfirmationPage implements OnInit {
   onConfirm() {
     if (this.nric_confirmation == ''){
       this.functionMain.presentToast('NRIC is required!', 'danger')
-    } else [
+    } else {
       this.modalController.dismiss(true)
-    ]
+    }
     
   }
 

@@ -25,8 +25,24 @@ export class ResidentMyVehiclePage implements OnInit {
 
   MaximumVehicle: boolean = false;
   vehicles: Vehicle[] = [];
+  fromWhere: boolean = false; //
 
-  constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router) { }
+  constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { from: any};
+    if (state) {
+      console.log(state.from);
+      this.fromWhere = true
+    } 
+  }
+
+  directTo() {
+    if (this.fromWhere) {
+      this.router.navigate(['/resident-my-profile']);
+    } else {
+      this.router.navigate(['/resident-homepage']);
+    }
+  }
 
   ngOnInit() {
     this.router.events.subscribe(event => {

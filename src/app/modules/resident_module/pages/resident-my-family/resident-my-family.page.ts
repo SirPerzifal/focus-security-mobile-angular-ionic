@@ -11,12 +11,28 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 export class ResidentMyFamilyPage implements OnInit {
 
   isModalFamilyEditOpen: boolean = false; // Status modal
+  fromWhere: boolean = false; //
 
-  constructor(private familyService: FamilyService, private router: Router) { }
+  constructor(private familyService: FamilyService, private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { from: any};
+    if (state) {
+      // console.log(state.from);
+      this.fromWhere = true
+    } 
+  }
 
   familyData = [
     { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '' }
   ];
+
+  directTo() {
+    if (this.fromWhere) {
+      this.router.navigate(['/resident-my-profile']);
+    } else {
+      this.router.navigate(['/resident-homepage']);
+    }
+  }
 
   getFamilyList() {
     this.familyData.pop()

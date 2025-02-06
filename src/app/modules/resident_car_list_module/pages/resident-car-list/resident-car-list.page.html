@@ -15,7 +15,7 @@
       <app-button-icon [customNameIcon]="'faSearch'" [text]="'SEARCH BY VEHICLE NO'" [isActive]="showSearch"
         [disableClick]="true" />
 
-      <app-button-icon [customNameIcon]="'faCamera'" [text]="'OPEN CAMERA'" *ngIf="showSearch" [isActive]="false"
+      <app-button-icon [customNameIcon]="'faCamera'" [text]="'OPEN CAMERA'" *ngIf="showSearch" [isActive]="false" (click)="takeVehicleLicense()"
         [disableClick]="true" />
     </div>
     <div @fadeInOut class="flex flex-row" *ngIf="showSearch">

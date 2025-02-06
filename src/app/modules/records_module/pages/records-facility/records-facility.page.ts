@@ -73,7 +73,7 @@ export class RecordsFacilityPage implements OnInit {
               // this.presentToast('Coach data successfully submitted!', 'success');
               this.facilityRecords = results.result.active_bookings
               this.daySchedules = this.facilityRecords
-              console.log(this.daySchedules.length)
+              console.log(this.daySchedules)
             } else {
               this.presentToast('There is no active booking data!', 'danger');
             }
@@ -85,7 +85,24 @@ export class RecordsFacilityPage implements OnInit {
         });
       }
     } else if (this.showUpcoming) {
-
+      if (this.upcomingSchedules.length == 0){
+        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/facility_book_upcoming' ).subscribe({
+          next: (results) => {
+            if (results.result.response_code == 200) {
+              // this.presentToast('Coach data successfully submitted!', 'success');
+              this.facilityRecords = results.result.active_bookings
+              this.upcomingSchedules = this.facilityRecords
+              console.log(this.upcomingSchedules)
+            } else {
+              this.presentToast('There is no active booking data!', 'danger');
+            }
+          },
+          error: (error) => {
+            this.presentToast('An error occurred while loading booking data!', 'danger');
+            console.error(error);
+          }
+        });
+      }
     } else if (this.showHistory) {
       console.log(this.historySchedules)
       if (this.historySchedules.length == 0) {
@@ -96,6 +113,7 @@ export class RecordsFacilityPage implements OnInit {
               // this.presentToast('!', 'success');
               this.facilityRecords = results.result.booking
               this.historySchedules = this.facilityRecords
+              console.log(this.historySchedules)
             } else {
               this.presentToast('There is no booking data!', 'danger');
             }

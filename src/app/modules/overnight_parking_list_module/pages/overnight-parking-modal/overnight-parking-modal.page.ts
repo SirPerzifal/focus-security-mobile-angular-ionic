@@ -174,10 +174,10 @@ export class OvernightParkingModalPage implements OnInit {
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
-            this.presentToast('Issue notice successfully updated!', 'success');
+            this.presentToast('Issue notice successfully submitted!', 'success');
             this.modalController.dismiss(true);
           } else {
-            this.presentToast('An error occurred while updating issue notice!', 'danger');
+            this.presentToast('An error occurred while submitting issue notice!', 'danger');
           }
   
           // this.isLoading = false;

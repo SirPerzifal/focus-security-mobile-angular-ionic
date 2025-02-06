@@ -15,12 +15,26 @@ export class ResidentMyProfilePage implements OnInit {
   ngOnInit() {
   }
 
-  toHistoryInVisitorJustBan() {
-    this.router.navigate(['/history'], {
-      state: {
-        from: "ban",
-      }
-    });
+  toWhere(where: string) {
+    if (where === 'ban_visitor') {
+      this.router.navigate(['/history'], {
+        state: {
+          from: "ban",
+        }
+      });
+    } else if (where === 'family') {
+      this.router.navigate(['/resident-my-family'], {
+        state: {
+          from: "profile",
+        }
+      });
+    } else if (where === 'vehicle') {
+      this.router.navigate(['/resident-my-vehicle'], {
+        state: {
+          from: "profile",
+        }
+      });
+    }
   }
 
 }

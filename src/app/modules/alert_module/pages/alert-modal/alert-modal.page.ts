@@ -18,14 +18,23 @@ export class AlertModalPage implements OnInit {
     private navParams: NavParams,
     private alertController: AlertController) 
   {
-    this.id = this.navParams.get('id')
-    this.type = this.navParams.get('type')
-    this.vehicle = this.navParams.get('vehicle')
+    this.is_search_barcode = this.navParams.get('is_search_barcode')
+    if ( this.is_search_barcode ) {
+      this.upload_text = 'UPLOAD IMAGE'
+    } else {
+      this.id = this.navParams.get('id')
+      this.type = this.navParams.get('type')
+      this.vehicle = this.navParams.get('vehicle')
+      this.upload_text = 'UPLOAD VEHICLE IMAGE'
+    }
+    
   }
 
   id = 0
   type = 'checkout'
   vehicle: any
+  upload_text = 'UPLOAD VEHICLE IMAGE'
+  is_search_barcode = false
 
   ngOnInit() {
     this.takePicture()
@@ -43,11 +52,10 @@ export class AlertModalPage implements OnInit {
         allowEditing: true,
         resultType: CameraResultType.Base64
       });
-      console.log(image)
       this.fileInput = image.base64String;
-
-      this.showImage = `data:image/png;base64,${this.fileInput}`
       this.functionMain.presentToast('Image loaded!', 'success');
+      
+      this.showImage = `data:image/png;base64,${this.fileInput}`
     } catch (error) {
       if (typeof error === 'object' && error !== null && 'message' in error) {
         const errorMessage = (error as { message: string }).message;
@@ -57,9 +65,21 @@ export class AlertModalPage implements OnInit {
       }
   
       this.functionMain.presentToast('Error taking photo', 'danger')
+      console.error(error)
     }
     
   };
+
+  base64ToBlob(base64: string, mimeType: string) {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  }
+  
 
   onCancel() {
     this.modalController.dismiss(false);
@@ -123,5 +143,26 @@ export class AlertModalPage implements OnInit {
     await alertButtons.present();
   }
 
+  imageSrc: string | ArrayBuffer | null = null;
+  barcodeResult: string | null = null;
+
+  async searchImageId(id: string) {
+    console.log(id);
+    
+    this.mainVmsService.getApi({id: id}, '/vms/get/search_expected_visitor').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.modalController.dismiss({scan: results.result.result[0]})
+        } else {
+          this.functionMain.presentToast('Expected visitor not found!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
+        console.error(error);
+      }
+    });
+  }
 
 }

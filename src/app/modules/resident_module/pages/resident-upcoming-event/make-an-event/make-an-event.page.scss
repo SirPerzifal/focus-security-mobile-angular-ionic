@@ -5,60 +5,80 @@
     border-right: none !important;
     border-left: none !important;
     border-bottom: none !important;
-}
-::ng-deep .cal-week-view {
+  }
+  ::ng-deep .cal-week-view {
     border: none !important;
     border-top: none !important;
     border-right: none !important;
     border-left: none !important;
     border-bottom: none !important;
-}
-::ng-deep .cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
-.cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
+  }
+  ::ng-deep .cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
+  .cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
     border: none !important;
     border-top: none !important;
     border-right: none !important;
     border-left: none !important;
     border-bottom: none !important;
-}
-::ng-deep .cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
-.cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
-  border-bottom: none !important;
-}
-::ng-deep .cal-week-view .cal-time {
+  }
+  ::ng-deep .cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
+  .cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
+    border-bottom: none !important;
+  }
+  ::ng-deep .cal-week-view .cal-time {
     font-weight: bold;
     padding-top: 5px;
     width: 87px;
     text-align: center;
-}
-
-ion-icon {
-    --ionicon-stroke-width: 70px;
-}
+  }
+  ::ng-deep .cal-week-view .cal-current-time-marker {
+    background-color: rgb(69, 138, 207);
+  }
   
-#addEventButton:focus #addIcon {
+  @media (min-width: 300px) and (max-width: 327px) {
+    ::ng-deep .ion-datetime-button-overlay ion-datetime.datetime-grid {
+      width: 300px;
+    }
+  }
+  
+  ion-icon {
+    --ionicon-stroke-width: 70px;
+  }
+  
+  #addEventButton:focus #addIcon {
     transition: transform 0.5s ease; /* Transisi untuk rotasi */
     transform: rotate(-90deg); /* Putar ikon ke kiri */
-}
-#addEventButton:not(:focus) #addIcon {
+  }
+  #addEventButton:not(:focus) #addIcon {
     transition: transform 0.5s ease; /* Transisi untuk rotasi */
     transform: rotate(0deg); /* Kembalikan ikon ke posisi semula */
-}
-
-ion-modal#click-date-modal{
+  }
+  
+  ion-modal#click-date-modal {
     --width: 90%;
     --min-width: 250px;
     --height: 100%;
     --max-height: 600px;
     --border-radius: 6px;
     --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-}
-.cal-day-view-modal-di-calendar {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    overflow-y: auto;
-    width: 100%;
-    height: 100%;
-    max-height: 850px;
-}
+  }
+  ion-modal#new-task-modal {
+    --width: 90%;
+    --min-width: 250px;
+    --height: 25%;
+    --max-height: 600px;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .style-overflow::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .style-overflow {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  

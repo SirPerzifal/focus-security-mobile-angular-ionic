@@ -5,6 +5,7 @@ import { TextInputComponent } from 'src/app/shared/components/text-input/text-in
 import { ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-move-form',
@@ -31,7 +32,8 @@ export class MoveFormPage implements OnInit {
     private moveFormService: MoveFormService,
     private toastController: ToastController,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private functionMain: FunctionMainService,
   ) {}
 
   ngOnInit() {
@@ -147,7 +149,7 @@ export class MoveFormPage implements OnInit {
       this.contact_number,
       this.getInputValue('contractor_company_name'),
       this.identificationType, // Misalnya 'NRIC', 'Passport', dll
-      this.getInputValue('contractor_nric/fin'),
+      this.nric_value,
       this.scheduleType == 'move_in' ? 'move_in_out' : 'renovation', // 'move_in', 'move_out', dll
       this.getInputValue('contractor_vc'), // Nomor kendaraan
       this.block_id,
@@ -217,5 +219,14 @@ export class MoveFormPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  nric_value = ''
+  onNricInput(event: any) {
+    this.nric_value = this.functionMain.nricChange(event.target.value)
+  }
+
+  nricPaxChange(event: any) {
+    this.setInputValue(event.target.id, this.functionMain.nricChange(event.target.value))
   }
 }

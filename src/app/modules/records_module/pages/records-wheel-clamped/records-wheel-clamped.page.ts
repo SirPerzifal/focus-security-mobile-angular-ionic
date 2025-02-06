@@ -261,6 +261,7 @@ export class RecordsWheelClampedPage implements OnInit {
   startDateFilter = ''
   
   clearFilters() {
+    this.searchOption = ''
     this.filter.issue_date = ''
     this.filter.end_issue_date = ''
     this.filter.block = ''

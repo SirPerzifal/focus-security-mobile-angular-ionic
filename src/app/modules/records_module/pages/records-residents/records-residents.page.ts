@@ -188,7 +188,7 @@ export class RecordsResidentsPage implements OnInit {
     // });
   }
 
-  clearFilter() {
+  clearFilters() {
     this.filter.block = ''
     this.filter.unit = ''
     this.applyFilters()

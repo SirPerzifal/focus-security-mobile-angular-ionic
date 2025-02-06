@@ -7,7 +7,7 @@
     </div>
     <div class="space-y-4">
       <div class="flex flex-col justify-between mt-1">
-        <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" [routerLink]="['/pet-registration']">Add New Pet</button>
+        <button class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base" (click)="toWhere()">Add New Pet</button>
         <!-- <button class="bg-[#D0D0D0] text-[#757575] mt-1 w-full text-base rounded-full h-10 font-bold" >Add New Card</button> -->
       </div>
       <div *ngFor="let pet of petList">

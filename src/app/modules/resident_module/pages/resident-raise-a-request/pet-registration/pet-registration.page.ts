@@ -24,8 +24,24 @@ export class PetRegistrationPage implements OnInit {
     pet_image: '',
     notes: '',
   }
+  fromWhere: boolean = false; //
   
-  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) { }
+  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { from: any};
+    if (state) {
+      console.log(state.from);
+      this.fromWhere = true
+    } 
+  }
+
+  directTo() {
+    if (this.fromWhere) {
+      this.router.navigate(['/my-profile-my-pets']);
+    } else {
+      this.router.navigate(['/resident-raise-a-request']);
+    }
+  }
 
   ngOnInit() {
     console.log("tes");

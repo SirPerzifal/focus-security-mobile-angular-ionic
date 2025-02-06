@@ -52,27 +52,30 @@
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div> -->
-            <div class="w-full" *ngIf="pageType == 'visitor'">
-              <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelText]="'NAME'"
-                [placeholder]="'VHASYA'" [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.name"
-                (change)="onNameFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-              </app-text-input>
+            <div class="w-full flex flex-row space-x-2 justify-between">
+              <div class="w-full" *ngIf="pageType == 'visitor' && (searchOption == 'name' || searchOption == 'all')">
+                <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelText]="'NAME'"
+                  [placeholder]="'VHASYA'" [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.name"
+                  (change)="onNameFilterChange($event)"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
+              <div class="w-full" *ngIf="pageType == 'vehicle' && (searchOption == 'vehicle' || searchOption == 'all')">
+                <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'" [labelText]="'VEHICLE NUMBER'"
+                  [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
+                  [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
+              <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
+                <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelText]="'CONTACT'"
+                  [placeholder]="'+65 7827 323'" [customClasses]="{'w-full ':true}" [type]="'text'"
+                  [(ngModel)]="filter.contact" (change)="onContactFilterChange($event)"
+                  [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+                </app-text-input>
+              </div>
             </div>
-            <div class="w-full" *ngIf="pageType == 'vehicle'">
-              <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'" [labelText]="'VEHICLE NUMBER'"
-                [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
-                [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-              </app-text-input>
-            </div>
-            <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
-              <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelText]="'CONTACT'"
-                [placeholder]="'+65 7827 323'" [customClasses]="{'w-full ':true}" [type]="'text'"
-                [(ngModel)]="filter.contact" (change)="onContactFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-              </app-text-input>
-            </div>
+            
           </div>
         </div>
 
@@ -81,14 +84,12 @@
             <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle"
               (click)="onNewData()"></ion-icon>
           </div>
-          <div *ngIf="filter.name || filter.vehicle_number || filter.contact" class="flex flex-col w-full space-y-5">
-            <div
-              class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-              *ngFor="let data of blacklistData">
-              <span class="text-2xl font-bold text-white">{{data.type == 'vehicle' ? data.vehicle_number :
+          <div class="flex flex-col w-full space-y-5">
+            <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+              *ngFor="let data of blacklistData" (click)="onClickDetail(data)"> 
+              <span class="text-2xl font-bold text-white">{{data.vehicle_no != '' ? data.vehicle_no :
                 data.visitor_name}}</span>
-              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-                (click)="onClickDetail(data)"></ion-icon>
+              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
             </div>
           </div>
 

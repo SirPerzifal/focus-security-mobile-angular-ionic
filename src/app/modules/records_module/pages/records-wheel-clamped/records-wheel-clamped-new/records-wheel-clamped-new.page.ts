@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams } from '@ionic/angular';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-wheel-clamped-new',
@@ -10,8 +12,26 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 })
 export class RecordsWheelClampedNewPage implements OnInit {
 
-  constructor(private router: Router, private modalController: ModalController, private navParams: NavParams, private blockUnitService: BlockUnitService) {
+  constructor(
+    private router: Router, 
+    private modalController: ModalController, 
+    private navParams: NavParams, 
+    private blockUnitService: BlockUnitService,
+    private mainVmsService: MainVmsService,
+    private functionMain: FunctionMainService,
+  ) {
     this.type = this.navParams.get('type')
+    const vehicle_number = navParams.get('vehicle_number')
+    if (vehicle_number){
+      this.vehicleNumber = vehicle_number
+      this.isVehicleNumberReadonly = true
+      if (navParams.get('type_of_entry')) {
+        this.typeOfEntry = navParams.get('type_of_entry')
+        this.isTypeOfEntryReadonly = true
+      }
+    }
+    
+    this.selectedNotice = this.type
     if (this.type == 'first_warning') {
       this.showType = 'FIRST WARNING NOTICE'
     } else if (this.type == 'second_warning') {
@@ -25,84 +45,126 @@ export class RecordsWheelClampedNewPage implements OnInit {
     this.loadBlock()
   }
 
-  type = 'firt_warning'
+  type = 'first_warning'
   showType = 'FIRST WARNING'
   selectedNotice = ''
-  beforeClampImageFile = null as File | null;
-  afterClampImageFile = null as File | null;
+  beforeClampImageFile = '';
+  afterClampImageFile = '';
   imageBeforeClampInput: string = '';
   imageAfterClampInput: string = '';
   issueOfficer = ''
   issueName = ''
   vehicleNumber = ''
+  isVehicleNumberReadonly = false
   issueContact = ''
   typeOfEntry = ''
+  isTypeOfEntryReadonly = false
   blockId = ''
   unitId = ''
   reasonOfIssuance = ''
 
   onBeforeClampImageFileSelected(file: File) {
-    // Convert File to a usable format if needed
-    this.beforeClampImageFile = file
-    this.imageBeforeClampInput = file.name; // Or file.path if you need the full path
-    console.log(this.imageBeforeClampInput);
-    console.log('imageBeforeClampInputimageBeforeClampInputimageBeforeClampInputimageBeforeClampInput');
-
-
-    // If you need to handle the file further
-    // For example, prepare for upload
-    const formData = new FormData();
-    formData.append('image', file);
-
-    // You can now use this formData for upload or further processing
+    let data = file;
+    if (data){
+      this.functionMain.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.beforeClampImageFile = base64.split(',')[1]
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } 
   }
 
   onAfterClampImageFileSelected(file: File) {
-    // Convert File to a usable format if needed
-    this.afterClampImageFile = file
-    this.imageAfterClampInput = file.name; // Or file.path if you need the full path
-    console.log(this.imageAfterClampInput);
-    console.log('this.imageAfterClampInputthis.imageAfterClampInputthis.imageAfterClampInputthis.imageAfterClampInput');
-
-    // If you need to handle the file further
-    // For example, prepare for upload
-    const formData = new FormData();
-    formData.append('image', file);
-
-    // You can now use this formData for upload or further processing
+    let data = file;
+    if (data){
+      this.functionMain.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.afterClampImageFile = base64.split(',')[1]
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } 
   }
 
   onSubmit() {
     let errMsg = ''
-    console.log(this.type, this.afterClampImageFile)
-    if (!this.selectedNotice) {
-      errMsg += 'You must select a notice! \n'
+    if (this.type == 'wheel_clamp'){
+      this.selectedNotice = 'wheel_clamp'
+    } else {
+      if (!this.selectedNotice) {
+        errMsg += 'You must select a notice! \n'
+      }
     }
     if (!this.beforeClampImageFile) {
       errMsg += this.type == 'wheel_clamp' ? 'Before clamp image is required! \n' : 'You must upload an evidence image! \n'
-    } 
-    if ( this.type == 'wheel_clamp' && !this.afterClampImageFile) {
-      errMsg += 'After clamp image is required for wheel clamp issues! \n'
-    } 
+    }
+    if (this.type == 'wheel_clamp') {
+      if (!this.afterClampImageFile) {
+        errMsg += 'After clamp image is required for wheel clamp issues! \n'
+      }
+    }
+    if (!this.vehicleNumber) {
+      errMsg += 'Offender vehicle number is required! \n'
+    }
+    if (!this.issueName) {
+      errMsg += 'Offender name is required! \n'
+    }
+    if (!this.issueContact) {
+      errMsg += 'Offender contact number is required! \n'
+    }
+    if (!this.typeOfEntry) {
+      errMsg += 'Offender type of entry is required! \n'
+    }
+    if (!this.issueOfficer) {
+      errMsg += 'Block and unit must be selected! \n'
+    }
+    if (!this.reasonOfIssuance) {
+      errMsg += 'You must provide an issue reason! \n'
+    }
     if (!this.issueOfficer) {
       errMsg += 'Issue officer is required! \n'
     }
     if (errMsg) {
-      console.log(errMsg)
+      this.functionMain.presentToast(errMsg, 'danger');
     } else {
-      console.log(this.afterClampImageFile, this.imageAfterClampInput, this.beforeClampImageFile, this.imageBeforeClampInput, this.selectedNotice, this.issueOfficer);
-      this.modalController.dismiss({
-        result: true, data: {
-          image_after: {
-            file: this.afterClampImageFile,
-            name: this.imageAfterClampInput
-          },
-          image_before: {
-            file: this.beforeClampImageFile,
-            name: this.imageBeforeClampInput
-          },
-          notice: this.selectedNotice,
-          officer: this.issueOfficer
+      let params = {
+        vehicle_number: this.vehicleNumber, 
+        visitor_name: this.issueName, 
+        block_id: this.blockId, 
+        unit_id: this.unitId, 
+        contact_number: this.issueContact,
+        type_notice: this.selectedNotice, 
+        issuing_officer_name: this.issueOfficer,
+        type: this.typeOfEntry,
+        reason: this.reasonOfIssuance,
+        notice_image: this.type != 'wheel_clamp' ? this.beforeClampImageFile : false,
+        before_clamp_image: this.type == 'wheel_clamp' ? this.beforeClampImageFile : false,
+        after_clamp_image: this.type == 'wheel_clamp' ? this.afterClampImageFile : false,
+      }
+      
+      console.log(params)
+      this.mainVmsService.getApi(params, '/vms/create/offenses' ).subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
+            this.modalController.dismiss(true);
+          } else {
+            if (results.result.error_message.includes('Record does not exist or has been deleted')) {
+              this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
+              this.modalController.dismiss(true);
+            } else {
+              this.functionMain.presentToast('An error occurred while submitting issue notice!', 'danger');
+            }
+            
+          }
+  
+          // this.isLoading = false;
+        },
+        error: (error) => {
+          this.functionMain.presentToast('An error occurred while submitting issue notice!', 'danger');
+          console.error(error);
         }
       });
     }
@@ -128,11 +190,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          // this.presentToast('Failed to load vehicle data', 'danger');
+          // this.functionMain.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
-        // this.presentToast('Error loading vehicle data', 'danger');
+        // this.functionMain.presentToast('Error loading vehicle data', 'danger');
         console.error('Error:', error);
       }
     });
@@ -144,12 +206,12 @@ export class RecordsWheelClampedNewPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Unit = response.result.result; // Simpan data unit
         } else {
-          // this.presentToast('Failed to load unit data', 'danger');
+          // this.functionMain.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
       error: (error) => {
-        // this.presentToast('Error loading unit data', 'danger');
+        // this.functionMain.presentToast('Error loading unit data', 'danger');
         console.error('Error:', error.result);
       }
     });
@@ -170,11 +232,12 @@ export class RecordsWheelClampedNewPage implements OnInit {
   }
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicleNumber = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    if (!this.isVehicleNumberReadonly) {
+      let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+      let front = ['SBA', 'SBS', 'SAA']
+      let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+      this.vehicleNumber = randomVhc
+    }
   }
   
 }

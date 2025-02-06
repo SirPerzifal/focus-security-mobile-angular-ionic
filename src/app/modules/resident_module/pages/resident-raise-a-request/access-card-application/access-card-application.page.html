@@ -125,17 +125,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr *ngFor="let fam of expectedFamily">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_member_or_family" (change)="onNewCardSelect('member_family')" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_member_or_family" (change)="onNewCardSelect(fam.family_id)" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
                 </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">xxxxx (Member, Family)</td>
-              </tr>
-              <tr>
-                <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_tenant" (change)="onNewCardSelect('tenant')" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
-                </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">xxxxx (Tenant)</td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"> {{ fam.family_name }} , {{ fam.member_type }} </td>
               </tr>
             </tbody>
           </table>

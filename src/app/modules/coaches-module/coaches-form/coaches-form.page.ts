@@ -38,6 +38,10 @@ export class CoachesFormPage implements OnInit {
     const state = navigation?.extras.state as { schedule: any};
     if (state) {
       this.schedule= state.schedule
+      if (this.schedule.vehicle_number) {
+        this.toggleShowDrive()
+        this.vehicle_number = this.schedule.vehicle_number
+      }
     } 
   }
 
@@ -215,6 +219,9 @@ export class CoachesFormPage implements OnInit {
     if (!this.schedule.contact_number) {
       errMsg += 'Contact number is missing! \n'
     }
+    if (this.showDrive && !this.vehicle_number) {
+      errMsg += 'Vehicle number is missing! \n'
+    }
     if (!this.schedule.block_id || !this.schedule.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
     }
@@ -233,6 +240,7 @@ export class CoachesFormPage implements OnInit {
         block_id: this.schedule.block_id,
         unit_id: this.schedule.unit_id,
         selection_type: this.schedule.coach_type_id,
+        vehicle_number: this.vehicle_number
       }
       console.log(params)
       this.mainVmsService.getApi(params, '/vms/post/add_coaches' ).subscribe({

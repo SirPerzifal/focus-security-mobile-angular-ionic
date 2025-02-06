@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 
 @Component({
@@ -16,16 +17,16 @@ export class RecordsBlacklistPage implements OnInit {
     private router: Router,
     private offensesService: OffensesService,
     private modalController: ModalController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private mainVmsService: MainVmsService
   ) { }
 
   ngOnInit() {
-    this.loadRecordsWheelClamp()
+    this.loadBlacklistData()
   }
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
-    // Bersihkan subscription untuk menghindari memory leaks
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
@@ -43,98 +44,25 @@ export class RecordsBlacklistPage implements OnInit {
     if (type == 'visitor') {
       this.pageType = 'visitor'
       this.showVisitor = true;
-      this.blacklistData = this.existData.filter(item => item.type == 'visitor')
+      this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
     }
     if (type == 'vehicle') {
       this.pageType = 'vehicle'
       this.showVehicle = true;
-      this.blacklistData = this.existData.filter(item => item.type == 'vehicle')
+      this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
     }
     console.log(type, this.showVehicle, this.showVisitor)
+    console.log(this.blacklistData)
   }
 
   vehicleData: any[] = [];
   activeVehicles: any[] = [];
   historyVehicles: any[] = [];
   sortVehicle: any[] = []
-  existData: any[] = [
-    {
-      visitor_name: 'Jhonson',
-      vehicle_number: '',
-      contact_number: '6582719273',
-      type: 'visitor',
-      date_time: '2024-12-25'
-    },
-    {
-      visitor_name: 'Thompson',
-      vehicle_number: '',
-      contact_number: '6582719273',
-      type: 'visitor',
-      date_time: '2024-12-24'
-    },
-    {
-      visitor_name: 'Jhonson',
-      vehicle_number: 'SBS 7820 X',
-      contact_number: '6582719273',
-      type: 'vehicle',
-      date_time: '2024-12-25'
-    },
-   {
-      visitor_name: 'Jhonson',
-      vehicle_number: 'SBS 7820 X',
-      contact_number: '6582719273',
-      type: 'vehicle',
-      date_time: '2024-12-24'
-    },
-   {
-      visitor_name: 'Jhonson',
-      vehicle_number: 'SBS 9020 X',
-      contact_number: '6582719273',
-      type: 'vehicle',
-      date_time: '2024-12-25'
-    },
-   {
-      visitor_name: 'Jhonson',
-      vehicle_number: 'SBS 1111 X',
-      contact_number: '6582719273',
-      type: 'vehicle',
-      date_time: '2024-12-24'
-    },
-  ]
-  blacklistData: any[] = this.existData.filter(item => item.type == 'visitor')
+  existData: any[] = []
+  blacklistData: any[] = []
   selectedRadio: string | null = null
   searchOption: string | null = null
-
-  onRadioClick(value: string): void {
-    if (this.selectedRadio === value) {
-      this.selectedRadio = null;
-    } else {
-      this.selectedRadio = value;
-    }
-    console.log(this.selectedRadio)
-    if (this.selectedRadio == 'sort_date') {
-      this.sortVehicle = Array.from(
-        new Set(this.vehicleData.map((record) => new Date(record.issue_date).toISOString()))
-      ).map((date) => ({
-        vehicle_number: '',
-        date: new Date(date),
-        issue_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.vehicleData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)),
-      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
-      console.log(this.sortVehicle)
-    }
-    if (this.selectedRadio == 'sort_vehicle') {
-      this.sortVehicle = Array.from(
-        new Set(this.vehicleData.map((record) => record.vehicle_number))
-      ).map((vehicle_number) => ({
-        vehicle_number: vehicle_number,
-        date: new Date(),
-        issue_date: '',
-        data: this.vehicleData.filter(item => item.vehicle_number == vehicle_number),
-      }));;
-      console.log(this.sortVehicle)
-    }
-  }
 
   convertToDDMMYYYY(dateString: string): string {
     const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
@@ -190,6 +118,7 @@ export class RecordsBlacklistPage implements OnInit {
   startDateFilter = ''
 
   clearFilters() {
+    this.searchOption = ''
     this.filter.name = ''
     this.filter.vehicle_number = ''
     this.filter.contact = ''
@@ -199,11 +128,11 @@ export class RecordsBlacklistPage implements OnInit {
 
   applyFilters() {
     this.blacklistData = this.existData.filter(item => {
-      const typeMatches = this.pageType ? item.type == this.pageType : false;
+      const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
       const contactMatches = this.filter.contact ? item.contact_number.toLowerCase().includes(this.filter.contact.toLowerCase()) : true;
       const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
 
-      return typeMatches && contactMatches && ( vehicleNumberMatches);
+      return typeMatches && contactMatches && vehicleNumberMatches;
     });
     console.log(this.blacklistData)
   }
@@ -217,29 +146,21 @@ export class RecordsBlacklistPage implements OnInit {
     });
   }
 
-  onClickNew() {
-    this.router.navigate(['records-wheel-clamped-new']);
-  }
-
-  loadRecordsWheelClamp() {
-
-    // this.offensesService.getOfffenses(this.pageType).subscribe({
-    //   next: (results) => {
-    //     if (results.result.response_code === 200) {
-    //       this.vehicleData = results.result.response_result;
-    //       console.log(this.vehicleData)
-    //       this.activeVehicles = this.vehicleData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-    //       this.historyVehicles = this.vehicleData
-    //     } else {
-    //       this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     }
-
-    //   },
-    //   error: (error) => {
-    //     this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     console.error(error);
-    //   }
-    // });
+  async loadBlacklistData() {
+    this.mainVmsService.getApi({}, '/vms/get/visitor_ban').subscribe({
+      next: (results) => {
+        if (results.result.response_code === 200) {
+          this.existData = results.result.result;
+          this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+        } else {
+          this.presentToast('An error occurred while loading blacklist data!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading blacklist data!', 'danger');
+        console.error(error);
+      }
+    });
   }
 
   onNewData() {

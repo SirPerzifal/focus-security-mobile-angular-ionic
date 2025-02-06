@@ -76,15 +76,15 @@
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showHistory  && (choosenBlock || startDateFilter || endDateFilter)">
-        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of filteredHistorySchedules" >
+        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of filteredHistorySchedules" (click)="form(vehicle)">
           <span class="text-2xl font-bold text-white">{{ vehicle.vehicle_numbers }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" (click)="form(vehicle)"></ion-icon>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"></ion-icon>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showUpcoming" @fadeInOut>
-        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of upcomingSchedules" >
+        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of upcomingSchedules" (click)="form(vehicle)">
           <span class="text-2xl font-bold text-white">{{ vehicle.vehicle_numbers }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" (click)="form(vehicle)"></ion-icon>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" ></ion-icon>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
@@ -102,9 +102,9 @@
             </tr>
           </table>
         </div>
-        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of daySchedules" >
+        <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of daySchedules" (click)="form(vehicle)">
           <span class="text-2xl font-bold text-white">{{ vehicle.vehicle_numbers }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" (click)="form(vehicle)"></ion-icon>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" ></ion-icon>
         </div>
       </div>
       <!-- <div class="move_in_box flex flex-col mt-8 self-start border-2 border-[black] w-[100%] h-[285px] p-[10px] mx-4 overflow-scroll scrollbar overflow-x-hidden">

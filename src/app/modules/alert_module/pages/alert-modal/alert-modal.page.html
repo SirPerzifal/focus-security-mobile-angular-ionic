@@ -1,4 +1,4 @@
-<ion-content class="">
+<ion-content class="vms-body">
   <div class="flex flex-col p-4 justify-center items-center h-full ">
     <div class="w-[80%]">
       <div class="flex flex-col justify-center w-full">
@@ -8,12 +8,16 @@
             <ion-icon name="trash-outline" size="large" class="text-white "/>
           </div>
         </div>
+        <!-- <div class="flex flex-col items-center text-2xl" *ngIf="barcodeResult">
+          <p>SCAN RESULT: {{ barcodeResult }}</p>
+        </div> -->
         <div class="flex flex-row w-full justify-between space-x-1">
           <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="takePicture()">
-            {{ showImage ? 'CHANGE IMAGE' :'UPLOAD VEHICLE IMAGE'}}
+            {{ showImage ? 'CHANGE IMAGE' : upload_text}}
           </button>
-          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" *ngIf="showImage" (click)="showAlertButtons()">SUBMIT IMAGE</button>
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" *ngIf="showImage && !is_search_barcode" (click)="showAlertButtons()">SUBMIT IMAGE</button>
         </div>
+        
       </div>
     </div>
   </div>

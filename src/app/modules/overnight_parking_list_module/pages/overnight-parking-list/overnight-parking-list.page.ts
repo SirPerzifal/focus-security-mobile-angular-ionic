@@ -162,6 +162,7 @@ export class OvernightParkingListPage implements OnInit {
   endDateFilter = ''
 
   clearFilters() {
+    this.searchOption = ''
     this.startDateFilter = ''
     this.endDateFilter = ''
     this.choosenBlock = ''

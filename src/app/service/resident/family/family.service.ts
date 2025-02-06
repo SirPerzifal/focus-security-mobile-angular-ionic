@@ -52,6 +52,7 @@ export class FamilyService extends ApiService{
     email_address: string,
     mobile_number: string,
     type_of_residence: string,
+    profile_image: string,
     tenancies: Record<string, any>
   ): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/resident/post/update_family`, {jsonrpc: '2.0', params: {
@@ -61,6 +62,7 @@ export class FamilyService extends ApiService{
       email_address,
       mobile_number,
       type_of_residence,
+      profile_image,
       tenancies
     }})
   }

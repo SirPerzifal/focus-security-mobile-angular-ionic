@@ -35,7 +35,10 @@ export class EmergencyModulePage implements OnInit {
   showOthersTrans = false;
 
   toggleShowSCDF() {
-    if (!this.showPoliceTrans && !this.showAmbulanceTrans){
+    if (!this.showPoliceTrans && !this.showAmbulanceTrans && !this.showOthersTrans){
+      if (!this.showSCDF) {
+        this.resetForm()
+      }
       this.showSCDFTrans = true
       this.showPolice = false;
       this.showAmbulance = false;
@@ -51,7 +54,10 @@ export class EmergencyModulePage implements OnInit {
   }
 
   toggleShowAmbulance() {
-    if (!this.showSCDFTrans && !this.showPoliceTrans){
+    if (!this.showSCDFTrans && !this.showPoliceTrans && !this.showOthersTrans){
+      if (!this.showAmbulance) {
+        this.resetForm()
+      }
       this.showAmbulanceTrans = true
       this.showPolice = false;
       this.showSCDF = false;
@@ -67,7 +73,10 @@ export class EmergencyModulePage implements OnInit {
   }
 
   toggleShowPolice() {
-    if (!this.showSCDFTrans && !this.showAmbulanceTrans){
+    if (!this.showSCDFTrans && !this.showAmbulanceTrans && !this.showOthersTrans){
+      if (!this.showPolice) {
+        this.resetForm()
+      }
       this.showPoliceTrans = true
       this.showAmbulance = false;
       this.showSCDF = false;
@@ -82,7 +91,10 @@ export class EmergencyModulePage implements OnInit {
   }
 
   toggleShowOthers() {
-    if (!this.showSCDFTrans && !this.showAmbulanceTrans){
+    if (!this.showSCDFTrans && !this.showAmbulanceTrans && !this.showPoliceTrans){
+      if (!this.showOthers) {
+        this.resetForm()
+      }
       this.showOthersTrans = true
       this.showPolice = false
       this.showAmbulance = false;
@@ -107,7 +119,19 @@ export class EmergencyModulePage implements OnInit {
     vehicle_type: ''
   }
   
-
+  resetForm() {
+    this.formData = {
+      vehicle_number: '',
+      block_id: '',
+      unit_id: '',
+      officer_name: '',
+      station_devision: '',
+      purpose: '',
+      contact_number: '',
+      govtAgency: '',
+      vehicle_type: ''
+    }
+  }
 
   refreshVehicle() {
     let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';

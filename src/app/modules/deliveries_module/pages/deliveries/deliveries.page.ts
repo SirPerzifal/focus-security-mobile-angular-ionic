@@ -176,6 +176,34 @@ export class DeliveriesPage implements OnInit {
     
   }
 
+  resetForm() {
+    this.formData = {
+      contact_number: '', 
+      vehicle_number: '', 
+      delivery_type: '', 
+      food_delivery: {
+        id: 0,
+        other: '',
+        delivery_option: ''
+      }, 
+      package_delivery: {
+        id: 0,
+        other: '',
+        delivery_option: ''
+      }, 
+      block: '', 
+      unit: '',
+      pax:'0',
+      remarks: ''
+    };
+    this.food_delivery_id = 0
+    this.package_delivery_id = 0
+    this.food_delivery_type = ''
+    this.package_delivery_type = ''
+    this.foodDeliveryButtons.forEach(button => button.isActive = false);
+    this.packageDeliveryButtons.forEach(button => button.isActive = false);
+  }
+
   onSubmitPackage(openBarrier: boolean = false) {
     console.log(openBarrier)
     let mutiple_unit = {
@@ -191,13 +219,13 @@ export class DeliveriesPage implements OnInit {
       errMsg += 'Please select a delivery type!\n';
     }
     if (!this.formData.contact_number){
-      errMsg += 'Please insert your contact number!\n';
+      errMsg += 'Please insert visitor contact number!\n';
     }
     if (!this.formData.vehicle_number){
-      errMsg += 'Please insert your vehicle number!\n';
+      errMsg += 'Please insert visitor vehicle number!\n';
     }
     if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit)){
-      errMsg += 'Please insert your block and unit!\n';
+      errMsg += 'Please insert visitor block and unit!\n';
     }
     if (this.package_delivery_type == "multiple" && this.formData.pax == "0"){
       errMsg += 'Please insert number of Pax!\n';
@@ -265,6 +293,9 @@ export class DeliveriesPage implements OnInit {
 
   toggleFoodDeliveries() {
     if (!this.bulkyItemDeliveriesTrans && !this.packageDeliveriesTrans) {
+      if (!this.foodDeliveries) {
+        this.resetForm()
+      }
       this.foodDeliveriesTrans = true
       this.bulkyItemDeliveries = false;
       this.packageDeliveries = false;
@@ -283,6 +314,9 @@ export class DeliveriesPage implements OnInit {
 
   togglePackageDeliveries() {
     if (!this.foodDeliveriesTrans && !this.bulkyItemDeliveriesTrans) {
+      if (!this.packageDeliveries) {
+        this.resetForm()
+      }
       this.packageDeliveriesTrans = true
       this.bulkyItemDeliveries = false;
       this.foodDeliveries = false;
@@ -301,6 +335,9 @@ export class DeliveriesPage implements OnInit {
 
   toggleBulkyItemDeliveries() {
     if (!this.foodDeliveriesTrans && !this.packageDeliveriesTrans) {
+      if (!this.bulkyItemDeliveries) {
+        this.resetForm()
+      }
       this.bulkyItemDeliveriesTrans = true
       this.packageDeliveries = false;
       this.foodDeliveries = false;
@@ -317,39 +354,6 @@ export class DeliveriesPage implements OnInit {
     }
   }
 
-  showFoodPanda = false;
-  showGrabFood = false;
-  showDeliveroo = false;
-  showFoodBar = false;
-
-  toggleDeliveroo() {
-    this.showGrabFood = false;
-    this.showFoodPanda = false;
-    this.showFoodBar = false
-    this.showDeliveroo = true
-  }
-
-  toggleFoodPanda() {
-    this.showGrabFood = false;
-    this.showDeliveroo = false;
-    this.showFoodBar = false
-    this.showFoodPanda = true
-  }
-
-  toggleGrabFood() {
-    this.showFoodPanda = false;
-    this.showDeliveroo = false;
-    this.showFoodBar = false
-    this.showGrabFood = true
-  }
-
-  toggleFoodBar() {
-    this.showGrabFood = false
-    this.showFoodPanda = false;
-    this.showDeliveroo = false;
-    this.showFoodBar = true
-  }
-
   showWalkIn = false;
   showDriveIn = false;
 
@@ -363,40 +367,7 @@ export class DeliveriesPage implements OnInit {
     this.showDriveIn = true;
   }
 
-  showNinjaVan = false;
-  showGrabExpress = false;
-  showSingPost = false;
-  showPackagetOthers = false;
-
-  toggleSingPost() {
-    this.showGrabExpress = false;
-    this.showNinjaVan = false;
-    this.showPackagetOthers = false
-    this.showSingPost = true
-  }
-
-  toggleNinjaVan() {
-    this.showGrabExpress = false;
-    this.showSingPost = false;
-    this.showPackagetOthers = false
-    this.showNinjaVan = true
-  }
-
-  toggleGrabExpress() {
-    this.showNinjaVan = false;
-    this.showSingPost = false;
-    this.showPackagetOthers = false
-    this.showGrabExpress = true
-  }
-
-  togglePackagetOthers() {
-    this.showGrabExpress = false
-    this.showNinjaVan = false;
-    this.showSingPost = false;
-    this.showPackagetOthers = true
-  }
-
-  // Metode untuk menangani klik tombol
+    // Metode untuk menangani klik tombol
   onButtonClick(event: { text: string, isActive: boolean }) {
     console.log(`Button clicked: ${event.text}, Active: ${event.isActive}`);
   }

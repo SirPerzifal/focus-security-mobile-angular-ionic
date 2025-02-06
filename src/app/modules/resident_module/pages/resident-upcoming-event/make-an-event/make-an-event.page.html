@@ -1,10 +1,63 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'Upcoming Events'" [text_second]="'Calendar Event'"/>
-  <div class="w-1/6 flex items-start mr-10 ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/upcoming-event-calendar-view']"></ion-icon>
+  <div class="w-full flex flex-row items-center justify-between">
+    <div class="w-1/6 flex items-start ml-4 mt-2">
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/upcoming-event-calendar-view']"></ion-icon>
+    </div>
+    <ion-datetime-button class="w-5/6 mt-2 mr-[1.7rem] ml-[4.5rem]" datetime="datetime"></ion-datetime-button>
+    <ion-modal keep-contents-mounted="true">
+      <ng-template>
+        <ion-datetime 
+          id="datetime" 
+          presentation="date" 
+          [(ngModel)]="selectedDate"
+          [formatOptions]="{
+            date: {
+              day: '2-digit',
+              weekday: 'short',
+              month: 'long',
+            },
+          }"
+        ></ion-datetime>
+      </ng-template>
+    </ion-modal>
   </div>
 
-  <div class="pb-2.5 pt-2 mb-20">
+  <div class="pb-2.5 pt-2 mb-16">
+    <div class="shadow-md rounded-2xl px-3.5 py-1 mb-3 overflow-auto max-h-28 style-overflow">
+      <div *ngIf="hasTasks">
+        <button (click)="showCompletedTasks = !showCompletedTasks" class="text-blue-500 text-sm">
+          {{ showCompletedTasks ? 'Hide Completed Tasks' : 'Show Completed Tasks' }}
+        </button>
+      </div>
+      <!-- Tampilkan pesan jika tidak ada tugas -->
+      <div *ngIf="!hasTasks" class="text-center text-gray-500 mt-4">
+        You don't have tasks today.
+      </div>
+      <ng-container *ngFor="let task of task">
+        <div *ngIf="showCompletedTasks || !task.completed" class="mt-2">
+          <div id="task.id" class="flex items-center mb-2">
+            <label class="flex items-center cursor-pointer relative" for="taskComplete{{task.id}}">
+              <input type="checkbox"
+                class="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-[var(--ion-color-primary)] checked:border-[var(--ion-color-primary)]"
+                id="taskComplete{{task.id}}" [checked]="task.completed" (change)="toggleTaskCompletion(task)" />
+              <span class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
+                  stroke="currentColor" stroke-width="1">
+                  <path fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"></path>
+                </svg>
+              </span>
+            </label>
+            <div class="w-full flex flex-row justify-between ml-1.5">
+              <p class="font-bold text-sm"><label for="taskComplete{{task.id}}">{{ task.title }}</label></p>
+              <p class="text-sm font-bold text-gray-500">{{ task.due_date }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
     <div class="cal-day-view">
       <mwl-calendar-day-view
         [viewDate]="ViewDate"
@@ -12,7 +65,43 @@
       ></mwl-calendar-day-view>
     </div>
   </div>
-  
+
+  <!-- Modal Untuk Add event -->
+  <ion-modal id="new-task-modal" keep-contents-mounted="true" [isOpen]="isTaskClick" (didDismiss)="isTaskClick = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-icon name="close-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="isDayClick = false"></ion-icon>
+          </ion-buttons>
+          <ion-title slot="end" class="text-center font-bold">Add new task</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <!-- Input untuk menambahkan tugas baru -->
+        <div class="flex mb-2 flex-col space-y-2">
+          <app-text-input 
+            [id]="'new-task'"
+            [placeholder]="'Type your task name'"
+            [(ngModel)]="newTaskTitle"
+            [customClasses]="{'w-full':true}" 
+            [type]="'text'"
+            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
+          </app-text-input>
+          <app-text-input 
+            [id]="'new-task'"
+            [placeholder]="'Tap to add task'"
+            [(ngModel)]="timeTask"
+            [customClasses]="{'w-full':true}" 
+            [type]="'time'"
+            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
+          </app-text-input>
+          <button (click)="addTask()" class="bg-[var(--ion-color-primary)] text-white rounded px-4 h-8">Add</button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <!-- Modal Untuk Add event -->
   <ion-modal id="click-date-modal" keep-contents-mounted="true" [isOpen]="isDayClick" (didDismiss)="isDayClick = false">
     <ng-template>
@@ -21,9 +110,8 @@
           <ion-buttons slot="start">
             <ion-icon name="close-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="isDayClick = false"></ion-icon>
           </ion-buttons>
-          <ion-title class="text-start text-lg ml-2 font-bold p-0">Add Event</ion-title>
           <ion-buttons slot="end">
-            <app-visitor-button [text]="'Save'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 text-base'"></app-visitor-button>
+            <app-visitor-button [text]="'Save'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 text-base mr-2'"></app-visitor-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -38,7 +126,13 @@
 
         <!-- Event Name Input -->
         <div class="mb-4">
-          <input type="text" placeholder="Event name" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <app-text-input 
+            [id]="'event_name'"
+            [placeholder]="'Type your event name'"
+            [customClasses]="{'w-full':true}" 
+            [type]="'text'"
+            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
+          </app-text-input>
         </div>
 
         <!-- All Day Toggle -->
@@ -109,7 +203,7 @@
 </ion-content>
 <div class="absolute bottom-[12rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2">
   <span class="font-bold">Add Task</span>
-  <button class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5">
+  <button class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5" (click)="isTaskClick = true">
     <ion-icon id="addIcon" slot="end" name="clipboard" class="text-white font-bold size-5"></ion-icon>
   </button>
 </div>

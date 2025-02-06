@@ -1,9 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Ocr, TextDetections} from '@capacitor-community/image-to-text'
+// import * as Tesseract from 'tesseract.js';
 
 @Component({
   selector: 'app-resident-car-list',
@@ -28,7 +31,8 @@ export class ResidentCarListPage implements OnInit {
     private mainVmsService: MainVmsService,
     private functionMain: FunctionMainService,
     private modalController: ModalController,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private alertController: AlertController,
   ) { }
 
   searchType: string = '';
@@ -48,7 +52,7 @@ export class ResidentCarListPage implements OnInit {
   showType = ''
 
   vehicleNumber = ''
-  toggleShowSearch() {
+  toggleShowSearch(is_camera: boolean = false) {
     if (this.vehicleNumber){
       this.mainVmsService.getApi({vehicle_number: this.vehicleNumber}, '/vms/get/search_vehicle' ).subscribe({
         next: (results) => {
@@ -64,7 +68,11 @@ export class ResidentCarListPage implements OnInit {
             }, 300)
             
           } else {
-            this.functionMain.presentToast(results.result.error, 'danger');
+            if (is_camera) {
+              this.presentAlert()
+            } else {
+              this.functionMain.presentToast(results.result.error, 'danger');
+            }
           }
         },
         error: (error) => {
@@ -75,6 +83,28 @@ export class ResidentCarListPage implements OnInit {
       
     }
     
+  }
+
+  async presentAlert(){
+    const alertButtons = await this.alertController.create({
+      cssClass: 'checkout-alert',
+      header: `Can't get vehicle number, is '${this.vehicleNumber}' the vehicle number you are looking for?`,
+      buttons: [
+        {
+          text: 'Retake',
+          role: 'confirm',
+          handler: () => {
+            this.toggleShowSearch(true)
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    })
   }
 
   ngOnInit() {
@@ -117,5 +147,71 @@ export class ResidentCarListPage implements OnInit {
     return await modal.present();
   }
 
+  plate_value = ''
+  detection_array = []
+  async takeVehicleLicense() {
+    try {
+      console.log("EY TAKE")
+      const image = await Camera.getPhoto({
+        quality: 90,
+        source: CameraSource.Camera,
+        allowEditing: false,
+        resultType: CameraResultType.Uri
+      });
+  
+      console.log(image)
+      const data: TextDetections = await Ocr.detectText({ filename: image.path! });
+      console.log(data)
+      for (let detection of data.textDetections) {
+        this.vehicleNumber += detection
+      }
+  
+      if (this.vehicleNumber == '') {
+        this.functionMain.presentToast("Vehicle number not detected!", 'warning')
+      } else {
+        this.toggleShowSearch()
+      }
+    } catch (error) {
+      this.functionMain.presentToast("Error occured while detecting vehicle number!", 'danger')
+      console.error(error)
+    }
+    
 
+  }
+
+  // async takePicture() {
+  //   try {
+  //     const image = await Camera.getPhoto({
+  //       quality: 90,
+  //       source: CameraSource.Camera,
+  //       allowEditing: true,
+  //       resultType: CameraResultType.Base64
+  //     });
+  //     return image.base64String;
+  //   } catch (error) {
+  //     if (typeof error === 'object' && error !== null && 'message' in error) {
+  //       const errorMessage = (error as { message: string }).message;
+  //       if (errorMessage === 'User cancelled photos app') {
+  //         return;
+  //       }
+  //     }
+  //     return false
+  //   }
+  // }
+
+  // async recognizeText(imagePath: string) {
+  //   const { data } = await Tesseract.recognize(`data:image/jpeg;base64,${imagePath}`, 'eng');
+  //   console.log('OCR Result:', data.text);
+  //   return data.text;
+  // }
+  
+  // async captureAndReadPlate() {
+  //   const imagePath = await this.takePicture();
+  //   let plateNumber = ''
+  //   if(imagePath){
+  //     plateNumber = await this.recognizeText(imagePath);
+  //   }
+  //   console.log('Detected Plate Number:', plateNumber);
+  // }
+  
 }

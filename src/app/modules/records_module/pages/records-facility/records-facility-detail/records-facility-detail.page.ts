@@ -17,6 +17,7 @@ export class RecordsFacilityDetailPage implements OnInit {
     const state = navigation?.extras.state as { record: any };
     if (state) {
       this.record = state.record
+      console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     }
   }

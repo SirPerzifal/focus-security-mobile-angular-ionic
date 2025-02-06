@@ -67,12 +67,23 @@ export class AuthService extends ApiService{
     return res
   }
 
+  
+
   parseJWTParams(token:string){
     return jwtDecode(token) as {user_id:string, family_id:string, partner_id:string,name:string,email:string,exp:Number}
   }
 
-  getActiveInvites(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/get/active_invites`, {jsonrpc: '2.0', params: {unit_id: 1}})
+  isTokenValid(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now(); // Check if token is expired
+    } catch (error) {
+      return false;
+    }
+  }
+
+  getEstatesByEmail(email:string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/resident/get/estate`, {jsonrpc: '2.0', params: {email}})
   }
 
   private handleError(error: any) {

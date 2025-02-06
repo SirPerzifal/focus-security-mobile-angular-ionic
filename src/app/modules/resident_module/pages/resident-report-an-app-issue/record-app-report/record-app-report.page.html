@@ -12,42 +12,27 @@
     </div>
     <!-- Issues List -->
     <div class="space-y-4">
-      <!-- Issue 1 -->
-      <div class="bg-[#E3787E] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Report Issue - Slow App Loading</h2>
+      <div *ngFor="let report of allData" [ngClass]="{
+        'bg-[var(--ion-color-tertiary)]': report.ticket_status === 'Solved',
+        'bg-[#F8F1BA]': report.ticket_status === 'New',
+        'bg-[#E3787E]': report.ticket_status === 'Canceled',
+        'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
+        }" class="bg-[#F8F1BA] p-4 rounded shadow"
+      >
+        <h2 class="font-bold text-left">{{ report.ticket_name }} - {{ report.ticket_type }}</h2>
         <table class="w-full text-left border-collapse mt-2">
           <tbody>
             <tr>
-              <td class="font-bold">Reported Issue On</td>
-              <td>: 09/10/2024</td>
+              <td class="font-bold">Reported On</td>
+              <td class="cw-3:text-sm">: {{ report.issued_on }}</td>
             </tr>
             <tr>
-              <td class="font-bold">Issue Resolved On</td>
-              <td>: N/A</td>
-            </tr>
-            <tr>
-              <td class="font-bold">Ticket Status</td>
-              <td>: Closed</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- Issue 2 -->
-      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded shadow">
-        <h2 class="font-bold text-left">Improvement - House Rule </h2>
-        <table class="w-full text-left border-collapse mt-2">
-          <tbody>
-            <tr>
-              <td class="font-bold">Reported Issue On</td>
-              <td>: 09/10/2024</td>
-            </tr>
-            <tr>
-              <td class="font-bold">Issue Resolved On</td>
-              <td>: 10/10/24</td>
+              <td class="font-bold">Resolved On</td>
+              <td class="cw-3:text-sm">: {{ report.solved_on || 'N/A' }}</td>
             </tr>
             <tr>
               <td class="font-bold">Ticket Status</td>
-              <td>: Closed</td>
+              <td class="cw-3:text-sm">: {{ report.ticket_status }}</td>
             </tr>
           </tbody>
         </table>

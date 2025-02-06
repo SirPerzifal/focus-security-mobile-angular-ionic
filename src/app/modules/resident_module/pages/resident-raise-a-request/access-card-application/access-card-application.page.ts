@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class AccessCardApplicationPage implements OnInit {
   selectedOption: string = '';
   expectedCards: any = [];
+  expectedFamily: any = [];
   agreementChecked: boolean = false;
   unitId: number = 1; // Replace with actual unit ID
   extend_mb = false
@@ -34,7 +35,6 @@ export class AccessCardApplicationPage implements OnInit {
 
   ngOnInit() {
     console.log('tes');
-    this.loadCards();
   }
 
   onOptionChange(option: string) {
@@ -45,6 +45,7 @@ export class AccessCardApplicationPage implements OnInit {
       this.loadCards();
       this.agreementChecked = false;
     } else if (option === 'new_application') {
+      this.loadCards();
       this.formData.amount_payable = '';
       this.agreementChecked = false;
       this.expectedCards = [];
@@ -55,7 +56,16 @@ export class AccessCardApplicationPage implements OnInit {
     this.raiseARequestService.getCardFamilyMember(this.unitId).subscribe(
       (response) => {
         if (response) {
-          
+          console.log(response);
+          if (response.result.family_data_with_no_ac) {
+            this.expectedFamily = response.result.family_data_with_no_ac.map((family_with_no_ac: any) => {
+              return {
+                family_id: family_with_no_ac.id,
+                family_name: family_with_no_ac.full_name,
+                member_type: family_with_no_ac.member_type
+              }
+            })
+          }
           // Flatten the access cards from family members
           this.expectedCards = response.result.family_data.flatMap((member: any) => 
             member.access_cards.map((card: any) => ({
@@ -95,6 +105,7 @@ export class AccessCardApplicationPage implements OnInit {
 
   onNewCardSelect(type: any) {
     console.log('New Card Type:', type);
+    this.formData.family_id = type;
     // Perform action based on selected card type
   }
 

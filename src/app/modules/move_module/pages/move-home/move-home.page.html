@@ -80,22 +80,22 @@
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showHistory && (choosenBlock || startDateFilter || endDateFilter)">
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-          *ngFor="let schedule of filteredHistorySchedules">
+          *ngFor="let schedule of filteredHistorySchedules" (click)="onClickHistory(schedule)">
           <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name : '-') : (schedule.block_name  ? schedule.block_name : '-') }}, {{ pageType == 'ma_visitor' ? (schedule.company_name ? schedule.company_name : '-') : (schedule.unit_name  ? schedule.unit_name : '-') }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
-            (click)="onScheduleClick(schedule)"></ion-icon>
-            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
-            (click)="coachForm(schedule)"></ion-icon>
+          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" 
+            ></ion-icon>
+            <!-- <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
+            (click)="coachForm(schedule)"></ion-icon> -->
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
-          *ngFor="let schedule of daySchedules">
+          *ngFor="let schedule of daySchedules" (click)="onClickDay(schedule)">
           <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name : '-') : (schedule.block_name  ? schedule.block_name : '-') }}, {{ pageType == 'ma_visitor' ? (schedule.company_name ? schedule.company_name : '-') : (schedule.unit_name  ? schedule.unit_name : '-') }}</span>
-          <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"  *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
-            (click)="form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)"></ion-icon>
-            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
-            (click)="coachForm(schedule)"></ion-icon>
+          <!-- <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"  *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
+            (click)="form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)"></ion-icon> -->
+            <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"
+            ></ion-icon>
         </div>
       </div>
     </div>

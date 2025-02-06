@@ -9,7 +9,7 @@
 					Welcome Veeknesh
 				</h1>
 				<p class="text-[black] font-bold">
-					ABC Condominium
+					{{condominiumName}}
 				</p>
 			</div>
 		</div>
@@ -17,7 +17,10 @@
 			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
 		</div>
 	</div>
-  <div class="p-5 text-center mb-24">
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading" class="p-5 text-center mb-24">
     <div class="w-full flex flex-row mb-4">
       <div class="w-full">
         <input type="text" id="simple-search" class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="What Would You Like To Do Today?" required />

@@ -60,6 +60,9 @@ export class CollectionModulePage implements OnInit {
 
   toggleShowWalk() {
     if (!this.showDriveTrans){
+      if(!this.showWalk){
+        this.resetForm()
+      }
       this.showWalkTrans = true
       this.showDrive = false;
       setTimeout(()=>{
@@ -69,8 +72,31 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
+  resetForm(){
+    this.walkInFormData = {
+      visitor_name: '',
+      visitor_contact_no: '',
+      visitor_type: 'walk_in',
+      visitor_vehicle: '',
+      block: '',
+      unit: ''
+    };
+  
+    this.driveInFormData = {
+      visitor_name: '',
+      visitor_contact_no: '',
+      visitor_type: 'drive_in',
+      visitor_vehicle: '',
+      block: '',
+      unit: ''
+    };
+  }
+
   toggleShowDrive() {
     if (!this.showWalkTrans){
+      if(!this.showDrive){
+        this.resetForm()
+      }
       this.showDriveTrans = true
       this.showWalk = false;
       setTimeout(()=>{

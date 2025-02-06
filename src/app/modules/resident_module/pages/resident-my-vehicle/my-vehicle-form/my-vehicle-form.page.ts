@@ -71,7 +71,9 @@ export class MyVehicleFormPage implements OnInit {
         if (response.result.response_code === 200) {
           this.FamilyMember = response.result.family_data;
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
+          // this.presentToast('Failed to load vehicle data', 'danger');
+          console.log("gaada data");
+          
         }
       },
       error: (error) => {

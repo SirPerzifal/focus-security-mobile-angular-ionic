@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { authGuard } from './service/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -72,7 +73,8 @@ const routes: Routes = [
   },
   {
     path: 'resident-homepage',
-    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule)
+    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule),
+    // canActivate:[authGuard]
   },
   {
     path: 'resident-visitors',
@@ -281,6 +283,10 @@ const routes: Routes = [
   {
     path: 'overnight-parking-modal',
     loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.module').then( m => m.OvernightParkingModalPageModule)
+  },
+  {
+    path: 'estate-modal',
+    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/estate-modal/estate-modal.module').then( m => m.EstateModalPageModule)
   },
   {
     path: 'records-blacklist',

@@ -19,7 +19,7 @@
     <div class="flex flex-row mx-4">
       <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4">
         <div class="w-full">
-          <app-vms-contact-input [value]="formData.visitor_contact_no" #blacklistContactNumberInput [id]="'blacklist_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input [(value)]="formData.contact_no" #blacklistContactNumberInput [id]="'blacklist_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
         </div>
         <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
@@ -31,7 +31,7 @@
         </div> -->
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
-            <app-text-input #blacklistVehicleNumberInput [id]="'blacklist_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8298 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_vehicle"></app-text-input>
+            <app-text-input #blacklistVehicleNumberInput [id]="'blacklist_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8298 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_no"></app-text-input>
           </div>
           <!-- <div class="w-1/4 h-20 bg-[var(--ion-color-primary)] rounded flex justify-center items-center"> -->
             <div class="h-25 flex flex-col justify-end">
@@ -44,26 +44,26 @@
         </div> 
         <div class="w-full flex flex-col">
           <label class="text-2xl"><b><u>BLOCK</u></b></label>
-          <select id="blacklist_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)" [(ngModel)]="formData.block">
+          <select id="blacklist_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)" [(ngModel)]="formData.block_id">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
         <div class="w-full">
           <label class="text-2xl"><b><u>UNIT</u></b></label>
-          <select id="blacklist_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="formData.unit">
+          <select id="blacklist_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="formData.unit_id">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REASON</b></u></label>
-          <textarea id="reason" rows="4"
+          <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER THE REASON HERE..."></textarea>
         </div>        
         <div class="w-full">
-          <app-text-input #submitNameInput [id]="'submit_name'" [labelText]="'SUBMITTED BY'" [placeholder]="'ERIC'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input #submitNameInput [id]="'submit_name'" [labelText]="'SUBMITTED BY'" [placeholder]="'ERIC'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.banned_by"></app-text-input>
         </div> 
         
         <div class="w-full flex flex-col">

@@ -73,31 +73,31 @@
         </div>
       </div> -->
       <div class="flex flex-col w-full space-y-5" *ngIf="showHistory" @fadeInOut>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of historySchedules" >
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of historySchedules" (click)="form(record)">
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
             <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
           </div>
           
-          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" ></ion-icon>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showUpcoming" @fadeInOut>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of upcomingSchedules" >
-          <div class="flex flex-col">
-            <span class="text-2xl font-bold text-white">{{ record.facility }}</span>
-            <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
-          </div>
-          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
-        </div>
-      </div>
-      <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of daySchedules" >
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of upcomingSchedules" (click)="form(record)">
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility_name }}</span>
             <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
           </div>
-          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="form(record)"></ion-icon>
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" ></ion-icon>
+        </div>
+      </div>
+      <div class="flex flex-col w-full space-y-5" *ngIf="showDay" @fadeInOut>
+        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of daySchedules" (click)="form(record)">
+          <div class="flex flex-col">
+            <span class="text-2xl font-bold text-white">{{ record.facility_name }}</span>
+            <span class="text-2xl font-sans text-white">{{ getBookingTime(record) }}</span>
+          </div>
+          <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
         </div>
       </div>
     </div>

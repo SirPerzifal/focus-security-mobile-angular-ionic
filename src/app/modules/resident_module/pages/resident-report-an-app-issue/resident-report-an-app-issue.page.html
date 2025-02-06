@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <app-resident-header [text]="'Report app Issue'" [text_second]="'Add App Report'"/>
   <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/record-app-report']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
@@ -10,11 +10,9 @@
         <div class="flex flex-row justify-start mb-1 mt-1">
           <p class="text-base font-bold">Type of Issue</p>
         </div>
-        <select id="type_of_issue" placeholder="Type of Issue" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280]">
+        <select id="type_of_issue" placeholder="Type of Issue" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-10 text-[#6B7280]" (change)="onTypeReportChange($event)">
           <option selected disabled hidden>Choose Type of Issue</option>
-          <option value="suggestion">Suggestion</option>
-          <option value="improvement">Improvement</option>
-          <option value="report_issue">Report Issue</option>
+          <option *ngFor="let tor of typeOfReport" [value]="tor.id">{{ tor.name }}</option>
         </select>
       </div>
       <u class="text-base font-bold mb-1.5 text-start">Reporter Details</u>
@@ -28,7 +26,7 @@
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
             [isReadonly]="true"
-            [value]="reporterDetails.name">
+            [(ngModel)]="reporterDetailsFrom.name">
           </app-text-input>
         </div>
         <div class="w-full">
@@ -40,7 +38,7 @@
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
             [isReadonly]="true"
-            [value]="reporterDetails.contactNumber">
+            [(ngModel)]="reporterDetailsFrom.contactNumber">
           </app-text-input>
         </div>
         <div class="w-full">
@@ -52,7 +50,7 @@
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
             [isReadonly]="true"
-            [value]="reporterDetails.email">
+            [(ngModel)]="reporterDetailsFrom.email">
           </app-text-input>
         </div>
         <div class="w-full">
@@ -64,7 +62,7 @@
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
             [isReadonly]="true"
-            [value]="reporterDetails.blockAndUnit">
+            [(ngModel)]="reporterDetailsFrom.blockAndUnit">
           </app-text-input>
         </div>
         <div class="w-full">
@@ -76,16 +74,16 @@
             [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
             [isReadonly]="true"
-            [value]="reporterDetails.placeOfResidence">
+            [(ngModel)]="reporterDetailsFrom.placeOfResidence">
           </app-text-input>
         </div>
         <div class="w-full">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Summary Report</p>
           </div>
-          <textarea id="report_summary" placeholder="Summary Report"
+          <textarea id="report_summary" placeholder="Summary Report"  (focus)="testAddMb(true)" (blur)="testAddMb(false)"
             class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
-            [value]="reporterDetails.summaryReport">
+            [(ngModel)]="reporterDetailsFrom.summaryReport">
           </textarea>
         </div>
       </div>
@@ -94,11 +92,12 @@
       <div class="w-full">
         <app-visitor-button [text]="'Submit'"
           [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-          [routerLink]="['/record']">
+          (click)="onSubmit()">
         </app-visitor-button>
       </div>
     </div>
   </div>
+  <div class="h-96" *ngIf="extend_mb"></div>
 
   <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

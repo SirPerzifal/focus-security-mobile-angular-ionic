@@ -11,49 +11,49 @@
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
         <table class="text-2xl">
           <tr>
-            <td class="font-bold w-2/5">NAME</td>
+            <td class="font-bold w-[45%]">NAME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.offender_name }}</td>
+            <td>{{ functionMain.returnNone(record.visitor_name) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">VEHICLE NO</td>
+            <td class="font-bold w-[45%]">VEHICLE NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.vehicle_number }}</td>
+            <td>{{ functionMain.returnNone(record.vehicle_no) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">CONTACT</td>
+            <td class="font-bold w-[45%]">CONTACT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.contact_number }}</td>
+            <td>{{ functionMain.returnNone(record.contact_no) }}</td>
           </tr>
-          <tr *ngIf="pageType == 'wheel_clamp'">
-            <td class="font-bold w-2/5">BANNED DATE</td>
+          <tr>
+            <td class="font-bold w-[45%]">BANNED DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.name }}</td>
+            <td>{{ functionMain.returnNone(record.create_date) }}</td>
           </tr>         
           <tr>
-            <td class="font-bold w-2/5">LAST ENTRY DATE & TIME</td>
+            <td class="font-bold w-[45%]">LAST ENTRY DATE & TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.issue_date }}</td>
+            <td>{{ functionMain.returnNone(record.last_entry_date_time) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">TYPE OF ENTRY</td>
+            <td class="font-bold w-[45%]">TYPE OF ENTRY</td>
             <td class="w-[5%]">:</td>
-            <td>{{ issue_time }}</td>
+            <td>{{ '-' }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">BLOCK & UNIT</td>
+            <td class="font-bold w-[45%]">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.block_name ? record.block_name : '-' }} | {{ record.unit_name ? record.unit_name : '-' }}</td>
+            <td>{{ record.block_id[1] ? record.block_id[1] : '-' }} | {{ record.unit_id[1] ? record.unit_id[1] : '-' }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">BANNED BY</td>
+            <td class="font-bold w-[45%]">BANNED BY</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.entry_datetime }}</td>
+            <td>{{ functionMain.returnNone(record.ban_by) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">REASON OF BAN</td>
+            <td class="font-bold w-[45%]">REASON OF BAN</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.type_of_entry }}</td>
+            <td>{{ functionMain.returnNone(record.reason) }}</td>
           </tr>  
         </table>
         <div class="flex flex-row justify-around w-full">

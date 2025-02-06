@@ -81,8 +81,8 @@
       </div>
     </div>
     <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/resident-my-family']">
-        <ion-button fill="clear" [routerLink]="['/resident-my-family']">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toWhere('family')">
+        <ion-button fill="clear" (click)="toWhere('family')">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Add User Group Woman Man.webp" alt="Icon for Family Member"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Family Member</span>
@@ -100,8 +100,8 @@
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Estate</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toHistoryInVisitorJustBan()">
-        <ion-button fill="clear" (click)="toHistoryInVisitorJustBan()">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toWhere('ban_visitor')">
+        <ion-button fill="clear" (click)="toWhere('ban_visitor')">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/No User.webp" alt="Icon for Ban Visitor"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Ban Visitor</span>
@@ -112,8 +112,8 @@
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">Registered Pets</span>
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/resident-my-vehicle']">
-        <ion-button fill="clear" [routerLink]="['/resident-my-vehicle']">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toWhere('vehicle')">
+        <ion-button fill="clear" (click)="toWhere('vehicle')">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Oncoming Automobile.webp" alt="Icon for Registered Vehicle"/>
         </ion-button>
         <span class="text-[13px] font-bold text-[black] text-center">Registered Vehicle</span>

@@ -64,7 +64,9 @@
   'bg-sky-100': status === 'pending_payment' || status === 'Pending Payment'
   }" [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col'">
   <div class="flex flex-row">
-    <img alt="Profile picture of {{name}}" class="h-16 w-16 rounded-full" height="50" src="data:image/png;base64,{{profile_image}}" width="50"/>
+    <img alt="Profile picture of {{name}}" class="h-16 w-16 rounded-full" height="50" 
+    [src]="profile_image ? 'data:image/png;base64,' + profile_image : 'https://placehold.co/600x400?text=' + name.charAt(0)" 
+    width="50"/>
     <div class="ml-4 text-start">
      <h2 class="text-lg font-bold">
       {{name}}

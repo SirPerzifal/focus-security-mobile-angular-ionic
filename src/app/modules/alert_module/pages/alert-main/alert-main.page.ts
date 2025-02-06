@@ -6,6 +6,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { AlertModalPage } from '../alert-modal/alert-modal.page';
+import { RecordsWheelClampedNewPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-new/records-wheel-clamped-new.page';
 
 @Component({
   selector: 'app-alert-main',
@@ -56,6 +57,7 @@ export class AlertMainPage implements OnInit {
     this.loadRecordsWheelClamp('first_warning')
     this.loadRecordsWheelClamp('second_warning')
     this.loadUnregisteredCar()
+    this.loadOverstay()
   }
 
   private routerSubscription!: Subscription;
@@ -110,6 +112,7 @@ export class AlertMainPage implements OnInit {
   }
 
   loadUnregisteredCar(){
+    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'unregistered');
     this.mainVmsService.getApi({}, '/vms/get/unregistered_car_list').subscribe({
       next: (results) => {
         console.log('unregistered', results)
@@ -128,6 +131,31 @@ export class AlertMainPage implements OnInit {
       },
       error: (error) => {
         this.presentToast('An error occurred while loading unregistered car data!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  loadOverstay(){
+    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'overstay');
+    this.mainVmsService.getApi({}, '/vms/get/overstay_list').subscribe({
+      next: (results) => {
+        console.log('overstay', results)
+        if (results.result.response_code === 200) {
+          this.alertsIssues.push({ type: 'overstay', data: results.result.response_result })
+          this.overstayTotal = results.result.response_result.length
+
+          this.recordAction();
+          this.actionTotalIssue()
+          if (!this.main) {
+            console.log("HEY THIS WORK")
+            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            console.log(this.showIssues)
+          }
+        } 
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading overstay car data!', 'danger');
         console.error(error);
       }
     });
@@ -252,16 +280,25 @@ export class AlertMainPage implements OnInit {
     let params = {
       offence_id: id,
       is_checkout: type == 'checkout',
-      is_release: type != 'checkout'
+      is_release: type != 'checkout',
+      is_unregistered: this.active_type == 'unregistered' || this.active_type == 'overstay',
     }
     console.log(params)
-    if (this.active_type == 'first_warning' || this.active_type == 'second_warning') {
+    if (true) {
       this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
             this.presentToast(`Successfully ${type} vehicle!`, 'success');
-            this.loadRecordsWheelClamp(this.active_type)
+            if (this.active_type == 'unregistered') {
+              this.loadUnregisteredCar()
+            } else if (this.active_type == 'overstay') {
+              this.loadOverstay()
+            }
+            else {
+              this.loadRecordsWheelClamp(this.active_type)
+            }
+            
           } else {
             this.presentToast(`Failed to ${type} vehicle!`, 'danger');
           }
@@ -269,7 +306,7 @@ export class AlertMainPage implements OnInit {
   
         },
         error: (error) => {
-          this.presentToast('An error occurred while processin function!', 'danger');
+          this.presentToast('An error occurred while processing function!', 'danger');
           console.error(error);
         }
       });
@@ -369,6 +406,29 @@ export class AlertMainPage implements OnInit {
 
   backHome() {
     this.router.navigate(['/home-vms'])
+  }
+
+  async presentModalFirstWarning(vehicle_number: any, entry_type: any) {
+    const modal = await this.modalController.create({
+      component: RecordsWheelClampedNewPage,
+      cssClass: 'record-modal',
+      componentProps: {
+        type: 'first_warning',
+        vehicle_number: vehicle_number,
+        type_of_entry: entry_type,
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if(result.data){
+          this.loadRecordsWheelClamp('first_warning')
+        }
+      }
+    });
+
+    return await modal.present();
   }
 
 }
