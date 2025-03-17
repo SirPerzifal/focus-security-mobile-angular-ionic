@@ -8,7 +8,28 @@ import { ApiService } from '../../api.service';
   providedIn: 'root'
 })
 export class RaiseARequestService extends ApiService  {
-  private apiUrl = this.baseUrl + '/resident/get/expected_visitor';
+  private getApiAllStatusRaiseARequest = this.baseUrl + '/resident/get/raise_a_request_status';
+  ggetAllStatusRaiseARequest(requestorId: number, unitId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        requestor_id: requestorId,
+        unit_id: unitId
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`${this.getApiAllStatusRaiseARequest}`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private getApiUrlExpectedVisitors = this.baseUrl + '/resident/get/expected_visitor';
   private postApiUrlOvernight = this.baseUrl + '/resident/post/overnight_parking_application';
 
   constructor(http: HttpClient) { 
@@ -29,7 +50,7 @@ export class RaiseARequestService extends ApiService  {
     };
 
     // Change to send data in request body
-    return this.http.post(`${this.apiUrl}`, body, { headers }).pipe(
+    return this.http.post(`${this.getApiUrlExpectedVisitors}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -338,7 +359,7 @@ export class RaiseARequestService extends ApiService  {
         catchError(this.handleError)
     );
   }
-  getTypeCoach(): Observable<any> {
+  getTypeCoach(project_id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -346,7 +367,7 @@ export class RaiseARequestService extends ApiService  {
 
     const body = {
         jsonrpc: '2.0',
-        params: {},
+        params: {project_id: project_id},
     };
 
     return this.http.post(`${this.getTypeApiCoach}`, body, { headers }).pipe(
@@ -440,6 +461,51 @@ export class RaiseARequestService extends ApiService  {
       return this.http.post(this.postApiForUpdateVehicleNumber, body, { headers }).pipe(
           catchError(this.handleError)
       );
+  }
+
+  private getForOffensesApi = this.baseUrl + '/resident/get/offenses';
+  private postOffenseApi = this.baseUrl + '/resident/post/offenses_appeal';
+
+  getOffensesApi(
+    unit_id: number
+  ): Observable<any> {
+      const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      });
+  
+      const body = {
+        jsonrpc: '2.0',
+        params: {
+          unit_id: unit_id,
+        },
+      };
+  
+      return this.http.post(this.getForOffensesApi, body, { headers }).pipe(
+          catchError(this.handleError)
+      );
+  }
+
+  postOffenseAppeal(
+    offense_id: number,
+    reason_for_appeal: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          offence_id: offense_id,
+          reason_for_appeal: reason_for_appeal,
+        },
+    };
+
+    return this.http.post(this.postOffenseApi, body, { headers }).pipe(
+        catchError(this.handleError)
+    );
   }
 
   private handleError(error: any) {

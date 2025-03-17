@@ -62,7 +62,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   showImageResident = ''
   showImageOfficer = ''
 
-  onResidentSign(event: any){
+  onResidentSign(event: any) {
     this.residentSign = event
     console.log(event)
   }
@@ -75,23 +75,29 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   }
 
   onSubmit() {
-    let params = {booking_id: this.record.id,resident_check: this.residentSign.split(',')[1], officer_check: this.officerSign.split(',')[1], check_in_out_type: this.purpose}
+    let params = { 
+      booking_id: this.record.id, 
+      resident_check: this.residentSign ? this.residentSign.split(',')[1] : false, 
+      officer_check: this.officerSign ? this.officerSign.split(',')[1] : false, 
+      check_in_out_type: this.purpose }
     console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/check_in_out_booking').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
           this.functionMainService.presentToast(results.result.response_description, 'success');
-          if ( this.purpose == 'check_in' ) {
-            this.record.resident_check_in =  this.residentSign.split(',')[1]
-            this.record.officer_check_in =  this.officerSign.split(',')[1]
+          if (this.purpose == 'check_in') {
+            this.record.resident_check_in = this.isResidentSigned ? this.record.resident_check_in : this.residentSign.split(',')[1]
+            this.record.officer_check_in = this.isOfficerSigned ? this.record.officer_check_in : this.officerSign.split(',')[1]
           } else {
-            this.record.resident_check_out =  this.residentSign.split(',')[1]
-            this.record.officer_check_out =  this.officerSign.split(',')[1]
+            this.record.resident_check_out = this.isResidentSigned ? this.record.resident_check_out : this.residentSign.split(',')[1]
+            this.record.officer_check_out = this.isOfficerSigned ? this.record.officer_check_out : this.officerSign.split(',')[1]
           }
-          this.router.navigate(['/records-facility-detail'], { state: {
-            record: this.record
-          }})
+          this.router.navigate(['/records-facility-detail'], {
+            state: {
+              record: this.record
+            }
+          })
         } else {
           this.functionMainService.presentToast(results.result.response_description, 'danger');
         }
@@ -104,7 +110,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   }
 
   onClear(resident: boolean = true) {
-    if(resident) {
+    if (resident) {
       this.residentSign = ''
       this.residentSignComponent.clear();
     } else {

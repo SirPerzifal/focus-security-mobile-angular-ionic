@@ -1,16 +1,16 @@
 import { Component, OnInit} from '@angular/core';
-import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { Router } from '@angular/router';
 import { Contacts } from '@capacitor-community/contacts';
-import { ToastController, ModalController } from '@ionic/angular';
-import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
+import { ModalController } from '@ionic/angular';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+
+import { NotificationService } from 'src/app/service/resident/notification/notification.service';
+import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
 import { EstateModalPage } from './estate-modal/estate-modal.page';
-import { NavigationStart } from '@angular/router';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-resident-homepage',
@@ -18,188 +18,143 @@ import { NavigationStart } from '@angular/router';
   styleUrls: ['./resident-homepage.page.scss'],
 })
 export class ResidentHomepagePage implements OnInit {
-  unit_id: number = 1;
-  partner_id: number = 1;
   paramForBadgeNotification: number = 0;
   houseRules: { title: string, base64Doc: string }[] = [];
-  searchTerm: string = '';
-  condominiumName: string=';'
-  isLoading: boolean = true;
+
+  condominiumName: string = '';
+  condoImage: string = '';
+  imageProfile: string = '';
+  isModalUpdateProfile: boolean = false;
+  name: string = '';
+  familyType: string = '';
+
+  estate: any[] = []
+  isLoading: boolean = false;
 
   constructor(
     private notificationService: NotificationService, 
     private route: Router, 
-    private toastController: ToastController, 
     private houseRulesService: HouseRulesService,
-    private authService: AuthService,
     private modalController: ModalController, 
     private router: Router,
-  ) { }
+    public functionMain: FunctionMainService
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { estate: any };
+    if (state) {
+      this.estate = state.estate;
+    } else {
+      Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+        if (value?.value) {
+          const parseValue = JSON.parse(value.value);
+          this.estate = parseValue;
+          this.isModalUpdateProfile = false;
+        }
+      })
+    }
+  }
   
   ngOnInit() {
-    
-    this.isLoading = true;
-    Preferences.get({key:'USER_INFO'}).then(async (value)=>{
+    Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
       if(value?.value){
-        const chosenUnit = await Preferences.get({key:'ACTIVE_UNIT'})
-        
-        var accessToken = this.authService.parseJWTParams(value.value)
-        await this.presentModal(accessToken?.email);
-        
-        this.loadHouseRules();
-        this.fetchContacts();
-        this.loadPreferenceProjectName();
-        this.router.events.subscribe(event => {
-          if (event instanceof NavigationStart) {
-            if (event['url'] == '/record'){
-              this.paramForBadgeNotification = 0
-              this.loadCountNotification();
-            }
-             // Panggil fungsi lagi saat halaman dibuka
+        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+          if (value?.value) {
+            const parseValue = JSON.parse(value.value);
+            this.setData(parseValue);
+            this.fetchContacts();
+            this.loadCountNotification();
+            this.loadHouseRules();
+          } else {
+            this.isLoading = true;
+            await this.presentModal(this.estate);
           }
-        });
-        // if(chosenUnit.value){
-
-
-        // }else{
-        //   // await Preferences.set({
-        //   //   key: 'ACTIVE_UNIT',
-        //   //   value: '1',
-        //   // })
-          
-        //   // var accessToken = this.authService.parseJWTParams(value.value)
-  
-          
-        //   // this.loadHouseRules();
-        //   // this.loadCountNotification();
-        //   // this.fetchContacts();
-        //   // this.route.navigate(['/my-profile-estate'])
-        //   this.loadPreferenceProjectName()
-        // }
-
-        // var parseResult = value ? JSON.parse(value.value) : null
-        // console.log();
-      }else{
-        await this.presentModal('jenvel@gmail.com');
-        this.loadHouseRules();
-        this.fetchContacts();
-        this.loadPreferenceProjectName();
-        this.router.events.subscribe(event => {
-          if (event instanceof NavigationStart) {
-            if (event['url'] == '/record'){
-              this.paramForBadgeNotification = 0
-              this.loadCountNotification();
-            }
-             // Panggil fungsi lagi saat halaman dibuka
-          }
-        });
-
-        // this.route.navigate(['/login-end-user'])
+        })
       }
     })
   }
 
-  ionViewWillEnter(){
-    this.loadPreferenceProjectName()
+  setData(parserValue: any) {
+    this.condominiumName = parserValue.project_name;
+    this.condoImage = parserValue.project_image;
+    this.imageProfile = parserValue.image_profile;
+    this.name = parserValue.family_name;
+    this.familyType = parserValue.family_type;
+    if (!this.imageProfile) {
+      this.isModalUpdateProfile = true;
+    }
+    
   }
 
-  async presentModal(email: string= '') {
-    console.log(email);
-    console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
-    
+  async presentModal(estate: any) {
     const modal = await this.modalController.create({
       component: EstateModalPage,
       cssClass: 'record-modal',
       componentProps: {
-        // email: email
-        email: email
+        estate: estate
       }
-  
     });
-
     modal.onDidDismiss().then((result) => {
       if (result) {
-        this.loadPreferenceProjectName()
         this.isLoading = false;
-        console.log(result.data)
-        if(result.data){
-          console.log("SUCCEED")
+        if (result.data) {
+          Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+            if (value?.value){
+              const parseValue = JSON.parse(value.value);
+              this.setData(parseValue);
+              this.fetchContacts();
+              this.loadCountNotification();
+              this.loadHouseRules();
+            }
+          })
         }
       }
     });
-
     return await modal.present();
-  }
-
-  async loadPreferenceProjectName(){
-    const projectName = await Preferences.get({key: 'PROJECT_NAME'})
-    console.log(projectName);
-    console.log('projectNameprojectNameprojectNameprojectName');
-    
-    if(projectName?.value){
-      this.condominiumName = projectName.value
-    }
   }
   
   async fetchContacts() {
-    const PermissionStatus = await Contacts.requestPermissions();
-    if (PermissionStatus.contacts === 'granted') {
-      this.presentToast('Now you app sync with your contact!', 'success');
-    }
+    await Contacts.requestPermissions();
   }
 
 
   loadCountNotification() {
-    console.log(this.partner_id);
-    console.log('this.partner_idthis.partner_idthis.partner_idthis.partner_id');
-    
-    this.notificationService.countNotifications(this.unit_id, this.partner_id)
-      .subscribe({next: (response: any) => {
-        if (response.result.response_code === 200) {
-          // Map data dengan tipe yang jelas
-          this.paramForBadgeNotification = response.result.notifications; // Simpan jumlah notifikasi baru
-          // if (this.paramForBadgeNotification) {
-          //   console.log('it works!', this.paramForBadgeNotification)
-          // }
-          console.log(response.result)
-        } else {
-          console.error('Error:', response);
-        }
-      },
-      error: (error) => {
-        console.error('Error:', error);
+    Preferences.get({key: 'USESTATE_DATA'}).then((value) => {
+      if (value?.value){
+        const unit_id = JSON.parse(value.value).unit_id;
+        const partner_id = JSON.parse(value.value).family_id;
+        this.notificationService.countNotifications(Number(unit_id), Number(partner_id))
+          .subscribe({next: (response: any) => {
+            if (response.result.response_code === 200) {
+              // Map data dengan tipe yang jelas
+              this.paramForBadgeNotification = response.result.notifications; 
+            } else {
+              console.error('Error:', response);
+            }
+          },
+          error: (error) => {
+            console.error('Error:', error);
+          }
+        });
       }
-    });
+    })
   }
 
 
   directToNotifications() {
     this.paramForBadgeNotification = 0;
     this.route.navigate(['resident-notification']);
-
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-
-    toast.present().then(() => {
-    });
   }
 
   loadHouseRules() {
-    Preferences.get({key: 'ACTIVE_PROJECT'}).then((value)=>{
-      if(value.value){
-        this.houseRulesService.getHouseRules(parseInt(value.value)).subscribe(
+    Preferences.get({key: 'USESTATE_DATA'}).then((value)=>{
+      if (value.value){
+        const projectId = JSON.parse(value.value).project_id;
+        this.houseRulesService.getHouseRules(Number(projectId)).subscribe(
           response => {
             if (response.result.response_code === 200) {
-              console.log("heres the data", response);
               this.houseRules = response.result.result.map((item: any) => ({
                 title: item.name,
-                base64Doc: item.documents // Pastikan item.documents adalah string base64
+                base64Doc: item.documents
               }));
             } else {
               console.error('Error fetching notifications:', response);
@@ -211,7 +166,6 @@ export class ResidentHomepagePage implements OnInit {
         );
       }else{
         console.error('No Active Project');
-        console.log(value);
       }
     })
   }
@@ -238,7 +192,7 @@ export class ResidentHomepagePage implements OnInit {
           filePath: path,
           contentType: blob.type
         });
-        console.log('File is opened');
+        // console.log('File is opened');
       } else {
         const href = window.URL.createObjectURL(blob);
         this.downloadFile(href, `${title}.pdf`);
@@ -274,5 +228,17 @@ export class ResidentHomepagePage implements OnInit {
             link.parentNode.removeChild(link);
         }
     }, 0);
+  }
+
+  selectedProfile: string = '';
+  onProfileFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedProfile = e.target.result; // Menyimpan URL gambar untuk preview
+      };
+      reader.readAsDataURL(file); // Membaca file sebagai URL data
+    }
   }
 }

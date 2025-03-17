@@ -27,12 +27,12 @@ export class BottomNavBarComponent implements OnInit {
 
   reportIssue() {
     this.navigationService.setActiveButton('report');
-    this.router.navigate([this.clientRoute ? '/client-main-app' : '/record-app-report']);
+    this.router.navigate([this.clientRoute ? '/client-app-issues' : '/record-app-report']);
   }
 
   settings() {
     this.navigationService.setActiveButton('settings');
-    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-settings-page']);
+    this.router.navigate([this.clientRoute ? '/client-settings' : '/resident-settings-page']);
   }
 
   ngOnInit() {
@@ -42,13 +42,13 @@ export class BottomNavBarComponent implements OnInit {
         if (url !== '/resident-homepage' && url !== '/record-app-report' && url !== '/resident-settings-page') {
           this.navigationService.setActiveButton('');
         }
-        if (url === '/resident-homepage') {
+        if (url === '/resident-homepage' || url === '/client-main-app') {
           this.navigationService.setActiveButton('home');
         }
-        if (url === '/record-app-report') {
+        if (url === '/record-app-report' || url === '/client-app-issues') {
           this.navigationService.setActiveButton('report');
         }
-        if (url === '/resident-settings-page') {
+        if (url === '/resident-settings-page' || url === '/client-settings') {
           this.navigationService.setActiveButton('settings');
         }
       }

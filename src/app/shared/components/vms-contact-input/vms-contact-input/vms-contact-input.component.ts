@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class VmsContactInputComponent  implements OnInit {
 
-  constructor(private mainVmsService: MainVmsService, private toastController: ToastController) { }
+  constructor(private mainVmsService: MainVmsService, private toastController: ToastController, private functionMain: FunctionMainService) { }
 
   @Input() placeholder: string = '';
   @Input() labelText: string = '';
@@ -24,29 +25,28 @@ export class VmsContactInputComponent  implements OnInit {
   @Input() labelClass: string = '';
   @Input() contactLabel: string = '';
   @Input() valueExist: string = '';
+  @Input() disableButton: boolean = false
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
   @Output() contactInfo = new EventEmitter<any>();
 
   getCode() {
-    // const countries = getCountries();
-    // this.countryCodes = countries.map(country => ({
-    //   country: country,
-    //   code: `${getCountryCallingCode(country)}`
-    // }));
     this.countryCodes = [
       {
         country: 'SG',
-        code: '65'
+        code: '65',
+        digit: 8,
       },
       {
         country: 'ID',
-        code: '62'
+        code: '62',
+        digit: 12,
       },
       {
         country: 'MY',
-        code: '60'
+        code: '60',
+        digit: 9,
       },
     ]
   }
@@ -97,14 +97,25 @@ export class VmsContactInputComponent  implements OnInit {
       }
     
     }, 0);
+    this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
   }
+
+  project_id = 0
 
   onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
 
   onKeyUp(event: KeyboardEvent): void {
+    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].digit
     const inputValue = (event.target as HTMLInputElement).value;
-    this.contactValue = inputValue;
+    if (inputValue.length > code) {
+      this.contactValue = inputValue.slice(0, code)
+      this.functionMain.presentToast(`Contact number must not be more than ${code} digits`, 'danger')
+    } else {
+      this.contactValue = inputValue;
+    }
     this.keyupEvent.emit(event);
     this.valueChange.emit(this.combinedValue);
     this.onChange(this.combinedValue);
@@ -117,12 +128,14 @@ export class VmsContactInputComponent  implements OnInit {
   }
 
   getContactInformation(){
-    if (!this.isReadonly){
+    if (!this.isReadonly && !this.disableButton){
       let params = {
-        contact_number: this.combinedValue
+        contact_number: this.combinedValue,
+        project_id: this.project_id
       }
       this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
         next: (results) => {
+          console.log(results)
           if (results.result.status_code === 200) {
             this.presentToast('Succesfully get data!', 'success');
             console.log(results.result.result)

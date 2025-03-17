@@ -1,20 +1,20 @@
 <ion-content [fullscreen]="true">
 	<app-resident-header [text]="'Settings'"/>
 
-  <div class="p-5 text-center mb-20 justify-center items-center flex flex-col w-full mt-14">
+  <div class="p-5 text-center mt-24 justify-center items-center flex flex-col w-full">
     <div class="flex flex-col justify-center w-full items-center">
-      <div class="rounded-full overflow-hidden w-32 h-32 mb-4">
-        <img alt="Profile picture of a man wearing a hat" class="w-full h-full object-cover" height="128" src="https://storage.googleapis.com/a1aa/image/poewGqkRRRzQfEWv2tOg3taVzSTeX7aRUmmg0kV3KzpOIM9nA.jpg" width="128"/>
+      <div class="rounded-full overflow-hidden w-32 mb-4">
+        <img class="w-full object-cover" [src]="functionMain.getImage(imageProfile)" width="128"/>
       </div>
       <h2 class="text-xl font-bold">
-        Veeknesh K
+        {{ userData.name }}
       </h2>
     </div>
     <div class="mt-1 space-y-2 w-full">
       <div class="flex flex-row text-[13px] w-full">
         <div class="w-full">
           <app-visitor-button [text]="'Change Password'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'">
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'" [routerLink]="['/change-password']">
           </app-visitor-button>
         </div>
       </div>
@@ -35,7 +35,7 @@
       </div>
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">
-          <app-visitor-button [text]="'Privacy Policy'"
+          <app-visitor-button [text]="'Privacy Policy'" [routerLink]="['/privacy-policy']"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'">
           </app-visitor-button>
         </div>
@@ -50,7 +50,7 @@
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">
           <app-visitor-button [text]="'Logout'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'">
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'" (click)="logout()">
           </app-visitor-button>
         </div>
       </div>

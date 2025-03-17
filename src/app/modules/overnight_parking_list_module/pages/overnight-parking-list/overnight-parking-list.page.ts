@@ -5,6 +5,7 @@ import { forkJoin, interval, Subject, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-overnight-parking-list',
@@ -42,7 +43,8 @@ export class OvernightParkingListPage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private blockUnitService: BlockUnitService,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    private functionMain: FunctionMainService
   ) { }
 
   ngOnInit() {
@@ -50,9 +52,19 @@ export class OvernightParkingListPage implements OnInit {
     tomorrowDate.setDate(tomorrowDate.getDate() + 1);
     this.showTomorrowdate = this.convertToDDMMYYYY(tomorrowDate.toISOString().split('T')[0]);
 
-    this.loadOvernight('today')
-    this.loadBlock()
+    this.loadProjectName().then(() => {
+      this.loadOvernight('today')
+      this.loadBlock()
+    })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -77,7 +89,7 @@ export class OvernightParkingListPage implements OnInit {
     } else {
       url = '/vms/get/overnight_parking_list_history'
     }
-    this.mainVmsService.getApi([], url ).subscribe({
+    this.mainVmsService.getApi({project_id: this.project_id}, url ).subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results.result.response_result)
@@ -90,7 +102,6 @@ export class OvernightParkingListPage implements OnInit {
             this.filteredHistorySchedules = this.historySchedules
           }   
         } else {
-          this.presentToast('There is no overnight parking data!', 'danger');
         }
 
         // this.isLoading = false;
@@ -114,14 +125,17 @@ export class OvernightParkingListPage implements OnInit {
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showDayTrans && !this.showUpcomingTrans) {
-      this.showDay = false;
-      this.showHistory = false;
-      this.showDayTrans = false;
-      this.showHistoryTrans = false;
-      this.showUpcoming = false;
-      this.showUpcomingTrans = false;
       if (type == 'day') {
+        this.showHistory = false;
+        this.showHistoryTrans = false;
+        this.showUpcoming = false;
+        this.showUpcomingTrans = false;
+        this.searchOption = ''
+        this.startDateFilter = ''
+        this.endDateFilter = ''
+        this.choosenBlock = ''
         this.showDayTrans = true
+        this.selectedRadio = ''
         if (this.daySchedules.length == 0) {
           this.loadOvernight('today')
         }
@@ -131,7 +145,16 @@ export class OvernightParkingListPage implements OnInit {
         }, 300)
       }
       if (type == 'upcoming') {
+        this.showDay = false;
+        this.showDayTrans = false;
+        this.showHistory = false;
+        this.showHistoryTrans = false;
+        this.searchOption = ''
+        this.startDateFilter = ''
+        this.endDateFilter = ''
+        this.choosenBlock = ''
         this.showUpcomingTrans = true
+        this.selectedRadio = ''
         if (this.upcomingSchedules.length == 0) {
           this.loadOvernight('upcoming')
         }
@@ -141,10 +164,10 @@ export class OvernightParkingListPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
-        this.searchOption = ''
-        this.startDateFilter = ''
-        this.endDateFilter = ''
-        this.choosenBlock = ''
+        this.showDay = false;
+        this.showDayTrans = false;
+        this.showUpcoming = false;
+        this.showUpcomingTrans = false;
         this.applyFilters()
         this.showHistoryTrans = true
         if (this.historySchedules.length == 0) {
@@ -266,6 +289,47 @@ export class OvernightParkingListPage implements OnInit {
     this.choosenBlock = ''
     this.applyFilters()
     console.log(event.target.value)
+  }
+
+  sortVehicle: any[] = []
+  selectedRadio: string | null = null
+  isRadioClicked = false
+
+  onRadioClick(value: string): void {
+    if (this.selectedRadio === value) {
+      this.selectedRadio = null;
+    } else {
+      this.selectedRadio = value;
+      this.searchOption = ''
+    }
+    console.log(this.selectedRadio)
+    this.sortVehicle = this.historySchedules
+    if (this.selectedRadio == 'sort_date') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.approved_date ? new Date(record.approved_date.split(' ')[0]).toISOString() : '-' ))
+      ).map((date) => ({
+        vehicle_number: '',
+        date: new Date(date),
+        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
+        data: this.sortVehicle.filter(item => item.approved_date ? new Date(item.approved_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.approved_date == date ) ,            
+      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
+      console.log(this.sortVehicle)
+    } else if (this.selectedRadio == 'sort_vehicle') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.vehicle_numbers != "" ? record.vehicle_numbers : false))
+      ).map((vehicle_numbers) => ({
+        vehicle_number: vehicle_numbers ? vehicle_numbers : 'Walk In',
+        date: new Date(),
+        schedule_date: '',
+        data: this.sortVehicle.filter(item => item.vehicle_numbers == vehicle_numbers),            
+      }));;
+      console.log(this.sortVehicle)
+    } else {
+      this.isRadioClicked = false
+      this.searchOption = ''
+    }
   }
 
 }

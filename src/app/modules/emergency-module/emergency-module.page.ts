@@ -116,10 +116,12 @@ export class EmergencyModulePage implements OnInit {
     purpose: '',
     contact_number: '',
     govtAgency: '',
-    vehicle_type: ''
+    vehicle_type: '',
+    project_id: 0,
   }
   
   resetForm() {
+    this.Unit = []
     this.formData = {
       vehicle_number: '',
       block_id: '',
@@ -129,7 +131,8 @@ export class EmergencyModulePage implements OnInit {
       purpose: '',
       contact_number: '',
       govtAgency: '',
-      vehicle_type: ''
+      vehicle_type: '',
+      project_id: this.project_id
     }
   }
 
@@ -142,8 +145,19 @@ export class EmergencyModulePage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadBlock()
+    this.loadProjectName().then(() => {
+      this.loadBlock()
+      this.formData.project_id = this.project_id
+    })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+  
+  project_id = 0
   
   getContactInfo(contactData: any){
     if (contactData) {
@@ -165,7 +179,6 @@ export class EmergencyModulePage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.functionMain.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
@@ -182,13 +195,17 @@ export class EmergencyModulePage implements OnInit {
     this.loadUnit(); // Panggil method load unit
   }
 
+  onUnitChange(event: any) {
+    this.formData.unit_id = event[0]
+  }
+
   async loadUnit() {
+    this.formData.unit_id = ''
     this.blockUnitService.getUnit(this.formData.block_id).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
         } else {
-          this.functionMain.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },

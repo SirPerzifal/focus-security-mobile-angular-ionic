@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
-interface QuickDial {
-  name: string;
-  number: string;
-}
+import { Router } from '@angular/router';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { QuickDial } from 'src/models/resident/quickDials.model';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+// import { WebRtcService } from 'src/app/service/fs-web-rts/web-rtc.service';
 
 @Component({
   selector: 'app-resident-quick-dials',
@@ -11,24 +11,40 @@ interface QuickDial {
   styleUrls: ['./resident-quick-dials.page.scss'],
 })
 export class ResidentQuickDialsPage implements OnInit {
-  quickDials: QuickDial[] = [
-    { name: 'Ambulance', number: '995' },
-    { name: 'Police', number: '999' },
-    { name: 'SCDF', number: '995' },
-    { name: 'Management', number: '12345678' },
-    { name: 'Security', number: '87654321' },
-    { name: 'Lift', number: '12345678' },
-    { name: 'AVS', number: '12345678' },
-    { name: 'Acres', number: '12345678' },
-    { name: 'Dengue', number: '12345678' },
-  ];
+  quickDials: QuickDial[] = [];
 
   selectedQuickDial: QuickDial | null = null;
   isAnimating: boolean = false;
 
-  constructor() { }
+  isLoading: boolean = true;
 
-  ngOnInit() { }
+  constructor(
+    // private webRtcService: WebRtcService, 
+    private router: Router,
+    private mainApiResidentService: MainApiResidentService,
+    public functionMain: FunctionMainService
+  ) { }
+
+  ngOnInit() {
+    this.loadQuickDials();
+  }
+
+ loadQuickDials() {
+  this.mainApiResidentService.endpointProcess({project_id: String(751)}, 'get/contact_list').subscribe((result: any) => {
+    // // console.log(result);
+    this.quickDials = result.result.response_result.map((dial: any) => ({
+      id : dial.id,
+      name : dial.name,
+      number : dial.contact_number,
+      is_allow_resident_quick_dials : dial.is_allow_resident_quick_dials,
+      icon : dial.image_profile,
+    }));
+    if (this.quickDials) {
+      this.isLoading = false;
+    }
+    // // console.log(this.quickDials);
+  })
+ }
 
   selectQuickDial(dial: QuickDial) {
     if (this.selectedQuickDial === dial) {
@@ -53,5 +69,11 @@ export class ResidentQuickDialsPage implements OnInit {
       this.selectedQuickDial = null;
       this.isAnimating = false;
     }, 300); // Match this duration with the CSS animation duration
+  }
+
+  async startCall(){
+    // await this.webRtcService.startLocalStream();
+    // await this.webRtcService.createOffer();
+    // this.router.navigate(['/outgoing-call']);
   }
 }

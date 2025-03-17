@@ -5,6 +5,9 @@ import { TextInputComponent } from 'src/app/shared/components/text-input/text-in
 import { ContractorsService } from 'src/app/service/vms/contrantors/contractors.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 @Component({
   selector: 'app-contractor-form',
   templateUrl: './contractor-form.page.html',
@@ -21,9 +24,11 @@ export class ContractorFormPage implements OnInit {
 
   identificationType: string = '';
   maxPax = 10;
-  paxCount = 1;
+  paxCount = 0;
   selectedBlock: string = '';
   selectedUnit: string = '';
+
+  faBarcode = faBarcode
 
   Block: any[] = [];
   Unit: any[] = [];
@@ -36,7 +41,8 @@ export class ContractorFormPage implements OnInit {
     private toastController: ToastController,
     private router: Router,
     private blockUnitService: BlockUnitService,
-    private functionMain: FunctionMainService
+    private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
   ) { }
 
   // Ambil nilai dari input
@@ -45,33 +51,72 @@ export class ContractorFormPage implements OnInit {
     return input ? input.value : '';
   }
 
+  paxIdentity: string[] = []
+  nameIdentity: string[] = []
+
   // Update jumlah pax
   onPaxCountChange(event: any) {
     this.paxCount = parseInt(event.target.value, 10);
     // Reset pax data
-    this.paxData = Array.from({ length: this.paxCount }, () => ({ contractor_name: '', identification_number: '' }));
+    // this.paxData = Array.from({ length: this.paxCount }, () => ({ contractor_name: '', identification_number: '' }));
+    this.paxData = [];
+    // Kumpulkan data pax setelah mengubah paxCount
     this.collectPaxData();
-  }
+}
   
   collectPaxData() {
     this.paxData = [];
     for (let i = 0; i < this.paxCount; i++) {
       const name = this.getInputValue(`contractor_name_pax_${i}`);
       const nric = this.getInputValue(`contractor_nric_fin_pax_${i}`);
-      
-      // Validasi input
+      console.log(name, nric)
+      this.paxData.push({
+        contractor_name: name,
+        identification_number: nric
+      });
+    }
+
+    return true
+  }
+
+  checkPaxData(): boolean {
+    for (let i = 0; i < this.paxCount; i++) {
+      console.log(i)
+      const name = this.getInputValue(`contractor_name_pax_${i}`);
+      const nric = this.getInputValue(`contractor_nric_fin_pax_${i}`);
+      console.log(name, nric)
       if (name && nric) {
-        this.paxData.push({
-          contractor_name: name,
-          identification_number: nric
-        });
+        
+      } else {
+        return true
       }
     }
+    return false
+  }
+
+  nricPaxChange(event: any, i: any) {
+     this.paxData[i].identification_number = this.functionMain.nricChange(event.target.value)
   }
 
   ngOnInit() {
+    this.loadProjectName()
     this.loadBlock();
     this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
+  }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   onIdentificationTypeChange(event: any) {
@@ -86,8 +131,7 @@ export class ContractorFormPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.selectedUnit = event.target.value;
-    console.log(this.selectedUnit)
+    this.selectedUnit = event[0]
   }
 
   async saveRecord(openBarrier: boolean = false) {  
@@ -103,6 +147,9 @@ export class ContractorFormPage implements OnInit {
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
     }
+    if (!companyName) {
+      errMsg += 'Company name is required! \n'
+    }
     if (!contractorContactNo) {
       errMsg += 'Contact number is required! \n'
     }
@@ -114,6 +161,9 @@ export class ContractorFormPage implements OnInit {
     }
     if (!this.selectedBlock || !this.selectedUnit) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if (this.checkPaxData()) {
+      errMsg += "All names and NRICs of contractor members must be filled in!!"
     }
     if (errMsg) {
       this.presentToast(errMsg, 'danger')
@@ -130,11 +180,6 @@ export class ContractorFormPage implements OnInit {
     console.log("subcon", subContractors);
     console.log("paxdata", this.paxData);
 
-    if (!subContractors.length) {      
-      console.log("No subcontractors found");
-      return;
-    }
-
     try {
       this.contractorService.addContractor(
         contractorName,
@@ -146,7 +191,8 @@ export class ContractorFormPage implements OnInit {
         this.selectedBlock,
         this.selectedUnit,
         remarks,
-        subContractors
+        subContractors,
+        this.project_id
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -163,7 +209,7 @@ export class ContractorFormPage implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error:', error.result.status_description);
+          console.error('Error:', error);
           this.presentToast('An unexpected error has occurred!', 'danger');
         }
       });
@@ -222,7 +268,6 @@ export class ContractorFormPage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
@@ -234,13 +279,13 @@ export class ContractorFormPage implements OnInit {
   }
 
   async loadUnit() {
+    this.selectedUnit = ''
     this.blockUnitService.getUnit(this.selectedBlock).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}));
           console.log(response)
         } else {
-          this.presentToast('An error occurred while loading unit data!', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -264,6 +309,8 @@ export class ContractorFormPage implements OnInit {
   formData = {
     contractor_name: '',
     contractor_vehicle: '',
+    company_name: '',
+    contact_number: '',
   };
 
   getContactInfo(contactData: any) {
@@ -281,4 +328,54 @@ export class ContractorFormPage implements OnInit {
   onNricInput(event: any) {
     this.nric_value = this.functionMain.nricChange(event.target.value)
   }
+
+  openNricScan(order: number = 0, is_pax: boolean = false) {
+    this.functionMain.presentModalNric().then(value => {
+      if (value) {
+        if (is_pax) {
+          this.paxIdentity[order] = value.data
+        } else {
+          console.log(value)
+          this.identificationType = value.is_fin ? 'fin' : 'nric'
+          this.nric_value = value.data;
+        } 
+        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+          next: (results) => {
+            console.log(results)
+            if (results.result.status_code === 200) {
+              let data = results.result.result[0]
+              if (is_pax) {
+                this.nameIdentity[order] = data.contractor_name
+              } else {
+                console.log(value)
+                this.formData.contractor_name = data.contractor_name
+                this.formData.company_name = data.company_name
+                this.formData.contact_number = data.contact_number
+                this.formData.contractor_vehicle =  data.vehicle_number
+              } 
+            } else {
+              if (is_pax) {
+                this.paxData[order].contractor_name = this.paxData[order].contractor_name ? this.paxData[order].contractor_name : ''
+              } else {
+                console.log(value)
+                this.formData.contractor_name = this.formData.contractor_name ? this.formData.contractor_name : ''
+                this.formData.company_name = this.formData.company_name ? this.formData.company_name : ''
+                this.formData.contact_number = this.formData.contact_number ? this.formData.contact_number : '65'
+                this.formData.contractor_vehicle = this.formData.contractor_vehicle ? this.formData.contractor_vehicle : ''
+              } 
+              this.functionMain.presentToast(`No data found in the system for ${value.data}!`, 'warning')
+            }
+          },
+          error: (error) => {
+            this.presentToast('An error occurred while searching for nric!', 'danger');
+            console.error(error);
+          }
+        });
+      }
+      
+    });
+    console.log(this.nric_value)
+  }
+
+  
 }

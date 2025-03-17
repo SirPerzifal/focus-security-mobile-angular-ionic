@@ -1,18 +1,20 @@
-<ion-content [fullscreen]="true">
+<ion-header>
 	<app-resident-header [text]="'Visitors'" [text_second]="'Hired Car'" />
+</ion-header>
+<ion-content [fullscreen]="true">
   <!-- CONTENT -->
 	<div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
   <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-row justify-between mt-2">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
     </div>
@@ -75,18 +77,20 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col mt-4 text-[14px]">
+        <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-4">
+          <ion-spinner name="circular"></ion-spinner>
+        </div>
+        <div *ngIf="!isLoading" class="flex flex-col mt-4 text-[14px]">
           <p class="underline underline-offset-1 font-bold text-[#757575] mb-2">Temporary Pickup/Drop-off Vehicle Authorization</p>
           <p class="mb-1.5">This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.</p>
           <p class="mb-1.5">This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.</p>
           <p class="mb-1.5">Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.</p>
         </div>
-        <div class="flex flex-row mt-4 text-[13px]">
-          <app-checkbox-confirmation 
-            [label]="'I agree to the terms above'" 
-            [(checked)]="agreementChecked" 
-            [customClass]="'mr-1 rounded font-bold'">
-          </app-checkbox-confirmation>
+        <div class="flex flex-row mt-4 text-[13px] cw-2:text-xs cw-3:text-[11px]">
+          <label class="mr-1 rounded font-bold flex items-center">
+            <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
+            I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above
+          </label>
         </div>
         <div class="flex flex-row mt-2 text-[13px] w-full">
           <div class="w-full">
@@ -101,5 +105,7 @@
     </div>
   </div>
   <!-- ############################### -->
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

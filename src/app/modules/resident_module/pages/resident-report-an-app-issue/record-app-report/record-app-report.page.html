@@ -1,14 +1,18 @@
+<app-resident-header [text]="'Report app Issue'" [text_second]="'Record of Report'"/>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Report app Issue'" [text_second]="'Record of Report'"/>
   <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
     <!-- Reported Issues Button -->
-    <div class="flex flex-row mt-4 justify-start items-center w-full space-x-3 mb-4">
-      <app-visitor-button [text]="'Reported Issues'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-sm w-32'" ></app-visitor-button>
-      <app-visitor-button [text]="'Report an Issues'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-sm w-32'" [routerLink]="['/resident-report-an-app-issue']"></app-visitor-button>
+    <div class="flex flex-row justify-start items-center w-full space-x-3 mb-4">
+      <div class="w-full">
+        <app-visitor-button [text]="'Reported Issues'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-sm w-full'" ></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Report an Issues'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-sm w-full'" [routerLink]="['/resident-report-an-app-issue']"></app-visitor-button>
+      </div>
     </div>
     <!-- Issues List -->
     <div class="space-y-4">
@@ -36,6 +40,12 @@
             </tr>
           </tbody>
         </table>
+        <div class="flex mt-[6px] w-full" (click)="seeDetail(report)">
+          <button
+            class="cw-2:text-[13px] bg-[var(--ion-color-primary)] w-full text-white px-3 py-2 text-base rounded-md font-bold">
+            View Details
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -15,26 +15,45 @@
     </div>
     <div class="flex flex-col">
       <div class="flex mt-8 flex-row space-x-1">
-
         <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
           (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true" />
-
         <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"
           [isActive]="showHistoryTrans || showHistory" [disableClick]="true" />
       </div>
       <div class="flex flex-col mx-4 mb-4">
-
         <div class="flex flex-col w-full space-y-5 mt-8" *ngIf="showHistory" @fadeInOut>
           <div class="flex flex-col w-full">
-            <div class="w-full flex flex-col">
+            <!-- SEARCH HEADER -->
+            <div class="flex flex-row w-full justify-start space-x-10">
+              <div class="flex flex-row items-center">
+                <input id="visitor_log_sort_date" type="radio" name="history_filter"
+                  class="size-6 text-[var(--ion-color-primary)]" value="sort_date" [(ngModel)]="selectedRadio"
+                  (click)="onRadioClick('sort_date')">
+                <label for="visitor_log_sort_date" class="text-2xl font-bold ml-2">SORT BY DATE</label>
+              </div>
+              <div class="flex flex-row items-center" *ngIf="pageType == 'vehicle'">
+                <input id="visitor_log_sort_vhnum" type="radio" name="history_filter"
+                  class="size-6 text-[var(--ion-color-primary)]" value="sort_vehicle" [(ngModel)]="selectedRadio"
+                  (click)="onRadioClick('sort_vehicle')">
+                <label for="visitor_log_sort_vhnum" class="text-2xl font-bold ml-2">SORT BY VEHICLE</label>
+              </div>
+              <div class="flex flex-row items-center">
+                <input id="visitor_log_search" type="radio" name="history_filter"
+                  class="size-6 text-[var(--ion-color-primary)]" value="search" [(ngModel)]="selectedRadio"
+                  (click)="onRadioClick('search')">
+                <label for="visitor_log_search" class="text-2xl font-bold ml-2">SEARCH</label>
+              </div>
+            </div>
+
+            <div class="w-full flex flex-col mt-5" *ngIf="selectedRadio == 'search'">
               <div class="w-full justify-between flex flex-row">
                 <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
                 <label class="text-2xl" (click)="clearFilters()"><u><b>CLEAR SEARCH</b></u></label>
               </div>
               <select id="search_option" (change)="onSearchOptionChange($event)"
                 class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
-                style="border: 1px solid #6B7280;">
-                <option selected disabled hidden>CHOOSE SEARCH BY</option>
+                style="border: 1px solid #6B7280;" [(ngModel)]="searchOption">
+                <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
                 <option [value]="'date'">ENTRY DATE</option>
                 <option [value]="'block'">BLOCK & UNIT</option>
                 <option [value]="'vehicle_no'" *ngIf="pageType == 'vehicle'">VEHICLE NUMBER</option>
@@ -53,7 +72,7 @@
               <div class="w-1/2">
                 <app-text-input #recordVisitorSearchDateEndFilter [id]="'record_visitor_search_date_end_filter'"
                   [labelText]="'DATE TO'" [placeholder]="'24/12/2024'" [customClasses]="{'w-full ':true}"
-                  [type]="'date'" (change)="onEndDateChange($event)" [(ngModel)]="filter.end_issue_date"
+                  [type]="'date'" (change)="onEndDateChange($event)" [(ngModel)]="filter.end_issue_date" [min]="filter.issue_date"
                   [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
                 </app-text-input>
               </div>
@@ -70,22 +89,25 @@
                 </select>
               </div>
               <div class="w-1/2">
+                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+                  [labelText]="'UNIT'"></app-m2m-selection>
                 <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
-              <select id="rv_unit" (change)="onUnitChange($event)"  [(ngModel)]="filter.unit"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" style="border: 1px solid #6B7280;">
-                <option value="" selected disabled hidden>CHOOSE UNIT</option>
-                <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-              </select> -->
-                <app-text-input #recordVisitorUnitFilter [id]="'record_visitor_unit_filter'" [labelText]="'UNIT'"
+                <select id="rv_unit" (change)="onUnitChange($event)" [(ngModel)]="filter.unit"
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                  style="border: 1px solid #6B7280;">
+                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
+                  <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+                </select> -->
+                <!-- <app-text-input #recordVisitorUnitFilter [id]="'record_visitor_unit_filter'" [labelText]="'UNIT'"
                   [placeholder]="'UNIT 0101'" [customClasses]="{'w-full ':true}" [type]="'text'"
                   [(ngModel)]="filter.unit" (change)="onUnitChange($event)" [isReadonly]="!filter.block"
                   [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-                </app-text-input>
+                </app-text-input> -->
               </div>
             </div>
 
 
-            <div class="w-full flex-row space-x-1 flex justify-between"
+            <div class="w-full"
               *ngIf="(searchOption == 'vehicle_no' || searchOption == 'all') && pageType == 'vehicle'">
               <app-text-input #recordVisitorVehicleNumberFilter [id]="'record_visitor_vehicle_number_filter'"
                 [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
@@ -96,25 +118,45 @@
           </div>
 
           <div class="flex flex-col w-full space-y-5"
-            *ngIf="filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number">
+            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number) && !isRadioClicked">
             <div
               class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let log of historyVehicles" (click)="onArrowClick(log)">
               <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number :
-                (log.visitor_name ? log.visitor_name : '-') }}, {{ convertToDDMMYYYY(log.entry_datetime.split(' ')[0]) }} {{ log.entry_datetime.split(' ')[1] }}</span>
-              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-                ></ion-icon>
+                (log.visitor_name ? log.visitor_name : '-') }}, {{ functionMain.convertNewDateTZ(log.entry_datetime)
+                }}</span>
+              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
             </div>
           </div>
+
+          <div class="flex flex-col w-full space-y-5" *ngIf="isRadioClicked">
+            <div class="flex flex-col" *ngFor="let logs of sortVehicle">
+              <span class="text-2xl font-bold">{{ selectedRadio == 'sort_date'? logs.schedule_date :
+                logs.vehicle_number }}</span>
+              <div class="flex flex-col w-full space-y-5 pl-4 mt-5">
+                <div
+                  class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+                  *ngFor="let log of logs.data" (click)="onArrowClick(log)">
+                  <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number :
+                    (log.visitor_name ? log.visitor_name : '-') }}, {{ functionMain.convertNewDateTZ(log.entry_datetime)
+                    }}</span>
+                  <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
+                </div>
+              </div>
+    
+            </div>
+    
+          </div>
+    
         </div>
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
           <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
             *ngFor="let log of activeVehicles" (click)="onArrowClick(log)">
-            <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number : (log.visitor_name ? log.visitor_name : '-')
-              }}, {{ convertToDDMMYYYY(log.entry_datetime.split(' ')[0]) }} {{ log.entry_datetime.split(' ')[1] }}</span>
-            <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"
-              ></ion-icon>
+            <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number :
+              (log.visitor_name ? log.visitor_name : '-')
+              }}, {{ functionMain.convertNewDateTZ(log.entry_datetime) }}</span>
+            <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
           </div>
         </div>
       </div>

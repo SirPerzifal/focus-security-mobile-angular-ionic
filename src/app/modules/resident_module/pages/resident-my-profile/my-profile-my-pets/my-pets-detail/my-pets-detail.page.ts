@@ -43,7 +43,7 @@ export class MyPetsDetailPage implements OnInit {
     const state = navigation?.extras.state as { pet: any};
     if (state) {
       this.petList = state.pet;
-      console.log(this.petList);
+      // console.log(this.petList);
       this.formData = {
         block_id: 1,
         unit_id: 1,
@@ -58,7 +58,7 @@ export class MyPetsDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log("tes");
+    // console.log("tes");
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -82,7 +82,7 @@ export class MyPetsDetailPage implements OnInit {
     if (data) {
       this.selectedLicencName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.pet_license = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -97,7 +97,7 @@ export class MyPetsDetailPage implements OnInit {
     if (data) {
       this.selectedImageName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.pet_image = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -122,7 +122,7 @@ export class MyPetsDetailPage implements OnInit {
         // Replace the following with your own logic to handle the success message and log the data
         // For example, you might want to save the data to a database or send it to a server for further processing
         this.presentToast(res.result.message, 'success');
-        console.log('Data updated successfully:', res);
+        // console.log('Data updated successfully:', res);
         this.router.navigate(['my-profile-my-pets'])
         this.OnDestroy();
       },
@@ -205,7 +205,7 @@ export class MyPetsDetailPage implements OnInit {
           filePath: path,
           contentType: blob.type
         });
-        console.log('File is opened');
+        // console.log('File is opened');
       } else {
         const href = window.URL.createObjectURL(blob);
         this.downloadFile(href, `${this.formData.notes}.pdf`);

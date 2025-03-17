@@ -1,5 +1,5 @@
+<app-resident-header [text]="'My Family'" [text_second]="'Edit Member'"/>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'My Family'" [text_second]="'Edit Member'"/>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-family']"></ion-icon>
   </div>
@@ -139,11 +139,14 @@
       </ion-modal>
       <div class="w-full" *ngIf="formData.type_of_residence !== 'tenants'">
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Update Family Member Details</button>
+        <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="changePassDirect()">Change Password</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" [routerLink]="['/resident-my-family']">Send a Reset Password Email</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onDelete()">Delete Family member</button>
       </div>
       <div class="w-full" *ngIf="formData.type_of_residence === 'tenants'">
-        <!-- <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Update Tenant Details</button> -->
+        <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Update Tenant Details</button>
+        <!-- <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="changePassDirect()">Change Password</button> -->
+        <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="changePassDirect()">Change Password</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold px-2" (click)="openExtend()">Request for Tenancy Agreement Date Extension</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onDelete()">Delete User</button>
       </div>

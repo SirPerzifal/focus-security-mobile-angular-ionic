@@ -72,7 +72,7 @@
               <select id="nationality" placeholder="nationality" (change)="onCoachNationalityChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1">
                 <option selected disabled hidden>Choose coach nationality</option>
                 <option [selected]="this.formData.nationality === 'Singaporean'" value="Singaporean">Singaporean</option>
-                <option [selected]="this.formData.nationality !== 'Singaporean'" value="others">Others</option>
+                <option [selected]="this.formData.nationality !== 'Singaporean' && ''" value="others">Others</option>
               </select>
               <app-text-input [id]="'nationality'"
                 [placeholder]="'Others________'"
@@ -201,22 +201,11 @@
             </app-text-input>
           </div>
         </div>
-        <div class="w-full mt-2">
-          <div class="flex flex-row justify-start mb-1">
-            <p class="text-base font-bold">Amount Payable</p>
-          </div>
-          <app-text-input [id]="'amount_payable'"
-            [placeholder]="'$$____'"
-            [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}">
-          </app-text-input>
-        </div>
         <div class="flex flex-row mt-4 text-base">
-          <app-checkbox-confirmation 
-            [label]="'I agree to the terms above'" 
-            [(checked)]="agreementChecked" 
-            [customClass]="'mr-1 rounded font-bold'">
-          </app-checkbox-confirmation>
+          <label class="mr-1 rounded font-bold flex items-center">
+            <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
+            <p class="text-start">I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above</p>
+          </label>
         </div>
         <button 
           [disabled]="!agreementChecked"

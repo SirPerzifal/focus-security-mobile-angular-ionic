@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class VmsBackgroundComponent  implements OnInit {
 
-  constructor(private mainVmsService: MainVmsService) { }
+  constructor(private mainVmsService: MainVmsService, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
     this.onLoadBackground()
@@ -16,22 +17,24 @@ export class VmsBackgroundComponent  implements OnInit {
 
   showImage = `assets/img/focus_logo-removebg.png`
   
-  onLoadBackground() {
-    let params = {
-      project_id: 1
-    }
-    this.mainVmsService.getApi(params, '/vms/get/project_background').subscribe({
-      next: (results) => {
-        if (results.result.status_code === 200) {
-          this.showImage = `data:image/png;base64,${results.result.response_result}`
+  async onLoadBackground() {
+    this.functionMain.vmsPreferences().then((value) => {
+      if (value) {
+        if (value.config.background) {
+          this.showImage = this.functionMain.getImage(value.config.background)
         } else {
           this.showImage = `assets/img/focus_logo-removebg.png`
         }
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+      } 
+      // this.mainVmsService.getApi(params, '/vms/get/project_background').subscribe({
+      //   next: (results) => {
+          
+      //   },
+      //   error: (error) => {
+      //     console.error(error);
+      //   }
+      // });
+    })
   }
 
 }

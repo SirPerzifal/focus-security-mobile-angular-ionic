@@ -15,6 +15,7 @@ export class MoveDetailPage implements OnInit {
     const state = navigation?.extras.state as { record: any};
     if (state) {
       this.record = state.record
+      console.log(this.record.schedule_date)
       console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     } 
@@ -23,8 +24,16 @@ export class MoveDetailPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
+      this.loadProjectName()
     })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_name = value.project_name.toUpperCase()
+    })
+  }
+  project_name = ''
 
   pageType = 'move_in'
   record: any
@@ -38,7 +47,7 @@ export class MoveDetailPage implements OnInit {
   entry_date = ''
   exit_date = ''
   accompanied_by = '5'
-  applied_by = 'WILSON'
+  applied_by = ''
   resident_contact_no = '+65 8192 022'
 
   onAccompanyDetail() {

@@ -5,6 +5,10 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { Subscription } from 'rxjs';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { ModalController } from '@ionic/angular';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
   selector: 'app-move-in-out-permit',
@@ -17,22 +21,28 @@ export class MoveInOutPermitPage implements OnInit {
   agreementChecked: boolean = false; // Status checkbox
   isModalOpen: boolean = false; // Status modal
   dateNow = new Date().toISOString().slice(0, 10);
+  userName: string = '';
+  condoName: string = '';
+  unit: number = 1; // Replace with actual unit ID
+  unitId: number = 1; // Replace with actual unit ID
+  block: number = 1; // Replace with actual block ID
+  noTel: string = '';
   extend_mb = false
   contactPerson: string = '';
   expectedFamilyMember: any = [];
   moveType: string = '';
 
-  constructor(private familyService: FamilyService, private fb: FormBuilder, private moveInOutService: RaiseARequestService, private toastController: ToastController, private route: Router) {
+  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private moveInOutService: RaiseARequestService, private toastController: ToastController, private route: Router, private getUserInfoService: GetUserInfoService, private authService:AuthService) {
     this.moveInOutForm = this.fb.group({
-      requestorId: [1],
+      requestorId: [15],
       name_of_resident: ['KingsMan Condominium'],
       phone_number: ['085830122464'],
       move_date: ['', Validators.required],
       move_time: ['', Validators.required],
       partner_name: ['Veknesh'],
       move_type: ['', Validators.required],
-      block: [1],
-      unit: [1],
+      block: [0],
+      unit: [0],
       contact_person_id: [1],
       contractor_contact_person: [''], 
       contractor_contact_number: [''],
@@ -40,7 +50,32 @@ export class MoveInOutPermitPage implements OnInit {
       contractor_vehicle_number: ['']
     });
   }
+  
+  termsAndCOndition: string = '';
 
+  async presentModalAgreement() {
+    // console.log("tes");
+        // // console.log(email);
+    // // console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        // email: email
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
+  }
   onChangeTypeMove(type: string) {
     this.extend_mb = true
     if (type !== 'bulky_item') {
@@ -50,15 +85,15 @@ export class MoveInOutPermitPage implements OnInit {
       this.moveType = type;
     } else {
       this.moveInOutForm = this.fb.group({
-        requestorId: [1],
-        name_of_resident: ['KingsMan Condominium'],
+        requestorId: [0],
+        name_of_resident: [''],
         phone_number: ['085830122464'],
         move_date: ['', Validators.required],
         move_time: ['', Validators.required],
         partner_name: ['Veknesh'],
         move_type: ['', Validators.required],
-        block: [1],
-        unit: [1],
+        block: [0],
+        unit: [0],
         contractor_contact_person: [''], 
         contractor_contact_number: [''],
         contractor_company_name: [''],
@@ -82,39 +117,55 @@ export class MoveInOutPermitPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('tes')
-    this.loadExpectedFamily();
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(
+      [ 
+        'user',
+        'unit',
+        'block_name',
+        'block',
+        'unit_name',
+        'project_name'
+      ]
+    ).then((value) => {
+      const parse_user = this.authService.parseJWTParams(value.user);
+      // // console.log(value);
+      this.block = value.block_name;
+      this.moveInOutForm.get('block')!.setValue(Number(value.block))
+      this.unitId = Number(value.unit);
+      this.moveInOutForm.get('unit')!.setValue(Number(value.unit))
+      this.unit = value.unit_name;
+      this.condoName = value.project_name;
+      this.userName = parse_user.name
+      // // console.log('unit', this.unitId);
+      this.loadExpectedFamily();
+    })
   }
 
   loadExpectedFamily() {
-    this.expectedFamilyMember.pop()
-    this.familyService.getFamilyList().subscribe(
-      res => {
-        var result = res.result['response_result']
-        console.log(result)
-        result.forEach((item: any) => {
-          this.expectedFamilyMember.push({
-            id: item['family_id'], 
-            type: item['member_type'], 
-            hard_type: item['member_hard_type'], 
-            name: item['family_full_name'], 
-            mobile: item['family_mobile_number'], 
-            nickname: item['family_nickname'], 
-            email: item['family_email'], 
-            head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
-            end_date: item['end_of_tenancy_aggrement'],
-            status: item['states'],
-            tenancy_agreement: item['tenancy_aggrement'] });
+    this.familyService.getFamilyList(this.unitId).subscribe((response) => {
+      var result = response.result['response_result']
+      result.forEach((item: any) => {
+        this.expectedFamilyMember.push({
+          id: item['family_id'], 
+          type: item['member_type'], 
+          hard_type: item['member_hard_type'], 
+          name: item['family_full_name'], 
+          mobile: item['family_mobile_number'], 
+          nickname: item['family_nickname'], 
+          email: item['family_email'], 
+          head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
+          end_date: item['end_of_tenancy_aggrement'],
+          status: item['states'],
+          tenancy_agreement: item['tenancy_aggrement'],
+          family_photo: item['family_photo']
         });
-      },
-      error => {
-        console.log(error)
-      }
-    )
+      });
+    });
   }
 
   onSelect(select: any) {
-    console.log('Selected:', select);
+    // console.log('Selected:', select);
     this.moveInOutForm.value.contact_person_id = select['id'];
   }
 
@@ -138,7 +189,7 @@ export class MoveInOutPermitPage implements OnInit {
           return
         }
       }
-      console.log(this.moveInOutForm.value);
+      // console.log(this.moveInOutForm.value);
 
       // Gabungkan move_date dan move_time
       const moveDate = this.moveInOutForm.value.move_date;
@@ -162,7 +213,7 @@ export class MoveInOutPermitPage implements OnInit {
         this.moveInOutForm.value.contractor_vehicle_number
       ).subscribe({
         next: (response) => {
-          console.log('Response:', response);
+          // console.log('Response:', response);
           this.presentToast('Request submitted successfully!', 'success');
           this.route.navigate(['resident-raise-a-request']);
           this.OnDestroy();
@@ -173,13 +224,13 @@ export class MoveInOutPermitPage implements OnInit {
         }
       });
     } else {
-      console.log('Form is invalid');
+      // console.log('Form is invalid');
       this.presentToast('Form is invalid. Please fill all required fields.', 'danger');
     }
   }
 
   navigateToEditFamily(family: any) {
-    console.log(family)
+    // console.log(family)
     this.route.navigate(['/family-edit-member'], {
       state: {
         id: family.id,

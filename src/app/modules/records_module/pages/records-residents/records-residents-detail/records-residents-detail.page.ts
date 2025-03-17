@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-records-residents-detail',
@@ -10,7 +11,7 @@ export class RecordsResidentsDetailPage implements OnInit {
 
   record: any = {};
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { logs: any[]};
     if (state) {

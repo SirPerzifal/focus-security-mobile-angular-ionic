@@ -11,6 +11,7 @@ module.exports = {
       'cw-2': { max: '359px', min: '300px' },
       'cw-3': { max: '327px', min: '300px' },
       'cw-4': { max: '375px', min: '300px' },
+      'cw-5': { max: '425px', min: '375px' },
     },
   },
   plugins: [],

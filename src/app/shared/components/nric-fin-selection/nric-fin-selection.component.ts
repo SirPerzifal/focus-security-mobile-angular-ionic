@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-nric-fin-selection',
@@ -7,8 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NricFinSelectionComponent  implements OnInit {
 
-  constructor() { }
+  @Input() selectedIdentification!: string;
+  @Output() selectedIdentificationChange = new EventEmitter<string>();
 
+  onSelectionChange(event: any) {
+    this.selectedIdentificationChange.emit(event.target.value);
+  }
+  constructor() { }
+  
   ngOnInit() {}
 
 }

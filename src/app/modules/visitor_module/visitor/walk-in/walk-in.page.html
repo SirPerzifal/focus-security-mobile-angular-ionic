@@ -5,7 +5,7 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header (click)="onBackHome()"/>
+      <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [isHomeButton]="true" [text]="'VISITORS'"
@@ -24,9 +24,6 @@
       <div class="mt-8 flex flex-col justify-start items-center h-[600px] w-full mx-4" *ngIf="showQr" @fadeInOut>
         <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60 mb-4" (click)="startScanner()" *ngIf="!isHidden"/>
         <div id="reader" class="w-full mb-4"></div>
-        <div class="bg-[var(--ion-color-danger)] fsh-badge-button" (click)="stopScanner()" *ngIf="isHidden">
-          <ion-icon name="stop-outline" size="large" class="text-white "/>
-        </div>
       </div>
       <form class="justify-between items-center w-full mx-4" #walkInForm="ngForm" *ngIf="showWalk" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5 mb-4">
@@ -39,17 +36,6 @@
           <div class="w-full">
             <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
           </div>
-          <!-- <div class="flex flex-row justify-between w-full">
-            <div class="w-4/6 flex flex-col">
-              <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
-              <input id="walk_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
-                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
-                [(ngModel)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" name="visitor_contact_no">
-            </div>
-            <div class="h-25 flex flex-col justify-end w-1/4">
-              <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl">SEARCH</button>
-            </div> 
-          </div> -->
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>BLOCK</u></b></label>
             <select id="visitor_walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="visitor_walk_in_block"
@@ -58,21 +44,22 @@
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-          <div class="w-full flex flex-col">
+          <div class="w-full">
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+              [labelText]="textUnit"></app-m2m-selection>
+          </div>
+          <!-- <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>UNIT</u></b></label>
             <select id="visitor_walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="visitor_walk_in_unit"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected disabled hidden>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
-          </div>
+          </div> -->
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
               (click)="onSubmitWalkIn()"></app-visitor-button>
-            <!-- <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'"
-              (click)="onSubmitWalkIn(true)"></app-visitor-button> -->
           </div>
         </div>
       </form>
@@ -88,17 +75,6 @@
           <div class="w-full">
             <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'drive_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
           </div>
-          <!-- <div class="flex flex-row justify-between w-full">
-            <div class="w-4/6 flex flex-col">
-              <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
-              <input id="drive_in_contact" placeholder="EG. +65 XXXX XXX" type="text"
-                class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
-                [(ngModel)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" name="visitor_contact_no">
-            </div>
-            <div class="h-25 flex flex-col justify-end w-1/4">
-              <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl">SEARCH</button>
-            </div>            
-          </div> -->
           <div class="w-full flex flex-row justify-between">
             <div class="w-[90%] flex flex-col">
               <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
@@ -118,19 +94,23 @@
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-          <div class="w-full flex flex-col">
+          <!-- <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>UNIT</u></b></label>
             <select id="visitor_drive_in_block" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="visitor_drive_in_block"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected disabled hidden>CHOOSE UNIT</option>
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
+          </div> -->
+          <div class="w-full">
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+              [labelText]="textUnit"></app-m2m-selection>
           </div>
           <div class="w-full ">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
               (click)="onSubmitDriveIn(true)"></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD'"
+            <app-visitor-button [text]="'SAVE RECORD ONLY'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-6'"
               (click)="onSubmitDriveIn()"></app-visitor-button>
           </div>

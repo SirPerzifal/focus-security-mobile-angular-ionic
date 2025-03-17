@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
@@ -29,7 +30,7 @@ export class CoachesFormPage implements OnInit {
   maxPax = 10;  // Define the maximum pax allowed
   paxCount = 1; // Initial pax count, you can set this to 1 by default
 
-  constructor(private fb: FormBuilder, private router: Router, private blockUnitService: BlockUnitService, private toastController: ToastController, private mainVmsService: MainVmsService) {
+  constructor(private fb: FormBuilder, private router: Router, private blockUnitService: BlockUnitService, private toastController: ToastController, private mainVmsService: MainVmsService, private functionMain: FunctionMainService) {
     // Initialize the form with an empty FormArray for pax entries
     this.paxForm = this.fb.group({
       paxEntries: this.fb.array([])
@@ -37,33 +38,50 @@ export class CoachesFormPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { schedule: any};
     if (state) {
-      this.schedule= state.schedule
-      if (this.schedule.vehicle_number) {
-        this.toggleShowDrive()
-        this.vehicle_number = this.schedule.vehicle_number
-      }
+      this.loadProjectName().then(() => {
+        this.schedule= state.schedule
+        console.log(this.schedule)
+        if (!this.schedule.vehicle_number) {
+          this.schedule.vehicle_number = ''
+        }
+        if (this.schedule.block_id){
+          this.loadUnit()
+        }
+        if (!this.schedule.unit_id) {
+          this.schedule.unit_id = ''
+        }
+        if (!this.schedule.coach_type_id) {
+          this.schedule.coach_type_id = ''
+        }
+        this.loadType()
+        if (this.schedule.vehicle_number) {
+          this.toggleShowDrive()
+          this.vehicle_number = this.schedule.vehicle_number
+        }
+      })
     } 
   }
 
-  schedule: any
+  schedule: any = []
   contactNumber = ''
+  selectedBlock = ''
 
   ngOnInit() {
-    console.log(this.schedule)
-    this.contactNumber = this.schedule.contact_number ? this.schedule.contact_number : ''
-    this.loadBlock()
-    if (this.schedule.block_id){
-      this.loadUnit()
-    }
-    if (!this.schedule.unit_id) {
-      this.schedule.unit_id = ''
-    }
-    if (!this.schedule.coach_type_id) {
-      this.schedule.coach_type_id = ''
-    }
-    this.loadType()
+    this.loadProjectName().then(() => {
+      console.log(this.schedule)
+      this.contactNumber = this.schedule.contact_number ? this.schedule.contact_number : ''
+      this.loadBlock()
+    })
     // Initialize with a default number of pax entries
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -113,8 +131,7 @@ export class CoachesFormPage implements OnInit {
     let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
     let front = ['SBA', 'SBS', 'SAA']
     let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicle_number = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    this.schedule.vehicle_number = randomVhc
   }
 
   onBackMove() {
@@ -126,21 +143,21 @@ export class CoachesFormPage implements OnInit {
   block = ''
   unit = ''
 
-  Block: any
-  Unit: any
-  Coach: any
+  Block: any = []
+  Unit: any = []
+  Coach: any = []
 
-  onBlockChange(event: any) {
-    this.schedule.block_id = event.target.value;
-    this.schedule.unit_id = ''
-    console.log(this.schedule.block_id)
-    this.loadUnit(); // Panggil method load unit
-  }
+  // onBlockChange(event: any) {
+  //   this.schedule.block_id = event.target.value;
+  //   this.schedule.unit_id = ''
+  //   console.log(this.schedule.block_id)
+  //   this.loadUnit(); // Panggil method load unit
+  // }
 
-  onUnitChange(event: any) {
-    this.schedule.unit_id = event.target.value;
-    console.log(this.schedule.unit_id)
-  }
+  // onUnitChange(event: any) {
+  //   this.schedule.unit_id = event.target.value;
+  //   console.log(this.schedule.unit_id)
+  // }
 
   onCoachChange(event: any) {
     this.schedule.coach_type_id = event.target.value;
@@ -148,17 +165,19 @@ export class CoachesFormPage implements OnInit {
   }
 
   loadType() {
-    this.mainVmsService.getApi({}, '/vms/get/get_coach_type' ).subscribe({
+    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/get_coach_type' ).subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
-          this.Coach = results.result.coaches_type;
           console.log(results)
+          if (results.result.coaches_type.length > 0) {
+            this.Coach = results.result.coaches_type;
+          } else {
+            this.Coach = []
+          }
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Failed to load vehicle data', 'danger');
         console.error(error);
       }
     });
@@ -170,7 +189,6 @@ export class CoachesFormPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
@@ -189,7 +207,6 @@ export class CoachesFormPage implements OnInit {
           this.Unit = response.result.result; // Simpan data unit
           this.isLoadingUnit = false
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
           this.isLoadingUnit = false
         }
@@ -212,14 +229,25 @@ export class CoachesFormPage implements OnInit {
   }
 
   onSubmitRecord(isOpenBarrier: boolean = false) {
+    let params = {
+      coach_id: this.schedule.coach_id,
+      name: this.schedule.coach_name,
+      contact_number: this.contactNumber,
+      block_id: this.schedule.block_id,
+      unit_id: this.schedule.unit_id,
+      selection_type: this.schedule.coach_type_id,
+      vehicle_number: this.schedule.vehicle_number,
+      project_id: this.project_id
+    }
+    console.log(params)
     let errMsg = ''
     if (!this.schedule.coach_name){
       errMsg += 'Coach name is missing! \n'
     }
-    if (!this.schedule.contact_number) {
+    if (!this.contactNumber) {
       errMsg += 'Contact number is missing! \n'
     }
-    if (this.showDrive && !this.vehicle_number) {
+    if (this.showDrive && !this.schedule.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
     }
     if (!this.schedule.block_id || !this.schedule.unit_id) {
@@ -233,15 +261,7 @@ export class CoachesFormPage implements OnInit {
       } else {
         console.log("BARRIER NOT OPENED");
       }
-      let params = {
-        coach_id: this.schedule.coach_id,
-        name: this.schedule.coach_name,
-        contact_number: this.schedule.contact_number,
-        block_id: this.schedule.block_id,
-        unit_id: this.schedule.unit_id,
-        selection_type: this.schedule.coach_type_id,
-        vehicle_number: this.vehicle_number
-      }
+      
       console.log(params)
       this.mainVmsService.getApi(params, '/vms/post/add_coaches' ).subscribe({
         next: (results) => {
@@ -263,8 +283,11 @@ export class CoachesFormPage implements OnInit {
 
   getContactInfo(contactData: any){
     if (contactData) {
-      this.coachName = contactData.visitor_name
-      this.vehicle_number = contactData.vehicle_number
+      this.schedule.coach_name = contactData.visitor_name
+      this.schedule.vehicle_number = contactData.vehicle_number
+      if (this.schedule.vehicle_number != ''){
+        this.toggleShowDrive()
+      }
       this.schedule.block_id = contactData.block_id
       this.loadUnit().then(() => {
         this.schedule.unit_id = contactData.unit_id

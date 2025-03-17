@@ -1,0 +1,332 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Approvals'" [text_second]="textSecond" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <div class="flex flex-row relative mx-4 mb-24" *ngIf="isApprovalHome" @fadeInOut>
+    <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
+      <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
+        <div class="w-full h-full relative" *ngFor="let menu of menuItems">
+          <ion-button fill="clear" class="w-full h-[150px] flex bg-[var(--ion-color-tertiary)] rounded-2xl relative p-0 m-0"
+            (click)="onClickMenu(menu)">
+            <div class="w-full flex flex-col items-center">
+              <img class="w-16 h-13" [src]="menu.src" [alt]="menu.alt" />
+              <span class="text-sm font-bold text-black text-center normal-case cw-4:text-[11.5px]">{{ menu.text
+                }}</span>
+            </div>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col w-full" *ngIf="isData" @fadeInOut>
+      <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
+        <div class="w-full">
+          <app-visitor-button [text]="'Waiting'"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleShowActive()"></app-visitor-button>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'Closed'"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleShowClosed()"></app-visitor-button>
+        </div>
+      </div>
+      <div class="flex flex-col justify-between mt-4 space-y-2" *ngIf="isClosed">
+        <div class="text-base font-bold">Request Date</div>
+        <div class="w-full flex flex-row space-x-3">
+          <div class="w-1/2">
+            <app-text-input #clientApprovalFilterStartDateInput [id]="'client_approval_filter_start_date_input'"
+              [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
+              [(ngModel)]="startDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+              (change)="onStartDateChange($event)"></app-text-input>
+          </div>
+          <div class="w-1/2">
+            <app-text-input #clientApprovalFilterEndDateInput [id]="'client_approval_filter_end_date_input'"
+              [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
+              [(ngModel)]="endDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+              (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
+          </div>
+        </div>
+        <div class="w-full flex flex-row-reverse">
+          <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+        </div>
+       
+      </div>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+      <div *ngIf="!isLoading">
+        <div *ngIf="showApprovals.length > 0; else noApprovals">
+          <div *ngFor="let approval of showApprovals; let i = index" [ngClass]="{
+            'bg-green-100': approval.states === 'approved',
+            'bg-sky-100': approval.states === 'pending_approval' || approval.states === 'pending_payment',
+            'bg-[#E3787E]': approval.states === 'rejected' || approval.states === 'cancel',
+            'bg-[#F8F1BA]': approval.states === 'requested',
+            'bg-[#c4c4c4]': !approval.states,
+            }" class="bg-green-100 rounded-2xl p-5 my-4 mt-4 w-full">
+            <h2 [ngClass]="{
+            'text-green-500': approval.states === 'approved',
+            'text-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment',
+            'text-red-700': approval.states === 'rejected' || approval.states === 'cancel',
+            'text-yellow-400': approval.states === 'requested',
+            }" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
+              <ion-icon [name]="approval.states === 'approved' ? 'checkmark' : 
+            approval.states === 'pending_approval' ? 'time' : 
+            approval.states === 'pending_payment' ? 'time' : 
+            approval.states === 'rejected' ? 'close' : 
+            approval.states === 'cancel' ? 'close' : 
+            approval.states === 'requested' ? 'help-circle' : 
+            'help-circle'" [ngClass]="{
+            'bg-green-500': approval.states === 'approved',
+            'bg-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment',
+            'bg-red-700': approval.states === 'rejected' || approval.states === 'cancel',
+            'bg-yellow-500': approval.states === 'requested'
+            }" class="mr-2 p-1 rounded-full text-white text-[18px]">
+              </ion-icon>
+              {{ approval.states ? functionMain.uppercaseFirstWithUnderscore(approval.states) : '-' }}
+            </h2>
+            <p class="font-bold text-base text-black" *ngIf="!['facility'].includes(approval_type)">{{ approval_name }}</p>
+            <p class="font-bold text-base text-black" *ngIf="['facility'].includes(approval_type)">{{ functionMain.returnNone(approval.facility_name) }}</p>
+            <div class="table w-full">
+              <div class="table-row" *ngIf="['move_permit', 'renovation', 'bicycle', 'coach', 'pet', 'vehicle'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black" >Application Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.application_date ? functionMain.convertToDDMMYYYY(approval.application_date.split(' ')[0]) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Event date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertToDDMMYYYY(approval.start_date.split(' ')[0]) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['pet'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Type and Breed</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.type_of_pet) + ' | ' + functionMain.returnNone(approval.pet_breed) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['bicycle'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Brand and Color</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.bicycle_brand) + ' | ' + functionMain.returnNone(approval.bicycle_color) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['access_card'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Family Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['coach'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Coach Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.coach_name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['coach'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Coach Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.coach_type_id.name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['family'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Full Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_full_name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['family'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Contact Number</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_mobile_number) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['family'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Member Type</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.member_type ? functionMain.uppercaseFirstWithUnderscore(approval.member_type) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['move_permit', 'renovation'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Company Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.contractor_company_name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Number</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.vehicle_number }}</p>
+              </div>
+              <div class="table-row" *ngIf="['parking'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Offence Time</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.issue_time) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Block</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.block_id.name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle', 'coach'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Unit</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.unit_id.name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? ( approval_type == 'facility' ? approval.start_date.split(' ')[1] : functionMain.convertDateExtend(approval.start_date) ) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date ? ( approval_type == 'facility' ? approval.end_date.split(' ')[1] : functionMain.convertDateExtend(approval.end_date) ) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Booked By</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.partner_id.name) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['family'].includes(approval_type)">
+                <p class="font-bold table-cell text-base text-black">Applied By</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.requestor) }}</p>
+              </div>
+            </div>
+            <div class="w-full flex flex-row justify-center mt-2" *ngIf="['family'].includes(approval_type) && approval.image_profile">
+              <img [src]="functionMain.getImage(approval.image_profile)" class="h-40" >
+            </div>
+            <div class="flex mt-2 space-x-2">
+              <button (click)="viewDetail(approval)"
+                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+        <ng-template #noApprovals>
+          <div class="w-full bg-transparent mt-8 text-center rounded-lg">
+            <p class="text-gray-600">There are no approvals for this type.....</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="flex flex-row relative mx-7 mt-4 mb-24" *ngIf="isDetail" @fadeInOut>
+    <div class="flex flex-col w-full p-4 rounded" [ngClass]="{
+      'bg-green-100': selectedApproval.states === 'approved',
+      'bg-sky-100': selectedApproval.states === 'pending_approval' || selectedApproval.states === 'pending_payment',
+      'bg-[#E3787E]': selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel',
+      'bg-[#F8F1BA]': selectedApproval.states === 'requested',
+      'bg-[#c4c4c4]': !selectedApproval.states,
+      }">
+      <div class="w-full flex flex-col justify-center items-center my-2" *ngIf="['family'].includes(approval_type) && selectedApproval.image_profile">
+        <img [src]="functionMain.getImage(selectedApproval.image_profile)" class="h-40" >
+        <p class="text-base text-black font-bold">{{ functionMain.returnNone(selectedApproval.family_full_name) }}</p>
+      </div>
+      <div class="table w-full">
+        <div class="table-row" *ngIf="['move_permit', 'renovation', 'bicycle', 'coach', 'pet', 'vehicle'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black" >Application Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.application_date ? functionMain.convertToDDMMYYYY(selectedApproval.application_date.split(' ')[0]) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Facility name</p>
+          <p class="ml-2 table-cell text-base text-black truncate">: {{ functionMain.returnNone(selectedApproval.facility_name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Event date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertToDDMMYYYY(selectedApproval.start_date.split(' ')[0]) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['access_card'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Family Name</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['pet'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Type and Breed</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.type_of_pet) + ' | ' + functionMain.returnNone(selectedApproval.pet_breed) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['bicycle'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Brand and Color</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.bicycle_brand) + ' | ' + functionMain.returnNone(selectedApproval.bicycle_color) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['coach'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Coach Name</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.coach_name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['coach'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Coach Name</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.coach_type_id.name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['move_permit', 'renovation'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Company Name</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.contractor_company_name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Vehicle Number</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.vehicle_number }}</p>
+        </div>
+        <div class="table-row" *ngIf="['parking'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Offence Time</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.issue_time) }}</p>
+        </div>
+        <!-- <div class="table-row" *ngIf="['family'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Full Name</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_full_name) }}</p>
+        </div> -->
+        <div class="table-row" *ngIf="['family'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Contact Number</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_mobile_number) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['family'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Member Type</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.member_type ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.member_type) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Block</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.block_id.name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle', 'coach'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Unit</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.unit_id.name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Start Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? ( approval_type == 'facility' ? selectedApproval.start_date.split(' ')[1] : functionMain.convertDateExtend(selectedApproval.start_date) ) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">End Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? ( approval_type == 'facility' ? selectedApproval.end_date.split(' ')[1] : functionMain.convertDateExtend(selectedApproval.end_date) ) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Booked By</p>
+          <p class="ml-2 table-cell text-base text-black truncate">: {{ functionMain.returnNone(selectedApproval.partner_id.name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['family'].includes(approval_type) && selectedApproval.end_of_tenancy">
+          <p class="font-bold table-cell text-base text-black w-2/5">End Of Tenancy Agreement</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertToDDMMYYYY(selectedApproval.end_of_tenancy) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['family'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Applied By</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.requestor) }}</p>
+        </div>
+        <div class="table-row">
+          <p class="font-bold table-cell text-base text-black">Status</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.states ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.states) : '-'  }}</p>
+        </div>
+        <div class="table-row" *ngIf="selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel'">
+          <p class="font-bold table-cell text-base text-black">Reason For Rejetion</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
+        </div>
+      </div>
+      <div class="w-full flex flex-col justify-start mt-2" *ngIf="['family'].includes(approval_type) && selectedApproval.tenancy_aggrement">
+        <p class="text-base text-black"><b>Tenancy Agreement</b></p>
+        <img [src]="functionMain.getImage(selectedApproval.tenancy_aggrement)" class="h-40 object-contain" *ngIf="selectedApproval.attachment_mimetype.includes('image')">
+        <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
+            (click)="functionMain.downloadDocument(selectedApproval.tenancy_aggrement, selectedApproval.family_full_name + '_Tenancy Agreement')" *ngIf="selectedApproval.attachment_mimetype.includes('application')" />
+      </div>
+      <div class="flex flex-col mt-4 space-y-2" *ngIf="['pending_approval', 'requested'].includes(selectedApproval.states)">
+        <button (click)="approveDetail(selectedApproval)"
+          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold">
+          Approve
+        </button>
+        <button (click)="openRejectModal()"
+          class="bg-[#E3787E] text-black px-3 py-2 text-base rounded font-bold">
+          Reject
+        </button>
+      </div>
+    </div>
+  </div>
+  <ion-modal id="text-modal" [isOpen]="isRejectModal" (didDismiss)="closeRejectModal()">
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Reason for rejection</p>
+          </div>
+          <textarea id="reason_ban_entry_message" placeholder="Type the remarks here. . ."
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
+            type="text" name="reasonForbanning" [(ngModel)]="reject_reason">
+          </textarea>
+        </div>
+        <app-visitor-button [text]="'Confirm Rejection'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'" (click)="rejectDetail()"></app-visitor-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

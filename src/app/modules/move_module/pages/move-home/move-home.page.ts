@@ -8,6 +8,7 @@ import { switchMap, takeUntil, startWith } from 'rxjs/operators';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 interface Schedule {
   id: number;
@@ -53,7 +54,8 @@ export class MoveHomePage implements OnInit, OnDestroy {
     private blockUnitService: BlockUnitService,
     private renovatorsService: RenovatorsService,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    private functionMain: FunctionMainService,
   ) { }
 
   pageType = 'move_in'
@@ -61,9 +63,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
   private routerSubscription!: Subscription;
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.pageType = params['type']
-      this.loadSchedulesHistory('today');
-      this.loadBlock()
+      this.loadProjectName().then(() => {
+        this.pageType = params['type']
+        this.loadSchedulesHistory('today');
+        this.loadSchedulesHistory('history');
+        this.loadBlock()
+      })
     })
   }
   
@@ -72,6 +77,16 @@ export class MoveHomePage implements OnInit, OnDestroy {
       this.routerSubscription.unsubscribe();
     }
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+
   loadSchedulesHistory(type: string = 'today') {
     let url = ''
     this.historySchedules = []
@@ -82,14 +97,13 @@ export class MoveHomePage implements OnInit, OnDestroy {
     // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
     if (this.pageType === 'move_in') {
       if (type === 'today') {
-        this.moveInOutService.getMoveInOutSchedules().subscribe({
+        this.moveInOutService.getMoveInOutSchedules(this.project_id).subscribe({
           next: (results) => {
             console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.daySchedules = results.result.result;
               console.log(results)
             } else {
-              this.presentToast('There is no move in data for today!', 'warning');
             }
 
             this.isLoading = false;
@@ -101,7 +115,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
           }
         });
       } else {
-        this.moveInOutService.getMoveInOutSchedulesHistory().subscribe({
+        this.moveInOutService.getMoveInOutSchedulesHistory(this.project_id).subscribe({
           next: (results) => {
             console.log(results.result.result)
             if (results.result.status_code === 200) {
@@ -109,7 +123,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
               this.filteredHistorySchedules = this.historySchedules
               console.log(results)
             } else {
-              this.presentToast('There is no move in data!', 'warning');
             }
 
             this.isLoading = false;
@@ -123,13 +136,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
       }
     } else if (this.pageType === 'renov') {
       if (type == 'today') {
-        this.renovatorsService.getRenovationSchedules().subscribe({
+        this.renovatorsService.getRenovationSchedules(this.project_id).subscribe({
           next: (results) => {
             console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.daySchedules = results.result.result;
             } else {
-              this.presentToast('There is no renovation data for today!', 'warning');
             }
 
             this.isLoading = false;
@@ -141,14 +153,13 @@ export class MoveHomePage implements OnInit, OnDestroy {
           }
         });
       } else {
-        this.renovatorsService.getRenovationSchedulesHistory().subscribe({
+        this.renovatorsService.getRenovationSchedulesHistory(this.project_id).subscribe({
           next: (results) => {
             console.log(results.result.result)
             if (results.result.status_code === 200) {
               this.historySchedules = results.result.result;
               this.filteredHistorySchedules = this.historySchedules
             } else {
-              this.presentToast('There is no renovation data!', 'warning');
             }
 
             this.isLoading = false;
@@ -170,9 +181,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
       let url = '/vms/get/coaches'
       let params = {}
       if (type == 'today') {
-        params = { is_today: true}
+        params = { is_today: true, project_id: this.project_id}
       } else {
-        params = { is_today: false}
+        params = { is_today: false, project_id: this.project_id}
       }
       this.mainVmsService.getApi(params, url).subscribe({
         next: (results) => {
@@ -185,7 +196,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
               this.filteredHistorySchedules = this.historySchedules
             }
           } else {
-            this.presentToast('There is no coaches data!', 'warning');
           }
 
           // this.isLoading = false;
@@ -221,7 +231,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
               this.filteredHistorySchedules = this.historySchedules
             }
           } else {
-            this.presentToast('There is no visitor data for today!', 'warning');
           }
 
           // this.isLoading = false;
@@ -259,6 +268,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   applyFilters() {
+    console.log(this.historySchedules)
     this.filteredHistorySchedules = this.historySchedules.filter((item: any) => {
       const visitorDate = new Date(item.schedule_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
@@ -275,15 +285,19 @@ export class MoveHomePage implements OnInit, OnDestroy {
         selectedEndDate.setHours(0, 0, 0, 0);
       }
 
-      const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+      console.log(item.contractor_name ,visitorDate, selectedStartDate, selectedEndDate)
+
+      // const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
 
-      return typeMatches && dateMatches;
+      return typeMatches && startDateMatches && endDateMatches;
     });
     console.log(this.filteredHistorySchedules)
   }
 
-  form(block: string, unit: string, block_id: string = '1', unit_id: string = '1') {
+  form(block: string, unit: string, block_id: string = '1', unit_id: string = '1', requestor_id: string) {
     if (this.pageType == 'ma_visitor') {
       this.router.navigate(['/ma-visitor-form'], {})
     } else if (this.pageType == 'coach') {
@@ -297,7 +311,8 @@ export class MoveHomePage implements OnInit, OnDestroy {
           unit_id: unit_id,
           block: block,
           unit: unit,
-          schedule_type: this.pageType
+          schedule_type: this.pageType,
+          requestor_id: requestor_id
         }
       });
     }
@@ -345,11 +360,15 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showDayTrans) {
-      this.showDay = false;
-      this.showHistory = false;
-      this.showDayTrans = false;
-      this.showHistoryTrans = false;
       if (type == 'day') {
+        this.showHistory = false;
+        this.showHistoryTrans = false;
+        this.searchOption = ''
+        this.startDateFilter = ''
+        this.endDateFilter = ''
+        this.choosenBlock = ''
+        this.selectedRadio = ''
+        this.isRadioClicked = false
         this.showDayTrans = true
         if (this.daySchedules.length == 0) {
           this.loadSchedulesHistory('today')
@@ -360,11 +379,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
         }, 300)
       }
       if (type == 'history') {
+        this.showDay = false;
+      this.showDayTrans = false;
         this.showHistoryTrans = true
-        this.searchOption = ''
-        this.startDateFilter = ''
-        this.endDateFilter = ''
-        this.choosenBlock = ''
         this.applyFilters()
         if (this.historySchedules.length == 0) {
           this.loadSchedulesHistory('history')
@@ -385,7 +402,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
@@ -413,16 +429,17 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   onClickHistory(record: any) {
-    if (this.pageType != 'coach' && this.pageType != 'ma_visitor'){
-      this.onScheduleClick(record)
-    } else if (this.pageType == 'coach' || this.pageType == 'ma_visitor') {
-      this.coachForm(record)
-    }
+    this.onScheduleClick(record)
+    // if (this.pageType != 'ma_visitor'){
+      
+    // } else if (this.pageType == 'ma_visitor') {
+    //   this.coachForm(record)
+    // }
   }
 
   onClickDay(record: any) {
     if (this.pageType != 'coach' && this.pageType != 'ma_visitor'){
-      this.form(record.block_name, record.unit_name, record.block_id, record.unit_id)
+      this.form(record.block_name, record.unit_name, record.block_id, record.unit_id, record.requestor_id)
     } else if (this.pageType == 'coach' || this.pageType == 'ma_visitor') {
       this.coachForm(record)
     }
@@ -445,5 +462,46 @@ export class MoveHomePage implements OnInit, OnDestroy {
     } else {}
     this.applyFilters()
     console.log(event.target.value)
+  }
+
+  sortVehicle: any[] = []
+  selectedRadio: string | null = null
+  isRadioClicked = false
+
+  onRadioClick(value: string): void {
+    if (this.selectedRadio === value) {
+      this.selectedRadio = null;
+    } else {
+      this.selectedRadio = value;
+      this.searchOption = ''
+    }
+    console.log(this.selectedRadio)
+    this.sortVehicle = this.historySchedules
+    if (this.selectedRadio == 'sort_date') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.schedule_date ? new Date(record.schedule_date.split(' ')[0]).toISOString() : '-' ))
+      ).map((date) => ({
+        vehicle_number: '',
+        date: new Date(date),
+        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
+        data: this.sortVehicle.filter(item => item.schedule_date ? new Date(item.schedule_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.schedule_date == date ) ,            
+      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
+      console.log(this.sortVehicle)
+    } else if (this.selectedRadio == 'sort_vehicle') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.vehicle_number != "" ? record.vehicle_number : false))
+      ).map((vehicle_number) => ({
+        vehicle_number: vehicle_number ? vehicle_number : 'Walk In',
+        date: new Date(),
+        schedule_date: '',
+        data: this.sortVehicle.filter(item => item.vehicle_number == vehicle_number),            
+      }));;
+      console.log(this.sortVehicle)
+    } else {
+      this.isRadioClicked = false
+      this.clearFilters()
+    }
   }
 }

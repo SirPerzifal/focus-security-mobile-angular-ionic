@@ -13,32 +13,32 @@
           <tr>
             <td class="font-bold w-2/5">RESIDENT NAME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.resident_name }}</td>
+            <td>{{ functionMain.returnNone(record.resident_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">CONTACT NO</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.contact }}</td>
+            <td>{{ functionMain.returnNone(record.contact) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">BLOCK</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.block_name }}</td>
+            <td>{{ functionMain.returnNone(record.block_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">UNIT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.unit_name }}</td>
+            <td>{{ functionMain.returnNone(record.unit_name) }}</td>
           </tr>         
           <tr>
             <td class="font-bold w-2/5">RESIDENT TYPE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.resident_type }}</td>
+            <td>{{ functionMain.returnNone(record.resident_type).replace("_", " ") }}</td>
           </tr>
           <tr *ngIf="record.is_tenant">
             <td class="font-bold w-2/5">TENANCY EXPIRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.tenant_date }}</td>
+            <td>{{ functionMain.returnNone(record.tenant_date) }}</td>
           </tr>
         </table>
         <div class="flex flex-col justify-around w-full">

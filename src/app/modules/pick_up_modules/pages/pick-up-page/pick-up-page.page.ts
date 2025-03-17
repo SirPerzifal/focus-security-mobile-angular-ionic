@@ -7,6 +7,7 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/vms/user/user.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -46,6 +47,14 @@ export class PickUpPagePage implements OnInit {
   
   }
 
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+
   Block: any[] = [];
 
   loadBlock() {
@@ -56,7 +65,6 @@ export class PickUpPagePage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
@@ -89,7 +97,8 @@ export class PickUpPagePage implements OnInit {
     private toastController: ToastController,
     private userApi: UserService,
     private router: Router,
-    private blockUnitService: BlockUnitService
+    private blockUnitService: BlockUnitService,
+    public functionMain: FunctionMainService
   ) { }
 
   toggleShowPick() {
@@ -103,10 +112,13 @@ export class PickUpPagePage implements OnInit {
   }
 
   resetForm() {
+    this.selectedVehicleType = ''
     this.valPhv = false
     this.valCar = false
     this.valTaxi = false
     this.valBike = false
+    this.vehicleNumber = ''
+    this.blkLocation = ''
   }
 
   toggleShowDrop() {
@@ -117,9 +129,6 @@ export class PickUpPagePage implements OnInit {
     this.showPick = false;
     this.showDrop = true;
     this.entryType = 'drop_off';
-    this.vehicleNumber = ''
-    this.blkLocation = ''
-    this.selectedVehicleType = ''
   }
 
   useVehicle(val: string) {
@@ -183,7 +192,8 @@ export class PickUpPagePage implements OnInit {
         this.entryType, 
         this.selectedVehicleType, 
         vehicleNumber, 
-        location
+        location,
+        this.project_id
       ).subscribe({
         next: (response) => {
           console.log(response)
@@ -240,6 +250,7 @@ export class PickUpPagePage implements OnInit {
 
   ngOnInit() {
     this.loadBlock()
+    this.loadProjectId()
   }
   
   vehicle_number = ''

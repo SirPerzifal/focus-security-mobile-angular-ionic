@@ -1,9 +1,9 @@
 <div [class]="'flex flex-col ' + getFilteredClasses(customClasses)">
-  <label class="text-2xl" *ngIf="labelText"><b><u>{{labelText}}</u></b></label>
+  <label class="text-2xl" [class]="labelResidentClass" *ngIf="labelText"><b><u>{{labelText}}</u></b></label>
   <label [class]="labelResidentClass" *ngIf="labelResidentText">{{labelResidentText}}</label>
   
   <!-- Displayed Input -->
-  <div class="flex flex-row items-center">
+  <div class="flex flex-row items-center w-full">
     <input 
       *ngIf="type === 'month' && !isMonthPickerActive"
       [id]="id + '-display'" 
@@ -70,7 +70,7 @@
       [name]="name"
       (click)="onDisplayInputClick()"
       [min]="type === 'date' ? min : null"
-      style="border: 1px solid #6B7280; cursor: pointer; background-color: white;"
+      [style]="'border: 1px solid #6B7280; cursor: pointer; ' + (isReadonly ? ' background-color: #F5F5F5; color: #7D8390; ' : ' background-color: white; color: black; ')"
       readonly
     />
     <ion-icon *ngIf="type === 'date'" name="calendar-clear-outline" class="positioning-calendar-icon"></ion-icon>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-my-profile-estate',
@@ -13,6 +14,7 @@ export class MyProfileEstatePage implements OnInit {
     family_id : number,
     family_name : string,
     family_type:string,
+    image_profile:string,
     unit_id : number,
     unit_name : string,
     block_id : number,
@@ -23,10 +25,17 @@ export class MyProfileEstatePage implements OnInit {
   activeUnit : number = 0;
 
   constructor(
-    private authService : AuthService
+    private authService : AuthService,
+    public functionMain: FunctionMainService,
   ) { }
 
   ngOnInit() {
+    
+
+  }
+
+  ionViewWillEnter(){
+    // this.loadPreferenceProjectName()
     Preferences.get({key:'ACTIVE_UNIT'}).then((unit_value)=>{
       if(unit_value?.value){
         this.activeUnit = parseInt(unit_value.value)
@@ -35,9 +44,10 @@ export class MyProfileEstatePage implements OnInit {
     Preferences.get({key:'USER_INFO'}).then((value)=>{
       if(value?.value){
         var accessToken = this.authService.parseJWTParams(value.value)
-        console.log(accessToken);
-        console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
+        // console.log(accessToken);
+        // console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
         this.loadEstate(accessToken?.email)
+        // this.loadEstate('jenvel@gmail.com')
         
         // this.authService.getEstatesByEmail(accessToken?.email).subscribe(
         
@@ -46,16 +56,15 @@ export class MyProfileEstatePage implements OnInit {
         this.loadEstate('jenvel@gmail.com')
       }
     })
-
   }
 
   loadEstate(email:string) {
     this.authService.getEstatesByEmail(email).subscribe(
           
       response => {
-        console.log(response,"responseresponseresponseresponseresponseresponse");
+        // console.log(response,"responseresponseresponseresponseresponseresponse");
         if (response.result.status_code === 200) {
-          console.log("heres the data", response);
+          // console.log("heres the data", response);
           var listedEstate = []
           for (var key in response.result.response){
             if(response.result.response.hasOwnProperty(key)){
@@ -63,6 +72,7 @@ export class MyProfileEstatePage implements OnInit {
                 family_id : response.result.response[key]?.family_id,
                 family_name : response.result.response[key]?.family_name ? response.result.response[key]?.family_name : '',
                 family_type:response.result.response[key]?.family_type ? response.result.response[key]?.family_type : '',
+                image_profile: response.result.response[key]?.image_profile ? response.result.response[key]?.image_profile : '',
                 unit_id : response.result.response[key]?.unit_id,
                 unit_name : response.result.response[key]?.unit_name ? response.result.response[key]?.unit_name : '',
                 block_id : response.result.response[key]?.block_id,
@@ -73,8 +83,8 @@ export class MyProfileEstatePage implements OnInit {
             }
           }
           this.profileEstate = listedEstate
-          console.log(this.profileEstate);
-          console.log('this.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstate');
+          // console.log(this.profileEstate);
+          // console.log('this.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstate');
           
           // this.profileEstate = response.result.result
         } else {
@@ -88,6 +98,18 @@ export class MyProfileEstatePage implements OnInit {
   }
 
   async chooseEstateClick(estate:any){
+    await Preferences.set({
+      key: 'NAME_OF_BLOCK',
+      value: estate.block_name.toString(),
+    })
+    await Preferences.set({
+      key: 'NAME_OF_UNIT',
+      value: estate.unit_name.toString(),
+    })
+    await Preferences.set({
+      key: 'ACTIVE_BLOCK',
+      value: estate.block_id.toString(),
+    })
     await Preferences.set({
       key: 'ACTIVE_UNIT',
       value: estate.unit_id.toString(),
@@ -113,8 +135,8 @@ export class MyProfileEstatePage implements OnInit {
     // Preferences.get({key:'USER_INFO'}).then((value)=>{
     //   if(value?.value){
     //     var accessToken = this.authService.parseJWTParams(value.value)
-    //     console.log(accessToken);
-    //     console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
+    //     // console.log(accessToken);
+    //     // console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
     //     this.loadEstate('jenvel@gmail.com')
         
     //     // this.authService.getEstatesByEmail(accessToken?.email).subscribe(

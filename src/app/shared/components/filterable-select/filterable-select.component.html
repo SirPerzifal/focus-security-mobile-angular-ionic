@@ -1,0 +1,9 @@
+<div (click)="toggleDropdown()" [class]="getFilteredClasses(customClasses)">
+  <ion-input class="w-full" style="--border-width:0px !important" fill="outline" [(ngModel)]="searchText" (ionInput)="onInputChange()" placeholder="Select or type..."></ion-input>
+</div>
+
+<ion-list lines="none" *ngIf="showDropdown">
+  <ion-item *ngFor="let option of filteredOptions" [id]="option.id" (click)="selectOption(option)">
+    {{ option.name }}
+  </ion-item>
+</ion-list>

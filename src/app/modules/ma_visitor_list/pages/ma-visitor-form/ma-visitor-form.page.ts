@@ -31,21 +31,35 @@ export class MaVisitorFormPage implements OnInit {
       if (this.record.vehicle_number != '') {
         this.selection_type = 'drive_in'
       }
-      console.log(this.record);
+      this.loadGetProjectConfig()
     } 
    }
 
   faUsers = faUsers
   record: any
-  project_config: any
+  project_config: any = []
+  showForm = true
 
   ngOnInit() {
-    this.getProjectConfig()
+    
   }
 
-  getProjectConfig() {
-    this.project_config = this.functionMain.getProjectConfig()
+  async loadGetProjectConfig() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_config = value.config
+      console.log(this.project_config);
+      // this.getProjectConfig()
+    })
   }
+
+  project_id = 0
+
+  // async getProjectConfig() {
+  //   this.project_config = await this.functionMain.getProjectConfig(this.project_id);
+  //   this.showForm = true
+  // }
+
 
   onBackMove() {
     this.router.navigate(['move-home'], {
@@ -57,7 +71,33 @@ export class MaVisitorFormPage implements OnInit {
 
   selection_type = ''
   onSubmitRecord(is_open: boolean) {
-    console.log(is_open)
+    console.log(this.record)
+    this.mainVmsService.getApi(this.record, '/client/post/update_ma_visitor').subscribe({
+      next: (results) => {
+        console.log(results.result)
+        if (results.result.status_code === 200) {
+          this.functionMain.presentToast('Successfully update this visitor' + is_open ? ' and open the barrier!' : '!', 'success');
+          this.onBackMove()
+        } else {
+          this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
+        }
+
+        // this.isLoading = false;
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
+        console.error(error);
+        // this.isLoading = false;
+      }
+    });
+  }
+
+  refreshVehicle() {
+    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    let front = ['SBA', 'SBS', 'SAA']
+    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.record.vehicle_number = randomVhc
+    console.log("Vehicle Refresh", randomVhc)
   }
 
 }

@@ -56,9 +56,9 @@ export class InviteFromHistoryPage implements OnInit {
           )
         );
         this.existingInvitees = existingInvitees; // Tandai invitee yang sudah ada di form sebelumnya
-        console.log('tes-top', existingInvitees)
+        // console.log('tes-top', existingInvitees)
       }
-      console.log('tes', existingInvitees)
+      // console.log('tes', existingInvitees)
       
     }
   }
@@ -69,10 +69,10 @@ export class InviteFromHistoryPage implements OnInit {
       next: (response: any) => {
         if (response.result.response_status === 200) {
           this.historyData = response.result.response_result;
-          console.log(response.result.response_result)
+          // console.log(response.result.response_result)
         } else {
           this.presentToast('Failed to load vehicle data', 'danger');
-          console.log(response)
+          // console.log(response)
         }
       },
       error: (error) => {
@@ -110,13 +110,13 @@ export class InviteFromHistoryPage implements OnInit {
     if (index > -1) {
       // Jika invitee sudah dipilih, hapus dari selectedInvitees
       this.selectedInvitees.splice(index, 1);
-      console.log('tes1', this.existingInvitees);
+      // console.log('tes1', this.existingInvitees);
     } else if (ifExist > -1) {
       // Jika invitee belum dipilih, tambahkan ke selectedInvitees
       this.selectedInvitees.slice(invitee);
       // Jika invitee ada di existingInvitees, hapus dari existingInvitees
       this.existingInvitees.splice(ifExist, 1);
-      console.log('tes4',this.existingInvitees);
+      // console.log('tes4',this.existingInvitees);
     } else {
       // Jika invitee belum dipilih, tambahkan ke selectedInvitees
       this.selectedInvitees.push(invitee);
@@ -129,9 +129,9 @@ export class InviteFromHistoryPage implements OnInit {
       // Jika invitee ada di existingInvitees, hapus dari existingInvitees
       if (this.isInviteeExisted(invitee)) {
         this.existingInvitees.splice(ifExist, 1);
-        console.log('tes2',this.existingInvitees);
+        // console.log('tes2',this.existingInvitees);
       }
-      console.log('tes3',this.existingInvitees);
+      // console.log('tes3',this.existingInvitees);
     }
   }
 
@@ -157,7 +157,7 @@ export class InviteFromHistoryPage implements OnInit {
       }
     };
     
-    console.log(navigationExtras);
+    // console.log(navigationExtras);
     // Navigasi ke invite-form
     this.router.navigate(['/invite-form'], navigationExtras);
   }

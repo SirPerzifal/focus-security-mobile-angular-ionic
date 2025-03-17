@@ -1,0 +1,290 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Notices'" [text_second]="textSecond" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <div class="flex flex-row relative mx-4 mb-24">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
+        <div class="w-full">
+          <app-visitor-button [text]="'Notice'"
+            [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNotice ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+            (click)="toggleShowNotice()"></app-visitor-button>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'New Notice'"
+            [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+            (click)="toggleShowNew()"></app-visitor-button>
+        </div>
+      </div>
+      <div *ngIf="showNotice.length > 0 && isNotice">
+        <div *ngFor="let notice of showNotice; let i = index"
+          class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full">
+          <div class="flex flex-row justify-between text-base">
+            <span class="font-bold">{{ notice.title }}</span>
+            <span>{{ notice.notice_date }}</span>
+          </div>
+          <p class="text-base text-black mt-3">{{ notice.remark }}</p>
+          <table class="w-full">
+            <tr>
+              <td class="text-base text-black w-2/5">Start Date</td>
+              <td class="ml-2 text-base text-black">: {{ notice.start_time }}</td>
+            </tr>
+            <tr>
+              <td class="text-base text-black w-2/5">End Date</td>
+              <td class="ml-2 text-base text-black">: {{ notice.end_time }}</td>
+            </tr>
+          </table>
+          <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
+            (click)="downloadDocument(notice.notice_attachment, notice.title)" *ngIf="notice.notice_attachment" />
+          <div class="flex mt-3 space-x-2 w-full">
+            <button (click)="deleteNotice(notice)"
+              class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-[30%]">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-between mt-4 space-y-2 w-full" *ngIf="isNew">
+        <div class="w-full">
+          <app-text-input [labelResidentText]="'Title'" [labelResidentClass]="'text-base font-bold'"
+            [id]="'client_new_notice_name'" [placeholder]="'Renovation Alert'"
+            [customClasses]="{'w-full items-start': true}" [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="newNoticeForm.notice_title"></app-text-input>
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Content</p>
+          </div>
+          <textarea id="client_new_notice_summary" placeholder="Report Summary"
+            class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
+            [(ngModel)]="newNoticeForm.notice_content" name="entryMessage">
+          </textarea>
+        </div>
+        <div class="flex flex-row justify-between space-x-1.5 w-full">
+          <div class="w-1/2">
+            <app-text-input #startDateNotice [id]="'start_notice'" [placeholder]="'Start Date'" [(ngModel)]="startDate"
+              [customClasses]="{'w-full':true}" [type]="'date'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}"
+              (change)="onChangeStartDate($event)">
+            </app-text-input>
+          </div>
+          <div class="w-1/2">
+            <app-text-input #endDateNotice [id]="'end_notice'" [placeholder]="'End Date'" [(ngModel)]="endDate"
+              [customClasses]="{'w-full':true}" [type]="'date'" [min]="startDate"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}"
+              (change)="onChangeEndDate($event)">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Attachment</p>
+          </div>
+          <!-- <div class="w-full flex flex-row justify-between ">
+            <div class="w-4/6">
+              <input #clientNoticeNewAttachment placeholder="Choose a file" type="file"
+                (change)="onFileSelected($event)"
+                class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer" />
+            </div>
+            <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
+              class="bg-[var(--ion-color-primary)] text-white w-[30%] h-[inherit] text-base rounded font-bold">
+              Upload
+            </button>
+          </div> -->
+          <div class="w-full flex flex-row justify-between items-end">
+            <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientNoticeNewAttachment
+              class="hidden" accept="application/pdf" />
+            <div class="w-4/6">
+              <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+                class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
+                readonly />
+            </div>
+            <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
+              class="bg-[var(--ion-color-secondary)] text-white w-[30%] h-14 text-base rounded font-bold">
+              Upload
+            </button>
+          </div>
+        </div>
+
+        <!-- Choose Post To -->
+        <div class="flex flex-col w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Post To</p>
+          </div>
+          <select id="post_to_selection"
+            class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+            [(ngModel)]="newNoticeForm.post_to">
+            <option value="" selected disabled hidden>Select a posting option</option>
+            <option value="all">All Users</option>
+            <option value="block">To Certain Blocks</option>
+            <option value="unit">To Certain Units</option>
+          </select>
+        </div>
+        <!-- <div class="flex flex-col w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Post To</p>
+          </div>
+          <div
+            class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] flex flex-row items-center justify-between"
+            (click)="toggleDropdownPostTo()" tabindex="0">
+            {{ newNoticeForm.post_to === 'all' ? 'Post to all block and unit' : newNoticeForm.post_to === 'block' ?
+            'Post to certain blocks' : newNoticeForm.post_to === 'unit' ? 'Post to certain units' : 'Select a posting
+            option' }}
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
+            </svg>
+          </div>
+          <div id="dropdown_post_to" [ngClass]="setDropdownPostTo ? '' : 'hidden'"
+            class="absolute top-[469px] z-50 bg-gray-100 w-full rounded-lg shadow-sm dark:bg-gray-700">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li>
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="all" name="Post To" type="radio" [checked]="newNoticeForm.post_to === 'all'" value="all"
+                    (click)="selectOptionPostTo('all')"
+                    class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="all"
+                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">All
+                    Users</label>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="block" name="Post To" type="radio" value="block" (click)="selectOptionPostTo('block')"
+                    class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="block"
+                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">To Certain
+                    Blocks</label>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="unit" name="Post To" type="radio" value="unit" (click)="selectOptionPostTo('unit')"
+                    class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="unit"
+                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">To Certain
+                    Units</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+        <!-- Choose Block -->
+        <!-- <div class="flex flex-col w-full" *ngIf="newNoticeForm.post_to === 'block'">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Block</p>
+          </div>
+          <div [ngClass]="setDropdownChooseBlock ? 'text-[0.9rem]' : ''"
+            class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] flex flex-row items-center justify-between"
+            (click)="toggleDropdownChooseBlock()" tabindex="0">
+            {{ setDropdownChooseBlock ? 'Click again to confirm the selection' : blockArrayProcess.length ?
+            isArrayAndJoin(blockArrayProcess, blockNames) : 'Click to select blocks' }}
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
+            </svg>
+          </div>
+          <div id="dropdown_choose_block" [ngClass]="setDropdownChooseBlock ? '' : 'hidden'"
+            class="absolute top-[549px] z-50 bg-gray-100 w-full max-h-[155px] overflow-y-auto rounded-lg shadow-sm dark:bg-gray-700">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li *ngFor="let block of Block">
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="{{block.id}}" type="checkbox" [value]="block.id"
+                    (click)="selectOptionChooseBlock(block.id)"
+                    class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="{{block.id}}"
+                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">{{
+                    block.block_name }}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+        <!-- Choose Unit -->
+        <!-- <div class="flex flex-col w-full" *ngIf="newNoticeForm.post_to === 'unit'">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Unit</p>
+          </div>
+          <div [ngClass]="setDropdownChooseUnit ? 'text-[0.9rem]' : ''" class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] flex flex-row items-center justify-between"
+          (click)="toggleDropdownChooseUnit()"
+          tabindex="0">
+            {{ setDropdownChooseUnit ? 'Click again to confirm the selection' : unitArrayProcess.length ? isArrayAndJoin(unitArrayProcess, unitNames) : 'Click to select units' }}
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </div>
+          <div id="dropdown_choose_unit" [ngClass]="setDropdownChooseUnit ? '' : 'hidden'" class="bg-gray-100 w-full max-h-[130px] overflow-y-auto rounded-lg shadow-sm dark:bg-gray-700">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li *ngFor="let unit of Unit">
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="{{unit.id}}" type="checkbox" [value]="unit.id" (click)="selectOptionChooseUnit(unit.id)" class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="{{unit.id}}" class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">{{ unit.unit_name }}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+        <div class="w-full" *ngIf="newNoticeForm.post_to === 'block'">
+          <app-m2m-selection [Arrays]="Block" (outputValue)="blockChange($event)" [placeholder]="'Select Blocks'" [divOuterClass]="'border-black min-h-14 text-base'"
+            [labelText]="'Block'"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="newNoticeForm.post_to === 'unit'">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="unitChange($event)" [placeholder]="'Select Units'" [divOuterClass]="'border-black min-h-14 text-base'"
+            [labelText]="'Unit'"></app-m2m-selection>
+        </div>
+
+        <!-- <div class="flex flex-col w-full" *ngIf="newNoticeForm.post_to === 'unit'">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Unit</p>
+          </div>
+          <div [ngClass]="setDropdownChooseUnit ? 'text-[0.9rem]' : ''"
+            class="border border-black w-full rounded px-3 py-1 outline-[#BDBDBD] min-h-14 text-base text-[#6B7280] flex flex-row items-center justify-between"
+            (click)="toggleDropdownChooseUnit()" tabindex="0">
+            <input [(ngModel)]="unit_key" (keyup)="onUnitKeyUp($event)" #before_click_unit class="border-0" type="text" placeholder="Select Units" *ngIf="unitArrayProcess.length == 0">
+            <div class="flex flex-row flex-wrap gap-1" *ngIf="unitArrayProcess.length > 0">
+              <div class="flex flex-row space-x-1 items-center border border-black p-1 rounded" *ngFor="let unitSelect of unitNames">
+                <ion-icon name="close-circle-outline" class="size-5"></ion-icon> <span>{{unitSelect.name}}</span>
+              </div>
+              <input #unit_typing class="border-0" type="text" (keyup)="onUnitKeyUp($event)" placeholder=". . ." [(ngModel)]="unit_key">
+            </div>
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
+            </svg>
+          </div>
+          <div id="dropdown_choose_unit" [ngClass]="setDropdownChooseUnit ? '' : 'hidden'"
+            class="bg-gray-100 w-full max-h-[130px] overflow-y-auto rounded-lg shadow-sm dark:bg-gray-700">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li *ngFor="let unit of showUnit">
+                <div class="flex items-center p-2 rounded-sm">
+                  <input id="{{unit.id}}" type="checkbox" [value]="unit.id" (click)="selectOptionChooseUnit(unit.id)" [checked]="optionCheck(unit.id)"
+                    class="w-4 h-4 text-[var(--ion-color-primary)] bg-gray-100 border-gray-300 rounded-sm focus:ring-[var(--ion-color-primary)] dark:focus:ring-[var(--ion-color-primary)] dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 accent-[var(--ion-color-primary)]">
+                  <label for="{{unit.id}}"
+                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">{{
+                    unit.unit_name }}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+
+        <div class="w-full ">
+          <button (click)="onSubmitPost()"
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
+            Post
+          </button>
+        </div>
+      </div>
+      <div class="h-24" *ngIf="screenExtend"></div>
+
+    </div>
+  </div>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

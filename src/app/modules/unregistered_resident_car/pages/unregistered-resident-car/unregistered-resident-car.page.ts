@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
@@ -15,11 +16,20 @@ export class UnregisteredResidentCarPage implements OnInit {
     private blockUnitService: BlockUnitService,
     private toastController: ToastController,
     private mainVmsService: MainVmsService,
-    private router: Router
+    private router: Router,
+    private functionMain: FunctionMainService
   ) { }
 
   ngOnInit() {
-    this.loadBlock()
+    this.loadProjectName().then(() => {
+      this.loadBlock()
+    })
+  }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.formData.project_id = value.project_id
+    })
   }
 
   formData = {
@@ -28,7 +38,8 @@ export class UnregisteredResidentCarPage implements OnInit {
     vehicle_number: '',
     block_id: '',
     unit_id: '',
-    reason: ''
+    reason: '',
+    project_id: 0
   }
 
   onSubmit(isOpenBarrier: boolean = false) {
@@ -91,8 +102,7 @@ export class UnregisteredResidentCarPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.formData.unit_id = event.target.value;
-    console.log(this.formData.unit_id)
+    this.formData.unit_id = event[0]
   }
 
   loadBlock() {
@@ -101,7 +111,6 @@ export class UnregisteredResidentCarPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
@@ -113,14 +122,14 @@ export class UnregisteredResidentCarPage implements OnInit {
 
   isLoadingUnit = false
   async loadUnit() {
+    this.formData.unit_id = ''
     this.isLoadingUnit = true
     this.blockUnitService.getUnit(this.formData.block_id).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
           this.isLoadingUnit = false
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
           this.isLoadingUnit = false
         }

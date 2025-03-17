@@ -7,6 +7,7 @@ import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { AlertModalPage } from '../alert-modal/alert-modal.page';
 import { RecordsWheelClampedNewPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-new/records-wheel-clamped-new.page';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-alert-main',
@@ -23,6 +24,7 @@ export class AlertMainPage implements OnInit {
     private modalController: ModalController,
     private route: ActivatedRoute,
     private alertController: AlertController,
+    public functionMain: FunctionMainService,
   ) { }
 
   alertsIssues: any[] = [];
@@ -46,19 +48,53 @@ export class AlertMainPage implements OnInit {
   secondWarningTotal = 0
   issueTotal = 0
 
+  unregisteredRedTotal = 0
+  overstayRedTotal = 0
+  wheelClampedRedTotal = 0
+  ticketsRedTotal = 0
+  firstWarningRedTotal = 0
+  secondWarningRedTotal = 0
+  issueRedTotal = 0
+
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      if (params && params['alert']) {
-        console.log(params)
-        this.loadRecordsWheelClamp('wheel_clamp')
+      if (params ) {
+        if (params['alert']){
+          this.loadProjectName().then(() => {
+            this.loadRecordsWheelClamp('wheel_clamp')
+          })
+        }
+        if (params['ticket']){
+          this.loadProjectName().then(() => {
+            this.loadTickets()
+          })
+        }
       }
     })
-    this.loadRecordsWheelClamp('wheel_clamp')
-    this.loadRecordsWheelClamp('first_warning')
-    this.loadRecordsWheelClamp('second_warning')
-    this.loadUnregisteredCar()
-    this.loadOverstay()
+    
+    this.loadAll()
   }
+
+  loadAll() {
+    this.loadProjectName().then(() => {
+      this.loadRecordsWheelClamp('wheel_clamp')
+      this.loadRecordsWheelClamp('first_warning')
+      this.loadRecordsWheelClamp('second_warning')
+      this.loadUnregisteredCar()
+      this.loadOverstay()
+      this.loadTickets()
+    }) 
+  }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_name = value.project_name.toUpperCase()
+    })
+  }
+
+  project_id = 0
+  project_name = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -69,33 +105,31 @@ export class AlertMainPage implements OnInit {
 
   actionTotalIssue() {
     this.issueTotal = this.unregisteredTotal + this.overstayTotal + this.wheelClampedTotal + this.ticketsTotal + this.firstWarningTotal + this.secondWarningTotal
+    this.issueRedTotal = this.unregisteredRedTotal + this.overstayRedTotal + this.wheelClampedRedTotal + this.ticketsRedTotal + this.firstWarningRedTotal + this.secondWarningRedTotal
   }
 
   loadRecordsWheelClamp(offenceType: string = 'wheel_clamp') {
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== offenceType);
     this.offensesService.getOfffenses(offenceType, true).subscribe({
       next: (results) => {
-        console.log(results.result)
         if (results.result.response_code === 200) {
-          console.log("HELLOOOO")
           this.alertsIssues.push({ type: offenceType, data: results.result.response_result })
           if (offenceType == 'wheel_clamp') {
             this.wheelClampedTotal = results.result.response_result.length
           }
           else if (offenceType == 'first_warning') {
             this.firstWarningTotal = results.result.response_result.length
+            this.firstWarningRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
           }
           else {
             this.secondWarningTotal = results.result.response_result.length
+            this.secondWarningRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
           }
           this.recordAction();
 
           this.actionTotalIssue()
-          console.log(this.alertsIssues)
           if (!this.main) {
-            console.log("HEY THIS WORK")
             this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
-            console.log(this.showIssues)
           }
         } else {
           // this.presentToast('There is no data in the system!', 'danger');
@@ -113,9 +147,8 @@ export class AlertMainPage implements OnInit {
 
   loadUnregisteredCar(){
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'unregistered');
-    this.mainVmsService.getApi({}, '/vms/get/unregistered_car_list').subscribe({
+    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/unregistered_car_list').subscribe({
       next: (results) => {
-        console.log('unregistered', results)
         if (results.result.response_code === 200) {
           this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result })
           this.unregisteredTotal = results.result.response_result.length
@@ -123,9 +156,7 @@ export class AlertMainPage implements OnInit {
           this.recordAction();
           this.actionTotalIssue()
           if (!this.main) {
-            console.log("HEY THIS WORK")
             this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
-            console.log(this.showIssues)
           }
         } 
       },
@@ -138,24 +169,45 @@ export class AlertMainPage implements OnInit {
 
   loadOverstay(){
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'overstay');
-    this.mainVmsService.getApi({}, '/vms/get/overstay_list').subscribe({
+    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/overstay_list').subscribe({
       next: (results) => {
-        console.log('overstay', results)
         if (results.result.response_code === 200) {
           this.alertsIssues.push({ type: 'overstay', data: results.result.response_result })
           this.overstayTotal = results.result.response_result.length
-
+          this.overstayRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
+          console.log(this.overstayRedTotal)
           this.recordAction();
           this.actionTotalIssue()
           if (!this.main) {
-            console.log("HEY THIS WORK")
             this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
-            console.log(this.showIssues)
           }
         } 
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overstay car data!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  loadTickets(){
+    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'tickets');
+    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/report_issue').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.alertsIssues.push({ type: 'tickets', data: results.result.response_result })
+          this.ticketsTotal = results.result.response_result.length
+          this.ticketsRedTotal = results.result.response_result.filter((item: any) =>  item.message_count === 0).length
+          this.recordAction();
+          this.actionTotalIssue()
+          if (!this.main) {
+            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+          }
+        } 
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading tickets!', 'danger');
         console.error(error);
       }
     });
@@ -170,7 +222,8 @@ export class AlertMainPage implements OnInit {
         isActive: true,
         route: '/records-main',
         needSize: false,
-        isWarning: this.overstayTotal,
+        isWarning: this.overstayRedTotal,
+        totalWarning: this.overstayTotal,
         type: 'overstay',
         extraTextClass: ""
       },
@@ -181,6 +234,7 @@ export class AlertMainPage implements OnInit {
         route: '/records-main',
         needSize: true,
         isWarning: this.unregisteredTotal,
+        totalWarning: this.unregisteredTotal,
         type: 'unregistered',
         extraTextClass: ''
       },
@@ -190,7 +244,8 @@ export class AlertMainPage implements OnInit {
         isActive: true,
         route: '/records-main',
         needSize: false,
-        isWarning: this.ticketsTotal,
+        isWarning: this.ticketsRedTotal,
+        totalWarning: this.ticketsTotal,
         type: 'tickets',
         extraTextClass: ""
       },
@@ -200,7 +255,8 @@ export class AlertMainPage implements OnInit {
         isActive: true,
         route: '/records-wheel-clamped',
         needSize: false,
-        isWarning: this.firstWarningTotal,
+        isWarning: this.firstWarningRedTotal,
+        totalWarning: this.firstWarningTotal,
         type: 'first_warning',
         extraTextClass: "",
       },
@@ -210,17 +266,19 @@ export class AlertMainPage implements OnInit {
         isActive: true,
         route: '/records-wheel-clamped',
         needSize: false,
-        isWarning: this.secondWarningTotal,
+        isWarning: this.secondWarningRedTotal,
+        totalWarning: this.secondWarningTotal,
         type: 'second_warning',
         extraTextClass: "",
       },
       {
-        text: 'WHEEL CLAMPEDED',
+        text: 'WHEEL CLAMPED',
         icon: 'assets/icon-vms/records_menu/Wheel_Clamped.png',
         isActive: true,
         route: '/records-wheel-clamped',
         needSize: false,
         isWarning: this.wheelClampedTotal,
+        totalWarning: this.wheelClampedTotal,
         type: 'wheel_clamp',
         extraTextClass: "",
       },
@@ -246,7 +304,6 @@ export class AlertMainPage implements OnInit {
       this.active_type = records.type
       records.isActive = true
       this.showIssues = this.alertsIssues.filter(item => item.type === records.type)
-      console.log(this.showIssues[0])
       if (!this.showIssues[0]) {
         this.showIssues = [{
           type: this.active_type,
@@ -255,12 +312,11 @@ export class AlertMainPage implements OnInit {
       }
       this.selectedMenu = this.recordsMenu.filter((item: any) => item.type === records.type)
     }
-    console.log(this.active_type, records.type)
   }
 
   convertToDDMMYYYY(dateString: string): string {
-    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
-    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+    const [year, month, day] = dateString.split('-'); 
+    return `${day}/${month}/${year}`; 
   }
 
   onBackDetail() {
@@ -283,22 +339,18 @@ export class AlertMainPage implements OnInit {
       is_release: type != 'checkout',
       is_unregistered: this.active_type == 'unregistered' || this.active_type == 'overstay',
     }
-    console.log(params)
     if (true) {
       this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
-          console.log(results)
           if (results.result.response_code === 200) {
             this.presentToast(`Successfully ${type} vehicle!`, 'success');
             if (this.active_type == 'unregistered') {
               this.loadUnregisteredCar()
             } else if (this.active_type == 'overstay') {
               this.loadOverstay()
-            }
-            else {
+            } else {
               this.loadRecordsWheelClamp(this.active_type)
             }
-            
           } else {
             this.presentToast(`Failed to ${type} vehicle!`, 'danger');
           }
@@ -315,10 +367,9 @@ export class AlertMainPage implements OnInit {
   }
 
   async presentModal(issue: string = this.active_type, vehicle: any = []) {
-    console.log("TRY OPEN MODAL")
     const modal = await this.modalController.create({
       component: OvernightParkingModalPage,
-      cssClass: issue == 'second_warning' ? 'record-modal' : 'record-modal-notice',
+      cssClass: 'record-modal',
       componentProps: {
         issue: issue == 'none' ? issue : (issue == 'second_warning' ? 'wheel_clamp' : 'first_warning'),
         vehicle: vehicle,
@@ -329,9 +380,7 @@ export class AlertMainPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result) {
-        console.log(result.data)
         if (result.data) {
-          console.log("SUCCEED")
           if (this.active_type == 'first_warning') {
             this.loadRecordsWheelClamp('first_warning')
             this.loadRecordsWheelClamp('second_warning')
@@ -359,7 +408,7 @@ export class AlertMainPage implements OnInit {
   async presentModalRelease(id: number, type: string, vehicle: any) {
     const modal = await this.modalController.create({
       component: AlertModalPage,
-      cssClass: 'record-modal-notice',
+      cssClass: 'nric-scan-modal',
       componentProps: {
         id: id,
         type: type
@@ -369,9 +418,7 @@ export class AlertMainPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result) {
-        console.log(result.data)
         if(result.data){
-          console.log("SUCCEED")
           this.loadRecordsWheelClamp(this.active_type)
         }
       }
@@ -421,7 +468,6 @@ export class AlertMainPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result) {
-        console.log(result.data)
         if(result.data){
           this.loadRecordsWheelClamp('first_warning')
         }
@@ -429,6 +475,18 @@ export class AlertMainPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  ticketDetail(ticket_id: any) {
+    this.router.navigate(['/alert-ticket-detail'], {
+      state: {
+        ticket_id: ticket_id
+      }
+    })
+  }
+
+  refreshClicked() {
+    this.loadAll()
   }
 
 }

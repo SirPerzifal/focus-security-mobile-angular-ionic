@@ -13,26 +13,28 @@
     <div class="w-full mt-4 space-y-2">
       <div class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center" *ngFor="let vd of voteData">
         <div class="flex justify-start flex-col items-start w-full">
-          <div class="flex flex-col items-start">
-            <h2 class="font-bold mb-2">{{ vd.title }}</h2>
+          <div class="flex flex-col items-start w-fit">
+            <h2 class="font-bold mb-2 text-start">{{ vd.polling_name }}</h2>
             <table class="w-full text-left">
               <tbody>
                 <tr>
-                  <td class="font-bold w-[]">Close On</td>
-                  <td class="truncate">: {{ vd.time_close || '-' }}</td>
+                  <td class="font-bold w-[80px]">Close On</td>
+                  <td class="truncate">: {{ functionMain.convertToDDMMYYYY(vd.polling_end_date) || '-' }}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td class="font-bold">Vote In</td>
                   <td class="truncate">: {{ vd.time_you_vote || '-' }}</td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td class="font-bold">You Vote</td>
-                  <td class="truncate">: {{ vd.you_vote || '-' }}</td>
-                </tr>
+                  <td>
+                    : {{ isArrayAndJoin(vd.voted_option) }}
+                  </td>
+                </tr>           
               </tbody>
             </table>
           </div>
-          <button class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded" (click)="voteNowOn(vd)">
+          <button class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded" (click)="voteNowOn(vd)">
             Vote Now
           </button>
         </div>
@@ -43,15 +45,48 @@
   <div class="w-full mt-2 flex items-start ml-4" *ngIf="voteNow">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="voteNowOn()"></ion-icon>
   </div>
-  <div *ngIf="voteNow" class="px-5 text-center mb-20" [ngClass]="{'slide-up-animation': openVote, 'slide-down-animation': closeVote}">
-    <div>
-      <h2 class="font-bold mb-2 ml-2.5">{{ dataForVote.title }}</h2>
+  <div *ngIf="voteNow" class="text-center mb-20" [ngClass]="{'slide-up-animation': openVote, 'slide-down-animation': closeVote}">
+    <div class="bg-[var(--ion-color-tertiary)] w-full py-3 my-[6px]">
+      <h2 class="font-bold text-center">{{ dataForVote.polling_name }}</h2>
     </div>
-    <div>
+    <div class="px-5 ">
       <div class="flex flex-col text-start">
-        <div class="flex flex-col justify-start space-y-1 w-full">
-          <p class="text-[var(--ion-color-primary)]"><strong>Status:</strong> Open</p>
-          <p><strong>You choose:</strong> {{ dataForVote.you_vote }}</p>
+        <div class="flex flex-col justify-start w-full">
+          <p class="text-[var(--ion-color-primary)]"><strong>Status:</strong> {{ dataForVote.states }} </p>
+          <p>
+            <strong>Your Option:</strong> 
+            {{ isArrayAndJoin(dataForVote.voted_option) }}
+          </p>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700" *ngFor="let option of dataForVote.options">
+            <ng-container *ngIf="dataForVote.is_multiple_answer; else notMulti">
+              <input 
+              [checked]="isOptionSelected(option.id)" 
+              (click)="postChoosingOptions(option.id, false)"
+              type="checkbox" 
+              value="{{ option.id }}" 
+              name="option_poll" 
+              id="{{ option.id }}" 
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+            </ng-container>
+            
+            <ng-template #notMulti>
+              <input 
+              [checked]="isOptionSelected(option.id)"
+              (click)="postChoosingOptions(option.id, true)"
+              type="radio" 
+              value="{{ option.id }}" 
+              name="option_poll" 
+              id="{{ option.id }}" 
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+            </ng-template>
+            
+            <label for="{{ option.id }}" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ option.options }}</label>
+          </div>
+          <button class="bg-[var(--ion-color-primary)] text-white w-full mt-2 font-bold px-4 py-2 rounded" (click)="postVote()">
+            Submit Vote
+          </button>
         </div>
       </div>
     </div>

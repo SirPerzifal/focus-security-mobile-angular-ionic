@@ -11,7 +11,11 @@
         [text]="'MA VISITOR'" [isActive]="true" [disableClick]="true" />
     </div>
 
-    <div class="flex flex-row mx-4" *ngIf="!project_config.is_guarded">
+    <div *ngIf="!showForm">
+
+    </div>
+
+    <div class="flex flex-row mx-4" *ngIf="showForm && !project_config.is_guarded" @fadeInOut>
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
         <!-- <label class="text-2xl font-bold mb-5">NUMBER OF PAX ENTERED: {{ number_of_pax }}</label> -->
           <table class="text-2xl">
@@ -35,7 +39,7 @@
               <td class="w-[5%]">:</td>
               <td>{{ record.selection_type == 'walk_in' ? 'Walk In' : 'Drive In' }}</td>
             </tr>
-            <tr class="font-bold" *ngIf="record.selection_type == 'drive_in'">
+            <tr class="font-bold" *ngIf="showForm && record.selection_type == 'drive_in'">
               <td class="font-bold w-2/5">VEHICLE NUMBER</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(record.vehicle_number) }}</td>
@@ -44,7 +48,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col" *ngIf="project_config.is_guarded">  
+    <div class="flex flex-col" *ngIf="showForm && project_config.is_guarded" @fadeInOut>  
       <div class="flex flex-row w-full ">
         <div class="mt-8 flex flex-col items-center w-full space-y-5 mx-4 mb-4">
           <div class="w-full">
@@ -76,35 +80,37 @@
             [contactLabel]="'CONTACT NUMBER'" [labelClass]="'text-2xl'" [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'"
             ></app-vms-contact-input>
           </div>
-          <!-- <div class="w-full mt-1">
-            <label class="text-2xl font-bold mb-[-4px]">VISITOR TYPE</label>
-            <select
-              id="register_visitor_type"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-2xl h-20 text-[#6B7280] "
-              [(ngModel)]="selection_type" name="visitorType"
-            >
-            <option selected hidden disabled value="">CHOOSE VISITOR TYPE</option>
-              <option [value]="'walk_in'">WALK IN</option>
-              <option [value]="'drive_in'">DRIVE IN</option>
+          <div class="w-full mt-1">
+            <label class="text-2xl font-bold mb-[-4px]"><u>Visitor Type</u></label>
+            <select id="register_visitor_type"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+              [(ngModel)]="record.selection_type" name="visitorType">
+              <option selected hidden disabled value="">Choose Visitor Type</option>
+              <option [value]="'walk_in'">Walk In</option>
+              <option [value]="'drive_in'">Drive in</option>
             </select>
-          </div> -->
-          <div class="w-full" *ngIf="record.vehicle_number != ''">
-            <app-text-input
-            [labelText]="'VEHICLE NUMBER'"
-              [id]="'register_vehicle_number'"
-              [name]="'register_vehicle_number'"
-              [placeholder]="'EG. SAA 7827 V'"
-              [customClasses]="{'w-full': true}"
-              [type]="'text'"
-              [isReadonly]="true"
-              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-20': true, 'text-2xl': true}"
-              [(ngModel)]="record.vehicle_number"
-            ></app-text-input>
+          </div>
+          <div class="w-full flex flex-row justify-between" *ngIf="record.selection_type == 'drive_in'">
+            <div class="w-[90%] flex flex-col">
+              <app-text-input
+              [labelText]="'VEHICLE NUMBER'"
+                [id]="'register_vehicle_number'"
+                [name]="'register_vehicle_number'"
+                [placeholder]="'EG. SAA 7827 V'"
+                [customClasses]="{'w-full': true}"
+                [type]="'text'"
+                [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-20': true, 'text-2xl': true}"
+                [(ngModel)]="record.vehicle_number"
+              ></app-text-input>
+            </div>
+            <div class="h-25 flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+            </div>
           </div>
           <div class="w-full">
-              <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="selection_type == 'drive_in'" (click)="onSubmitRecord(true)"
+              <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="record.selection_type == 'drive_in'" (click)="onSubmitRecord(true)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
-              <app-visitor-button [text]="'SAVE RECORD' + (selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
+              <app-visitor-button [text]="'SAVE RECORD' + (record.selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
           </div>
         </div>

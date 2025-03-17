@@ -1,22 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
-
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { fines } from 'src/models/resident/poymentModel.model';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-small-bills-card-detailed',
   templateUrl: './small-bills-card-detailed.component.html',
   styleUrls: ['./small-bills-card-detailed.component.scss'],
 })
-export class SmallBillsCardDetailedComponent  implements OnInit {
+export class SmallBillsCardDetailedComponent  implements OnInit, OnDestroy {
 
-  constructor() { }
+  constructor(public functionMainService: FunctionMainService) { }
 
-  @Input() title: string=""
-  @Input() desc_title: string=""
-  @Input() vehicle_no: string=""
-  @Input() violation_date: string=""
-  @Input() paid_on: string=""
-  @Input() total: string=""
-  @Input() warning: boolean=false
+  @Input() fines: any;
+  
+  
+  @Output() buttonClick = new EventEmitter<{ isActive: boolean, paymentId: number }>(); // Emit objek dengan teks dan status aktif
+  
+  ngOnInit() {
+    // console.log(this.fines);
+  }
 
-  ngOnInit() {}
+  payNow(id: number) {
+    this.buttonClick.emit({ isActive: true, paymentId: id }); // Emit objek dengan teks dan status aktif
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
 
 }

@@ -1,114 +1,76 @@
+<app-resident-header [text]="'Notice'"/>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Notice'"/>
-  <div class="w-full mt-2 flex items-start ml-4">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
-  </div>
+	<div class="w-full mt-2 flex items-start ml-4">
+		<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+	</div>
 
-  <div class="px-5 text-center mb-20">
-    <div class="flex flex-row mt-2 justify-start items-center w-full space-x-3">
-      <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'"></app-visitor-button>
-      <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" [routerLink]="['/favourite-announcement']"></app-visitor-button>
-    </div>
-
-    <div class="w-full space-y-3 mt-3 text-left">
-      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-        <h2 class="font-bold">
-         Renovation Alert
-        </h2>
-        <p>
-         Blk 100, #08-33 will be having renovation works.
-        </p>
-        <table>
-         <tr>
-          <td class="pr-2">
-           Start
-          </td>
-          <td>
-           : 09/09/24
-          </td>
-         </tr>
-         <tr>
-          <td class="pr-2">
-           End
-          </td>
-          <td>
-           : 10/12/24
-          </td>
-         </tr>
-        </table>
-        <div class="flex justify-end">
-         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
-         </ion-icon>
+  <div class="px-5 text-center mb-24">
+		<div class="flex flex-row mt-2 justify-start items-center w-full space-x-3">
+      <div class="w-full">
+        <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full leading-none'"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full'" [routerLink]="['/favourite-announcement']"></app-visitor-button>
+      </div>
+		</div>
+		<div class="w-full space-y-3 mt-3 text-left">
+      <div class="w-full mt-1">
+        <select id="notice_filter" 
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]" 
+                [(ngModel)]="newOrOld" 
+                (change)="filtering()">
+          <option disabled hidden value="">Filter by</option>
+          <option value="all">All</option>
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="favourite">Favourites</option>
+        </select>
+      </div>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
+      <div *ngFor="let notice of notices">
+        <div  *ngIf="!isLoading" class="bg-[var(--ion-color-tertiary)] p-4 rounded">
+          <h2 class="font-bold">
+            {{ notice.notice_title }}
+          </h2>
+          <p>
+            {{ notice.notice_content }}
+          </p>
+          <table>
+            <tr>
+              <td class="pr-2">
+                Start
+              </td>
+              <td>
+                : {{ functionMainService.convertToDDMMYYYY(notice.start_date) }}
+              </td>
+            </tr>
+            <tr>
+              <td class="pr-2">
+                End
+              </td>
+              <td>
+                : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
+              </td>
+            </tr>
+          </table>
+          <div class="flex justify-between items-center">
+            <button class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm" (click)="downloadAttachment(notice.notice_attachment)">
+            Download Attachment
+            </button>
+            <ion-icon *ngIf="notice.is_prioritize !== false; else notPriority" class="text-yellow-500 text-4xl" name="star" (click)="prioritizeNotice(notice)">
+            </ion-icon>
+            <ng-template #notPriority>
+              <div (click)="prioritizeNotice(notice)">
+                <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
+                </ion-icon>
+              </div>
+            </ng-template>
+          </div>
         </div>
-       </div>
-       <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-        <h2 class="font-bold">
-         Carpark Closure
-        </h2>
-        <p>
-         Carpark closure due to painting works
-        </p>
-        <table>
-         <tr>
-          <td class="pr-2">
-           Start
-          </td>
-          <td>
-           : 10/11/24
-          </td>
-         </tr>
-         <tr>
-          <td class="pr-2">
-           End
-          </td>
-          <td>
-            : 15/12/24
-          </td>
-         </tr>
-        </table>
-        <div class="flex justify-end">
-         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
-         </ion-icon>
-        </div>
-       </div>
-       <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-        <h2 class="font-bold">
-         11th Council Meeting
-        </h2>
-        <table>
-          <tr>
-            <td class="pr-2">
-              Venue
-             </td>
-             <td>
-              : Function Room 2
-             </td>
-          </tr>
-         <tr>
-          <td class="pr-2">
-           Start
-          </td>
-          <td>
-          : 10/11/24, 1700Hrs
-          </td>
-         </tr>
-         <tr>
-          <td class="pr-2">
-           End
-          </td>
-          <td>
-           : 15/12/24, 1930Hrs
-          </td>
-         </tr>
-        </table>
-        <div class="flex justify-end">
-         <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
-         </ion-icon>
-        </div>
-       </div>
-    </div>
-
-  </div>
-
+      </div>
+		</div>
+	</div>
 	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

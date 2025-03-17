@@ -42,8 +42,18 @@ export class RecordsWheelClampedNewPage implements OnInit {
    }
 
   ngOnInit() {
-    this.loadBlock()
+    this.loadProjectName().then(() => {
+      this.loadBlock()
+    })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   type = 'first_warning'
   showType = 'FIRST WARNING'
@@ -116,7 +126,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.typeOfEntry) {
       errMsg += 'Offender type of entry is required! \n'
     }
-    if (!this.issueOfficer) {
+    if (!this.blockId || !this.unitId) {
       errMsg += 'Block and unit must be selected! \n'
     }
     if (!this.reasonOfIssuance) {
@@ -141,6 +151,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
         notice_image: this.type != 'wheel_clamp' ? this.beforeClampImageFile : false,
         before_clamp_image: this.type == 'wheel_clamp' ? this.beforeClampImageFile : false,
         after_clamp_image: this.type == 'wheel_clamp' ? this.afterClampImageFile : false,
+        project_id: this.project_id
       }
       
       console.log(params)
@@ -190,7 +201,6 @@ export class RecordsWheelClampedNewPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          // this.functionMain.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
@@ -201,10 +211,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
   }
 
   async loadUnit() {
+    this.unitId = ''
     this.blockUnitService.getUnit(this.blockId).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
         } else {
           // this.functionMain.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
@@ -224,7 +235,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.unitId = event.target.value;
+    this.unitId = event[0];
   }
 
   onCancel() {

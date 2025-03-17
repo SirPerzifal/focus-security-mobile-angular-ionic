@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true" class="vms-body flex flex-col justify-between">
+  <div class="h-[5%]">
+    <ion-icon name="chevron-back-outline" class="text-[var(--ion-color-primary)] size-12 mt-10 ml-7" (click)="onBack()"></ion-icon>
+  </div>
+  <div class="flex flex-col items-center justify-center h-[90%] w-full">
+    <div class="mb-10">
+      <img alt="iFS360 logo" src="assets/logoIFS.png" class="max-h-44 max-w-44" />
+    </div>
+    <div class="flex flex-col text-4xl font-bold items-center text-[var(--ion-color-primary)] mb-10">
+      <span class="flex flex-row justify-center text-center">WELCOME TO iFS360</span>
+      <span class="flex flex-row justify-center text-center">VISITOR MANAGEMENT SYSTEM</span>
+    </div>
+    <div class="w-full flex flex-row justify-center space-x-2">
+        <app-text-input 
+          #textInput
+          [id]="'project_key'" 
+          [placeholder]="'PROJECT CODE'" 
+          [customClasses]="{'w-full ':true}" 
+          [type]="'text'" 
+          [(ngModel)]="project_key"
+          [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+        </app-text-input>
+        <button class="h-20 w-1/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white" (click)="searchBarcode(project_key)">LOGIN</button>
+      <!-- <img alt="Loading" src="assets/img/qr_2.png" class="w-48 h-48" (click)="onClick()" /> -->
+    </div>
+  </div>
+  <div class="h-[5%]">
+
+  </div>
+  <ion-modal id="text-modal" [isOpen]="isQrModal" (didDismiss)="closeModal()">
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full">
+          <div id="reader" class="w-full mb-4"></div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

@@ -1,19 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 import { ToastController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-history-details',
   templateUrl: './history-details.page.html',
   styleUrls: ['./history-details.page.scss'],
 })
-export class HistoryDetailsPage implements OnInit {
+export class HistoryDetailsPage implements OnInit, OnDestroy {
 
   isModalReasonBanOpen: boolean = false;
   selectedFileName: string = ''; // New property to hold the selected file name
+
+  minDate: string = this.getTodayDate(); // Set tanggal minimum saat inisialisasi
+  formattedDate: string = '';
+  isModalReinviteOpen: boolean = false; // New property to hold the
+  dataForReinvite = {
+    visitor_id: 0,
+    family_id: 0,
+    date_of_visit: '',
+    entry_type: '',
+    entry_title: '',
+    entry_message: '',
+    is_provide_unit: false,
+  }
 
   historyData!: {
     purpose: 'Drop Off' | 'Pick Up' | 'Visiting' | 'Delivery' | string;
@@ -30,6 +46,7 @@ export class HistoryDetailsPage implements OnInit {
     banned: boolean;
     id: number;
   };
+  projectId: number = 0;
 
   formData = {
     reason: '',
@@ -42,7 +59,7 @@ export class HistoryDetailsPage implements OnInit {
     image: '',
   }
 
-  constructor(private router: Router, private alertController: AlertController, private visitorService: VisitorService, private toastController: ToastController) { 
+  constructor(private router: Router, private alertController: AlertController, private visitorService: VisitorService, private toastController: ToastController, private mainApiResidentService: MainApiResidentService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { historyData: any };
     if (state) {
@@ -52,8 +69,8 @@ export class HistoryDetailsPage implements OnInit {
         const visitorEntryTime = state.historyData.visitor_entry_time; // HH:mm format
         this.formData = {
           reason: '',
-          block_id: 1,
-          unit_id: 1,
+          block_id: 0,
+          unit_id: 0,
           contact_no: String(this.historyData.mobile_number),
           vehicle_no: String(this.historyData.vehicle_number),
           visitor_name: String(this.historyData.visitor_name),
@@ -61,25 +78,31 @@ export class HistoryDetailsPage implements OnInit {
           image: '',
         }
       }
-      console.log(this.historyData);
     }
   }
 
-  toggleShowInv() {
-    this.router.navigate(['resident-visitors']);
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.formData.unit_id = Number(parseValue.unit_id);
+        this.formData.block_id = Number(parseValue.block_id);
+        this.dataForReinvite.family_id = Number(parseValue.family_id);
+        this.projectId = Number(parseValue.project_id);
+      } 
+    })
   }
 
-  toggleShowHired() {
-    this.router.navigate(['hired-car']);
+  getTodayDate(): string {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+    const yyyy = today.getFullYear();
+    return `${dd}-${mm}-${yyyy}`; // Format yyyy-mm-dd
   }
 
   toggleShowHistory() {
-    // this.router.navigate(['']);
-  }
-
-  ngOnInit() {
-    console.log('tes');
-    
+    this.router.navigate(['history']);
   }
 
   public async showAlertButtons(headerName: string, className: string) {
@@ -102,7 +125,7 @@ export class HistoryDetailsPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Alert cancel');
+            // console.log('Alert cancel');
           },
         },
       ]
@@ -110,68 +133,42 @@ export class HistoryDetailsPage implements OnInit {
     await alertButtons.present ();
   }
 
-  onFileChange(value: any): void {
-    let data = value.target.files[0];
-    if (data) {
-      this.selectedFileName = data.name; // Store the selected file name
-      this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.formData.image = base64.split(',')[1]; // Update the form control for image file
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
-    } else {
-      this.selectedFileName = ''; // Reset if no file is selected
-    }
-  }
-
   banProcess() {
     this.isModalReasonBanOpen = true;
   }
 
   reinstateProcess() {
-    console.log("tes");
-    this.visitorService.postReinstate(
-      this.formData.block_id,
-      this.formData.unit_id,
-      this.formData.contact_no,
-      this.formData.vehicle_no
-    ).subscribe(
-      (response) => {
-        console.log('Success:', response);
-        this.router.navigate(['history']);
-      },
-    )
+    // console.log("tes");
+    this.mainApiResidentService.endpointProcess({
+      block_id: this.formData.block_id,
+      unit_id: this.formData.unit_id,
+      contact_no: this.formData.contact_no,
+      vehicle_number: this.formData.vehicle_no
+    }, 'post/reinstate_visitor').subscribe((response) => {
+      this.router.navigate(['history']);
+    })
   }
 
   onSubmitReasonBan() {
-
     if (!this.formData.reason) {
       this.presentToast('Please provide reason why you ban this visitor', 'danger');
       return;
     }
-
     this.isModalReasonBanOpen = false;
-    console.log(this.formData);
-    this.visitorService.postBanVisitor(
-      this.formData.reason,
-      this.formData.block_id,
-      this.formData.unit_id,
-      this.formData.contact_no,
-      this.formData.vehicle_no,
-      this.formData.visitor_name,
-      this.formData.last_entry_date_time,
-      this.formData.image
-    ).subscribe(
-      (response) => {
-        console.log('Success:', response);
-        this.router.navigate(['history']);
-      },
-    )
-  }
-
-  setResult() {
-    console.log(`Dismissed with role`);
+    // console.log(this.formData);
+    this.mainApiResidentService.endpointProcess({
+      reason: this.formData.reason,
+      block_id: this.formData.block_id,
+      project_id: this.projectId,
+      unit_id: this.formData.unit_id,
+      contact_no: this.formData.contact_no,
+      vehicle_no: this.formData.vehicle_no,
+      visitor_name: this.formData.visitor_name,
+      last_entry_date_time: this.formData.last_entry_date_time, 
+      image: this.formData.image,
+    }, 'post/ban_visitor').subscribe((response) => {
+      this.router.navigate(['history']);
+    })
   }
 
   formatDateTime(date: Date, time: string): string {
@@ -179,6 +176,21 @@ export class HistoryDetailsPage implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day} ${time}`;
+  }
+
+  onFileChange(value: any): void {
+    let data = value.target.files[0];
+    if (data) {
+      this.selectedFileName = data.name; // Store the selected file name
+      this.convertToBase64(data).then((base64: string) => {
+        // console.log('Base64 successed');
+        this.formData.image = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } else {
+      this.selectedFileName = ''; // Reset if no file is selected
+    }
   }
 
   convertToBase64(file: File): Promise<string> {
@@ -197,8 +209,67 @@ export class HistoryDetailsPage implements OnInit {
     });
   }
 
+  reinviteModal(invite: any) {
+    this.isModalReinviteOpen = !this.isModalReinviteOpen;
+    this.dataForReinvite.visitor_id = invite.id;
+  }
+
+  onEntryTypeChange(value: string): void {
+    this.dataForReinvite.entry_type = this.dataForReinvite.entry_type === value ? '' : value;
+  }
+
+  onProvideUnitChange() {
+    this.dataForReinvite.is_provide_unit = !this.dataForReinvite.is_provide_unit;
+  }
+
+  onDateOfInviteChange(event: Event) {
+    const input = event.target as HTMLInputElement; // Ambil elemen input
+    this.dataForReinvite.date_of_visit = input.value; // Ambil nilai dari input
+    this.formattedDate = input.value; // Ambil
+    // console.log(this.formattedDate, this.formData.dateOfInvite)
+  }
+
+  entryTitleChange(value: string) {
+    this.dataForReinvite.entry_title = value;
+  }
+
+  onSubmitNext() {
+    let errMsg = '';
+    if (this.dataForReinvite.date_of_visit == '') {
+      errMsg += 'Please fill date of invite! \n';
+    }
+    if (this.dataForReinvite.entry_type == "") {
+      errMsg += "Please choose entry type! \n";
+    }
+    if (this.dataForReinvite.entry_title == "") {
+      errMsg += "Please fill entry title! \n";
+    }
+    
+    if (errMsg == '') {
+      this.isModalReinviteOpen = !this.isModalReinviteOpen;
+      this.mainApiResidentService.endpointProcess({
+        visitor_id: this.dataForReinvite.visitor_id,
+        family_id: this.dataForReinvite.family_id,
+        date_of_visit: this.dataForReinvite.date_of_visit,
+        entry_type: this.dataForReinvite.entry_type,
+        entry_title: this.dataForReinvite.entry_title,
+        entry_message: this.dataForReinvite.entry_message,
+        is_provide_unit: this.dataForReinvite.is_provide_unit,
+      }, 'post/reinvite_visitor').subscribe((response) => {
+        this.router.navigate(['/resident-visitors'], {
+          queryParams: {
+            openActive: true,
+            formData: null
+          }
+        });
+      })
+    } else {
+      this.presentToast(errMsg, 'danger');
+    }
+  }
+
   private routerSubscription!: Subscription;
-  OnDestroy() {
+  ngOnDestroy() {
     // Bersihkan subscription untuk menghindari memory leaks
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();

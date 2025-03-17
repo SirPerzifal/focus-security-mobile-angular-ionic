@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MyVehicleDetailService } from 'src/app/service/resident/my-vehicle/my-vehicle-detail/my-vehicle-detail.service';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 interface BookingData {
   facilityName: string;
@@ -12,6 +13,7 @@ interface BookingData {
   deposit: number;
   bookedBy: string;
   status: string;
+  from: string;
 }
 
 @Component({
@@ -19,25 +21,33 @@ interface BookingData {
   templateUrl: './facility-history-form.page.html',
   styleUrls: ['./facility-history-form.page.scss'],
 })
-export class FacilityHistoryFormPage implements OnInit {
+export class FacilityHistoryFormPage implements OnInit, OnDestroy {
 
   bookingData: BookingData | null = null;
 
-  constructor(private router: Router, private alertController: AlertController,) { }
+  constructor(private router: Router, private alertController: AlertController,) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { bookingData: any};
+    if (state) {
+      this.bookingData = state.bookingData;
+      // console.log(this.bookingData)
+    } 
+  }
 
   ngOnInit() {
     // Ambil data yang dikirim dari halaman sebelumnya
-    console.log('ngOnInitngOnInitngOnInitngOnInitngOnInit');
+    // // console.log('ngOnInitngOnInitngOnInitngOnInitngOnInit');
     
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.bookingData = navigation.extras.state['bookingData'] as BookingData;
-    }
+    // const navigation = this.router.getCurrentNavigation();
+    // if (navigation?.extras.state) {
+    //   this.bookingData = navigation.extras.state['bookingData'] as BookingData;
+    //   // console.log(this.bookingData)
+    // }
 
-    // Jika tidak ada data, kembalikan ke halaman sebelumnya
-    if (!this.bookingData) {
-      this.router.navigate(['/facility-history']);
-    }
+    // // Jika tidak ada data, kembalikan ke halaman sebelumnya
+    // if (!this.bookingData) {
+    //   this.router.navigate(['/facility-history']);
+    // }
   }
 
   formatDate(dateString: string): string {
@@ -70,13 +80,15 @@ export class FacilityHistoryFormPage implements OnInit {
   }
 
   backToHistoryList() {
-    this.bookingData = null;
     this.router.navigate(['/facility-history']);
+    if (this.bookingData?.from) {
+      this.router.navigate(['/resident-facility-bookings']);
+    }
   }
 
   proceedToEmail() {
     // Logika untuk mengirim email
-    console.log('Sending email for booking:', this.bookingData);
+    // console.log('Sending email for booking:', this.bookingData);
   }
 
   calculateTotal(): number {
@@ -93,8 +105,8 @@ export class FacilityHistoryFormPage implements OnInit {
 
 
   // reformatDate(booking:any){
-  //   console.log(booking);
-  //   console.log('bookingbookingbookingbooking');
+  //   // console.log(booking);
+  //   // console.log('bookingbookingbookingbooking');
     
   //   return this.formatDate(booking.event_date || booking.start_datetime.split(' ')[0])
   // }
@@ -118,4 +130,10 @@ export class FacilityHistoryFormPage implements OnInit {
   //   }
   // }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
 }

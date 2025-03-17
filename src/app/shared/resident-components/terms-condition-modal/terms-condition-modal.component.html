@@ -1,0 +1,13 @@
+<div class="p-4 flex flex-col">
+  <h2 class="font-bold text-base">Terms & Condition</h2>
+  <div class="max-h-96 overflow-y-auto">
+    <ng-container *ngIf="termsConditionBody; else defaultHtml">
+      <span [innerHtml]="termsConditionBody"></span>
+    </ng-container>
+    <ng-template #defaultHtml>
+      <div class="px-5 pb-5 pt-2 space-y-3 text-justify text-sm mb-24">
+        <span [innerHTML]="sanitizedInnerHtml"></span>
+      </div>
+    </ng-template>
+  </div>
+</div>

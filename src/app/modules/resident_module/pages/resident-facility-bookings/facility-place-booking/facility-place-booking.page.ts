@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
   selector: 'app-facility-place-booking',
@@ -18,7 +23,7 @@ export class FacilityPlaceBookingPage implements OnInit {
   facilityDetail: any;
   roomDetail: any;
   roomSchedule: any[] = [];
-  isLoading = true;
+  isLoading = false;
   errorMessage: string = '';
   selectedDate: string = new Date().toISOString();
   isTermsAccepted: boolean = false; // Menyimpan status checkbox
@@ -28,10 +33,23 @@ export class FacilityPlaceBookingPage implements OnInit {
     private route: ActivatedRoute, 
     private router: Router, 
     private facilityService: NewBookingService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private getUserInfoService: GetUserInfoService,
+    private modalController: ModalController
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {    // Ambil data unit yang sedang aktif
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadFacilityDetail();
+      }
+    })
+    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
+      this.unitId = Number(value.unit);
+      // // console.log('unit', this.unitId);
+    })
     this.route.queryParams.subscribe(params => {
       this.facilityId = +params['facilityId'] || 1;
       this.loadFacilityDetail();
@@ -49,7 +67,7 @@ export class FacilityPlaceBookingPage implements OnInit {
     this.facilityService.getFacilityById(this.facilityId).subscribe({
       next: (response) => {
         this.facilityDetail = response.result;
-        console.log('Facility Detail:', this.facilityDetail);
+        // // console.log('Facility Detail:', this.facilityDetail);
       },
       error: (error) => {
         this.errorMessage = 'Failed to load facility details';
@@ -58,24 +76,74 @@ export class FacilityPlaceBookingPage implements OnInit {
     });
   }
 
+  isCloseForMaintenance: boolean = true;
+
   loadRoomSchedule(event: any) {
+    this.isLoading = true
     // Jika event ada, ambil roomId dari event
     if (event) {
       this.roomId = event.target.value; // Set the roomId to the selected value
     }
-    
-    const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
-    this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
-      next: (response) => {
-        this.roomSchedule = response.result.schedule;
-        console.log('Room Id:', this.roomId);
-        console.log('Room Schedule:', this.roomSchedule);
-      },
-      error: (error) => {
-        this.errorMessage = 'Failed to load room schedule';
-        console.error('Error loading room schedule', error);
+
+    if (this.roomId) {
+      // Pastikan facilityDetail dan facility_detail ada
+      if (this.facilityDetail && Array.isArray(this.facilityDetail.facility_detail)) {
+          // Mengonversi this.roomId ke number
+          const roomIdAsNumber = Number(this.roomId);
+          
+          // Mencari objek yang sesuai dengan roomIdAsNumber
+          const facility = this.facilityDetail.facility_detail.find((facility: any) => {
+              return facility.room_id === roomIdAsNumber;
+          });
+
+          const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
+  
+          if (facility || formattedDate) {
+            if (facility) {
+              this.termsAndCOndition = facility.terms_and_conditions;
+              // // console.log(this.termsAndCOndition);
+              
+              // Jika ditemukan, ambil is_close_for_maintenance
+              const isCloseForMaintenance = facility.is_close_for_maintenance;
+              if (isCloseForMaintenance) {
+                this.isCloseForMaintenance = true;
+                // console.log(isCloseForMaintenance, "tes");
+                this.roomSchedule = []
+                this.isLoading = false;
+              } else {
+                this.isCloseForMaintenance = false;
+                this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
+                  next: (response) => {
+                    this.roomSchedule = response.result.schedule;
+                    this.isLoading = false;
+                  },
+                  error: (error) => {
+                    this.errorMessage = 'Failed to load room schedule';
+                    console.error('Error loading room schedule', error);
+                  }
+                });
+              }
+            } else {
+              this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
+                next: (response) => {
+                  this.roomSchedule = response.result.schedule;
+                  this.isLoading = false;
+                },
+                error: (error) => {
+                  this.errorMessage = 'Failed to load room schedule';
+                  console.error('Error loading room schedule', error);
+                }
+              });
+            }
+          } else {
+              // console.log(this.facilityDetail.facility_detail); // Menampilkan seluruh array facility_detail
+              // console.log('Room not found');
+          }
+      } else {
+          console.error('facility_detail is not an array or facilityDetail is undefined:', this.facilityDetail);
       }
-    });
+    }
+    
   }
 
   getTimeSlotClass(timeSlot: any): string {
@@ -103,47 +171,28 @@ export class FacilityPlaceBookingPage implements OnInit {
       });
       // Tandai slot waktu yang dipilih
       timeSlot.isSelected = true;
-      console.log('Selected Time Slot:', this.selectedTimeSlot);
+      // // console.log('Selected Time Slot:', this.selectedTimeSlot);
     }
   }
 
   uploadFacilityBooking() {
-    if (!this.selectedTimeSlot) {
-      // Tampilkan pesan error jika tidak ada slot yang dipilih
-      this.errorMessage = 'Please select a time slot';
-      return;
-    }
-
-    if (!this.isTermsAccepted) {
-      this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
-      return;
-    }  
-
-    // Format tanggal sesuai kebutuhan API
     const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
     const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
     const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
-
-    this.facilityService.postFacilityBook(
-      this.roomId,
-      startTimeString,
-      endTimeString,
-      this.unitId,
-      this.partnerId
-    ).subscribe({
-      next: (response) => {
-        this.roomSchedule = response.result.success;
-        const message = response.result.message;
-        this.presentToast(message, 'success');
-        console.log('Room Schedule:', this.roomSchedule);
-        this.resetForm();
-        this.router.navigate(['/resident-facility-bookings'])
-      },
-      error: (error) => {
-        this.errorMessage = 'Failed to load room schedule';
-        console.error('Error loading room schedule', error);
+    this.router.navigate(['/facility-booking-payment'], {
+      state: {
+        roomId: this.roomId,
+        eventDate: formattedDate,
+        bookingTime: `${this.selectedTimeSlot.start_time} - ${this.selectedTimeSlot.end_time}`,
+        facilityName: this.facilityDetail?.facility_name,
+        startTimeString: startTimeString,
+        endTimeString: endTimeString,
+        unitId: this.unitId,
+        partnerId: this.partnerId,
+        bookingFee: 40.00,
+        deposit: 100.00
       }
-    });
+    })
   }
 
   toggleShowActBk() {
@@ -186,10 +235,8 @@ export class FacilityPlaceBookingPage implements OnInit {
     this.facilityId = 1;
     this.roomId = 1;
     this.selectedTimeSlot = null;
-    this.unitId = 1; // Sesuaikan dengan unit ID pengguna
     this.partnerId = 1;
     this.roomSchedule = [];
-    this.isLoading = true;
     this.errorMessage = '';
     this.selectedDate = new Date().toISOString();
     this.isTermsAccepted = false; // Menyimpan status checkbox
@@ -205,6 +252,27 @@ export class FacilityPlaceBookingPage implements OnInit {
     const unitSelect = document.getElementById('contractor_unit') as HTMLSelectElement;
     if (blockSelect) blockSelect.selectedIndex = 0;
     if (unitSelect) unitSelect.selectedIndex = 0;
+  }
+
+  termsAndCOndition: string = '';
+
+  async presentModalAgreement() {
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
   }
 
 }

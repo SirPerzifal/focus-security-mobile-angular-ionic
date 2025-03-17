@@ -34,7 +34,7 @@ export class WalkInPage implements OnInit {
     private visitorService: VisitorService, 
     private toastController: ToastController, 
     private router: Router,
-    private functionMain: FunctionMainService,
+    public functionMain: FunctionMainService,
     private mainVmsService: MainVmsService,
     private modalController: ModalController,
     private blockUnitService: BlockUnitService,
@@ -46,8 +46,17 @@ export class WalkInPage implements OnInit {
     visitor_type: 'walk_in',
     visitor_vehicle: '',
     block: '',
-    unit: ''
+    unit: '',
+    family_id: ''
   };
+
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   Block: any[] = [];
   Unit: any[] = [];
@@ -67,6 +76,7 @@ export class WalkInPage implements OnInit {
   }
 
   resetForm() {
+    this.Unit = []
     this.formData.visitor_name = ''
     this.formData.visitor_contact_no = ''
     this.formData.visitor_type = ''
@@ -96,7 +106,7 @@ export class WalkInPage implements OnInit {
       return
     }
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -143,7 +153,7 @@ export class WalkInPage implements OnInit {
     }
     console.log(this.formData)
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -175,25 +185,32 @@ export class WalkInPage implements OnInit {
   showWalkTrans = false;
   showDriveTrans = false;
   showQrTrans = false;
+  showClose = false
 
   toggleShowQr() {
     if (!this.showDriveTrans && !this.showWalkTrans) {
-      this.resetForm()
+      if ( !this.isFromScan) {
+        this.resetForm()
+      }
       this.showQrTrans = true
       this.showDrive = false;
       this.showWalk = false;
+      this.isHidden = true
       setTimeout(() => {
         this.showQr = true;
         this.showQrTrans = false
-        
+        this.startScanner()
       }, 300)
     }
   }
 
   toggleShowWalk() {
     if (!this.showQrTrans && !this.showDriveTrans) {
-      if (this.showDrive) {
+      if (this.showDrive && !this.isFromScan) {
         this.resetForm() 
+      }
+      if (this.showQr && this.showClose) {
+        this.stopScanner()
       }
       this.showWalkTrans = true
       this.showDrive = false;
@@ -207,9 +224,13 @@ export class WalkInPage implements OnInit {
 
   toggleShowDrive() {
     if (!this.showQrTrans && !this.showWalkTrans) {
-      if (this.showWalk) {
+      if (this.showWalk && !this.isFromScan) {
         this.resetForm() 
       }
+      if (this.showQr && this.showClose) {
+        this.stopScanner()
+      }
+      this
       this.showDriveTrans = true
       this.showWalk = false;
       this.showQr = false;
@@ -226,7 +247,7 @@ export class WalkInPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.formData.unit = event.target.value;
+    this.formData.unit = event[0];
   }
 
   loadBlock() {
@@ -235,7 +256,6 @@ export class WalkInPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
@@ -245,13 +265,16 @@ export class WalkInPage implements OnInit {
     });
   }
 
+  textUnit = 'Unit'
+
   async loadUnit() {
+    this.formData.unit = ''
     this.blockUnitService.getUnit(this.formData.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result;
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name})); 
+          console.log(this.Unit)
         } else {
-          this.presentToast('An error occurred while loading unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -270,6 +293,7 @@ export class WalkInPage implements OnInit {
         this.showDrive = true; 
       }
     });
+    this.loadProjectId()
   }
 
   htmlScanner!: Html5Qrcode
@@ -311,64 +335,56 @@ export class WalkInPage implements OnInit {
   }
 
   searchData: any
-  
-  async presentModal() {
-    const modal = await this.modalController.create({
-      component: AlertModalPage,
-      cssClass: 'record-modal-notice',
-      componentProps: {
-        is_search_barcode: true
-      }
-  
-    });
-
-    modal.onDidDismiss().then((result) => {
-      if (result) {
-        if(result.data){
-          
-          
-        }
-      }
-    });
-
-    return await modal.present();
-  }
 
   imageSrc: string | ArrayBuffer | null = null;
   barcodeResult: string | null = null;
 
   scanResult: string = ''
   isHidden = false
+  isFromScan = false
   startScanner(){
-    this.htmlScanner = new Html5Qrcode(this.scannerId);
-    console.log("Scanner Initialized:", this.htmlScanner);
-    this.isHidden = true
-    console.log("WORK")
-    this.htmlScanner.start(
-      { 
-        facingMode: "environment"
-      },
-      {
-        fps: 10,
-        qrbox: {
-          width: 500,
-          height: 500,
+    setTimeout(() => {
+
+      const closeModalOnBack = () => {
+        this.stopScanner()
+        window.removeEventListener('popstate', closeModalOnBack);
+      };
+      window.addEventListener('popstate', closeModalOnBack)
+
+      this.htmlScanner = new Html5Qrcode(this.scannerId);
+      console.log("Scanner Initialized:", this.htmlScanner);
+      this.isHidden = true
+      console.log("WORK")
+      this.htmlScanner.start(
+        { 
+          facingMode: "environment"
+        },
+        {
+          fps: 10,
+          qrbox: {
+            width: 500,
+            height: 500,
+          }
+        },
+        (decodedText) => {
+          this.scanResult = decodedText
+          console.log(this.scanResult)
+          this.checkResult()
+        },
+        (errorMessage) => {
+          console.log(errorMessage)
         }
-      },
-      (decodedText) => {
-        this.scanResult = decodedText
-        console.log(this.scanResult)
-        this.checkResult()
-      },
-      (errorMessage) => {
-        console.log(errorMessage)
-      }
-    ).catch(err => console.log(err));
+        
+      ).catch(err => console.log(err));
+      this.showClose = true
+    }, 500)
+    
   }
 
   stopScanner() {
     this.htmlScanner.stop().catch( err => console.log(err))
     this.isHidden = false
+    this.showClose = false
   }
 
   errorSound = new Audio('assets/sound/Error Alert.mp3');
@@ -377,13 +393,15 @@ export class WalkInPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
+          this.isFromScan = true
           this.stopScanner()
           this.searchData = results.result.result[0]
           this.formData.visitor_name = this.searchData.visitor_name
           this.formData.visitor_contact_no = this.searchData.contact_number
           this.formData.visitor_type = this.searchData.visitor_type
-          this.formData.visitor_vehicle = this.searchData.vehicle_number
+          this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : '' 
           this.formData.block = this.searchData.block_id[0]
+          this.formData.family_id = this.searchData.family_id
           this.loadUnit().then(() => {
             this.formData.unit = this.searchData.unit_id[0]
             if (this.formData.visitor_type == 'walk_in') {

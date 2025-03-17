@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { RecordsResidentService } from 'src/app/service/vms/records/records-resident.service';
 
 @Component({
   selector: 'app-records-residents',
@@ -16,52 +18,40 @@ export class RecordsResidentsPage implements OnInit {
     private toastController: ToastController, 
     private router: Router, 
     private modalController: ModalController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private recordsResidentService: RecordsResidentService,
+    private functionMain: FunctionMainService,
   ) { }
 
   initTemp() {
-    this.logsData = [
-      {
-        resident_name: 'RIVERTREE RESIDENT',
-        contact: '+65 7872 123',
-        resident_type: 'PRIMARY',
-        is_tenant: false,
-        tenant_date: '',
-        block_id: '1',
-        block_name: 'Block 1',
-        unit_id: '2',
-        unit_name: 'Unit 2',
+    this.recordsResidentService.loadAllResident(this.project_id).subscribe(
+      (response: any) => {
+        console.log(response)
+        if (response.result.status === 'success') {
+          console.log(response)
+          this.logsData = response.result.data;
+        } else {
+          // this.presentToast('Failed to load resident data', 'danger');
+        }
       },
-      {
-        resident_name: 'AZALEA RESIDENT',
-        contact: '+65 7582 553',
-        resident_type: 'PRIMARY',
-        is_tenant: false,
-        tenant_date: '',
-        block_id: '1',
-        block_name: 'Block 1',
-        unit_id: '1',
-        unit_name: 'Unit 1',
-      },
-      {
-        resident_name: 'COUNTSIDE RESIDENT',
-        contact: '+65 6791 521',
-        resident_type: 'TENANT',
-        is_tenant: true,
-        tenant_date: '20/12/2024',
-        block_id: '1',
-        block_name: 'Block 1',
-        unit_id: '1',
-        unit_name: 'Unit 1',
-      },
-    ]
+    )
     this.historyVehicles = this.logsData
   }
 
   ngOnInit() {
-    this.initTemp()
-    this.loadBlock()
+    this.loadProjectName().then(() => {
+      this.initTemp()
+      this.loadBlock()
+    })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -89,7 +79,7 @@ export class RecordsResidentsPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.filter.unit = event.target.value;
+    this.filter.unit = event[0];
     this.applyFilters()
   }
 
@@ -107,7 +97,6 @@ export class RecordsResidentsPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('Failed to load block data', 'danger');
         }
       },
       error: (error) => {
@@ -117,13 +106,13 @@ export class RecordsResidentsPage implements OnInit {
     });
   }
 
-  loadUnit() {
+  async loadUnit() {
+    this.filter.unit = ''
     this.blockUnitService.getUnit(this.filter.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -147,7 +136,7 @@ export class RecordsResidentsPage implements OnInit {
   applyFilters() {
     this.historyVehicles = this.logsData.filter(item => {  
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) : true;
+      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
   
       return blockMatches && unitMatches;
     });
@@ -189,6 +178,7 @@ export class RecordsResidentsPage implements OnInit {
   }
 
   clearFilters() {
+    this.Unit = []
     this.filter.block = ''
     this.filter.unit = ''
     this.applyFilters()

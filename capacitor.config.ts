@@ -5,6 +5,11 @@ const config: CapacitorConfig = {
   appName: 'focus_security',
   webDir: 'www',
   plugins: {
+    App: {
+      appUrlOpen: {
+        schemes: ['FocusSecurity']
+      }
+    },
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
     },

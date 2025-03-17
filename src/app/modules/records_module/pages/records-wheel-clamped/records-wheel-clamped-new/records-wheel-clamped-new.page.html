@@ -1,5 +1,5 @@
-<ion-content class="">
-  <div class="flex flex-col p-4 justify-center items-center h-full over">
+<ion-content class="vms-body">
+  <div class="flex flex-col p-4 justify-center items-center h-full">
     <div class="flex flex-row w-[80%] overflow-auto max-h-[80%] pr-3">
       <div class="flex flex-col justify-start w-full gap-4 items-center">
         <div class="flex flex-row justify-center w-full">
@@ -16,10 +16,10 @@
           </div>
         </div>
         <app-file-input class="w-full h-25" [labelText]="type == 'wheel_clamp' ? 'UPLOAD IMAGE (BEFORE)' : 'UPLOAD IMAGE'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded'" [customPlaceholder]="'EG. VIOLATION.png'"
+          [extraButtonClass]="'rounded text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
           (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="type == 'wheel_clamp'"
+          [extraButtonClass]="'rounded text-white'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="type == 'wheel_clamp'"
           (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
@@ -51,12 +51,14 @@
           </select>
         </div>
         <div class="w-full">
-          <label class="text-2xl"><u><b>UNIT</b></u></label>
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
+          <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="unitId"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-          </select>
+          </select> -->
         </div>
         <div class="w-full">
           <app-text-input [id]="'record_issue_reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'EG. ILLEGAL PARKING'"

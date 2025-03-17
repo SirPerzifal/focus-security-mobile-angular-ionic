@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-wheel-clamped-detail',
@@ -13,7 +15,14 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   vehicle: any = {};
   issue_time = ''
 
-  constructor(private router: Router, private route: ActivatedRoute, private modalController: ModalController) {
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private modalController: ModalController,
+    private alertController: AlertController,
+    public functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any[]};
     if (state) {
@@ -77,7 +86,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     console.log("TRY OPEN MODAL")
     const modal = await this.modalController.create({
       component: OvernightParkingModalPage,
-      cssClass: issue == 'second_warning' ? 'record-modal' : 'record-modal-notice',
+      cssClass: 'record-modal' ,
       componentProps: {
         issue: issue == 'second_warning' ? 'wheel_clamp' : 'first_warning',
         vehicle: vehicle,
@@ -99,5 +108,55 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  public async showCheckoutAlert(id: number, type: string) {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'checkout-alert',
+      header: `Are you sure you want to ${type} this vehicle?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.onCheckOut(id, type)
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    }
+    )
+    await alertButtons.present();
+  }
+
+  onCheckOut(id: number, type: string) {
+    let params = {
+      offence_id: id,
+      is_checkout: type == 'checkout',
+      is_release: type != 'checkout',
+      is_unregistered: false,
+    }
+    if (true) {
+      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+        next: (results) => {
+          if (results.result.response_code === 200) {
+            this.router.navigate(['/records-wheel-clamped'], {queryParams: this.params}) 
+            this.functionMain.presentToast(`Successfully ${type} vehicle!`, 'success');
+          } else {
+            this.functionMain.presentToast(`Failed to ${type} vehicle!`, 'danger');
+          }
+        },
+        error: (error) => {
+          this.functionMain.presentToast('An error occurred while processing function!', 'danger');
+          console.error(error);
+        }
+      });
+    }
+    
   }
 }

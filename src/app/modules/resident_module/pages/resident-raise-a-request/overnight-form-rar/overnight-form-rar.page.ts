@@ -5,6 +5,10 @@ import { TextInputComponent } from 'src/app/shared/components/text-input/text-in
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { ModalController } from '@ionic/angular';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 interface Visitor {
   id: number;
@@ -20,6 +24,11 @@ interface Visitor {
 })
 export class OvernightFormRarPage implements OnInit {
   unitId: number = 1; // Replace with actual unit ID logic
+  userName: string = '';
+  condoName: string = '';
+  unit: number = 1; // Replace with actual unit ID
+  block: number = 1; // Replace with actual block ID
+  noTel: string = '';
   blokId: number = 1; // Replace with actual
   nameOfResident: string = "kingsman"
   userPhoneNumber: string = '085830122464'; // Replace with actual
@@ -42,7 +51,7 @@ export class OvernightFormRarPage implements OnInit {
     visitor_id: 0,
   }
 
-  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router) {
+  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private modalController: ModalController, private authService:AuthService) {
     this.form = this.fb.group({
       residentName: this.nameOfResident,
       block: this.blokId,
@@ -57,15 +66,60 @@ export class OvernightFormRarPage implements OnInit {
     });
   }
 
+  termsAndCOndition: string = '';
+
+  async presentModalAgreement() {
+    // console.log("tes");
+        // // console.log(email);
+    // // console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        // email: email
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
+  }
+
   ngOnInit() {
-    this.fetchExpectedVisitors();
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(
+      [ 'unit',
+        'block_name',
+        'unit_name',
+        'project_name'
+      ]
+    ).then((value) => {
+      const parse_user = this.authService.parseJWTParams(value.user);
+      // // console.log(value);
+      this.block = value.block_name;
+      this.unitId = value.unit;
+      this.unit = value.unit_name;
+      this.condoName = value.project_name;
+      this.userName = parse_user.name
+      this.fetchExpectedVisitors();
+      // // console.log('unit', this.unitId);
+    })
   }
 
   fetchExpectedVisitors() {
-    this.requestService.getExpectedVisitors(this.unitId).subscribe(
+    // console.log(this.unitId);
+    
+    this.requestService.getExpectedVisitors(Number(this.unitId)).subscribe(
       (response) => {
         if (response.result.response_code === 200) {
-          console.log(response);
+          // console.log(response);
           // Transform the result into an array of visitors
           this.expectedVisitors = response.result.result;
         }
@@ -104,7 +158,7 @@ export class OvernightFormRarPage implements OnInit {
     if (data){
       this.selectedRentAgreement = data.name;
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.uploadedFileBase64 = base64.split(',')[1];
         this.form.patchValue({ agreement: this.uploadedFileBase64 }); // Update the form control
       }).catch(error => {
@@ -122,7 +176,7 @@ export class OvernightFormRarPage implements OnInit {
 
   openModalVehicle(visitor: any) {
     this.isModalAddVehicleNumberOpen = true;
-    // console.log(visitor);
+    // // console.log(visitor);
     // this.idVisitor = visitor.id; // Update the local variable
     this.formData.visitor_id = visitor.id;
   }
@@ -136,7 +190,7 @@ export class OvernightFormRarPage implements OnInit {
         vehicleNumber
       ).subscribe(
         (response) => {
-          console.log('Vehicle number updated successfully:', response);
+          // console.log('Vehicle number updated successfully:', response);
           this.expectedVisitors = []
           if (this.expectedVisitors = []) {
             this.fetchExpectedVisitors();
@@ -154,7 +208,7 @@ export class OvernightFormRarPage implements OnInit {
     if (this.form.valid) {
       const formData = this.form.value;
       // Send formData to your endpoint
-      console.log('Form Data:', formData);
+      // console.log('Form Data:', formData);
       if (this.form.valid) {
         const formData = this.form.value;
     
@@ -166,7 +220,7 @@ export class OvernightFormRarPage implements OnInit {
         const visitorId = applicantType === 'visitor' ? formData.visitorId : null; // Only if applying for a visitor
         const purpose = applicantType === 'myself' ? formData.purposeOfParking : null; // Only if applying for myself
         const rentalAgreement = formData.agreement; // Convert boolean to string
-        const familyId = 1; // Replace with actual family ID logic if needed
+        const familyId = 15; // Replace with actual family ID logic if needed
     
         this.requestService.postOvernightFormCar(
           blockId,
@@ -180,7 +234,7 @@ export class OvernightFormRarPage implements OnInit {
           familyId
         ).subscribe(
           (response) => {
-            console.log('Response from server:', response);
+            // console.log('Response from server:', response);
             if (response.result.response_code === 400) {
               // Handle error response (e.g., show an error message)
               this.presentToast(response.result.error_message, 'danger');
@@ -196,7 +250,7 @@ export class OvernightFormRarPage implements OnInit {
           }
         );
       } else {
-        console.log('Form is invalid');
+        // console.log('Form is invalid');
       }
     }
   }

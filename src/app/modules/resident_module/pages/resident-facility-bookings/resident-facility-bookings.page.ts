@@ -1,29 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router, NavigationStart } from '@angular/router';
+import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 import { AlertController } from '@ionic/angular';
+
+import { ActiveBooking, BookingResponse } from 'src/models/resident/facility.model';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
-
-interface ActiveBooking {
-  id: number;
-  facilityName: string;
-  eventDate: string;
-  startTime: string;
-  endTime: string;
-  bookedBy: string;
-  statusBooked: string;
-}
-
-// Tambahkan interface ini di bagian atas file TypeScript Anda
-interface BookingResponse {
-  id: number;
-  facility_name: string;
-  booking_date: string;
-  start_datetime: string;
-  stop_datettime: string;
-  booked_by: string;
-  booking_status: string;
-}
 
 @Component({
   selector: 'app-resident-facility-bookings',
@@ -32,28 +14,25 @@ interface BookingResponse {
 })
 export class ResidentFacilityBookingsPage implements OnInit {
   activeBookings: ActiveBooking[] = [];
-  unit_id: number = 1;
+  unit_id: number = 0;
   bookingId = '';
-  
+  isLoading: boolean = true;
+
   constructor(
     private router:Router, 
     private alertController: AlertController,
     private toastController: ToastController,
-    private facilityBookingsService: FacilityBookingsService
+    private facilityBookingsService: FacilityBookingsService,
   ) { }
   
-  
   ngOnInit() {
-    this.loadActiveBookings();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/resident-facility-bookings'){
-          this.activeBookings = []
-          this.loadActiveBookings();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unit_id = Number(parseValue.unit_id);
+        this.loadActiveBookings();
       }
-    });
+    })
   }
 
   loadActiveBookings() {
@@ -70,11 +49,8 @@ export class ResidentFacilityBookingsPage implements OnInit {
             bookedBy: booking.booked_by,
             statusBooked: booking.booking_status,
           }));
-          console.log('Mapped Active Bookings:', this.activeBookings);
-          console.log('Mapped Active Bookings:', response);
-        } else {
-          this.presentToast('Failed to load booking data', 'danger');
-          console.error('Error:', response);
+
+          this.isLoading = false;
         }
       },
       error: (error) => {
@@ -99,18 +75,14 @@ export class ResidentFacilityBookingsPage implements OnInit {
     }
   }
   
-  formatTime(dateTimeString: string): string {
-    if (!dateTimeString) return '';
-    try {
-      const date = new Date(dateTimeString);
-      return date.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
-      });
-    } catch {
-      return dateTimeString;
-    }
+  formatTime(datetime: string): string {
+    if (!datetime) return '';
+    
+    // Misalkan format datetime adalah 'YYYY-MM-DD HH:mm:ss'
+    const timePart = datetime.split(' ')[1];
+    
+    // Potong detik jika perlu
+    return timePart ? timePart.substring(0, 5) : '';
   }
   
   toggleShowActBk() {
@@ -141,9 +113,9 @@ export class ResidentFacilityBookingsPage implements OnInit {
   getBookingStatusIcon(status: string): string {
     switch(status) {
       case 'approved': return 'checkmark';
-      case 'requested': return 'alert-circle-outline';
+      case 'requested': return 'alert';
       case 'pending_approval':
-      case 'pending_payment': return 'alert-circle-outline';
+      case 'pending_payment': return 'alert';
       case 'rejected':
       case 'cancel': return 'close-outline';
       default: return 'help-outline';
@@ -162,20 +134,6 @@ export class ResidentFacilityBookingsPage implements OnInit {
     }
   }
 
-  // cancelBooking(bookingId: number) {
-  //   // Implementasi logika pembatalan booking
-  //   this.bookingService.cancelBooking(bookingId).subscribe({
-  //     next: (response) => {
-  //       // Refresh daftar booking atau hapus booking dari list
-  //       this.loadActiveBookings();
-  //     },
-  //     error: (error) => {
-  //       // Tangani error
-  //       console.error('Gagal membatalkan booking', error);
-  //     }
-  //   });
-  // }
-
   public async presentCustomAlert(
     header: string = 'Cancel Booking', 
     cancelText: string = 'Cancel', 
@@ -191,7 +149,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
           role: 'cancel',
           cssClass: 'cancel-button',
           handler: () => {
-            console.log('Booking cancellation cancelled');
+            // console.log('Booking cancellation cancelled');
           }
         },
         {
@@ -208,21 +166,14 @@ export class ResidentFacilityBookingsPage implements OnInit {
   }
 
   confirmBookingCancellation() {
-    // Logika untuk membatalkan booking
-    console.log('Booking cancelled');
     this.deleteBooking();
-    // Reload the page
-    // window.location.reload();
-    // Contoh: Tampilkan toast atau navigasi
-    // this.presentToast('Booking successfully cancelled');
-    // this.router.navigate(['/booking-list']);
   }
 
   deleteBooking() {
     this.facilityBookingsService.deleteBooking(this.bookingId)
       .subscribe({next: (response: any) => {
         if (response.result.response_code === 200) {
-          console.log('work')
+          // console.log('work')
           this.activeBookings = []
           this.loadActiveBookings();
         } else {
@@ -237,16 +188,6 @@ export class ResidentFacilityBookingsPage implements OnInit {
     });
   }
 
-  // Opsional: Tambahkan metode presentToast jika diperlukan
-  // async presentToast(message: string) {
-  //   const toast = await this.toastController.create({
-  //     message: message,
-  //     duration: 2000,
-  //     position: 'bottom'
-  //   });
-  //   
-  // toast.present(0)
-  // }
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
       message: message,
@@ -267,7 +208,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
   }
 
   addToCalendar(booking: ActiveBooking) {
-    console.log(booking);
+    // console.log(booking);
     const eventTitle = encodeURIComponent(booking.facilityName);
     const bookedBy = encodeURIComponent(booking.bookedBy);
   
@@ -301,5 +242,26 @@ export class ResidentFacilityBookingsPage implements OnInit {
   
     // Buka URL di jendela baru
     window.open(googleCalendarUrl, '_blank');
+  }
+
+  navigateToHistoryDetail(booking: ActiveBooking) {
+    const bookingData = {
+      facilityName:booking.facilityName,
+      eventDate:booking.eventDate,
+      bookingTime: `${booking.startTime} - ${booking.endTime}`,
+      startTime:booking.startTime,
+      endTime:booking.endTime,
+      bookingFee:0,
+      deposit:0,
+      bookedBy:booking.bookedBy,
+      status:booking.statusBooked,
+      from: 'Active'
+    }
+    // Gunakan NavigationExtras untuk membawa data
+    this.router.navigate(['/facility-history-form'], {
+      state: {
+        bookingData: bookingData
+      }
+    });
   }
 }

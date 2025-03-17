@@ -43,6 +43,7 @@ export class RecordsFacilityPage implements OnInit {
 
   ngOnInit() {
     this.loadBlock()
+    this.getFacilities()
     this.getFacilityData()
   }
 
@@ -56,12 +57,30 @@ export class RecordsFacilityPage implements OnInit {
   daySchedules: any[] = [];
   upcomingSchedules: any[] = [];
   historySchedules: any[] = []
+  filteredHistorySchedules: any[] = []
 
   tempDataInit() {
     this.getFacilityData()
     // this.daySchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
     // this.upcomingSchedules = this.facilityRecords.filter(item => new Date(item.parking_date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0))
     // this.historySchedules = this.facilityRecords
+  }
+
+  Facilities: any[] = []
+  getFacilities(){
+    this.mainVmsService.getApi({}, '/vms/get/get_room_facility' ).subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.Facilities = results.result.facility
+        } else {
+        }
+      },
+      error: (error) => {
+        this.presentToast('Failed to load facility room!', 'danger');
+        console.error(error);
+      }
+    });
   }
 
   getFacilityData(){
@@ -75,7 +94,6 @@ export class RecordsFacilityPage implements OnInit {
               this.daySchedules = this.facilityRecords
               console.log(this.daySchedules)
             } else {
-              this.presentToast('There is no active booking data!', 'danger');
             }
           },
           error: (error) => {
@@ -94,7 +112,6 @@ export class RecordsFacilityPage implements OnInit {
               this.upcomingSchedules = this.facilityRecords
               console.log(this.upcomingSchedules)
             } else {
-              this.presentToast('There is no active booking data!', 'danger');
             }
           },
           error: (error) => {
@@ -113,9 +130,9 @@ export class RecordsFacilityPage implements OnInit {
               // this.presentToast('!', 'success');
               this.facilityRecords = results.result.booking
               this.historySchedules = this.facilityRecords
+              this.filteredHistorySchedules = this.historySchedules
               console.log(this.historySchedules)
             } else {
-              this.presentToast('There is no booking data!', 'danger');
             }
           },
           error: (error) => {
@@ -134,40 +151,56 @@ export class RecordsFacilityPage implements OnInit {
   showUpcoming = false;
   showUpcomingTrans = false;
   choosenBlock = ''
+  choosenUnit = ''
+  choosenFacility = ''
+
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showDayTrans && !this.showUpcomingTrans) {
-      this.showDay = false;
-      this.showHistory = false;
-      this.showDayTrans = false;
-      this.showHistoryTrans = false;
-      this.showUpcoming = false;
-      this.showUpcomingTrans = false;
       if (type == 'day') {
-        this.showDayTrans = true
-        setTimeout(() => {
-          this.showDay = true;
-          this.getFacilityData()
-          this.showDayTrans = false
-        }, 300)
+        if (!this.showDay){
+          this.clearFilters()
+          this.showHistory = false;
+          this.showHistoryTrans = false;
+          this.showUpcoming = false;
+          this.showUpcomingTrans = false;
+          this.showDayTrans = true
+          setTimeout(() => {
+            this.showDay = true;
+            this.getFacilityData()
+            this.showDayTrans = false
+          }, 300)
+        }
       }
       if (type == 'upcoming') {
-        this.showUpcomingTrans = true
-        setTimeout(() => {
-          this.showUpcoming = true;
-          this.getFacilityData()
-          this.showUpcomingTrans = false
-        }, 300)
+        if(!this.showUpcoming){
+          this.clearFilters()
+          this.showDay = false;
+          this.showDayTrans = false;
+          this.showHistory = false;
+          this.showHistoryTrans = false;
+          this.showUpcomingTrans = true
+          setTimeout(() => {
+            this.showUpcoming = true;
+            this.getFacilityData()
+            this.showUpcomingTrans = false
+          }, 300)
+        }
       }
       if (type == 'history') {
-        this.startDateFilter = ''
-        this.choosenBlock = ''
-        this.showHistoryTrans = true
-        setTimeout(() => {
-          this.showHistory = true;
-          this.getFacilityData()
-          this.showHistoryTrans = false
-        }, 300)
+        if(!this.showHistory){
+          this.showDay = false;
+          this.showDayTrans = false;
+          this.showUpcoming = false;
+          this.showUpcomingTrans = false;
+          this.showHistoryTrans = true
+          setTimeout(() => {
+            this.showHistory = true;
+            this.getFacilityData()
+            this.showHistoryTrans = false
+          }, 300)
+        }
+        
       }
       
     }
@@ -177,7 +210,7 @@ export class RecordsFacilityPage implements OnInit {
   endDateFilter = ''
 
   applyFilters() {
-    this.historySchedules = this.facilityRecords.filter(item => {
+    this.filteredHistorySchedules = this.historySchedules.filter(item => {
       const visitorDate = new Date(item.parking_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
@@ -195,16 +228,18 @@ export class RecordsFacilityPage implements OnInit {
 
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
+      const unitMatches = this.choosenUnit ? item.unit_id == this.choosenUnit : true;
+      const facilityMatches = this.choosenFacility ? item.facility_id == this.choosenFacility : true;
 
-      return typeMatches && dateMatches;
+      return typeMatches && unitMatches && facilityMatches && dateMatches;
     });
-    console.log(this.historySchedules)
+    console.log(this.filteredHistorySchedules)
   }
 
   Block: any[] = [];
+  Unit: any[] = []
 
   loadBlock() {
-    console.log('hey this is block')
     this.blockUnitService.getBlock().subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -218,13 +253,46 @@ export class RecordsFacilityPage implements OnInit {
         console.error('Error:', error);
       }
     });
-    console.log(this.Block)
+  }
+
+  async loadUnit() {
+    this.choosenUnit = ''
+    // this.isLoadingUnit = true
+    this.blockUnitService.getUnit(this.choosenBlock).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result; // Simpan data unit
+          // this.isLoadingUnit = false
+        } else {
+          console.error('Error:', response.result);
+          // this.isLoadingUnit = false
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+        // this.isLoadingUnit = false
+      }
+    });
   }
 
   onBlockChange(event: any) {
     this.choosenBlock = event.target.value;
+    this.choosenUnit = ''
+    this.loadUnit()
     this.applyFilters()
   }
+
+  onFacilityChange(event: any) {
+    this.choosenFacility = event.target.value;
+    this.applyFilters()
+  }
+
+  onUnitChange(event: any) {
+    this.choosenUnit = event.target.value;
+    this.applyFilters()
+  }
+
 
   onChangeDate(event: any) {
     this.startDateFilter = event.target.value
@@ -240,6 +308,16 @@ export class RecordsFacilityPage implements OnInit {
     });
   }
 
+  clearFilters() {
+    this.searchOption = ''
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
+    this.choosenFacility = ''
+    this.selectedRadio = ''
+    this.isRadioClicked = false
+    this.applyFilters() 
+  }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
     const toast = await this.toastController.create({
@@ -281,6 +359,36 @@ export class RecordsFacilityPage implements OnInit {
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+  }
+
+  sortVehicle: any[] = []
+  selectedRadio: string | null = null
+  isRadioClicked = false
+
+  onRadioClick(value: string): void {
+    if (this.selectedRadio === value) {
+      this.selectedRadio = null;
+    } else {
+      this.selectedRadio = value;
+      this.searchOption = ''
+    }
+    console.log(this.selectedRadio)
+    this.sortVehicle = this.historySchedules
+    if (this.selectedRadio == 'sort_date') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.start_datetime ? new Date(record.start_datetime.split(' ')[0]).toISOString() : '-' ))
+      ).map((date) => ({
+        vehicle_number: '',
+        date: new Date(date),
+        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
+        data: this.sortVehicle.filter(item => item.start_datetime ? new Date(item.start_datetime).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.start_datetime == date ) ,            
+      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
+      console.log(this.sortVehicle)
+    } else {
+      this.isRadioClicked = false
+      this.searchOption = ''
     }
   }
 

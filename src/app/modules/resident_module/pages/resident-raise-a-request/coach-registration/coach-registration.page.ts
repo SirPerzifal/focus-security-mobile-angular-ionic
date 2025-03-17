@@ -5,6 +5,9 @@ import { AlertController } from '@ionic/angular';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { ModalController } from '@ionic/angular';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
   selector: 'app-coach-registration',
@@ -33,8 +36,8 @@ export class CoachRegistrationPage implements OnInit {
   showNextForm: boolean = false; // New variable to control visibility of next-form
   expectedCoach: any = [];
   formData = {
-    block_id: 1,
-    unit_id: 1,
+    block_id: 0,
+    unit_id: 0,
     coach_name: '',
     contact_number: '',
     coach_sex: '',
@@ -53,11 +56,47 @@ export class CoachRegistrationPage implements OnInit {
   otherCoachType: string = '';
   otherFacility: string = '';
 
-  constructor(private alertController: AlertController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) { }
+  constructor(private modalController: ModalController, private alertController: AlertController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { }
+
+  termsAndCOndition: string = '';
+
+  async presentModalAgreement() {
+    // console.log("tes");
+        // // console.log(email);
+    // // console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        // email: email
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
+  }
 
   ngOnInit() {
-    console.log('tes');
+    // Ambil data unit dan blok yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(['unit', 'block', 'project_id']).then((value) => {
+      this.formData.unit_id = Number(value.unit); // Mengambil nilai unit dari objek
+      this.formData.block_id = Number(value.block); // Mengambil nilai block dari objek
+      this.project_id = Number(value.project_id)
+      // // console.log('unit', this.formData.unit_id);
+      // // console.log('block', this.formData.block_id);
+    });
+    // console.log('tes');
   }
+
+  project_id = 0
 
   onCoachSexChange(event: any) {
     this.formData.coach_sex = event.target.value;
@@ -95,7 +134,7 @@ export class CoachRegistrationPage implements OnInit {
         this.presentToast('Please fill in the Nationality field.', 'danger');
         return;
       }
-      // console.log(this.formData);
+      // // console.log(this.formData);
       
       this.showNextForm = true; // Show next form when Next button is clicked
       this.loadFacilityRequired();
@@ -106,7 +145,7 @@ export class CoachRegistrationPage implements OnInit {
   }
 
   loadTypeCoach() {
-    this.raiseARequestService.getTypeCoach().subscribe(
+    this.raiseARequestService.getTypeCoach(this.project_id).subscribe(
       (response: any) => {
         if (response.result.response_code === 200) {
           this.coachingType = response.result.coaches_type; // Atau gunakan map jika perlu
@@ -122,11 +161,11 @@ export class CoachRegistrationPage implements OnInit {
       (response: any) => {
         if (response) {
           this.facilityRequired = response.result;
-          console.log(response);
+          // console.log(response);
           
         } else {
           this.presentToast('An error occurred while loading facility required data!', 'danger');
-          console.log(response);
+          // console.log(response);
         }
       }
     )
@@ -168,7 +207,7 @@ export class CoachRegistrationPage implements OnInit {
       this.presentToast('Please select the Duration per Session field.', 'danger');
       return;
     }
-    console.log(this.formData)
+    // console.log(this.formData)
     this.raiseARequestService.postRegiterRequestCoach(
       this.formData.block_id,
       this.formData.unit_id,
@@ -186,7 +225,7 @@ export class CoachRegistrationPage implements OnInit {
     ).subscribe (
       (response_from_coach_registered: any) => {
         if (response_from_coach_registered) {
-          console.log(response_from_coach_registered);
+          // console.log(response_from_coach_registered);
           this.presentToast('Coach registration request submitted successfully!','success');
           this.OnDestroy()
           this.router.navigate(['/resident-raise-a-request']);
@@ -201,7 +240,7 @@ export class CoachRegistrationPage implements OnInit {
     this.raiseARequestService.getExpectedCoachByUnit(this.formData.unit_id).subscribe (
       (response: any) => {
         if (response) {
-          console.log(response);
+          // console.log(response);
           this.expectedCoach = response.result.registered_coaches;
         } else {
           this.presentToast('An error occurred while loading expected coach data!', 'danger');
@@ -245,7 +284,7 @@ export class CoachRegistrationPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Alert cancel');
+            // console.log('Alert cancel');
           },
         },
       ]
@@ -262,7 +301,7 @@ export class CoachRegistrationPage implements OnInit {
           text: 'Confirm',
           role: 'confirm',
           handler: () => {
-            // console.log(this.formData);
+            // // console.log(this.formData);
             this.formData.registered_coach_id = coachId
             if (this.formData.registered_coach_id) {
               this.raiseARequestService.postRegiterRequestCoach(
@@ -297,7 +336,7 @@ export class CoachRegistrationPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Alert cancel');
+            // console.log('Alert cancel');
           },
         },
       ]

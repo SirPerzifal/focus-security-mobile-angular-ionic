@@ -3,6 +3,8 @@ import { ReportIssueService } from 'src/app/service/resident/report-issue/report
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
   selector: 'app-resident-report-an-app-issue',
@@ -25,29 +27,37 @@ export class ResidentReportAnAppIssuePage implements OnInit {
   extend_mb = false
   typeOfReport: any = []
 
-  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router) { }
+  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService) { }
 
   ngOnInit() {
-    console.log("tes");
+    this.getUserInfoService.getPreferenceStorage(['user', 'family', 'type_family', 'block_name', 'unit_name', 'project_name']).then((value) => {
+      const parse_user = this.authService.parseJWTParams(value.user);
+      
+      this.reporterDetailsFrom.name = parse_user.name;
+      this.reporterDetailsFrom.blockAndUnit = value.block_name + ',' + value.unit_name;
+      this.reporterDetailsFrom.email = parse_user.email;
+      this.reporterDetailsFrom.contactNumber = parse_user.mobile_number;
+      this.reporterDetailsFrom.placeOfResidence = value.project_name;
+    })
     this.loadType();
   }
   
   loadType() {
     this.reportIssueService.getReportAppTypeOfIssues().subscribe(
       (response) => {
-        // console.log(response);
+        // // console.log(response);
         this.typeOfReport = response.result.result;
-        this.presentToast(response.result.message, 'success');
+        // this.presentToast(response.result.message, 'success');
       },
       (error) => {
-        this.presentToast('Failed to load your report. Please try again later.', 'danger');
+        // this.presentToast('Failed to load your report. Please try again later.', 'danger');
         console.error(error);
       }
     );
   }
 
   onTypeReportChange(event: any){
-    // console.log(event.target.value);
+    // // console.log(event.target.value);
     const type = event.target.value;
     this.reporterDetailsFrom.typeReport = parseInt(type);
   }
@@ -62,16 +72,16 @@ export class ResidentReportAnAppIssuePage implements OnInit {
       this.reporterDetailsFrom.blokId,
     ).subscribe(
       (response) => {
-        // console.log(response);
+        // // console.log(response);
         if (response.result.response_code === 200) {
-          this.presentToast(response.result.message, 'success');
+          // this.presentToast(response.result.message, 'success');
           this.router.navigateByUrl('/record-app-report');
         } else {
-          this.presentToast(response.result.message, 'danger');
+          // this.presentToast(response.result.message, 'danger');
         }
       },
       (error) => {
-        this.presentToast('Failed to submit your report. Please try again later.', 'danger');
+        // this.presentToast('Failed to submit your report. Please try again later.', 'danger');
         console.error(error);
       }
     );

@@ -1,6 +1,6 @@
 .fslp-container {
     text-align: center;
-    padding: 30px;
+    padding: 30px 5px 30px 5px;
 }
 .fslp-logo {
     width: 200px;
@@ -33,3 +33,6 @@
     border-radius: 5px;
     cursor: pointer;
 }
+.focus-visible {
+    outline: 2px solid blue; /* Gaya fokus yang diinginkan */
+  }

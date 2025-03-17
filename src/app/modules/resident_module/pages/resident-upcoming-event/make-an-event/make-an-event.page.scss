@@ -34,7 +34,14 @@
   ::ng-deep .cal-week-view .cal-current-time-marker {
     background-color: rgb(69, 138, 207);
   }
-  
+  ::ng-deep .cal-week-view .cal-all-day-events .cal-events-row {
+    margin-left: 0;
+  }
+  .cal-week-view .cal-event {
+    color: black !important;
+    font-weight: 700;
+    font-size: 14px;
+  }
   @media (min-width: 300px) and (max-width: 327px) {
     ::ng-deep .ion-datetime-button-overlay ion-datetime.datetime-grid {
       width: 300px;
@@ -81,4 +88,53 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  
+
+  select:disabled {
+    background-color: #F5F5F5;
+    color: #7F8592;
+    border-color: #6B7280;
+  }
+
+  textarea:read-only {
+    background-color: #F5F5F5;
+    color: #7F8592;
+    border-color: #6B7280;
+  }
+
+  input:read-only {
+    background-color: #F5F5F5;
+    color: #7F8592;
+    border-color: #6B7280;
+  }
+
+  .input-custom-readonly {
+    background-color: #F5F5F5 !important;
+    color: #7F8592;
+    border: #6B7280 1px solid;
+  }
+
+ion-modal#contact-number-changed {
+  --width: 90%;
+  --min-width: 250px;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#contact-number-changed .wrapper {
+  padding: 15px;
+  background-color: #E3787E;
+}
+
+input::file-selector-button {
+  display: none;
+}
+
+.confirm-button-modal {
+  background-color: #D0D0D0;
+  color: #1F2937;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid black;
+  font-weight: bold;
+}

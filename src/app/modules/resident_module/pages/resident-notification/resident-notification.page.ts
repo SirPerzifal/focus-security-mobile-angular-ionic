@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 
 interface Notification {
@@ -23,22 +25,33 @@ export class ResidentNotificationPage implements OnInit {
   filteredNotifications: Notification[] = []; // Ubah ke array of Notification
   searchTerm: string = '';
 
-  constructor(private notificationService: NotificationService, private toast: ToastController) { }
+  constructor(private notificationService: NotificationService, private toast: ToastController, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
-    this.filteredNotifications = this.notifications; // Initialize with all notifications
-    this.loadNotification();
-
-    console.log("this notifications", this.notifications)
-    console.log("thisfilterednotifications", this.filteredNotifications)
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(
+      [ 
+        'unit',
+      ]
+    ).then((value) => {
+      // // console.log(value);
+      this.unitId = value.unit
+      // Load polling data
+      this.filteredNotifications = this.notifications; // Initialize with all notifications
+      this.loadNotification();
+    })
   }
 
   loadNotification() {
+    // // console.log(this.unitId);
+    
     this.notificationService.getNotifications(this.unitId, this.partnerId).subscribe(
       response => {
         if (response.result.response_code === 200) {
           // Mengisi notifications dengan objek
           this.notifications = response.result.notifications; // Simpan objek notifikasi
+          // // console.log(response.result.notifications);
+          
           
           // Format tanggal untuk setiap notifikasi
           this.notifications = this.notifications.map(notification => {
@@ -52,8 +65,8 @@ export class ResidentNotificationPage implements OnInit {
           });
           this.filteredNotifications = this.notifications; // Update filtered notifications
 
-          console.log("this notifications", this.notifications)
-          console.log("thisfilterednotifications", this.filteredNotifications)
+          // // console.log("this notifications", this.notifications)
+          // // console.log("thisfilterednotifications", this.filteredNotifications)
         } else {
           this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching notifications:', response);

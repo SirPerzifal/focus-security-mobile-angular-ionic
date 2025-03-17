@@ -1,23 +1,25 @@
-<div class="border border-t-[#BBCDB3] flex justify-between bg-[#D8ECCF] fixed bottom-0 w-full z-50">
-  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="routeTo()">
-    <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-2xl mb-2"></ion-icon>
-      <span class="text-[13px] font-bold">Home</span>
-    </div>
-  </ion-button>
-  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="reportIssue()">
-    <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-2xl mb-2"></ion-icon>
-      <span class="text-[13px] font-bold">App Issues</span>
-    </div>
-  </ion-button>
-  <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="settings()">
-    <div class="flex flex-col items-center text-black">
-      <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-2xl mb-2"></ion-icon>
-      <span class="text-[13px] font-bold">Settings</span>
-    </div>
-  </ion-button>
-</div>
+<ion-footer>
+  <div class="border back-aww flex justify-between bg-[#D8ECCF] fixed bottom-0 w-full z-50 rounded-t-[25px]">
+    <ion-button fill="clear" class="fsc-icon-button fsc-icon-button-right w-[33%]" (click)="routeTo()">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon [name]="activeButton === 'home' ? 'home' : 'home-outline'" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[13px] font-bold">Home</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear" class="fsc-icon-button w-[33%]" (click)="reportIssue()">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon [name]="activeButton === 'report' ? 'alert-circle' : 'alert-circle-outline'" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[13px] font-bold">App Issues</span>
+      </div>
+    </ion-button>
+    <ion-button fill="clear" class="fsc-icon-button fsc-icon-button-left w-[33%]" (click)="settings()">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[13px] font-bold">Settings</span>
+      </div>
+    </ion-button>
+  </div>
+</ion-footer>
 
 <!-- <ion-tabs>
   <ion-tab-bar slot="bottom">

@@ -1,71 +1,63 @@
-<ion-content [fullscreen]="true">
-	<div class="header fixed top-0">
-		<div class="flex flex-col justify-start">
-			<img alt="Profile picture of a person" height="80" src="https://storage.googleapis.com/a1aa/image/NWAf6fQlGwiLJkFZou5lnWGhp97H7gZehBzVmVzlOoIYO4gnA.jpg" width="80" class="w-80 h-80"/>
-      <ion-icon class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1" name="pencil" [routerLink]="['/resident-my-profile']">
+<ion-header>
+  <div class="header fixed top-0">
+    <div class="flex flex-col justify-start">
+      <img height="80" [src]="functionMain.getImage(imageProfile)" width="80" class="w-80 h-80"/>
+      <ion-icon class="absolute bottom-[4rem] drop-shadow-xl left-12 text-base bg-white rounded-full p-1" name="pencil" [routerLink]="['/resident-my-profile']">
       </ion-icon>
-			<div class="flex flex-col items-start mt-4">
-				<h1 class="text-[black]">
-					Welcome Veeknesh
-				</h1>
-				<p class="text-[black] font-bold">
-					{{condominiumName}}
-				</p>
-			</div>
-		</div>
-		<div class="logo">
-			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-		</div>
-	</div>
+      <div class="flex flex-col items-start mt-4">
+        <h1 class="text-[black]">
+          Welcome {{name}}
+        </h1>
+        <p class="text-[black] font-bold">
+          {{condominiumName}}
+        </p>
+      </div>
+    </div>
+    <div class="logo flex flex-row justify-end">
+      <img alt="iFS360 logo" height="60" [src]="functionMain.getImage(condoImage)"/>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true">
   <div *ngIf="isLoading" class="flex justify-center items-center h-full">
     <ion-spinner name="circular"></ion-spinner>
   </div>
   <div *ngIf="!isLoading" class="p-5 text-center mb-24">
-    <div class="w-full flex flex-row mb-4">
-      <div class="w-full">
-        <input type="text" id="simple-search" class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="What Would You Like To Do Today?" required />
-      </div>
-      <button type="submit" class="p-3.5 ms-2 text-sm font-medium text-white bg-[#10421D] items-center rounded-lg border border-[#10421D] hover:bg-[#10421D] focus:ring-4 focus:outline-none focus:ring-green-700 dark:bg-[#10421D] dark:hover:bg-[#10421D] dark:focus:ring-[#10421D]">
-          <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-          </svg>
-          <span class="sr-only">Search</span>
-      </button>
-    </div>
     <div class="flex flex-col gap-3">
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-visitors']">
+      <ion-button fill="clear" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-visitors']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/visitors.png" alt="Icon for Visitors"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Visitors</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-facility-bookings']">
+      <ion-button fill="clear" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-facility-bookings']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon3.png" alt="Icon for Facility Bookings"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Facility Bookings</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-payment']">
+      <ion-button fill="clear" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-payment']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon2.png" alt="Icon for Payments"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Payments</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-my-family']">
+      <ion-button fill="clear" *ngIf="familyType ==='Primary Contacts' || familyType ==='Secondary Contacts'" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-my-family']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon1.png" alt="Icon for My Family"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">My Family</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-my-vehicle']">
+      <ion-button fill="clear" *ngIf="familyType ==='Primary Contacts' || familyType ==='Secondary Contacts'" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-my-vehicle']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon4.png" alt="Icon for My Vehicle"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">My Vehicle</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-raise-a-request']">
+      <ion-button fill="clear" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-raise-a-request']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon6.png" alt="Icon for Raise A Request"/>
         <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Raise A Request</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full" [routerLink]="['/resident-find-a-service-provider']">
+      <ion-button fill="clear" expand="full" class="flex justify-between fsc-radius-button items-center bg-[#D8ECCF] rounded-full shadow-lg" [routerLink]="['/resident-find-a-service-provider']">
         <img class="w-8 h-8" src="assets/icon/resident-icon/icon5.png" alt="Icon for Find a Service Provider"/>
-        <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Find a Service Provider</span>
+        <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">Find Service Provider</span>
         <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
       </ion-button>
     </div>
@@ -73,72 +65,101 @@
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div class="w-full h-full relative">
           <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2 z-10" *ngIf="paramForBadgeNotification > 0">{{ paramForBadgeNotification }}</span>
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" (click)="directToNotifications()">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" (click)="directToNotifications()">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/notification.png" alt="Icon for Notifications"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Notifications</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Notifications</span>
             </div>
           </ion-button>
         </div>
         <div class="w-full h-full relative">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" [routerLink]="['/resident-announcement-page']">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/resident-announcement-page']">
             <div class="w-full flex flex-col items-center">
               <img class="w-12 h-12 mt-2" src="assets/icon/home-icon/sound.webp" alt="Icon for Upcoming Events"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Notice & Docs</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Notice & Docs</span>
             </div>
           </ion-button>
         </div>
         <div class="w-full h-full relative">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" [routerLink]="['/resident-polling']">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/resident-polling']">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/polling.png" alt="Icon for Polling"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Polling</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Polling</span>
             </div>
           </ion-button>
         </div>
         <div *ngFor="let rule of houseRules" class="w-full h-full relative">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" (click)="downloadDocument(rule.base64Doc, rule.title)">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" (click)="downloadDocument(rule.base64Doc, rule.title)">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/house-rule.png" alt="Icon for House Rules"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">House Rule</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">House Rule</span>
             </div>
           </ion-button>
         </div>
         <div class="w-full h-full relative">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" [routerLink]="['/record']">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/record']">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/report-an-issue.png" alt="Icon for Report an Issue"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Report an Issue</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Report an Issue</span>
             </div>
           </ion-button>
         </div>
         <div class="w-full h-full relative">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" [routerLink]="['/upcoming-event-calendar-view']">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/upcoming-event-calendar-view']">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/upcoming-event.png" alt="Icon for Upcoming Events"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Upcoming Events</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Upcoming Events</span>
             </div>
           </ion-button>
         </div>
-        <div class="w-full max-w-[30vw] relative flex">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] rounded-2xl relative p-0 m-0" [routerLink]="['/resident-door-access']">
+        <div class="w-full h-full relative">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/resident-door-access']">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/home-icon/door.png" alt="Icon for Door Access"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Door Access</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Door Access</span>
             </div>
           </ion-button>
         </div>
-        <div class="w-full max-w-[30vw] relative flex">
-          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] rounded-2xl relative p-0 m-0" [routerLink]="['/resident-quick-dials']">
+        <div class="w-full h-full relative">
+          <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] rounded-2xl shadow-lg relative p-0 m-0" [routerLink]="['/resident-quick-dials']">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" src="assets/icon/resident-icon/quick-dials.png" alt="Icon for Quick Dials"/>
-              <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">Quick Dials</span>
+              <span class="text-sm font-bold text-[black] text-center normal-case cw-3:text-[11px]">Quick Dials</span>
             </div>
           </ion-button>
         </div>
       </div>
-
     </div>
   </div>
-  <app-bottom-nav-bar></app-bottom-nav-bar>
+  <ion-modal [isOpen]="isModalUpdateProfile" (didDismiss)="isModalUpdateProfile === false">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Upload Profile</ion-title>
+        </ion-toolbar>
+        <div class="px-5 pb-3 mt-[70px]">
+          <div class="w-full mt-2">
+            <div class="flex flex-row justify-start mb-1">
+            </div>
+            <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+              <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
+              <label for="profile_image">
+                <img height="50" [src]="selectedProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
+              </label>
+            </div>
+          </div>
+          <button 
+            [disabled]="!selectedProfile"
+            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+            class="mt-2 w-full text-base rounded h-10 font-bold">
+            Upload
+          </button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

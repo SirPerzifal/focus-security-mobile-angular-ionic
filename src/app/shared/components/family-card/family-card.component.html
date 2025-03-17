@@ -63,6 +63,22 @@
   'bg-[#E3787E]': status === 'Rejected' || status === 'rejected',
   'bg-sky-100': status === 'pending_payment' || status === 'Pending Payment'
   }" [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col'">
+  <div class="flex flex-col justify-start items-start mb-2">
+    <div class="flex flex-row items-center justify-end mt-2">
+      <ng-container *ngIf="status === 'approved' || status === 'Approved'">
+        <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+        <p class="text-[var(--ion-color-primary)] font-bold text-base">Approved</p>
+      </ng-container>
+      <ng-container *ngIf="status === 'pending_approval' || status === 'Pending Approval' || status === 'pending_payment' || status === 'Pending Payment'">
+        <ion-icon name="alert" class=" bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+        <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+      </ng-container>
+      <ng-container *ngIf="status === 'rejected' || status === 'Rejected'">
+        <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+        <p class="text-red-700 font-bold text-base">Rejected</p>
+      </ng-container>
+    </div>
+  </div>
   <div class="flex flex-row">
     <img alt="Profile picture of {{name}}" class="h-16 w-16 rounded-full" height="50" 
     [src]="profile_image ? 'data:image/png;base64,' + profile_image : 'https://placehold.co/600x400?text=' + name.charAt(0)" 

@@ -3,10 +3,10 @@
   <div class="w-full mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToHistoryList()"></ion-icon>
   </div>
-  <div class="flex flex-col relative mx-4 mb-24" *ngIf="bookingData">
-    <div class="w-full bg-[#D8ECCF] text-center my-2 m-0 p-2">
+  <div class="flex flex-col relative mb-24" *ngIf="bookingData">
+    <div class="w-full bg-[#D8ECCF] text-center mb-2 m-0 p-2">
       <h2 class="text-base font-bold text-black">
-        {{ bookingData.facilityName }} Booking details
+        {{ bookingData.facilityName }} {{ bookingData.from ? bookingData.from : '' }} Booking details {{ bookingData.status }}
       </h2>
     </div>
 
@@ -20,7 +20,7 @@
         </div>
       </ion-button> -->
 
-      <table style="width: 70%; border-collapse: collapse;">
+      <table class="w-full" style="border-collapse: collapse;">
         <tr>
           <td><strong>Facility</strong></td>
           <td>: {{ bookingData.facilityName }}</td>
@@ -35,7 +35,7 @@
         </tr>
       </table>
 
-      <div class="ml-1 mt-4">
+      <div class="mt-4">
         <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
         <div class="flex justify-between font-bold">
           <p>Booking Fee</p>
@@ -63,3 +63,6 @@
     </div>
   </div>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

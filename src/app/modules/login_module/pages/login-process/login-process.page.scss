@@ -1,14 +1,20 @@
 .fslp-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
     text-align: center;
 }
 .fslp-logo {
     width: 200px;
-    margin: 50px auto 20px;
+    margin: 140px auto 0;
 }
 .fslp-title {
     font-size: 24px;
     font-family: 'Montserrat', sans-serif;
-    margin-bottom: 20px;
+    margin-top: 25px;
+    margin-bottom: 50px;
 }
 .fslp-button {
     font-family: 'Abyssinica SIL', serif;

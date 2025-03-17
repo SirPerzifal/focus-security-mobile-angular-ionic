@@ -1,51 +1,55 @@
+<app-resident-header [text]="'Docs'"/>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Docs'"/>
   <div class="w-full mt-2 flex items-start ml-4">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
-    <div class="flex flex-row mt-2 justify-start items-center w-full space-x-3">
-      <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" [routerLink]="['/resident-announcement-page']"></app-visitor-button>
-      <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'"></app-visitor-button>
+    <div class="flex flex-row my-2 justify-start items-center w-full space-x-3">
+      <div class="w-full">
+        <app-visitor-button [text]="'Notice'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full'" [routerLink]="['/resident-announcement-page']"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Docs'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full leading-none'"></app-visitor-button>
+      </div>
     </div>
-
-    <div class="w-full space-y-3 mt-3 text-left">
-      <div class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-        <h2 class="font-bold">
-         11th Council Meeting
-        </h2>
-        <table>
-          <tr>
-            <td class="pr-2">
-              Venue
-             </td>
-             <td>
-              : Function Room 2
-             </td>
-          </tr>
-         <tr>
-          <td class="pr-2">
-           Start
-          </td>
-          <td>
-           : 10/11/24, 1700Hrs
-          </td>
-         </tr>
-         <tr>
-          <td class="pr-2">
-           End
-          </td>
-          <td>
-           : 15/12/24, 1930Hrs
-          </td>
-         </tr>
-        </table>
-        <div class="flex justify-end">
-         <ion-icon class="text-yellow-500 text-4xl" name="star">
-         </ion-icon>
+    <nav class="flex px-5 py-3 items-center text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse mb-[10px]">
+        <li class="inline-flex items-center" *ngFor="let name of previousParentNames">
+          <p (click)="backToPreviousparent()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+              {{ name }}
+          </p>
+          <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+          </svg>
+        </li>
+      </ol>
+    </nav>
+    <div class="w-full space-y-3 mt-2 text-left">
+      <div *ngIf="previousParentId || isRoot" class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] pl-1 pr-2.5 py-1.5 rounded" (click)="backToPreviousparent()">
+        <div class="flex items-start">
+          <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-14"></ion-icon>
         </div>
-       </div>
+        <h2 class="font-bold">
+         Back
+        </h2>
+      </div>
+      <div *ngFor="let file of files">
+        <div *ngIf="file.document_type === 'folder'; else otherFile" class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded" (click)="reqParent(file.id, file.name, file.parent_id)">
+          <img class="w-10 h-10 my-2" src="assets/icon/folder-enhance.png" alt="Folder Image"/>
+          <h2 class="font-bold">
+            {{ file.name }}
+          </h2>
+        </div>
+        <ng-template #otherFile>
+          <div class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded" (click)="downloadFile(file.document)">
+            <img class="w-10 h-10 my-2" src="assets/icon/text-icon.png" alt="Folder Image"/>
+            <h2 class="font-bold">
+             {{ file.name }}
+            </h2>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 

@@ -1,0 +1,111 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <app-vms-background />
+  </div>
+
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/alert-main'" [params]="{ticket: true}" />
+    </div>
+
+    <div class="flex flex-row mt-8 mb-4">
+      <div class="w-full mx-4">
+        <div class="w-full">
+          <div class="w-full bg-[var(--ion-color-primary)] p-4 rounded flex flex-col mb-5">
+            <div class="flex flex-col mb-5">
+              <span class="text-2xl font-bold text-white">
+                {{ functionMain.returnNone(alert.ticket_name) }} ( {{ functionMain.returnNone(alert.type_os_issue) }} )
+              </span>
+              <span class="text-xl text-white" [innerHtml]="alert.summary" *ngIf="alert.summary"></span>
+              <span class="text-xl text-white mb-2">
+                <b>REQUESTED BY</b>: {{ functionMain.returnNone(alert.requested_by) }} | {{
+                functionMain.returnNone(alert.created_on) }}
+              </span>
+              <app-image-zoom [imageZoom]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment" [bgColor]="'bg-[var(--ion-color-primary)]'"></app-image-zoom>
+              <!-- <img [src]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment"> -->
+            </div>
+
+            <hr class="" style="height: 20px; border-top: 5px solid white;">
+
+            <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'"
+              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black'"
+              [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"
+              [fileAccept]="'image/*'" (fileSelected)="onUploadImage($event)"></app-file-input>
+            <div class="w-full mt-4">
+              <app-text-input [id]="'reply_message'" [(ngModel)]="reply_message" [labelText]="'REPLY MESSAGE'"
+                [placeholder]="'EG. NEW STATUS IS . . .'" [customClasses]="{'w-full':true}" [type]="'text'"
+                [labelResidentClass]="'text-white text-2xl'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+            </div>
+
+            <div class="flex flex-row space-x-1 w-full">
+              <div class="w-full">
+                <app-visitor-button [text]="'SUBMIT REPLY'"
+                  [extraClass]="'bg-white text-black mt-4 w-full text-2xl h-20 px-2'"
+                  (click)="onReplySubmit(false)"></app-visitor-button>
+              </div>
+              <div class="w-full">
+                <app-visitor-button [text]="'SUBMIT REPLY & CLOSE TICKET'"
+                  [extraClass]="'bg-white text-black mt-4 w-full text-2xl h-20 px-2'"
+                  (click)="onReplySubmit(true)"></app-visitor-button>
+              </div>
+
+            </div>
+
+            <hr class="mt-5" style="height: 20px; border-top: 5px solid white;">
+
+            <div class="w-full flex flex-col space-y-5 mb-5" *ngIf="messages.length > 0; else noMessages">
+              <div *ngFor="let message of messages"
+                class="w-full bg-white p-4 rounded flex justify-between items-center">
+                <div class="flex flex-col items-center mr-3">
+                  <ion-icon size="large" class="text-black size-7" name="chevron-forward-outline"></ion-icon>
+                </div>
+                <div class="flex flex-col w-full">
+                  <div class="flex flex-row w-full justify-between text-xl text-black">
+                    <span>
+                      <b>{{ message.sender_name ? '# ' + message.sender_name : (message.is_vms ? '# VMS Admin' : ( message.is_client ? '#
+                        Client User' : '# Resident User')) }} </b>
+                    </span>
+                    <span style="color: #575757;">
+                      {{ functionMain.returnNone(message.message_datetime) }}
+                    </span>
+                  </div>
+
+                  <span class="text-xl text-black" [innerHtml]="message.body">
+                    <!-- {{ functionMain.returnNone(message.body) }} -->
+                  </span>
+                  <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
+                    <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
+                      <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="'bg-white'"></app-image-zoom>
+                      <!-- <img [src]="functionMain.getImage(attachment.datas)" *ngIf="attachment.mimetype.startsWith('image/')"> -->
+                      <!-- <span>{{ attachment.name}}</span> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <ng-template #noMessages>
+              <div class="w-full flex flex-col space-y-5 mb-5">
+                <div class="w-full bg-white p-4 rounded flex justify-between items-center h-14">
+                  <div class="flex flex-col items-center mr-3">
+                    <ion-icon size="large" class="text-black size-7" name="chevron-forward-outline"></ion-icon>
+                  </div>
+                  <div class="flex flex-col w-full">
+                    <div class="flex flex-row w-full justify-between text-xl text-black">
+                      <span style="color: #575757;">
+                        NO MESSAGE FOUND.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

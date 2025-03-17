@@ -10,8 +10,8 @@ export class FamilyService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
 
-  getFamilyList(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/get/get_family`, {jsonrpc: '2.0', params: {unit_id: 1}})
+  getFamilyList(unit_id: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/resident/get/get_family`, {jsonrpc: '2.0', params: {unit_id: unit_id}})
   }
 
   postFamilyDetail(
@@ -20,6 +20,8 @@ export class FamilyService extends ApiService{
     email_address: string,
     mobile_number: string,
     profile_image: string,
+    familyId: number,
+    unitId: number, // Tambahkan parameter ini
     type_of_residence: string,
     tenancies: Record<string, any>,
     helper_work_permit?: string // Tambahkan parameter ini
@@ -33,7 +35,8 @@ export class FamilyService extends ApiService{
       profile_image,
       type_of_residence,
       tenancies,
-      unit: 1,
+      family_id: familyId, // Tambahkan parameter ini
+      unit: unitId,
       helper_work_permit: ''
     };
   

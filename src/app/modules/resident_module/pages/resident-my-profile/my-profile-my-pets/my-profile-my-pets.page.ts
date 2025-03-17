@@ -57,7 +57,7 @@ export class MyProfileMyPetsPage implements OnInit {
           } else {
             this.presentToast('Maybe you dont have a registered pet or not approved yet.', 'danger');
           }
-          console.log(response);
+          // console.log(response);
         } else {
           this.presentToast('Failed to load pet data', 'danger');
         }
@@ -79,7 +79,7 @@ export class MyProfileMyPetsPage implements OnInit {
           role: 'cancel',
           cssClass:'secondary',
           handler: (blah) => {
-            console.log('Confirm Cancel: blah', blah);
+            // console.log('Confirm Cancel: blah', blah);
           }
         }, {
           text: 'Delete',
@@ -104,7 +104,7 @@ export class MyProfileMyPetsPage implements OnInit {
           } else {
             this.presentToast('Failed to delete pet data', 'danger');
           }
-          console.log(response);
+          // console.log(response);
         } else {
           this.presentToast('Failed to load pet data', 'danger');
         }

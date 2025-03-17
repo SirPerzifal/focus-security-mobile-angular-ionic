@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
 @Component({
   selector: 'app-family-edit-member',
@@ -13,6 +14,7 @@ export class FamilyEditMemberPage implements OnInit {
 
   isModalFamilyEditOpen: boolean = false; // Status modal
   isModalAddFamilyMessageOpen: boolean = false; // Status modal
+  unitId: number = 0;
 
   formData = {
     unit_id: 0,
@@ -31,7 +33,7 @@ export class FamilyEditMemberPage implements OnInit {
   end_of_tenancy = ''
   selectedImageName: string = ''; // New property to hold the selected file name
 
-  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController) {
+  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController, private getUserInfoService: GetUserInfoService) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, };
@@ -45,7 +47,7 @@ export class FamilyEditMemberPage implements OnInit {
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
       this.formData.image_family = state.profile_image
     } 
-    console.log(this.formData)
+    // console.log(this.formData)
   }
 
   mobile_temp = ''
@@ -71,7 +73,7 @@ export class FamilyEditMemberPage implements OnInit {
     if (data) {
       this.selectedImageName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -95,6 +97,10 @@ export class FamilyEditMemberPage implements OnInit {
 
       reader.readAsDataURL(file);
     });
+  }
+
+  changePassDirect() {
+    this.router.navigate(['/change-password'], { state: { formData: this.formData } });
   }
 
   onSubmit() {
@@ -178,7 +184,7 @@ export class FamilyEditMemberPage implements OnInit {
           text: confirmText,
           cssClass: 'confirm-button',
           handler: () => {
-            console.log('Confirmed');
+            // console.log('Confirmed');
             // Logika konfirmasi
             this.onDelete();
             // if (invite) {
@@ -189,7 +195,7 @@ export class FamilyEditMemberPage implements OnInit {
           text: cancelText,
           cssClass: 'cancel-button',
           handler: () => {
-            console.log('Canceled');
+            // console.log('Canceled');
             // Logika pembatalan
           }
         },
@@ -200,16 +206,7 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   private performUpdate() {
-    console.log('Submitting Invitees');
-    console.log(
-      this.formData.unit_id,
-      this.formData.full_name,
-      this.formData.nickname,
-      this.formData.email_address,
-      this.formData.mobile_number,
-      this.formData.type_of_residence,
-      this.formData.type_of_residence == 'tenants' ? this.formData.tenancies : {}
-    );
+    // console.log('Submitting Invitees');
   
     try {
       this.familyService.updateFamilyDetail(
@@ -223,7 +220,7 @@ export class FamilyEditMemberPage implements OnInit {
         this.formData.type_of_residence == 'tenants' ? this.formData.tenancies : {},
       ).subscribe(
         res => {
-          console.log(res);
+          // console.log(res);
           if (res.result.response_code == 200) {
             this.presentToast('Success Edit Record', 'success');
             this.router.navigate(['resident-my-family']);
@@ -247,10 +244,10 @@ export class FamilyEditMemberPage implements OnInit {
 
   getFamilyList() {
     this.familyEditData.pop()
-    this.familyService.getFamilyList().subscribe(
+    this.familyService.getFamilyList(this.unitId).subscribe(
       res => {
         const result = res.result['response_result'];
-        console.log(result);
+        // console.log(result);
         
         // Filter data sesuai dengan kriteria yang diinginkan
         const filteredData = result.filter((item: any) => 
@@ -278,18 +275,18 @@ export class FamilyEditMemberPage implements OnInit {
       if (this.familyEditData.length > 0) {
         // Open modal if there's data
         this.isModalFamilyEditOpen = true;
-        console.log('Opening modal with family data:', this.familyEditData);
+        // console.log('Opening modal with family data:', this.familyEditData);
       } else {
         this.isModalAddFamilyMessageOpen = true;
         // Handle case when there's no data
-        console.log('No family data available to show in the modal.');
+        // console.log('No family data available to show in the modal.');
       }
       },
       error => {
-        console.log(error)
+        // console.log(error)
       }
     )
-    console.log("tes", this.familyEditData)
+    // console.log("tes", this.familyEditData)
   }
 
   selectedFamilyMemberId: number | undefined = 0; // Menyimpan ID anggota keluarga yang dipilih
@@ -299,7 +296,7 @@ export class FamilyEditMemberPage implements OnInit {
     this.familyEditData = [
       { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
     ];
-    console.log(this.formData.unit_id)
+    // console.log(this.formData.unit_id)
     const alertButtons = await this.alertController.create({
       cssClass: 'manage-payment-alert',
       header: `Are you sure you want to delete ${this.formData.full_name}?`,
@@ -337,7 +334,7 @@ export class FamilyEditMemberPage implements OnInit {
         type_of_residence
       ).subscribe(
         res => {
-          console.log(res);
+          // console.log(res);
               if (res.result.response_code == 200) {
                 this.presentToast('Successfully deleted this member.', 'success');
                 this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
@@ -398,7 +395,13 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log("tes");
+    // Ambil data unit dan blok yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
+      this.unitId = value.unit; // Mengambil nilai unit dari objek
+      // // console.log('unit', this.formData.unit_id);
+      // // console.log('block', this.formData.block_id);
+    });
+    // console.log("tes");
     
   }
 

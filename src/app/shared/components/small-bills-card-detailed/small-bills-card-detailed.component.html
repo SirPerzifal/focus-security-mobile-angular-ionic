@@ -1,60 +1,45 @@
-<div [class]="warning ? 'bg-[#E3787E] p-4 rounded-lg w-full mb-2 relative' : 'bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full mb-2 relative'">
-  <div class="absolute w-full flex flex-col items-center ml-0">
+<div [class]="fines.overdue ? 'bg-[#E3787E] p-4 rounded-lg w-full mb-2 relative' : 'bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full mb-2 relative'">
+  <div *ngIf="fines.is_pay" class="flex flex-col items-center z-10 absolute">
     <img
-    alt="IFS360"
-    class="w-24 h-24 mr-[-25px]"
-    src="assets/icon/resident-icon/payment-paid.png"
-  />
+      alt="IFS360"
+      class="w-[8.5rem] h-[7.5rem] mr-[-25px] mt-[30px] ml-[130px]"
+      src="assets/icon/resident-icon/payment-paid.png"
+    />
   </div>
-  <div class="flex flex-row justify-between font-bold items-center">
-    <div class="flex flex-col w-4/6">
+  <div class="flex flex-col font-bold">
+    <div class="flex flex-col w-full">
       <div class="text-base font-extrabold ml-1">
-        {{title}}
+        {{ fines.fines_references }}
       </div>
-      <div *ngIf="desc_title" class="text-base flex flex-col">
+      <div *ngIf="fines.fines_name" class="text-base flex flex-col">
         <div class="ml-1">
-          {{desc_title}}
+          {{ fines.fines_name }}
         </div>
-        <div class="text-base">
+        <div class="text-base cw-3:text-[13px]">
           <table>
-            <tr *ngIf="vehicle_no" class="h-1">
-              <td >Vehicle No</td>
+            <tr class="h-1">
+              <td>Vehicle No</td>
               <td>:</td>
-              <td class="font-thin">{{vehicle_no}}</td>
+              <td class="font-thin">{{ fines.offence_data[0]?.vehicle_number }}</td>
+            </tr>
+            <tr class="h-1">
+              <td>Amount</td>
+              <td>:</td>
+              <td class="font-thin">S${{ fines.total_bill }}</td>
             </tr>
             <tr class="h-1">
               <td>Date of Violation</td>
               <td>:</td>
-              <td class="font-thin">{{violation_date}}</td>
-            </tr>
-            <tr *ngIf="paid_on" class="h-1">
-              <td>Paid On</td>
-              <td>:</td>
-              <td class="font-thin">{{paid_on}}</td>
+              <td class="font-thin">{{ functionMainService.convertToDDMMYYYY(fines.start_date) }}</td>
             </tr>
           </table>
         </div>
-        <!-- <div *ngIf="vehicle_no">
-          Vehicle No: {{vehicle_no}}
-        </div>
-        <div>
-          Date of Violation: {{violation_date}}
-        </div>
-        <div *ngIf="paid_on">
-          Paid On: {{paid_on}}
-        </div> -->
       </div>
-      
     </div>
-    <div class="flex flex-col w-1/4 items-center mr-1">
-      <div class="text-base">
-        {{total}}
-      </div>
-      <button class="bg-[var(--ion-color-primary)] text-white py-2 text-base  rounded-md font-bold w-24">
+    <div class="flex flex-col w-full mt-2">
+      <button *ngIf="!fines.is_pay" class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-24" (click)="payNow(fines.id)">
         Pay Now
       </button>
-      
     </div>
   </div>
-  
 </div>

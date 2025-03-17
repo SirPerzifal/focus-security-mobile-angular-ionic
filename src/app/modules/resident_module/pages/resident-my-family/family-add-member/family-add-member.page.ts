@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 })
 export class FamilyAddMemberPage implements OnInit {
 
-  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router) { }
+  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { }
   selectedImageName: string = ''; // New property to hold the selected file name
   selectedFile = new FormData()
   formData = {
@@ -28,6 +29,8 @@ export class FamilyAddMemberPage implements OnInit {
   }
   fileCheck = false
   dateNow = new Date().toISOString().slice(0, 10);
+  familyId: number = 0;
+  unitId: number = 0;
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
     const toast = await this.toastController.create({
@@ -81,12 +84,14 @@ export class FamilyAddMemberPage implements OnInit {
           this.formData.email_address,
           this.formData.mobile_number,
           this.formData.image_family,  // Tambahkan ini
+          this.familyId,
+          this.unitId,
           this.formData.type_of_residence,
           this.formData.type_of_residence === 'tenants' ? this.formData.tenancies : {},
           this.formData.type_of_residence === 'helper' ? this.formData.helper_work_permit : '' // Tambahkan ini
         ).subscribe(
           res => {
-            console.log(res);
+            // console.log(res);
             if (res.result.response_code == 200) {
               this.presentToast('Success Add Record', 'success');
               this.router.navigate(['resident-my-family']);
@@ -123,7 +128,7 @@ export class FamilyAddMemberPage implements OnInit {
     if (data) {
       this.selectedImageName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -138,14 +143,14 @@ export class FamilyAddMemberPage implements OnInit {
   }
 
   onTenanciesChange(value: any): void {
-    console.log(value)
-    console.log(value.target)
-    console.log(value.target.files)
-    console.log(value.target.files[0])
+    // console.log(value)
+    // console.log(value.target)
+    // console.log(value.target.files)
+    // console.log(value.target.files[0])
     let data = value.target.files[0];
     if (data){
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.tenancies.tenancy_aggrement = base64.split(',')[1]
         this.fileCheck = true
       }).catch(error => {
@@ -161,7 +166,7 @@ export class FamilyAddMemberPage implements OnInit {
     const file = value.target.files[0];
     if (file) {
       this.convertToBase64(file).then((base64: string) => {
-        console.log('Base64 conversion successful');
+        // console.log('Base64 conversion successful');
         this.formData.helper_work_permit = base64.split(',')[1]; // Simpan base64 ke dalam formData
         this.fileCheck = true; // Menandakan bahwa file telah di-upload
       }).catch(error => {
@@ -201,7 +206,7 @@ export class FamilyAddMemberPage implements OnInit {
         this.selectedFile
       ).subscribe(
         res => {
-          console.log(res);
+          // console.log(res);
           if (res.result.response_code == 200) {
             this.presentToast('Success Add Record', 'success');
             this.router.navigate(['resident-my-family']);
@@ -220,6 +225,14 @@ export class FamilyAddMemberPage implements OnInit {
   }
 
   ngOnInit() {
+    this.getUserInfoService.getPreferenceStorage(['family', 'unit']).then((value: any) => {
+      if (value) {
+        this.familyId = value.family;
+        this.unitId = value.unit;
+        // console.log(this.familyId, this.unitId);
+        
+      }
+    })
   }
 
 }

@@ -30,9 +30,9 @@ export class HistoryCardComponent implements OnInit {
     banned: boolean;
     id: number;
   };
+  @Input() hideResinstateButton: string = '';
 
   ngOnInit() {
-    // console.log(this.historyData)
   }
 
   openDetails() {

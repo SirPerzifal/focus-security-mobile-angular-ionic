@@ -21,29 +21,49 @@
         <label class="text-2xl font-bold">{{record.facility}}</label>
         <table class="text-2xl">
           <tr>
-            <td class="font-bold w-2/5">BOOKING DATE</td>
+            <td class="font-bold w-[45%]">BOOKING DATE</td>
             <td class="w-[5%]">:</td>
             <td>{{ getBookingTime(record) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">BOOKED BY</td>
+            <td class="font-bold w-[45%]">BOOKED BY</td>
             <td class="w-[5%]">:</td>
             <td>{{record.booked_by ? record.booked_by : '-'}}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">RESIDENT NAME</td>
+            <td class="font-bold w-[45%]">RESIDENT NAME</td>
             <td class="w-[5%]">:</td>
             <td>-</td>
           </tr>
           <!-- <tr>
-            <td class="font-bold w-2/5">RESIDENT CONTACT NO</td>
+            <td class="font-bold w-[45%]">RESIDENT CONTACT NO</td>
             <td class="w-[5%]">:</td>
             <td>-</td>
           </tr> -->
           <tr>
-            <td class="font-bold w-2/5">BLOCK & UNIT</td>
+            <td class="font-bold w-[45%]">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td> 
             <td>{{record.block_id ? record.block_id : '-' }} | {{ record.unit_id  ? record.unit_id : '-' }}</td>
+          </tr>
+          <tr *ngIf="record.resident_check_in">
+            <td class="font-bold w-[45%]">RESIDENT CHECKED IN</td>
+            <td class="w-[5%]">:</td>
+            <td>SIGNED</td>
+          </tr>
+          <tr *ngIf="record.resident_check_out">
+            <td class="font-bold w-[45%]">RESIDENT CHECKED OUT</td>
+            <td class="w-[5%]">:</td>
+            <td>SIGNED</td>
+          </tr>
+          <tr *ngIf="record.officer_check_in">
+            <td class="font-bold w-[45%]">OFFICER CHECKED IN</td>
+            <td class="w-[5%]">:</td>
+            <td>SIGNED</td>
+          </tr>
+          <tr *ngIf="record.officer_check_out">
+            <td class="font-bold w-[45%]">OFFICER CHECKED OUT</td>
+            <td class="w-[5%]">:</td>
+            <td>SIGNED</td>
           </tr>
         </table>
         <div class="flex flex-col justify-around w-full">

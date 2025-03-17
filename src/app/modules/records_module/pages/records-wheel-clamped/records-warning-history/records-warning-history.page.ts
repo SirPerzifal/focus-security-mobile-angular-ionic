@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-warning-history',
@@ -10,21 +12,36 @@ export class RecordsWarningHistoryPage implements OnInit {
 
   vehicle: any = {}
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
+
+  ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any};
     if (state) {
       this.vehicle = state.vehicle
       this.vehicle_number = state.vehicle.vehicle_number
+      this.loadProjectName().then(() => {
+        this.getOffenceCount()
+      })
     } 
-   }
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
       this.params = params
     })
+    console.log(this.vehicle)
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   params: any
   pageType = 'wheel_clamp'
@@ -36,14 +53,48 @@ export class RecordsWarningHistoryPage implements OnInit {
   first_issued = '4'
   second_issued = '4'
   wheel_clamp = '4'
-  last_offence = '24/12/2024'
+  last_offence = ''
 
   onClickDetails() {
     this.router.navigate(['records-warning-detail'], {
       state: {
-        vehicle: this.vehicle
+        vehicle: this.vehicle,
+        offence_detail: this.offence_detail
       },
       queryParams: this.params
+    });
+  }
+
+  async onBlacklist() {
+    if(this.vehicle.vehicle_number == '' && this.vehicle.contact_number == ''){
+      this.functionMain.presentToast("Unable to ban data that is missing a vehicle number and contact number!")
+    } else {
+      this.router.navigate(['/records-blacklist-form'], {
+        state: {
+          record: this.vehicle,
+          is_ban_record: false,
+          type: this.pageType,
+          is_ban_notice: true,
+        }
+      })
+    }
+  }
+
+  offence_detail: any = []
+
+  getOffenceCount() {
+    this.mainVmsService.getApi({vehicle_number: this.vehicle_number, project_id: this.project_id}, '/vms/get/offenses_count_based_on_vehicle_number').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.offence_detail = results.result.response_result
+        } else {
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while fetching offence count!', 'danger');
+        console.error(error);
+      }
     });
   }
 

@@ -59,8 +59,8 @@ export class MyVehicleFormPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
       this.MaximumVehicle = navigation.extras.state['maximumVehicle']; // Perbaikan di sini
-      console.log(navigation.extras.state['maximumVehicle'])
-      console.log(this.MaximumVehicle)
+      // console.log(navigation.extras.state['maximumVehicle'])
+      // console.log(this.MaximumVehicle)
     }
   }
 
@@ -72,7 +72,7 @@ export class MyVehicleFormPage implements OnInit {
           this.FamilyMember = response.result.family_data;
         } else {
           // this.presentToast('Failed to load vehicle data', 'danger');
-          console.log("gaada data");
+          // console.log("gaada data");
           
         }
       },
@@ -87,7 +87,7 @@ export class MyVehicleFormPage implements OnInit {
     this.myVehicleFormService.getVehicleMakeAndType().subscribe({
       next: (response: any) => {
         if (response.result.response_code === 200) {
-          console.log(response.result)
+          // console.log(response.result)
           this.vehicleMakes = response.result.vehicle_makes;
           this.vehicleTypes = response.result.vehicle_types;
           this.vehicleColours = response.result.vehicle_colors;
@@ -107,7 +107,7 @@ export class MyVehicleFormPage implements OnInit {
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
-          console.log(response)
+          // console.log(response)
         } else {
           this.presentToast('Failed to load vehicle data', 'danger');
         }
@@ -124,7 +124,7 @@ export class MyVehicleFormPage implements OnInit {
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Unit = response.result.result; // Simpan data unit
-          console.log(response)
+          // console.log(response)
         } else {
           this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);

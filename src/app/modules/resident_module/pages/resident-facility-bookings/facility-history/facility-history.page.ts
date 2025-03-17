@@ -1,18 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
+import { Subscription } from 'rxjs';
 
-interface BookingData {
-  facility_name: string;
-  event_date: string;
-  start_time: string;
-  end_time: string;
-  booking_fee: number;
-  deposit: number;
-  booked_by: string;
-  status: string;
-}
+import { BookingData } from 'src/models/resident/facility.model';
+import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
 @Component({
   selector: 'app-facility-history',
@@ -30,7 +24,8 @@ interface BookingData {
     ])
   ]
 })
-export class FacilityHistoryPage implements OnInit {
+export class FacilityHistoryPage implements OnInit, OnDestroy {
+  isLoading: boolean = true;
   unit_id: string = '1';
   showMainContent = true;
   showDetailContent = false;
@@ -52,7 +47,17 @@ export class FacilityHistoryPage implements OnInit {
   endDate: string = '';
   bookingList: any[] = [];
 
-  constructor(private router: Router, private facilityBookingService: FacilityBookingsService,) { }
+  constructor(private router: Router, private facilityBookingService: FacilityBookingsService, private getUserInfoService: GetUserInfoService) { }
+
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unit_id = parseValue.unit_id;
+        this.loadHistoryBookings();
+      }
+    })
+  }
 
   formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -117,7 +122,7 @@ export class FacilityHistoryPage implements OnInit {
               facilityName: booking.facility || 'Unknown Facility',
               eventDate: this.formatDate(booking.event_date || booking.start_datetime.split(' ')[0]),
               eventDay: this.getDayName(new Date(booking.booking_date || booking.start_datetime)),
-              bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datetime)}`,
+              bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
               bookingFee: booking.booking_fee || 0,
               deposit: booking.deposit || 0,
               bookedBy: booking.booked_by || 'Unknown',
@@ -129,6 +134,9 @@ export class FacilityHistoryPage implements OnInit {
             // Set booking list awal
             this.bookingList = [...this.originalBookingList];
             this.filteredBookingList = [...this.originalBookingList];
+            this.isLoading = false;
+            // console.log(response.result, this.isLoading);
+            
           } else {
             this.originalBookingList = [];
             this.bookingList = [];
@@ -164,38 +172,10 @@ export class FacilityHistoryPage implements OnInit {
     // Potong detik jika perlu
     return timePart ? timePart.substring(0, 5) : '';
   }
-  
-  // Utility method untuk mapping status
-  // mapStatus(status: string): string {
-  //   const statusMap: { [key: string]: string } = {
-  //     'draft': 'Pending',
-  //     'confirmed': 'Approved',
-  //     'cancelled': 'Rejected',
-  //     // Tambahkan mapping status lain sesuai kebutuhan
-  //   };
-    
-  //   return statusMap[status.toLowerCase()] || status;
-  // }
-  
-  // Utility method untuk mengonversi tanggal ke nama hari
+
   getDayName(date: Date): string {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[date.getDay()];
-  }
-
-  ngOnInit() {
-    console.log('tes')
-    this.loadHistoryBookings();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/facility-history'){
-          console.log('tes')
-          this.bookingList = []
-          this.loadHistoryBookings();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
-      }
-    });
   }
 
   toggleShowActBk() {
@@ -241,6 +221,13 @@ export class FacilityHistoryPage implements OnInit {
 
   proceedToEmail() {
     // Logika untuk mengirim email
-    console.log('Sending email for booking:', this.bookingDetails);
+    // console.log('Sending email for booking:', this.bookingDetails);
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 }

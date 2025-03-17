@@ -19,6 +19,10 @@ import { VmsBackgroundComponent } from './vms-background/vms-background.componen
 import { VmsContactInputComponent } from './vms-contact-input/vms-contact-input/vms-contact-input.component';
 import { SignaturePadComponent } from './signature-pad/signature-pad.component';
 import SignaturePad from 'signature_pad';
+import { FilterableSelectComponent } from './filterable-select/filterable-select.component';
+import { M2mSelectionComponent } from './m2m-selection/m2m-selection.component';
+import { M2mSelectionReadonlyComponent } from './m2m-selection-readonly/m2m-selection-readonly.component';
+import { ImageZoomComponent } from './image-zoom/image-zoom.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +41,10 @@ import SignaturePad from 'signature_pad';
     VmsBackgroundComponent,
     VmsContactInputComponent,
     SignaturePadComponent,
+    FilterableSelectComponent,
+    M2mSelectionComponent,
+    M2mSelectionReadonlyComponent,
+    ImageZoomComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +67,10 @@ import SignaturePad from 'signature_pad';
     VmsBackgroundComponent,
     VmsContactInputComponent,
     SignaturePadComponent,
+    FilterableSelectComponent,
+    M2mSelectionComponent,
+    M2mSelectionReadonlyComponent,
+    ImageZoomComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'House Rules'" [text_second]="''" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4 space-y-3 mt-4">
+    <div class="w-full flex flex-row justify-between mb-2 items-start">
+      <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientTicketNewAttachment accept="application/pdf"
+        class="hidden" />
+      <div class="w-4/6">
+        <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+          class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer" readonly/>
+      </div>
+      <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
+        class="bg-[var(--ion-color-secondary)] text-black w-[30%] h-12 text-base rounded font-bold">
+        Upload
+      </button>
+    </div>
+    <div *ngIf="documentList.length > 0; else noDocument" class="flex flex-col space-y-3">
+      <div class="flex flex-col" *ngFor="let document of documentList">
+        <span class="text-xl text-[#4653A9] font-bold"
+          (click)="downloadDocument(document.documents, document.name)"><u>{{ document.name }}</u></span>
+        <span class="text-base font-bold">Last uploaded: {{ functionMain.convertToDDMMYYYY(document.upload_date) }}</span>
+      </div>
+    </div>
+    <ng-template #noDocument>
+      <div class="w-full bg-transparent text-center rounded-lg">
+        <p class="text-gray-600">There are no documents.....</p>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <!-- ############################### -->
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

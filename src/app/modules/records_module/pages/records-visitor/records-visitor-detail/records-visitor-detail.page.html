@@ -9,6 +9,7 @@
     </div>
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <span class="text-3xl font-bold mt-2" *ngIf="blacklist.length > 0">BANNED</span>
         <table class="text-2xl">
           <tr *ngIf="pageType == 'visitor'">
             <td class="font-bold w-2/5">VISITOR NAME</td>
@@ -28,12 +29,12 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ returnNone(functionMain.convertToDDMMYYYY(record.entry_datetime.split(' ')[0]) ) }}</td>
+            <td>{{ record.entry_datetime ? record.entry_datetime.split(' ')[0] : '-' }}</td>
           </tr>         
           <tr>
             <td class="font-bold w-2/5">ENTRY TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ returnNone(record.entry_datetime.split(' ')[1]) }}</td>
+            <td>{{ record.entry_datetime ? record.entry_datetime.split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">VISITING BLOCK & UNIT</td>
@@ -59,15 +60,21 @@
             <td class="font-bold w-2/5" >PREVIOUS WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.warning_issued) }}</td>
-          </tr> 
+          </tr>
+          <tr *ngIf="record.requestor">
+            <td class="font-bold w-2/5">Requestor</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ returnNone(record.requestor) }}</td>
+          </tr>
         </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 ">CALL VISITOR</button>
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL RESIDENT</button>
           </div>
-          <div class="flex flex-row w-full justify-around mb-4">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">BLACKLIST VISITOR</button>
+          <div class="flex flex-row w-full justify-around mb-4" >
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onBlacklist()" *ngIf="blacklist.length == 0">BLACKLIST VISITOR</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onLiftBan()" *ngIf="blacklist.length > 0">LIFT BAN</button>
           </div>
         </div>
       </div>

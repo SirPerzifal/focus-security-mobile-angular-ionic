@@ -49,7 +49,7 @@ export class MyVehicleDetailPage implements OnInit {
     cancelText: string = 'Cancel', 
     vehicleId?: number  // Jadikan optional
   ) {
-    console.log(vehicleId)
+    // console.log(vehicleId)
     const alert = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
       header: header,
@@ -59,13 +59,13 @@ export class MyVehicleDetailPage implements OnInit {
           text: confirmText,
           cssClass: 'confirm-button',
           handler: () => {
-            console.log('Confirmed');
+            // console.log('Confirmed');
             // Logika konfirmasi
             if (vehicleId) {
               this.myVehicleDetailService.deleteVehicle(vehicleId).subscribe(
                 response => {
                   if (response.result.response_code === 200) {
-                    console.log("Vehicle deleted successfully", response);
+                    // console.log("Vehicle deleted successfully", response);
                     this.backToVehicle();
                   } else {
                     console.error('Error deleting vehicle:', response);
@@ -87,7 +87,7 @@ export class MyVehicleDetailPage implements OnInit {
           text: cancelText,
           cssClass: 'cancel-button',
           handler: () => {
-            console.log('Canceled');
+            // console.log('Canceled');
           }
         },
       ]

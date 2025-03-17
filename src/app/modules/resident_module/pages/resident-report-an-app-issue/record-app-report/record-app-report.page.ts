@@ -17,7 +17,7 @@ export class RecordAppReportPage implements OnInit {
   constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router) { }
 
   ngOnInit() {
-    console.log("tes");
+    // console.log("tes");
     this.loadTicketFromBackend();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
@@ -36,18 +36,27 @@ export class RecordAppReportPage implements OnInit {
       this.isReportApp
     ).subscribe(
       (response) => {
-        console.log(response);
+        // console.log(response);
         if (response.result.response_code === 200) {
           this.allData = response.result.result;
-          this.presentToast(response.result.message, 'success');
+          // this.presentToast(response.result.message, 'success');
         } else {
-          this.presentToast(response.result.error_message, 'danger');
+          // this.presentToast(response.result.error_message, 'danger');
         }
       },
       (error) => {
-        this.presentToast(error.error.message, 'danger');
+        // this.presentToast(error.error.message, 'danger');
       }
     );
+  }
+
+  seeDetail(ticket: any) {
+    // // console.log(ticket);
+    this.router.navigate(['/issue-app-detail'], {
+      state: {
+        ticketDetail: ticket
+      }
+    });
   }
 
   private routerSubscription!: Subscription;

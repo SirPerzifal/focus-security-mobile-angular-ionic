@@ -2,25 +2,56 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Injectable,inject } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from '../resident/authenticate/authenticate.service';
+import { FunctionMainService } from '../function/function-main.service';
 
 
 export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
+  const functionMain = inject(FunctionMainService) 
 
   const tokenData = await Preferences.get({ key: 'USER_INFO' });
-
+  
   if (!tokenData.value) {
-    router.navigate(['/login-end-user']);
-    return false;
+    
+    if(state.url=='/'){
+      return true;
+    }else if(state.url!='/login-end-user'){
+      router.navigate(['/login-end-user']);
+      return false;
+    }else{
+      return true;
+    }
   }
 
   const isTokenValid = authService.isTokenValid(tokenData.value);
   
+  
   if (!isTokenValid) {
     await Preferences.remove({ key: 'USER_INFO' });
-    router.navigate(['/login-end-user']);
-    return false;
+    if(state.url=='/'){
+      return true;
+    }else if(state.url!='/login-end-user'){
+      router.navigate(['/login-end-user']);
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  if(state.url=='/' || state.url=='/login-end-user'){
+    await functionMain.vmsPreferences().then((value) => {
+      if (value.is_resident) {
+        router.navigate(['/resident-homepage']);
+      } else if (value.is_vms) {
+        router.navigate(['/home-vms']);
+      } else if (value.is_client) {
+        router.navigate(['/client-main-app']);
+      } else {
+        router.navigate(['/']);
+      }
+    })
+    return false
   }
 
   return true;

@@ -18,27 +18,27 @@
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF 1ST WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
-            <td>{{ first_issued }}</td>
+            <td>{{ offence_detail.total_first_warning_offences }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF 2ND WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
-            <td>{{ second_issued }}</td>
+            <td>{{ offence_detail.total_second_warning_offences }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF WHEEL CLAMPS</td>
             <td class="w-[5%]">:</td>
-            <td>{{ wheel_clamp }}</td>
+            <td>{{ offence_detail.total_wheel_clamp_offences }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-[60%]">LSAT OFFENCE DATE</td>
+            <td class="font-bold w-[60%]">LAST OFFENCE DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ last_offence }}</td>
+            <td>{{ offence_detail.last_issued_datetime }}</td>
           </tr>
         </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">BLACKLIST VEHICLE</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onBlacklist()">BLACKLIST VEHICLE</button>
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">ALERT NEXT VISIST</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4">

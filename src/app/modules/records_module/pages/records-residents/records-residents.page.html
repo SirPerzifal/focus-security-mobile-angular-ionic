@@ -39,21 +39,24 @@
                 <option value="" selected disabled hidden>CHOOSE UNIT</option>
                 <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
               </select> -->
-              <app-text-input #recordResidentUnitFilter [id]="'record_resident_unit_filter'"
+              <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+                [labelText]="'UNIT'"></app-m2m-selection>
+              <!-- <app-text-input #recordResidentUnitFilter [id]="'record_resident_unit_filter'"
                   [labelText]="'UNIT'" [placeholder]="'UNIT 0101'" [customClasses]="{'w-full ':true}"
                   [type]="'text'" [(ngModel)]="filter.unit" (change)="onUnitChange($event)" [isReadonly]="!filter.block"
                   [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-                </app-text-input>
+                </app-text-input> -->
                 <div class="w-full">
                   <label class="text-2xl float-end" (click)="clearFilters()"><u><b>CLEAR FILTER</b></u></label>
                 </div>
             </div>
           </div>
+          
 
-          <div class="flex flex-col w-full space-y-5">
-            <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let log of historyVehicles" >
+          <div class="flex flex-col w-full space-y-5" *ngIf="filter.block != '' || filter.unit != ''">
+            <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let log of historyVehicles" (click)="onArrowClick(log)">
               <span class="text-2xl font-bold text-white">{{ log.resident_name }}</span>
-              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" (click)="onArrowClick(log)"></ion-icon>
+              <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" ></ion-icon>
             </div>
           </div>
         </div>

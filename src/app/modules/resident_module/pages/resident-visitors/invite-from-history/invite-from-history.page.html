@@ -1,5 +1,7 @@
-<ion-content [fullscreen]="true">
+<ion-header>
 	<app-resident-header [text]="'Visitors'" [text_second]="'Invite From History'" />
+</ion-header>
+<ion-content [fullscreen]="true">
 	<div class="w-full flex items-start justify-start mt-2 ml-3">
 		<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/invite-form']"></ion-icon>
 	</div>
@@ -7,13 +9,13 @@
 	<div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-col mt-3">
       <u class="text-ls font-bold">Invitee History List</u>
-      <div id="data">
+      <div id="data" class="h-[35rem] overflow-y-auto">
         <div *ngFor="let invitee of historyData" class="w-full flex justify-between flex-row mt-2">
-          <div class="w-11/12">
+          <div class="w-full flex justify-between">
             <!-- <div class="flex flex-row justify-start">
               <p class="text-base font-bold">Name on the List</p>
             </div> -->
-            <div class="flex">
+            <div class="flex justify-between">
               <app-text-input 
                 [id]="'invf_name'" 
                 [placeholder]="'Name'" 
@@ -29,13 +31,13 @@
                   'h-12': true, 
                   'mt-1': true, 
                   'text-base': true, 
-                  'text-grey-100': invitee.is_banned,
-                  'outline-grey-100': invitee.is_banned
+                  'text-red-100': invitee.is_banned,
+                  'outline-red-100': invitee.is_banned
                 }" 
                 [value]="invitee.visitor_name" 
                 [isReadonly]="true">
               </app-text-input>
-              <div class="flex items-center ml-4">
+              <div class="flex items-center ml-5">
                 <input 
                   id="checked-checkbox"
                   (change)="toggleSelect(invitee)"
@@ -57,5 +59,7 @@
     </div>
 	</div>
 	<!-- ############################### -->	  
-	 <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

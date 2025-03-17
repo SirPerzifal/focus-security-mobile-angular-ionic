@@ -12,30 +12,44 @@ export class MoveInOutService extends ApiService{
 
   constructor(http: HttpClient) {super(http)}
 
-  getMoveInOutSchedules(): Observable<any> {
+  getMoveInOutSchedules(project_id: number): Observable<any> {
     let apiUrl = this.baseUrl + '/vms/get/move_in_out_schedule'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    console.log(this.http.post(apiUrl, {}, { headers }))
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        project_id: project_id
+      }
+    }
 
-    return this.http.post(apiUrl, {}, { headers }).pipe(
+    console.log(apiUrl, body, { headers })
+
+    return this.http.post(apiUrl, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getMoveInOutSchedulesHistory(): Observable<any> {
+  getMoveInOutSchedulesHistory(project_id: number): Observable<any> {
     let apiUrl = this.baseUrl + '/vms/get/move_in_out_schedule_history'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    console.log(this.http.post(apiUrl, {}, { headers }))
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        project_id: project_id
+      }
+    }
 
-    return this.http.post(apiUrl, {}, { headers }).pipe(
+    console.log(this.http.post(apiUrl, body, { headers }))
+
+    return this.http.post(apiUrl, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

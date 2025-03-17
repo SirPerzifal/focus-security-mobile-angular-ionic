@@ -6,8 +6,12 @@
 
   <div class="px-5 text-center mb-20">
     <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
-        <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none cw-4:text-sm'"></app-visitor-button>
-        <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32 cw-4:text-sm'" [routerLink]="['/rejected-request']"></app-visitor-button>
+      <div class="w-full">
+        <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full leading-none cw-4:text-sm'"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full cw-4:text-sm'" [routerLink]="['/rejected-request']"></app-visitor-button>
+      </div>
     </div>
 
     <div class="space-y-4 w-full mt-2">

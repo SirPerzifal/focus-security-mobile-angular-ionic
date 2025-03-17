@@ -1,0 +1,43 @@
+<ion-content class="ion-padding h-full flex flex-col">
+  <!-- Video Background -->
+  <div class="absolute inset-0 overflow-hidden -z-50">
+    <video 
+      autoplay 
+      loop 
+      muted 
+      playsinline 
+      class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
+    >
+      <source src="assets/tes_back.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+<ion-icon class="text-2xl" name="arrow-back-outline" [routerLink]="['']">
+</ion-icon>
+<div class="fslp-container">
+  <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png"/>
+  <h2 class="fslp-title font-bold text-[var(--ion-color-primary)]">
+   Welcome To iFS360 APP
+  </h2>
+  <div>
+    <app-text-input [id]="'email'" [placeholder]="'Sample@example.com'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [value]="existUser.params.login" (valueChange)="onLoginChange($event)"></app-text-input>
+  </div> 
+  <div class="mt-2">
+    <app-text-input [id]="'password'" [placeholder]="'Password'" [customClasses]="{'w-full':true}" [type]="'password'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [value]="existUser.params.password" (valueChange)="onPasswordChange($event)"></app-text-input>
+  </div> 
+  <div class="fsles-button-container mt-5">
+    <ion-button fill="clear" [ngClass]="(existUser.params.login && existUser.params.password) ? 'fslp-button w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 fslp-button-disabled w-full'" (click)="login()">
+     Log In
+    </ion-button>
+    <br/>
+    <!-- <ion-button fill="clear" [ngClass]="(existUser.params.login && existUser.params.password) ? 'fslp-button w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 fslp-button-disabled w-full'" (click)="loginCommercial()">
+     Log In (Commersial)
+    </ion-button> -->
+  </div>
+  <div class="flex items-center mt-5">
+    <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    <label for="checked-checkbox" class="ms-2 fsles-bottom text-xs font-medium text-gray-900 dark:text-gray-300">Stay Logged In</label>
+  </div>
+  <!-- <p class="mt-6 text-xs text-center text-gray-300 fsles-bottom">New User? <a href="/register" class="text-xs text-blue-500 fsles-bottom hover:underline">Register Now</a></p> -->
+ </div>
+</ion-content>

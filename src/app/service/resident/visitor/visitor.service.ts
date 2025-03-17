@@ -33,6 +33,7 @@ export class VisitorService extends ApiService{
     this.inviteeFormList = [];
   }
   postCreateExpectedVisitors(
+    family_id: number,
     date_of_visit: Date, 
     entry_type: string, 
     entry_title: string,
@@ -60,7 +61,8 @@ export class VisitorService extends ApiService{
           is_provide_unit,
           invitees,
           hired_car,
-          unit: 1, 
+          unit: unit, 
+          family_id,
         }
       },
       {headers}
@@ -70,8 +72,8 @@ export class VisitorService extends ApiService{
     return res
   }
 
-  getActiveInvites(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resident/get/active_invites`, {jsonrpc: '2.0', params: {unit_id: 1}})
+  getActiveInvites(unitId: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/resident/get/active_invites`, {jsonrpc: '2.0', params: {unit_id: unitId}})
   }
 
   postCancelVisitor(

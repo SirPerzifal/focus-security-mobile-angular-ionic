@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2">
+    <div id="nav_tabs_main">
+      <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
+    </div>
+    <div id="sub_nav_tabs">
+      <app-nav-tabs [buttons]="navButtonsSub"></app-nav-tabs>
+    </div>
+    <div id="form" class="flex flex-col w-full mt-4">
+      <app-input-component [id]="'choose_entry_date_field'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="'Entry Details'" [labelChild1]="'Entry Date'" [labelChild2]="'Entry date'"></app-input-component>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

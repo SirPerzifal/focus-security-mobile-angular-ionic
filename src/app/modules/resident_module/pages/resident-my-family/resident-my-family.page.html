@@ -1,5 +1,5 @@
+<app-resident-header [text]="'My Family'" />
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'My Family'" />
   <div class="w-1/6 flex items-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
   </div>
@@ -12,7 +12,10 @@
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
-          <div class="flex flex-col w-full justify-start space-y-2">
+          <div *ngIf="isLoading" class="flex justify-center items-center h-[50%] mt-24">
+            <ion-spinner name="circular"></ion-spinner>
+          </div>
+          <div *ngIf="!isLoading" class="flex flex-col w-full justify-start space-y-2">
             <div *ngFor="let data of familyData">
               <app-family-card 
                 [id]="data.id"

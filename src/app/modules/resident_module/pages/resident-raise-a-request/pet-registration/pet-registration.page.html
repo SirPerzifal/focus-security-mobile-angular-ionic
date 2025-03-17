@@ -60,13 +60,11 @@
         type="text" name="notes_for_management" [(ngModel)]="formData.notes">
       </textarea>
     </div>
-    <div class="flex flex-row mt-3 text-base">
-      <app-checkbox-confirmation 
-        [label]="'I agree to the terms above'" 
-        [(checked)]="agreementChecked" 
-        (click)="onCheck(false)"
-        [customClass]="'mr-1 rounded font-bold'">
-      </app-checkbox-confirmation>
+    <div class="flex flex-row mt-4 text-base">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
+        <p class="text-start">I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above</p>
+      </label>
     </div>
     <button 
       [disabled]="!agreementChecked"

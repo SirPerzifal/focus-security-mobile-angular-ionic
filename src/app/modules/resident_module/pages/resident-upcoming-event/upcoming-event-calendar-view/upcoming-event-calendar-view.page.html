@@ -1,13 +1,17 @@
+<app-resident-header [text]="'Upcoming Events'" [text_second]="'Calendar View'"/>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Upcoming Events'" [text_second]="'Calendar View'"/>
   <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-48">
     <div class="flex flex-row justify-start items-center w-full space-x-3">
-      <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32'" (click)="toggleDirecttoHis()"></app-visitor-button>
-      <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32 leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      <div class="w-full">
+        <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'" (click)="toggleDirecttoHis()"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      </div>
     </div>
     <div class="h-full w-full mt-2">
       <div class="flex flex-row justify-between items-center w-full">

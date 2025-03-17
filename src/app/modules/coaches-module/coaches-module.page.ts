@@ -73,7 +73,6 @@ export class CoachesModulePage implements OnInit {
             this.filteredHistorySchedules = this.historySchedules
           }   
         } else {
-          this.presentToast('An error occurred while loading overnight parking data!', 'danger');
         }
 
         // this.isLoading = false;
@@ -172,10 +171,7 @@ export class CoachesModulePage implements OnInit {
   }
 
   onBlockChange(event: any) {
-    console.log(event.target.value)
     this.choosenBlock = event.target.value;
-    console.log(this.choosenBlock)
-    console.log(new Date('2024-12-24'))
     this.applyFilters()
   }
 

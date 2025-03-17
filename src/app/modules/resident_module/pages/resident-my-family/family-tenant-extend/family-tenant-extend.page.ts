@@ -50,7 +50,7 @@ export class FamilyTenantExtendPage implements OnInit {
     let data = value.target.files[0];
     if (data){
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.tenancies.tenancy_aggrement = base64.split(',')[1]
         this.fileCheck = true
       }).catch(error => {
@@ -60,7 +60,7 @@ export class FamilyTenantExtendPage implements OnInit {
     } else {
       this.fileCheck = false
     }
-    console.log(this.fileCheck)
+    // console.log(this.fileCheck)
   }
 
   convertToBase64(file: File): Promise<string> {
@@ -98,15 +98,7 @@ export class FamilyTenantExtendPage implements OnInit {
   }  
 
   onSubmit() {
-    console.log('Submitting Invitees');
-    console.log(
-      this.formData.unit_id,
-      this.formData.full_name,
-      this.formData.nickname,
-      this.formData.email_address,
-      this.formData.mobile_number,
-      this.formData.type_of_residence,
-      this.formData.tenancies)
+
     let errMsg = ''
     if (this.formData.tenancies.tenancy_aggrement == '') {
       errMsg += "Please upload the tenancy agreement! \n"
@@ -129,7 +121,7 @@ export class FamilyTenantExtendPage implements OnInit {
           this.formData.tenancies,
         ).subscribe(
           res => {
-            console.log(res);
+            // console.log(res);
             if (res.result.response_code == 200) {
               this.presentToast('Success Edit Record', 'success');
               this.router.navigate(['resident-my-family']);

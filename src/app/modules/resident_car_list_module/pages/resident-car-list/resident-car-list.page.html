@@ -8,27 +8,27 @@
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
     <div class="flex flex-row mt-8">
-        <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true"
-        [disableClick]="true" [routerLink]="['/home-vms']" />
+      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true"
+        [routerLink]="['/home-vms']" />
     </div>
     <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customNameIcon]="'faSearch'" [text]="'SEARCH BY VEHICLE NO'" [isActive]="showSearch"
         [disableClick]="true" />
 
-      <app-button-icon [customNameIcon]="'faCamera'" [text]="'OPEN CAMERA'" *ngIf="showSearch" [isActive]="false" (click)="takeVehicleLicense()"
-        [disableClick]="true" />
+      <app-button-icon [customNameIcon]="'faCamera'" [text]="'OPEN CAMERA'" [isActive]="false"
+        (click)="takeVehicleLicense()" [disableClick]="true" [isActive]="!showSearch" />
     </div>
-    <div @fadeInOut class="flex flex-row" *ngIf="showSearch">
+    <div @fadeInOut class="flex flex-row">
       <div class="flex flex-row justify-between w-full mt-8 gap-x-6 mx-4">
         <div class="w-4/6">
-          <app-text-input [id]="'search_by_vehicle_no'" [labelText]="'VEHICLE NO'" [placeholder]="'EG. SAA 9222 V'"
+          <app-text-input [id]="'search_by_vehicle_no'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SAA 9222 V'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="vehicleNumber"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="flex flex-col justify-end w-1/4 ">
           <button id="middle_button"
             class="bg-[var(--ion-color-primary)] w-full text-white text-2xl font-bold rounded h-20"
-            (click)="toggleShowSearch()">SEARCH</button>
+            (click)="onSearch(vehicleNumber)">SEARCH</button>
         </div>
 
       </div>
@@ -41,65 +41,83 @@
           [ngClass]="{ 
             ' bg-[var(--ion-color-primary)] border-[var(--ion-color-primary)] text-white ': true}">
           <div class="flex flex-col ml-3 gap-y-3 text-2xl">
-            <span class="text-3xl font-bold mt-2">{{ showType }}</span>
+            <span class="text-3xl font-bold mt-2">{{ functionMain.returnNone(vehicle.vehicle_number) }}</span>
             <table>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">NAME</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.visitor_name}}</td>
+                <td>{{functionMain.returnNone(vehicle.visitor_name)}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">CONTACT</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.contact_number}}</td>
+                <td>{{functionMain.returnNone(vehicle.contact_number)}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">BLOCK</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.block_id[1]}}</td>
+                <td>{{functionMain.returnNone(vehicle.block_id)[1]}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">UNIT</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.unit_id[1]}}</td>
+                <td>{{functionMain.returnNone(vehicle.unit_id)[1]}}</td>
               </tr>
               <tr class="h-9">
-                <td class="w-2/5 font-bold">VEHICLE</td>
+                <td class="w-2/5 font-bold">Warning Issue</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.vehicle_number}}</td>
+                <td>{{ functionMain.uppercaseFirstWithUnderscore(vehicle.offence_type) }}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">VEHICLE TYPE</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.vehicle_type}}</td>
+                <td>{{functionMain.returnNone(vehicle.vehicle_type)}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">LAST ENTRY</td>
                 <td class="w-[2%]">:</td>
-                <td>{{vehicle.entry_datetime}}</td>
+                <td>{{vehicle.entry_datetime ? functionMain.convertDateExtend(vehicle.entry_datetime) : '-' }}</td>
               </tr>
             </table>
             <div class="w-full flex flex-col items-center mb-4 mt-5">
+              <div class="w-full flex flex-row justify-around mb-4">
+                <button (click)="callResident(vehicle)"
+                  class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                  CALL RESIDENT
+                </button>
+                <button *ngIf="!vehicle.is_resident" (click)="callVisitor(vehicle)"
+                  class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                  CALL VISITOR
+                </button>
+              </div>
               <div class="w-full flex flex-row justify-around">
                 <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5" [ngClass]="{
-                  ' bg-white text-black ': true}"
-                  (click)="presentModal('first_warning', vehicle)" *ngIf="!vehicle.offence_type">
+                  ' bg-white text-black ': true}" (click)="presentModal('none', vehicle)"
+                  *ngIf="vehicle.offence_type == 'no_issue'">
                   ISSUE 1ST WARNING
                 </button>
-                <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5" *ngIf="vehicle.offence_type == 'first_warning'"
-                  [ngClass]="{
-                  ' bg-white text-black ': true}" (click)="presentModal('second_warning', vehicle)">
+                <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5"
+                  *ngIf="vehicle.offence_type == 'first_warning'" [ngClass]="{
+                  ' bg-white text-black ': true}" (click)="presentModal('first_warning', vehicle)">
                   ISSUE 2ND WARNING
                 </button>
-                <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5" *ngIf="vehicle.offence_type == 'second_warning'"
-                  [ngClass]="{' bg-white text-black  ': true}"
+                <button class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5"
+                  *ngIf="vehicle.offence_type == 'second_warning'" [ngClass]="{' bg-white text-black  ': true}"
                   (click)="presentModal('wheel_clamp', vehicle)">
                   CLAMP VEHICLE
                 </button>
-                <button
-                class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
-                CHECKOUT
-              </button>
+                <button *ngIf="vehicle.offence_type == 'first_warning' || vehicle.offence_type == 'second_warning' " (click)="showCheckoutAlert(vehicle.offence_id, 'checkout')"
+                  class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                  CHECKOUT
+                </button>
+                <button *ngIf="vehicle.offence_type == 'wheel_clamp' && !vehicle.is_pay" (click)="loadRecordsWheelClampById(vehicle.offence_id)"
+                  class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                  PAY NOW
+                </button>
+                <button *ngIf="vehicle.is_pay " (click)="showCheckoutAlert(vehicle.offence_id, 'release')"
+                  class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
+                  RELEASE
+                </button>
               </div>
             </div>
 
@@ -109,7 +127,7 @@
     </div>
     <div @fadeInOut class="flex flex-row mx-4 w-full" *ngIf="showList">
       <div *ngIf="vehicle.length == 1" class="flex flex-col mt-8 gap-y-4 w-full">
-        
+
       </div>
     </div>
 

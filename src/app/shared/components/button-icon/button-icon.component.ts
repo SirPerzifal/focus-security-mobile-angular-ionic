@@ -44,6 +44,7 @@ export class ButtonIconComponent implements OnInit {
   @Input() params: string = '';
   @Input() isHomeButton: boolean = false;
   @Input() isWarning: number = 0;
+  @Input() totalWarning: number = 0;
   @Input() disableClick: boolean = false; // Input baru untuk mengontrol event click
   @Input() isActive: boolean = false; // Tambahkan input untuk status aktif
 

@@ -1,21 +1,27 @@
 <ion-content class="vms-body">
   <div class="flex flex-col p-4 justify-center items-center h-full ">
     <div class="w-[80%]">
-      <div class="flex flex-col justify-center w-full">
-        <div class="w-full flex flex-col items-center mb-4" *ngIf="showImage">
+      <div class="flex flex-col justify-center w-full gap-4">
+        <!-- <div class="w-full flex flex-col items-center mb-4" *ngIf="showImage">
           <img [src]="showImage" class="max-w-full max-h-96 rounded">
           <div class="bg-[var(--ion-color-danger)] fsh-badge-button" (click)="onDeleteImage()">
             <ion-icon name="trash-outline" size="large" class="text-white "/>
           </div>
-        </div>
+        </div> -->
         <!-- <div class="flex flex-col items-center text-2xl" *ngIf="barcodeResult">
           <p>SCAN RESULT: {{ barcodeResult }}</p>
         </div> -->
+        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (BEFORE)'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
+        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
+          (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
         <div class="flex flex-row w-full justify-between space-x-1">
-          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="takePicture()">
+          <!-- <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="takePicture()">
             {{ showImage ? 'CHANGE IMAGE' : upload_text}}
-          </button>
-          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" *ngIf="showImage && !is_search_barcode" (click)="showAlertButtons()">SUBMIT IMAGE</button>
+          </button> -->
+          <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="showAlertButtons()">SUBMIT IMAGE</button>
         </div>
         
       </div>

@@ -11,31 +11,11 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
-  private inviteeFormList: any = [];
 
-  getInviteeFormList(): any {
-    return this.inviteeFormList;
-  }
-
-  addInvitees(invitees: any): void {
-    invitees.forEach((invitee: any) => {
-      const exists = this.inviteeFormList.some((existingInvitee: any) => 
-        existingInvitee.visitor_name === invitee.visitor_name &&
-        existingInvitee.contact_number === invitee.contact_number &&
-        existingInvitee.vehicle_number === invitee.vehicle_number
-      );
-      if (!exists) {
-        this.inviteeFormList.push(invitee);
-      }
-    });
-  }
-
-  clearInviteeFormList(): void {
-    this.inviteeFormList = [];
-  }
   postLoginAuthenticate(
     login: string, 
-    password: string, 
+    password: string,
+    fcmToken: string,
   ): Observable<any> {
 
     const headers = new HttpHeaders({
@@ -43,34 +23,28 @@ export class AuthService extends ApiService{
       'Accept': 'application/json',
     });
 
-    console.log(login)
-    console.log('loginloginloginloginlogin')
-    console.log(password);
-    console.log('passwordpasswordpasswordpassword');
-    console.log(this.baseUrl)
-    console.log('this.baseUrlthis.baseUrlthis.baseUrlthis.baseUrl')
-    
 
     const res = this.http.post<any>(
-      `${this.baseUrl}/resident/post/login`, 
+      `${this.baseUrl}/post/login`, 
       {
         jsonrpc: '2.0', 
         params: {
           login,
-          password
+          password,
+          fcm_token: fcmToken
         }
       },
       {headers}
     );
-    
-    console.log(res)
     return res
   }
 
-  
-
   parseJWTParams(token:string){
-    return jwtDecode(token) as {user_id:string, family_id:string, partner_id:string,name:string,email:string,exp:Number}
+    return jwtDecode(token) as {mobile_number:string, family_id:string,name:string,email:string,exp:Number, image_profile: string}
+  }
+
+  parseJWTParamsVMS(token:string){
+    return jwtDecode(token) as {mobile_number:string, project_id:number, project_name:string, user_id:number, exp:Number}
   }
 
   isTokenValid(token: string): boolean {
@@ -84,6 +58,43 @@ export class AuthService extends ApiService{
 
   getEstatesByEmail(email:string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/resident/get/estate`, {jsonrpc: '2.0', params: {email}})
+  }
+
+  changePassword(newPassword: string, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          new_password: newPassword,
+          family_id: userId,
+        },
+    };
+
+    return this.http.post(this.baseUrl + '/residential/post/update_password', body, { headers }).pipe(
+        catchError(this.handleError)
+    );
+  }
+
+  logoutProcess(familyId: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    const body = {
+        jsonrpc: '2.0',
+        params: {
+          family_id: familyId,
+        },
+    };
+
+    return this.http.post(this.baseUrl + '/resident/post/logout', body, { headers }).pipe(
+        catchError(this.handleError)
+    );
   }
 
   private handleError(error: any) {

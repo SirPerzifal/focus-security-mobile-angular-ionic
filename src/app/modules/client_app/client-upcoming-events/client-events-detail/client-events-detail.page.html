@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Facility Booking'" [text_second]="'Booking Detail'" />
+  <div class="w-full mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToHistoryList()"></ion-icon>
+  </div>
+  <div class="flex flex-col relative mb-24" *ngIf="bookingData">
+    <div class="w-full bg-[#D8ECCF] text-center mb-2 m-0 p-2">
+      <h2 class="text-base font-bold text-black">
+        {{ functionMain.returnNone(bookingData.facility_name) }} Booking details
+      </h2>
+    </div>
+
+    <div class="flex flex-col relative mx-4">
+      <!-- <ion-button
+        class="flex flex-row justify-center items-center w-full icon my-2" 
+        fill="clear" 
+        (click)="backToHistoryList()">
+        <div class="flex flex-col items-center text-black">
+          <ion-icon name="arrow-back"></ion-icon>
+        </div>
+      </ion-button> -->
+
+      <table class="w-full" style="border-collapse: collapse;">
+        <tr>
+          <td><strong>Facility</strong></td>
+          <td>: {{ functionMain.returnNone(bookingData.facility_name) }}</td>
+        </tr>
+        <tr>
+          <td><strong>Event Date</strong></td>
+          <td>: {{ functionMain.convertToDDMMYYYY(bookingData.eventDate) }}</td>
+        </tr>
+        <tr>
+          <td><strong>Booking Time</strong></td>
+          <td>: {{ bookingData.bookingTime }}</td>
+        </tr>
+      </table>
+
+      <div class="ml-1 mt-4">
+        <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
+        <div class="flex justify-between font-bold">
+          <p>Booking Fee</p>
+          <p>${{ bookingData.bookingFee ? bookingData.bookingFee.toFixed(2) : '0.00' }}</p>
+        </div>
+        <div class="flex justify-between font-bold">
+          <p>Deposit</p>
+          <p>${{ bookingData.deposit ? bookingData.deposit.toFixed(2) : '0.00' }}</p>
+        </div>
+        <hr class="my-2">
+        <div class="flex justify-between font-bold">
+          <p>Grand Total</p>
+          <p>${{ calculateTotal().toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Tombol Proceed to Payment -->
+      <div class="text-center mb-4">
+        <app-visitor-button
+          [text]="'Email Receipt'" 
+          [extraClass]="'bg-[#10421d] text-[white] w-full mt-4 mb-2'"
+          (click)="proceedToEmail()">
+        </app-visitor-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

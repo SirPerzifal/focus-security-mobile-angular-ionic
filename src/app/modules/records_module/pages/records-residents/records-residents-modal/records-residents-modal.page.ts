@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
@@ -15,12 +16,16 @@ export class RecordsResidentsModalPage implements OnInit {
     private modalController: ModalController, 
     private navParams: NavParams, 
     private mainVmsService: MainVmsService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    public functionMain: FunctionMainService
   ) {
     this.nric_resident = this.navParams.get('nric_resident')
   }
 
   nric_resident = ''
+  onNricInput(event: any) {
+    this.nric_resident = this.functionMain.nricChange(event.target.value)
+  }
 
   ngOnInit() {
     this.loadOfficer()
@@ -38,7 +43,7 @@ export class RecordsResidentsModalPage implements OnInit {
     } else {
       let params = {}
       console.log(params)
-      if (this.nric_resident == 'S11111111') {
+      if (this.nric_resident != '') {
         this.router.navigate(['/records-residents'], {state: {nric: this.nric_resident}})
         this.modalController.dismiss(true);
       } else {

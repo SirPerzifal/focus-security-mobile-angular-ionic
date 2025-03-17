@@ -43,7 +43,10 @@
           <p class="text-red-700 font-bold text-base">Rejected</p>
         </ng-container>
       </div>
-      <p class="font-bold text-base text-black"> 
+      <p *ngIf="vehicle.isPrimary" class="font-bold text-base text-black"> 
+        {{ vehicle.type_application + ' (Primary Vehicle)' | titlecase }}
+      </p>
+      <p *ngIf="!vehicle.isPrimary" class="font-bold text-base text-black"> 
         {{ vehicle.type_application | titlecase }}
       </p>
       <div class="flex flex-col justify-between w-full">

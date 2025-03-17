@@ -52,7 +52,7 @@
             <select id="pick_up_location"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
               (change)="onBlockChange($event)" [(ngModel)]="blkLocation">
-              <option selected [value]="''">CHOOSE BLOCK / PICK UP POINT</option>
+              <option selected disabled hidden [value]="''">CHOOSE BLOCK / PICK UP POINT</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>

@@ -34,6 +34,7 @@
     "@capacitor/preferences": "^6.0.3",
     "@capacitor/push-notifications": "^6.0.3",
     "@capacitor/status-bar": "6.0.1",
+    "@capacitor/text-zoom": "^7.0.0",
     "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
@@ -52,6 +53,7 @@
     "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.11.17",
     "signature_pad": "^5.0.4",
+    "socket.io-client": "^4.8.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

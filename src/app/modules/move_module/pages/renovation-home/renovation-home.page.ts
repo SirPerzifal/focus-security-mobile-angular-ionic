@@ -50,37 +50,37 @@ export class RenovationHomePage implements OnInit {
   // Subject untuk mengelola subscription
   private refreshInterval: any;
   ngOnInit() {
-    this.loadSchedules();
+    // this.loadSchedules();
     this.loadBlock()
   }
 
-  loadSchedules() {
-    console.log("TES")
-    this.isLoading = false;
+  // loadSchedules() {
+  //   console.log("TES")
+  //   this.isLoading = false;
 
-    // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
-    forkJoin({
-      renovation: this.renovatorsService.getRenovationSchedules()
-    }).subscribe({
-      next: (results) => {
+  //   // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
+  //   forkJoin({
+  //     renovation: this.renovatorsService.getRenovationSchedules()
+  //   }).subscribe({
+  //     next: (results) => {
 
-        if (results.renovation.result.status_code === 200) {
-          this.renovationSchedules = results.renovation.result.result;
-          this.daySchedules = this.renovationSchedules.filter(item => new Date(item.schedule_date) == new Date() )
-          this.historySchedules = this.renovationSchedules
-        } else {
-          this.presentToast('An error occurred while loading Renovations schedule!', 'warning');
-        }
+  //       if (results.renovation.result.status_code === 200) {
+  //         this.renovationSchedules = results.renovation.result.result;
+  //         this.daySchedules = this.renovationSchedules.filter(item => new Date(item.schedule_date) == new Date() )
+  //         this.historySchedules = this.renovationSchedules
+  //       } else {
+  //         this.presentToast('An error occurred while loading Renovations schedule!', 'warning');
+  //       }
 
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.presentToast('An error occurred while loading Renovations schedule!', 'danger');
-        console.error(error);
-        this.isLoading = false;
-      }
-    });
-  }
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       this.presentToast('An error occurred while loading Renovations schedule!', 'danger');
+  //       console.error(error);
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
     const toast = await this.toastController.create({
@@ -144,7 +144,6 @@ export class RenovationHomePage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {

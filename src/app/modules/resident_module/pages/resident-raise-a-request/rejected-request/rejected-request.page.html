@@ -1,78 +1,82 @@
+<app-resident-header [text]="'Raise A Request'" [text_second]="'History Request'"/>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Raise A Request'" [text_second]="'History Request'"/>
+  
   <div class="w-full flex items-start ml-4 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
     <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
-      <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32 leading-none cw-4:text-sm'" [routerLink]="['/resident-raise-a-request']"></app-visitor-button>
-      <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 cw-4:text-sm'" [routerLink]="['/rejected-request']"></app-visitor-button>
+      <div class="w-full">
+        <app-visitor-button [text]="'New Request'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full leading-none cw-4:text-sm'" [routerLink]="['/resident-raise-a-request']"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Request Status'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full cw-4:text-sm'" [routerLink]="['/rejected-request']"></app-visitor-button>
+      </div>
     </div>
 
     <div class="space-y-4 w-full mt-3">
       <div class="w-full mt-4 mb-3 flex flex-row items-center">
-        <h2 class="w-full max-w-24 font-bold text-lg text-center">
-          Filter by
-        </h2>
-        <select id="walk_in_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]">
-          <option disabled selected>Type of Application</option>
+        <h2 class="w-full max-w-24 font-bold text-lg text-center">Filter by</h2>
+        <select id="walk_in_unit" 
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]" 
+                [(ngModel)]="selectedApplicationType" 
+                (change)="onApplicationTypeChange()">
+          <option disabled hidden value="">Type of Application</option>
+          <option value="Access cards Application.">Access Card Application</option>
+          <option value="Overnight parking records Application.">Overnight Parking</option>
+          <option value="Bicycle tags Application.">Bicycle Tag</option>
+          <option value="Registered coaches Application.">Coach Registration</option>
+          <!-- <option value="Request schedules Application.">Request schedules Application</option> -->
+          <option value="Move In / Move Out">Move In / Move Out</option>
+          <!-- <option value="Move Out">Move Out</option> -->
+          <option value="Renovation">Renovation</option>
+          <option value="Pets Application.">Pet Registration</option>
+          <option value="Offences Application.">Offences Application</option>
         </select>
       </div>
-      <div *ngIf="hisrotyRequests.length > 0">
-        <div *ngFor="let hisrotyRequest of hisrotyRequests; let i = index" [ngClass]="{
-            'bg-[var(--ion-color-tertiary)]': hisrotyRequest.statusBooked === 'Approved',
-            'bg-sky-100': hisrotyRequest.statusBooked === 'Pending Approval' || hisrotyRequest.statusBooked === 'Pending Payment',
-            'bg-[#E3787E]': hisrotyRequest.statusBooked === 'Rejected' || hisrotyRequest.statusBooked === 'Cancelled',
-            'bg-[#F8F1BA]': hisrotyRequest.statusBooked === 'Requested',
-          }" class="bg-[var(--ion-color-tertiary)] rounded-2xl p-5 my-4 mt-4 w-full">
-          <h2 [ngClass]="{
-            'text-green-500': hisrotyRequest.statusBooked === 'Approved',
-            'text-sky-500': hisrotyRequest.statusBooked === 'Pending Approval' || hisrotyRequest.statusBooked === 'Pending Payment',
-            'text-red-700': hisrotyRequest.statusBooked === 'Rejected' || hisrotyRequest.statusBooked === 'Cancelled',
-            'text-yellow-400': hisrotyRequest.statusBooked === 'Requested',
-          }" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
-            <ion-icon 
-              [name]="hisrotyRequest.statusBooked === 'Approved' ? 'checkmark' : 
-                      hisrotyRequest.statusBooked === 'Pending Approval' ? 'time' : 
-                      hisrotyRequest.statusBooked === 'Pending Payment' ? 'time' : 
-                      hisrotyRequest.statusBooked === 'Rejected' ? 'close' : 
-                      hisrotyRequest.statusBooked === 'Cancelled' ? 'close' : 
-                      hisrotyRequest.statusBooked === 'Requested' ? 'help-circle' : 
-                      'help-circle'"
-              [ngClass]="{
-                'bg-green-500': hisrotyRequest.statusBooked === 'Approved',
-                'bg-sky-500': hisrotyRequest.statusBooked === 'Pending Approval' || hisrotyRequest.statusBooked === 'Pending Payment',
-                'bg-red-700': hisrotyRequest.statusBooked === 'Rejected' || hisrotyRequest.statusBooked === 'Cancelled',
-                'bg-yellow-500': hisrotyRequest.statusBooked === 'Requested'
-              }"
-              class="mr-2 p-1 rounded-full text-white text-[18px]">
-            </ion-icon>
-            {{ gethisrotyRequestStatusLabel(hisrotyRequest.statusBooked) }}
-          </h2>
-          <p class="font-bold text-base text-black text-left">Overnight Parking Application</p>
-          <div class="table w-full text-left">
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Application Date</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ hisrotyRequest.applicationDate }}</p>
+      <div class="space-y-2">
+        <ng-container *ngFor="let allData of filteredDatas; let i = index">
+          <div [ngClass]="{
+            'bg-green-100': allData.states === 'Approved',
+            'bg-[#E3787E]': allData.states === 'Rejected' || allData.states === 'Cancelled',
+            'bg-[#F8F1BA]': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+          }" class="rounded-2xl p-5 mt-4 w-full flex flex-col">
+            <div class="flex flex-row items-center mt-1 mb-2">
+              <ng-container *ngIf="allData.states === 'approved' || allData.states === 'Approved'">
+                <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-[var(--ion-color-primary)] font-bold text-base">Approved</p>
+              </ng-container>
+              <ng-container *ngIf="allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued'">
+                <ion-icon name="alert" class=" bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-yellow-500 font-bold text-base">{{ allData.states ? allData.states : allData.appeal_status }}</p>
+              </ng-container>
+              <ng-container *ngIf="allData.states === 'rejected' || allData.states === 'Rejected' || allData.states === 'cancelled' || allData.states === 'Cancelled'">
+                <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-red-700 font-bold text-base">Rejected</p>
+              </ng-container>
             </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Vehicle Number</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ hisrotyRequest.vehicleNumber }}</p>
-            </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Start Date</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ hisrotyRequest.startDate }}</p>
-            </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">End Date</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ hisrotyRequest.endDate}}</p>
+            <h2 [ngClass]="{
+              'text-green-500': allData.states === 'Approved',
+              'text-red-700': allData.states === 'Rejected' || allData.states === 'Cancelled',
+              'text-yellow-400': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+            }" class="flex flex-col text-base font-bold mb-2 items-start text-start">
+              {{ allData.title }}
+            </h2>
+            <div class="w-full">
+              <table class="w-full">
+                <tr class="text-base text-black" *ngFor="let field of fieldMapping[allData.title]">
+                  <td class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]">{{ field }}</td>
+                  <td class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]">:</td>
+                  <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">{{ getRequestValue(allData, field) }}</td>
+                </tr>
+              </table>
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
-	<app-bottom-nav-bar></app-bottom-nav-bar>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>

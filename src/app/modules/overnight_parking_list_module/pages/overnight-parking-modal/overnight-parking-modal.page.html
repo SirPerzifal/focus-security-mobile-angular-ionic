@@ -1,8 +1,13 @@
-<ion-content class="">
+<ion-content class="vms-body">
   <div class="flex flex-col p-4 justify-center items-center h-full">
-    <div class="flex flex-row w-[80%]">
-      <div class="flex flex-col justify-center w-full gap-4 items-center">
-        <div class="flex flex-col w-full" *ngIf="issue == 'wheel_clamp' && !search">
+    <div class="flex flex-row w-[80%] max-h-[80%] overflow-x-auto">
+      <div class="flex flex-col justify-start items-center w-full gap-4">
+        <div class="w-full">
+          <app-text-input [id]="'reason'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'GY 7828 B'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="vehicle_number " [isReadonly]="true"
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="flex flex-col w-full " *ngIf="issue == 'wheel_clamp' && !search">
           <label class="text-2xl"><b><u>WHEEL CLAMP NOTICE</u></b></label>
           <select id="clamping_reason" [(ngModel)]="selectedNotice" [disabled]="isReadonly"
             class="border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
@@ -26,10 +31,10 @@
         </div>
 
         <app-file-input class="w-full h-25" [labelText]="issue == 'wheel_clamp' ? 'UPLOAD IMAGE (BEFORE)' : 'UPLOAD IMAGE' " [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'"
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
           (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="issue == 'wheel_clamp'"
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="issue == 'wheel_clamp'"
           (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
 
         <!-- <div class="flex flex-col w-full">

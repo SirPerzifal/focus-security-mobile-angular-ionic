@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 
@@ -18,12 +20,34 @@ export class RecordsBlacklistPage implements OnInit {
     private offensesService: OffensesService,
     private modalController: ModalController,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    public functionMain: FunctionMainService,
+    private blockUnitService: BlockUnitService
   ) { }
 
   ngOnInit() {
-    this.loadBlacklistData()
+    this.loadProjectName().then(() => {
+      this.loadBlacklistData()
+      this.loadBlock()
+    })
+    this.route.queryParams.subscribe(params => {
+      if (params ) {
+        if (params['reload']){
+          this.loadProjectName().then(() => {
+            this.loadBlacklistData()
+          })
+        }
+      }
+    })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -41,6 +65,17 @@ export class RecordsBlacklistPage implements OnInit {
   toggleSlide(type: string) {
     this.showVisitor = false;
     this.showVehicle = false;
+    if (type != this.pageType) {
+      this.searchOption = ''
+      this.filter = {
+        vehicle_number: '',
+        name: '',
+        contact: '',
+        issue_date: '',
+        block: '',
+        unit: '',
+      }
+    }
     if (type == 'visitor') {
       this.pageType = 'visitor'
       this.showVisitor = true;
@@ -55,14 +90,11 @@ export class RecordsBlacklistPage implements OnInit {
     console.log(this.blacklistData)
   }
 
-  vehicleData: any[] = [];
   activeVehicles: any[] = [];
   historyVehicles: any[] = [];
-  sortVehicle: any[] = []
   existData: any[] = []
   blacklistData: any[] = []
-  selectedRadio: string | null = null
-  searchOption: string | null = null
+  searchOption: string = ''
 
   convertToDDMMYYYY(dateString: string): string {
     const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
@@ -87,7 +119,52 @@ export class RecordsBlacklistPage implements OnInit {
 
   onContactFilterChange(event: any) {
     this.filter.contact = event.target.value
+    console.log(this.filter.contact)
     this.applyFilters()
+  }
+
+  onBlockChange(event: any) {
+    this.filter.block = event.target.value;
+    this.filter.unit = ''
+    this.loadUnit(); // Panggil method load unit
+    this.applyFilters()
+  }
+
+  onUnitChange(event: any) {
+    this.filter.unit = event[0];
+    this.applyFilters()
+  }
+
+  loadBlock() {
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+        } else {
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading block data', 'danger');
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  async loadUnit() {
+    this.filter.unit
+    this.blockUnitService.getUnit(this.filter.block).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
+        } else {
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+      }
+    });
   }
 
   Block: any[] = []
@@ -98,6 +175,8 @@ export class RecordsBlacklistPage implements OnInit {
     vehicle_number: '',
     issue_date: '',
     contact: '',
+    block: '',
+    unit: ''
   }
 
 
@@ -129,10 +208,13 @@ export class RecordsBlacklistPage implements OnInit {
   applyFilters() {
     this.blacklistData = this.existData.filter(item => {
       const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
-      const contactMatches = this.filter.contact ? item.contact_number.toLowerCase().includes(this.filter.contact.toLowerCase()) : true;
-      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
+      const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
+      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_no.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
 
-      return typeMatches && contactMatches && vehicleNumberMatches;
+      const blockMatches = this.filter.block ? item.block_id[0] == this.filter.block : true;
+      const unitMatches =  this.filter.unit ? item.unit_id[0] == this.filter.unit : true;
+
+      return blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
     });
     console.log(this.blacklistData)
   }
@@ -147,13 +229,19 @@ export class RecordsBlacklistPage implements OnInit {
   }
 
   async loadBlacklistData() {
-    this.mainVmsService.getApi({}, '/vms/get/visitor_ban').subscribe({
+    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
+        console.log(results);
         if (results.result.response_code === 200) {
           this.existData = results.result.result;
-          this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+          this.applyFilters()
+          if (this.pageType == 'visitor') {
+            this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+          } else {
+            this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
+          }
         } else {
-          this.presentToast('An error occurred while loading blacklist data!', 'danger');
+          this.existData = []
         }
       },
       error: (error) => {

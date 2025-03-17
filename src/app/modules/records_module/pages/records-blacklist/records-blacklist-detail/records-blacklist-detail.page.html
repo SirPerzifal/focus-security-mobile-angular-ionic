@@ -56,10 +56,13 @@
             <td>{{ functionMain.returnNone(record.reason) }}</td>
           </tr>  
         </table>
+        <div class="w-full flex flex-col items-center" *ngIf="record.ban_image">
+          <img [src]="ban_image" class="w-4/5">
+        </div>
         <div class="flex flex-row justify-around w-full">
           <div class="flex flex-col w-1/2 items-center">
             <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL MA</button>
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">LIFT BAN</button>
+            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onLiftBan()">LIFT BAN</button>
           </div>
           <div class="flex flex-col w-1/2 items-center">
             <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL RESIDENT</button>

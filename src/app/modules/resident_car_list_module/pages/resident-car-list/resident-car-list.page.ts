@@ -5,7 +5,10 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Ocr, TextDetections} from '@capacitor-community/image-to-text'
+import { Ocr, TextDetections} from '@capacitor-community/image-to-text';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 // import * as Tesseract from 'tesseract.js';
 
 @Component({
@@ -27,12 +30,14 @@ import { Ocr, TextDetections} from '@capacitor-community/image-to-text'
 export class ResidentCarListPage implements OnInit {
 
   constructor(
-    private toastController: ToastController,
     private mainVmsService: MainVmsService,
-    private functionMain: FunctionMainService,
+    public functionMain: FunctionMainService,
     private modalController: ModalController,
     private changeDetectorRef: ChangeDetectorRef,
     private alertController: AlertController,
+    private router: Router,
+    private offensesService: OffensesService,
+    private route: ActivatedRoute
   ) { }
 
   searchType: string = '';
@@ -52,49 +57,69 @@ export class ResidentCarListPage implements OnInit {
   showType = ''
 
   vehicleNumber = ''
-  toggleShowSearch(is_camera: boolean = false) {
-    if (this.vehicleNumber){
-      this.mainVmsService.getApi({vehicle_number: this.vehicleNumber}, '/vms/get/search_vehicle' ).subscribe({
-        next: (results) => {
-          if (results.result.response_code === 200) {
-            this.showList = false;
-            this.vehicle = results.result.result[0]
-            console.log(this.vehicle);
-            this.returnShowType()
-            console.log(this.showType);
-            
-            setTimeout(() => {
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.project_name = value.project_name.toUpperCase()
+      this.project_id = value.project_id
+    })
+  }
+  project_name = ''
+  project_id = 0
+
+  async toggleShowSearch(vehicle_number: any, is_camera: boolean = false) {
+    console.log("PING OVER HERE")
+    console.log(vehicle_number)
+    this.mainVmsService.getApi({vehicle_number: vehicle_number, project_id: this.project_id}, '/vms/get/search_vehicle' ).subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.showList = false;
+          this.vehicle = results.result.result[0]
+          this.vehicleNumber = this.vehicle.vehicle_number
+          console.log(this.vehicle);
+          this.returnShowType()
+          console.log(this.showType);
+          
+          setTimeout(() => {
             this.showList = true;
-            }, 300)
-            
-          } else {
             if (is_camera) {
-              this.presentAlert()
-            } else {
-              this.functionMain.presentToast(results.result.error, 'danger');
+              this.is_vehicle_get = true
             }
+          }, 300)
+        } else {
+          if (is_camera) {
+            this.presentAlert(vehicle_number)
+          } else {
+            if (results.result.error) {
+              this.functionMain.presentToast(results.result.error, 'danger');
+            } else {
+              this.functionMain.presentToast('An error occurred while searching vehicle records!', 'danger');
+            }
+            
           }
-        },
-        error: (error) => {
-          this.functionMain.presentToast('An error occurred while searching vehicle records!', 'danger');
-          console.error(error);
         }
-      });
-      
-    }
-    
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while searching vehicle records!', 'danger');
+        console.error(error);
+      }
+    });
   }
 
-  async presentAlert(){
+  async presentAlert(vehicle_number: any){
+    const formatted_array = Array.isArray(vehicle_number) ? vehicle_number.join(" ") : vehicle_number;
+    console.log(formatted_array)
     const alertButtons = await this.alertController.create({
       cssClass: 'checkout-alert',
-      header: `Can't get vehicle number, is '${this.vehicleNumber}' the vehicle number you are looking for?`,
+      header: `Can't get vehicle number, is '${formatted_array}' the vehicle number you are looking for?`,
       buttons: [
         {
           text: 'Retake',
           role: 'confirm',
           handler: () => {
-            this.toggleShowSearch(true)
+            this.takeVehicleLicense()
           },
         },
         {
@@ -105,9 +130,30 @@ export class ResidentCarListPage implements OnInit {
         },
       ]
     })
+
+    return await alertButtons.present()
   }
 
   ngOnInit() {
+    this.loadProjectName()
+    this.route.queryParams.subscribe(params => {
+      if (params ) {
+        if (params['vehicle_number']){
+          this.loadProjectName()
+          this.vehicleNumber = params['vehicle_number']
+          this.toggleShowSearch([this.vehicleNumber])
+        }
+      }
+    })
+  }
+
+  onSearch(vehicle_number: any) {
+    if (vehicle_number) {
+      let scan_list = [vehicle_number]
+      this.toggleShowSearch(scan_list)
+    } else {
+      this.functionMain.presentToast('Vehicle number is required!', 'danger');
+    }
   }
 
   returnShowType() {
@@ -126,11 +172,12 @@ export class ResidentCarListPage implements OnInit {
   async presentModal(issue: string= 'wheel_clamp', vehicle: any = this.vehicle) {
     const modal = await this.modalController.create({
       component: OvernightParkingModalPage,
-      cssClass: issue == 'wheel_clamp' ? 'record-modal' : 'record-modal-notice',
+      cssClass: 'record-modal',
       componentProps: {
         issue: issue,
         vehicle: vehicle,
-        search: true
+        search: true,
+        alert: true
       }
   
     });
@@ -139,6 +186,7 @@ export class ResidentCarListPage implements OnInit {
       if (result) {
         console.log(result.data)
         if(result.data){
+          this.toggleShowSearch([this.vehicleNumber])
           console.log("SUCCEED")
         }
       }
@@ -147,9 +195,14 @@ export class ResidentCarListPage implements OnInit {
     return await modal.present();
   }
 
+  is_vehicle_get = false
+
   plate_value = ''
   detection_array = []
   async takeVehicleLicense() {
+    this.showSearch = false
+    this.is_vehicle_get = false
+    let scan_list = []
     try {
       console.log("EY TAKE")
       const image = await Camera.getPhoto({
@@ -163,55 +216,118 @@ export class ResidentCarListPage implements OnInit {
       const data: TextDetections = await Ocr.detectText({ filename: image.path! });
       console.log(data)
       for (let detection of data.textDetections) {
-        this.vehicleNumber += detection
+        scan_list.push(detection.text)
       }
-  
-      if (this.vehicleNumber == '') {
+      if (scan_list.length === 0) {
         this.functionMain.presentToast("Vehicle number not detected!", 'warning')
       } else {
-        this.toggleShowSearch()
+        this.toggleShowSearch(scan_list, true)
       }
+      this.showSearch = true
+      this.is_vehicle_get = false
     } catch (error) {
-      this.functionMain.presentToast("Error occured while detecting vehicle number!", 'danger')
-      console.error(error)
+      this.showSearch = true
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as { message: string }).message;
+        if (errorMessage === 'User cancelled photos app') {
+          return;
+        } else {
+          this.functionMain.presentToast('Error occured while taking a photo!', 'danger')
+          console.error(error)
+        }
+      }
     }
-    
-
   }
 
-  // async takePicture() {
-  //   try {
-  //     const image = await Camera.getPhoto({
-  //       quality: 90,
-  //       source: CameraSource.Camera,
-  //       allowEditing: true,
-  //       resultType: CameraResultType.Base64
-  //     });
-  //     return image.base64String;
-  //   } catch (error) {
-  //     if (typeof error === 'object' && error !== null && 'message' in error) {
-  //       const errorMessage = (error as { message: string }).message;
-  //       if (errorMessage === 'User cancelled photos app') {
-  //         return;
-  //       }
-  //     }
-  //     return false
-  //   }
-  // }
+  public async showCheckoutAlert(id: number, type: string) {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'checkout-alert',
+      header: `Are you sure you want to ${type} this vehicle?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.onCheckOut(id, type)
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    }
+    )
+    await alertButtons.present();
+  }
 
-  // async recognizeText(imagePath: string) {
-  //   const { data } = await Tesseract.recognize(`data:image/jpeg;base64,${imagePath}`, 'eng');
-  //   console.log('OCR Result:', data.text);
-  //   return data.text;
-  // }
+  onCheckOut(id: number, type: string) {
+    let params = {
+      offence_id: id,
+      is_checkout: type == 'checkout',
+      is_release: type != 'checkout',
+      is_unregistered: false,
+    }
+    if (true) {
+      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+        next: (results) => {
+          if (results.result.response_code === 200) {
+            this.toggleShowSearch([this.vehicleNumber])
+            this.functionMain.presentToast(`Successfully ${type} vehicle!`, 'success');
+
+          } else {
+            this.functionMain.presentToast(`Failed to ${type} vehicle!`, 'danger');
+          }
+          
   
-  // async captureAndReadPlate() {
-  //   const imagePath = await this.takePicture();
-  //   let plateNumber = ''
-  //   if(imagePath){
-  //     plateNumber = await this.recognizeText(imagePath);
-  //   }
-  //   console.log('Detected Plate Number:', plateNumber);
-  // }
+        },
+        error: (error) => {
+          this.functionMain.presentToast('An error occurred while processing function!', 'danger');
+          console.error(error);
+        }
+      });
+    }
+    
+  }
+
+  wheelClamp: any = []
+
+  loadRecordsWheelClampById(id: any){
+    this.offensesService.getOfffenses('wheel_clamp', true, parseInt(id)).subscribe({
+      next: (results) => {
+        console.log(results.result)
+        if (results.result.response_code === 200) {
+          this.onPaymentClick(results.result.response_result[results.result.response_result.length - 1])
+        } else {
+        }
+
+        // this.isLoading = false;
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while loading wheel clamp data!', 'danger');
+        console.error(error);
+        // this.isLoading = false;
+      }
+    });
+  }
+
+  onPaymentClick(alert: any = []) {
+    this.router.navigate(['records-wheel-clamped-payment'], {
+      state: {
+        vehicle: alert,
+        search: true,
+      },
+    });
+  }
+
+  callResident(vehicle: any) {
+    console.log(vehicle)
+  }
+
+  callVisitor(vehicle: any) {
+    console.log(vehicle)
+  }
   
 }

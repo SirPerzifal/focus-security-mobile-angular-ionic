@@ -6,6 +6,7 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-records-visitor',
@@ -31,7 +32,8 @@ export class RecordsVisitorPage implements OnInit {
     private router: Router, 
     private modalController: ModalController,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    public functionMain: FunctionMainService,
   ) { }
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
@@ -43,7 +45,8 @@ export class RecordsVisitorPage implements OnInit {
     } else if (type === 'vehicle') {
       
     }
-    this.mainVmsService.getApi({is_today: today, log_type: type}, '/vms/get/visitor_log').subscribe({
+    console.log(this.project_id)
+    this.mainVmsService.getApi({is_today: today, log_type: type, project_id: this.project_id}, '/vms/get/visitor_log').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.response_code === 200) {
@@ -55,7 +58,6 @@ export class RecordsVisitorPage implements OnInit {
           }
           
         } else {
-          this.presentToast('There is no data in the system!', 'danger');
         }
 
         // this.isLoading = false;
@@ -69,30 +71,15 @@ export class RecordsVisitorPage implements OnInit {
   }
 
   ngOnInit() {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     console.log(event.url, 'from record visitoorrrrr')
-    //     if (event.url.split('?')[0] == '/records-visitor'){
-    //       this.route.queryParams.subscribe(params => {
-    //         this.pageType = params['type']
-    //         this.params = params
-    //         console.log(this.pageType)
-    //       })
-    //       this.loadLogs(this.pageType, true)
-    //       this.loadBlock()
-    //     } else {
-    //       console.log("THIS WORK")          
-    //     }
-    //   } 
-    // });
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
       this.params = params
       console.log(this.pageType)
     })
-    this.loadLogs(this.pageType, true)
-    this.loadBlock()
-    
+    this.loadProjectId().then(() => {
+      this.loadLogs(this.pageType, true)
+      this.loadBlock()
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -100,6 +87,14 @@ export class RecordsVisitorPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  project_id = 0
+
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
   }
 
   params: any
@@ -126,6 +121,9 @@ export class RecordsVisitorPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
+        this.isRadioClicked = false
+        this.selectedRadio = ''
+        this.clearFilters()
         this.showHistoryTrans = true
         if (this.logsData.length == 0){
           this.loadLogs(this.pageType, false)
@@ -145,37 +143,6 @@ export class RecordsVisitorPage implements OnInit {
   selectedRadio: string | null = null
   searchOption: string | null = null
 
-  onRadioClick(value: string): void {
-    if (this.selectedRadio === value) {
-      this.selectedRadio = null;
-    } else {
-      this.selectedRadio = value;
-    }
-    console.log(this.selectedRadio)
-    if (this.selectedRadio == 'sort_date') {
-      this.sortVehicle = Array.from(
-        new Set(this.logsData.map((record) => new Date(record.issue_date).toISOString()))
-      ).map((date) => ({
-        vehicle_number: '',
-        date: new Date(date),
-        issue_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.logsData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)),            
-      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
-      console.log(this.sortVehicle)
-    }
-    if (this.selectedRadio == 'sort_vehicle') {
-      this.sortVehicle = Array.from(
-        new Set(this.logsData.map((record) => record.vehicle_number))
-      ).map((vehicle_number) => ({
-        vehicle_number: vehicle_number,
-        date: new Date(),
-        issue_date: '',
-        data: this.logsData.filter(item => item.vehicle_number == vehicle_number),            
-      }));;
-      console.log(this.sortVehicle)
-    }
-  }
-
   convertToDDMMYYYY(dateString: string): string {
     const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
     return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
@@ -189,7 +156,7 @@ export class RecordsVisitorPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.filter.unit = event.target.value;
+    this.filter.unit = event[0];
     this.applyFilters()
   }
 
@@ -227,7 +194,6 @@ export class RecordsVisitorPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('Failed to load block data', 'danger');
         }
       },
       error: (error) => {
@@ -237,13 +203,13 @@ export class RecordsVisitorPage implements OnInit {
     });
   }
 
-  loadUnit() {
+  async loadUnit() {
+    this.filter.unit
     this.blockUnitService.getUnit(this.filter.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -271,6 +237,7 @@ export class RecordsVisitorPage implements OnInit {
   startDateFilter = ''
 
   clearFilters() {
+    this.Unit = []
     this.searchOption = ''
     this.filter.issue_date = ''
     this.filter.end_issue_date = ''
@@ -282,13 +249,27 @@ export class RecordsVisitorPage implements OnInit {
 
   applyFilters() {
     this.historyVehicles = this.logsData.filter(item => {  
-      const dateMatches = this.filter.issue_date ? item.entry_datetime >= this.filter.issue_date : true;
-      const endDateMatches = this.filter.end_issue_date ? item.entry_datetime <= this.filter.end_issue_date : true;
+      const visitorDate = new Date(item.entry_datetime);
+      visitorDate.setHours(0, 0, 0, 0); 
+
+      const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+      const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+
+      if (selectedStartDate) {
+        selectedStartDate.setHours(0, 0, 0, 0);
+      }
+      if (selectedEndDate) {
+        selectedEndDate.setHours(0, 0, 0, 0);
+      }
+      
+      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) : true;
+      const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
       const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
-  
-      return blockMatches && dateMatches && unitMatches && vehicleMatches && endDateMatches;
+      
+      return blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;
     });
     console.log(this.historyVehicles)
   }
@@ -305,29 +286,44 @@ export class RecordsVisitorPage implements OnInit {
   onClickNew() {
     this.router.navigate(['records-wheel-clamped-new']);
   }
+  
+  isRadioClicked = false
 
-  loadRecordsWheelClamp() {
-    // this.isLoading = false;
-
-    // this.offensesService.getOfffenses(this.pageType).subscribe({
-    //   next: (results) => {
-    //     if (results.result.response_code === 200) {
-    //       this.logsData = results.result.response_result;
-    //       console.log(this.logsData)
-    //       this.activeVehicles = this.logsData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-    //       this.historyVehicles = this.logsData
-    //     } else {
-    //       this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     }
-
-    //     // this.isLoading = false;
-    //   },
-    //   error: (error) => {
-    //     this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     console.error(error);
-    //     // this.isLoading = false;
-    //   }
-    // });
+  onRadioClick(value: string): void {
+    if (this.selectedRadio === value) {
+      this.selectedRadio = null;
+    } else {
+      this.selectedRadio = value;
+      this.searchOption = ''
+    }
+    console.log(this.selectedRadio)
+    this.sortVehicle = this.historyVehicles
+    if (this.selectedRadio == 'sort_date') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.entry_datetime ? new Date(record.entry_datetime.split(' ')[0]).toISOString() : '-' ))
+      ).map((date) => ({
+        vehicle_number: '',
+        date: new Date(date),
+        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
+        data: this.sortVehicle.filter(item => item.entry_datetime ? new Date(item.entry_datetime).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.entry_datetime == date ) ,            
+      })).sort((a, b) => b.date.getTime() - a.date.getTime());;
+      console.log(this.sortVehicle)
+    } else if (this.selectedRadio == 'sort_vehicle') {
+      this.isRadioClicked = true
+      this.sortVehicle = Array.from(
+        new Set(this.sortVehicle.map((record) => record.vehicle_number != "" ? record.vehicle_number : false))
+      ).map((vehicle_number) => ({
+        vehicle_number: vehicle_number ? vehicle_number : 'Walk In',
+        date: new Date(),
+        schedule_date: '',
+        data: this.sortVehicle.filter(item => item.vehicle_number == vehicle_number),            
+      }));;
+      console.log(this.sortVehicle)
+    } else {
+      this.isRadioClicked = false
+      this.searchOption = ''
+    }
   }
 
 }

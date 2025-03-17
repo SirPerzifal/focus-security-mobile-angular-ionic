@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from 'src/app/service/api.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ import { ApiService } from 'src/app/service/api.service';
 export class MoveFormService extends ApiService {
   private apiUrl = this.baseUrl + '/vms/post/add_schedule';
 
-  constructor(http: HttpClient) { super(http) }
+  constructor(http: HttpClient, public functionMain: FunctionMainService) { super(http) }
+
+  project_id = 0
 
   addSchedule(
     contractorName: string, 
@@ -22,7 +25,9 @@ export class MoveFormService extends ApiService {
     contractorVehicle: string,
     block: string, 
     unit: string,
-    subContractors: any[]
+    requestor_id: string,
+    subContractors: any[],
+    project_id: number
   ): Observable<any> {
     const body = {
       jsonrpc: '2.0',
@@ -36,7 +41,9 @@ export class MoveFormService extends ApiService {
         contractor_vehicle: contractorVehicle,
         block: block,
         unit: unit,
-        sub_contractors: subContractors
+        requestor_id: requestor_id,
+        sub_contractors: subContractors,
+        project_id: project_id,
       }
     };
 

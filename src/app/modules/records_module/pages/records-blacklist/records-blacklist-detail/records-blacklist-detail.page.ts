@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-blacklist-detail',
@@ -12,18 +16,97 @@ export class RecordsBlacklistDetailPage implements OnInit {
   record: any = {};
   issue_time = ''
 
-  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    public functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
+    private alertController: AlertController,
+    private modalController: ModalController
+  ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { record: any[]};
+    const state = navigation?.extras.state as { record: any[] };
     if (state) {
       this.record = state.record
-    } 
-   }
+      this.ban_image = `data:image/png;base64,${this.record.ban_image}`
+      console.log(this.record)
+    }
+  }
 
   ngOnInit() {
   }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  ban_image = ''
+
   params: any
   pageType = 'wheel_clamp'
 
+  async onLiftBan() {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'checkout-alert',
+      header: `Are you sure you want to lift the ban?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.liftBanProc()
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    }
+    )
+    await alertButtons.present();
+  }
+
+  async liftBanProc() {
+    console.log("TRY OPEN MODAL")
+    const modal = await this.modalController.create({
+      component: SearchNricConfirmationPage,
+      cssClass: 'nric-confirmation-modal',
+
+    });
+    await modal.present();
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if (result.data) {
+          this.mainVmsService.getApi({ id: this.record.id }, '/vms/post/lift_ban').subscribe({
+            next: (results) => {
+              console.log(results)
+              if (results.result.response_status === 200) {
+                this.functionMain.presentToast('Successfully lifted the ban!', 'success');
+                this.onBackMove()
+              } else {
+                this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
+              }
+            },
+            error: (error) => {
+              this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
+              console.error(error);
+            }
+          });
+        }
+      }
+    });
+  }
+
+  onBackMove() {
+    this.router.navigate(['/records-blacklist'], { queryParams: { reload: true } })
+  }
+
+  srcImg= "assets/img/SCDF.png"
 }

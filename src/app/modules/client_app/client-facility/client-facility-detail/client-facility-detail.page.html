@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Facilities'" [text_second]="'Edit Facility'" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4">
+    <div class="flex flex-col justify-between mt-4 space-y-2 w-full mb-24">
+      <img [src]="facilityForm.facility_banner ? functionMain.getImage(facilityForm.facility_banner) : 'assets/icon/exc-client/no_image.jpg'" [alt]="facilityForm.facility_name" class="w-full h-40 object-cover rounded-2xl">
+      <div class="w-full flex flex-col">
+        <label class="text-base"><b>Room</b></label>
+        <select id="blacklist_block"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+          (change)="onRoomChange($event)" [(ngModel)]="selectedRoomId" [disabled]="false">
+          <option value="" selected disabled hidden>Choose Room</option>
+          <option *ngFor="let room of facilityForm.room_ids" [value]="room.room_id">{{ room.room_name }}</option>
+        </select>
+      </div>
+      <div class="w-full" *ngIf="selectedRoomId">
+        <app-text-input [labelResidentText]="'Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_facility_edit_name'" [placeholder]="'Tennis Court'"
+            [customClasses]="{'w-full items-start': true}" [type]="'text'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="roomName"></app-text-input>
+      </div>
+      <div class="w-full"  *ngIf="selectedRoomId">
+        <app-text-input [labelResidentText]="'Open Time'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_facility_edit_open_time'" [placeholder]="'08:00'"
+            [customClasses]="{'w-full items-start': true}" [type]="'time'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="submitForm.start_time"></app-text-input>
+      </div>
+      <div class="w-full"  *ngIf="selectedRoomId">
+        <app-text-input [labelResidentText]="'Close Time'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_facility_edit_close_time'" [placeholder]="'21:00'"
+            [customClasses]="{'w-full items-start': true}" [type]="'time'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="submitForm.end_time"></app-text-input>
+      </div>
+      <div class="flex flex-row justify-between items-center"  *ngIf="selectedRoomId">
+        <label class="text-base font-bold mt-1" for="client_facility_edit_close">Close for Maintenance</label>
+        <input id="client_facility_edit_close" name="client_facility_edit_close" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="submitForm.is_close_for_maintenance">
+      </div>
+      <div class="flex flex-col"  *ngIf="selectedRoomId">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Terms & Conditions</p>
+        </div>
+        <textarea id="client_facility_edit_terms" placeholder="Terms & Conditions"
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
+          [(ngModel)]="submitForm.terms_and_conditions" name="client_facility_edit_terms">
+          </textarea>
+      </div>
+      <div class="w-full "  *ngIf="selectedRoomId">
+        <button (click)="onSubmit()"
+          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

@@ -1,21 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
-import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 import { Subscription } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
-interface FormData {
-  dateOfInvite: string;
-  vehicleNumber: string;
-  entryType: string;
-  entryTitle: string;
-  entryMessage: string;
-  isProvideUnit: boolean;
-  hiredCar: string;
-  unit: number;
-}
+import { FormData } from 'src/models/resident/visitor.model';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-resident-visitors',
@@ -33,8 +24,10 @@ interface FormData {
     ])
   ]
 })
-export class ResidentVisitorsPage implements OnInit {
+export class ResidentVisitorsPage implements OnInit, OnDestroy {  
   
+  isLoading: boolean = true;
+  unitId:number = 0;
   minDate: string = this.getTodayDate(); // Set tanggal minimum saat inisialisasi
   formattedDate: string = '';
   showNewInv = true;
@@ -54,29 +47,6 @@ export class ResidentVisitorsPage implements OnInit {
       is_entry: false
     }
   ]
-
-  constructor(
-    private router: Router,
-    private alertController: AlertController,
-    private residentVisitorService: VisitorService,
-    private toastController: ToastController,
-    private activeRoute: ActivatedRoute
-  ) {}
-
-  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 4000,
-      color: color
-    });
-
-
-    toast.present().then(() => {
-      
-      
-    });;
-  }
-
   formData = {
     dateOfInvite: "",
     vehicleNumber: "",
@@ -88,74 +58,77 @@ export class ResidentVisitorsPage implements OnInit {
     unit: 0,
   }
 
-  getTodayDate(): string {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
-    const yyyy = today.getFullYear();
-    return `${dd}-${mm}-${yyyy}`; // Format yyyy-mm-dd
-}
+  constructor(
+    private router: Router,
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private activeRoute: ActivatedRoute,
+    private mainApiResidentService: MainApiResidentService
+  ) {}
 
-  onEntryTypeChange(value: string): void {
-    this.formData.entryType = this.formData.entryType === value ? '' : value;
-  }
-
-  onProvideUnitChange() {
-    this.formData.isProvideUnit = !this.formData.isProvideUnit;
-  }
-
-  onDateOfInviteChange(event: Event) {
-    const input = event.target as HTMLInputElement; // Ambil elemen input
-    this.formData.dateOfInvite = input.value; // Ambil nilai dari input
-
-    // Konversi ke format dd/mm/yyyy untuk ditampilkan
-    const dateParts = input.value.split('-');
-    if (dateParts.length === 3) {
-        this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // dd/mm/yyyy
-    } else {
-        this.formattedDate = ''; // Reset jika format tidak valid
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = parseValue.unit_id;
+        this.getActiveInvites();
+      } 
+    })
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: FormData };
+    if (state) {
+      this.formData = state.formData;
     }
-    console.log(this.formattedDate, this.formData.dateOfInvite)
-  }
-
-  entryTitleChange(value: string) {
-    this.formData.entryTitle = value;
-  }
-
-  onSubmitNext() {
-    
-    let errMsg = '';
-    if (this.formData.dateOfInvite == "") {
-      errMsg += 'Please fill date of invite! \n';
+    // Inisialisasi formattedDate jika ada tanggal yang sudah ada
+    if (this.formData.dateOfInvite) {
+      const dateParts = this.formData.dateOfInvite.split('-');
+      if (dateParts.length === 3) {
+          this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+      }
     }
-    if (this.formData.entryType == "") {
-      errMsg += "Please choose entry type! \n";
-    }
-    if (this.formData.entryTitle == "") {
-      errMsg += "Please fill entry title! \n";
-    }
-    
-    console.log(this.formData);
-    if (errMsg == '') {
-      this.router.navigate(['/invite-form'], {
-        state: {
-          formData: this.formData,
+    this.activeRoute.queryParams.subscribe(params => {
+      // console.log(params);
+      if (params['openActive']) {
+        this.toggleShowActInv();
+        this.formattedDate = '';
+        this.getActiveInvites();
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          isProvideUnit: false,
+          hiredCar: "",
+          unit: 0,
         }
-      });
-    } else {
-      this.presentToast(errMsg, 'danger');
-    }
+      } else if (params['formData']) {
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          isProvideUnit: false,
+          hiredCar: "",
+          unit: 0,
+        }
+      } else {
+        this.toggleShowNewInv()
+      }
+    });
   }
 
   getActiveInvites() {
     try {
-      this.residentVisitorService.getActiveInvites().subscribe(
+      this.mainApiResidentService.endpointProcess({unit_id: this.unitId}, 'get/active_invites').subscribe(
         res => {
           var result = res.result['response_status'];
-          console.log(result)
+          // console.log(result)
           if (result === 400) {
-            console.log(res);
+            // console.log(res);
             this.activeInvites = [];
+            this.isLoading = false;
             return;
           } else if (result === 200) {
             var result_data = res.result['response_result']
@@ -174,6 +147,7 @@ export class ResidentVisitorsPage implements OnInit {
                 invite_id: item['invite_id'],
                 is_entry: item['is_entry']
               });
+              this.isLoading = false
             });
           }
         },
@@ -184,7 +158,57 @@ export class ResidentVisitorsPage implements OnInit {
     } catch (err) {
       console.log(err);
     }
-    // console.log(this.activeInvites);
+  }
+
+  getTodayDate(): string {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+    const yyyy = today.getFullYear();
+    return `${dd}-${mm}-${yyyy}`; // Format yyyy-mm-dd
+  }
+
+  onEntryTypeChange(value: string): void {
+    this.formData.entryType = this.formData.entryType === value ? '' : value;
+  }
+
+  onProvideUnitChange() {
+    this.formData.isProvideUnit = !this.formData.isProvideUnit;
+  }
+
+  onDateOfInviteChange(event: Event) {
+    const input = event.target as HTMLInputElement; // Ambil elemen input
+    this.formData.dateOfInvite = input.value; // Ambil nilai dari input
+    this.formattedDate = input.value; // Ambil
+    // console.log(this.formattedDate, this.formData.dateOfInvite)
+  }
+
+  entryTitleChange(value: string) {
+    this.formData.entryTitle = value;
+  }
+
+  onSubmitNext() {
+    let errMsg = '';
+    if (this.formData.dateOfInvite == "") {
+      errMsg += 'Please fill date of invite! \n';
+    }
+    if (this.formData.entryType == "") {
+      errMsg += "Please choose entry type! \n";
+    }
+    if (this.formData.entryTitle == "") {
+      errMsg += "Please fill entry title! \n";
+    }
+    
+    // console.log(this.formData);
+    if (errMsg == '') {
+      this.router.navigate(['/invite-form'], {
+        state: {
+          formData: this.formData,
+        }
+      });
+    } else {
+      this.presentToast(errMsg, 'danger');
+    }
   }
 
   toggleShowInv() {
@@ -234,8 +258,6 @@ export class ResidentVisitorsPage implements OnInit {
           text: confirmText,
           cssClass: 'confirm-button',
           handler: () => {
-            console.log('Confirmed');
-            // Logika konfirmasi
             if (invite) {
               this.confirmCancel(invite);
             }
@@ -245,8 +267,6 @@ export class ResidentVisitorsPage implements OnInit {
           text: cancelText,
           cssClass: 'cancel-button',
           handler: () => {
-            console.log('Canceled');
-            // Logika pembatalan
           }
         },
       ]
@@ -255,97 +275,36 @@ export class ResidentVisitorsPage implements OnInit {
     await alert.present(); // Tambahkan baris ini
   }
 
-  setResult(ev: any) {
-    console.log(`Dismissed with role: ${ev.detail.role}`);
-  }
-
   confirmCancel(invite: any) {
     try{
-      this.residentVisitorService.postCancelVisitor(invite.is_entry ? false : invite.invite_id, !invite.is_entry ? false : invite.invite_id).subscribe(
+      this.mainApiResidentService.endpointProcess(
+        {
+          entry_id: !invite.is_entry ? false : invite.invite_id, 
+          visitor_id: invite.is_entry ? false : invite.invite_id
+        },
+        'post/cancel_invite'
+      ).subscribe(
         res => {
-          console.log("Success")
           this.presentToast('Successfully cancel invites!', 'success')
           this.activeInvites = this.activeInvites.filter(inviteItem => inviteItem.invite_id !== invite.invite_id)
         },
         error => {
           this.presentToast(error, 'danger')
-          console.log(error)
         }
       )
      } catch (err) {
       this.presentToast(String(err), 'danger')
-      console.log(err)
      }
   }
 
-  @ViewChild('inputDateVisitor') inputDateVisitor!: ElementRef;
-
-  onClickOpenDate(): void {
-    this.inputDateVisitor.nativeElement.focus(); // Fokus ke elemen input
-  }
-
-
-  ngOnInit() {
-    Preferences.get({key: 'ACTIVE_UNIT'}).then((value)=>{
-      console.log(value)
-      console.log('valuevaluevaluevaluevaluevalue')
-      console.log(value.value)
-      console.log("value.valuevalue.valuevalue.valuevalue.value")
-    })
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: FormData };
-    if (state) {
-      this.formData = state.formData;
-      console.log('tes', this.formData);
-    }
-    this.getActiveInvites()
-    // Inisialisasi formattedDate jika ada tanggal yang sudah ada
-    if (this.formData.dateOfInvite) {
-      const dateParts = this.formData.dateOfInvite.split('-');
-      if (dateParts.length === 3) {
-          this.formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // dd/mm/yyyy
-      }
-    }
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        console.log(event['url'])
-        if (event['url'].split('?')[0] == '/resident-visitors'){
-          this.getActiveInvites();
-          this.activeInvites
-        }
-      }
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
     });
-    this.activeRoute.queryParams.subscribe(params => {
-      console.log(params);
-      if (params['openActive']) {
-        this.toggleShowActInv()
-        this.formattedDate = '';
-        this.formData = {
-          dateOfInvite: "",
-          vehicleNumber: "",
-          entryType: "",
-          entryTitle: "",
-          entryMessage: "",
-          isProvideUnit: false,
-          hiredCar: "",
-          unit: 0,
-        }
-      } else if (params['formData']) {
-        this.formData = {
-          dateOfInvite: "",
-          vehicleNumber: "",
-          entryType: "",
-          entryTitle: "",
-          entryMessage: "",
-          isProvideUnit: false,
-          hiredCar: "",
-          unit: 0,
-        }
-      } else {
-        this.toggleShowNewInv()
-      }
-    });
-  
+    toast.present().then(() => {
+    });;
   }
 
   private routerSubscription!: Subscription;
@@ -357,7 +316,6 @@ export class ResidentVisitorsPage implements OnInit {
   }
 
   extend_mb = false
-
   testAddMb(status: boolean = false) {
     this.extend_mb = status
   }

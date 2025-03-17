@@ -4,21 +4,78 @@
     <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-3">
-    <div class="flex flex-col items-center justify-center text-center">
-      <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>ABC RESIDENCES</b></span>
-      <span
-        class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] flex flex-row items-center text-[var(--ion-color-primary)]"><b>iFS360 VISITOR MANAGEMENT SYSTEM</b></span>
-      
+    <div class="flex flex-row justify-between items-center text-center mx-4">
+      <div class="w-[66px]"></div>
+      <div class="flex flex-col">
+        <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{
+            project_name }}</b></span>
+        <span
+          class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] flex flex-row items-center text-[var(--ion-color-primary)]"><b>iFS360
+            VISITOR MANAGEMENT SYSTEM</b></span>
+      </div>
+      <div
+        class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-[50%] flex flex-row items-center justify-center">
+        <ion-icon name="log-out-outline" size="large" class="text-white size-10"
+          (click)="isLogoutModal = true"></ion-icon>
+      </div>
     </div>
     <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
-      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'"
+      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry"
         [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'"
+      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor"
         [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'"
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" *ngIf="project_config.is_allow_vms_contractor"
         [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true"/>
+
+      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule"
+        [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_schedule"
+        [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery"
+        [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" *ngIf="project_config.is_allow_vms_collection"
+        [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" *ngIf="project_config.is_allow_vms_coaches"
+        (click)="onClickMoveCustom('coach')" [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true" *ngIf="project_config.is_allow_vms_emergency_vehicles"
+        [routerLink]="['/emergency-module']" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor')" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list"
+        [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car"
+        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true"/>
+
+      <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list"
+        [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle"
+        [routerLink]="['/resident-car-list']" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true" 
+        [routerLink]="['/records-main']" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts"
+        [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal"/>
+
+
+    </div>
+    <!-- <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
+      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" [routerLink]="['/pick-up-page']"
+        [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_entry"/>
+
+      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true"
+        [disableClick]="true" *ngIf="project_config.is_allow_vms_visitor" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']"
+        [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_contractor" />
 
       <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')"
         [isActive]="true" [disableClick]="true" />
@@ -26,14 +83,14 @@
       <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'"
-        [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
+      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" [routerLink]="['/deliveries']" [isActive]="true"
+        [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'"
-        [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" (click)="onClickMoveCustom('coach')"
+      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" [routerLink]="['/collection-module']"
         [isActive]="true" [disableClick]="true" />
+
+      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']"
+        (click)="onClickMoveCustom('coach')" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true"
         [routerLink]="['/emergency-module']" [disableClick]="true" />
@@ -42,7 +99,7 @@
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'"
-        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true"/>
+        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true"
         [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
@@ -53,11 +110,11 @@
       <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true"
         [routerLink]="['/records-main']" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" 
-        [routerLink]="['/alert-main']" [isWarning]="alertTotal"/>
+      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true"
+        [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal" />
 
 
-    </div>
+    </div> -->
     <!-- <div class="bottom-0 w-full p-4 justify-items-end">
       <div class="grid grid-cols-2 w-full">
         <ion-button fill="clear"
@@ -82,5 +139,16 @@
       </div>
     </div> -->
   </div>
-
+  <ion-modal id="text-modal" [isOpen]="isLogoutModal" (didDismiss)="closeModal()">
+    <ng-template>
+      <div class="flex flex-row justify-center space-x-2 m-10">
+        <app-text-input #textInput [id]="'project_key'" [placeholder]="'PROJECT PASSWORD'" [customClasses]="{'w-full ':true}"
+          [type]="'text'" [(ngModel)]="project_key"
+          [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+        </app-text-input>
+        <button class="h-20 w-2/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white"
+          (click)="onLogout()">LOGOUT</button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

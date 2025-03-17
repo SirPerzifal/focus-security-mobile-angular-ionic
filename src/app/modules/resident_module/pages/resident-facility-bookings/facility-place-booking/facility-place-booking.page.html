@@ -1,5 +1,7 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [text]="facilityDetail?.facility_name || 'Court Detail'" />
+</ion-header>
+<ion-content [fullscreen]="true">
 
   <div class="flex flex-col relative mt-2 mb-32">
     <!-- <div class="mx-4">
@@ -30,7 +32,7 @@
           </div>
         </ion-button>
         <ion-datetime-button class="w-4/5 mt-0.5" datetime="datetime"></ion-datetime-button>
-        <ion-modal keep-contents-mounted="true">
+        <ion-modal id="choose-date-court-modal" keep-contents-mounted="true">
           <ng-template>
             <ion-datetime 
               id="datetime" 
@@ -52,22 +54,14 @@
       <div class="flex flex-row justify-center space-x-3 w-full mb-3">
         <select id="ch_room" [(ngModel)]="selectedRoom" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
           <option [value]="'default'" disabled hidden>Choose {{ facilityDetail?.facility_name || 'Room' }}</option>
-          <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.room_name }}</option>
+          <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.is_close_for_maintenance ? room.room_name + ' (This court / room is under maintenance)' : room.room_name }}</option>
         </select>
       </div>
 
-      <!-- <div class="grid grid-cols-3 gap-2 mb-4">
-        <button 
-          *ngFor="let timeSlot of roomSchedule"
-          [ngClass]="getTimeSlotClass(timeSlot)"
-          (click)="selectTimeSlot(timeSlot)"
-          class="py-2 rounded"
-        >
-          {{ timeSlot.start_time }} - {{ timeSlot.end_time }}
-        </button>
-      </div> -->
-
-      <div class="grid grid-cols-3 gap-2 mb-4">
+      <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+				<ion-spinner name="circular"></ion-spinner>
+			</div>
+      <div *ngIf="!isLoading" class="grid grid-cols-3 gap-2 mb-4">
         <button 
           *ngFor="let timeSlot of roomSchedule"
           [ngClass]="getTimeSlotClass(timeSlot)"
@@ -78,27 +72,30 @@
         </button>
       </div>
 
-      <div class="flex items-start mb-4">
-        <input 
-        id="termsCheckbox"
-          class="mr-2 mt-1" 
-          type="checkbox" 
-          [(ngModel)]="isTermsAccepted" 
-        />
-        <label for="termsCheckbox" class="text-base font-bold">
-          By clicking "Book Now," I acknowledge that I have read and agree to the
-          Terms and Conditions for using this facility.
-        </label>
-      </div>
-
-      <div class="text-center mb-4">
-        <app-visitor-button 
-          [text]="'Book Now'" 
-          [extraClass]="isTermsAccepted ? 'bg-[#10421d] text-[white] w-full text-base' : 'bg-[#D0D0D0] text-[#757575] w-full text-base cursor-not-allowed'"
-          (click)="uploadFacilityBooking()"
-        ></app-visitor-button>
+      <div *ngIf="!isCloseForMaintenance">
+        <div class="flex items-start mb-4">
+          <input 
+          id="termsCheckbox"
+            class="mr-2 mt-1" 
+            type="checkbox" 
+            [(ngModel)]="isTermsAccepted" 
+          />
+          <label for="termsCheckbox" class="text-base font-bold">
+            By clicking "Book Now," I acknowledge that I have read and agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">Terms and Conditions</u>&nbsp;for using this facility.
+          </label>
+        </div>
+  
+        <div class="text-center mb-4">
+          <app-visitor-button 
+            [text]="'Book Now'" 
+            [extraClass]="isTermsAccepted ? 'bg-[#10421d] text-[white] w-full text-base' : 'bg-[#D0D0D0] text-[#757575] w-full text-base cursor-not-allowed'"
+            (click)="uploadFacilityBooking()"
+          ></app-visitor-button>
+        </div>
       </div>
     </div>
   </div>
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

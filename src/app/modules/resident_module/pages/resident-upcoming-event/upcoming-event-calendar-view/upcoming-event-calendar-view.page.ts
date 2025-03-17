@@ -6,8 +6,11 @@ import {
 } from 'angular-calendar';
 import { Subscription } from 'rxjs';
 import { CustomDateFormatter } from 'src/utils/custom-date-formatter';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
 import { IonDatetime } from '@ionic/angular';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
 @Component({
   selector: 'app-upcoming-event-calendar-view',
@@ -44,49 +47,54 @@ export class UpcomingEventCalendarViewPage implements OnInit {
 
   @ViewChild('datePicker', { static: false }) datePicker?: IonDatetime;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private clientMainService: ClientMainService,
+    public functionMain: FunctionMainService,
+    private route: ActivatedRoute,
+    private getUserInfoService: GetUserInfoService
+  ) {}
 
   ngOnInit() {
-    this.loadEvents();
-    this.loadTask();
+    this.getUserInfoService.getPreferenceStorage(
+      ['unit',
+        'block_name',
+        'block',
+        'unit_name',
+        'project_id'
+      ]
+    ).then((value) => {
+      // // console.log(value);
+      // NOTE THIS SEMI HARD CODE
+      this.block_id = value.block != null ? value.block : 1;
+      this.project_id = value.project_id != null ? value.project_id : 1;
+      this.unit_id = value.unit != null ? value.unit : 1
+      // console.log(this.project_id, this.block_id, this.unit_id)
+      this.loadUpcomingEvents()
+    })
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
-        console.log(url);
+        // console.log(url);
         if (url !== '/upcoming-event-calendar-view') {
           this.viewDate = new Date();
         }
       }
     });
-  }
-
-  loadEvents() {
-    const now = new Date();
-    this.events = [
-      {
-        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0), // 10:00 AM
-        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 11, 0), // 11:00 AM
-        title: 'Event 1',
-        color: { primary: '#ad2121', secondary: '#FAE3E3' },
-      },
-      {
-        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0), // 12:00 PM
-        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0), // 1:00 PM
-        title: 'Event 2',
-        color: { primary: '#1e90ff', secondary: '#D1E8FF' },
-      },
-      {
-        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0), // 12:00 PM
-        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0), // 1:00 PM
-        title: 'Event 3',
-        color: { primary: '#1e90ff', secondary: '#D1E8FF' },
+    this.route.queryParams.subscribe(params => {
+      // console.log("JAAAAIi")
+      if (params ) {
+        if (params['reload']){
+          this.loadUpcomingEvents()
+        }
       }
-    ];
+    })
+    
   }
 
-  toggleTaskCompletion(task: any) {
-    task.completed = !task.completed; // Toggle status completed
-  }
+  unit_id = 1
+  block_id = 1
+  project_id = 191
 
   addTask() {
     if (this.newTaskTitle.trim()) { // Pastikan input tidak kosong
@@ -99,6 +107,44 @@ export class UpcomingEventCalendarViewPage implements OnInit {
       this.task.push(newTask); // Tambahkan tugas baru ke array
       this.newTaskTitle = ''; // Reset input
     }
+  }
+
+  async loadUpcomingEvents() {
+    const now = new Date();
+    this.clientMainService.getApi({ unit_id: this.unit_id }, '/resident/get/upcoming_event').subscribe({
+      next: (results) => {
+        // console.log(results)
+        if (results.result.response_code == 200) {
+          const newEvents = results.result.result.map((result: any) => ({
+            id: result.id,
+            start: new Date(result.start_date), // 12:00 PM
+            end: new Date(result.end_date), // 1:00 PM
+            title: result.event_title,
+            description: result.event_description,
+            registered_coach_id: result.registered_coach_id,
+            color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
+            resizable: {
+              beforeStart: true,
+              afterEnd: true,
+            },
+          }));
+  
+          // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
+          this.events = [...newEvents];
+  
+          // console.log(this.events);
+        } else {
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('Failed!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+ 
+  toggleTaskCompletion(task: any) {
+    task.completed = !task.completed; // Toggle status completed
   }
 
   calculateEventDuration(event: CalendarEvent): string {
@@ -165,10 +211,10 @@ export class UpcomingEventCalendarViewPage implements OnInit {
     
     // // Menggunakan map untuk mendapatkan array judul event
     // this.eventDayClick = day.events.map((event: any) => event); // Mengambil hanya judul dari setiap event
-    // // console.log(this.eventDayClick.title)
-    // console.log(this.showDate);
+    // // // console.log(this.eventDayClick.title)
+    // // console.log(this.showDate);
     // this.isDayClick = true;
-    // console.log('Day Click', day);
+    // // console.log('Day Click', day);
     this.router.navigate(['make-an-event'], {
       state: {
         day: day,
@@ -177,7 +223,7 @@ export class UpcomingEventCalendarViewPage implements OnInit {
   }
 
   handleEvent(event: CalendarEvent) {
-    console.log('Event clicked:', event);
+    // console.log('Event clicked:', event);
   }
 
   toggleDirecttoActiveEvent() {

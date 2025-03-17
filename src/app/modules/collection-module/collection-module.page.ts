@@ -58,6 +58,14 @@ export class CollectionModulePage implements OnInit {
   showWalkTrans = false;
   showDriveTrans = false;
 
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+
   toggleShowWalk() {
     if (!this.showDriveTrans){
       if(!this.showWalk){
@@ -137,7 +145,6 @@ export class CollectionModulePage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
@@ -154,10 +161,9 @@ export class CollectionModulePage implements OnInit {
     this.blockUnitService.getUnit(blockUnittoGet).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name})); // Simpan data unit
           console.log(response)
         } else {
-          this.functionMain.presentToast('An error occurred while loading unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -171,11 +177,13 @@ export class CollectionModulePage implements OnInit {
   onBlockChange(event: any) {
     if(this.showWalk){
       this.walkInFormData.block = event.target.value;
+      this.walkInFormData.unit = ''
       this.isLoadingUnit =true
       this.loadUnit(); // Panggil method load unit
       this.isLoadingUnit =false
     }else if(this.showDrive){
       this.driveInFormData.block = event.target.value;
+      this.driveInFormData.unit = ''
       this.isLoadingUnit =true
       this.loadUnit();
       this.isLoadingUnit =false
@@ -186,9 +194,9 @@ export class CollectionModulePage implements OnInit {
 
   onUnitChange(event: any) {
     if(this.showWalk){
-      this.walkInFormData.unit = event.target.value;
+      this.walkInFormData.unit = event[0];
     }else if(this.showDrive){
-      this.driveInFormData.unit = event.target.value;
+      this.driveInFormData.unit = event[0];
     }else{
       this.functionMain.presentToast('Please choose collection type first!', 'danger');
     }
@@ -213,7 +221,7 @@ export class CollectionModulePage implements OnInit {
     }
     console.log(this.walkInFormData)
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit).subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id).subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -260,7 +268,7 @@ export class CollectionModulePage implements OnInit {
     }
     console.log(this.driveInFormData)
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -285,6 +293,7 @@ export class CollectionModulePage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProjectName()
     this.isLoadingBlock =true
     this.loadBlock(); 
     this.isLoadingBlock =false

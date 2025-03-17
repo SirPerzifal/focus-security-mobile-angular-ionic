@@ -10,8 +10,8 @@
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
         <div class="flex flex-col">
-          <label class="text-2xl font-bold">TOTAL NUMBER OF 1ST WARNING ISSUED: {{ first_issued }}</label>
-          <div class="border-2 p-1 w-full">
+          <label class="text-2xl font-bold">TOTAL NUMBER OF 1ST WARNING ISSUED: {{ offence_detail.total_first_warning_offences ? offence_detail.total_first_warning_offences : 0 }}</label>
+          <div class="border-2 p-1 w-full" *ngIf="offence_detail.total_first_warning_offences > 0">
             <table class="text-xl w-full">
               <tr class="font-bold">
                 <td class="">SERIAL NUMBER</td>
@@ -19,19 +19,19 @@
                 <td>TIME</td>
                 <td>ISSUED BY</td>
               </tr>
-              <tr *ngFor="let item of first_issued_array">
-                <td>{{ item.serial_number }}</td>
-                <td>{{ item.issued_date }}</td>
-                <td>{{ item.issued_time }}</td>
-                <td>{{ item.issued_by }}</td>
+              <tr *ngFor="let offence of offence_detail.offences_details.first_warning">
+                <td>{{ offence.name }}</td>
+                <td>{{ offence.date }}</td>
+                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>
           </div>
          
         </div>
         <div class="flex flex-col">
-          <label class="text-2xl font-bold">TOTAL NUMBER OF 2ND WARNING ISSUED: {{ second_issued }}</label>
-          <div class="border-2 p-1 w-full">
+          <label class="text-2xl font-bold">TOTAL NUMBER OF 2ND WARNING ISSUED: {{ offence_detail.total_second_warning_offences ? offence_detail.total_second_warning_offences : 0 }}</label>
+          <div class="border-2 p-1 w-full" *ngIf="offence_detail.total_second_warning_offences > 0">
             <table class="text-xl w-full">
               <tr class="font-bold">
                 <td class="">SERIAL NUMBER</td>
@@ -39,19 +39,19 @@
                 <td>TIME</td>
                 <td>ISSUED BY</td>
               </tr>
-              <tr *ngFor="let item of second_issued_array">
-                <td>{{ item.serial_number }}</td>
-                <td>{{ item.issued_date }}</td>
-                <td>{{ item.issued_time }}</td>
-                <td>{{ item.issued_by }}</td>
+              <tr *ngFor="let offence of offence_detail.offences_details.second_warning">
+                <td>{{ offence.name }}</td>
+                <td>{{ offence.date }}</td>
+                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>
           </div>
          
         </div>
         <div class="flex flex-col">
-          <label class="text-2xl font-bold">TOTAL NUMBER OF WHEEL CLAMPS: {{ wheel_clamp }}</label>
-          <div class="border-2 p-1 w-full mb-4">
+          <label class="text-2xl font-bold">TOTAL NUMBER OF WHEEL CLAMPS: {{ offence_detail.total_wheel_clamp_offences ? offence_detail.total_wheel_clamp_offences : 0 }}</label>
+          <div class="border-2 p-1 w-full mb-4" *ngIf="offence_detail.total_wheel_clamp_offences > 0">
             <table class="text-xl w-full">
               <tr class="font-bold">
                 <td class="">SERIAL NUMBER</td>
@@ -59,17 +59,15 @@
                 <td>TIME</td>
                 <td>ISSUED BY</td>
               </tr>
-              <tr *ngFor="let item of wheel_clamp_array">
-                <td>{{ item.serial_number }}</td>
-                <td>{{ item.clamp_date }}</td>
-                <td>{{ item.clamp_time }}</td>
-                <td>{{ item.clamped_by }}</td>
+              <tr *ngFor="let offence of offence_detail.offences_details.wheel_clamp">
+                <td>{{ offence.name }}</td>
+                <td>{{ offence.date }}</td>
+                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>
           </div>
-         
         </div>
-      
       </div>
     </div>
   </div>

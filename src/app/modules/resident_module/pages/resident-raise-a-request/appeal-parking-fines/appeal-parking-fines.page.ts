@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ToastController } from '@ionic/angular';
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
 @Component({
   selector: 'app-appeal-parking-fines',
@@ -8,31 +12,66 @@ import { Router } from '@angular/router';
 })
 export class AppealParkingFinesPage implements OnInit {
 
-  appealData: any = [
-    {
-      ReportNo: 1,
-      VehicleNo: 'RC 1665',
-      OffenceDate: '01-01-2025',
-      Status: 'Approved'
-    },
-    {
-      ReportNo: 2,
-      VehicleNo: 'PB 7661',
-      OffenceDate: '02-01-2025',
-      Status: 'Approved'
-    },
-    {
-      ReportNo: 3,
-      VehicleNo: 'TC 6652',
-      OffenceDate: '03-01-2025',
-      Status: 'Approved'
-    }
-  ];
+  unitId: number = 1;
 
-  constructor(private router: Router) { }
+  appealData: any = [];
+
+  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
-    console.log('tes')
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
+      this.unitId = Number(value.unit);
+      this.loadOffence();
+      // // console.log('unit', this.formData.unit);
+    })
+    // console.log('tes')
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event['url'] == '/appeal-parking-fines'){
+          this.appealData = []
+          this.loadOffence();
+        }
+         // Panggil fungsi lagi saat halaman dibuka
+      }
+    });
+  }
+
+ ambil_tanggal(datetime_str: any) {
+   const tanggal = datetime_str.split(" ")[0]
+   return tanggal
+ }
+
+  loadOffence() {
+    this.raiseARequestService.getOffensesApi(
+      this.unitId
+    ).subscribe((response: any) => {
+      // console.log(response);
+      if (response.result.response_code === 200) {
+        // console.log(response);
+        this.appealData = response.result.response_result.map((appeal_data: any) => {
+          return {
+            'id' : appeal_data.id,
+            'name' : appeal_data.name,
+            'contact_number' : appeal_data.contact_number,
+            'offender_name' : appeal_data.offender_name,
+            'vehicle_number' : appeal_data.vehicle_number,
+            'block_id' : appeal_data.block_id,
+            'block_name' : appeal_data.block_name,
+            'unit_id' : appeal_data.unit_id,
+            'unit_name' : appeal_data.unit_name,
+            'issue_time' : this.ambil_tanggal(appeal_data.issue_time),
+            'appeal_status' : appeal_data.appeal_status
+          }
+        })
+        if (this.appealData) {
+          // console.log("cor");
+          
+        }
+      } else {
+        this.presentToast('Failed to load offence data', 'danger');
+      }
+    });
   }
 
   navigateToAppealForm(appealData: any) {
@@ -41,6 +80,23 @@ export class AppealParkingFinesPage implements OnInit {
         appealData: appealData
       }
     });
+  }
+
+  private routerSubscription!: Subscription;
+  OnDestroy() {
+    // Bersihkan subscription untuk menghindari memory leaks
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
+    });
+    toast.present();
   }
 
 }

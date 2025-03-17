@@ -1,0 +1,35 @@
+.fslp-container {
+    text-align: center;
+    padding: 30px;
+}
+.fslp-logo {
+    width: 200px;
+    margin: 50px auto 20px;
+}
+.fslp-title {
+    font-size: 24px;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+}
+.fsles-button-container {
+    margin-right: 4px;
+}
+.fsles-bottom {
+    font-family: 'Montserrat', sans-serif;
+}
+.fslp-button {
+    font-family: 'Abyssinica SIL', serif;
+    font-size: 12px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.fslp-button-disabled {
+    font-family: 'Abyssinica SIL', serif;
+    font-size: 12px;
+    color: rgb(107 114 128);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

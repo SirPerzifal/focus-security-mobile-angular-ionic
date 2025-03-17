@@ -4,6 +4,7 @@ import { FoodPlatformService } from 'src/app/service/vms/food_platform/food-plat
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-deliveries',
@@ -34,7 +35,7 @@ export class DeliveriesPage implements OnInit {
     { image: 'assets/icon/deliveries-icon/Package.webp', text: 'Not Exist', isActive: false, id: 0 },
   ];
 
-  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService) { }
+  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService, private functionMain: FunctionMainService) { }
 
   package_delivery_type = ""
   food_delivery_type = ""
@@ -65,9 +66,17 @@ export class DeliveriesPage implements OnInit {
     remarks: ''
   };
 
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+  
+  project_id = 0
+
   getFoodPlatform() {
     this.foodDeliveryButtons.pop()
-    this.foodPlatform.getFoodPlatForm().subscribe(
+    this.foodPlatform.getFoodPlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
         console.log(result)
@@ -80,13 +89,14 @@ export class DeliveriesPage implements OnInit {
       },
       error => {
         console.log(error)
+        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 0});
       }
     )
   }
 
   getPackagePlatform() {
     this.packageDeliveryButtons.pop()
-    this.foodPlatform.getPackagePlatForm().subscribe(
+    this.foodPlatform.getPackagePlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
         console.log(result)
@@ -101,6 +111,7 @@ export class DeliveriesPage implements OnInit {
       },
       error => {
         console.log(error)
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 0});
       }
     )
   }
@@ -150,7 +161,8 @@ export class DeliveriesPage implements OnInit {
         {}, 
         this.formData.block, 
         this.formData.unit,
-        {}
+        {},
+        this.project_id
       ).subscribe(
         res => {
           console.log(res);
@@ -166,6 +178,7 @@ export class DeliveriesPage implements OnInit {
           }
         },
         error => {
+          this.presentToast('An error occurred while submitting delivery data!', 'danger');
           console.error('Error:', error);
         }
       );
@@ -202,6 +215,7 @@ export class DeliveriesPage implements OnInit {
     this.package_delivery_type = ''
     this.foodDeliveryButtons.forEach(button => button.isActive = false);
     this.packageDeliveryButtons.forEach(button => button.isActive = false);
+    this.Unit = []
   }
 
   onSubmitPackage(openBarrier: boolean = false) {
@@ -250,7 +264,8 @@ export class DeliveriesPage implements OnInit {
         mutiple_unit = {
           pax: this.formData.pax,
           remarks: this.formData.remarks
-        }
+        },
+        this.project_id
       ).subscribe(
         res => {
           console.log(res);
@@ -267,6 +282,7 @@ export class DeliveriesPage implements OnInit {
           }
         },
         error => {
+          this.presentToast('An error occurred while submitting delivery data!', 'danger');
           console.error('Error:', error);
         }
       );
@@ -433,8 +449,7 @@ export class DeliveriesPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.formData.unit = event.target.value;
-    console.log(this.formData.unit)
+    this.formData.unit = event[0];
   }
 
   loadBlock() {
@@ -445,7 +460,6 @@ export class DeliveriesPage implements OnInit {
           this.Block = response.result.result;
           console.log(response)
         } else {
-          this.presentToast('Failed to load block data', 'danger');
         }
       },
       error: (error) => {
@@ -457,13 +471,13 @@ export class DeliveriesPage implements OnInit {
   }
 
   async loadUnit() {
+    this.formData.unit = ''
     this.blockUnitService.getUnit(this.formData.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
           console.log(response)
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -481,11 +495,14 @@ export class DeliveriesPage implements OnInit {
       packageDeliveries: false,
       bulkyItemDeliveries: false
     };
-    this.foodDeliveryButtons.forEach(button => button.isActive = false);
-    this.packageDeliveryButtons.forEach(button => button.isActive = false);
-    this.loadBlock()
-    this.getFoodPlatform()
-    this.getPackagePlatform()
+    this.loadProjectName().then(() => {
+      this.foodDeliveryButtons.forEach(button => button.isActive = false);
+      this.packageDeliveryButtons.forEach(button => button.isActive = false);
+      this.loadBlock()
+      this.getFoodPlatform()
+      this.getPackagePlatform()
+    })
+    
   }
 
   selectedUnitType: string = ''; // To track the selected unit type

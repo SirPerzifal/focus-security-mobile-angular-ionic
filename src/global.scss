@@ -9,6 +9,11 @@
 
 @import 'tailwindcss/utilities';
 @import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+
+@import 'tailwindcss/utilities';
+@import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 /*
@@ -49,7 +54,13 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
-
+ion-header {
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+ion-spinner {
+  transform: scale(2);
+}
 
 .custom-alert-class-family-edit-page {
   --background: rgba(0, 0, 0, 0.5); // Background transparan
@@ -148,7 +159,6 @@ select:focus>option:checked:before {
       display: flex;
       flex-direction: row;
       justify-content: center;
-      column-gap: 10px !important;
     }
   
     .cancel-button {
@@ -313,6 +323,7 @@ select:focus>option:checked:before {
       width: 24rem;
       padding: 20px 0px 20px 0px;
       text-align: center;
+      font-family: 'Comic Neue', serif;
   }
   .alert-title{
       font-size: 1.5rem;
@@ -426,6 +437,11 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+ion-header {
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
 /* Rounded sliders */
 .slider.round {
   border-radius: 34px;
@@ -438,8 +454,15 @@ input:checked + .slider:before {
 .record-modal{
   --height: 90%;
   --border-radius: 4px;
+  --width: 90%;
+}
+
+.payment-modal{
+  --overflow-y: auto;
+  --max-height: 55%;
+  --border-radius: 10px;
   --padding: 20px;
-  --width: 80%;
+  --width: 90%;
 }
 
 .nric-confirmation-modal{
@@ -448,6 +471,14 @@ input:checked + .slider:before {
   --border-radius: 4px;
   --padding: 20px;
   --width: 60%;
+}
+
+.nric-scan-modal{
+  --border: black 1px solid;
+  --height: 80%;
+  --border-radius: 4px;
+  --padding: 20px;
+  --width: 80%;
 }
 
 .record-modal-notice{
@@ -462,4 +493,17 @@ input:checked + .slider:before {
   --border-radius: 4px;
   --padding: 20px;
   --max-width: 80%
+}
+
+.terms-condition-modal{
+  --height: 50%;
+  --border-radius: 5px;
+  --padding: 35px;
+  --max-width: 90%
+}
+
+.cal-week-view .cal-event {
+  color: black !important;
+  font-weight: 700;
+  font-size: 14px;
 }

@@ -7,6 +7,10 @@ import { Subscription } from 'rxjs';
 import { faEraser, faPenFancy } from '@fortawesome/free-solid-svg-icons';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { SignaturePadComponent } from 'src/app/shared/components/signature-pad/signature-pad.component';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { ModalController } from '@ionic/angular';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
   selector: 'app-renovation-permit',
@@ -20,8 +24,13 @@ export class RenovationPermitPage implements OnInit {
   faEraser = faEraser
   renovationForm: FormGroup;
   agreementChecked: boolean = false; // Status checkbox
-  extend_mb = true
+  userName: string = '';
+  condoName: string = '';
+  unit: number = 1; // Replace with actual unit ID
   unitId: number = 1; // Replace with actual unit ID
+  block: number = 1; // Replace with actual block ID
+  noTel: string = '';
+  extend_mb = true
   isModalOpen: boolean = false; // Status modal
   dateNow = new Date().toISOString().slice(0, 10);
   contactPerson: string = '';
@@ -30,8 +39,9 @@ export class RenovationPermitPage implements OnInit {
   ];
   renovationSigned: string = '';
   isRenovationSigned = false
+  unitIdForGetFamily: number = 0;
 
-  constructor(private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private route: Router) {
+  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private route: Router, private getUserInfoService: GetUserInfoService, private authService:AuthService) {
     this.renovationForm = this.fb.group({
       requestorId: [36],
       name_of_resident: ['KingsMan Condominium'],
@@ -43,8 +53,38 @@ export class RenovationPermitPage implements OnInit {
       block: [1],
       unit: [1],
       contact_person_id: [0],
+      contractor_contact_person: [''], 
+      contractor_contact_number: [''],
+      contractor_company_name: [''],
+      contractor_vehicle_number: [''],
       renovation_signature: [''],
     });
+  }
+
+  termsAndCOndition: string = '';
+
+  async presentModalAgreement() {
+    // console.log("tes");
+        // // console.log(email);
+    // // console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        // email: email
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
   }
 
   showTimeInfo() {
@@ -62,8 +102,29 @@ export class RenovationPermitPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('tes')
-    this.loadExpectedFamily();
+    // console.log('tes')
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(
+      [ 'unit',
+        'block_name',
+        'unit_name',
+        'block',
+        'project_name'
+      ]
+    ).then((value) => {
+      const parse_user = this.authService.parseJWTParams(value.user);
+      // // console.log(value);
+      this.block = value.block_name;
+      this.renovationForm.get('block')!.setValue(Number(value.block))
+      this.unitId = Number(value.unit);
+      this.unit = value.unit_name;
+      this.unitIdForGetFamily = Number(value.unit); // Mengambil nilai unit dari objek
+      this.renovationForm.get('unit')!.setValue(Number(value.unit))
+      this.condoName = value.project_name;
+      this.userName = parse_user.name
+      // // console.log('unit', this.unitId);
+      this.loadExpectedFamily();
+    })
   }
 
   loadCards() {
@@ -83,10 +144,10 @@ export class RenovationPermitPage implements OnInit {
 
   loadExpectedFamily() {
     this.expectedFamilyMember.pop()
-    this.familyService.getFamilyList().subscribe(
+    this.familyService.getFamilyList(this.unitIdForGetFamily).subscribe(
       res => {
         var result = res.result['response_result']
-        console.log(result)
+        // console.log(result)
         result.forEach((item: any) => {
           this.expectedFamilyMember.push({
             id: item['family_id'], 
@@ -104,7 +165,7 @@ export class RenovationPermitPage implements OnInit {
         this.renovationForm.value.contact_person_id = result[0].id;
       },
       error => {
-        console.log(error)
+        // console.log(error)
       }
     )
   }
@@ -115,7 +176,7 @@ export class RenovationPermitPage implements OnInit {
   }
 
   onSelect(select: any) {
-    console.log('Selected:', select);
+    // console.log('Selected:', select);
     this.renovationForm.value.contact_person_id = select['id'];
   }
 
@@ -125,7 +186,7 @@ export class RenovationPermitPage implements OnInit {
         this.presentToast('Please provide your sign.', 'danger');
         return
       }
-      console.log(this.renovationForm.value);
+      // console.log(this.renovationForm.value);
 
       // Gabungkan renovation_date dan renovation_time
       const renovationDate = this.renovationForm.value.renovation_date;
@@ -143,17 +204,17 @@ export class RenovationPermitPage implements OnInit {
         this.renovationForm.value.unit,
         this.renovationForm.value.contact_person_id,
         this.renovationForm.value.renovation_signature,
-        '',
-        '',
-        '',
-        '',
+        this.renovationForm.value.contractor_contact_person,
+        this.renovationForm.value.contractor_contact_number,
+        this.renovationForm.value.contractor_company_name,
+        this.renovationForm.value.contractor_vehicle_number
       ).subscribe({
         next: (response) => {
           if (response.result.response_code === 400) {
-            console.log(this.renovationForm);
+            // console.log(this.renovationForm);
             this.presentToast('Theres something wrong when submit your form!', 'danger');
           } else {
-            console.log('Response:', response);
+            // console.log('Response:', response);
             this.OnDestroy();
             this.presentToast('Request submitted successfully!', 'success');
             this.route.navigate(['resident-raise-a-request'])
@@ -165,13 +226,13 @@ export class RenovationPermitPage implements OnInit {
         }
       });
     } else {
-      console.log('Form is invalid');
+      // console.log('Form is invalid');
       this.presentToast('Form is invalid. Please fill all required fields.', 'danger');
     }
   }
 
   navigateToEditFamily(family: any) {
-    console.log(family)
+    // console.log(family)
     this.route.navigate(['/family-edit-member'], {
       state: {
         id: family.id,

@@ -6,6 +6,8 @@ import { ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-move-form',
@@ -16,7 +18,7 @@ export class MoveFormPage implements OnInit {
   @ViewChildren('textInput') textInputs!: QueryList<TextInputComponent>;
 
   maxPax = 10;
-  paxCount = 1;
+  paxCount = 0;
   block = '';
   block_id = '1';
   unit_id = '1';
@@ -34,10 +36,12 @@ export class MoveFormPage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
   ) {}
 
   ngOnInit() {
     // Ambil parameter dari route
+    this.loadProjectName()
     this.route.queryParams.subscribe(params => {
       console.log(params)
       this.block = params['block'] || '';
@@ -45,6 +49,7 @@ export class MoveFormPage implements OnInit {
       this.block_id = params['block_id'] || '';
       this.unit_id = params['unit_id'] || '';
       this.scheduleType = params['schedule_type'] || 'move_in_out';
+      this.requestor_id = params['requestor_id'] || ''
   
       // Setel nilai input secara manual
       setTimeout(() => {
@@ -55,6 +60,16 @@ export class MoveFormPage implements OnInit {
       });
     });
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+
+  requestor_id = ''
 
   // Metode baru untuk mengatur nilai input
   setInputValue(id: string, value: string) {
@@ -103,6 +118,21 @@ export class MoveFormPage implements OnInit {
     }
   }
 
+  checkPaxData(): boolean {
+    for (let i = 0; i < this.paxCount; i++) {
+      console.log(i)
+      const name = this.getInputValue(`name_pax_${i}`);
+      const nric = this.getInputValue(`nric_fin_pax_${i}`);
+      console.log(name, nric)
+      if (name && nric) {
+        
+      } else {
+        return true
+      }
+    }
+    return false
+  }
+
   // Fungsi submit untuk SAVE RECORD & OPEN BARRIER
   saveRecordAndOpenBarrier() {
     this.submitForm(true);
@@ -119,16 +149,38 @@ export class MoveFormPage implements OnInit {
   }
 
   contact_number = ''
+  contractor_name = ''
+  company_name = ''
 
   // Fungsi submit umum
   submitForm(openBarrier: boolean = false) {
-    // Tampilkan loading
-    // const loading = await this.loadingController.create({
-    //   message: 'Saving Record...'
-    // });
-    // await loading.present();
+    let errMsg = ''
+    if (!this.getInputValue('contractor_name')) {
+      errMsg += 'Contractor name is required! \n'
+    }
+    if (!this.contact_number) {
+      errMsg += 'Contact number is required! \n'
+    }
+    if (!this.identificationType) {
+      errMsg += 'Identification type must be selected! \n'
+    }
+    if (!this.nric_value) {
+      errMsg += 'Identification number is required! \n'
+    }
+    if (!this.block_id || !this.unit_id) {
+      errMsg += 'Block and unit must be selected! \n'
+    }
+    if (!this.getInputValue('contractor_company_name')) {
+      errMsg += 'Company name is required! \n'
+    }
+    if (this.checkPaxData()) {
+      errMsg += "All names and NRICs of contractor members must be filled in!!"
+    }
+    if (errMsg) {
+      this.presentToast(errMsg, 'danger')
+      return
+    }
 
-    // Kumpulkan data pax sebelum menggunakan subContractors
     this.collectPaxData();
 
     const subContractors = this.paxData.map(pax => ({
@@ -138,11 +190,6 @@ export class MoveFormPage implements OnInit {
 
     console.log("subcon", subContractors);
     console.log("paxdata", this.paxData);
-
-    if (!subContractors.length) {      
-      console.log("No subcontractors found");
-      return;
-    }
   
     this.moveFormService.addSchedule(
       this.getInputValue('contractor_name'),
@@ -154,7 +201,9 @@ export class MoveFormPage implements OnInit {
       this.getInputValue('contractor_vc'), // Nomor kendaraan
       this.block_id,
       this.unit_id,
-      subContractors
+      this.requestor_id,
+      subContractors,
+      this.project_id,
     ).subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {       
@@ -229,4 +278,57 @@ export class MoveFormPage implements OnInit {
   nricPaxChange(event: any) {
     this.setInputValue(event.target.id, this.functionMain.nricChange(event.target.value))
   }
+
+  paxIdentity: string[] = []
+  nameIdentity: string[] = []
+
+  openNricScan(order: number = 0, is_pax: boolean = false) {
+    this.functionMain.presentModalNric().then(value => {
+      if (value) {
+        if (is_pax) {
+          this.paxData[order].identification_number = value.data
+        } else {
+          console.log(value)
+          this.identificationType = value.is_fin ? 'fin' : 'nric'
+          this.nric_value = value.data;
+        } 
+        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+          next: (results) => {
+            console.log(results)
+            if (results.result.status_code === 200) {
+              let data = results.result.result[0]
+              if (is_pax) {
+                this.paxData[order].contractor_name = data.contractor_name
+              } else {
+                console.log(value)
+                this.contractor_name = data.contractor_name
+                this.company_name = data.company_name
+                this.contact_number = data.contact_number
+                this.vehicle_number = data.vehicle_number
+              } 
+            } else {
+              if (is_pax) {
+                this.paxData[order].contractor_name = this.paxData[order].contractor_name ? this.paxData[order].contractor_name : ''
+              } else {
+                console.log(value)
+                this.contractor_name = this.contractor_name ? this.contractor_name : ''
+                this.company_name = this.company_name ? this.company_name : ''
+                this.contact_number = this.contact_number ? this.contact_number : '65'
+                this.vehicle_number = this.vehicle_number ? this.vehicle_number : ''
+              } 
+              this.functionMain.presentToast(`No data found in the system for ${value.data}!`, 'warning')
+            }
+          },
+          error: (error) => {
+            this.presentToast('An error occurred while searching for nric!', 'danger');
+            console.error(error);
+          }
+        });
+      }
+      
+    });
+    console.log(this.nric_value)
+  }
+
+  faBarcode = faBarcode
 }

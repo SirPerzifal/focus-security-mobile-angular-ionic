@@ -1,0 +1,35 @@
+<ng-container *ngIf="name === 'Notification'; else otherButtons">
+  <div class="w-full h-full relative">
+    <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2 z-10" *ngIf="paramForBadgeNotification > 0">{{ paramForBadgeNotification }}</span>
+    <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" (click)="routeLinkNotification()">
+      <div class="w-full flex flex-col items-center">
+        <img class="w-10 h-10 my-2" [src]="srcImage" alt="Icon for Notifications"/>
+        <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">{{ name }}</span>
+      </div>
+    </ion-button>
+  </div>
+</ng-container>
+
+<ng-template #otherButtons>
+  <ng-container *ngIf="name === 'House Rule'; else defaultButton">
+    <div class="w-full h-full relative">
+      <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" (click)="downloadDocument(document, documentName)">
+        <div class="w-full flex flex-col items-center">
+          <img class="w-10 h-10 my-2" [src]="srcImage" alt="Icon for House Rules"/>
+          <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">{{ name }}</span>
+        </div>
+      </ion-button>
+    </div>
+  </ng-container>
+
+  <ng-template #defaultButton>
+    <div class="w-full h-full relative">
+      <ion-button fill="clear" class="w-full h-full min-h-[130px] flex bg-[#D8ECCF] h-18 rounded-2xl relative p-0 m-0" (click)="routeBasic()">
+        <div class="w-full flex flex-col items-center">
+          <img class="w-10 h-10 my-2" [src]="srcImage" alt="Icon for {{ name }}"/>
+          <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs">{{ name }}</span>
+        </div>
+      </ion-button>
+    </div>
+  </ng-template>
+</ng-template>

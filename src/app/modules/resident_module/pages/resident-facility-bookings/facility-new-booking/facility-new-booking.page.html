@@ -1,5 +1,7 @@
+<ion-header>
+  <app-resident-header [text]="'Facility Booking'" [text_second]="'New Booking'" />
+</ion-header>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Facility Booking'" [text_second]="'Court'" />
     
   <div class="w-full flex items-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
@@ -7,8 +9,8 @@
     <!-- CONTENT -->
     <div class="flex flex-col relative mx-4 mb-24">
       <div class="flex flex-row mt-2 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'Active'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
+        <app-multi-line-button [text]="'New'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
         <!-- <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowDep()"></app-visitor-button> -->
         <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
@@ -21,7 +23,7 @@
           (click)="navigateToFacilityPlaceBooking(facility.facility_id)"
         >
           <img 
-            [src]="getFacilityImage(facility.facility_name)" 
+            [src]="functionMainService.getImage(facility.facility_banner)" 
             [alt]="facility.facility_name" 
             class="w-full h-40 object-cover"
           >
@@ -31,12 +33,18 @@
           </div>
         </div>
   
+        <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-16">
+          <ion-spinner name="circular"></ion-spinner>
+        </div>
+
         <!-- Tampilkan pesan jika tidak ada fasilitas -->
-        <div *ngIf="facilities.length === 0" class="text-center mt-10">
+        <div *ngIf="facilities.length === 0 && !isLoading" class="text-center mt-10">
           <p class="text-gray-600">No facilities available</p>
         </div>
       </div>
     </div>
     
-    <app-bottom-nav-bar></app-bottom-nav-bar>
   </ion-content>
+  <ion-footer>
+    <app-bottom-nav-bar></app-bottom-nav-bar>
+  </ion-footer>

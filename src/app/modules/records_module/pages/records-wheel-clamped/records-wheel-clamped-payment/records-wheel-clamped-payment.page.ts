@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-records-wheel-clamped-payment',
@@ -15,7 +16,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private mainVmsService: MainVmsService, private toastController: ToastController) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { vehicle: any, alert: boolean };
+    const state = navigation?.extras.state as { vehicle: any, alert: boolean, search: boolean, overnight: boolean };
     if (state) {
       this.vehicle = state.vehicle
       this.qr_code = `data:image/png;base64,${state.vehicle.payment_qr_code}`
@@ -24,6 +25,16 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
         this.home_url = 'alert-main'
         this.back_url = '/alert-main'
         this.params = {reset: true}
+      }
+      if (state.search) {
+        this.search = state.search
+        this.home_url = 'resident-car-list'
+        this.back_url = '/resident-car-list'
+      }
+      if (state.overnight) {
+        this.overnight = state.overnight
+        this.home_url = 'overnight-parking-detail'
+        this.back_url = '/overnight-parking-detail'
       }
     }
   }
@@ -36,10 +47,19 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
     })
   }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
   params: any
   pageType = 'wheel_clamp'
 
   alert = false
+  search = false
+  overnight = false
   home_url = 'records-wheel-clamped'
   back_url = '/records-wheel-clamped-detail'
   qr_code = ''
@@ -79,9 +99,8 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
         if (results.result.response_code === 200) {
           console.log(results)
           this.presentToast('Successfully upload receipt!', 'success');
-          this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : { queryParams: { type: 'wheel_clamp'} } );
+          this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : ( this.search ? { queryParams: { vehicle_number: this.vehicle.vehicle_number} } :( this.overnight ? { queryParams: { reload: 'true'} } : { queryParams: { type: 'wheel_clamp'} })) );
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {

@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <app-header [userName]="useName" [condoName]="condominiumName"></app-header>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <ion-spinner name="dots"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading" class="p-5 text-center mb-24">
+    <!-- <div class="w-full flex flex-row mb-4">
+      <div class="w-full">
+        <input type="text" id="simple-search" class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="What Would You Like To Do Today?" required />
+      </div>
+      <button type="submit" class="p-3.5 ms-2 text-sm font-medium text-white bg-[#10421D] items-center rounded-lg border border-[#10421D] hover:bg-[#10421D] focus:ring-4 focus:outline-none focus:ring-green-700 dark:bg-[#10421D] dark:hover:bg-[#10421D] dark:focus:ring-[#10421D]">
+          <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+          <span class="sr-only">Search</span>
+      </button>
+    </div> -->
+    <div class="flex flex-col gap-3">
+      <div *ngFor="let lb of longButtondata">
+        <app-long-button [name]="lb.name" [srcImage]="lb.src" [routeLinkTo]="lb.routeLinkTo"></app-long-button>
+      </div>
+    </div>
+    <div class="flex items-center justify-center flex-col">
+      <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
+        <div *ngFor="let sb of squareButton">
+          <app-square-button 
+            [name]="sb.name" 
+            [srcImage]="sb.src" 
+            [routeLinkTo]="sb.routeLinkTo" 
+            [paramForBadgeNotification]="sb.paramForBadgeNotification" 
+            [document]="sb.document" 
+            [documentName]="sb.documentName">
+          </app-square-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

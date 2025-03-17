@@ -12,21 +12,21 @@ export class FoodPlatformService extends ApiService{
     super(http)
   }
 
-  getFoodPlatForm(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/vms/get/food_platform`, {jsonrpc: '2.0', params: {}});
+  getFoodPlatForm(project_id: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/vms/get/food_platform`, {jsonrpc: '2.0', params: {project_id: project_id}});
   }
 
-  getPackagePlatForm(): Observable<any> {
+  getPackagePlatForm(project_id: number): Observable<any> {
     console.log("HEY THIS WORK HERE")
-    return this.http.post<any>(`${this.baseUrl}/vms/get/package_express`, {jsonrpc: '2.0', params: {}});
+    return this.http.post<any>(`${this.baseUrl}/vms/get/package_express`, {jsonrpc: '2.0', params: {project_id: project_id}});
   }
 
-  pastAddDeliveries(contact_number: string, vehicle_number: string, delivery_type : string, food_delivery : Record<string, any>, package_delivery : Record<string, any>, block: string, unit: string, multiple_unit: Record<string, any>): Observable<any> {
+  pastAddDeliveries(contact_number: string, vehicle_number: string, delivery_type : string, food_delivery : Record<string, any>, package_delivery : Record<string, any>, block: string, unit: string, multiple_unit: Record<string, any>, project_id: number): Observable<any> {
     console.log(contact_number, vehicle_number, delivery_type , food_delivery , package_delivery , block, unit, multiple_unit)
     return this.http.post<any>(`${this.baseUrl}/vms/post/add_deliveries`, {
       jsonrpc: '2.0', 
       params: {
-        contact_number, vehicle_number, delivery_type, food_delivery, package_delivery, block, unit, multiple_unit
+        contact_number, vehicle_number, delivery_type, food_delivery, package_delivery, block, unit, multiple_unit,project_id
       }});
   }
 }

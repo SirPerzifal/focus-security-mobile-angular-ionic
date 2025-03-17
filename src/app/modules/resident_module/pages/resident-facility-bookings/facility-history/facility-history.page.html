@@ -1,16 +1,18 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [text]="'Facility Booking'" [text_second]="'Booking History'" />
+</ion-header>
+<ion-content [fullscreen]="true">
 
   <div class="flex flex-col relative mt-2 mb-16">
     <div class="w-1/6 flex items-start ml-3">
 			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
 			</div>
     <div class="mx-4">
-      <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
-        <!-- <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowDep()"></app-visitor-button> -->
-        <app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'" (click)="toggleShowHis()"></app-visitor-button>
+      <div class="flex flex-row mt-2 justify-between w-full">
+				<app-visitor-button [text]="'Active'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-2:w-[70px] cw-2:text-sm leading-none'" (click)="toggleShowActBk()"></app-visitor-button>
+				<app-visitor-button [text]="'New'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-2:w-[70px] cw-2:text-sm leading-none'" (click)="toggleShowNewBk()"></app-visitor-button>
+				<!-- <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-2:w-[70px] cw-2:text-sm'" (click)="toggleShowDep()"></app-visitor-button> -->
+				<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-2:w-[70px] cw-2:text-sm'" (click)="toggleShowHis()"></app-visitor-button>
       </div>
     </div>
 
@@ -73,16 +75,29 @@
       <div class="flex flex-row-reverse mt-4 space-x-2 ml-4 mr-4">
         <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
       </div>
-      <div *ngFor="let booking of bookingList" class="bg-[#D8ECCF] rounded-2xl p-5 m-4 flex flex-col space-y-2">
+      <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+				<ion-spinner name="circular"></ion-spinner>
+			</div>
+      <div *ngFor="let booking of bookingList" class="bg-[#D8ECCF] rounded-2xl p-4 m-4 flex flex-col space-y-2">
         <div class="max-w-[100%]">
-          <div [ngClass]="{
-            'bg-green-300': booking.status === 'Approved',
-            'bg-sky-300': booking.status === 'Pending Approval' || booking.status === 'Pending Payment',
-            'bg-[#E3787E]': booking.status === 'Rejected' || booking.status === 'Cancelled',
-            'bg-yellow-500': booking.status === 'Requested',
-            }" class="bg-[#A3D9A5] text-black py-1 px-2 rounded-md font-bold inline-block ml-1">{{ booking.status }}</div>
-          <h2 class="ml-1 text-xl bg-[#D8ECCF] font-bold mt-2">{{ booking.facilityName }}</h2>
-          <div class="text-black text-base">
+          <div class="flex flex-col justify-start items-start mb-2">
+            <div class="flex flex-row items-center justify-end mt-2">
+              <ng-container *ngIf="booking.status === 'approved' || booking.status === 'Approved'">
+                <ion-icon name="checkmark" class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-[var(--ion-color-primary)] font-bold text-base">Approved</p>
+              </ng-container>
+              <ng-container *ngIf="booking.status === 'pending_approval' || booking.status === 'Pending Approval' || booking.status === 'pending_payment' || booking.status === 'Pending Payment'">
+                <ion-icon name="alert" class=" bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+              </ng-container>
+              <ng-container *ngIf="booking.status === 'rejected' || booking.status === 'Rejected' || booking.status === 'cancelled' || booking.status === 'Cancelled'">
+                <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-red-700 font-bold text-base">Rejected</p>
+              </ng-container>
+            </div>
+          </div>
+          <h2 class="ml-1 text-xl bg-[#D8ECCF] font-bold mt-1">{{ booking.facilityName }}</h2>
+          <div class="text-black text-base cw-3:text-xs">
             <table class="w-full table-fixed">
               <tr class="h-1">
                 <td class="font-bold">Event Date</td>
@@ -105,7 +120,7 @@
           <p class="text-black">Booked By : {{ booking.bookedBy }}</p>
           <p class="text-black">Deposit Status : {{ booking.status === 'Approved' ? 'No Deposit Required' : 'Pending' }}</p> -->
         </div>
-        <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-3 w-[45%]" (click)="navigateToHistoryDetail(booking)">
+        <button class="ml-1 bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base cw-3:text-sm rounded-md font-bold mt-3 w-[50%]" (click)="navigateToHistoryDetail(booking)">
           View Details
         </button>
       </div>
@@ -172,6 +187,7 @@
       </div>
     </div>
   </div>
-
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

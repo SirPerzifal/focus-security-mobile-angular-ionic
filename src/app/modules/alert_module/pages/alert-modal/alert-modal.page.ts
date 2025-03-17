@@ -37,7 +37,6 @@ export class AlertModalPage implements OnInit {
   is_search_barcode = false
 
   ngOnInit() {
-    this.takePicture()
   }
 
   fileInput: any
@@ -99,7 +98,9 @@ export class AlertModalPage implements OnInit {
     let params = {
       offence_id: this.id,
       is_checkout: this.type == 'checkout',
-      is_release: this.type != 'checkout'
+      is_release: this.type != 'checkout',
+      before_image: this.beforeClampImageFile,
+      after_image: this.afterClampImageFile
     }
     console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
@@ -140,7 +141,19 @@ export class AlertModalPage implements OnInit {
       ]
     }
     )
-    await alertButtons.present();
+    let errMsg = ''
+    if (!this.beforeClampImageFile) {
+      errMsg += 'Before clamp image is required! \n'
+    }
+    if (!this.afterClampImageFile) {
+      errMsg += 'After clamp image is required for wheel clamp issues! \n'
+    }
+    if (errMsg == '') {
+      await alertButtons.present();
+    } else {
+      this.functionMain.presentToast(errMsg, 'danger')
+    }
+    
   }
 
   imageSrc: string | ArrayBuffer | null = null;
@@ -162,6 +175,49 @@ export class AlertModalPage implements OnInit {
         this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
         console.error(error);
       }
+    });
+  }
+
+  beforeClampImageFile: string = '';
+  afterClampImageFile: string = '';
+
+  onBeforeClampImageFileSelected(file: File): void {
+    let data = file;
+    if (data){
+      this.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.beforeClampImageFile = base64.split(',')[1]
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } 
+  }
+
+  onAfterClampImageFileSelected(file: File) {
+    let data = file;
+    if (data){
+      this.convertToBase64(data).then((base64: string) => {
+        console.log('Base64 successed');
+        this.afterClampImageFile = base64.split(',')[1]
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } 
+  }
+
+  convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
     });
   }
 

@@ -1,10 +1,12 @@
-<ion-content [fullscreen]="true">
+<ion-header>
 	<app-resident-header [text]="'Visitors'" [text_second]="'Invite Form'" />
+</ion-header>
+<ion-content [fullscreen]="true">
 	<div class="w-full flex items-start justify-start mt-2 ml-3">
 		<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToVisitors()"></ion-icon>
 	</div>
 	<!-- CONTENT -->
-	<div class="flex flex-col relative mt-2 mx-4 mb-20">
+	<div class="flex flex-col relative mx-4 mb-20">
 		<div class="flex flex-col mt-2">
 			<u class="text-lg font-bold">Invitation List</u>
 			<div *ngIf="!isFormVisible" class="text-center text-gray-500 mt-4 dark:text-[white]">
@@ -38,7 +40,7 @@
 					<div class="w-full flex flex-row justify-between space-x-2">
 						<div class="w-1/2">
 							<div class="flex flex-row justify-start mt-2">
-								<p class="text-base font-bold">Entry Mobile Number</p>
+								<p class="text-base font-bold cw-3:text-xs">Entry Mobile Number</p>
 							</div>
 							<input 
 							[id]="'invf_phone_' + i" 
@@ -50,7 +52,7 @@
 						</div>
 						<div class="w-1/2">
 							<div class="flex flex-row justify-start mt-2">
-								<p class="text-base font-bold">Entry Vehicle Number</p>
+								<p class="text-base font-bold cw-3:text-xs">Entry Vehicle Number</p>
 							</div>
 							<input 
 							[id]="'invf_plate_' + i" 
@@ -86,5 +88,7 @@
 		</div>
 	</div>
 	<!-- ############################### -->
-	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

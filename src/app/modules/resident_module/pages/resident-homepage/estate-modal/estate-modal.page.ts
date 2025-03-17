@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
-import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
+import { Component, OnInit } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { EstateProfile } from 'src/models/resident/auth.model';
 
 @Component({
   selector: 'app-estate-modal',
@@ -13,147 +12,48 @@ import { AuthService } from 'src/app/service/resident/authenticate/authenticate.
 })
 export class EstateModalPage implements OnInit {
 
-  profileEstate: {
-    family_id : number,
-    family_name : string,
-    family_type:string,
-    unit_id : number,
-    unit_name : string,
-    block_id : number,
-    block_name : string,
-    project_id : number,
-    project_name : string,
-  }[] = [];
+  profileEstate: EstateProfile[] = [];
   activeUnit : number = 0;
   isLoading: boolean = true;
   noData: boolean = false;
 
   constructor(
-    private authService : AuthService,
     private navParams: NavParams, 
-    private modalController: ModalController, 
-    private toastController: ToastController, 
+    private modalController: ModalController,
+    public functionMain: FunctionMainService,
   ) { }
 
-  ngOnInit() {
-    Preferences.get({key:'ACTIVE_UNIT'}).then((unit_value)=>{
-      if(unit_value?.value){
-        this.activeUnit = parseInt(unit_value.value)
-      }
-    })
-    
-    var email = this.navParams.get('email')
-    console.log(email);
-    console.log('emailemailemailemailemail');
-    // console.log(accessToken);
-    // console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
-    this.isLoading = true;
-    this.loadEstate('jenvel@gmail.com')
-    // this.loadEstate(email)
-    // Preferences.get({key:'USER_INFO'}).then((value)=>{
-    //   if(value?.value){
-    //     var accessToken = this.authService.parseJWTParams(value.value)
-        
-    //     // this.authService.getEstatesByEmail(accessToken?.email).subscribe(
-        
-        
-    //   }
-    // })
-
+  async ngOnInit() {
+    const user_state = await Preferences.get({ key: 'USESTATE_DATA' });
+    if (user_state?.value) {
+      this.activeUnit = JSON.parse(user_state.value).unit_id; // Pastikan untuk mengurai JSON
+    }
+  
+    const estate = this.navParams.get('estate');
+    this.profileEstate = Object.keys(estate).map(key => ({
+      family_id: estate[key]?.family_id,
+      family_name: estate[key]?.family_name || '',
+      family_type: estate[key]?.family_type || '',
+      image_profile: estate[key]?.image_profile || '',
+      unit_id: estate[key]?.unit_id,
+      unit_name: estate[key]?.unit_name || '',
+      block_id: estate[key]?.block_id,
+      block_name: estate[key]?.block_name || '',
+      project_id: estate[key]?.project_id,
+      project_name: estate[key]?.project_name || '',
+      project_image: estate[key]?.project_image || '',
+    }));
+  
+    this.isLoading = false;
   }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-
-    toast.present().then(() => {
-    });
-  }
-
-  loadEstate(email:string) {
-    this.authService.getEstatesByEmail(email).subscribe(
-          
-      response => {
-        console.log(response,"responseresponseresponseresponseresponseresponse");
-        if (response.result.status_code === 200) {
-          console.log("heres the data", response);
-          var listedEstate = []
-          for (var key in response.result.response){
-            if(response.result.response.hasOwnProperty(key)){
-              listedEstate.push({
-                family_id : response.result.response[key]?.family_id,
-                family_name : response.result.response[key]?.family_name ? response.result.response[key]?.family_name : '',
-                family_type:response.result.response[key]?.family_type ? response.result.response[key]?.family_type : '',
-                unit_id : response.result.response[key]?.unit_id,
-                unit_name : response.result.response[key]?.unit_name ? response.result.response[key]?.unit_name : '',
-                block_id : response.result.response[key]?.block_id,
-                block_name : response.result.response[key]?.block_name ? response.result.response[key]?.block_name : '',
-                project_id : response.result.response[key]?.project_id,
-                project_name : response.result.response[key]?.project_name ? response.result.response[key]?.project_name : '',
-              })
-            }
-          }
-          this.profileEstate = listedEstate
-          this.isLoading = false
-          if(listedEstate.length==0){
-            this.noData = true
-          }
-          console.log(this.profileEstate);
-          console.log('this.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstatethis.profileEstate');
-          
-          // this.profileEstate = response.result.result
-        } else {
-          console.error('Error fetching Estate:', response);
-          this.presentToast('Error fetching Estate!', 'danger');
-        }
-      },
-      error => {
-        console.error('HTTP Error:', error);
-        this.presentToast('Internal Server Error', 'danger');
-      }
-    );
-  }
-
+  
   async chooseEstateClick(estate:any){
-    await Preferences.set({
-      key: 'ACTIVE_UNIT',
-      value: estate.unit_id.toString(),
-    })
-    await Preferences.set({
-      key: 'ACTIVE_FAMILY',
-      value: estate.family_id.toString(),
-    })
-    await Preferences.set({
-      key: 'ACTIVE_PROJECT',
-      value: estate.project_id.toString(),
-    })
-    await Preferences.set({
-      key: 'PROJECT_NAME',
-      value: estate.project_name.toString(),
-    })
-    await Preferences.set({
-      key: 'FAMILY_TYPE',
-      value: estate.family_type,
-    })
-    this.activeUnit = estate.unit_id
-    this.modalController.dismiss(true);
-
-    // Preferences.get({key:'USER_INFO'}).then((value)=>{
-    //   if(value?.value){
-    //     var accessToken = this.authService.parseJWTParams(value.value)
-    //     console.log(accessToken);
-    //     console.log('accessTokenaccessTokenaccessTokenaccessTokenaccessToken');
-    //     this.loadEstate('jenvel@gmail.com')
-        
-    //     // this.authService.getEstatesByEmail(accessToken?.email).subscribe(
-        
-        
-    //   }
-    // })
+    Preferences.set({
+      key: 'USESTATE_DATA',
+      value: JSON.stringify(estate),
+    }).then(()=>{
+      this.modalController.dismiss(JSON.stringify(estate));
+    });
   }
-
 
 }

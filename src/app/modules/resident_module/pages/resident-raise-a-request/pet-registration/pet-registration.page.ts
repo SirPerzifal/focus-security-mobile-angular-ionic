@@ -3,6 +3,9 @@ import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Router } from '@angular/router';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { ModalController } from '@ionic/angular';
+import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
   selector: 'app-pet-registration',
@@ -26,13 +29,39 @@ export class PetRegistrationPage implements OnInit {
   }
   fromWhere: boolean = false; //
   
-  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) {
+  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
-      console.log(state.from);
+      // console.log(state.from);
       this.fromWhere = true
     } 
+  }
+
+  termsAndCOndition: string = '';
+
+  async presentModalAgreement() {
+    // console.log("tes");
+        // // console.log(email);
+    // // console.log('presentModalpresentModalpresentModalpresentModalpresentModal');
+    
+    const modal = await this.modalController.create({
+      component: TermsConditionModalComponent,
+      cssClass: 'terms-condition-modal',
+      componentProps: {
+        // email: email
+        terms_condition: this.termsAndCOndition
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+
+      }
+    });
+
+    return await modal.present();
   }
 
   directTo() {
@@ -44,7 +73,21 @@ export class PetRegistrationPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log("tes");
+    // Ambil data unit yang sedang aktif
+    this.getUserInfoService.getPreferenceStorage(
+      [ 'unit',
+        'block_name',
+        'unit_name',
+        'block',
+        'project_name'
+      ]
+    ).then((value) => {
+      // // console.log(value);
+      this.formData.block_id = Number(value.block);
+      this.formData.unit_id = Number(value.unit)
+      // // console.log('unit', this.unitId);
+    })
+    // console.log("tes");
   }
 
   onLicenceChange(value: any): void {
@@ -52,7 +95,7 @@ export class PetRegistrationPage implements OnInit {
     if (data) {
       this.selectedLicencName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.pet_license = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -67,7 +110,7 @@ export class PetRegistrationPage implements OnInit {
     if (data) {
       this.selectedImageName = data.name; // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
+        // console.log('Base64 successed');
         this.formData.pet_image = base64.split(',')[1]; // Update the form control for image file
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -116,7 +159,7 @@ export class PetRegistrationPage implements OnInit {
         // Replace the following with your own logic to handle the success message and log the data
         // For example, you might want to save the data to a database or send it to a server for further processing
         this.presentToast(res.result.message, 'success');
-        console.log('Data submitted successfully:', res);
+        // console.log('Data submitted successfully:', res);
         this.router.navigate(['resident-raise-a-request'])
         this.formData = {
           block_id: 1,

@@ -4,6 +4,7 @@ import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OvernightParkingListPage } from '../overnight-parking-list/overnight-parking-list.page';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-overnight-parking-modal',
@@ -18,10 +19,12 @@ export class OvernightParkingModalPage implements OnInit {
     private navParams: NavParams, 
     private mainVmsService: MainVmsService,
     private toastController: ToastController,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private functionMain: FunctionMainService
   ) {}
 
   alert: boolean = false
+  no_nric: boolean = false
   search: boolean = false
   vehicle: any
   issue = 'wheel_clamp'
@@ -29,7 +32,9 @@ export class OvernightParkingModalPage implements OnInit {
   isReadonlyIssue = false
 
   ngOnInit() {
+    this.loadProjectName()
     this.issue = this.navParams.get('issue')
+    this.no_nric = this.navParams.get('no_nric')
     this.vehicle = this.navParams.get('vehicle')
     this.alert = this.navParams.get('alert') ? true : false
     if (this.alert && this.issue == 'none') {
@@ -55,17 +60,28 @@ export class OvernightParkingModalPage implements OnInit {
         this.isReadonly = false
       }
     }
-    if (this.search) {
-      this.selectedNotice = this.navParams.get('issue')
-      this.isReadonlyIssue = true
-      this.isReadonly = false
-      this.issue = this.navParams.get('issue')
+    if (this.search && this.issue == 'none') {
+      this.alert = false
     }
+    if (this.no_nric) {
+      this.search = false
+    }
+    this.vehicle_number = this.vehicle.vehicle_numbers ? this.vehicle.vehicle_numbers : (this.vehicle.vehicle_number ? this.vehicle.vehicle_number : '')
+    console.log(this.vehicle_number)
     console.log(this.issue)
     console.log(this.vehicle)
     console.log(this.alert)
     this.loadOfficer()
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+    })
+  }
+
+  project_id = 0
+  vehicle_number = ''
 
   url = '/vms/create/offenses'
 
@@ -147,7 +163,7 @@ export class OvernightParkingModalPage implements OnInit {
       let params = {}
       if (this.alert){
         params = {
-          offence_id: this.vehicle.id, 
+          offence_id: this.search || this.no_nric ? this.vehicle.offence_id : this.vehicle.id , 
           issuing_officer: this.issueOfficer,
           notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
           before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
@@ -157,8 +173,8 @@ export class OvernightParkingModalPage implements OnInit {
         params = {
           vehicle_number: this.vehicle.vehicle_numbers ? this.vehicle.vehicle_numbers : this.vehicle.vehicle_number, 
           visitor_name: this.vehicle.visitor_name, 
-          block_id: this.search ? this.vehicle.block_id[0] : this.vehicle.block_id, 
-          unit_id: this.search ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
+          block_id: this.search || this.no_nric ? this.vehicle.block_id[0] : this.vehicle.block_id, 
+          unit_id: this.search || this.no_nric ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
           contact_number: this.vehicle.contact_number,
           type_notice: this.selectedNotice, 
           issuing_officer_name: this.issueOfficer,
@@ -167,6 +183,7 @@ export class OvernightParkingModalPage implements OnInit {
           notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
           before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
           after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
+          project_id: this.project_id,
         }
       }
       console.log(params)

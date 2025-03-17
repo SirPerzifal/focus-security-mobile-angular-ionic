@@ -10,10 +10,12 @@
         <p class="text-base font-bold">Report No</p>
       </div>
       <app-text-input [id]="'rp_no'"
-        [placeholder]="appealDataForm.ReportNo"
+        [placeholder]="appealDataForm.id"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-        [isReadonly]="true">
+        [isReadonly]="true"
+        [(ngModel)]="appealDataForm.id"
+        >
       </app-text-input>
     </div>
     <div class="w-full">
@@ -21,10 +23,12 @@
         <p class="text-base font-bold">Vehicle No</p>
       </div>
       <app-text-input [id]="'vhc_no'"
-        [placeholder]="appealDataForm.VehicleNo"
+        [placeholder]="appealDataForm.vehicle_number"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-        [isReadonly]="true">
+        [isReadonly]="true"
+        [(ngModel)]="appealDataForm.vehicle_number"
+        >
       </app-text-input>
     </div>
     <div class="w-full">
@@ -32,10 +36,12 @@
         <p class="text-base font-bold">Offence Date</p>
       </div>
       <app-text-input [id]="'ofc_date'"
-        [placeholder]="appealDataForm?.OffenceDate"
+        [placeholder]="appealDataForm?.issue_time"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-        [isReadonly]="true">
+        [isReadonly]="true"
+        [(ngModel)]="appealDataForm.issue_time"
+        >
       </app-text-input>
     </div>
     <div class="w-full">

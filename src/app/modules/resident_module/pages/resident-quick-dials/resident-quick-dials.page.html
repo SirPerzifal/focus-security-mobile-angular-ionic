@@ -4,15 +4,18 @@
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
   </div>
 
-  <div class="px-5 text-center mb-20">
+  <div *ngIf="isLoading" class="flex h-[50%] justify-center items-center">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading" class="px-5 text-center mb-24">
     <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
       <div *ngFor="let dial of quickDials"
             class="w-full h-full relative">
         <ion-button fill="clear" class="w-full flex bg-[#D8ECCF] h-24 rounded-2xl relative p-0 m-0" 
                     (click)="selectQuickDial(dial)">
           <div class="w-full flex flex-col items-center">
-            <img class="w-12 h-12" [src]="'assets/icon/resident-icon/quick-dials/' + dial.name + '.webp'" [alt]="'Icon for ' + dial.name"/>
-            <span class="text-xs font-bold text-[black] text-center">{{ dial.name }}</span>
+            <img class="w-12 h-12" [src]="functionMain.getImage(dial.icon)" [alt]="'Icon for ' + dial.name"/>
+            <span class="text-xs normal-case cw-3:text-[11px] font-bold text-[black] text-center">{{ dial.name }}</span>
           </div>
         </ion-button>
       </div>

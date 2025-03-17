@@ -13,26 +13,40 @@ export class RenovatorsService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
 
-  getRenovationSchedules(): Observable<any> {
+  getRenovationSchedules(project_id: number): Observable<any> {
     let apiUrl = this.baseUrl + '/vms/get/renovation_schedule'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    return this.http.post(apiUrl, {}, { headers }).pipe(
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        project_id: project_id
+      }
+    }
+
+    return this.http.post(apiUrl, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getRenovationSchedulesHistory(): Observable<any> {
+  getRenovationSchedulesHistory(project_id: number): Observable<any> {
     let apiUrl = this.baseUrl + '/vms/get/renovation_schedule_history'
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    return this.http.post(apiUrl, {}, { headers }).pipe(
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        project_id: project_id
+      }
+    }
+
+    return this.http.post(apiUrl, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

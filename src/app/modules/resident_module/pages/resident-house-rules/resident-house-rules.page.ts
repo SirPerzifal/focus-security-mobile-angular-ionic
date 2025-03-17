@@ -36,7 +36,7 @@ export class ResidentHouseRulesPage implements OnInit {
     this.houseRulesService.getHouseRules(1).subscribe(
       response => {
         if (response.result.response_code === 200) {
-          console.log("heres the data", response);
+          // console.log("heres the data", response);
           this.houseRules = response.result.result.map((item: any) => ({
             title: item.name,
             base64Doc: item.documents // Pastikan item.documents adalah string base64
@@ -74,7 +74,7 @@ export class ResidentHouseRulesPage implements OnInit {
           filePath: path,
           contentType: blob.type
         });
-        console.log('File is opened');
+        // console.log('File is opened');
       } else {
         const href = window.URL.createObjectURL(blob);
         this.downloadFile(href, `${title}.pdf`);

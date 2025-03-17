@@ -13,6 +13,7 @@ interface Vehicle {
   colour: string;
   type: string;
   fees: string;
+  isPrimary: string
 }
 
 @Component({
@@ -31,7 +32,7 @@ export class ResidentMyVehiclePage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
-      console.log(state.from);
+      // console.log(state.from);
       this.fromWhere = true
     } 
   }
@@ -90,11 +91,12 @@ export class ResidentMyVehiclePage implements OnInit {
             make: vehicle.vehicle_make,
             colour: vehicle.vehicle_color || '-',
             type: vehicle.vehicle_type,
-            fees: 'S$0.00' // Anda dapat menyesuaikan ini berdasarkan logika Anda
+            fees: 'S$0.00', // Anda dapat menyesuaikan ini berdasarkan logika Anda
+            isPrimary:vehicle.is_primary_vehicle
           }));
           this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
           // this.presentToast('Data fetched successfully!', 'success');
-          console.log("heres the data", response);
+          // console.log("heres the data", response);
         } else {
           // this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching vehicle details:', response);
@@ -114,7 +116,8 @@ export class ResidentMyVehiclePage implements OnInit {
       'vehicle make': 'make',
       'vehicle colour': 'colour',
       'vehicle type': 'type',
-      'fees': 'fees'
+      'fees': 'fees',
+      'isPrimary' : 'isPrimary'
     };
 
     const mappedField = fieldMap[field.toLowerCase()];

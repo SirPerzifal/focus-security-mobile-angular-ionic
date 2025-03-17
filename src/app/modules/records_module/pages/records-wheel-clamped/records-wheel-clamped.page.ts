@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { RecordsWheelClampedNewPage } from './records-wheel-clamped-new/records-wheel-clamped-new.page'; 
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-wheel-clamped',
@@ -32,7 +34,8 @@ export class RecordsWheelClampedPage implements OnInit {
     private router: Router, 
     private offensesService: OffensesService,
     private modalController: ModalController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public functionMain: FunctionMainService,
   ) { }
 
   async presentModal() {
@@ -98,12 +101,10 @@ export class RecordsWheelClampedPage implements OnInit {
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showActiveTrans) {
-      this.showActive = false;
-      this.showHistory = false;
-      this.showActiveTrans = false;
-      this.showHistoryTrans = false;
       if (type == 'active') {
         this.is_active = true
+        this.showHistory = false;
+        this.showHistoryTrans = false;
         this.showActiveTrans = true
         if (this.activeVehicles.length == 0){
           this.loadRecordsWheelClamp()
@@ -114,6 +115,12 @@ export class RecordsWheelClampedPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
+        if(!this.showHistory) {
+          this.selectedRadio = ''
+          this.clearFilters()
+        }
+        this.showActive = false;
+        this.showActiveTrans = false;
         this.is_active = false
         this.showHistoryTrans = true
         if (this.historyVehicles.length == 0){
@@ -179,7 +186,7 @@ export class RecordsWheelClampedPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.filter.unit = event.target.value;
+    this.filter.unit = event[0]
     this.applyFilters()
   }
 
@@ -217,7 +224,6 @@ export class RecordsWheelClampedPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('Failed to load block data', 'danger');
         }
       },
       error: (error) => {
@@ -227,13 +233,13 @@ export class RecordsWheelClampedPage implements OnInit {
     });
   }
 
-  loadUnit() {
+  async loadUnit() {
+    this.filter.unit = ''
     this.blockUnitService.getUnit(this.filter.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
         } else {
-          this.presentToast('Failed to load unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
@@ -261,6 +267,7 @@ export class RecordsWheelClampedPage implements OnInit {
   startDateFilter = ''
   
   clearFilters() {
+    this.Unit = []
     this.searchOption = ''
     this.filter.issue_date = ''
     this.filter.end_issue_date = ''
@@ -271,15 +278,29 @@ export class RecordsWheelClampedPage implements OnInit {
   }
 
   applyFilters() {
-    this.historyVehicles = this.vehicleData.filter(item => {  
-      const dateMatches = this.filter.issue_date ? item.issue_date >= this.filter.issue_date : true;
-      const endDateMatches = this.filter.end_issue_date ? item.issue_date <= this.filter.end_issue_date : true;
+    this.historyVehicles = this.vehicleData.filter(item => {
+      const visitorDate = new Date(item.issue_date);
+      visitorDate.setHours(0, 0, 0, 0); 
+
+      const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+      const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+
+      if (selectedStartDate) {
+        selectedStartDate.setHours(0, 0, 0, 0);
+      }
+      if (selectedEndDate) {
+        selectedEndDate.setHours(0, 0, 0, 0);
+      }
+      
+      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_name.toLowerCase().includes(this.filter.unit.toLowerCase()) && item.block_id == this.filter.block : true;
+      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
       const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
       console.log(item.vehicle_number, this.filter.vehicle_number)
-      return endDateMatches && blockMatches && dateMatches && unitMatches && vehicleNumberMatches;
+      return endDateMatches && blockMatches && startDateMatches && unitMatches && vehicleNumberMatches;
     });
     console.log(this.historyVehicles)
   }
@@ -312,7 +333,6 @@ export class RecordsWheelClampedPage implements OnInit {
           }
           
         } else {
-          this.presentToast('There is no data in the system!', 'danger');
         }
 
         // this.isLoading = false;
@@ -324,4 +344,5 @@ export class RecordsWheelClampedPage implements OnInit {
       }
     });
   }
+
 }

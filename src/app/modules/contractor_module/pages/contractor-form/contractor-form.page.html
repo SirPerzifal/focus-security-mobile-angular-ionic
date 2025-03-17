@@ -16,7 +16,7 @@
           <app-text-input #contractorNameInput [id]="'contractor_name'" [labelText]="'NAME'" [placeholder]="'EG. MIFTAH AKHBAR'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.contractor_name"></app-text-input>
         </div> 
         <div class="w-full">
-          <app-vms-contact-input #contractorContactNumberInput [id]="'contractor_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input #contractorContactNumberInput [id]="'contractor_contact_number'" [(value)]="formData.contact_number" [valueExist]="formData.contact_number" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
         </div>
         <!-- <div class="flex flex-row justify-between w-full">
           <div class="w-4/6">
@@ -38,12 +38,17 @@
           </div>
         </div> -->
         <div class="w-full">
-          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)"/>
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType"/>
         </div>
-        <div class="w-full">
-          <app-text-input #contractorIdentificationNumberInput [id]="'contractor_identification_number'" [labelText]="'NRIC / FIN'" [placeholder]="'SXXXX789A'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" (keyup)="onNricInput($event)" [(ngModel)]="nric_value"></app-text-input>
+        <div class="w-full flex flex-row justify-between items-end space-x-2">
+          <div class="w-[90%]">
+            <app-text-input #contractorIdentificationNumberInput [id]="'contractor_identification_number'" [labelText]="'NRIC / FIN'" [placeholder]="'SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" (keyup)="onNricInput($event)" [(ngModel)]="nric_value" [isReadonly]="true"></app-text-input>
+          </div>
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(0, false)">
+            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
+          </div>
         </div>
-        <div class="w-full flex flex-row justify-between">
+        <div class="w-full flex flex-row justify-between space-x-2">
           <div class="w-[90%]">
             <app-text-input #contractorVehicleNumberInput [id]="'contractor_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SAA 8298 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.contractor_vehicle"></app-text-input>
           </div>
@@ -54,7 +59,7 @@
           <!-- </div> -->
         </div> 
         <div class="w-full">
-          <app-text-input #contractorCompanyNameInput [id]="'contractor_company_name'" [labelText]="'COMPANY NAME'" [placeholder]="'MOZAIC CONSTRUCTION PTE LTD'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input #contractorCompanyNameInput [id]="'contractor_company_name'" [labelText]="'COMPANY NAME'" [placeholder]="'MOZAIC CONSTRUCTION PTE LTD'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.company_name"></app-text-input>
         </div> 
         <div class="w-full flex flex-col">
           <label class="text-2xl"><b><u>BLOCK</u></b></label>
@@ -63,12 +68,16 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <label class="text-2xl"><b><u>UNIT</u></b></label>
           <select id="contractor_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="selectedUnit" name="contractor_unit">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
+        </div> -->
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
         </div>
         <div class="w-full">
           <app-text-input #remarksInput [id]="'remarks'" [labelText]="'REMARKS'" [placeholder]="'Remarks'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
@@ -76,17 +85,20 @@
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>NUMBER OF PAX</b></u></label>
           <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onPaxCountChange($event)">
-            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i" [selected]="i === 1">
+            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i" [selected]="i === 0">
               NO OF PAX {{ i }}
             </option>  
           </select>
         </div>
-        <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-1">
+        <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-2 items-end justify-between">
           <div class="w-1/2">
-            <app-text-input #textInput [id]="'contractor_name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxData[i].contractor_name"></app-text-input>
+              <app-text-input #textInput [id]="'contractor_name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nameIdentity[i]"></app-text-input>
           </div>
           <div class="w-1/2">
-            <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" [labelText]="'NRIC / FIN'" [placeholder]="'EG. SXXXX789A'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxData[i].identification_number"></app-text-input>
+              <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" [labelText]="'NRIC / FIN'" [placeholder]="'EG. SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxIdentity[i]" (keyup)="nricPaxChange($event, i)" [isReadonly]="true"></app-text-input>
+          </div>
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(i, true)">
+            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
         </div>
         <div class="w-full flex flex-col">

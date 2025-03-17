@@ -1,72 +1,44 @@
+<app-resident-header [text]="'Upcoming Events'" [text_second]="'Active Event'"/>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Upcoming Events'" [text_second]="'Active Event'"/>
   <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="onBack()"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-24">
     <div class="flex flex-row justify-start items-center w-full space-x-3">
-      <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-32'" (click)="toggleDirecttoHis()"></app-visitor-button>
-      <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32 leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      <div class="w-full">
+        <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full'" (click)="toggleDirecttoHis()"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      </div>
     </div>
     
     <!-- Display upcoming events -->
     <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
-      <div *ngFor="let upcomingEvent of upcomingEvents; let i = index" [ngClass]="{
-          'bg-[var(--ion-color-tertiary)]': upcomingEvent.statusBooked === 'Approved',
-          'bg-sky-100': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
-          'bg-[#E3787E]': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
-          'bg-[#F8F1BA]': upcomingEvent.statusBooked === 'Requested',
-        }" class="bg-[var(--ion-color-tertiary)] rounded-2xl px-4 py-2 mt-4 w-full">
-        <h2 [ngClass]="{
-          'text-green-500': upcomingEvent.statusBooked === 'Approved',
-          'text-sky-500': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
-          'text-red-700': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
-          'text-yellow-400': upcomingEvent.statusBooked === 'Requested',
-        }" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
-          <ion-icon 
-            [name]="upcomingEvent.statusBooked === 'Approved' ? 'checkmark' : 
-                    upcomingEvent.statusBooked === 'Pending Approval' ? 'time' : 
-                    upcomingEvent.statusBooked === 'Pending Payment' ? 'time' : 
-                    upcomingEvent.statusBooked === 'Rejected' ? 'close' : 
-                    upcomingEvent.statusBooked === 'Cancelled' ? 'close' : 
-                    upcomingEvent.statusBooked === 'Requested' ? 'help-circle' : 
-                    'help-circle'"
-            [ngClass]="{
-              'bg-green-500': upcomingEvent.statusBooked === 'Approved',
-              'bg-sky-500': upcomingEvent.statusBooked === 'Pending Approval' || upcomingEvent.statusBooked === 'Pending Payment',
-              'bg-red-700': upcomingEvent.statusBooked === 'Rejected' || upcomingEvent.statusBooked === 'Cancelled',
-              'bg-yellow-500': upcomingEvent.statusBooked === 'Requested'
-            }"
-            class="mr-2 p-1 rounded-full text-white text-[18px]">
-          </ion-icon>
-          {{ getupcomingEventStatusLabel(upcomingEvent.statusBooked) }}
-        </h2>
-        <p class="font-bold text-base text-black text-left">{{ upcomingEvent.facilityName }}</p>
+      <div *ngFor="let upcomingEvent of upcomingEvents; let i = index"  class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100">
+        <p class="font-bold text-xl text-black text-left mt-2">{{ upcomingEvent.title }}</p>
         <div class="table text-left">
           <div class="table-row">
             <p class="font-bold table-cell text-base text-black">Event Date</p>
-            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.eventDate }}</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnDate(upcomingEvent.start) }}</p>
           </div>
           <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Upcoming Event Start</p>
-            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.startTime }}</p>
+            <p class="font-bold table-cell text-base text-black">Coach Name</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ? upcomingEvent.registered_coach_name : '-' }}</p>
           </div>
           <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Upcoming Event End</p>
-            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.endTime }}</p>
+            <p class="font-bold table-cell text-base text-black">Event Start</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.start) }}</p>
           </div>
           <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Booked By</p>
-            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.bookedBy }}</p>
+            <p class="font-bold table-cell text-base text-black">Event End</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.end) }}</p>
           </div>
         </div>
-        <div class="flex mt-2 space-x-2">
-          <button class="cw-1:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" *ngIf="upcomingEvent.statusBooked === 'Requested' || upcomingEvent.statusBooked === 'Approved'">
-						Add to Calendar
-					  </button>
-					  <button class="bg-[#E3787E] text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold" (click)="cancelupcomingEvent()">
-						Cancel Booking
+        <div class="flex mt-2 space-x-2 mb-2">
+					  <button class="bg-[#E3787E] text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold" (click)="onLiftBan(upcomingEvent)">
+						  Cancel Events
 					  </button>
         </div>
       </div>

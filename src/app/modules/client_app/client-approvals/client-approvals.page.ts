@@ -1,0 +1,317 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { trigger, style, animate, transition } from '@angular/animations';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { Subscription } from 'rxjs';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+
+@Component({
+  selector: 'app-client-approvals',
+  templateUrl: './client-approvals.page.html',
+  styleUrls: ['./client-approvals.page.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(100%)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
+})
+export class ClientApprovalsPage implements OnInit {
+
+  constructor(
+    private router: Router, 
+    private clientMainService: ClientMainService,
+    public functionMain: FunctionMainService,
+    private getUserInfoService: GetUserInfoService
+  ) { }
+
+  ngOnInit() {
+    this.getUserInfoService.getPreferenceStorage(
+      ['project_id',]
+    ).then((value) => {
+      console.log(value)
+      this.project_id = value.project_id != null ? value.project_id : 751;
+    })
+    console.log("ahoy")
+  }
+  
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  approval_type = ''
+  approval_name = ''
+  isHome = true
+  isData = false
+  textSecond = ''
+  project_id = 0
+
+  menuItems = [
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work' },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking' },
+    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals' },
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Account', route: 'family', text: 'Residents' },
+    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility' },
+    { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment' },
+  ];
+
+  onClickMenu(menu: any) {
+    this.isHome = false
+    setTimeout(() => {
+      this.isData = true
+      this.textSecond = menu.text
+    }, 300)
+    if (menu.route == "") {
+      this.activeApprovals = []
+      this.showApprovals = []
+      this.approval_type = menu.route
+      this.approval_name = menu.text
+    } else {
+      this.activeApprovals = []
+      this.showApprovals = []
+      this.approval_type = menu.route
+      this.approval_name = menu.text
+      console.log(menu.route)
+      this.loadApproval()
+      this.toggleShowActive()
+    }
+  }
+
+  isLoading = false
+
+  loadApproval(){
+    this.isLoading = true
+    console.log(this.approval_type)
+    this.clientMainService.getApi({record_list: this.approval_type, project_id: this.project_id}, '/client/get/approval_list').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.success) {
+          if (results.result.booking.length > 0){
+            this.activeApprovals = results.result.booking
+            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval'].includes(approval.states) )
+          } else {
+          }
+          // this.functionMain.presentToast(`Success!`, 'success');
+        } else {
+          this.functionMain.presentToast(`Failed!`, 'danger');
+        }
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.isLoading = false
+        this.functionMain.presentToast('Failed!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  onBack() {
+    if (this.isDetail) {
+      this.toggleApprovalHome()
+      this.selectedApproval = []
+    } else {
+      if (this.isHome) {
+        this.router.navigate(['/client-main-app'])
+      } else {
+        this.isData = false
+        setTimeout(() => {
+          this.textSecond = ''
+          this.isHome = true
+          this.startDateFilter = ''
+          this.endDateFilter = ''
+        }, 300)
+      }
+    }
+  }
+
+  activeApprovals: any = [
+    {
+      status: 'Approved',
+      typeName: 'Access card',
+      applicationDate: '03/02/2025 12:00:00',
+      vehicleNumber: 'GY 7289 V',
+      startDate: '03/02/2025 18:00:00',
+      endDate: '04/02/2025 00:00:00',
+    }
+  ]
+  showApprovals: any = []
+
+  isActive = true
+  isClosed = false
+  isClosedTrans = false
+  toggleShowActive() {
+    this.isClosed = false
+    this.isActive = true
+    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval'].includes(approval.states) )
+  }
+
+  toggleShowClosed() {
+    this.isActive = false
+    this.isClosed = true
+    this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) )
+  }
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  applyDateFilter() {
+    this.showApprovals = this.activeApprovals.filter((approval: any) => {
+      const approvalDate = new Date(this.approval_type =='overnight' ? approval.start_date : approval.application_date )
+
+      const approvalType = ['rejected', 'cancel', 'approved'].includes(approval.states)
+
+      const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+      const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+
+      if (startDate) {
+        startDate.setHours(0, 0, 0, 0);
+      }
+      if (endDate) {
+        endDate.setHours(23, 59, 59, 59);
+      }
+      // Cek kondisi filtering
+      const isAfterStartDate = startDate ? approvalDate >= startDate : true
+      const isBeforeEndDate = endDate ? approvalDate <= endDate : true
+
+      return isAfterStartDate && isBeforeEndDate && approvalType;
+    });
+  }
+
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.showApprovals = this.activeApprovals;
+    this.applyDateFilter()
+  }
+
+  getApprovalStatusLabel(status: string): string {
+    switch (status) {
+      case 'approved': return 'Approved';
+      case 'requested': return 'Requested';
+      case 'pending_approval': return 'Pending Approval';
+      case 'pending_payment': return 'Pending Payment';
+      case 'rejected': return 'Rejected';
+      case 'cancel': return 'Cancelled';
+      default: return status;
+    }
+  }
+
+  viewDetail(approval: any) {
+    // this.router.navigate(['/client-approvals-details'], {
+    //   state: {
+    //     approval: approval,
+    //     approval_type: this.approval_type
+    //   }
+    // })
+    this.selectedApproval = approval
+    console.log(this.selectedApproval)
+    this.isApprovalHome = false
+    setTimeout(() => {
+      this.isDetail = true
+    }, 300);
+    
+  }
+
+  selectedApproval: any =[]
+
+  isApprovalHome = true
+  isDetail = false
+
+  approveDetail(approval: any) {
+    console.log(approval)
+    console.log(this.approval_type)
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id}, '/client/approve').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.success) {
+          this.selectedApproval.states = 'approved'
+          this.loadApproval()
+          this.onBack()
+          this.functionMain.presentToast(`Successfully approved this data!`, 'success');
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to approve this data!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to approve this data!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  rejectDetail() {
+    if (this.reject_reason == '') {
+      this.functionMain.presentToast('Reason for rejection is required!', 'danger')
+      return
+    }
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: this.selectedApproval.id, reject_reason: this.reject_reason}, '/client/reject').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.success) {
+          this.selectedApproval.states = 'rejected'
+          this.isRejectModal = false
+          this.reject_reason = ''
+          this.loadApproval()
+          this.onBack()
+          this.functionMain.presentToast(`Successfully rejected this data!`, 'success');
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to reject this data!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to reject this data!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  toggleApprovalHome(){
+    this.isDetail = false
+    setTimeout(() => {
+      this.isApprovalHome = true
+    }, 300);
+  }
+
+  reject_id = 0
+
+  isRejectModal = false
+  reject_reason = ''
+
+  closeRejectModal() {
+    this.isRejectModal = false
+    this.reject_reason = ''
+  }
+
+  openRejectModal() {
+    this.isRejectModal = true
+    this.reject_reason = ''
+  }
+
+}

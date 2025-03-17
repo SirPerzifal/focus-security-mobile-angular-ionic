@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-file-input',
@@ -17,6 +17,10 @@ export class FileInputComponent  implements OnInit {
   @Input() customPlaceholder: string='';
   @Input() disableUpload:boolean = false;
   @Input() labelText: string='';
+  @Input() isCustomName: boolean=false
+  @Input() fileName: string = ''
+  @Input() fileAccept: string = ''
+  @Input() labelClass: string = ''
 
   @Output() fileSelected = new EventEmitter<File>();
   
@@ -31,11 +35,18 @@ export class FileInputComponent  implements OnInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['fileName'] && this.isCustomName) {
+      this.selectedFileName = this.fileName;
+    }
+  }
+
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      this.selectedFileName = file.name;
+      this.selectedFileName = this.isCustomName ? this.fileName : file.name;
       this.fileSelected.emit(file);
       // Optional: If you want to upload the file immediately
       // this.uploadFile();

@@ -1,27 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faAddressBook, faL, faMotorcycle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faAddressBook, faM, faUser } from '@fortawesome/free-solid-svg-icons';
 import { ToastController, AlertController } from '@ionic/angular';
-import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 import { Contacts } from '@capacitor-community/contacts';
+import { Preferences } from '@capacitor/preferences';
 
-interface Invitee {
-  visitor_name: string;
-  vehicle_number: string;
-  contact_number: string;
-}
-
-interface FormData {
-  dateOfInvite: Date;
-  vehicleNumber: string;
-  entryType: string;
-  entryTitle: string;
-  entryMessage: string;
-  isProvideUnit: boolean;
-  hiredCar: string;
-  unit: number;
-}
-
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { FormData, Invitee } from 'src/models/resident/visitor.model';
 
 @Component({
   selector: 'app-invite-form',
@@ -29,6 +15,8 @@ interface FormData {
   styleUrls: ['./invite-form.page.scss'],
 })
 export class InviteFormPage implements OnInit {
+
+  faUser = faUser
   inviteeFormList: any = [];
   addInviteeText: string = 'Add Invitee';
   isModalOpen: boolean = false; // Status modal
@@ -58,21 +46,78 @@ export class InviteFormPage implements OnInit {
     private residentVisitorService: VisitorService,
     private toastController: ToastController,
     private alertController: AlertController,
+    private mainApiResidentService: MainApiResidentService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
   
     if (state) {
-      this.formData = state.formData;
+        this.formData = {
+          ...state.formData,
+          dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
+        };
   
       if (state.selectedInvitees) {
         this.inviteeFormList = state.selectedInvitees; // Update local list
         this.isFormVisible = true; // Show form if there are invitees
         this.addInviteeText = 'Add More Invitees'; // Update button text
-        console.log('tes110', state.selectedInvitees)
+        // console.log('tes110', state.selectedInvitees)
       }
-      console.log('tes1', this.formData);
+      // console.log('tes1', this.formData);
     }
+  }
+
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.family_id = Number(parseValue.family_id);
+        this.formData.unit = Number(parseValue.unit_id);
+      } 
+    })
+    this.isFormInitialized = false;
+    // Gunakan setTimeout untuk memastikan rendering
+    this.route.queryParams.subscribe(params => {
+      this.initializeInviteeForm(params);
+    });
+  }
+
+  initializeInviteeForm(params?: any) {
+    // Cek state dari navigasi saat ini
+    const navigation = this.router.getCurrentNavigation();
+    const navigationState = navigation?.extras.state;
+
+    // Cek state dari route
+    let selectedInvitees: any[] = [];
+
+    // Prioritaskan state dari navigasi
+    if (navigationState && navigationState['selectedInvitees']) {
+      selectedInvitees = navigationState['selectedInvitees'];
+    } 
+    // Jika tidak ada, cek params
+    else if (params && params['selectedInvitees']) {
+      try {
+        selectedInvitees = JSON.parse(params['selectedInvitees']);
+      } catch (error) {
+        console.error('Error parsing selectedInvitees', error);
+      }
+    }
+
+    // Proses data invitee
+    if (selectedInvitees && selectedInvitees.length > 0) {
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
+        visitor_name: invitee.visitor_name || '',
+        contact_number: invitee.contact_number || '',
+        vehicle_number: invitee.vehicle_number || ''
+      }));
+      this.addInviteeText = 'Add More Invitees';
+    }
+
+    if (this.inviteeFormList.length > 0) {
+      this.isFormVisible = true; // Show form if there are invitees
+    }
+
+    this.isFormInitialized = true;
   }
 
   backToVisitors() {
@@ -119,30 +164,8 @@ export class InviteFormPage implements OnInit {
     }
   }
 
-  faUser = faUser
-
   showTimeInfo() {
     this.isModalOpen = true; // Membuka modal
-  }
-
-  ngOnInit() {
-    this.isFormInitialized = false;
-    // Gunakan setTimeout untuk memastikan rendering
-    this.route.queryParams.subscribe(params => {
-      this.initializeInviteeForm(params);
-    });
-    console.log('tes111', this.isFormInitialized)
-    console.log('tes110', this.inviteeFormList)
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 4000,
-      color: color
-    });
-    toast.present().then(() => {
-    });;
   }
 
   removeInvitee(index: number) {
@@ -167,7 +190,7 @@ export class InviteFormPage implements OnInit {
           text: confirmText,
           cssClass: 'confirm-button',
           handler: () => {
-            console.log('Confirmed');
+            // console.log('Confirmed');
             this.removeInvitee(index); // Panggil metode untuk menghapus invitee
           }
         },
@@ -175,54 +198,12 @@ export class InviteFormPage implements OnInit {
           text: cancelText,
           cssClass: 'cancel-button',
           handler: () => {
-            console.log('Canceled');
-            // Logika pembatalan (jika ada)
           }
         },
       ]
     });
   
     await alert.present();
-  }
-
-  initializeInviteeForm(params?: any) {
-    // Cek state dari navigasi saat ini
-    const navigation = this.router.getCurrentNavigation();
-    const navigationState = navigation?.extras.state;
-
-    // Cek state dari route
-    let selectedInvitees: any[] = [];
-
-    // Prioritaskan state dari navigasi
-    if (navigationState && navigationState['selectedInvitees']) {
-      selectedInvitees = navigationState['selectedInvitees'];
-    } 
-    // Jika tidak ada, cek params
-    else if (params && params['selectedInvitees']) {
-      try {
-        selectedInvitees = JSON.parse(params['selectedInvitees']);
-      } catch (error) {
-        console.error('Error parsing selectedInvitees', error);
-      }
-    }
-
-    // Proses data invitee
-    if (selectedInvitees && selectedInvitees.length > 0) {
-      this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
-        visitor_name: invitee.visitor_name || '',
-        contact_number: invitee.contact_number || '',
-        vehicle_number: invitee.vehicle_number || ''
-      }));
-      this.addInviteeText = 'Add More Invitees';
-    }
-
-    // Jika tidak ada data, tambahkan form kosong
-    if (this.inviteeFormList.length > 0) {
-      this.isFormVisible = true; // Show form if there are invitees
-    }
-
-    // Tandai form sudah diinisialisasi
-    this.isFormInitialized = true;
   }
 
   addInvitee() {
@@ -234,11 +215,10 @@ export class InviteFormPage implements OnInit {
     
     this.inviteeFormList.push(newInvitee);
     this.addInviteeText = 'Add More Invitees';
-    this.isFormVisible = true; // Show form when an invitee is added
+    this.isFormVisible = true;
   }
 
   navigateToInviteFormHistory() {
-    // Kirim data yang sudah diisi ke halaman invite-form-history
     this.router.navigate(['/invite-from-history'], { 
       state: { existingInvitees: this.inviteeFormList } 
     });
@@ -252,6 +232,7 @@ export class InviteFormPage implements OnInit {
     });
   }
 
+  family_id: number = 0;
   onSubmit() {
     const isValid = this.inviteeFormList.every((invitee:any) => 
       invitee.visitor_name.trim() !== '' && 
@@ -259,49 +240,42 @@ export class InviteFormPage implements OnInit {
     );
 
     if (isValid) {
-      console.log('Submitting Invitees:', this.inviteeFormList);
       try {
-        this.residentVisitorService.postCreateExpectedVisitors(
-          this.formData.dateOfInvite,
-          this.formData.entryType,
-          this.formData.entryTitle,
-          this.formData.entryMessage,
-          this.formData.isProvideUnit,
-          this.inviteeFormList,
-          this.formData.hiredCar,
-          this.formData.unit,
-        ).subscribe(
-          res => {
-            console.log(res);
-            // if (res.result.status_code == 200) {
-              this.presentToast('Success Add Record', 'success');
-              console.log("HEY PEOPLES")
-              this.inviteeFormList = [];
-              this.inviteeFormList = null;
-              this.formData = {
-                dateOfInvite: new Date(),
-                vehicleNumber: "",
-                entryType: "",
-                entryTitle: "",
-                entryMessage: "",
-                isProvideUnit: false,
-                hiredCar: "",
-                unit: 0,
+        this.mainApiResidentService.endpointProcess({
+          family_id: this.family_id,
+          date_of_visit: this.formData.dateOfInvite, 
+          entry_type: this.formData.entryType, 
+          entry_title: this.formData.entryTitle,
+          entry_message: this.formData.entryMessage,
+          is_provide_unit: this.formData.isProvideUnit,
+          invitees: this.inviteeFormList,
+          hired_car: this.formData.hiredCar,
+          unit: this.formData.unit,
+        }, 'post/create_expected_visitors').subscribe((response: any) => {
+          if (response.result.response_code == 200) {
+            this.presentToast('Success Add Invite', 'success');
+            this.inviteeFormList = [];
+            this.inviteeFormList = null;
+            this.formData = {
+              dateOfInvite: new Date(),
+              vehicleNumber: "",
+              entryType: "",
+              entryTitle: "",
+              entryMessage: "",
+              isProvideUnit: false,
+              hiredCar: "",
+              unit: 0,
+            }
+            this.router.navigate(['/resident-visitors'], {
+              queryParams: {
+                openActive: true,
+                formData: null
               }
-              this.router.navigate(['/resident-visitors'], {
-                queryParams: {
-                  openActive: true,
-                  formData: null
-                }
-              });
-            // } else {
-            //   this.presentToast('Failed Add Record', 'danger');
-            // }
-          },
-          error => {
-            console.error('Error:', error);
+            });
+          } else {
+            this.presentToast('Failed Add Invite', 'danger');
           }
-        );
+        })
       } catch (error) {
         console.error('Unexpected error:', error);
         this.presentToast(String(error), 'danger');
@@ -311,8 +285,17 @@ export class InviteFormPage implements OnInit {
     }
   }
 
-  // Control rendering form
   shouldShowForm(): boolean {
     return this.isFormVisible; // Use the new variable to control visibility
+  }
+
+  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 4000,
+      color: color
+    });
+    toast.present().then(() => {
+    });;
   }
 }

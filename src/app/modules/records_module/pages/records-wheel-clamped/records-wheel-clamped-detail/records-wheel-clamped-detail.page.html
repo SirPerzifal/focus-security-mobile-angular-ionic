@@ -5,16 +5,17 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-wheel-clamped'" [homeRoute]="true" [params]="params"/>
+      <app-vms-header [urlCustom]="'/records-wheel-clamped'" [homeRoute]="true" [params]="params" />
     </div>
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <span class="text-3xl font-bold mt-2">{{ functionMain.returnNone(vehicle.vehicle_number) }}</span>
         <table class="text-2xl">
-          <tr>
+          <!-- <tr>
             <td class="font-bold w-2/5">VEHICLE NO</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnFalse(vehicle.vehicle_number) }}</td>
-          </tr>
+          </tr> -->
           <tr *ngIf="pageType == 'wheel_clamp'">
             <td class="font-bold w-2/5">OFFENCE NO</td>
             <td class="w-[5%]">:</td>
@@ -43,7 +44,8 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE & TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.entry_datetime ? convertToDDMMYYYY(vehicle.entry_datetime.split(' ')[0]) + ' ' + vehicle.entry_datetime.split(' ')[1] : '-' }}</td>
+            <td>{{ vehicle.entry_datetime ? convertToDDMMYYYY(vehicle.entry_datetime.split(' ')[0]) + ' ' +
+              vehicle.entry_datetime.split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">TYPE OF ENTRY</td>
@@ -65,23 +67,44 @@
             <td class="w-[5%]">:</td>
             <td>{{ vehicle.issuing_officer ? vehicle.issuing_officer : '-' }}</td>
           </tr>
-          
+          <tr *ngIf="vehicle.is_pay">
+            <td class="font-bold w-2/5">PAYMENT</td>
+            <td class="w-[5%]">:</td>
+            <td>PAID</td>
+          </tr>
+
         </table>
-        <div class="flex flex-row justify-around w-full">
-          <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL VISITOR</button>
-            <button *ngIf="pageType == 'wheel_clamp'" class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CHECK VISITOR</button>
-            <button *ngIf="pageType != 'wheel_clamp'" class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onHistoryClick()">CHECK HISTORY</button>
+        <div class="flex flex-col justify-between w-full">
+          <div class="flex flex-row w-full justify-around space-x-2">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CALL VISITOR</button>
+            <!-- <button *ngIf="pageType == 'wheel_clamp'" class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CHECK VISITOR</button> -->
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CALL RESIDENT</button>
           </div>
-          <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL RESIDENT</button>
-            <button *ngIf="pageType == 'wheel_clamp'" class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onPaymentClick()">PAYMENT</button>
-            <button *ngIf="pageType == 'first_warning'" class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="presentModal('first_warning', vehicle)">ISSUE 2ND WARNING</button>
-            <button *ngIf="pageType == 'second_warning'" class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="presentModal('second_warning', vehicle)">WHEEL CLAMP</button>
+          <div class="flex flex-row w-full justify-around space-x-2">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              (click)="onHistoryClick()">CHECK HISTORY</button>
+            <button *ngIf="pageType == 'wheel_clamp' && vehicle.is_pay && vehicle.states == 'issued'"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              (click)="showCheckoutAlert(vehicle.id, 'release')">RELEASE</button>
+            <button *ngIf="pageType == 'wheel_clamp' && !vehicle.is_pay"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              (click)="onPaymentClick()">PAYMENT</button>
+            <button *ngIf="pageType == 'first_warning'"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              (click)="presentModal('first_warning', vehicle)">ISSUE 2ND WARNING</button>
+            <button *ngIf="pageType == 'second_warning'"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              (click)="presentModal('second_warning', vehicle)">WHEEL CLAMP</button>
+
+          </div>
+          <div class="flex flex-row w-full justify-around space-x-2"
+            *ngIf="pageType != 'wheel_clamp' && vehicle.states == 'issued'">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14 mb-4"
+              (click)="showCheckoutAlert(vehicle.id, 'chekcout')">CHECKOUT</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
 </ion-content>

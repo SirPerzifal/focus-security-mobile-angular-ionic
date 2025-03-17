@@ -13,7 +13,7 @@
   <div class="w-[78%] flex flex-col justify-start">
     <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
     <div class="flex flex-row justify-between">
-      <input [id]="id" class="border w-[58%] rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl" type="text"
+      <input [id]="id" class="border w-[58%] rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl" type="number"
       [placeholder]="'821 7263 112'" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
       style="border: 1px solid #6B7280;" />
       <div class="h-25 flex flex-col justify-end w-2/5">
@@ -28,7 +28,7 @@
 
 <div class="w-full flex flex-row justify-between" *ngIf="!vmsPage">
   <div class="w-[30%] flex flex-col justify-start">
-    <label [class]="labelClass"><b><u>Code</u></b></label>
+    <label [class]="labelClass"><b>Code</b></label>
     <select [id]="id" [class]="inputClass + ' resident-selection'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >
       <option hidden selected disabled value="+65">SG +65</option>
@@ -36,8 +36,8 @@
     </select>
   </div>
   <div class="w-[65%] flex flex-col justify-start">
-    <label [class]="labelClass"><b><u>{{ contactLabel }}</u></b></label>
-    <input [id]="id" [class]="inputClass" type="text"
+    <label [class]="labelClass"><b>{{ contactLabel }}</b></label>
+    <input [id]="id" [class]="inputClass" type="number"
       [placeholder]="'EG. 8217822137'" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
       style="border: 1px solid #6B7280;" />
   </div>

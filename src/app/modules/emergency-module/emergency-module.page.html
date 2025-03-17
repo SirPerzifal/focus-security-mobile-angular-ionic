@@ -52,13 +52,17 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="deliveries_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
+        </div> -->
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -117,13 +121,17 @@
            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full mb-5">
+        <!-- <div class="w-full mb-5">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="emergency_police_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
+        </div> -->
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -177,13 +185,17 @@
            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="emergency_other_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
+        </div> -->
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -223,13 +235,17 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="deliveries_unit" [(ngModel)]="formData.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
+        </div> -->
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            [labelText]="'UNIT'"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>

@@ -10,6 +10,18 @@ import { MultiLineButtonComponent } from './components/multi-line-button/multi-l
 import { CheckboxConfirmationComponent } from './components/checkbox-confirmation/checkbox-confirmation.component';
 import { VotingGraphComponent } from './components/voting-graph/voting-graph.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { ModalPaymentCustomComponent } from './resident-components/modal-payment-custom/modal-payment-custom.component';
+import { TermsConditionModalComponent } from './resident-components/terms-condition-modal/terms-condition-modal.component';
+
+// rewrite
+import { HeaderComponent } from './resident-components/header/header.component';
+import { LongButtonComponent } from './resident-components/long-button/long-button.component';
+import { SquareButtonComponent } from './resident-components/square-button/square-button.component';
+import { BottonNavBarComponent } from './resident-components/botton-nav-bar/botton-nav-bar.component';
+import { ModalEstateHomepageComponent } from './resident-components/modal-estate-homepage/modal-estate-homepage.component';
+import { HeaderInnerPageComponent } from './resident-components/header-inner-page/header-inner-page.component';
+import { NavTabsComponent } from './resident-components/nav-tabs/nav-tabs.component';
+import { InputComponentComponent } from './resident-components/input-component/input-component.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +30,18 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
     VotingGraphComponent,
-    CalendarComponent
+    CalendarComponent,
+    ModalPaymentCustomComponent,
+    TermsConditionModalComponent,
+    //rewrite
+    HeaderComponent,
+    LongButtonComponent,
+    SquareButtonComponent,
+    BottonNavBarComponent,
+    ModalEstateHomepageComponent,
+    HeaderInnerPageComponent,
+    NavTabsComponent,
+    InputComponentComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +55,18 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
     VotingGraphComponent,
-    CalendarComponent
+    CalendarComponent,
+    ModalPaymentCustomComponent,
+    TermsConditionModalComponent,
+    //rewrite
+    HeaderComponent,
+    LongButtonComponent,
+    SquareButtonComponent,
+    BottonNavBarComponent,
+    ModalEstateHomepageComponent,
+    HeaderInnerPageComponent,
+    NavTabsComponent,
+    InputComponentComponent
   ]
 })
 export class SharedModule { }

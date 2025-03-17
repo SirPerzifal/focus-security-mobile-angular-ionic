@@ -1,18 +1,20 @@
+<ion-header>
+  <app-resident-header [text]="'Visitors'" [text_second]="'History'" />
+</ion-header>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Visitors'" [text_second]="'History'" />
   <!-- CONTENT -->
 	<div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
   </div>
   <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-row justify-between mt-2">
-			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'Daily Invite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowInv()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'Hired Car'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowHired()">
 			</app-visitor-button>
-			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px]'"
+			<app-visitor-button [text]="'History'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base cw-3:text-sm w-28 cw-1:w-24 cw-3:w-[88px] cw-4:text-xs'"
 				(click)="toggleShowHistory()">
 			</app-visitor-button>
     </div>
@@ -44,34 +46,12 @@
                     [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
                     (change)="onChangeStartDate($event)"></app-text-input>
                 </div>
-                <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
-                  <input
-                    type="text"
-                    placeholder="Start Filter Date"
-                    value="{{showStartDate}}"
-                    class="w-[140px] border-none border-0 text-base"
-                    style="background-color: transparent;"
-                    readonly
-                  />
-                  <input type="date" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeStartDate($event)">
-                </div> -->
                 <div class="w-1/2">
                   <app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter" [(ngModel)]="endDateFilter"
                     [customClasses]="{'w-full':true}" [type]="'date'"
                     [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
                     (change)="onChangeEndDate($event)"></app-text-input>
                 </div>
-                <!-- <div class="flex flex-row items-center border border-black w-1/2 rounded py-2 justify-between outline-[#BDBDBD] h-12 text-base">
-                  <input
-                    type="text"
-                    placeholder="End Filter Date"
-                    value="{{showEndDate}}"
-                    class="w-[140px] border-none border-0 text-base"
-                    style="background-color: transparent;"
-                    readonly
-                  />
-                  <input type="date" min="{{startDateFilter}}" class="w-[40px] border-none border-0 rounded py-2 px-3 outline-[#BDBDBD] h-5 text-xs text-[#6B7280] bg-transparent" (change)="onChangeEndDate($event)">
-                </div> -->
               </div>
             </div>
           </div>
@@ -81,8 +61,11 @@
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">
+            <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+							<ion-spinner name="circular"></ion-spinner>
+						</div>
             <div *ngFor="let data of filteredData">
-              <app-history-card [historyData]="data" />
+              <app-history-card [historyData]="data" [hideResinstateButton]="hideFilter" />
             </div>
           </div>
         </div>
@@ -90,5 +73,7 @@
     </div>
   </div>
   <!-- ############################### -->
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+	<app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

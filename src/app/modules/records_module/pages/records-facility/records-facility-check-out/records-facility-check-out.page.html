@@ -14,9 +14,9 @@
           <div class="flex flex-row w-full justify-between">
             <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 flex flex-col">
               <app-signature-pad #residentSignContainer id="resident_sign" (signatureOutput)="onResidentSign($event)" [value]="residentSign" *ngIf="!isResidentSigned"></app-signature-pad>
-              <img [src]="showImageResident">
+              <img [src]="showImageResident" *ngIf="isResidentSigned">
               <div class="h-14">
-                <div class="flex flex-row justify-between relative mt-[-26px]">
+                <div class="flex flex-row justify-between relative mt-[-26px]" *ngIf="!isResidentSigned">
                   <div class=""><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
                   <div class=""><fa-icon [icon]="faEraser" class="w-full h-full" (click)="onClear()"></fa-icon></div>
                 </div>
@@ -28,9 +28,9 @@
             </div>
             <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 flex flex-col">
               <app-signature-pad #officerSignContainer id="officer_sign" (signatureOutput)="onOfficerSign($event)" [value]="officerSign" *ngIf="!isOfficerSigned"></app-signature-pad>
-              <img [src]="showImageOfficer">
+              <img [src]="showImageOfficer" *ngIf="isOfficerSigned">
               <div class="h-14">
-                <div class="flex flex-row justify-between relative mt-[-26px]">
+                <div class="flex flex-row justify-between relative mt-[-26px]" *ngIf="!isOfficerSigned">
                   <div class=""><fa-icon [icon]="faPenFancy" class="w-full h-full"></fa-icon></div>
                   <div class=""><fa-icon [icon]="faEraser" class="w-full h-full" (click)="onClear(false)"></fa-icon></div>
                 </div>
@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-row w-full justify-around mb-4 mt-4">
+          <div class="flex flex-row w-full justify-around mb-4 mt-4" *ngIf="!isOfficerSigned || !isResidentSigned">
             <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="onSubmit()">{{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}}</button>
           </div>
         </div>

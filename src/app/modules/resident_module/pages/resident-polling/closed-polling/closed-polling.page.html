@@ -14,25 +14,25 @@
       <div class="bg-[var(--ion-color-tertiary)] rounded p-3 py-5 flex justify-between items-center" *ngFor="let vd of voteData">
         <div class="flex justify-start flex-col items-start w-full">
           <div class="flex flex-col items-start">
-            <h2 class="font-bold mb-2 ml-2.5">{{ vd.title }}</h2>
+            <h2 class="font-bold mb-2 ml-2.5 text-left">{{ vd.polling_name }}</h2>
             <table class="w-full text-left">
               <tbody>
                 <tr>
                   <td class="font-bold">Closed</td>
-                  <td class="truncate">: {{ vd.time_close }}</td>
+                  <td class="truncate">: {{ funcitonMain.convertToDDMMYYYY(vd.polling_end_date) }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Voted</td>
-                  <td class="truncate">: {{ vd.you_vote }}</td>
+                  <td class="truncate">: {{ isArrayAndJoin(vd.voted_option) }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Results</td>
-                  <td class="truncate">: Option {{ vd.result }} win</td>
+                  <td class="truncate">: Option <strong>{{ vd.winning_response }}</strong> win</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <button class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded ml-2.5" (click)="toggleGraph(vd)">
+          <button class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded" (click)="toggleGraph(vd)">
             View Detail
           </button>
         </div>
@@ -45,15 +45,15 @@
   </div>
   <div *ngIf="showGraph" class="px-5 text-center mb-20" [ngClass]="{'slide-up-animation': openingGraph, 'slide-down-animation': closingGraph}">
     <div>
-      <h2 class="font-bold mb-2 ml-2.5">{{ dataForGraph.title }}</h2>
+      <h2 class="font-bold mb-2 ml-2.5">{{ dataForGraph.polling_name }}</h2>
     </div>
     <app-voting-graph [chartData]="dataForGraph"></app-voting-graph> <!-- Pass data to the graph component -->
     <div>
       <div class="flex flex-col text-start">
         <div class="flex flex-col justify-start space-y-1 w-full">
-          <p class="text-[var(--ion-color-danger)]"><strong>Polling Status:</strong> Close</p>
-          <p><strong>Winning Response:</strong> {{ dataForGraph.result }}</p>
-          <p><strong>You voted for:</strong> {{ dataForGraph.you_vote }}</p>
+          <p class="text-[var(--ion-color-danger)]"><strong>Polling Status:</strong> {{ dataForGraph.states }}</p>
+          <p><strong>Winning Response:</strong> {{ dataForGraph.winning_response }}</p>
+          <p><strong>You option:</strong> {{ isArrayAndJoin(dataForGraph.voted_option) }}</p>
         </div>
       </div>
     </div>

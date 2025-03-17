@@ -1,15 +1,15 @@
+<app-resident-header [text]="'My Profile'"/>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'My Profile'"/>
 
   <div class="p-5 text-center mb-20">
     <div class="flex flex-col justify-center w-full items-center">
-      <div class="rounded-full overflow-hidden w-32 h-32 mb-4 flex flex-col justify-start relative">
-        <img alt="Profile picture of a man wearing a hat" class="w-full h-full object-cover" height="128" src="https://storage.googleapis.com/a1aa/image/poewGqkRRRzQfEWv2tOg3taVzSTeX7aRUmmg0kV3KzpOIM9nA.jpg" width="128"/>
-        <ion-icon class="absolute top-24 right-4 drop-shadow-xl text-4xl bg-white rounded-full p-1 z-50" name="pencil">
+      <div class="w-32 h-32 mb-4 flex flex-col justify-start relative">
+        <img class="w-full h-full object-covern rounded-full" height="128" [src]="functionMain.getImage(imageProfile)" width="128"/>
+        <ion-icon class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50" name="pencil">
         </ion-icon>
       </div>
       <h2 class="text-xl font-bold mb-6">
-        Veeknesh K
+        {{ userData.name }}
       </h2>
     </div>
     <div class="space-y-2">
@@ -21,7 +21,9 @@
           [placeholder]="'KingsMan Condominium'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.name_condo"
+        >
         </app-text-input>
       </div>
       <div class="w-full">
@@ -32,7 +34,9 @@
           [placeholder]="'Owner'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.type"
+        >
         </app-text-input>
       </div>
       <div class="w-full">
@@ -43,7 +47,9 @@
           [placeholder]="'1'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.block"
+        >
         </app-text-input>
       </div>
       <div class="w-full">
@@ -54,7 +60,9 @@
           [placeholder]="'1'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.unit"
+        >
         </app-text-input>
       </div>
       <div class="w-full">
@@ -65,7 +73,9 @@
           [placeholder]="'email@example.com'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.email"
+        >
         </app-text-input>
       </div>
       <div class="w-full">
@@ -76,7 +86,9 @@
           [placeholder]="'67778378733'"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true">
+          [isReadonly]="true"
+          [(ngModel)]="userData.contact"
+        >
         </app-text-input>
       </div>
     </div>
@@ -88,8 +100,8 @@
         <span class="text-sm font-bold text-[black] text-center">Family Member</span>
         <!-- <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2">1</span> -->
       </div>
-      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" [routerLink]="['/my-profile-house-employee']">
-        <ion-button fill="clear" [routerLink]="['/my-profile-house-employee']">
+      <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2" (click)="toWhere('helper')">
+        <ion-button fill="clear" (click)="toWhere('helper')">
           <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Furniture.webp" alt="Icon for House Employee"/>
         </ion-button>
         <span class="text-sm font-bold text-[black] text-center">House Employee</span>

@@ -9,13 +9,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class RecordsWarningDetailPage implements OnInit {
 
   vehicle: any = {}
+  offence_detail: any = []
 
   constructor(private route: ActivatedRoute, private router: Router) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { vehicle: any};
+    const state = navigation?.extras.state as { vehicle: any, offence_detail: any};
     if (state) {
       this.vehicle = state.vehicle
+      this.offence_detail = state.offence_detail
       this.vehicle_number = state.vehicle.vehicle_number
+      console.log(this.offence_detail)
     } 
    }
 
@@ -31,9 +34,9 @@ export class RecordsWarningDetailPage implements OnInit {
 
   vehicle_number = ''
   // Properties
-first_issued = '4';
-second_issued = '4';
-wheel_clamp = '4';
+  first_issued = '4';
+  second_issued = '4';
+  wheel_clamp = '4';
 
 // Array of objects
 first_issued_array = [
