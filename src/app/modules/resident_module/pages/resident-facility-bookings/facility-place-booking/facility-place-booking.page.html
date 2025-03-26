@@ -36,6 +36,7 @@
           <ng-template>
             <ion-datetime 
               id="datetime" 
+              min="{{minDate}}"
               presentation="date" 
               [(ngModel)]="selectedDate"
               (ionChange)="onDateChange($event)"

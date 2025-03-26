@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
 
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
@@ -20,6 +21,7 @@ interface Notification {
 export class ResidentNotificationPage implements OnInit {
   partnerId = 1;
   unitId = 1;
+  isLoading: boolean = true;
 
   notifications: Notification[] = []; // Ubah ke array of Notification
   filteredNotifications: Notification[] = []; // Ubah ke array of Notification
@@ -28,17 +30,15 @@ export class ResidentNotificationPage implements OnInit {
   constructor(private notificationService: NotificationService, private toast: ToastController, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'unit',
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.unitId = value.unit
-      // Load polling data
-      this.filteredNotifications = this.notifications; // Initialize with all notifications
-      this.loadNotification();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        // // console.log(value);
+        this.unitId = parseValue.unit_id;
+        // Load polling data
+        this.filteredNotifications = this.notifications; // Initialize with all notifications
+        this.loadNotification();
+      }
     })
   }
 
@@ -64,16 +64,15 @@ export class ResidentNotificationPage implements OnInit {
             };
           });
           this.filteredNotifications = this.notifications; // Update filtered notifications
+          this.isLoading = false; // Ubah loading status ke false
 
           // // console.log("this notifications", this.notifications)
           // // console.log("thisfilterednotifications", this.filteredNotifications)
         } else {
-          this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching notifications:', response);
         }
       },
       error => {
-        this.presentToast('Data fetched failed!', 'danger');
         console.error('HTTP Error:', error);
       }
     );

@@ -5,6 +5,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService) { }
+  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService) { }
 
   alertColor = 'red'
 

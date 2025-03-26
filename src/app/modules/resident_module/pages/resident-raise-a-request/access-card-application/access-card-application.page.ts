@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Subscription } from 'rxjs';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-access-card-application',
@@ -18,13 +22,25 @@ export class AccessCardApplicationPage implements OnInit {
   expectedCards: any = [];
   expectedFamily: any = [];
   agreementChecked: boolean = false;
+  projectId: number = 0;
   userName: string = '';
-  condoName: string = '';
+  phoneNumber: string = '';
+  familyType: string = '';
   unit: number = 0; // Replace with actual unit ID
   unitId: number = 0; // Replace with actual unit ID
   block: number = 0; // Replace with actual block ID
   noTel: string = '';
-  extend_mb = false
+  qrCodeImage: string = '';
+  selectedPaymentMethod: string = '';
+  amountPayable: string = '';
+  amountType = {
+    amountUntaxed: '',
+    amountTaxed: '',
+    amountTotal: '',
+    isIncludeGST: false
+  }
+
+  extend_mb = false;
 
   formData = {
     card_id: 0,
@@ -40,30 +56,34 @@ export class AccessCardApplicationPage implements OnInit {
     reason: '',
   }
 
-  constructor(private modalController: ModalController, private router: Router, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private getUserInfoService: GetUserInfoService, private authService:AuthService) { }
+  constructor(private modalController: ModalController, private router: Router, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'user',
-        'unit',
-        'block_name',
-        'unit_name',
-        'project_name'
-      ]
-    ).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-
-      // // console.log(value);
-      this.block = value.block_name;
-      this.unitId = value.unit;
-      this.unit = value.unit_name;
-      this.condoName = value.project_name;
-      this.userName = parse_user.name
-      // // console.log('unit', this.unitId);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.formData.family_id = Number(parseValue.family_id)
+        this.projectId = Number(parseValue.project_id);
+        this.unitId = Number(parseValue.unit_id);
+        this.unit = parseValue.unit_name;
+        this.block = parseValue.block_name;
+        this.phoneNumber = parseValue.family_mobile_number;
+        this.userName = parseValue.family_name;
+        this.familyType = parseValue.family_type;
+      }
     })
-    // console.log('tes');
+  }
+
+  onShowAmountChange(event: any) {
+    const type = event.target.value;
+
+    if (type === 'untaxed') {
+      this.amountPayable = this.amountType.amountUntaxed;
+    } else if (type === 'taxed') {
+      this.amountPayable = this.amountType.amountTaxed;
+    } else {
+      this.amountPayable = this.amountType.amountTotal;
+    }
   }
 
   onOptionChange(option: string) {
@@ -137,10 +157,35 @@ export class AccessCardApplicationPage implements OnInit {
     // Perform action based on selected card type
   }
 
-  onSubmit() {
+  selectPaymentMethod(method: 'card' | 'paynow') {
+    this.selectedPaymentMethod = method;
+  }
+
+  donwloadQris() {
+    if (!this.qrCodeImage) {
+      this.presentToast('QR Code image is not available', 'danger');
+      return;
+    }
+  
+    // Membuat elemen <a> untuk mendownload gambar
+    const link = document.createElement('a');
+    link.href = this.qrCodeImage; // Mengatur href ke base64 image
+    link.download = 'qr_code.png'; // Menentukan nama file yang akan diunduh
+  
+    // Menambahkan elemen ke body dan memicu klik
+    document.body.appendChild(link);
+    link.click();
+  
+    // Menghapus elemen setelah klik
+    document.body.removeChild(link);
+  }
+
+  onSubmit(paymentReceipt: string) {
     if (this.selectedOption === 'replacement' && this.agreementChecked) {
       this.raiseARequestService.postRequestCard(
         this.formData.family_id,
+        this.projectId,
+        paymentReceipt,
         this.formData.card_id,
         this.formData.reason
       ).subscribe(
@@ -159,7 +204,11 @@ export class AccessCardApplicationPage implements OnInit {
         }
       );
     } else if (this.selectedOption === 'new_application' && this.agreementChecked) {
-      this.raiseARequestService.postRequestCard(this.formData.family_id).subscribe(
+      this.raiseARequestService.postRequestCard(
+        this.formData.family_id,
+        this.projectId,
+        paymentReceipt
+      ).subscribe(
         (response) => {
           // console.log(response);
           if (response.result.status === 'success') {
@@ -199,6 +248,43 @@ export class AccessCardApplicationPage implements OnInit {
       }
     });
 
+    return await modal.present();
+  }
+
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmit(receipt);
+      }
+    });
     return await modal.present();
   }
 

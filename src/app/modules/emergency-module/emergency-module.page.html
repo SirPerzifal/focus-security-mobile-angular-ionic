@@ -62,7 +62,7 @@
         </div> -->
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -70,12 +70,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            (click)="onSubmit(true)"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
-        </div>
+        <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showPolice" @fadeInOut>
@@ -131,7 +126,7 @@
         </div> -->
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -139,12 +134,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            (click)="onSubmit(true)"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
-        </div>
+        <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showOthers" @fadeInOut>
@@ -195,7 +185,7 @@
         </div> -->
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -203,12 +193,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            (click)="onSubmit(true)"></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
-        </div>
+        <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
 
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showSCDF" @fadeInOut>
@@ -245,7 +230,7 @@
         </div> -->
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
@@ -253,13 +238,19 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="ENTER PURPOSE HERE..."></textarea>
         </div>
-        <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-            (click)="onSubmit(true)"></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-2 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
-        </div>
+        <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
     </div>
+
+    <ng-template #submitButton>
+      <div class="w-full" *ngFor="let camera of Camera; let i = index">
+        <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
+          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+          (click)="onSubmit(true, camera.CamSentId)"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'" (click)="onSubmit()"></app-visitor-button>
+      </div>
+    </ng-template>
   </div>
 </ion-content>

@@ -3,11 +3,13 @@ import { ServiceProvidersService } from 'src/app/service/resident/service-provid
 import { ToastController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 import { ApiService } from 'src/app/service/api.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 interface QuickDial {
   name: string;
   number: string;
   icon:string;
+  is_whatsapp: boolean;
 }
 
 @Component({
@@ -25,25 +27,18 @@ export class ResidentFindAServiceProviderPage implements OnInit {
   constructor(
     private serviceProvidersService: ServiceProvidersService,
     private toastController: ToastController,
-    private apiservice:ApiService
+    private apiservice:ApiService,
+    private webRtcService: WebRtcService
     
   ) { }
 
   ngOnInit() {
-    // // console.log('ngOnInitngOnInitngOnInit');
-    
-    Preferences.get({key:'ACTIVE_PROJECT'}).then((project_value)=>{
-      // // console.log(project_value);
-      // // console.log('project_valueproject_valueproject_valueproject_valueproject_valueproject_value');
-      
-      if(project_value?.value){
-        this.loadServiceProviders(project_value?.value)
-      }else{
-        this.presentToast('Error Project has not been chosen. Please go to the profile estate section and choose a unit', 'danger');
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.loadServiceProviders(parseValue.project_id)
       }
     })
-
-
   }
 
   loadServiceProviders(project_id:string) {
@@ -54,7 +49,8 @@ export class ResidentFindAServiceProviderPage implements OnInit {
           this.quickDials = response.result.data.map((service: any) => ({
             name: service.name,
             number: service.contact_number,
-            icon:`${this.apiservice.baseUrl}/web/image/fs.residential.service.providers/${service.id}/icon`
+            icon:`${this.apiservice.baseUrl}/web/image/fs.residential.service.providers/${service.id}/icon`,
+            is_whatsapp: service.is_whatsapp
           }));
           if (this.quickDials) {
             this.isLoading = false;
@@ -115,5 +111,11 @@ export class ResidentFindAServiceProviderPage implements OnInit {
         errorSound.play().catch((err) => console.error('Error playing sound:', err));
       }
     });
+  }
+
+  async startCall(record:any){
+    record.isResident = true;
+    record.requestor_contact_number = record.number;
+    await this.webRtcService.createOffer(record);
   }
 }

@@ -134,6 +134,8 @@ export class EmergencyModulePage implements OnInit {
       vehicle_type: '',
       project_id: this.project_id
     }
+
+    this.contactUnit = ''
   }
 
   refreshVehicle() {
@@ -154,18 +156,24 @@ export class EmergencyModulePage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
   
   project_id = 0
-  
+  Camera: any = []
+
+  contactUnit = ''
   getContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       this.formData.officer_name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
       this.formData.block_id = contactData.block_id
       this.loadUnit().then(() => {
-        this.formData.unit_id = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }
@@ -215,10 +223,11 @@ export class EmergencyModulePage implements OnInit {
       }
     });
   }
-
-  onSubmit(isOpenBarrier: boolean = false){
+  
+  onSubmit(isOpenBarrier: boolean = false, camera_id: string = ''){
+    let params = { ...this.formData, camera_id: camera_id };
     console.log(this.formData)
-    this.mainVmsService.getApi(this.formData, '/vms/post/emergency_vehicle').subscribe({
+    this.mainVmsService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

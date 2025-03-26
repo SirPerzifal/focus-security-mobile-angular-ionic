@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
-import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Router, NavigationStart } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
+import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
 
 @Component({
   selector: 'app-record',
@@ -19,16 +21,13 @@ export class RecordPage implements OnInit {
 
   ngOnInit() {
     // console.log("tes");
-    this.loadTicketFromBackend();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/record'){
-          this.allData = []
-          this.loadTicketFromBackend();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadTicketFromBackend();
       }
-    });
+    })
   }
 
   loadTicketFromBackend() {

@@ -107,9 +107,11 @@ export class ContractorFormPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
+  Camera: any = []
   project_id = 0
 
   private routerSubscription!: Subscription;
@@ -134,7 +136,7 @@ export class ContractorFormPage implements OnInit {
     this.selectedUnit = event[0]
   }
 
-  async saveRecord(openBarrier: boolean = false) {  
+  async saveRecord(openBarrier: boolean = false, camera_id: string = '') {  
     let errMsg = ''
     // Validasi input
     const contractorName = this.contractorNameInput.value;
@@ -192,7 +194,8 @@ export class ContractorFormPage implements OnInit {
         this.selectedUnit,
         remarks,
         subContractors,
-        this.project_id
+        this.project_id,
+        camera_id
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -221,6 +224,8 @@ export class ContractorFormPage implements OnInit {
 
   resetForm() {
     // Reset semua input
+    this.contactUnit = ''
+    
     this.contractorNameInput.value = '';
     this.contractorContactNumberInput.value = '';
     this.contractorIdentificationNumberInput.value = '';
@@ -313,13 +318,17 @@ export class ContractorFormPage implements OnInit {
     contact_number: '',
   };
 
+  contactUnit = ''
   getContactInfo(contactData: any) {
+    this.contactUnit = ''
     if (contactData) {
       this.formData.contractor_name = contactData.visitor_name
       this.formData.contractor_vehicle = contactData.vehicle_number
       this.selectedBlock = contactData.block_id
       this.loadUnit().then(() => {
-        this.selectedUnit = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }

@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
+import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+
+
 @Component({
   selector: 'app-resident-report-an-issue',
   templateUrl: './resident-report-an-issue.page.html',
@@ -28,18 +32,22 @@ export class ResidentReportAnIssuePage implements OnInit {
 
   constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService) { }
 
-  ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(['user', 'family', 'type_family', 'block_name', 'unit_name', 'project_name']).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-      
-      this.reporterDetailsFrom.name = parse_user.name;
-      this.reporterDetailsFrom.blockAndUnit = value.block_name + ','+ value.unit_name;
-      this.reporterDetailsFrom.email = parse_user.email;
-      this.reporterDetailsFrom.contactNumber = parse_user.mobile_number;
-      this.reporterDetailsFrom.placeOfResidence = value.project_name;
+  ngOnInit() {    // console.log("tes");
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.reporterDetailsFrom.name = parseValue.family_name;
+        this.reporterDetailsFrom.blockAndUnit = parseValue.block_name + ','+ parseValue.unit_name;
+        this.reporterDetailsFrom.contactNumber = parseValue.family_mobile_number;
+        this.reporterDetailsFrom.placeOfResidence = parseValue.project_name;
+        this.loadType();
+      }
     })
-    // // console.log("tes");
-    this.loadType();
+    Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
+      if (value?.value) {
+        this.reporterDetailsFrom.email = value.value;
+      }
+    })
   }
   
   loadType() {

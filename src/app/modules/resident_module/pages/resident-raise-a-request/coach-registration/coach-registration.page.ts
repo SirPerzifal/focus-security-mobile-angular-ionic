@@ -2,12 +2,16 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AlertController } from '@ionic/angular';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 
 @Component({
   selector: 'app-coach-registration',
@@ -85,15 +89,14 @@ export class CoachRegistrationPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit dan blok yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(['unit', 'block', 'project_id']).then((value) => {
-      this.formData.unit_id = Number(value.unit); // Mengambil nilai unit dari objek
-      this.formData.block_id = Number(value.block); // Mengambil nilai block dari objek
-      this.project_id = Number(value.project_id)
-      // // console.log('unit', this.formData.unit_id);
-      // // console.log('block', this.formData.block_id);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.formData.unit_id = Number(parseValue.unit_id); // Mengambil nilai unit dari objek
+        this.formData.block_id = Number(parseValue.block_id); // Mengambil nilai block dari objek
+        this.project_id = Number(parseValue.project_id)
+      }
     });
-    // console.log('tes');
   }
 
   project_id = 0
@@ -190,7 +193,7 @@ export class CoachRegistrationPage implements OnInit {
       this.formData.facility_required = event.target.value;
     }
   }
-  onSubmitCoach() {
+  onSubmitCoach(paymentReceipt: string) {
     if (!this.formData.type_of_coaching) {
       this.presentToast('Please select the Type of Coaching field.', 'danger');
       return;
@@ -211,6 +214,8 @@ export class CoachRegistrationPage implements OnInit {
     this.raiseARequestService.postRegiterRequestCoach(
       this.formData.block_id,
       this.formData.unit_id,
+      this.project_id,
+      paymentReceipt,
       this.formData.coach_name,
       this.formData.contact_number,
       this.formData.coach_sex,
@@ -234,6 +239,43 @@ export class CoachRegistrationPage implements OnInit {
         }
       }
     )
+  }
+
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmitCoach(receipt);
+      }
+    });
+    return await modal.present();
   }
 
   loadCoach() {
@@ -307,6 +349,8 @@ export class CoachRegistrationPage implements OnInit {
               this.raiseARequestService.postRegiterRequestCoach(
                 this.formData.block_id,
                 this.formData.unit_id,
+                0,
+                '',
                 '',
                 '',
                 '',

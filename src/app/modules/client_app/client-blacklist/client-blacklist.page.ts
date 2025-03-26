@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
@@ -36,7 +37,8 @@ export class ClientBlacklistPage implements OnInit {
     private blockUnitService: BlockUnitService,
     private alertController: AlertController,
     private mainVmsService: MainVmsService,
-    private getUserInfoService: GetUserInfoService
+    private getUserInfoService: GetUserInfoService,
+    private webRtcService: WebRtcService
   ) { }
 
   ngOnInit() {
@@ -514,5 +516,11 @@ export class ClientBlacklistPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  callResident(){
+    console.log("black listttt -================", this.blacklistData);
+    let copyData = this.blacklistData;
+    // this.webRtcService.createOffer(copyData);
   }
 }

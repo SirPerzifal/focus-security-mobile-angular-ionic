@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NoticeAndDocService } from 'src/app/service/resident/notice-and-doc/notice-and-doc.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { Subscription } from 'rxjs';
 import { Router, NavigationStart } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
+
+import { NoticeAndDocService } from 'src/app/service/resident/notice-and-doc/notice-and-doc.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -24,38 +26,16 @@ export class ResidentAnnouncementPagePage implements OnInit, OnDestroy {
   constructor(private noticeAndDocService: NoticeAndDocService, private getUserInfoService: GetUserInfoService, private router: Router, public functionMainService: FunctionMainService) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'unit',
-        'block'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.unitId = Number(value.unit);
-      this.blockId = Number(value.block);
-      
-      this.loadNotice();
-    })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        // // console.log(event['url'])
-        if (event['url'].split('?')[0] == '/resident-announcement-page'){
-          this.getUserInfoService.getPreferenceStorage(
-            [ 
-              'unit',
-              'block'
-            ]
-          ).then((value) => {
-            // // console.log(value);
-            this.unitId = Number(value.unit);
-            this.blockId = Number(value.block);
-            
-            this.loadNotice();
-          })
-        }
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        // // console.log(value);
+        this.unitId = Number(parseValue.unit_id);
+        this.blockId = Number(parseValue.block_id);
+        
+        this.loadNotice();
       }
-    });
+    })
   }
 
   newOrOld: string = '';

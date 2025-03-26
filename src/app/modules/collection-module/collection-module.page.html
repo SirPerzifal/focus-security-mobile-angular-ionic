@@ -42,7 +42,7 @@
         </div> -->
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'" (click)="onSubmitWalkIn()"></app-visitor-button>
@@ -75,11 +75,13 @@
         </div>
         <div class="w-full">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngFor="let camera of Camera; let i = index">
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="onSubmitDriveIn(true, camera.CamSentId)"></app-visitor-button>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'" (click)="onSubmitDriveIn(true)"></app-visitor-button>
-          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'" (click)="onSubmitDriveIn(false)"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'" (click)="onSubmitDriveIn(false)"></app-visitor-button>
         </div>
       </div>
     </div>

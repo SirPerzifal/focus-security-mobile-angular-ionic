@@ -10,6 +10,8 @@ import { AllData, AccessCard, OvernightParking, BicycleTag, RegisteredCoach, Req
   styleUrls: ['./rejected-request.page.scss'],
 })
 export class RejectedRequestPage implements OnInit, OnDestroy {
+  isLoading: boolean = true;
+
   selectedApplicationType: string = ''; // Deklarasi variabel untuk menyimpan tipe aplikasi yang dipilih
   allDatas: AllData[] = [];
 
@@ -165,11 +167,7 @@ export class RejectedRequestPage implements OnInit, OnDestroy {
         ].filter(item => item); // Filter out any undefined or null items
         
         this.typeSchedule = [...new Set(this.schedule.map((type: any) => type.schedule_type))];
-        // console.log(this.typeSchedule);
-        
-        // if (this.allDatas.length) {
-          //   // console.log("all Data", this.filteredDatas);
-        // }
+        this.isLoading = false;
       },
       (error) => {
         console.error("Error loading history requests:", error);

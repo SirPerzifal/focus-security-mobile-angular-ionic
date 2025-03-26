@@ -22,6 +22,8 @@ import { ModalEstateHomepageComponent } from './resident-components/modal-estate
 import { HeaderInnerPageComponent } from './resident-components/header-inner-page/header-inner-page.component';
 import { NavTabsComponent } from './resident-components/nav-tabs/nav-tabs.component';
 import { InputComponentComponent } from './resident-components/input-component/input-component.component';
+import { ModalChoosePaymentMethodComponent } from './resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from './resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { InputComponentComponent } from './resident-components/input-component/i
     ModalEstateHomepageComponent,
     HeaderInnerPageComponent,
     NavTabsComponent,
-    InputComponentComponent
+    InputComponentComponent,
+    ModalChoosePaymentMethodComponent,
+    ModalPaymentManualCustomComponent
   ],
   imports: [
     CommonModule,
@@ -66,7 +70,9 @@ import { InputComponentComponent } from './resident-components/input-component/i
     ModalEstateHomepageComponent,
     HeaderInnerPageComponent,
     NavTabsComponent,
-    InputComponentComponent
+    InputComponentComponent,
+    ModalChoosePaymentMethodComponent,
+    ModalPaymentManualCustomComponent
   ]
 })
 export class SharedModule { }

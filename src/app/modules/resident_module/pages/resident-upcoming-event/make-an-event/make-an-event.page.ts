@@ -8,6 +8,7 @@ import {
   CalendarWeekViewBeforeRenderEvent,
   CalendarDayViewBeforeRenderEvent
 } from 'angular-calendar';
+import { Preferences } from '@capacitor/preferences';
 import { CalendarEventTitleFormatter } from 'angular-calendar';
 import { CustomEventTitleFormatter } from 'src/utils/custom-event-title-formatter.providers';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
@@ -118,29 +119,21 @@ export class MakeAnEventPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['unit',
-        'block_name',
-        'block',
-        'unit_name',
-        'project_id',
-        'project_name',
-        'family'
-      ]
-    ).then((value) => {
-      // console.log(value);
-      // NOTE THIS SEMI HARD CODE
-      this.EventsForm.block_id = value.block != null ? value.block : 1;
-      this.EventsForm.project_id = value.project_id != null ? value.project_id : 1;
-      this.EventsForm.unit_id = value.unit != null ? value.unit : 1
-      this.block_id = value.block != null ? value.block : 1;
-      this.project_id = value.project_id != null ? value.project_id : 1;
-      this.unit_id = value.unit != null ? value.unit : 1
-      this.EventsForm.family_id = value.family != null ? value.family : 1
-      // console.log(this.project_id, this.block_id, this.unit_id)
-      this.loadRegisteredCoach()
-      this.loadUpcomingEvents()
-      this.loadFacilityList()
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.EventsForm.block_id = parseValue.block_id != null ? parseValue.block_id : 1;
+        this.EventsForm.project_id = parseValue.project_id != null ? parseValue.project_id : 1;
+        this.EventsForm.unit_id = parseValue.unit_id != null ? parseValue.unit_id : 1
+        this.block_id = parseValue.block_id != null ? parseValue.block_id : 1;
+        this.project_id = parseValue.project_id != null ? parseValue.project_id : 1;
+        this.unit_id = parseValue.unit_id != null ? parseValue.unit_id : 1
+        this.EventsForm.family_id = parseValue.family_id != null ? parseValue.family_id : 1
+        // console.log(this.project_id, this.block_id, this.unit_id)
+        this.loadRegisteredCoach()
+        this.loadUpcomingEvents()
+        this.loadFacilityList()
+      }
     })
   }
 

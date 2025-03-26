@@ -28,9 +28,6 @@ export class OffensesService extends ApiService{
           'Accept': 'application/json'
         });
         console.log(this.project_id)
-        if (Array.isArray(this.project_id)) {
-          this.project_id = this.project_id[0]
-        }
         let params: Record<string, any> = {alert_type: type, is_active: is_active, project_id: this.project_id};
         if (id !== 0) {
           params['id'] = id;

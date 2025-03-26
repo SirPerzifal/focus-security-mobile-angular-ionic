@@ -11,8 +11,84 @@
       <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
         <label class="text-2xl font-bold">{{record.facility_name ? record.facility_name : (record.facility ? record.facility : '-')}} | {{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}} FORM</label>
         <div class="flex flex-col justify-around w-full">
-          <div class="flex flex-row w-full justify-between">
-            <div class="w-[45%] text-white text-2xl font-bold rounded mt-5 flex flex-col">
+          <table class="mt-5 text-2xl "  *ngIf="(purpose == 'check_in' ? !record.is_form_check_in : !record.is_form_check_out) && record.is_today">
+            <tr>
+              <td class="w-1/4 p-2"></td>
+              <td class="w-1/4 p-2 font-bold">QTY</td>
+              <td class="w-1/4 p-2 font-bold">CONDITION</td>
+              <td class="w-1/4 p-2 font-bold">REMARKS</td>
+              <td class="w-1/4 p-2 font-bold">ATTACHMENT</td>
+            </tr>
+            <tr *ngFor="let form of formData; let i = index">
+              <td class="w-1/4 p-2 font-bold">
+                {{form.description}}
+              </td>
+              <td class="w-1/4 p-2">
+                <input type="number" class="text-2xl bg-white rounded w-full text-black" style="outline: none; box-shadow: none;" [(ngModel)]="formData[i].quantity" [readonly]="record.is_history">
+              </td>
+              <td class="w-1/4 p-2">
+                <select [disabled]="record.is_history" class="text-2xl bg-white rounded w-full text-black" style="outline: none; box-shadow: none;" [(ngModel)]="formData[i].condition">
+                  <option class="p-1 text-[#6b7280]" value="" selected disabled hidden></option>
+                  <option class="p-1 text-[#6b7280]" value="all_in_order">ALL IN ORDER</option>
+                  <option class="p-1 text-[#6b7280]" value="na">NA</option>
+                  <option class="p-1 text-[#6b7280]" value="damaged">DAMAGED</option>
+                </select>
+              </td>
+              <td class="w-1/4 p-2">
+                <input class="text-2xl bg-white rounded w-full text-black" style="outline: none; box-shadow: none;" [(ngModel)]="formData[i].remarks" [readonly]="record.is_history">
+              </td>
+              <td class="w-1/4 p-2">
+                <input class="text-2xl bg-white rounded w-full text-black" style="outline: none; box-shadow: none;" [(ngModel)]="formData[i].attachment_name" [readonly]="true" (click)="editImage(i)">
+              </td>
+            </tr>
+          </table>
+          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #facilityAttachment class="hidden" />
+          <table class="mt-5 text-2xl" *ngIf="purpose == 'check_in' && record.is_history">
+            <tr>
+              <td class="w-1/4 p-2"></td>
+              <td class="w-1/4 p-2 font-bold">QTY</td>
+              <td class="w-1/4 p-2 font-bold">CONDITION</td>
+              <td class="w-1/4 p-2 font-bold">REMARKS</td>
+            </tr>
+            <tr *ngFor="let form of record.checkin_form">
+              <td class="w-1/4 p-2 font-bold">
+                {{functionMainService.returnNone(form.description)}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{functionMainService.returnNone(form.quantity)}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{functionMainService.returnNone(form.condition)}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{functionMainService.returnNone(form.remarks)}}
+              </td>
+            </tr>
+          </table>
+          <table class="mt-5 text-2xl" *ngIf="purpose == 'check_out' && record.is_history">
+            <tr>
+              <td class="w-1/4 p-2"></td>
+              <td class="w-1/4 p-2 font-bold">QTY</td>
+              <td class="w-1/4 p-2 font-bold">CONDITION</td>
+              <td class="w-1/4 p-2 font-bold">REMARKS</td>
+            </tr>
+            <tr *ngFor="let form of record.checkout_form">
+              <td class="w-1/4 p-2 font-bold">
+                {{form.description}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{form.quantity}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{form.condition}}
+              </td>
+              <td class="w-1/4 p-2">
+                {{form.remarks}}
+              </td>
+            </tr>
+          </table>
+          <div class="flex flex-row w-full justify-between" *ngIf="(purpose == 'check_in' ? record.is_form_check_in : record.is_form_check_out) && record.is_today">
+            <div class="w-[45%] rounded text-2xl font-bold mt-5 flex flex-col">
               <app-signature-pad #residentSignContainer id="resident_sign" (signatureOutput)="onResidentSign($event)" [value]="residentSign" *ngIf="!isResidentSigned"></app-signature-pad>
               <img [src]="showImageResident" *ngIf="isResidentSigned">
               <div class="h-14">
@@ -39,7 +115,10 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-row w-full justify-around mb-4 mt-4" *ngIf="!isOfficerSigned || !isResidentSigned">
+          <div class="flex flex-row w-full justify-around mb-4 mt-4" *ngIf="(purpose == 'check_in' ? !record.is_form_check_in : !record.is_form_check_out) && record.is_today" >
+            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="submitForm()">SUBMIT FORM</button>
+          </div>
+          <div class="flex flex-row w-full justify-around mb-4 mt-4" *ngIf="(!isOfficerSigned || !isResidentSigned) && (purpose == 'check_in' ? record.is_form_check_in : record.is_form_check_out ) && record.is_today" >
             <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="onSubmit()">{{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}}</button>
           </div>
         </div>

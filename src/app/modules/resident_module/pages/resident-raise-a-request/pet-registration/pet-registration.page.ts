@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Router } from '@angular/router';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { Preferences } from '@capacitor/preferences';
 import { ModalController } from '@ionic/angular';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
@@ -73,21 +75,13 @@ export class PetRegistrationPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 'unit',
-        'block_name',
-        'unit_name',
-        'block',
-        'project_name'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.formData.block_id = Number(value.block);
-      this.formData.unit_id = Number(value.unit)
-      // // console.log('unit', this.unitId);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.formData.unit_id = parseValue.unit_id;
+        this.formData.block_id = parseValue.block_id;
+      }
     })
-    // console.log("tes");
   }
 
   onLicenceChange(value: any): void {

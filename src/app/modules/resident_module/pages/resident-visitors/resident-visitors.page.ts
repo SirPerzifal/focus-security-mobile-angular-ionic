@@ -28,7 +28,7 @@ export class ResidentVisitorsPage implements OnInit, OnDestroy {
   
   isLoading: boolean = true;
   unitId:number = 0;
-  minDate: string = this.getTodayDate(); // Set tanggal minimum saat inisialisasi
+  minDate: string = ''; // Set tanggal minimum saat inisialisasi
   formattedDate: string = '';
   showNewInv = true;
   showActInv = false;
@@ -71,6 +71,7 @@ export class ResidentVisitorsPage implements OnInit, OnDestroy {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
         this.unitId = parseValue.unit_id;
+        this.getTodayDate();
         this.getActiveInvites();
       } 
     })
@@ -160,12 +161,14 @@ export class ResidentVisitorsPage implements OnInit, OnDestroy {
     }
   }
 
-  getTodayDate(): string {
+  getTodayDate() {
     const today = new Date();
+    const string = today.toString;
+    const final = String(today);
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
     const yyyy = today.getFullYear();
-    return `${dd}-${mm}-${yyyy}`; // Format yyyy-mm-dd
+    this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
   }
 
   onEntryTypeChange(value: string): void {

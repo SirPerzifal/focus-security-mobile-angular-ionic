@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
@@ -16,25 +18,16 @@ export class AppealParkingFinesPage implements OnInit {
 
   appealData: any = [];
 
-  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { }
+  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
-      this.unitId = Number(value.unit);
-      this.loadOffence();
-      // // console.log('unit', this.formData.unit);
-    })
-    // console.log('tes')
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/appeal-parking-fines'){
-          this.appealData = []
-          this.loadOffence();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadOffence();
       }
-    });
+    })
   }
 
  ambil_tanggal(datetime_str: any) {
@@ -46,7 +39,6 @@ export class AppealParkingFinesPage implements OnInit {
     this.raiseARequestService.getOffensesApi(
       this.unitId
     ).subscribe((response: any) => {
-      // console.log(response);
       if (response.result.response_code === 200) {
         // console.log(response);
         this.appealData = response.result.response_result.map((appeal_data: any) => {
@@ -68,9 +60,7 @@ export class AppealParkingFinesPage implements OnInit {
           // console.log("cor");
           
         }
-      } else {
-        this.presentToast('Failed to load offence data', 'danger');
-      }
+      } 
     });
   }
 

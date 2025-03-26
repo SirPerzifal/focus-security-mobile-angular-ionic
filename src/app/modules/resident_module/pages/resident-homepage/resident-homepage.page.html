@@ -144,12 +144,13 @@
             <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
               <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
               <label for="profile_image">
-                <img height="50" [src]="selectedProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
+                <img height="50" [src]="showingProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
               </label>
             </div>
           </div>
           <button 
             [disabled]="!selectedProfile"
+            (click)="uploadNewProfile()"
             [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
             class="mt-2 w-full text-base rounded h-10 font-bold">
             Upload

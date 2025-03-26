@@ -52,11 +52,14 @@ export class WalkInPage implements OnInit {
 
   async loadProjectId() {
     await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
   project_id = 0
+  Camera: any = []
 
   Block: any[] = [];
   Unit: any[] = [];
@@ -83,9 +86,10 @@ export class WalkInPage implements OnInit {
     this.formData.visitor_vehicle = ''
     this.formData.block = ''
     this.formData.unit = ''
+    this.contactUnit = ''
   }
 
-  onSubmitDriveIn(openBarrier: boolean = false) {
+  onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '') {
     console.log(this.formData)
     console.log(openBarrier)
     let errMsg = ""
@@ -106,7 +110,7 @@ export class WalkInPage implements OnInit {
       return
     }
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -153,7 +157,7 @@ export class WalkInPage implements OnInit {
     }
     console.log(this.formData)
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -246,6 +250,7 @@ export class WalkInPage implements OnInit {
     this.loadUnit(); // Panggil method load unit
   }
 
+  contactUnit = ''
   onUnitChange(event: any) {
     this.formData.unit = event[0];
   }
@@ -265,7 +270,7 @@ export class WalkInPage implements OnInit {
     });
   }
 
-  textUnit = 'Unit'
+  textUnit = 'UNIT'
 
   async loadUnit() {
     this.formData.unit = ''
@@ -315,12 +320,15 @@ export class WalkInPage implements OnInit {
   }
 
   getContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       this.formData.visitor_name = contactData.visitor_name
       this.formData.visitor_vehicle = contactData.vehicle_number
       this.formData.block = contactData.block_id
       this.loadUnit().then(() => {
-        this.formData.unit = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }
@@ -387,6 +395,8 @@ export class WalkInPage implements OnInit {
     this.showClose = false
   }
 
+  entry_id = 0
+  entry_type = ''
   errorSound = new Audio('assets/sound/Error Alert.mp3');
   checkResult(){
     this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
@@ -402,8 +412,9 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : '' 
           this.formData.block = this.searchData.block_id[0]
           this.formData.family_id = this.searchData.family_id
+          this.contactUnit = ''
           this.loadUnit().then(() => {
-            this.formData.unit = this.searchData.unit_id[0]
+            this.contactUnit = this.searchData.unit_id[0]
             if (this.formData.visitor_type == 'walk_in') {
               this.toggleShowWalk()
             } else {

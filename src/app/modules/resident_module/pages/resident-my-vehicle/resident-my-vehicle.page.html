@@ -18,7 +18,9 @@
       <button class="bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base" *ngIf="userRole !== 'household' || MaximumVehicle === true" disabled>Add New Vehicle</button>
       <div *ngIf="userRole !== 'household'" class="text-center text-base white:text-black mx-5 mb-2"> "Please contact your primary or secondary contact of the household to add a new vehicle" </div>
     </div>
-
+    <div *ngIf="isLoading" class="flex justify-center items-center h-[50%] mt-24">
+      <ion-spinner name="circular"></ion-spinner>
+    </div>
     <div *ngFor="let vehicle of vehicles" [ngClass]="{
       'bg-[var(--ion-color-tertiary)]': vehicle.status === 'approved' || vehicle.status === 'Approved',
       'bg-[#F8F1BA]': vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval',
@@ -50,12 +52,6 @@
         {{ vehicle.type_application | titlecase }}
       </p>
       <div class="flex flex-col justify-between w-full">
-        <!-- <div class="table w-full">
-          <div class="flex" *ngFor="let field of ['Vehicle No', 'Make', 'Colour', 'Vehicle Type', 'Fees']">
-            <p class="font-bold w-[auto] text-[11px] text-black">{{ field }}</p>
-            <p class="font-bold w-[auto] text-[11px] text-black">:</p>
-            <p class="w-[auto] text-[11px] text-black">{{ getVehicleValue(vehicle, field) }}</p>
-          </div> -->
           <div class="w-full">
             <table class="w-full">
               <tr class="text-base text-black" *ngFor="let field of ['Vehicle Number', 'Vehicle Make', 'Vehicle Colour', 'Vehicle Type', 'Fees']">
@@ -77,17 +73,6 @@
           </div>
           
         </div>
-        <!-- <div class="flex flex-col mt-1 w-full">
-          <div class="flex items-end justify-end" (click)="navigateToVehicleDetail(vehicle)">
-            <ion-icon 
-              class="icon bg-[var(--ion-color-primary)] rounded-full p-2 font-xs text-white" 
-              name="arrow-forward"
-            ></ion-icon>
-          </div>
-                    <div class="flex justify-end items-end mt-2" *ngIf="vehicle.status === 'pending_payment' && vehicle.status === 'Pending Payment'">
-            <button class="px-4 py-1 bg-[var(--ion-color-primary)] text-white font-bold text-base rounded-md">Pay Now</button>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>

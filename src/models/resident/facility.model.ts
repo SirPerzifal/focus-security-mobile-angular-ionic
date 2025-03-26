@@ -27,6 +27,7 @@ export interface BookingDetails {
   eventDate: string;
   bookingTime: string;
   facilityName: string;
+  booking_id: string;
 }
 
 export interface ActiveBooking {
@@ -37,6 +38,9 @@ export interface ActiveBooking {
   endTime: string;
   bookedBy: string;
   statusBooked: string;
+  amountUntaxed: string,
+  amountTaxed: string,
+  amount_total: string
 }
 
 // Tambahkan interface ini di bagian atas file TypeScript Anda
@@ -48,4 +52,7 @@ export interface BookingResponse {
   stop_datettime: string;
   booked_by: string;
   booking_status: string;
+  amount_untaxed: string,
+  amount_taxed: string,
+  amount_total: string,
 }

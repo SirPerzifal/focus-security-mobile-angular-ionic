@@ -116,6 +116,8 @@ export class FacilityHistoryPage implements OnInit, OnDestroy {
     if (this.unit_id) {
       this.facilityBookingService.getHistoryBookingsServices(this.unit_id).subscribe({
         next: (response: any) => {
+          console.log(response);
+          
           if (response.result && response.result.booking && Array.isArray(response.result.booking)) {
             // Simpan daftar booking asli
             this.originalBookingList = response.result.booking.map((booking: any) => ({

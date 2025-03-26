@@ -4,11 +4,11 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/home-vms'"/>
+      <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
     <div class="flex flex-row mt-8">
-      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'"
-        [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" [routerLink]="['/home-vms']" [isActive]="true"
+        [disableClick]="true" />
     </div>
     <div class="flex mt-8 flex-row space-x-1">
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodBar.webp'" [text]="'FOOD DELIVERY'"
@@ -27,20 +27,23 @@
             <div class="flex flex-row flex-wrap">
               <div *ngFor="let button of foodDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image ? button.image : ''" [text]="button.text"
-                  [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'"/>
+                  [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)"
+                  [extraParentClass]="'mr-1'" />
               </div>
             </div>
             <div class="flex flex-row flex-wrap mt-6" *ngIf="food_delivery_id" @fadeInOut>
               <div *ngFor="let deliveriesButton of deliveriesType">
-                <app-button-icon [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''" [text]="deliveriesButton.text"
-                  [isActive]="deliveriesButton.isActive" (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" [extraParentClass]="'mr-1'"/>
+                <app-button-icon [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''"
+                  [text]="deliveriesButton.text" [isActive]="deliveriesButton.isActive"
+                  (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" [extraParentClass]="'mr-1'" />
               </div>
             </div>
           </div>
           <div class="flex flex-row mt-6" *ngIf="food_delivery_type">
             <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
               <div class="w-full">
-                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'deliveries_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'deliveries_contact_number'"
+                  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
               </div>
               <!-- <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
@@ -63,8 +66,10 @@
               </div>
               <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
-                <select id="delivery_food_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="delivery_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1" style="border: 1px solid #6B7280;">
+                <select id="delivery_food_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block"
+                  name="delivery_food_block"
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                  style="border: 1px solid #6B7280;">
                   <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
@@ -78,15 +83,19 @@
                 </select>
               </div> -->
               <div class="w-full">
-                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'UNIT'"></app-m2m-selection>
+                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
+                  [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
-              <div class="w-full ">
-                <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="food_delivery_type == 'drive_in'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-                  (click)="onSubmitFood(true)"></app-visitor-button>
+              <div class="w-full space-y-5" *ngIf="food_delivery_type == 'drive_in'">
+                <div class="w-full " *ngFor="let camera of Camera; let i = index">
+                  <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
+                    [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+                    (click)="onSubmitFood(true, camera.CamSentId)"></app-visitor-button>
+                </div>
+              </div>
+              <div class="w-full">
                 <app-visitor-button [text]="food_delivery_type == 'drive_in' ? 'SAVE RECORD ONLY' : 'SAVE RECORD'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-5 w-full text-2xl h-20'"
+                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20 ' + (food_delivery_type == 'walk_in' ? 'mt-6' : 'mt-1' )"
                   (click)="onSubmitFood()"></app-visitor-button>
               </div>
             </div>
@@ -99,13 +108,14 @@
           <div class="flex flex-row flex-wrap">
             <div *ngFor="let button of packageDeliveryButtons">
               <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
-                [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'"/>
+                [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'" />
             </div>
           </div>
           <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
             <div class="flex flex-col justify-between items-center w-full space-y-5 mx-4">
               <div class="w-full">
-                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'"
+                  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
               </div>
               <!-- <div class="w-full flex flex-col">
                 <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
@@ -117,8 +127,8 @@
                 <div class="flex flex-col w-[90%]">
                   <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
                   <input id="vehicle_number" placeholder="VEHICLE NUMBER" type="text" style="border: 1px solid #6B7280;"
-                  class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                  [(ngModel)]="formData.vehicle_number" name="vehicle_number">
+                    class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
+                    [(ngModel)]="formData.vehicle_number" name="vehicle_number">
                 </div>
                 <div class="flex flex-col justify-end">
                   <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -126,7 +136,7 @@
               </div>
               <div class="w-full flex  gap-x-8">
                 <div class="flex items-center me-4 ml-1 my-2">
-                  <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group" 
+                  <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
                     (change)="onUnitTypeChange('multiple')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
                   <label for="inline-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Multiple
                     Units</label>
@@ -142,8 +152,8 @@
                 <form class="mx-auto flex flex-col">
                   <label class="text-2xl"><u><b>NUMBER OF UNITS</b></u></label>
                   <select id="number_pax"
-                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" style="border: 1px solid #6B7280;"
-                    [(ngModel)]="formData.pax" name="number_pax">
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black"
+                    style="border: 1px solid #6B7280;" [(ngModel)]="formData.pax" name="number_pax">
                     <option value="0" selected hidden>CHOOSE NUMBER OF UNITS</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -162,11 +172,12 @@
                   class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
                   placeholder="Enter remarks here..." [(ngModel)]="formData.remarks"></textarea>
               </div>
-             
+
               <div class="w-full flex flex-col" *ngIf="showBlock" @fadeInOut>
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
-                <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;" [(ngModel)]="formData.block" name="package_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1">
+                <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;"
+                  [(ngModel)]="formData.block" name="package_food_block"
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
                   <option value="" selected disabled hidden>CHOOSE BLOCK</option>
                   <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                 </select>
@@ -180,22 +191,17 @@
                 </select>
               </div> -->
               <div class="w-full" *ngIf="showUnit" @fadeInOut>
-                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'UNIT'"></app-m2m-selection>
+                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
+                  [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
-              <div class="w-full ">
-                <!-- <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitPackage(true)"
-                >
-                  SAVE RECORD & OPEN BARRIER
-                </ion-button>
-                <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onSubmitPackage()">
-                  SAVE RECORD ONLY
-                </ion-button> -->
-                <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-                  (click)="onSubmitPackage(true)"></app-visitor-button>
+              <div class="w-full " *ngFor="let camera of Camera; let i = index">
+                <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
+                  [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+                  (click)="onSubmitPackage(true, camera.CamSentId)"></app-visitor-button>
+              </div>
+              <div class="w-full">
                 <app-visitor-button [text]="'SAVE RECORD ONLY'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-5 w-full text-2xl h-20'"
+                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'"
                   (click)="onSubmitPackage()"></app-visitor-button>
               </div>
             </div>
@@ -203,10 +209,10 @@
         </div>
       </form>
 
-      <div class="mt-8 flex flex-col justify-between items-center h-80 w-full" *ngIf="bulkyItemDeliveries" @fadeInOut>
+    <div class="mt-8 flex flex-col justify-between items-center h-80 w-full" *ngIf="bulkyItemDeliveries" @fadeInOut>
 
-      </div>
     </div>
+  </div>
 
   </div>
 </ion-content>

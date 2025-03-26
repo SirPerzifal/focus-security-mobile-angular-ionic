@@ -1,15 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ModalController } from '@ionic/angular';
 import { faEraser, faPenFancy } from '@fortawesome/free-solid-svg-icons';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { SignaturePadComponent } from 'src/app/shared/components/signature-pad/signature-pad.component';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
-import { ModalController } from '@ionic/angular';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
@@ -26,10 +30,12 @@ export class RenovationPermitPage implements OnInit {
   agreementChecked: boolean = false; // Status checkbox
   userName: string = '';
   condoName: string = '';
+  userPhoneNumber: string = '';
   unit: number = 1; // Replace with actual unit ID
   unitId: number = 1; // Replace with actual unit ID
   block: number = 1; // Replace with actual block ID
   noTel: string = '';
+  projectId: number = 0;
   extend_mb = true
   isModalOpen: boolean = false; // Status modal
   dateNow = new Date().toISOString().slice(0, 10);
@@ -102,28 +108,21 @@ export class RenovationPermitPage implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('tes')
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 'unit',
-        'block_name',
-        'unit_name',
-        'block',
-        'project_name'
-      ]
-    ).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-      // // console.log(value);
-      this.block = value.block_name;
-      this.renovationForm.get('block')!.setValue(Number(value.block))
-      this.unitId = Number(value.unit);
-      this.unit = value.unit_name;
-      this.unitIdForGetFamily = Number(value.unit); // Mengambil nilai unit dari objek
-      this.renovationForm.get('unit')!.setValue(Number(value.unit))
-      this.condoName = value.project_name;
-      this.userName = parse_user.name
-      // // console.log('unit', this.unitId);
-      this.loadExpectedFamily();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.renovationForm.get('block')!.setValue(Number(parseValue.block_id))        
+        this.renovationForm.get('contact_person_id')!.setValue(Number(parseValue.family_id))
+        this.unit = parseValue.unit_name;
+        this.block = parseValue.block_name;
+        this.projectId = parseValue.project_id;
+        this.renovationForm.get('unit')!.setValue(Number(parseValue.unit_id));
+        this.condoName = parseValue.project_name;
+        this.userName = parseValue.family_name;
+        this.userPhoneNumber = parseValue.family_mobile_number;
+        this.loadExpectedFamily();
+      }
     })
   }
 
@@ -180,7 +179,44 @@ export class RenovationPermitPage implements OnInit {
     this.renovationForm.value.contact_person_id = select['id'];
   }
 
-  onSubmit() {
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmit(receipt);
+      }
+    });
+    return await modal.present();
+  }
+
+  onSubmit(paymentReceipt: string) {
     if (this.renovationForm.valid) {
       if (!this.renovationForm.value.renovation_signature) {
         this.presentToast('Please provide your sign.', 'danger');
@@ -202,6 +238,8 @@ export class RenovationPermitPage implements OnInit {
         this.renovationForm.value.renovation_type,
         this.renovationForm.value.block,
         this.renovationForm.value.unit,
+        this.projectId,
+        paymentReceipt,
         this.renovationForm.value.contact_person_id,
         this.renovationForm.value.renovation_signature,
         this.renovationForm.value.contractor_contact_person,

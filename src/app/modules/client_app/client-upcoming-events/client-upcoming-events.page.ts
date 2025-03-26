@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { AlertController, IonDatetime } from '@ionic/angular';
 import { CalendarEvent, CalendarView, CalendarDateFormatter } from 'angular-calendar';
 import { Subscription } from 'rxjs';
@@ -61,6 +61,7 @@ export class ClientUpcomingEventsPage implements OnInit {
     private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     private alertController: AlertController,
+    private route: ActivatedRoute
   ) {}
 
   onBack() {
@@ -70,15 +71,24 @@ export class ClientUpcomingEventsPage implements OnInit {
   ngOnInit() {
     this.loadUpcomingEvents();
     this.loadTask();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        const url = event['url'].split('?')[0];
-        console.log(url);
-        if (url !== '/client-upcoming-events') {
-          this.viewDate = new Date();
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationStart) {
+    //     const url = event['url'].split('?')[0];
+    //     console.log(url);
+    //     if (url !== '/client-upcoming-events') {
+          
+    //     }
+    //   }
+    // });
+    this.viewDate = new Date();
+    this.route.queryParams.subscribe(params => {
+      console.log("WORK HERE", params)
+      if (params) {
+        if (params['reload']){
+          this.loadUpcomingEvents()
         }
       }
-    });
+    })
   }
 
   private routerSubscription!: Subscription;

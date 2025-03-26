@@ -5,6 +5,7 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Subscription } from 'rxjs';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client-approvals',
@@ -28,7 +29,8 @@ export class ClientApprovalsPage implements OnInit {
     private router: Router, 
     private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
-    private getUserInfoService: GetUserInfoService
+    private getUserInfoService: GetUserInfoService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -313,5 +315,18 @@ export class ClientApprovalsPage implements OnInit {
     this.isRejectModal = true
     this.reject_reason = ''
   }
+
+  getPdf(file: any) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(`data:application/pdf;base64,${file}`);
+  }
+
+  getBgClass(): string {
+    return this.selectedApproval.states === 'approved' ? 'bg-green-100' :
+           this.selectedApproval.states === 'pending_approval' || this.selectedApproval.states === 'pending_payment' ? 'bg-sky-100' :
+           this.selectedApproval.states === 'rejected' || this.selectedApproval.states === 'cancel' ? 'bg-[#E3787E]' :
+           this.selectedApproval.states === 'requested' ? 'bg-[#F8F1BA]' :
+           !this.selectedApproval.states ? 'bg-[#c4c4c4]' : '';
+  }
+  
 
 }

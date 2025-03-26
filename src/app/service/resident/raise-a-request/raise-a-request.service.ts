@@ -59,6 +59,8 @@ export class RaiseARequestService extends ApiService  {
     blockId: number,
     unitId: number,
     contactNumber: number,
+    paymentReceipt: string,
+    projectId: number,
     applicantType: string,
     vehicleNumber: string | null,
     visitorId: number | null,
@@ -77,6 +79,8 @@ export class RaiseARequestService extends ApiService  {
         block: blockId,
         unit: unitId,
         contact_number: contactNumber,
+        payment_receipt: paymentReceipt,
+        project_id: projectId,
         applicant_type: applicantType,
         vehicle_number: vehicleNumber,
         visitor_id: visitorId,
@@ -99,6 +103,8 @@ export class RaiseARequestService extends ApiService  {
     scheduleType?: string,
     blockId?: number,
     unitId?: number,
+    projectId?: number,
+    paymentReceipt?: string,
     contact_person_id?: string,
     requestor_signature?: string,
     contractor_contact_person?: string, 
@@ -119,6 +125,8 @@ export class RaiseARequestService extends ApiService  {
             schedule_type: scheduleType,
             block_id: blockId,
             unit_id: unitId,
+            project_id: projectId,
+            payment_receipt: paymentReceipt,
             contact_person_id: contact_person_id,
             requestor_signature: requestor_signature,
             contractor_contact_person: contractor_contact_person,
@@ -139,6 +147,8 @@ export class RaiseARequestService extends ApiService  {
   postRequestBicycle(
     block_id: number,
     unit_id: number,
+    projectId: number,
+    paymentReceipt: string,
     bicycle_brand: string,
     bicycle_colour: string,
     bicycle_id?: number, // Optional untuk replacement
@@ -154,13 +164,14 @@ export class RaiseARequestService extends ApiService  {
         params: {
           block_id: block_id,
           unit_id: unit_id,
+          project_id: projectId,
+          payment_receipt: paymentReceipt,
           bicycle_brand: bicycle_brand,
           bicycle_colour: bicycle_colour,
           bicycle_image: bicycle_image, // Hanya akan ada untuk new application
           bicycle_tag_id: bicycle_id, // Hanya akan ada untuk replacement
         },
     };
-  
     return this.http.post(`${this.postApiBicycle}`, body, { headers }).pipe(
         catchError(this.handleError)
     );
@@ -191,6 +202,8 @@ export class RaiseARequestService extends ApiService  {
   private getApiCard = this.baseUrl + '/residential/get/access_card_family_member_data';
   postRequestCard(
     family_id: number,
+    project_id: number,
+    payment_receipt: string,
     access_card_replacement_id?: number,
     reason_for_replacement?: string
   ): Observable<any> {
@@ -203,7 +216,9 @@ export class RaiseARequestService extends ApiService  {
         jsonrpc: '2.0',
         params: {
           family_id: family_id,
-          access_card_replacement_id : access_card_replacement_id,
+          project_id: project_id,
+          payment_receipt: payment_receipt,
+          card_replacement_id : access_card_replacement_id,
           reason_for_replacement : reason_for_replacement
         },
     };
@@ -378,6 +393,8 @@ export class RaiseARequestService extends ApiService  {
   postRegiterRequestCoach(
     block_id?: number,
     unit_id?: number,
+    project_id?: number,
+    payment_receipt?: string,
     coach_name?: string,
     contact_number?: string,
     coach_sex?: string,
@@ -401,6 +418,8 @@ export class RaiseARequestService extends ApiService  {
         params: {
           block_id: block_id,
           unit_id: unit_id,
+          project_id: project_id,
+          payment_receipt: payment_receipt,
           coach_name: coach_name,
           contact_number: contact_number,
           coach_sex: coach_sex,

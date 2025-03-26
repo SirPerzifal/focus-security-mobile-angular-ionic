@@ -11,7 +11,7 @@
           <ion-button fill="clear" class="w-full h-[150px] flex bg-[var(--ion-color-tertiary)] rounded-2xl relative p-0 m-0"
             (click)="onClickMenu(menu)">
             <div class="w-full flex flex-col items-center">
-              <img class="w-16 h-13" [src]="menu.src" [alt]="menu.alt" />
+              <img class="w-16 h-13" [src]="menu.src ? functionMain.getImage(menu.src) : 'assets/icon/exc-client/ticket.png'" [alt]="menu.alt" />
               <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-[11.5px]">{{ menu.text
                 }}</span>
             </div>
@@ -148,7 +148,7 @@
             readonly />
         </div>
         <button id="client_ticket_detail_upload_attachment" (click)="uploadFile()"
-          class="bg-[var(--ion-color-secondary)] text-white w-[30%] h-14 text-base rounded font-bold mb-2">
+          class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold mb-2">
           Upload
         </button>
       </div>

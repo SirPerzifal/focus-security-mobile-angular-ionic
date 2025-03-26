@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MoveHomePage } from '../move-home/move-home.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-move-detail',
@@ -10,7 +11,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class MoveDetailPage implements OnInit {
 
-  constructor(private router: Router, private moveHome: MoveHomePage, private route: ActivatedRoute, public functionMain: FunctionMainService) {
+  constructor(private router: Router, private moveHome: MoveHomePage, private route: ActivatedRoute, public functionMain: FunctionMainService, private webrtc: WebRtcService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { record: any};
     if (state) {
@@ -52,6 +53,10 @@ export class MoveDetailPage implements OnInit {
 
   onAccompanyDetail() {
     this.main = !this.main
+  }
+
+  callResident(){
+    this.webrtc.createOffer(this.record);
   }
 
   main = true

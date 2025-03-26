@@ -52,14 +52,14 @@ export class ClientLoginPage implements OnInit {
     this.existUser.params.login = value
   }
 
-  onPasswordChange(value: string): void {
-    this.existUser.params.password = value;
+  onPasswordChange(password: string): void {
+    this.existUser.params.password = password;
   }
 
   async login(){
     console.log(this.existUser);
 
-    if(!this.existUser.params.login && !this.existUser.params.password){
+    if(!this.existUser.params.login || !this.existUser.params.password){
       return
     }else{
       try{

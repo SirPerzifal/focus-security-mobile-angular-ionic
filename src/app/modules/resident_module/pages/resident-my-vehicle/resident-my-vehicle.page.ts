@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router, NavigationStart } from '@angular/router';
+import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
 import { MyVehicleService } from 'src/app/service/resident/my-vehicle/my-vehicle.service';
 
 interface Vehicle {
@@ -23,6 +25,8 @@ interface Vehicle {
 })
 export class ResidentMyVehiclePage implements OnInit {
   userRole: string = 'household';
+  unitId: number = 0;
+  isLoading: boolean = true;
 
   MaximumVehicle: boolean = false;
   vehicles: Vehicle[] = [];
@@ -46,16 +50,13 @@ export class ResidentMyVehiclePage implements OnInit {
   }
 
   ngOnInit() {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/resident-my-vehicle'){
-          this.vehicles = [];
-          this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
       }
-    });
-    this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
+    })
   }
 
   // Method untuk navigasi ke halaman detail
@@ -78,8 +79,7 @@ export class ResidentMyVehiclePage implements OnInit {
   }
 
   loadVehicleDetails() {
-    const unitId = 1; // Ganti dengan unit_id yang sesuai
-    this.myVehicleService.getVehicleDetail(unitId).subscribe(
+    this.myVehicleService.getVehicleDetail(this.unitId).subscribe(
       response => {
         if (response.result.response_code === 200) {
           this.vehicles = response.result.response_result.vehicles.map((vehicle: any) => ({
@@ -95,8 +95,7 @@ export class ResidentMyVehiclePage implements OnInit {
             isPrimary:vehicle.is_primary_vehicle
           }));
           this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
-          // this.presentToast('Data fetched successfully!', 'success');
-          // console.log("heres the data", response);
+          this.isLoading = false
         } else {
           // this.presentToast('Data fetched failed!', 'danger');
           console.error('Error fetching vehicle details:', response);

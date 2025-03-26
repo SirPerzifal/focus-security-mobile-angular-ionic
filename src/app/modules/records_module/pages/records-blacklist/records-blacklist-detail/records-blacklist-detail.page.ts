@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
@@ -22,7 +23,8 @@ export class RecordsBlacklistDetailPage implements OnInit {
     public functionMain: FunctionMainService,
     private mainVmsService: MainVmsService,
     private alertController: AlertController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private webRtcService: WebRtcService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { record: any[] };
@@ -106,6 +108,12 @@ export class RecordsBlacklistDetailPage implements OnInit {
 
   onBackMove() {
     this.router.navigate(['/records-blacklist'], { queryParams: { reload: true } })
+  }
+
+  callResident(){
+    console.log("record blacklist ======", this.record);
+    let copyData = this.record;
+    this.webRtcService.createOffer(copyData);
   }
 
   srcImg= "assets/img/SCDF.png"

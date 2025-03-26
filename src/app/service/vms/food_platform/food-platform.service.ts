@@ -21,12 +21,12 @@ export class FoodPlatformService extends ApiService{
     return this.http.post<any>(`${this.baseUrl}/vms/get/package_express`, {jsonrpc: '2.0', params: {project_id: project_id}});
   }
 
-  pastAddDeliveries(contact_number: string, vehicle_number: string, delivery_type : string, food_delivery : Record<string, any>, package_delivery : Record<string, any>, block: string, unit: string, multiple_unit: Record<string, any>, project_id: number): Observable<any> {
+  pastAddDeliveries(contact_number: string, vehicle_number: string, delivery_type : string, food_delivery : Record<string, any>, package_delivery : Record<string, any>, block: string, unit: string, multiple_unit: Record<string, any>, project_id: number, camera_id: string): Observable<any> {
     console.log(contact_number, vehicle_number, delivery_type , food_delivery , package_delivery , block, unit, multiple_unit)
     return this.http.post<any>(`${this.baseUrl}/vms/post/add_deliveries`, {
       jsonrpc: '2.0', 
       params: {
-        contact_number, vehicle_number, delivery_type, food_delivery, package_delivery, block, unit, multiple_unit,project_id
+        contact_number, vehicle_number, delivery_type, food_delivery, package_delivery, block, unit, multiple_unit,project_id,camera_id
       }});
   }
 }

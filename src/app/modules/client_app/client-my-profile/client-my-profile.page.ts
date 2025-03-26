@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
@@ -7,11 +8,23 @@ import { AuthService } from 'src/app/service/resident/authenticate/authenticate.
 import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'rxjs';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-client-my-profile',
   templateUrl: './client-my-profile.page.html',
   styleUrls: ['./client-my-profile.page.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(100%)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
 })
 export class ClientMyProfilePage implements OnInit {
 
@@ -23,6 +36,7 @@ export class ClientMyProfilePage implements OnInit {
     contact: '',
     designation: '',
     image_profile: '',
+    selected_project_id: '',
   };
 
   constructor(
@@ -46,17 +60,27 @@ export class ClientMyProfilePage implements OnInit {
 
   async loadProject() {
     await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.savedPref = value
       this.userData = {
         id: value.user_id,
         name: value.name,
-        name_condo: value.project_name.join(', '),
+        name_condo: value.project_name,
         email: value.email,
         contact: value.contact_number ? value.contact_number : '',
         designation: value.designation ? value.designation : '',
         image_profile: value.image_profile ? value.image_profile : '',
+        selected_project_id: value.project_id ? value.project_id : '',
       }
     })
   }
+
+  savedPref: any = []
+
+  // project_list: any = []
+  // project_id = 0
+  faCheck = faCheck
+  faFalse = faX
 
   saveRecord() {
     this.clientMainService.getApi(this.userData, '/client/update/my_profile').subscribe({
@@ -117,6 +141,29 @@ export class ClientMyProfilePage implements OnInit {
   
       this.functionMain.presentToast('Error taking photo', 'danger');
     }
+  }
+
+  isMain = true
+  isMenu = false
+  onClickLocation() {
+    this.isMain = false
+    setTimeout(() => {
+      this.isMenu = true
+    }, 300)
+  }
+
+  useProject(project: any) {
+    console.log(project)
+    this.savedPref.project_id = project.id
+    this.savedPref.project_name = project.name
+    console.log(this.savedPref)
+  }
+
+  onBack() {
+    this.isMenu = false
+    setTimeout(() => {
+      this.isMain = true
+    }, 300)
   }
 
 }

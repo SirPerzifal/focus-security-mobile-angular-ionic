@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { MyVehicleFormService } from 'src/app/service/resident/my-vehicle/my-vehicle-form/my-vehicle-form.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
@@ -11,6 +13,8 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
   styleUrls: ['./my-vehicle-form.page.scss'],
 })
 export class MyVehicleFormPage implements OnInit {
+  unitId: number = 0;
+
   // Properti untuk file
   selectedFile: File | null = null;
   uploadedFileBase64: string | null = null;
@@ -51,22 +55,25 @@ export class MyVehicleFormPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadVehicleMakeAndType();
-    this.loadFamilyMember();
-    this.loadBlock();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadFamilyMember();
+        this.loadVehicleMakeAndType();
+        this.loadBlock();
+      }
+    })
     
     // Ambil data yang dikirim dari halaman sebelumnya
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
-      this.MaximumVehicle = navigation.extras.state['maximumVehicle']; // Perbaikan di sini
-      // console.log(navigation.extras.state['maximumVehicle'])
-      // console.log(this.MaximumVehicle)
+      this.MaximumVehicle = navigation.extras.state['maximumVehicle']; 
     }
   }
 
   loadFamilyMember() {
-    const unitId = 1; // Ganti dengan unit_id yang sesuai
-    this.myVehicleFormService.getFamily(unitId).subscribe({
+    this.myVehicleFormService.getFamily(this.unitId).subscribe({
       next: (response: any) => {
         if (response.result.response_code === 200) {
           this.FamilyMember = response.result.family_data;

@@ -187,6 +187,18 @@ select:focus>option:checked:before {
     }
   }
 
+.raise-a-request-choose-payment-modal {
+  --height: 20%;
+  --border-radius: 10px;
+  --width: 85%;
+}
+
+.raise-a-request-manual-payment-modal {
+  --height: 35%;
+  --border-radius: 10px;
+  --width: 85%;
+}
+
 .history-alert{
     .alert-wrapper {
       background: #E3787E;

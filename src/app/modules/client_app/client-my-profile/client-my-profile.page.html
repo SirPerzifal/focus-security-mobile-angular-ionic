@@ -1,75 +1,116 @@
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'My Profile'"/>
+  <app-resident-header [text]="'My Profile'" />
 
-  <div class="p-5 text-center mb-20">
-    <div class="flex flex-col justify-center w-full items-center">
-      <div class="rounded-full overflow-hidden w-32 h-32 mt-4 flex flex-col justify-start relative" (click)="editImage()">
-        <img class="w-full h-full object-cover" height="128" [src]="functionMain.getImage(userData.image_profile)" width="128"/>
-        <!-- <ion-icon class="absolute top-24 right-4 drop-shadow-xl text-4xl bg-white rounded-full p-1 z-50" name="pencil">
-        </ion-icon> -->
-      </div>
-      <div class="w-full flex flex-row justify-center">
-        <div class="w-1"></div>
-        <input #editProfileName [(ngModel)]="userData.name" class="text-xl font-bold mb-6 border-0 w-full text-center" *ngIf="isEdit" (blur)="isEdit = false" style="outline: none; box-shadow: none;">
-        <span class="text-xl font-bold mb-6" *ngIf="!isEdit">{{ userData.name }}</span>
-        <div class="w-1">
-          <ion-icon class="text-base bg-white rounded-full p-1" name="pencil" (click)="editName()"  *ngIf="!isEdit" ></ion-icon>
+  <div class="w-full flex flex-row mb-20">
+    <div class="w-full flex flex-col p-5" *ngIf="isMain" @fadeInOut>
+      <div class="text-center">
+        <div class="flex flex-col justify-center w-full items-center">
+          <div class="rounded-full overflow-hidden w-32 h-32 mt-4 flex flex-col justify-start relative"
+            (click)="editImage()">
+            <img class="w-full h-full object-cover" height="128" [src]="functionMain.getImage(userData.image_profile)"
+              width="128" />
+            <!-- <ion-icon class="absolute top-24 right-4 drop-shadow-xl text-4xl bg-white rounded-full p-1 z-50" name="pencil">
+            </ion-icon> -->
+          </div>
+          <div class="w-full flex flex-row justify-center">
+            <div class="w-1"></div>
+            <input #editProfileName [(ngModel)]="userData.name" class="text-xl font-bold mb-6 border-0 w-full text-center"
+              *ngIf="isEdit" (blur)="isEdit = false" style="outline: none; box-shadow: none;">
+            <span class="text-xl font-bold mb-6" *ngIf="!isEdit">{{ userData.name }}</span>
+            <div class="w-1">
+              <ion-icon class="text-base bg-white rounded-full p-1" name="pencil" (click)="editName()"
+                *ngIf="!isEdit"></ion-icon>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="w-full">
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base font-bold">Project Title</p>
+            </div>
+            <app-text-input [id]="'my_profile_name'" [placeholder]="'KingsMan Condominium'"
+              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              [isReadonly]="true" [(ngModel)]="userData.name_condo">
+            </app-text-input>
+          </div>
+          <div class="w-full">
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base font-bold">Designation</p>
+            </div>
+            <app-text-input [id]="'my_profile_status'" [placeholder]="'Owner'" [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              [isReadonly]="true" [(ngModel)]="userData.designation">
+            </app-text-input>
+          </div>
+          <div class="w-full">
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base font-bold">Email</p>
+            </div>
+            <app-text-input [id]="'my_profile_Email'" [placeholder]="'email@example.com'"
+              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              [isReadonly]="false" [(ngModel)]="userData.email">
+            </app-text-input>
+          </div>
+          <div class="w-full text-start">
+            <app-vms-contact-input [(value)]="userData.contact" [id]="'my_profile_contact_number'" [vmsPage]="false"
+              [contactLabel]="'Contact Number'" [labelClass]="'text-base'"
+              [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base'"></app-vms-contact-input>
+          </div>
+          <div class="w-full flex flex-col items-start">
+            <label class="text-base"><b>Select Location</b></label>
+            <select id="blacklist_block"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]" [(ngModel)]="userData.selected_project_id" [disabled]="false">
+              <option value="" selected disabled hidden>Choose Location</option>
+              <option *ngFor="let project of savedPref.project_array" [value]="project.id">{{ project.name }}</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <button (click)="saveRecord()"
+              class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold h-14 w-full mt-2">
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
+      
+      <!-- <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
+        <div class="w-full flex flex-col items-center bg-[#D8ECCF] h-18 rounded-2xl relative py-2"
+          (click)="onClickLocation()">
+          <ion-button fill="clear">
+            <img class="w-10 h-10" src="assets/icon/resident-icon/profile/Home.png"
+              alt="Icon for Family Member" />
+          </ion-button>
+          <span class="text-sm font-bold text-[black] text-center">Choose Location</span>
+        </div>
+      </div> -->
     </div>
-    <div class="space-y-2">
-      <div class="w-full">
-        <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold">Project Title</p>
+    <div class="flex flex-col w-full" *ngIf="isMenu" @fadeInOut>
+      <div class="flex flex-col justify-between mt-2 ml-3">
+        <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+          (click)="onBack()"></ion-icon>
+      </div>
+      <div class="flex flex-col relative mx-4 mt-7 space-y-2">
+        <div
+          class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
+          *ngFor="let project of savedPref.project_array">
+          <span class="text-lg font-bold">{{ project.name }}</span>
+          <div *ngIf="savedPref.project_id == project.id"
+            class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
+            <fa-icon [icon]="faCheck"
+              class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
+          </div>
+          <div (click)="useProject(project)" *ngIf="savedPref.project_id != project.id"
+            class="w-10 h-10 rounded-full bg-[var(--ion-color-danger)] flex flex-col justify-center items-center mr-2">
+            <fa-icon [icon]="faFalse"
+              class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
+          </div>
         </div>
-        <app-text-input [id]="'my_profile_name'"
-          [placeholder]="'KingsMan Condominium'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true"
-          [(ngModel)]="userData.name_condo"
-        >
-        </app-text-input>
-      </div>
-      <div class="w-full">
-        <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold">Designation</p>
-        </div>
-        <app-text-input [id]="'my_profile_status'"
-          [placeholder]="'Owner'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="true"
-          [(ngModel)]="userData.designation"
-        >
-        </app-text-input>
-      </div>
-      <div class="w-full">
-        <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold">Email</p>
-        </div>
-        <app-text-input [id]="'my_profile_Email'"
-          [placeholder]="'email@example.com'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
-          [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-          [isReadonly]="false"
-          [(ngModel)]="userData.email"
-        >
-        </app-text-input>
-      </div>
-      <div class="w-full text-start">
-        <app-vms-contact-input [(value)]="userData.contact" [id]="'my_profile_contact_number'" [vmsPage]="false"
-          [contactLabel]="'Contact Number'" [labelClass]="'text-base'"
-          [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base'"></app-vms-contact-input>
-      </div>
-      <div class="w-full">
-        <button (click)="saveRecord()"
-          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold h-14 w-full mt-2">
-          Save Changes
-        </button>
       </div>
     </div>
   </div>
 
-	<app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
 </ion-content>

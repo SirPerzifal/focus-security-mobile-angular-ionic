@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Router, NavigationStart } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { PollingService } from 'src/app/service/resident/polling/polling.service';
-import { Router, NavigationStart } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 interface VotedOption {
@@ -15,7 +17,8 @@ interface VotedOption {
   templateUrl: './closed-polling.page.html',
   styleUrls: ['./closed-polling.page.scss'],
 })
-export class ClosedPollingPage implements OnInit {
+export class ClosedPollingPage implements OnInit, OnDestroy {
+  isLoading: boolean = true;
   familyId: number = 0;
   projectId: number = 0;
   
@@ -98,29 +101,14 @@ export class ClosedPollingPage implements OnInit {
   constructor(private getUserInfoService: GetUserInfoService, private pollingService: PollingService, private router: Router, public funcitonMain: FunctionMainService) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'project_id',
-        'family'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.familyId = Number(value.family);
-      this.projectId = Number(value.project_id);
-      
-      // Load polling data
-      this.loadPolling();
-    })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/resident-polling'){
-          this.voteData = []
-          this.loadPolling();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.familyId = parseValue.family_id;
+        this.projectId = parseValue.project_id;
+        this.loadPolling();
       }
-    });
+    })
   }
 
   toggleGraph(voteDetal?: any) {
@@ -208,6 +196,7 @@ export class ClosedPollingPage implements OnInit {
               }
             }
           });
+          this.isLoading = false;
         }
       },
       (error) => {

@@ -110,7 +110,7 @@ export class RegisterResidentPage implements OnInit {
             this.router.navigate(['login-end-user'])
             this.presentToast('Please wait for approval', 'success');
           } else {
-            this.presentToast('An error occurred while attempting to register', 'danger');
+            this.presentToast(res.result.status_desc, 'danger');
             console.log(res.result);
           }
 

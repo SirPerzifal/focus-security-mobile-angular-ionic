@@ -61,10 +61,12 @@ export class CollectionModulePage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
   project_id = 0
+  Camera: any = []
 
   toggleShowWalk() {
     if (!this.showDriveTrans){
@@ -204,7 +206,6 @@ export class CollectionModulePage implements OnInit {
 
 
   onSubmitWalkIn(){
-    
     let errMsg = ""
     if (!this.walkInFormData.visitor_name) {
       errMsg += 'Visitor is required!\n';
@@ -221,7 +222,7 @@ export class CollectionModulePage implements OnInit {
     }
     console.log(this.walkInFormData)
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id).subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '').subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -243,7 +244,7 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
-  onSubmitDriveIn(openBarrier: boolean = true){
+  onSubmitDriveIn(openBarrier: boolean = true, camera_id: string = ''){
     let errMsg = ""
     if (!this.driveInFormData.visitor_name) {
       errMsg += 'Visitor is required!\n';
@@ -268,7 +269,7 @@ export class CollectionModulePage implements OnInit {
     }
     console.log(this.driveInFormData)
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -309,24 +310,31 @@ export class CollectionModulePage implements OnInit {
     console.log("Vehicle Refresh", randomVhc)
   }
 
+  contactUnit = ''
   getDriveInContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       this.driveInFormData.visitor_name = contactData.visitor_name
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number
       this.driveInFormData.block = contactData.block_id
       this.loadUnit().then(() => {
-        this.driveInFormData.unit = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }
 
   getWalkInContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       this.walkInFormData.visitor_name = contactData.visitor_name
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number
       this.walkInFormData.block = contactData.block_id
       this.loadUnit().then(() => {
-        this.walkInFormData.unit = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }

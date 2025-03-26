@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, numberAttribute, OnInit } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 import { Router } from '@angular/router';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { QuickDial } from 'src/models/resident/quickDials.model';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-// import { WebRtcService } from 'src/app/service/fs-web-rts/web-rtc.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-resident-quick-dials',
@@ -12,6 +13,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class ResidentQuickDialsPage implements OnInit {
   quickDials: QuickDial[] = [];
+  projectId: number = 0;
 
   selectedQuickDial: QuickDial | null = null;
   isAnimating: boolean = false;
@@ -22,15 +24,22 @@ export class ResidentQuickDialsPage implements OnInit {
     // private webRtcService: WebRtcService, 
     private router: Router,
     private mainApiResidentService: MainApiResidentService,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private webRtcService: WebRtcService
   ) { }
 
   ngOnInit() {
-    this.loadQuickDials();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.projectId = parseValue.project_id;
+        this.loadQuickDials();
+      } 
+    })
   }
 
  loadQuickDials() {
-  this.mainApiResidentService.endpointProcess({project_id: String(751)}, 'get/contact_list').subscribe((result: any) => {
+  this.mainApiResidentService.endpointProcess({project_id: String(this.projectId)}, 'get/contact_list').subscribe((result: any) => {
     // // console.log(result);
     this.quickDials = result.result.response_result.map((dial: any) => ({
       id : dial.id,
@@ -71,9 +80,11 @@ export class ResidentQuickDialsPage implements OnInit {
     }, 300); // Match this duration with the CSS animation duration
   }
 
-  async startCall(){
+  async startCall(record:any){
     // await this.webRtcService.startLocalStream();
-    // await this.webRtcService.createOffer();
+    record.isResident = true;
+    record.requestor_contact_number = record.number;
+    await this.webRtcService.createOffer(record);
     // this.router.navigate(['/outgoing-call']);
   }
 }

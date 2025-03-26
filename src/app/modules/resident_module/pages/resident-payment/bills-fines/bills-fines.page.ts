@@ -18,6 +18,7 @@ declare var Stripe: any; // Declare Stripe
 })
 export class BillsFinesPage implements OnInit, OnDestroy {
   choosePaymentModal: boolean = false;
+  isLoading: boolean = true;
 
   stripe: any;
   fines: fines[] = []
@@ -71,6 +72,7 @@ export class BillsFinesPage implements OnInit, OnDestroy {
           })
         }
       })
+      this.isLoading = false
       // console.log(this.fines);
       
     })

@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { Subscription } from 'rxjs';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
@@ -23,9 +27,11 @@ export class MoveInOutPermitPage implements OnInit {
   dateNow = new Date().toISOString().slice(0, 10);
   userName: string = '';
   condoName: string = '';
+  userPhoneNumber: string = '';
   unit: number = 1; // Replace with actual unit ID
   unitId: number = 1; // Replace with actual unit ID
   block: number = 1; // Replace with actual block ID
+  projectId: number = 0;
   noTel: string = '';
   extend_mb = false
   contactPerson: string = '';
@@ -117,28 +123,21 @@ export class MoveInOutPermitPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'user',
-        'unit',
-        'block_name',
-        'block',
-        'unit_name',
-        'project_name'
-      ]
-    ).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-      // // console.log(value);
-      this.block = value.block_name;
-      this.moveInOutForm.get('block')!.setValue(Number(value.block))
-      this.unitId = Number(value.unit);
-      this.moveInOutForm.get('unit')!.setValue(Number(value.unit))
-      this.unit = value.unit_name;
-      this.condoName = value.project_name;
-      this.userName = parse_user.name
-      // // console.log('unit', this.unitId);
-      this.loadExpectedFamily();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.moveInOutForm.get('block')!.setValue(Number(parseValue.block_id))
+        this.moveInOutForm.get('contact_person_id')!.setValue(Number(parseValue.family_id))
+        this.unit = parseValue.unit_name;
+        this.block = parseValue.block_name;
+        this.projectId = parseValue.project_id;
+        this.moveInOutForm.get('unit')!.setValue(Number(parseValue.unit_id));
+        this.condoName = parseValue.project_name;
+        this.userName = parseValue.family_name;
+        this.userPhoneNumber = parseValue.family_mobile_number;
+        this.loadExpectedFamily();
+      }
     })
   }
 
@@ -169,7 +168,44 @@ export class MoveInOutPermitPage implements OnInit {
     this.moveInOutForm.value.contact_person_id = select['id'];
   }
 
-  onSubmit() {
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmit(receipt);
+      }
+    });
+    return await modal.present();
+  }
+
+  onSubmit(paymentReceipt: string) {
     if (this.moveInOutForm.valid) {
       if (this.moveInOutForm.value.move_type !== 'bulky_item') {
         if (!this.moveInOutForm.value.contractor_contact_person) {
@@ -205,6 +241,8 @@ export class MoveInOutPermitPage implements OnInit {
         this.moveInOutForm.value.move_type,
         this.moveInOutForm.value.block,
         this.moveInOutForm.value.unit,
+        this.projectId,
+        paymentReceipt,
         this.moveInOutForm.value.contact_person_id,
         '',
         this.moveInOutForm.value.contractor_contact_person,

@@ -10,15 +10,6 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
-interface Schedule {
-  id: number;
-  block_name: string;
-  unit_name: string;
-  block_id: string;
-  unit_id: string;
-  schedule_date: string;
-}
-
 @Component({
   selector: 'app-move-home',
   templateUrl: './move-home.page.html',
@@ -92,7 +83,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     this.historySchedules = []
     this.daySchedules = []
     console.log(this.pageType)
-    this.isLoading = false;
+    this.isLoading = true;
 
     // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
     if (this.pageType === 'move_in') {
@@ -198,12 +189,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
           } else {
           }
 
-          // this.isLoading = false;
+          this.isLoading = false;
         },
         error: (error) => {
           this.presentToast('An error occurred while loading coaches data!', 'danger');
           console.error(error);
-          // this.isLoading = false;
+          this.isLoading = false;
         }
       });
     } else if (this.pageType === 'ma_visitor') {
@@ -233,12 +224,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
           } else {
           }
 
-          // this.isLoading = false;
+          this.isLoading = false;
         },
         error: (error) => {
           this.presentToast('An error occurred while loading visitor data!', 'danger');
           console.error(error);
-          // this.isLoading = false;
+          this.isLoading = false;
         }
       });
     }

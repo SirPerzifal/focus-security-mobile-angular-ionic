@@ -16,6 +16,7 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 })
 export class FacilityPlaceBookingPage implements OnInit {
   facilityId: number = 1;
+  minDate: any = new Date().toISOString();
   roomId: number = 1;
   selectedTimeSlot: any = null;
   unitId: number = 1; // Sesuaikan dengan unit ID pengguna
@@ -28,6 +29,7 @@ export class FacilityPlaceBookingPage implements OnInit {
   selectedDate: string = new Date().toISOString();
   isTermsAccepted: boolean = false; // Menyimpan status checkbox
   selectedRoom: string = 'default' ;
+  isRequirePayment: boolean = false; // Menyimpan status checkbox
 
   constructor(
     private route: ActivatedRoute, 
@@ -46,10 +48,6 @@ export class FacilityPlaceBookingPage implements OnInit {
         this.loadFacilityDetail();
       }
     })
-    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
-      this.unitId = Number(value.unit);
-      // // console.log('unit', this.unitId);
-    })
     this.route.queryParams.subscribe(params => {
       this.facilityId = +params['facilityId'] || 1;
       this.loadFacilityDetail();
@@ -67,6 +65,7 @@ export class FacilityPlaceBookingPage implements OnInit {
     this.facilityService.getFacilityById(this.facilityId).subscribe({
       next: (response) => {
         this.facilityDetail = response.result;
+        
         // // console.log('Facility Detail:', this.facilityDetail);
       },
       error: (error) => {
@@ -108,13 +107,15 @@ export class FacilityPlaceBookingPage implements OnInit {
               if (isCloseForMaintenance) {
                 this.isCloseForMaintenance = true;
                 // console.log(isCloseForMaintenance, "tes");
-                this.roomSchedule = []
+                this.roomSchedule = [];
+                this.isRequirePayment = facility.is_require_payment;
                 this.isLoading = false;
               } else {
                 this.isCloseForMaintenance = false;
                 this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
                   next: (response) => {
                     this.roomSchedule = response.result.schedule;
+                    this.isRequirePayment = facility.is_require_payment;
                     this.isLoading = false;
                   },
                   error: (error) => {
@@ -127,6 +128,7 @@ export class FacilityPlaceBookingPage implements OnInit {
               this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
                 next: (response) => {
                   this.roomSchedule = response.result.schedule;
+                  this.isRequirePayment = facility.is_require_payment;
                   this.isLoading = false;
                 },
                 error: (error) => {
@@ -179,20 +181,92 @@ export class FacilityPlaceBookingPage implements OnInit {
     const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
     const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
     const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
-    this.router.navigate(['/facility-booking-payment'], {
-      state: {
-        roomId: this.roomId,
-        eventDate: formattedDate,
-        bookingTime: `${this.selectedTimeSlot.start_time} - ${this.selectedTimeSlot.end_time}`,
-        facilityName: this.facilityDetail?.facility_name,
-        startTimeString: startTimeString,
-        endTimeString: endTimeString,
-        unitId: this.unitId,
-        partnerId: this.partnerId,
-        bookingFee: 40.00,
-        deposit: 100.00
+
+    if (this.isRequirePayment) {
+      if (!this.selectedTimeSlot) {
+        // Tampilkan pesan error jika tidak ada slot yang dipilih
+        this.errorMessage = 'Please select a time slot';
+        return;
       }
-    })
+  
+      if (!this.isTermsAccepted) {
+        this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
+        return;
+      }  
+  
+      // Format tanggal sesuai kebutuhan API
+      const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
+      const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
+      const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
+  
+      this.facilityService.postFacilityBook(
+        this.roomId,
+        startTimeString,
+        endTimeString,
+        this.unitId,
+        this.partnerId
+      ).subscribe({
+        next: (response) => {
+          this.router.navigate(['/facility-booking-payment'], {
+            state: {
+              roomId: this.roomId,
+              eventDate: formattedDate,
+              bookingTime: `${this.selectedTimeSlot.start_time} - ${this.selectedTimeSlot.end_time}`,
+              facilityName: this.facilityDetail?.facility_name,
+              startTimeString: startTimeString,
+              endTimeString: endTimeString,
+              unitId: this.unitId,
+              partnerId: this.partnerId,
+              bookingFee: response.result.booking_detail.amount_total,
+              deposit: 0,
+              booking_id: response.result.booking_detail.booking_id
+            }
+          })
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to load room schedule';
+          console.error('Error loading room schedule', error);
+        }
+      });
+    } else {
+      if (!this.selectedTimeSlot) {
+        // Tampilkan pesan error jika tidak ada slot yang dipilih
+        this.errorMessage = 'Please select a time slot';
+        return;
+      }
+  
+      if (!this.isTermsAccepted) {
+        this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
+        return;
+      }  
+  
+      // Format tanggal sesuai kebutuhan API
+      const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
+      const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
+      const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
+  
+      this.facilityService.postFacilityBook(
+        this.roomId,
+        startTimeString,
+        endTimeString,
+        this.unitId,
+        this.partnerId
+      ).subscribe({
+        next: (response) => {
+          this.roomSchedule = response.result.success;
+          const message = response.result.message;
+          this.presentToast(message, 'success');
+          console.log('Room Schedule:', this.roomSchedule);
+          this.resetForm();
+          this.router.navigate(['/resident-facility-bookings'])
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to load room schedule';
+          console.error('Error loading room schedule', error);
+        }
+      });
+    }
+
   }
 
   toggleShowActBk() {

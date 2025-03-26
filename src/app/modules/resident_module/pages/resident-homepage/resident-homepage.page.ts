@@ -10,6 +10,7 @@ import { Preferences } from '@capacitor/preferences';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
 import { EstateModalPage } from './estate-modal/estate-modal.page';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -37,7 +38,8 @@ export class ResidentHomepagePage implements OnInit {
     private houseRulesService: HouseRulesService,
     private modalController: ModalController, 
     private router: Router,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private mainApiResident: MainApiResidentService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { estate: any };
@@ -54,13 +56,13 @@ export class ResidentHomepagePage implements OnInit {
     }
   }
   
-  ngOnInit() {
+  ionViewWillEnter() {
     Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
       if(value?.value){
         Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
           if (value?.value) {
-            const parseValue = JSON.parse(value.value);
-            this.setData(parseValue);
+            const valueUseState = JSON.parse(value.value);
+            this.setData(valueUseState, '');
             this.fetchContacts();
             this.loadCountNotification();
             this.loadHouseRules();
@@ -73,16 +75,15 @@ export class ResidentHomepagePage implements OnInit {
     })
   }
 
-  setData(parserValue: any) {
+  ngOnInit() {
+  }
+
+  setData(parserValue: any, imageProfile: string) {
     this.condominiumName = parserValue.project_name;
     this.condoImage = parserValue.project_image;
-    this.imageProfile = parserValue.image_profile;
+    this.imageProfile = imageProfile;
     this.name = parserValue.family_name;
     this.familyType = parserValue.family_type;
-    if (!this.imageProfile) {
-      this.isModalUpdateProfile = true;
-    }
-    
   }
 
   async presentModal(estate: any) {
@@ -95,15 +96,18 @@ export class ResidentHomepagePage implements OnInit {
     });
     modal.onDidDismiss().then((result) => {
       if (result) {
-        this.isLoading = false;
         if (result.data) {
           Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
             if (value?.value){
-              const parseValue = JSON.parse(value.value);
-              this.setData(parseValue);
+              const valueUseState = JSON.parse(value.value);
+              this.setData(valueUseState, '');
+              if (!this.imageProfile) {
+                this.isModalUpdateProfile = true;
+              }          
               this.fetchContacts();
               this.loadCountNotification();
               this.loadHouseRules();
+              this.isLoading = false;
             }
           })
         }
@@ -231,14 +235,52 @@ export class ResidentHomepagePage implements OnInit {
   }
 
   selectedProfile: string = '';
+  showingProfile: string = '';
   onProfileFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.selectedProfile = e.target.result; // Menyimpan URL gambar untuk preview
+        this.showingProfile = e.target.result; // Menyimpan URL gambar untuk preview
       };
       reader.readAsDataURL(file); // Membaca file sebagai URL data
+      this.convertToBase64(file).then((base64: string) => {
+        // console.log('Base64 successed');
+        this.selectedProfile = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
     }
+  }
+
+  uploadNewProfile() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value){
+        const valueUseState = JSON.parse(value.value);
+        const familyId = valueUseState.family_id;
+        this.mainApiResident.endpointProcess({
+          family_id: familyId,
+          new_image_profile: this.selectedProfile
+        }, 'post/change_update_profile_image').subscribe((response: any) => {
+          
+        })
+      }
+    })
+  }
+
+  convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 }

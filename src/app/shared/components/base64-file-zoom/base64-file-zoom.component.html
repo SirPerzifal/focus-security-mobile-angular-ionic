@@ -1,0 +1,9 @@
+<img [class]="imageClass" src="assets/icon/exc-client/file_download.webp" alt="File Download" (click)="clickImage()"  />
+<ion-modal id="text-modal" [isOpen]="isOpenModal" (didDismiss)="closeModal()">
+  <ng-template>
+    <div [class]="'wrapper flex flex-col justify-center items-center h-full ' + bgColor">
+      <iframe [src]="getPdf(file)" width="100%" height="100%"></iframe>
+      <!-- <ngx-extended-pdf-viewer [src]="getPdf(file)" height="100%" width="100%"></ngx-extended-pdf-viewer> -->
+    </div>
+  </ng-template>
+</ion-modal>

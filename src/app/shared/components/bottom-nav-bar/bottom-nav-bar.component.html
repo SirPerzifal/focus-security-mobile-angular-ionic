@@ -12,6 +12,12 @@
         <span class="text-[13px] font-bold">App Issues</span>
       </div>
     </ion-button>
+    <ion-button fill="clear" class="fsc-icon-button fsc-icon-button-right w-[33%]" (click)="openModal = true" *ngIf="is_client">
+      <div class="flex flex-col items-center text-black">
+        <ion-icon name="call-outline" class="text-2xl mb-2"></ion-icon>
+        <span class="text-[13px] font-bold">Call VMS</span>
+      </div>
+    </ion-button>
     <ion-button fill="clear" class="fsc-icon-button fsc-icon-button-left w-[33%]" (click)="settings()">
       <div class="flex flex-col items-center text-black">
         <ion-icon [name]="activeButton === 'settings' ? 'settings' : 'settings-outline'" class="text-2xl mb-2"></ion-icon>
@@ -19,6 +25,21 @@
       </div>
     </ion-button>
   </div>
+  <ion-modal id="text-modal" [isOpen]="openModal" (didDismiss)="openModal = false">
+    <ng-template>
+      <div class="wrapper mt-2">
+        <div class="w-full flex flex-col justify-center items-center">
+          <div class="w-full flex flex-row justify-center mb-4">
+            <p class="text-base font-bold">Call VMS?</p>
+          </div>
+          <div class="flex flex-row justify-around items-center w-full">
+            <button class="bg-gray-300 text-gray-800 p-2 w-[40%] rounded border border-black font-bold" (click)="callVms()">Call</button>
+            <button class="bg-gray-300 text-gray-800 p-2 w-[40%] rounded border border-black font-bold" (click)="openModal = false">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-footer>
 
 <!-- <ion-tabs>

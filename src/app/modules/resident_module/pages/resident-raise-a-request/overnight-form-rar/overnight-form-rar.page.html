@@ -55,7 +55,8 @@
           <p class="text-base font-bold">Contact Number of Resident</p>
         </div>
         <app-text-input [id]="'phone_number'"
-          [placeholder]="'085830122464'"
+          [(ngModel)]="userPhoneNumber"
+          [ngModelOptions]="{standalone: true}"
           [customClasses]="{'w-full':true}" [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true">
@@ -179,7 +180,7 @@
       </div>
       <button 
         [disabled]="!agreementChecked" 
-        (click)="onSubmit()"
+        (click)="presentChoosePaymentMethodeModal()"
         [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
         class="mt-2 w-full text-base rounded h-10 font-bold">
         Submit for Approval

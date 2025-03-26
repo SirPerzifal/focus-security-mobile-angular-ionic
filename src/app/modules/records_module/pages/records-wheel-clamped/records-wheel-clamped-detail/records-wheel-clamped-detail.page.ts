@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
@@ -21,7 +22,8 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     private modalController: ModalController,
     private alertController: AlertController,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    private webRtcService: WebRtcService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any[]};
@@ -158,5 +160,11 @@ export class RecordsWheelClampedDetailPage implements OnInit {
       });
     }
     
+  }
+
+  callResident(record:any){
+    // record.requestor_contact_number = record.contact;
+    console.log("record wheel clamped ==========", record);
+    // this.webRtcService.createOffer(record);
   }
 }

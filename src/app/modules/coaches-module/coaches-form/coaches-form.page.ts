@@ -78,10 +78,12 @@ export class CoachesFormPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
   project_id = 0
+  Camera: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -228,7 +230,7 @@ export class CoachesFormPage implements OnInit {
     toast.present();
   }
 
-  onSubmitRecord(isOpenBarrier: boolean = false) {
+  onSubmitRecord(isOpenBarrier: boolean = false, camera_id: string = '') {
     let params = {
       coach_id: this.schedule.coach_id,
       name: this.schedule.coach_name,
@@ -237,7 +239,8 @@ export class CoachesFormPage implements OnInit {
       unit_id: this.schedule.unit_id,
       selection_type: this.schedule.coach_type_id,
       vehicle_number: this.schedule.vehicle_number,
-      project_id: this.project_id
+      project_id: this.project_id,
+      camera_id: camera_id
     }
     console.log(params)
     let errMsg = ''

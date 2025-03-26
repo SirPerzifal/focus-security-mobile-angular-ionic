@@ -6,6 +6,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { Subscription } from 'rxjs';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-overnight-parking-detail',
@@ -21,7 +22,8 @@ export class OvernightParkingDetailPage implements OnInit {
     public functionMain: FunctionMainService,
     private alertController: AlertController,
     private offensesService: OffensesService,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private webRtcService: WebRtcService) {
       const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any};
     if (state) {
@@ -208,6 +210,12 @@ export class OvernightParkingDetailPage implements OnInit {
         overnight: true,
       },
     });
+  }
+
+  callResident(record:any){
+    record.requestor_contact_number = record.requestor_phone;
+    // console.log("overnigth parking ==========", record);
+    this.webRtcService.createOffer(record);
   }
 
 

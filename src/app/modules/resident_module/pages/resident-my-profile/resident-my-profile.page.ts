@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
@@ -38,23 +39,28 @@ export class ResidentMyProfilePage implements OnInit {
   }
 
   loadUserInfo() {
-    this.getUserInfoService.getPreferenceStorage(['user', 'family', 'type_family', 'block_name', 'unit_name', 'project_name']).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-
-      this.userData = {
-        name: parse_user.name,
-        name_condo: value.project_name,
-        type: value.type_family,
-        block: value.block_name,
-        unit: value.unit_name,
-        email: parse_user.email,
-        contact: parse_user.mobile_number,
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        // this.userId = parseValue.family_id
+        this.userData.name = parseValue.family_name;
+        this.userData.name_condo = parseValue.project_name;
+        this.userData.type = parseValue.family_type;
+        this.userData.block = parseValue.block_name;
+        this.userData.unit = parseValue.unit_name;
+        this.userData.contact = parseValue.family_mobile_number;
+        this.imageProfile = parseValue.image_profile;
       }
-
-      this.imageProfile = parse_user.image_profile;
-
-      // console.log(this.userData);
-      
+    })
+    Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
+      if (value?.value) {
+        this.userData.email = value.value;
+      }
+    })
+    Preferences.get({key: 'PROFILE_IMAGE'}).then(async (value) => {
+      if (value?.value) {
+        this.imageProfile = value.value;
+      }
     })
   }
 

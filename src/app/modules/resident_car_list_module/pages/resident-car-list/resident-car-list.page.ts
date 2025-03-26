@@ -9,6 +9,7 @@ import { Ocr, TextDetections} from '@capacitor-community/image-to-text';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 // import * as Tesseract from 'tesseract.js';
 
 @Component({
@@ -37,7 +38,8 @@ export class ResidentCarListPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private offensesService: OffensesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private webRtcService: WebRtcService
   ) { }
 
   searchType: string = '';
@@ -67,8 +69,9 @@ export class ResidentCarListPage implements OnInit {
   }
   project_name = ''
   project_id = 0
-
+  isLoading = false
   async toggleShowSearch(vehicle_number: any, is_camera: boolean = false) {
+    this.isLoading = true
     console.log("PING OVER HERE")
     console.log(vehicle_number)
     this.mainVmsService.getApi({vehicle_number: vehicle_number, project_id: this.project_id}, '/vms/get/search_vehicle' ).subscribe({
@@ -100,10 +103,12 @@ export class ResidentCarListPage implements OnInit {
             
           }
         }
+        this.isLoading = false
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while searching vehicle records!', 'danger');
         console.error(error);
+        this.isLoading = false
       }
     });
   }
@@ -323,7 +328,8 @@ export class ResidentCarListPage implements OnInit {
   }
 
   callResident(vehicle: any) {
-    console.log(vehicle)
+    console.log("vehicle ================", vehicle);
+    this.webRtcService.createOffer(vehicle);
   }
 
   callVisitor(vehicle: any) {

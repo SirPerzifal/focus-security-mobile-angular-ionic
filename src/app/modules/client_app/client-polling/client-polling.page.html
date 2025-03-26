@@ -188,6 +188,14 @@
               <td class="font-bold">Voting Type</td>
               <td class="truncate">: {{ dataForGraph.is_multiple_answer ? 'Multiple Selection' : 'Single Selection' }}</td>
             </tr>
+            <tr>
+              <td class="font-bold">Votes Total</td>
+              <td class="truncate">: {{ dataForGraph.voted_count }}</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Not Voted Total</td>
+              <td class="truncate">: {{ dataForGraph.not_voted_count }}</td>
+            </tr>
             <!-- <tr>
               <td class="font-bold">You Vote</td>
               <td class="truncate">: {{ vd.you_vote || '-' }}</td>

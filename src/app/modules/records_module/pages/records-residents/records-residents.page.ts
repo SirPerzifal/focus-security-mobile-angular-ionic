@@ -23,7 +23,9 @@ export class RecordsResidentsPage implements OnInit {
     private functionMain: FunctionMainService,
   ) { }
 
+  isLoading = false
   initTemp() {
+    this.isLoading = true
     this.recordsResidentService.loadAllResident(this.project_id).subscribe(
       (response: any) => {
         console.log(response)
@@ -33,6 +35,7 @@ export class RecordsResidentsPage implements OnInit {
         } else {
           // this.presentToast('Failed to load resident data', 'danger');
         }
+        this.isLoading = false
       },
     )
     this.historyVehicles = this.logsData

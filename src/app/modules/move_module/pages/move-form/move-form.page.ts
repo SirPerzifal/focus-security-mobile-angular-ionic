@@ -64,10 +64,12 @@ export class MoveFormPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
   project_id = 0
+  Camera: any = []
 
   requestor_id = ''
 
@@ -153,7 +155,7 @@ export class MoveFormPage implements OnInit {
   company_name = ''
 
   // Fungsi submit umum
-  submitForm(openBarrier: boolean = false) {
+  submitForm(openBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
     if (!this.getInputValue('contractor_name')) {
       errMsg += 'Contractor name is required! \n'
@@ -204,6 +206,7 @@ export class MoveFormPage implements OnInit {
       this.requestor_id,
       subContractors,
       this.project_id,
+      camera_id
     ).subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {       

@@ -24,7 +24,7 @@ export class ClientSettingsPage implements OnInit {
       this.userData = {
         id: value.user_id,
         name: value.name,
-        name_condo: value.project_name.join(', '),
+        name_condo: value.project_name,
         email: value.email,
         contact: value.contact_number ? value.contact_number : '',
         designation: value.designation ? value.designation : '',

@@ -37,8 +37,9 @@ export class RecordsVisitorPage implements OnInit {
   ) { }
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
-
+  isLoading = false
   loadLogs(type: string, today: boolean = true) {
+    this.isLoading = true
     this.logsData = [];
     if (type === 'visitor') {
       
@@ -60,12 +61,12 @@ export class RecordsVisitorPage implements OnInit {
         } else {
         }
 
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
-        // this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }

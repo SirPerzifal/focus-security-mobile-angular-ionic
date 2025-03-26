@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Router, NavigationStart } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { PollingService } from 'src/app/service/resident/polling/polling.service';
-import { Router, NavigationStart } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 
@@ -17,6 +19,7 @@ interface VotedOption {
   styleUrls: ['./resident-polling.page.scss'],
 })
 export class ResidentPollingPage implements OnInit {
+  isLoading: boolean = true;
   familyId: number = 0;
   projectId: number = 0;
 
@@ -26,75 +29,6 @@ export class ResidentPollingPage implements OnInit {
   closeVote: boolean = false; // Flag for closing animation
   openVote: boolean = false; // Flag for opening animation
   voteData: any = [
-    // {
-    //   id: 1,
-    //   title: 'Block Colour Voting',
-    //   time_close: '01-01-2025 23:00:00',
-    //   time_you_vote: '',
-    //   you_vote: '',
-    //   forSelectionChoise: {
-    //     labels: ['Option A', 'Option B', 'Option C'],
-    //     datasets: {
-    //       data: [15, 25, 10], // Different vote counts
-    //       backgroundColor: [
-    //         'rgba(255, 99, 132, 0.2)',
-    //         'rgba(54, 162, 235, 0.2)',
-    //         'rgba(255, 206, 86, 0.2)',
-    //       ],
-    //       borderColor: [
-    //         'rgba(255, 99, 132, 1)',
-    //         'rgba(54, 162, 235, 1)',
-    //         'rgba(255, 206, 86, 1)',
-    //       ]
-    //     }
-    //   }
-    // },
-    // {
-    //   id: 2,
-    //   title: 'Unit Colour Voting',
-    //   time_close: '15-02-2025 23:00:00',
-    //   time_you_vote: '',
-    //   you_vote: '',
-    //   forSelectionChoise: {
-    //     labels: ['Option D', 'Option E', 'Option F'],
-    //     datasets: {
-    //       data: [20, 15, 5], // Different vote counts
-    //       backgroundColor: [
-    //         'rgba(75, 192, 192, 0.2)',
-    //         'rgba(153, 102, 255, 0.2)',
-    //         'rgba(255, 159, 64, 0.2)',
-    //       ],
-    //       borderColor: [
-    //         'rgba(75, 192, 192, 1)',
-    //         'rgba(153, 102, 255, 1)',
-    //         'rgba(255, 159, 64, 1)',
-    //       ]
-    //     }
-    //   }
-    // },
-    // {
-    //   id: 3,
-    //   title: 'Garden Colour Voting',
-    //   time_close: '30-03-2025 23:00:00',
-    //   time_you_vote: '',
-    //   you_vote: '',
-    //   forSelectionChoise: {
-    //     labels: ['Option G', 'Option H', 'Option I'],
-    //     datasets: {
-    //       data: [30, 10, 20], // Different vote counts
-    //       backgroundColor: [
-    //         'rgba(255, 205, 86, 0.2)',
-    //         'rgba(54, 162, 235, 0.2)',
-    //         'rgba(255, 99, 132, 0.2)',
-    //       ],
-    //       borderColor: [
-    //         'rgba(255, 205, 86, 1)',
-    //         'rgba(54, 162, 235, 1)',
-    //         'rgba(255, 99, 132, 1)',
-    //       ]
-    //     }
-    //   }
-    // }
   ];
 
   voteNowOn(voteData?: any) {
@@ -119,29 +53,14 @@ export class ResidentPollingPage implements OnInit {
   constructor(private getUserInfoService: GetUserInfoService, private pollingService: PollingService, private router: Router, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'project_id',
-        'family'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.familyId = Number(value.family);
-      this.projectId = Number(value.project_id);
-      
-      // Load polling data
-      this.loadPolling();
-    })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/resident-polling'){
-          this.voteData = []
-          this.loadPolling();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.familyId = parseValue.family_id;
+        this.projectId = parseValue.project_id;
+        this.loadPolling();
       }
-    });
+    })
   }
 
   loadPolling() {
@@ -181,6 +100,7 @@ export class ResidentPollingPage implements OnInit {
               })
             }
           })
+          this.isLoading = false;
         }
       },
       (error) => {

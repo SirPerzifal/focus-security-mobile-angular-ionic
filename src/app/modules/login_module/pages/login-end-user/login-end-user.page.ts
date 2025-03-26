@@ -15,6 +15,9 @@ import { NotificationService } from 'src/app/service/resident/notification/notif
 })
 export class LoginEndUserPage implements OnInit {
 
+  isAnimating: boolean = false;
+  waitingResponseLoginApi: boolean = false;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -23,6 +26,17 @@ export class LoginEndUserPage implements OnInit {
   ) {}
 
   ngOnInit() {
+  }
+
+  addMarginBottomExtend: boolean = false;
+
+  // Fungsi untuk mengubah nilai addMarginBottomExtend
+  handleFocus() {
+    this.addMarginBottomExtend = true;
+  }
+
+  handleBlur() {
+    this.addMarginBottomExtend = false;
   }
 
   existUser: LoginUserDto = {
@@ -43,12 +57,18 @@ export class LoginEndUserPage implements OnInit {
     this.showPassword = this.showPassword === 'password' ? 'text' : 'password';
   }
 
-  onPasswordChange(event: any): void {
-    this.existUser.params.password = event.target.value;
+  onPasswordChange(password: string): void {
+    this.existUser.params.password = password;
   }
 
   fcmToken: string = '';
   async loginResident(){
+    // If a different dial is clicked, animate the popdown first
+    this.waitingResponseLoginApi = true;
+    this.isAnimating = true;
+    setTimeout(() => {
+      this.isAnimating = false;
+    }, 300); // Match this duration with the CSS animation duration
     // console.log(this.existUser.params.login, this.existUser.params.password, this.fcmToken);
     if(!this.existUser.params.login && !this.existUser.params.password){
       return
@@ -64,24 +84,47 @@ export class LoginEndUserPage implements OnInit {
                 key: 'USER_EMAIL',
                 value: String(this.existUser.params.login),
               }).then(()=>{
-                this.router.navigate(['/resident-homepage'], {
-                  state: {
-                    estate: estate,
-                  }
-                });
+                Preferences.set({
+                  key: 'CURRENT_PASS',
+                  value: String(this.existUser.params.password)
+                }).then(() => {
+                  this.router.navigate(['/resident-homepage'], {
+                    state: {
+                      estate: estate,
+                    }
+                  });
+                  this.waitingResponseLoginApi = true;
+                  this.isAnimating = true;
+                  setTimeout(() => {
+                    this.isAnimating = false;
+                  }, 300); // Match this duration with the CSS animation duration
+                })
               });
             } else {
+              this.waitingResponseLoginApi = false;
+              this.isAnimating = true;
+              setTimeout(() => {
+                this.isAnimating = false;
+              }, 300); // Match this duration with the CSS animation duration
               this.presentToast(`${res.result.status_desc}`, 'danger');
             }
           },
           error => {
-            console.error('Error:', error);
-            this.presentToast('Login Failed :'+String(error.message), 'danger');
+            this.waitingResponseLoginApi = false;
+            this.isAnimating = true;
+            setTimeout(() => {
+              this.isAnimating = false;
+            }, 300); // Match this duration with the CSS animation duration
+            this.presentToast('Login Failed : Server not response well', 'danger');
           }
         );
       } catch (error) {
-        console.error('Unexpected error:', error);
-        this.presentToast(String(error), 'danger');
+        this.waitingResponseLoginApi = false;
+        this.isAnimating = true;
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 300); // Match this duration with the CSS animation duration
+        this.presentToast("There's somrthing wrong with Server.", 'danger');
       }
     }
   }

@@ -2,9 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
+import { Subscription } from 'rxjs';
+import { Preferences } from '@capacitor/preferences';
+
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BookingDetails } from 'src/models/resident/facility.model';
-import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 
 @Component({
@@ -15,6 +18,7 @@ import { ToastController } from '@ionic/angular';
 export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
   isPaymentProcessed = false;
   selectedPaymentMethod: 'card' | 'paynow' | null = null;
+  projectId: number = 0;
 
   qrCodeImage: string = '';
 
@@ -29,7 +33,8 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     public functionMainService: FunctionMainService,
     private facilityService: NewBookingService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private mainApiResidentService: MainApiResidentService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as {
@@ -43,6 +48,7 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
       eventDate: string;
       bookingTime: string;
       facilityName: string;
+      booking_id: string;
     };
     if (state) {
       this.bookingDetails = state
@@ -53,10 +59,49 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
     } 
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.projectId = Number(parseValue.project_id);
+        this.loadQRCode();
+      }
+    })
+  }
+
+  loadQRCode() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectId
+    }, 'get/payment_qr_code').subscribe((result: any) => {
+      this.qrCodeImage = result.result.qr_code;
+    })
+  }
+
+  donwloadQris() {
+    if (!this.qrCodeImage) {
+      this.presentToast('QR Code image is not available', 'danger');
+      return;
+    }
+  
+    // Membuat elemen <a> untuk mendownload gambar
+    const link = document.createElement('a');
+    link.href = this.qrCodeImage; // Mengatur href ke base64 image
+    link.download = 'qr_code.png'; // Menentukan nama file yang akan diunduh
+  
+    // Menambahkan elemen ke body dan memicu klik
+    document.body.appendChild(link);
+    link.click();
+  
+    // Menghapus elemen setelah klik
+    document.body.removeChild(link);
+  }
 
   toggleShowActBk() {
-    this.router.navigate(['resident-facility-bookings']);
+    this.router.navigate(['resident-facility-bookings'], {
+      queryParams: {
+        restart: 'restart',
+      }
+    });
   }
 
   toggleShowNewBk() {
@@ -138,40 +183,19 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
 
     // Simulasi proses pembayaran
     try {
-      // Contoh proses pembayaran (ganti dengan logika sebenarnya)
-      // await this.processPayment();
-      // if (!this.bookingDetails.) {
-      //   // Tampilkan pesan error jika tidak ada slot yang dipilih
-      //   this.errorMessage = 'Please select a time slot';
-      //   return;
-      // }
+      if (!this.paymentReceipt) {
+        this.presentToast('Please upload your receipt payment', 'danger');
+        return;
+      }
 
-      // if (!this.isTermsAccepted) {
-      //   this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
-      //   return;
-      // }  
-
-      this.facilityService.postFacilityBook(
-        Number(this.bookingDetails?.roomId),
-        String(this.bookingDetails?.startTimeString),
-        String(this.bookingDetails?.endTimeString),
-        Number(this.bookingDetails?.unitId),
-        Number(this.bookingDetails?.partnerId)
-      ).subscribe({
-        next: (response) => {
-          // this.roomSchedule = response.result.success;
-          // // const message = response.result.message;
-          this.presentToast("Success Book", 'success');
-          // // console.log('Room Schedule:', this.roomSchedule);
-          // this.resetForm();
-        },
-        error: (error) => {
-          // this.errorMessage = 'Failed to load room schedule';
-          console.error('Error loading room schedule', error);
-        }
-      });
-      // Jika pembayaran berhasil
-      this.isPaymentProcessed = true;
+      this.mainApiResidentService.endpointProcess({
+        booking_id: this.bookingDetails?.booking_id,
+        payment_receipt: this.paymentReceipt
+      }, 'post/facility_book_payment').subscribe((response: any) => {
+        this.presentToast("Success Book", 'success');
+        this.isPaymentProcessed = true;
+      })
+      
     } catch (error) {
       // Tangani error pembayaran
       const alert = await this.alertController.create({

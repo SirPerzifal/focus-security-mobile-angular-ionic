@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { NoticeAndDocService } from 'src/app/service/resident/notice-and-doc/notice-and-doc.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
+
+import { NoticeAndDocService } from 'src/app/service/resident/notice-and-doc/notice-and-doc.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
 @Component({
   selector: 'app-favourite-announcement',
@@ -13,6 +15,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
   styleUrls: ['./favourite-announcement.page.scss'],
 })
 export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
+  isLoading: boolean = true;
   projectId: number = 0;
   files: any = [];
   previousParentId: number = 0;
@@ -23,16 +26,14 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
   constructor(private noticeAndDocService: NoticeAndDocService, private getUserInfoService: GetUserInfoService, private router: Router) { }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'project_id',
-      ]
-    ).then((value) => {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
       // // console.log(value);
-      this.projectId = Number(value.project_id);
+      this.projectId = Number(parseValue.project_id);
       
       this.loadFile();
+      }
     })
   }
 
@@ -49,6 +50,7 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
           document_type : file.document_type,
           path : file.path,
         }));
+        this.isLoading = false;
       },
       (err) => console.error(err)
     )
@@ -67,6 +69,7 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
           document_type : file.document_type,
           path : file.path,
         }));
+        this.isLoading = false
         // if (this.files.is_root = true) {
         //   this.previousParentId = 0;
         // } 
@@ -76,24 +79,6 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
         // Optionally show an error message to the user
       }
     );
-  }
-
-  breadCrumbsAction(name: string) {
-    // this.previousParentNames.pop(); // Hapus dan ambil parentId terakhir
-    // if (this.previousParentIds.length > 0) {
-    //     // Ambil parentId terakhir dari array
-    //     const lastParentId = this.previousParentIds.pop(); // Hapus dan ambil parentId terakhir
-    //     // // console.log(this.previousParentNames);
-    //     this.loadDocuments(lastParentId); // Muat dokumen untuk parentId tersebut
-    //     this.isRoot = this.previousParentIds.length === 0; // Periksa apakah masih di root
-    // } else {
-    //     // // console.log("tes");
-    //     this.previousParentId = 0;
-    //     this.isRoot = false;
-    //     this.loadFile(); // Kembali ke file utama jika tidak ada parent
-    // }
-    // console.log(name);
-    
   }
 
   reqParent(id: number, name: string, parentId: any) {

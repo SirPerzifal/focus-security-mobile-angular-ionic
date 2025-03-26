@@ -101,6 +101,8 @@ export class ClientPollingPage implements OnInit {
       states: vote.states,
       time_you_vote: '',
       you_vote: '',
+      voted_count: vote.voted_count,
+      not_voted_count: vote.not_voted_count,
       polling_start_date: vote.polling_start_date,
       polling_end_date: vote.polling_end_date,
       forChart: {

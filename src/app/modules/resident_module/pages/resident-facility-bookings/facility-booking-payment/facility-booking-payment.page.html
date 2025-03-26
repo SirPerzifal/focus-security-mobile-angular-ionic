@@ -4,7 +4,7 @@
 <ion-content [fullscreen]="true">
   <div class="flex flex-col relative mt-2 mb-16">
 		<div class="w-full flex items-start mt-1 ml-3">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/facility-place-booking']"></ion-icon>
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="toggleShowActBk()"></ion-icon>
 		</div>
     <div class="w-full bg-green-100 text-center mt-2 m-0 p-2">
       <h2 class="text-base font-bold text-black">
@@ -77,9 +77,7 @@
           
           <!-- QR Code untuk Paynow -->
           <div *ngIf="selectedPaymentMethod === 'paynow'" class="mt-4 flex justify-center flex-col items-center">
-            <a [href]="qrCodeImage" download="paynow-qr-code.png">
-              <img [src]="qrCodeImage" alt="QR code for Paynow" class="h-24 w-24 cursor-pointer">
-            </a>
+            <img [src]="functionMainService.getImage(qrCodeImage)" alt="QR code for Paynow" class="h-24 w-24 cursor-pointer" (click)="donwloadQris()">
             <div class="w-full mt-2">
               <div class="flex flex-row justify-start mb-1">
                 <p class="text-base font-bold">Payment receipt</p>
@@ -97,7 +95,7 @@
 
       <!-- Tombol Proceed to Payment -->
       <div class="text-center mb-4">
-        <div *ngIf="!isPaymentProcessed">
+        <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow'">
           <app-visitor-button 
             [text]="'Proceed to Payment'" 
             [extraClass]="'bg-[#10421d] text-[white] w-full'"
@@ -116,7 +114,7 @@
             (click)="proceedToDirectActiveBooking()">
           </app-visitor-button>
           <app-visitor-button
-            [text]="'HomePage'" 
+            [text]="'Home Page'" 
             [extraClass]="'bg-[#10421d] text-[white] w-full'"
             (click)="proceedToCirectHomepage()">
           </app-visitor-button>

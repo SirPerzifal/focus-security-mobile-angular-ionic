@@ -34,7 +34,7 @@ export class EstateModalPage implements OnInit {
       family_id: estate[key]?.family_id,
       family_name: estate[key]?.family_name || '',
       family_type: estate[key]?.family_type || '',
-      image_profile: estate[key]?.image_profile || '',
+      family_mobile_number: estate[key]?.family_mobile_number || '',
       unit_id: estate[key]?.unit_id,
       unit_name: estate[key]?.unit_name || '',
       block_id: estate[key]?.block_id,

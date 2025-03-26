@@ -48,18 +48,13 @@ export class MaVisitorFormPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
       this.project_config = value.config
+      this.Camera = value.config.lpr
       console.log(this.project_config);
-      // this.getProjectConfig()
     })
   }
 
   project_id = 0
-
-  // async getProjectConfig() {
-  //   this.project_config = await this.functionMain.getProjectConfig(this.project_id);
-  //   this.showForm = true
-  // }
-
+  Camera: any = []
 
   onBackMove() {
     this.router.navigate(['move-home'], {
@@ -70,9 +65,10 @@ export class MaVisitorFormPage implements OnInit {
   is_guarded = false
 
   selection_type = ''
-  onSubmitRecord(is_open: boolean) {
-    console.log(this.record)
-    this.mainVmsService.getApi(this.record, '/client/post/update_ma_visitor').subscribe({
+  onSubmitRecord(is_open: boolean = false, camera_id: string = '') {
+    let params = {...this.record, camera_id: camera_id}
+    console.log(params)
+    this.mainVmsService.getApi(params, '/client/post/update_ma_visitor').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.status_code === 200) {

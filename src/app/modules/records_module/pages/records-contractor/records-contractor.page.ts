@@ -37,7 +37,9 @@ export class RecordsContractorPage implements OnInit {
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
 
+  isLoading = false
   loadLogs(today: boolean = true) {
+    this.isLoading = true;
     this.logsData = [];
     this.mainVmsService.getApi({is_today: today, project_id: this.project_id}, '/vms/get/contractor_logs').subscribe({
       next: (results) => {
@@ -53,12 +55,12 @@ export class RecordsContractorPage implements OnInit {
         } else {
         }
 
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
-        // this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }

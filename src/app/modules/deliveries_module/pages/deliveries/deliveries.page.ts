@@ -29,10 +29,10 @@ export class DeliveriesPage implements OnInit {
     { icon: 'faCarSide', text: 'DRIVE IN', isActive: false },
   ];
   foodDeliveryButtons = [
-    { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: 0 }
+    { image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'Not Exist', isActive: false, id: '0' }
   ];
   packageDeliveryButtons = [
-    { image: 'assets/icon/deliveries-icon/Package.webp', text: 'Not Exist', isActive: false, id: 0 },
+    { image: 'assets/icon/deliveries-icon/Package.webp', text: 'Not Exist', isActive: false, id: '0' },
   ];
 
   constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService, private functionMain: FunctionMainService) { }
@@ -40,8 +40,8 @@ export class DeliveriesPage implements OnInit {
   package_delivery_type = ""
   food_delivery_type = ""
 
-  food_delivery_id = 0
-  package_delivery_id = 0
+  food_delivery_id = ''
+  package_delivery_id = ''
 
   Block: any[] = [];
   Unit: any[] = [];
@@ -51,12 +51,12 @@ export class DeliveriesPage implements OnInit {
     vehicle_number: '', 
     delivery_type: '', 
     food_delivery: {
-      id: 1,
+      id: 0,
       other: 'Test Others',
       delivery_option: 'walk_in'
     }, 
     package_delivery: {
-      id: 1,
+      id: 0,
       other: 'Test Others',
       delivery_option: 'single'
     }, 
@@ -69,9 +69,11 @@ export class DeliveriesPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
   
+  Camera: any = []
   project_id = 0
 
   getFoodPlatform() {
@@ -80,16 +82,18 @@ export class DeliveriesPage implements OnInit {
       res => {
         var result = res.result['result']
         console.log(result)
-        result.forEach((item: any) => {
-          const base64Image = item['icon'];
-          const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/FoodBar.webp'; 
-          this.foodDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
-        });
-        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 0});
+        if (result) {
+          result.forEach((item: any) => {
+            const base64Image = item['icon'];
+            const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/FoodBar.webp'; 
+            this.foodDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
+          });
+        } 
+        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 'other'});
       },
       error => {
         console.log(error)
-        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 0});
+        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 'other'});
       }
     )
   }
@@ -100,18 +104,20 @@ export class DeliveriesPage implements OnInit {
       res => {
         var result = res.result['result']
         console.log(result)
-        result.forEach((item: any) => {
-          const base64Image = item['icon'];
-          const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp'; 
-          console.log(formattedImage)
-          this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
-          console.log(item)
-        });
-        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 0});
+        if (result) {
+          result.forEach((item: any) => {
+            const base64Image = item['icon'];
+            const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp'; 
+            console.log(formattedImage)
+            this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
+            console.log(item)
+          });
+        }
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 'other'});
       },
       error => {
         console.log(error)
-        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 0});
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 'other'});
       }
     )
   }
@@ -125,7 +131,7 @@ export class DeliveriesPage implements OnInit {
     toast.present();
   }
 
-  onSubmitFood(openBarrier: boolean = false) {
+  onSubmitFood(openBarrier: boolean = false, camera_id: string = '') {
     console.log(openBarrier)
     console.log(this.formData)
     let errMsg = ""
@@ -154,15 +160,16 @@ export class DeliveriesPage implements OnInit {
         this.food_delivery_type == 'drive_in' ? this.formData.vehicle_number : '', 
         'food' , 
         this.formData.food_delivery= {
-          id: this.food_delivery_id,
-          other: this.food_delivery_id == 0 ? 'Others Checked' : '',
+          id: this.food_delivery_id == 'other' ? 0 : parseInt(this.food_delivery_id),
+          other: this.food_delivery_id == 'other' ? 'Others Checked' : '',
           delivery_option: this.food_delivery_type
         }, 
         {}, 
         this.formData.block, 
         this.formData.unit,
         {},
-        this.project_id
+        this.project_id,
+        camera_id
       ).subscribe(
         res => {
           console.log(res);
@@ -209,16 +216,17 @@ export class DeliveriesPage implements OnInit {
       pax:'0',
       remarks: ''
     };
-    this.food_delivery_id = 0
-    this.package_delivery_id = 0
+    this.food_delivery_id = ''
+    this.package_delivery_id = ''
     this.food_delivery_type = ''
     this.package_delivery_type = ''
     this.foodDeliveryButtons.forEach(button => button.isActive = false);
+    this.deliveriesType.forEach(button => button.isActive = false);
     this.packageDeliveryButtons.forEach(button => button.isActive = false);
     this.Unit = []
   }
 
-  onSubmitPackage(openBarrier: boolean = false) {
+  onSubmitPackage(openBarrier: boolean = false, camera_id: string = '') {
     console.log(openBarrier)
     let mutiple_unit = {
       pax: '0',
@@ -254,9 +262,9 @@ export class DeliveriesPage implements OnInit {
         this.formData.vehicle_number, 
         'package' , 
         {}, 
-        this.formData.package_delivery= {
-          id: this.package_delivery_id,
-          other: this.package_delivery_id == 0 ? 'Others Checked' : '',
+        this.formData.package_delivery = {
+          id: this.package_delivery_id == 'other' ? 0 : parseInt(this.package_delivery_id) ,
+          other: this.package_delivery_id == 'other' ? 'Others Checked' : '',
           delivery_option: this.package_delivery_type
         }, 
         this.package_delivery_type == 'multiple' ? '1' : this.formData.block, 
@@ -265,7 +273,8 @@ export class DeliveriesPage implements OnInit {
           pax: this.formData.pax,
           remarks: this.formData.remarks
         },
-        this.project_id
+        this.project_id,
+        camera_id
       ).subscribe(
         res => {
           console.log(res);
@@ -390,31 +399,32 @@ export class DeliveriesPage implements OnInit {
 
   toggleDeliveryButton(selectedButton: any) {
     // Reset all buttons to inactive
-    
+    console.log(selectedButton)
     // Set the selected button to active
     console.log(this.food_delivery_id)
     if (this.foodDeliveries) {
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
-      if(this.food_delivery_id != selectedButton.id){
-        this.food_delivery_id = selectedButton.id
+      if(this.food_delivery_id != String(selectedButton.id)){
+        this.food_delivery_id = String(selectedButton.id)
       } else {
-        this.food_delivery_id = 0
+        this.food_delivery_id = ''
       }
     }
 
     if (this.packageDeliveries) {
       this.packageDeliveryButtons.forEach(button => button.isActive = false);
-      if(this.package_delivery_id != selectedButton.id){
-        this.package_delivery_id = selectedButton.id
+      if(this.package_delivery_id != String(selectedButton.id)){
+        this.package_delivery_id = String(selectedButton.id)
       } else {
-        this.package_delivery_id = 0
+        this.package_delivery_id = ''
       }
     }
+    console.log('new', this.food_delivery_id)
 
     selectedButton.isActive = !selectedButton.isActive;
 
     // Handle any additional logic needed for the button click
-    console.log(`Button clicked: ${selectedButton.id}, Active: ${selectedButton.isActive}`);
+    console.log(`Button clicked: ${String(selectedButton.id)}, Active: ${selectedButton.isActive}`);
     
   }
 
@@ -545,13 +555,17 @@ export class DeliveriesPage implements OnInit {
     console.log("Vehicle Refresh", this.formData.vehicle_number)
   }
 
+  contactUnit = ''
   getContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       console.log(contactData)
       this.formData.vehicle_number = contactData.vehicle_number
       this.formData.block = contactData.block_id
       this.loadUnit().then(() => {
-        this.formData.unit = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }

@@ -90,9 +90,13 @@
                 <ion-icon name="alert" class=" bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
                 <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
               </ng-container>
-              <ng-container *ngIf="booking.status === 'rejected' || booking.status === 'Rejected' || booking.status === 'cancelled' || booking.status === 'Cancelled'">
+              <ng-container *ngIf="booking.status === 'rejected' || booking.status === 'Rejected'">
                 <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
                 <p class="text-red-700 font-bold text-base">Rejected</p>
+              </ng-container>
+              <ng-container *ngIf="booking.status === 'cancelled' || booking.status === 'Cancelled'">
+                <ion-icon name="close" class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"></ion-icon>
+                <p class="text-red-700 font-bold text-base">Cancelled</p>
               </ng-container>
             </div>
           </div>

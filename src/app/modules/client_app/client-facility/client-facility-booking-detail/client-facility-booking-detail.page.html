@@ -31,16 +31,17 @@
         <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
         <div class="flex justify-between font-bold">
           <p>Booking Fee</p>
-          <p>${{ bookingData.bookingFee ? bookingData.bookingFee.toFixed(2) : '0.00' }}</p>
+          <p>${{ bookingData.amount_total ? bookingData.amount_total.toFixed(2) : '0.00' }}</p>
         </div>
         <div class="flex justify-between font-bold">
           <p>Deposit</p>
-          <p>${{ bookingData.deposit ? bookingData.deposit.toFixed(2) : '0.00' }}</p>
+          <!-- <p>${{ bookingData.amount_taxed ? bookingData.amount_taxed.toFixed(2) : '0.00' }}</p> -->
+          <p>$0.00</p>
         </div>
         <hr class="my-2">
         <div class="flex justify-between font-bold">
           <p>Grand Total</p>
-          <p>${{ calculateTotal().toFixed(2) || '0.00' }}</p>
+          <p>${{ bookingData.amount_total ? bookingData.amount_total.toFixed(2) : '0.00' }}</p>
         </div>
       </div>
 

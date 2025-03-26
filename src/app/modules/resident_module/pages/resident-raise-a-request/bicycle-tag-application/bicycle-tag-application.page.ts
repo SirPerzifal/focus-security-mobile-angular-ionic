@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
@@ -15,10 +19,12 @@ import { AuthService } from 'src/app/service/resident/authenticate/authenticate.
 })
 export class BicycleTagApplicationPage implements OnInit {
 
+  projectId: number =1;
   selectedOption: string = '';
   expectedBicycle: any = [];
   agreementChecked: boolean = false;
   userName: string = '';
+  userPhoneNumber: string = '';
   condoName: string = '';
   unit: number = 1; // Replace with actual unit ID
   unitId: number = 1; // Replace with actual unit ID
@@ -65,27 +71,19 @@ export class BicycleTagApplicationPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'user',
-        'unit',
-        'block_name',
-        'unit_name',
-        'block',
-        'project_name'
-      ]
-    ).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-      // // console.log(value);
-      this.block = value.block_name;
-      this.formData.block_id = Number(value.block);
-      this.unitId = Number(value.unit);
-      this.formData.unit_id = Number(value.unit)
-      this.unit = value.unit_name;
-      this.condoName = value.project_name;
-      this.userName = parse_user.name
-      // // console.log('unit', this.unitId);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.projectId = Number(parseValue.project_id)
+        this.unitId = Number(parseValue.unit_id);
+        this.formData.unit_id = parseValue.unit_id;
+        this.unit = parseValue.unit_name;
+        this.block = parseValue.block_name;
+        this.formData.block_id = parseValue.block_id;
+        this.condoName = parseValue.project_name;
+        this.userName = parseValue.family_name;
+        this.userPhoneNumber = parseValue.family_mobile_number;
+      }
     })
   }
 
@@ -150,7 +148,44 @@ export class BicycleTagApplicationPage implements OnInit {
     // Perform action based on selected card
   }
 
-  onSubmit() {
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmit(receipt);
+      }
+    });
+    return await modal.present();
+  }
+
+  onSubmit(paymentReceipt: string) {
     if (this.selectedOption === 'replacement') {
       if (this.formData.bicycle_brand && this.formData.bicycle_colour) {
         // console.log(this.formData);
@@ -159,6 +194,8 @@ export class BicycleTagApplicationPage implements OnInit {
         this.raiseARequestService.postRequestBicycle(
           this.formData.block_id,
           this.formData.unit_id,
+          this.projectId,
+          paymentReceipt,
           this.formData.bicycle_brand,
           this.formData.bicycle_colour,
           this.formData.id // Mengirim bicycle_id untuk replacement
@@ -196,6 +233,8 @@ export class BicycleTagApplicationPage implements OnInit {
         this.raiseARequestService.postRequestBicycle(
           this.formData.block_id,
           this.formData.unit_id,
+          this.projectId,
+          paymentReceipt,
           this.formData.bicycle_brand,
           this.formData.bicycle_colour,
           0,

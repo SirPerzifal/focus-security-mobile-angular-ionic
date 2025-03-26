@@ -14,6 +14,7 @@ export class ClientTicketDetailPage implements OnInit {
   constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService) { }
 
   ngOnInit() {
+    this.loadProject()
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { ticket: any, filter: any, is_open: boolean, menu: any, issue: boolean };
     if (state) {
@@ -29,6 +30,13 @@ export class ClientTicketDetailPage implements OnInit {
         this.secondTitle = 'Issue Detail'
       }
     } 
+  }
+
+  async loadProject() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.replyForm.user_id = value.user_id
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -96,6 +104,7 @@ export class ClientTicketDetailPage implements OnInit {
   }
 
   replyForm = {
+    user_id: '',
     ticket_id: 0,
     ir_attachment_datas: '',
     ir_attachment_name: '',

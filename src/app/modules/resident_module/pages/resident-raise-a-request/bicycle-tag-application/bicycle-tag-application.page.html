@@ -46,28 +46,35 @@
         </app-text-input>
       </div>
     </div>
+
     <div class="w-full mt-2">
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Contact Number of Resident</p>
       </div>
       <app-text-input [id]="'phone_number'"
-        [placeholder]="'085830122464'"
+        [(ngModel)]="userPhoneNumber"
+        [ngModelOptions]="{standalone: true}"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
         [isReadonly]="true">
       </app-text-input>
     </div>
+
     <div class="w-full mt-2">
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold text-start">What purpose you applying this?</p>
       </div>
-      <div class="flex flex-row">
-        <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
-        <label for="new_application"><b>New Application</b></label>
-        <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
-        <label for="replacement"><b>Replacement</b></label>
+      <div class="flex flex-row cw-2:flex-col cw-2:space-y-2">
+        <div class="flex flex-row items-center">
+          <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')" [checked]="selectedOption === 'replacement'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+          <label for="replacement"><b>Replacement</b></label>
+        </div>
+        <div class="flex flex-row items-center">
+          <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')" [checked]="selectedOption === 'new_application'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base cw-2:ml-0">
+          <label for="new_application"><b>New Application</b></label>
+        </div>
       </div>
     </div>
 
@@ -149,7 +156,7 @@
       [disabled]="!agreementChecked"
       [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
       class="mt-2 w-full text-base rounded h-10 font-bold"
-      (click)="onSubmit()"
+      (click)="presentChoosePaymentMethodeModal()"
     >
       Submit for Approval
     </button>

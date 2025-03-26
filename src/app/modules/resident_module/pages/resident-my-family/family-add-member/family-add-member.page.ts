@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { Preferences } from '@capacitor/preferences';
+
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 
 @Component({
@@ -11,7 +12,19 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 })
 export class FamilyAddMemberPage implements OnInit {
 
-  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { }
+  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router) { }
+
+  
+  ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.familyId = Number(parseValue.family_id);
+      }
+    })
+  }
+
   selectedImageName: string = ''; // New property to hold the selected file name
   selectedFile = new FormData()
   formData = {
@@ -222,17 +235,6 @@ export class FamilyAddMemberPage implements OnInit {
       console.error('Unexpected error:', error);
       this.presentToast(String(error), 'danger');
     }
-  }
-
-  ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(['family', 'unit']).then((value: any) => {
-      if (value) {
-        this.familyId = value.family;
-        this.unitId = value.unit;
-        // console.log(this.familyId, this.unitId);
-        
-      }
-    })
   }
 
 }

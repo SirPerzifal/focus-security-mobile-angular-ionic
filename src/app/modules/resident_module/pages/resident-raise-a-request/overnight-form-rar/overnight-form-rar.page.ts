@@ -1,13 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { ModalController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
+import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 interface Visitor {
@@ -23,6 +26,7 @@ interface Visitor {
   styleUrls: ['./overnight-form-rar.page.scss'],
 })
 export class OvernightFormRarPage implements OnInit {
+  projectid: number = 0;
   unitId: number = 1; // Replace with actual unit ID logic
   userName: string = '';
   condoName: string = '';
@@ -93,23 +97,18 @@ export class OvernightFormRarPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 'unit',
-        'block_name',
-        'unit_name',
-        'project_name'
-      ]
-    ).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-      // // console.log(value);
-      this.block = value.block_name;
-      this.unitId = value.unit;
-      this.unit = value.unit_name;
-      this.condoName = value.project_name;
-      this.userName = parse_user.name
-      this.fetchExpectedVisitors();
-      // // console.log('unit', this.unitId);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.projectid = Number(parseValue.project_id);
+        this.unitId = Number(parseValue.unit_id);
+        this.unit = parseValue.unit_name;
+        this.block = parseValue.block_name;
+        this.condoName = parseValue.project_name;
+        this.userName = parseValue.family_name;
+        this.userPhoneNumber = parseValue.family_mobile_number;
+        this.fetchExpectedVisitors();
+      }
     })
   }
 
@@ -204,14 +203,47 @@ export class OvernightFormRarPage implements OnInit {
     }
   }
 
-  onSubmit() {
+  async presentChoosePaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalChoosePaymentMethodComponent,
+      cssClass: 'raise-a-request-choose-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if (result.data === "electronic") {
+          console.log("tes");
+        } else {
+          this.presentManualPaymentMethodeModal();
+        }
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentManualPaymentMethodeModal() {
+    const modal = await this.modalController.create({
+      component: ModalPaymentManualCustomComponent,
+      cssClass: 'raise-a-request-manual-payment-modal',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        const receipt = result.data;
+        this.onSubmit(receipt);
+      }
+    });
+    return await modal.present();
+  }
+
+  onSubmit(paymentReceipt: string) {
     if (this.form.valid) {
       const formData = this.form.value;
-      // Send formData to your endpoint
-      // console.log('Form Data:', formData);
       if (this.form.valid) {
-        const formData = this.form.value;
-    
         const blockId = Number(formData.block); // Assuming block is a number
         const unitId = this.unitId; // Use the unitId from the component
         const contactNumber = formData.contactNumber; // Assuming this is a string
@@ -221,11 +253,13 @@ export class OvernightFormRarPage implements OnInit {
         const purpose = applicantType === 'myself' ? formData.purposeOfParking : null; // Only if applying for myself
         const rentalAgreement = formData.agreement; // Convert boolean to string
         const familyId = 15; // Replace with actual family ID logic if needed
-    
+
         this.requestService.postOvernightFormCar(
           blockId,
           unitId,
           contactNumber,
+          paymentReceipt,
+          this.projectid,
           applicantType,
           vehicleNumber,
           visitorId,

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 
 @Component({
@@ -13,13 +14,17 @@ export class BottomNavBarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    public functionMain: FunctionMainService,
   ) { }
 
   get activeButton() {
     return this.navigationService.getActiveButton();
   }
 
+  is_client = false
+  openModal = false
+  
   routeTo() {
     this.navigationService.setActiveButton('home');
     this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-homepage']);
@@ -36,6 +41,9 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.functionMain.vmsPreferences().then((value: any)=> {
+      this.is_client = value.is_client
+    })
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
@@ -53,5 +61,9 @@ export class BottomNavBarComponent implements OnInit {
         }
       }
     });
+  }
+
+  callVms() {
+    console.log("CALL VMS")
   }
 }

@@ -5,9 +5,11 @@ import {
   CalendarDateFormatter
 } from 'angular-calendar';
 import { Subscription } from 'rxjs';
-import { CustomDateFormatter } from 'src/utils/custom-date-formatter';
 import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
 import { IonDatetime } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { CustomDateFormatter } from 'src/utils/custom-date-formatter';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
@@ -56,31 +58,15 @@ export class UpcomingEventCalendarViewPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['unit',
-        'block_name',
-        'block',
-        'unit_name',
-        'project_id'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      // NOTE THIS SEMI HARD CODE
-      this.block_id = value.block != null ? value.block : 1;
-      this.project_id = value.project_id != null ? value.project_id : 1;
-      this.unit_id = value.unit != null ? value.unit : 1
-      // console.log(this.project_id, this.block_id, this.unit_id)
-      this.loadUpcomingEvents()
-    })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        const url = event['url'].split('?')[0];
-        // console.log(url);
-        if (url !== '/upcoming-event-calendar-view') {
-          this.viewDate = new Date();
-        }
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.block_id = parseValue.block_id != null ? parseValue.block_id : 1;
+        this.project_id = parseValue.project_id != null ? parseValue.project_id : 1;
+        this.unit_id = parseValue.unit_id != null ? parseValue.unit_id : 1
+        this.loadUpcomingEvents()
       }
-    });
+    })
     this.route.queryParams.subscribe(params => {
       // console.log("JAAAAIi")
       if (params ) {

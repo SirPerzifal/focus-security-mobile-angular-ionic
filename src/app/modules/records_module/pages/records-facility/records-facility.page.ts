@@ -5,6 +5,7 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 // import { SignaturePadModule } from 'angular-signaturepad';
 
 @Component({
@@ -38,6 +39,7 @@ export class RecordsFacilityPage implements OnInit {
     private toastController: ToastController,
     private blockUnitService: BlockUnitService,
     private mainVmsService: MainVmsService,
+    public functionMain: FunctionMainService,
     // private signaturePad: SignaturePadModule
   ) { }
 
@@ -86,8 +88,10 @@ export class RecordsFacilityPage implements OnInit {
   getFacilityData(){
     if (this.showDay){
       if (this.daySchedules.length == 0){
-        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/facility_book' ).subscribe({
+        this.isLoading = true
+        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/facility_book' ).subscribe({
           next: (results) => {
+            console.log(results)
             if (results.result.response_code == 200) {
               // this.presentToast('Coach data successfully submitted!', 'success');
               this.facilityRecords = results.result.active_bookings
@@ -95,16 +99,19 @@ export class RecordsFacilityPage implements OnInit {
               console.log(this.daySchedules)
             } else {
             }
+            this.isLoading = false
           },
           error: (error) => {
             this.presentToast('An error occurred while loading booking data!', 'danger');
             console.error(error);
+            this.isLoading = false
           }
         });
       }
     } else if (this.showUpcoming) {
       if (this.upcomingSchedules.length == 0){
-        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/facility_book_upcoming' ).subscribe({
+        this.isLoading = true
+        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/facility_book_upcoming' ).subscribe({
           next: (results) => {
             if (results.result.response_code == 200) {
               // this.presentToast('Coach data successfully submitted!', 'success');
@@ -113,17 +120,20 @@ export class RecordsFacilityPage implements OnInit {
               console.log(this.upcomingSchedules)
             } else {
             }
+            this.isLoading = false
           },
           error: (error) => {
             this.presentToast('An error occurred while loading booking data!', 'danger');
             console.error(error);
+            this.isLoading = false
           }
         });
       }
     } else if (this.showHistory) {
       console.log(this.historySchedules)
       if (this.historySchedules.length == 0) {
-        this.mainVmsService.getApi({unit_id: 1}, '/resident/get/booking_history' ).subscribe({
+        this.isLoading = true
+        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/booking_history' ).subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.success) {
@@ -134,10 +144,12 @@ export class RecordsFacilityPage implements OnInit {
               console.log(this.historySchedules)
             } else {
             }
+            this.isLoading = false
           },
           error: (error) => {
             this.presentToast('An error occurred while loading booking data!', 'danger');
             console.error(error);
+            this.isLoading = false
           }
         });
       }
@@ -350,9 +362,10 @@ export class RecordsFacilityPage implements OnInit {
   }
 
   getBookingTime(record: any) {
-    let [year, month, day] = record.start_datetime.split(' ')[0].split('-'); 
-    const startDate = `${day}/${month}/${year}`; 
-    return `${startDate} (${record.start_datetime.split(' ')[1]} - ${record.stop_datettime.split(' ')[1]})` 
+    let start_date = this.functionMain.convertNewDateTZ(record.start_datetime)
+    let stop_date = this.functionMain.convertNewDateTZ(record.stop_datettime)
+    const startDate = start_date.split(' ')[0]; 
+    return `${startDate} (${start_date.split(' ')[1]} - ${stop_date.split(' ')[1]})` 
   }
 
   private routerSubscription!: Subscription;
@@ -390,6 +403,10 @@ export class RecordsFacilityPage implements OnInit {
       this.isRadioClicked = false
       this.searchOption = ''
     }
+  }
+
+  returnStatus(record: any) {
+    return (record.resident_check_in && record.officer_check_in) ? ((record.resident_check_out && record.officer_check_out) ? '(CHECKED OUT)' : '(CHECKED IN)') : ''
   }
 
 }

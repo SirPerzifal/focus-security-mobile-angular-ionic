@@ -27,6 +27,9 @@
     <div class="flex flex-col space-y-1 mb-2">
       <p class="text-justify">The app provides payment history for up to 13 months from the current date. For invoices older than this period, please contact MA for assistance.</p>
     </div>
+    <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+      <ion-spinner name="circular"></ion-spinner>
+    </div>
     <div *ngFor="let md of mergeData">
       <!-- <h2>{{ Bulan-tahun group untuk data  }}</h2> -->
       <ng-container *ngIf="md.bill_references; else finesReferences">

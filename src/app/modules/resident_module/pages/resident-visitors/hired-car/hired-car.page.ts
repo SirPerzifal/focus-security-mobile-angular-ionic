@@ -31,11 +31,11 @@ export class HiredCarPage implements OnInit, OnDestroy {
   faMotorcycle = faMotorcycle
 
   isLoading: boolean = true;
-  textForHiredCarPgaes = {
+  textForHiredCarPages = {
     title: 'Temporary Pickup/Drop-off Vehicle Authorization',
-    content1: 'This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.',
-    content2: 'This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.',
-    content3: 'Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.'
+    content: ['This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.',
+    'This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.',
+    'Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.']
   }
 
   formData = {
@@ -69,6 +69,15 @@ export class HiredCarPage implements OnInit, OnDestroy {
         this.formData.unit = Number(parseValue.unit_id);
         this.formData.family_id = Number(parseValue.family_id);
         this.loaadTextForPage();
+
+        this.mainApiResidentService.endpointProcess({
+          project_id:parseValue.project_id}, 'get/hired_car_text').subscribe((response) => {
+          if (response.result.response_code == 200) {
+          (response.result.response_description).forEach((line: string, index: number) => {
+              this.textForHiredCarPages.content[index] = line;
+            });
+          }
+        })
       } 
     })
   }

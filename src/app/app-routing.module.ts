@@ -710,6 +710,10 @@ const routes: Routes = [
     path: 'client-events-detail',
     loadChildren: () => import('./modules/client_app/client-upcoming-events/client-events-detail/client-events-detail.module').then( m => m.ClientEventsDetailPageModule)
   },
+  {
+    path: 'client-residents',
+    loadChildren: () => import('./modules/client_app/client-residents/client-residents.module').then( m => m.ClientResidentsPageModule)
+  },
   // {
   //   path: 'incoming-call',
   //   loadChildren: () => import('./modules/call_modules/pages/incoming-call/incoming-call.module').then( m => m.IncomingCallPageModule)
@@ -722,6 +726,22 @@ const routes: Routes = [
   //   path: 'ongoing-call',
   //   loadChildren: () => import('./modules/call_modules/pages/ongoing-call/ongoing-call.module').then( m => m.OngoingCallPageModule)
   // },
+  {
+    path: 'incoming-call',
+    loadChildren: () => import('./modules/call_module/incoming-call/incoming-call.module').then( m => m.IncomingCallPageModule)
+  },
+  {
+    path: 'ongoing-call',
+    loadChildren: () => import('./modules/call_module/ongoing-call/ongoing-call.module').then( m => m.OngoingCallPageModule)
+  },
+  {
+    path: 'outgoing-call',
+    loadChildren: () => import('./modules/call_module/outgoing-call/outgoing-call.module').then( m => m.OutgoingCallPageModule)
+  },
+  {
+    path: 'client-docs',
+    loadChildren: () => import('./modules/client_app/client-docs/client-docs.module').then( m => m.ClientDocsPageModule)
+  },
   // // rewrite code
   // {
   //   path: 'resident-home-page',

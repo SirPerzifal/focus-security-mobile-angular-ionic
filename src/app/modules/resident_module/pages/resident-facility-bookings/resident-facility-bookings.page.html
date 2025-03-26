@@ -65,21 +65,24 @@
 						<p class="ml-2 table-cell text-base cw-3:text-xs text-black">: {{ booking.bookedBy }}</p>
 					</div>
 				</div>
-				<div class="flex mt-2 space-x-2">
-					<button (click)="addToCalendar(booking)" class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base rounded-md font-bold" *ngIf="booking.statusBooked === 'Requested' || booking.statusBooked === 'Approved'">
+				<div class="flex mt-2 space-y-1 flex-col">
+					<button (click)="addToCalendar(booking)" class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base rounded-md font-bold w-full" *ngIf="booking.statusBooked === 'Approved'">
 						Add to Calendar
-					  </button>
-					  <button class="bg-[#E3787E] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold" (click)="cancelBooking(booking.id)">
+					</button>
+					<button class="bg-[#E3787E] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full" (click)="cancelBooking(booking.id)">
 						Cancel Booking
-					  </button>
-					  <button class="ml-1 bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold" (click)="navigateToHistoryDetail(booking)">
+					</button>
+					<button class="bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full" (click)="navigateToHistoryDetail(booking)">
 						View Details
-					  </button>
+					</button>
+					<button class="bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full" (click)="navigateToBookingPayment(booking)" *ngIf="booking.statusBooked === 'Pending Payment'">
+						Process Payment
+					</button>
 				</div>
 			</div>
 		</div>
 		<ng-template #noActiveBookings>
-			<div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+			<div *ngIf="!isLoading" class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
 				<p class="text-gray-600">You have no active bookings.....</p>
 				<p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
 				<p class="text-gray-600"><strong><a routerLink="/facility-new-booking">Click Here</a></strong> to make a new booking now.</p>

@@ -30,7 +30,7 @@ export class FacilityHistoryFormPage implements OnInit, OnDestroy {
     const state = navigation?.extras.state as { bookingData: any};
     if (state) {
       this.bookingData = state.bookingData;
-      // console.log(this.bookingData)
+      // console.log(state.bookingData)
     } 
   }
 

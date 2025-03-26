@@ -50,11 +50,12 @@ export class ClientRaiseTicketPage implements OnInit {
     this.isMainLoading = true
     this.clientMainService.getApi({}, '/client/get/report_app_type_of_issues').subscribe({
       next: (results) => {
+        console.log(results)
         if (results.result.response_code == 200) {
           if (results.result.result.length > 0){
             this.menuItems = results.result.result.map((result: any) => ({
               id: result.id,
-              src: 'assets/icon/resident-icon/icon4.png', 
+              src: result.image, 
               alt: 'Icon for' + result.name, 
               route: '', 
               text: result.name

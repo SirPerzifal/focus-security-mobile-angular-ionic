@@ -27,7 +27,8 @@ export class MoveFormService extends ApiService {
     unit: string,
     requestor_id: string,
     subContractors: any[],
-    project_id: number
+    project_id: number,
+    camera_id: string
   ): Observable<any> {
     const body = {
       jsonrpc: '2.0',
@@ -44,6 +45,7 @@ export class MoveFormService extends ApiService {
         requestor_id: requestor_id,
         sub_contractors: subContractors,
         project_id: project_id,
+        camera_id: camera_id,
       }
     };
 

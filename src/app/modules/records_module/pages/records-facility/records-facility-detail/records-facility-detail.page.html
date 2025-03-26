@@ -18,7 +18,7 @@
     </div> -->
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
-        <label class="text-2xl font-bold">{{record.facility}}</label>
+        <label class="text-2xl font-bold">{{record.facility ? record.facility : functionMain.returnNone(record.facility_name) }} {{returnStatus(record)}}</label>
         <table class="text-2xl">
           <tr>
             <td class="font-bold w-[45%]">BOOKING DATE</td>
@@ -43,19 +43,19 @@
           <tr>
             <td class="font-bold w-[45%]">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td> 
-            <td>{{record.block_id ? record.block_id : '-' }} | {{ record.unit_id  ? record.unit_id : '-' }}</td>
+            <td>{{record.block_name ? record.block_name : '-' }} | {{ record.unit_name  ? record.unit_name : '-' }}</td>
           </tr>
-          <tr *ngIf="record.resident_check_in">
-            <td class="font-bold w-[45%]">RESIDENT CHECKED IN</td>
+          <!-- <tr *ngIf="record.resident_check_in && record.officer_check_in">
+            <td class="font-bold w-[45%]">CHECKED IN</td>
             <td class="w-[5%]">:</td>
             <td>SIGNED</td>
           </tr>
-          <tr *ngIf="record.resident_check_out">
-            <td class="font-bold w-[45%]">RESIDENT CHECKED OUT</td>
+          <tr *ngIf="record.resident_check_out && record.officer_check_out">
+            <td class="font-bold w-[45%]">CHECKED OUT</td>
             <td class="w-[5%]">:</td>
             <td>SIGNED</td>
-          </tr>
-          <tr *ngIf="record.officer_check_in">
+          </tr> -->
+          <!-- <tr *ngIf="record.officer_check_in">
             <td class="font-bold w-[45%]">OFFICER CHECKED IN</td>
             <td class="w-[5%]">:</td>
             <td>SIGNED</td>
@@ -64,15 +64,15 @@
             <td class="font-bold w-[45%]">OFFICER CHECKED OUT</td>
             <td class="w-[5%]">:</td>
             <td>SIGNED</td>
-          </tr>
+          </tr> -->
         </table>
         <div class="flex flex-col justify-around w-full">
-          <div class="flex flex-row w-full justify-around">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_in')">CHECK IN</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')">CHECK OUT</button>
+          <div class="flex flex-row w-full justify-around" *ngIf="!record.is_upcoming">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_in')" *ngIf="record.is_history || (!record.resident_check_in || !record.officer_check_in)">CHECK IN</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')" *ngIf="record.is_history || (record.is_form_check_in && (!record.resident_check_out || !record.officer_check_out))">CHECK OUT</button>
           </div>
-          <div class="flex flex-row w-full justify-around mb-4">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL RESIDENT</button>
+          <div class="flex flex-row w-full justify-around mb-4" *ngIf="!record.is_history && (!record.resident_check_out || !record.officer_check_out)">
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident(record)">CALL RESIDENT</button>
           </div>
         </div>
       </div>

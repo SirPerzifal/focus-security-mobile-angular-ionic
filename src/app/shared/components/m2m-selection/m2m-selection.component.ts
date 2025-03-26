@@ -8,7 +8,9 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 export class M2mSelectionComponent implements OnInit {
 
   private _arrays: any[] = [];
+  private _selected: any;
   private _arraysSelection: any[] = [];
+  private lock = false
 
   @Input()
   set Arrays(value: any[]) {
@@ -20,6 +22,33 @@ export class M2mSelectionComponent implements OnInit {
 
   get Arrays(): any[] {
     return this._arrays;
+  }
+
+  @Input()
+  set Selected(value: any) {
+    console.log("TEST", value)
+    if (this.lock) return
+    console.log("WORK", value)
+    this.unitNames = []
+    this.unitArrayProcess = []
+    this._selected = this.isOne ? value || '' : value || [];
+    console.log(this._selected)
+    if (this._selected instanceof Array) {
+      console.log('array')
+      for(let i = 0; i < this._selected.length; i++ ){
+        console.log(i, this._selected[i])
+        this.onUnitChange(this._selected[i])
+      }
+    } else {
+      console.log('string')
+      this.onUnitChange(this._selected)
+    }
+    console.log(this._selected)
+  }
+
+  get Selected(): any {
+    console.log(this._selected)
+    return this.unitArrayProcess
   }
 
   @Input() labelText: string = ''
@@ -76,26 +105,36 @@ export class M2mSelectionComponent implements OnInit {
   }
 
   onUnitChange(unitId: any) {
-    const unit = this.Arrays.find((u: any) => u.id === unitId); // Temukan unit berdasarkan ID
-    if (unit) {
-      const index = this.unitArrayProcess.indexOf(unitId);
-      if (index !== -1) {
-        // Jika ada, hapus unit_id dari array
-        this.unitArrayProcess.splice(index, 1);
-        this.unitNames = this.unitNames.filter((item: any) => { console.log(item, item.id, unitId); return item.id !== unitId }); // Hapus nama dari array
-      } else {
-        // Jika tidak ada, tambahkan unit_id ke dalam array
-        if (this.isOne) {
-          this.unitArrayProcess = [unitId]
-          this.unitNames = [{ 'name': unit.name, 'id': unitId }]
-          this.setDropdownChooseUnit = false
+    console.log(unitId)
+    if (unitId) {
+      const unit = this.Arrays.find((u: any) => u.id === unitId); // Temukan unit berdasarkan ID
+      if (unit) {
+        const index = this.unitArrayProcess.indexOf(unitId);
+        console.log(this.unitArrayProcess)
+        console.log(index)
+        if (index !== -1) {
+          console.log("WANT TO ERASE")
+          // Jika ada, hapus unit_id dari array
+          this.unitArrayProcess.splice(index, 1);
+          this.unitNames = this.unitNames.filter((item: any) => { console.log(item, item.id, unitId); return item.id !== unitId }); // Hapus nama dari array
         } else {
-          this.unitArrayProcess.push(unitId);
-          this.unitNames.push({ 'name': unit.name, 'id': unitId });
+          console.log("WANT TO ADD")
+          // Jika tidak ada, tambahkan unit_id ke dalam array
+          if (this.isOne) {
+            this.unitArrayProcess = [unitId]
+            this.unitNames = [{ 'name': unit.name, 'id': unitId }]
+            this.setDropdownChooseUnit = false
+          } else {
+            this.unitArrayProcess.push(unitId);
+            this.unitNames.push({ 'name': unit.name, 'id': unitId });
+          }
+          
         }
-
+        console.log("OKEY END", this.unitArrayProcess)
+        this.lock = true
+        this.outputValue.emit([...this.unitArrayProcess]);
+        this.lock = false
       }
-      this.outputValue.emit([...this.unitArrayProcess]);
     }
   }
 
@@ -123,6 +162,7 @@ export class M2mSelectionComponent implements OnInit {
       this.showUnit.map((item: any) => {
         this.onUnitChange(item.id)
       })
+      this.showUnit = this.Arrays
       console.log(this.unitNames)
     } else {
       this.unitNames = []

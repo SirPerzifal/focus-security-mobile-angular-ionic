@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class RecordsResidentsDetailPage implements OnInit {
 
   record: any = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService) {
+  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService, private webRtcService: WebRtcService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { logs: any[]};
     if (state) {
@@ -19,6 +20,13 @@ export class RecordsResidentsDetailPage implements OnInit {
       console.log(this.record)
     } 
    }
+
+  callResident(){
+    // console.log("record here =========", this.record);
+    let recordCopy = this.record;
+    recordCopy.requestor_contact_number = this.record.contact;
+    this.webRtcService.createOffer(recordCopy);
+  }
 
   ngOnInit() {
   }

@@ -12,8 +12,10 @@
     </div>
   </div>
 
+  <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
   <div class="px-5 text-center mb-20" *ngIf="notifications.length > 0; else noNotification">
-
     <div class="mt-4 space-y-4">
       <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
         <div class="flex justify-between mb-1 text-sm">
@@ -27,7 +29,7 @@
   </div>
 
   <ng-template #noNotification>
-    <div class="p-5 text-center mb-20">
+    <div *ngIf="isLoading" class="p-5 text-center mb-20">
       <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
         <p class="text-gray-600">You have no Notification.....</p>
         <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong></p>

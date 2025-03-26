@@ -10,7 +10,6 @@ export interface EstateProfile {
   family_id: number;
   family_name: string;
   family_type: string;
-  image_profile: string;
   unit_id: number;
   unit_name: string;
   block_id: number;

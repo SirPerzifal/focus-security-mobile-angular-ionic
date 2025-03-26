@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 import { ToastController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
 @Component({
   selector: 'app-invite-from-history',
@@ -40,7 +42,13 @@ export class InviteFromHistoryPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadDistinctInviteHistory();
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        const unitId = Number(parseValue.unit_id);
+        this.loadDistinctInviteHistory(unitId);
+      } 
+    })
     // Cek apakah ada existing invitees yang dikirim dari invite-form
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -63,8 +71,7 @@ export class InviteFromHistoryPage implements OnInit {
     }
   }
 
-  loadDistinctInviteHistory() {
-    const unitId = 1; // Ganti dengan unit_id yang sesuai
+  loadDistinctInviteHistory(unitId: number) {
     this.visitorService.getDistinctInviteHistory(unitId).subscribe({
       next: (response: any) => {
         if (response.result.response_status === 200) {

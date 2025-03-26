@@ -81,10 +81,8 @@
           <ion-spinner name="circular"></ion-spinner>
         </div>
         <div *ngIf="!isLoading" class="flex flex-col mt-4 text-[14px]">
-          <p class="underline underline-offset-1 font-bold text-[#757575] mb-2">Temporary Pickup/Drop-off Vehicle Authorization</p>
-          <p class="mb-1.5">This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.</p>
-          <p class="mb-1.5">This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.</p>
-          <p class="mb-1.5">Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.</p>
+          <p class="underline underline-offset-1 font-bold text-[#757575] mb-2">{{textForHiredCarPages.title}}</p>
+          <p class="mb-1.5" *ngFor="let text of textForHiredCarPages.content">{{ text }}</p>
         </div>
         <div class="flex flex-row mt-4 text-[13px] cw-2:text-xs cw-3:text-[11px]">
           <label class="mr-1 rounded font-bold flex items-center">

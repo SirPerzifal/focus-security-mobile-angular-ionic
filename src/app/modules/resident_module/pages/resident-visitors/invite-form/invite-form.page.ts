@@ -48,6 +48,7 @@ export class InviteFormPage implements OnInit {
     private alertController: AlertController,
     private mainApiResidentService: MainApiResidentService
   ) {
+    this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
   
@@ -80,6 +81,18 @@ export class InviteFormPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
     });
+  }
+
+  addInitialInvitee() {
+    const initialInvitee: Invitee = { 
+      visitor_name: '', 
+      contact_number: '', 
+      vehicle_number: '' 
+    };
+
+    this.inviteeFormList.push(initialInvitee);
+    this.isFormVisible = true; // Show form since we have at least one invitee
+    this.addInviteeText = 'Add More Invitees'; // Update button text
   }
 
   initializeInviteeForm(params?: any) {

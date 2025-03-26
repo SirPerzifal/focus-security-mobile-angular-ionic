@@ -5,13 +5,13 @@
   </div>
   <div class="border  bg-white w-full rounded px-3 py-1 outline-[#BDBDBD] text-[#6B7280] flex flex-row items-center justify-between" 
     tabindex="0" [ngClass]="isVMS ? 'min-h-20 text-2xl border-black' : divOuterClass" (click)="focusInput()">
-    <input [(ngModel)]="unit_key" (keyup)="onUnitKeyUp($event)" #before_click_unit class="border-0" [ngClass]="isVMS ? 'text-2xl' : customTextClass" type="text" [placeholder]="placeholder" *ngIf="unitArrayProcess.length == 0" style="padding-left: 0px;" (focus)="onFocusInput()" style="outline: none; box-shadow: none;"
+    <input [(ngModel)]="unit_key" (keyup)="onUnitKeyUp($event)" #before_click_unit class="border-0" [ngClass]="isVMS ? 'text-2xl p-0' : customTextClass" type="text" [placeholder]="placeholder" *ngIf="unitArrayProcess.length == 0" style="padding-left: 0px;" (focus)="onFocusInput()" style="outline: none; box-shadow: none;"
     >
     <div class="flex flex-row flex-wrap gap-1" *ngIf="unitArrayProcess.length > 0">
       <div class="flex flex-row space-x-1 items-center rounded" [ngClass]="isOne ? '' : 'border border-black p-1'" *ngFor="let array of unitNames">
         <ion-icon name="close-circle-outline" class="size-5" (click)="onUnitChange(array.id)" *ngIf="!isOne"></ion-icon> <span>{{array.name}}</span>
       </div>
-      <input #unit_typing class="border-0 w-[30%]" type="text" [ngClass]="isVMS ? 'text-2xl' : customTextClass" (keyup)="onUnitKeyUp($event)" [placeholder]="isOne ? '' : '. . .'" [(ngModel)]="unit_key" style="padding-left: 0px;" (focus)="onFocusInput()" style="outline: none; box-shadow: none;"> 
+      <input #unit_typing class="border-0 w-[30%]" type="text" [ngClass]="isVMS ? 'text-2xl p-0' : customTextClass" (keyup)="onUnitKeyUp($event)" [placeholder]="isOne ? '' : '. . .'" [(ngModel)]="unit_key" style="padding-left: 0px;" (focus)="onFocusInput()" style="outline: none; box-shadow: none;"> 
     </div>
     <svg class="h-2.5" [ngClass]="isVMS ? 'w-5 mr-1' : 'w-[10px] mr-[2px]'" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" (click)="toggleOnlyDrop()"
       viewBox="0 0 10 6">

@@ -81,6 +81,7 @@ export class OvernightParkingListPage implements OnInit {
   filteredHistorySchedules: any[] = []
 
   async loadOvernight(type: string = 'today') {
+    this.isLoading = true
     let url = ''
     if (type === 'today') { 
       url = '/vms/get/overnight_parking_list'
@@ -104,12 +105,12 @@ export class OvernightParkingListPage implements OnInit {
         } else {
         }
 
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overnight parking data!', 'danger');
         console.error(error);
-        // this.isLoading = false;
+        this.isLoading = false;
       }
     });
     console.log(this.overnightSchedules)
@@ -136,6 +137,7 @@ export class OvernightParkingListPage implements OnInit {
         this.choosenBlock = ''
         this.showDayTrans = true
         this.selectedRadio = ''
+        this.isRadioClicked = false
         if (this.daySchedules.length == 0) {
           this.loadOvernight('today')
         }
@@ -155,6 +157,7 @@ export class OvernightParkingListPage implements OnInit {
         this.choosenBlock = ''
         this.showUpcomingTrans = true
         this.selectedRadio = ''
+        this.isRadioClicked = false
         if (this.upcomingSchedules.length == 0) {
           this.loadOvernight('upcoming')
         }

@@ -61,7 +61,7 @@ export class ClientMainAppPage implements OnInit {
       console.log(value)
       this.userData = {
         name: value.name,
-        name_condo: value.project_name.join(', '),
+        name_condo: value.project_name,
         type: value.type_family,
         block: value.block_name,
         unit: value.unit_name,
@@ -132,6 +132,7 @@ export class ClientMainAppPage implements OnInit {
     { src: "assets/icon/resident-icon/Raise_Ticket.png", alt: "Icon for Raise Ticket", text: "Ticket", route: "/client-raise-ticket" },
     { src: "assets/icon/resident-icon/polling.png", alt: "Icon for Polling", text: "Polling", route: "/client-polling" },
     { src: "assets/icon/resident-icon/Notices.png", alt: "Icon for Notices", text: "Notices", route: "/client-notices" },
+    { src: "assets/icon/home-icon/sound.webp", alt: "Icon for Docs", text: "Docs", route: "/client-docs" },
     { src: "assets/icon/exc-client/report.png", alt: "Icon for Report an Issue", text: "Reports", route: "/client-reports" },
     { src: "assets/icon/resident-icon/upcoming-event.png", alt: "Icon for Upcoming Events", text: "Upcoming Events", route: "/client-upcoming-events" },
     { src: "assets/icon/resident-icon/Register_Visitor.png", alt: "Icon for Register a Visitor", text: "My Visitors", route: "/client-register-visitor" },
@@ -140,6 +141,7 @@ export class ClientMainAppPage implements OnInit {
     { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Quick Dials", text: "Quick Dials", route: "/client-quick-dials" },
     { src: "assets/icon/exc-client/blacklist.png", alt: "Icon for Blacklist", text: "Blacklist", route: "/client-blacklist" },
     { src: "assets/icon/exc-client/wheel.png", alt: "Icon for Wheel Clamp", text: "Wheel Clamp", route: "/client-wheel-clamp" },
+    { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Residents", text: "Residents", route: "/client-residents" },
   ];
   
   onClickMenu(route: string) {

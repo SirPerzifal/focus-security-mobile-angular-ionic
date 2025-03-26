@@ -50,10 +50,13 @@ export class PickUpPagePage implements OnInit {
   async loadProjectId() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.Camera = value.config.lpr
+      console.log(this.Camera)
     })
   }
 
   project_id = 0
+  Camera: any = []
 
   Block: any[] = [];
 
@@ -165,7 +168,7 @@ export class PickUpPagePage implements OnInit {
     console.log('Vehicle Number:', this.blkLocation); // Untuk debugging
   }
 
-  async saveRecord(openBarrier: boolean = false) {
+  async saveRecord(openBarrier: boolean = false, cameraId: string = '') {
     const vehicleNumber = this.vehicleNumber
     const location = this.blkLocation;
     let errMsg = ''
@@ -193,7 +196,8 @@ export class PickUpPagePage implements OnInit {
         this.selectedVehicleType, 
         vehicleNumber, 
         location,
-        this.project_id
+        this.project_id,
+        cameraId ? cameraId : ''
       ).subscribe({
         next: (response) => {
           console.log(response)

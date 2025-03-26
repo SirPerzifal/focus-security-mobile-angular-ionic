@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Subscription } from 'rxjs';
 import { ToastController, AlertController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
+
+import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 
 interface pet {
   id: number;
@@ -19,23 +21,22 @@ interface pet {
   styleUrls: ['./my-profile-my-pets.page.scss'],
 })
 export class MyProfileMyPetsPage implements OnInit {
-  blokId: number = 1;
-  unitId: number = 1;
+  blokId: number = 0;
+  unitId: number = 0;
   petList: pet[] = [];
 
   constructor(private router: Router, private petService: RaiseARequestService, private toastController: ToastController, private alertController: AlertController) {}
 
   ngOnInit() {
-    this.loadPet();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        if (event['url'] == '/my-profile-my-pets'){
-          this.petList = []
-          this.loadPet();
-        }
-         // Panggil fungsi lagi saat halaman dibuka
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        // this.userId = parseValue.family_id
+        this.blokId = Number(parseValue.block_id);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadPet();
       }
-    });
+    })
   }
 
   loadPet() {

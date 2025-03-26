@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { Preferences } from '@capacitor/preferences';
+
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
@@ -395,14 +397,12 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   ngOnInit() {
-    // Ambil data unit dan blok yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage('unit').then((value) => {
-      this.unitId = value.unit; // Mengambil nilai unit dari objek
-      // // console.log('unit', this.formData.unit_id);
-      // // console.log('block', this.formData.block_id);
-    });
-    // console.log("tes");
-    
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+      }
+    })
   }
 
   private routerSubscription!: Subscription;

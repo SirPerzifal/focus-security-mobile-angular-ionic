@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./bills-history.page.scss'],
 })
 export class BillsHistoryPage implements OnInit, OnDestroy {
-
+  isLoading: boolean = true;
   groupedData: { [key: string]: any[] } = {};
 
   isDatePickerOpen: boolean = false;
@@ -107,12 +107,15 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
         this.mergeData = this.bills;
         // Grouping the data by month and year
         this.groupedData = this.groupByMonthYear(this.mergeData);
+        this.isLoading = false;
       } else if (this.filterByTypeValue === 'fines') {
         this.mergeData = this.fines;
         this.groupedData = this.groupByMonthYear(this.mergeData);
+        this.isLoading = false;
       } else {
         this.mergeData = [...this.fines, ...this.bills];
         this.groupedData = this.groupByMonthYear(this.mergeData);
+        this.isLoading = false;
       }
     
       // Mengurutkan mergeData berdasarkan start_date

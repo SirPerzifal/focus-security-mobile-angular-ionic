@@ -12,9 +12,8 @@ export class VisitorService extends ApiService{
     super(http)
   }
 
-  postAddVisitor(visitor_name: string, visitor_contact_no: string, visitor_type: string, visitor_vehicle: string, block: string, unit: string, family_id: string,project_id:number): Observable<any> {
-    console.log("HEY THIS WORK HERE")
-    console.log(visitor_name, visitor_contact_no, visitor_type, visitor_vehicle, block, unit)
-    return this.http.post<any>(`${this.baseUrl}/vms/post/add_visitor`, {jsonrpc: '2.0', params: {visitor_name, visitor_contact_no, visitor_type, visitor_vehicle, block, unit, family_id,project_id}});
+  postAddVisitor(visitor_name: string, visitor_contact_no: string, visitor_type: string, visitor_vehicle: string, block: string, unit: string, family_id: string,project_id:number, camera_id: string, is_pre_entry: boolean, entry_id: number, entry_type: string): Observable<any> {
+    console.log({visitor_name, visitor_contact_no, visitor_type, visitor_vehicle, block, unit, family_id,project_id,camera_id,is_pre_entry, entry_id, entry_type})
+    return this.http.post<any>(`${this.baseUrl}/vms/post/add_visitor`, {jsonrpc: '2.0', params: {visitor_name, visitor_contact_no, visitor_type, visitor_vehicle, block, unit, family_id,project_id,camera_id,is_pre_entry, entry_id, entry_type}});
   }
 }

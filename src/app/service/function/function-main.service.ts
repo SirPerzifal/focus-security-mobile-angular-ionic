@@ -30,8 +30,16 @@ export class FunctionMainService {
   }
 
   convertToDDMMYYYY(dateString: string): string {
-    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
-    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+    // Memisahkan string berdasarkan "-"
+    const parts = dateString.split('-');
+    
+    // Memastikan bahwa kita memiliki 3 bagian (tahun, bulan, hari)
+    if (parts.length === 3) {
+      const [year, month, day] = parts; // Pisahkan menjadi tahun, bulan, dan hari
+      return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+    } else {
+      return dateString; // Kembalikan string asli jika format tidak sesuai
+    }
   }
 
   returnNone(params: any) {
@@ -292,5 +300,21 @@ export class FunctionMainService {
         }
     }, 0);
   }
+
+  convertBase64ToBlob(base64: string) {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+    const blob = new Blob(byteArrays, { type: 'application/pdf' });
+    return URL.createObjectURL(blob);
+  }
+
 
 }

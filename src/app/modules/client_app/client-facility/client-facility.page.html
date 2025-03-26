@@ -30,7 +30,7 @@
     </div>
     <div class="mt-2 mb-24 flex flex-col items-center flex-grow w-full" *ngIf="isFacility && !isLoading">
       <!-- Dynamic Facility Rendering -->
-      <div *ngIf="facilities.length > 0; else noFacility">
+      <div *ngIf="facilities.length > 0; else noFacility" class="w-full">
         <div *ngFor="let facility of facilities"
           class="bg-white rounded-2xl overflow-hidden shadow-md mx-4 my-2 w-11/12 max-w-md"
           (click)="facilityDetail(facility)">
@@ -142,7 +142,7 @@
           <div class="flex mt-2 space-x-2">
             <button (click)="viewDetails(booking)"
               class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold"
-              *ngIf="booking.booking_status === 'Requested' || booking.booking_status === 'Approved'">
+              *ngIf="booking.booking_status === 'Requested' || booking.booking_status === 'Pending Approval' || booking.booking_status === 'Approved'">
               View Details
             </button>
             <!-- <button class="bg-[#E3787E] text-black px-3 py-2 text-base cw-2:text-[13px] rounded-md font-bold" (click)="cancelBooking(booking.id)">

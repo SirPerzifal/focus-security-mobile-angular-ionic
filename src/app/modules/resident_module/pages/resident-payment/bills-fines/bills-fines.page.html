@@ -14,6 +14,9 @@
       <div class="flex flex-col w-full">
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">
+            <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+              <ion-spinner name="circular"></ion-spinner>
+            </div>
             <div *ngFor="let fine of fines">
               <app-small-bills-card-detailed [fines]="fine" (buttonClick)="payNow($event)"></app-small-bills-card-detailed>
             </div>

@@ -12,7 +12,7 @@ export class VmsServicePickUp extends ApiService{
 
   constructor(http: HttpClient) {super(http)}
 
-  addEntry(entryType: string, vehicleType: string, vehicleNumber: string, block: string, project_id: number): Observable<any> {
+  addEntry(entryType: string, vehicleType: string, vehicleNumber: string, block: string, project_id: number, camera_id: string): Observable<any> {
     const body = {
       jsonrpc: '2.0',
       params : {
@@ -20,7 +20,8 @@ export class VmsServicePickUp extends ApiService{
         vehicle_type: vehicleType,
         vehicle_number: vehicleNumber,
         block: block,
-        project_id: project_id
+        project_id: project_id,
+        camera_id: camera_id
       }
     };
 

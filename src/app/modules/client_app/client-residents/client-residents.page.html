@@ -1,0 +1,36 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [text]="'Residents'" [text_second]="''" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4 mt-4">
+    <div>
+
+    </div>
+    <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
+    <div class="flex flex-col mt-3 mb-24 space-y-2" *ngIf="!isLoading">
+        <div
+          class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
+          *ngFor="let contact of Residents">
+          <span class="text-lg font-bold">{{ contact.resident_name }}</span>
+          <div (click)="callResident(contact)"
+            class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
+            <fa-icon [icon]="faPhone"
+              class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- ############################### -->
+  <ng-template #noContact>
+    <div class="w-full bg-transparent mt-8 text-center rounded-lg">
+      <p class="text-gray-600">There are no contacts.....</p>
+    </div>
+  </ng-template>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

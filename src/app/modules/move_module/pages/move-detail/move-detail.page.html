@@ -103,7 +103,7 @@
         </table>
         <div class="flex flex-row justify-between w-full" *ngIf="['move_in', 'renov'].includes(pageType)">
           <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL CONTRACTOR</button>
-          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL RESIDENT</button>
+          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="callResident()">CALL RESIDENT</button>
         </div>
       </div>
 

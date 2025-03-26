@@ -23,6 +23,8 @@ import { FilterableSelectComponent } from './filterable-select/filterable-select
 import { M2mSelectionComponent } from './m2m-selection/m2m-selection.component';
 import { M2mSelectionReadonlyComponent } from './m2m-selection-readonly/m2m-selection-readonly.component';
 import { ImageZoomComponent } from './image-zoom/image-zoom.component';
+import { InputPasswordComponent } from './input-password/input-password.component';
+import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { ImageZoomComponent } from './image-zoom/image-zoom.component';
     M2mSelectionComponent,
     M2mSelectionReadonlyComponent,
     ImageZoomComponent,
+    InputPasswordComponent,
+    Base64FileZoomComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +75,8 @@ import { ImageZoomComponent } from './image-zoom/image-zoom.component';
     M2mSelectionComponent,
     M2mSelectionReadonlyComponent,
     ImageZoomComponent,
+    InputPasswordComponent,
+    Base64FileZoomComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

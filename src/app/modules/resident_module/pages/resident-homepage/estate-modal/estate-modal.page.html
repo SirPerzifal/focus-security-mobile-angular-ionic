@@ -5,31 +5,31 @@
 		</div>
 		<div *ngIf="!isLoading" class="space-y-4 h-[47.5rem] p-5 overflow-y-auto rounded-lg style-overflow-hidden">
 			<div class="bg-[#D8ECCF] border rounded-lg p-4 flex items-center" *ngFor="let estate of profileEstate" (click)="chooseEstateClick(estate)">
-			<img alt="Profile Picture" class="rounded-full h-12 w-12 mr-2" height="50" [src]="functionMain.getImage(estate.project_image)" width="50"/>
-			<div class="flex-1">
-				<p class="font-bold cw-3:text[13px]">
-					{{estate.project_name}}
-				</p>
-				<p class="cw-3:text[13px]">
-					{{estate.family_name}}
-				</p>
-				<p class="cw-3:text[13px]">
-					{{estate.family_type}}
-				</p>
-				<p class="cw-3:text[13px]">
-					{{estate.block_name}}, {{estate.unit_name}}
-				</p>
-			</div>
-			<div class="ml-2">
-				<ion-icon *ngIf="activeUnit === estate.unit_id" class="text-green-500 text-2xl" name="checkmark-circle">
-				</ion-icon>
-				<ion-icon *ngIf="activeUnit !== estate.unit_id" class="text-red-500 text-2xl" name="close-circle">
-				</ion-icon>
+				<img alt="Profile Picture" class="rounded-full h-12 w-12 mr-2" height="50" [src]="functionMain.getImage(estate.project_image)" width="50"/>
+				<div class="flex-1">
+					<p class="font-bold cw-3:text[13px]">
+						{{estate.project_name}}
+					</p>
+					<p class="cw-3:text[13px]">
+						{{estate.family_name}}
+					</p>
+					<p class="cw-3:text[13px]">
+						{{estate.family_type}}
+					</p>
+					<p class="cw-3:text[13px]">
+						{{estate.block_name}}, {{estate.unit_name}}
+					</p>
+				</div>
+				<div class="ml-2">
+					<ion-icon *ngIf="activeUnit === estate.unit_id" class="text-green-500 text-2xl" name="checkmark-circle">
+					</ion-icon>
+					<ion-icon *ngIf="activeUnit !== estate.unit_id" class="text-red-500 text-2xl" name="close-circle">
+					</ion-icon>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div *ngIf="noData">
-		No Data
-	</div>
+		<div *ngIf="noData">
+			No Data
+		</div>
 	</div>
 </ion-content>

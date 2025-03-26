@@ -228,7 +228,9 @@ export class RecordsBlacklistPage implements OnInit {
     });
   }
 
+  isLoading = false
   async loadBlacklistData() {
+    this.isLoading = true
     this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
         console.log(results);
@@ -243,10 +245,12 @@ export class RecordsBlacklistPage implements OnInit {
         } else {
           this.existData = []
         }
+        this.isLoading = false
       },
       error: (error) => {
         this.presentToast('An error occurred while loading blacklist data!', 'danger');
         console.error(error);
+        this.isLoading = false
       }
     });
   }

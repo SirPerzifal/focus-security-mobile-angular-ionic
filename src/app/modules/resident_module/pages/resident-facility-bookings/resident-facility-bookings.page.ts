@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { AlertController } from '@ionic/angular';
 
@@ -21,11 +21,34 @@ export class ResidentFacilityBookingsPage implements OnInit {
   constructor(
     private router:Router, 
     private alertController: AlertController,
+    private activeRoute: ActivatedRoute,
     private toastController: ToastController,
     private facilityBookingsService: FacilityBookingsService,
   ) { }
   
   ngOnInit() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unit_id = Number(parseValue.unit_id);
+        this.loadActiveBookings();
+      }
+    })
+
+    this.activeRoute.queryParams.subscribe(params => {
+      if (params['restart']) {
+        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+          if (value?.value) {
+            const parseValue = JSON.parse(value.value);
+            this.unit_id = Number(parseValue.unit_id);
+            this.loadActiveBookings();
+          }
+        })
+      }
+    });
+  }
+
+  ionViewWillEnter() {
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
@@ -39,6 +62,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
     this.facilityBookingsService.getActiveFacilityBookingsServices(this.unit_id.toString())
       .subscribe({next: (response: any) => {
         if (response.result.response_code === 200) {
+          this.isLoading = false;
           // Map data dengan tipe yang jelas
           this.activeBookings = response.result.active_bookings.map((booking: BookingResponse) => ({
             id: booking.id,
@@ -48,13 +72,14 @@ export class ResidentFacilityBookingsPage implements OnInit {
             endTime: this.formatTime(booking.stop_datettime),
             bookedBy: booking.booked_by,
             statusBooked: booking.booking_status,
+            amount_untaxed: booking.amount_untaxed,
+            amount_taxed: booking.amount_taxed,
+            amount_total: booking.amount_total,
           }));
-
-          this.isLoading = false;
         }
       },
       error: (error) => {
-        this.presentToast('Error loading active booking data', 'danger');
+        // this.presentToast('Error loading active booking data', 'danger');
         console.error('Error:', error);
       }
     });
@@ -251,7 +276,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
       bookingTime: `${booking.startTime} - ${booking.endTime}`,
       startTime:booking.startTime,
       endTime:booking.endTime,
-      bookingFee:0,
+      bookingFee:booking.amount_total,
       deposit:0,
       bookedBy:booking.bookedBy,
       status:booking.statusBooked,
@@ -263,5 +288,34 @@ export class ResidentFacilityBookingsPage implements OnInit {
         bookingData: bookingData
       }
     });
+  }
+
+  navigateToBookingPayment(booking: ActiveBooking) {
+    const bookingData = {
+      booking_id: booking.id,
+      facilityName:booking.facilityName,
+      eventDate:booking.eventDate,
+      bookingTime: `${booking.startTime} - ${booking.endTime}`,
+      startTime:booking.startTime,
+      endTime:booking.endTime,
+      bookingFee:booking.amount_total,
+      deposit:0,
+      bookedBy:booking.bookedBy,
+      status:booking.statusBooked,
+      from: 'Active'
+    }
+    
+    this.router.navigate(['/facility-booking-payment'], {
+      state: {
+        eventDate: bookingData.eventDate,
+        bookingTime: bookingData.bookingTime,
+        facilityName: bookingData.facilityName,
+        startTimeString: bookingData.startTime,
+        endTimeString: bookingData.endTime,
+        bookingFee: bookingData.bookingFee,
+        deposit: bookingData.deposit,
+        booking_id: bookingData.booking_id
+      }
+    })
   }
 }

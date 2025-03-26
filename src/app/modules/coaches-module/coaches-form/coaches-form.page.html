@@ -79,11 +79,15 @@
             <option *ngFor="let coach of Coach" [value]="coach.id">{{ coach.name }}</option>
           </select>
         </div>
+        <div class="w-full space-y-5" *ngIf="showDrive">
+          <div class="w-full" *ngFor="let camera of Camera; let i = index">
+              <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" (click)="onSubmitRecord(true, camera.CamSentId)"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (i == 0 ? 'mt-6' : 'mt-1' )"></app-visitor-button>
+          </div>
+        </div>
         <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'" *ngIf="showDrive" (click)="onSubmitRecord(true)"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
-            <app-visitor-button [text]="'SAVE RECORD' + (showDrive ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full h-20 text-2xl'"></app-visitor-button>
+          <app-visitor-button [text]="'SAVE RECORD' + (showDrive ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full h-20 text-2xl ' + (!showDrive ? 'mt-6' : 'mt-1' )"></app-visitor-button>
         </div>
       </div>
     </div>

@@ -51,7 +51,7 @@
         <p class="text-base font-bold">Contact Number of Resident</p>
       </div>
       <app-text-input [id]="'phone_number'"
-        [placeholder]="'085830122464'"
+        [(ngModel)]="phoneNumber"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
         [isReadonly]="true">
@@ -61,13 +61,17 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold text-start">What purpose you applying this?</p>
       </div>
-      <div class="flex flex-row">
-        <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')" [checked]="selectedOption === 'replacement'"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
-        <label for="replacement"><b>Replacement</b></label>
-        <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')" [checked]="selectedOption === 'new_application'"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
-        <label for="new_application"><b>New Application</b></label>
+      <div class="flex flex-row cw-2:flex-col cw-2:space-y-2">
+        <div class="flex flex-row items-center">
+          <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')" [checked]="selectedOption === 'replacement'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+          <label for="replacement"><b>Replacement</b></label>
+        </div>
+        <div class="flex flex-row items-center">
+          <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')" [checked]="selectedOption === 'new_application'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base cw-2:ml-0">
+          <label for="new_application"><b>New Application</b></label>
+        </div>
       </div>
     </div>
 
@@ -134,9 +138,9 @@
             <tbody>
               <tr *ngFor="let fam of expectedFamily">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_member_or_family" (change)="onNewCardSelect(fam.family_id)" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_member_or_family_{{fam.family_id}}" (change)="onNewCardSelect(fam.family_id)" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
                 </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"> {{ fam.family_name }} , {{ fam.member_type }} </td>
+                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"><label for="card_data_member_or_family_{{fam.family_id}}">{{ fam.family_name }} , {{ fam.member_type }}</label></td>
               </tr>
             </tbody>
           </table>
@@ -149,7 +153,26 @@
         <p class="text-base font-bold">Owner status</p>
       </div>
       <app-text-input [id]="'owner_status'"
-        [placeholder]="'Primary'"
+        [placeholder]="'familyType'"
+        [(ngModel)]="familyType"
+        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+        [isReadonly]="true">
+      </app-text-input>
+    </div>
+
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-base font-bold">Amount Payable</p>
+        <select name="select_show_amount" id="select_show_amount" (change)="onShowAmountChange($event)" class="ml-1">
+          <option value="total">Total</option>
+          <option value="untaxed">Untaxed</option>
+          <option value="taxed">Taxed</option>
+        </select>
+      </div>
+      <app-text-input [id]="'amount_payable'"
+        [placeholder]="'S$____'"
+        [(ngModel)]="amountPayable"
         [customClasses]="{'w-full':true}" [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
         [isReadonly]="true">
@@ -163,8 +186,9 @@
       </label>
     </div>
     <button
+      [disabled]="!agreementChecked"
       [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
+      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="presentChoosePaymentMethodeModal()">
       Submit for Approval
     </button>
   </div>

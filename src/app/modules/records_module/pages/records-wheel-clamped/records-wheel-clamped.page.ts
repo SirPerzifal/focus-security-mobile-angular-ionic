@@ -318,8 +318,9 @@ export class RecordsWheelClampedPage implements OnInit {
     this.router.navigate(['records-wheel-clamped-new']);
   }
 
+  isLoading = false
   loadRecordsWheelClamp() {
-    // this.isLoading = false;
+    this.isLoading = true;
 
     this.offensesService.getOfffenses(this.pageType, this.is_active).subscribe({
       next: (results) => {
@@ -335,12 +336,12 @@ export class RecordsWheelClampedPage implements OnInit {
         } else {
         }
 
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
-        // this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }

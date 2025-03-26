@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Router, NavigationStart } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { PollingService } from 'src/app/service/resident/polling/polling.service';
-import { Router, NavigationStart } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -11,6 +13,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
   styleUrls: ['./upcoming-polling.page.scss'],
 })
 export class UpcomingPollingPage implements OnInit {
+  isloading: boolean = true;
   familyId: number = 0;
   projectId: number = 0;
 
@@ -20,20 +23,14 @@ export class UpcomingPollingPage implements OnInit {
   constructor(private getUserInfoService: GetUserInfoService, private pollingService: PollingService, private router: Router, public functionMainService: FunctionMainService) { }
 
   ngOnInit() {
-        // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage(
-      [ 
-        'project_id',
-        'family'
-      ]
-    ).then((value) => {
-      // // console.log(value);
-      this.familyId = Number(value.family);
-      this.projectId = Number(value.project_id);
-      
-      // Load polling data
-      const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-      this.loadPolling(today);
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.familyId = parseValue.family_id;
+        this.projectId = parseValue.project_id;
+        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        this.loadPolling(today);
+      }
     })
   }
 
@@ -61,7 +58,7 @@ export class UpcomingPollingPage implements OnInit {
                 polling_start_date: polling.polling_start_date
               };
             });
-  
+          this.isloading = false;
           // // console.log(this.voteData);
         }
       },

@@ -29,9 +29,11 @@ export class UnregisteredResidentCarPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.formData.project_id = value.project_id
+      this.Camera = value.config.lpr
     })
   }
 
+  Camera: any = []
   formData = {
     name: '',
     contact_number: '',
@@ -42,7 +44,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     project_id: 0
   }
 
-  onSubmit(isOpenBarrier: boolean = false) {
+  onSubmit(isOpenBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
     if (!this.formData.name) {
       errMsg += 'Name is missing! \n'
@@ -66,9 +68,9 @@ export class UnregisteredResidentCarPage implements OnInit {
         console.log("OPEN BARRIER");
       } else {
         console.log("BARRIER NOT OPENED");
-        
       }
-      console.log(this.formData)
+      let params = {...this.formData, camera_id: camera_id}
+      console.log(params)
       this.mainVmsService.getApi(this.formData, '/vms/post/unregistered_resident_car').subscribe({
         next: (results) => {
           console.log(results)
@@ -159,13 +161,17 @@ export class UnregisteredResidentCarPage implements OnInit {
     console.log("Vehicle Refresh", randomVhc)
   }
 
+  contactUnit = ''
   getContactInfo(contactData: any){
+    this.contactUnit = ''
     if (contactData) {
       this.formData.name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
       this.formData.block_id = contactData.block_id
       this.loadUnit().then(() => {
-        this.formData.unit_id = contactData.unit_id
+        setTimeout(() => {
+          this.contactUnit = contactData.unit_id
+        }, 300)
       })
     }
   }

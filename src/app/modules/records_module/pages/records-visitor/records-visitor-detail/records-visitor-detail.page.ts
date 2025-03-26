@@ -5,6 +5,7 @@ import { RecordsBlacklistFormPage } from '../../records-blacklist/records-blackl
 import { AlertController, ModalController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-records-visitor-detail',
@@ -16,7 +17,7 @@ export class RecordsVisitorDetailPage implements OnInit {
   record: any = {};
   issue_time = ''
 
-  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService, private modalController: ModalController, private mainVmsService: MainVmsService, private alertController: AlertController) {
+  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService, private modalController: ModalController, private mainVmsService: MainVmsService, private alertController: AlertController, private webrtc: WebRtcService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { logs: any[]};
     if (state) {
@@ -127,6 +128,10 @@ export class RecordsVisitorDetailPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  async callResident(){
+    this.webrtc.createOffer(this.record);
   }
 
 }
