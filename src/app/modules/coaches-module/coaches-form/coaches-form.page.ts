@@ -130,10 +130,13 @@ export class CoachesFormPage implements OnInit {
 
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.schedule.vehicle_number = randomVhc
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.schedule.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 
   onBackMove() {
@@ -249,6 +252,11 @@ export class CoachesFormPage implements OnInit {
     }
     if (!this.contactNumber) {
       errMsg += 'Contact number is missing! \n'
+    }
+    if (this.contactNumber) {
+      if (this.contactNumber.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (this.showDrive && !this.schedule.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'

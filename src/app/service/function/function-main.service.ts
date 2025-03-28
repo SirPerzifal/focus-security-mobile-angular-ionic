@@ -316,5 +316,25 @@ export class FunctionMainService {
     return URL.createObjectURL(blob);
   }
 
+  async getLprConfig(project_id: number) {
+    try {
+      const results = await this.mainVmsService.getApi({project_id: project_id}, '/fs/get/latest_vehicle_number').toPromise();
+      console.log(results);
+
+      if (results.result.response_code === 200) {
+        if (results.result.response_result[0].vehicle_number) {
+        }
+        return results.result.response_result[0];
+      } else {
+        this.presentToast('Failed to get project latest vehicle number', 'danger');
+        return false;
+      }
+    } catch (error) {
+      this.presentToast('An error occurred while loading latest vehicle number!', 'danger');
+      console.error(error);
+      return false;
+    }
+  }
+
 
 }

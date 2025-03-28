@@ -10,7 +10,7 @@
 			<app-visitor-button [text]="'Upcoming'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'"></app-visitor-button>
 			<app-visitor-button [text]="'Closed'" [extraClass]="'bg-[#D0D0D0] text-[#757575] text-base w-[105px] cw-3:text-sm w-[105px] cw-1:w-24 cw-3:w-[88px]'" [routerLink]="['/closed-polling']"></app-visitor-button>
 		</div>
-    <div *ngIf="isloading" class="flex justify-center items-center h-full">
+    <div *ngIf="isloading" class="flex justify-center items-center h-full mt-14">
       <ion-spinner name="circular"></ion-spinner>
     </div>
     <div *ngIf="!isloading" class="w-full mt-4 space-y-2">

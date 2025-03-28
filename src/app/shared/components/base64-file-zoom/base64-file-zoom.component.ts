@@ -39,7 +39,7 @@ export class Base64FileZoomComponent  implements OnInit {
 
   getPdf(file: any) {
     console.log(file)
-    return this.sanitizer.bypassSecurityTrustResourceUrl(`data:application/pdf;base64,${file}`);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(file);
     // return this.functionMain.convertBase64ToBlob(`data:application/pdf;base64,${file}`);
   }
 

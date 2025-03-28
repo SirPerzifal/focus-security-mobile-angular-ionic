@@ -134,16 +134,20 @@ export class EmergencyModulePage implements OnInit {
       vehicle_type: '',
       project_id: this.project_id
     }
-
+    this.refreshVehicle()
     this.contactUnit = ''
   }
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.formData.vehicle_number = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    // this.formData.vehicle_number = randomVhc
+    // console.log("Vehicle Refresh", randomVhc)
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 
   ngOnInit() {

@@ -67,7 +67,7 @@
           </tr> -->
         </table>
         <div class="flex flex-col justify-around w-full">
-          <div class="flex flex-row w-full justify-around" *ngIf="!record.is_upcoming">
+          <div class="flex flex-row w-full justify-around" *ngIf="!record.is_upcoming && record.is_need_check">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_in')" *ngIf="record.is_history || (!record.resident_check_in || !record.officer_check_in)">CHECK IN</button>
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')" *ngIf="record.is_history || (record.is_form_check_in && (!record.resident_check_out || !record.officer_check_out))">CHECK OUT</button>
           </div>

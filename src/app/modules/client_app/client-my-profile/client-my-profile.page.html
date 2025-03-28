@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'My Profile'" />
+  <app-resident-header [is_client]="true"  [text]="'My Profile'" />
 
   <div class="w-full flex flex-row mb-20">
     <div class="w-full flex flex-col p-5" *ngIf="isMain" @fadeInOut>

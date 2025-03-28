@@ -75,6 +75,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
             amount_untaxed: booking.amount_untaxed,
             amount_taxed: booking.amount_taxed,
             amount_total: booking.amount_total,
+            amount_deposit: booking.amount_deposit,
           }));
         }
       },
@@ -271,16 +272,19 @@ export class ResidentFacilityBookingsPage implements OnInit {
 
   navigateToHistoryDetail(booking: ActiveBooking) {
     const bookingData = {
+      booking_id: booking.id,
       facilityName:booking.facilityName,
       eventDate:booking.eventDate,
       bookingTime: `${booking.startTime} - ${booking.endTime}`,
       startTime:booking.startTime,
       endTime:booking.endTime,
       bookingFee:booking.amount_total,
-      deposit:0,
+      bookingTax:booking.amount_taxed,
+      deposit: booking.amount_deposit,
       bookedBy:booking.bookedBy,
       status:booking.statusBooked,
-      from: 'Active'
+      from: 'Active',
+      amountDeposit: booking.amount_deposit
     }
     // Gunakan NavigationExtras untuk membawa data
     this.router.navigate(['/facility-history-form'], {
@@ -299,7 +303,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
       startTime:booking.startTime,
       endTime:booking.endTime,
       bookingFee:booking.amount_total,
-      deposit:0,
+      deposit: booking.amount_deposit,
       bookedBy:booking.bookedBy,
       status:booking.statusBooked,
       from: 'Active'
@@ -307,6 +311,7 @@ export class ResidentFacilityBookingsPage implements OnInit {
     
     this.router.navigate(['/facility-booking-payment'], {
       state: {
+        type: 'BookingState',
         eventDate: bookingData.eventDate,
         bookingTime: bookingData.bookingTime,
         facilityName: bookingData.facilityName,

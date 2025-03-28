@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Facilities'" [text_second]="'Edit Facility'" />
+  <app-resident-header [is_client]="true"  [text]="'Facilities'" [text_second]="'Edit Facility'" />
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -41,6 +41,10 @@
       <div class="flex flex-row justify-between items-center"  *ngIf="selectedRoomId">
         <label class="text-base font-bold mt-1" for="client_facility_edit_close">Close for Maintenance</label>
         <input id="client_facility_edit_close" name="client_facility_edit_close" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="submitForm.is_close_for_maintenance">
+      </div>
+      <div class="flex flex-row justify-between items-center"  *ngIf="selectedRoomId">
+        <label class="text-base font-bold mt-1" for="client_facility_edit_check">Need Check In and Check Out</label>
+        <input id="client_facility_edit_check" name="client_facility_edit_check" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="submitForm.is_need_checked">
       </div>
       <div class="flex flex-col"  *ngIf="selectedRoomId">
         <div class="flex flex-row justify-start mb-1">

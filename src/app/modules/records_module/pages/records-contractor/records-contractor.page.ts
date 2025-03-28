@@ -218,6 +218,14 @@ export class RecordsContractorPage implements OnInit {
   }
 
   onSearchOptionChange(event: any) {
+    if (this.searchOption == event.target.value) return
+    this.filter = {
+      block: '',
+      unit: '',
+      vehicle_number: '',
+      issue_date: '',
+      end_issue_date: ''
+    }
     this.searchOption = event.target.value
     console.log(event.target.value)
   }
@@ -278,11 +286,18 @@ export class RecordsContractorPage implements OnInit {
     if (this.selectedRadio === value) {
       this.selectedRadio = null;
     } else {
+      this.filter = {
+        block: '',
+        unit: '',
+        vehicle_number: '',
+        issue_date: '',
+        end_issue_date: ''
+      }
       this.selectedRadio = value;
       this.searchOption = ''
     }
     console.log(this.selectedRadio)
-    this.sortVehicle = this.historyVehicles
+    this.sortVehicle = this.logsData
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
       this.sortVehicle = Array.from(

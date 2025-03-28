@@ -61,6 +61,7 @@ export class MyVehicleFormService extends ApiService{
     states: string,
     temporaryCarRequest: string | null,
     isFirstVehicle: string, // Pastikan ini adalah parameter wajib
+    projectId: number,
     vehicleLogFilename?: string, // Ini adalah parameter opsional
 ): Observable<any> {
     const headers = new HttpHeaders({
@@ -83,6 +84,7 @@ export class MyVehicleFormService extends ApiService{
             vehicle_log_filename: vehicleLogFilename,
             vehicle_log: vehicleLog,
             is_first_vehicle: isFirstVehicle,
+            project_id: projectId,
             states: states,
             end_date_for_temporary_pass: typeOfApplication === 'temporary_vehicle' ? endDateForTemporaryPass : null,
             temporary_car_request: typeOfApplication === 'temporary_vehicle' ? temporaryCarRequest : null

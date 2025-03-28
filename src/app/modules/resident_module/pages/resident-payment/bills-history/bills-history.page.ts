@@ -5,6 +5,48 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Subscription } from 'rxjs';
 
+interface FinesResponse {
+  id: number,
+  fines_references: string,
+  fines_name: string,
+  start_date: string,
+  total_bill: string,
+  offence_data: [],
+  is_pay : string,
+  pay_date: string,
+}
+
+interface FinesData {
+  id: number,
+  finesReferences: string,
+  finesName: string,
+  startDate: string,
+  totalBill: string,
+  offenceData: [],
+  isPay : string,
+  payDate: string,
+}
+
+interface BillsResponse {
+  id: number,
+  bill_references: string,
+  bill_name: string,
+  total_bill: number,
+  pay_date: string,
+  is_pay : boolean,
+  start_date: string, 
+}
+
+interface BillsData {
+  id: number,
+  billReferences: string,
+  billName: string,
+  totalBill: number,
+  payDate: string,
+  isPay : boolean,
+  startDate: string, 
+}
+
 @Component({
   selector: 'app-bills-history',
   templateUrl: './bills-history.page.html',
@@ -14,13 +56,14 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
   isLoading: boolean = true;
   groupedData: { [key: string]: any[] } = {};
 
+  isFilterApplied: boolean = false;
   isDatePickerOpen: boolean = false;
   viewDate: Date = new Date(); // Tanggal yang akan ditampilkan
   viewDateForDatet: string = this.viewDate.toISOString().split('T')[0]; // Tanggal yang akan ditampilkan dalam
   filterByTypeValue: string = '';
 
-  fines: any[] = [];
-  bills: any[] = [];
+  fines: FinesData[] = [];
+  bills: BillsData[] = [];
   mergeData: any[] = [];
 
   blockId: number = 0;
@@ -30,7 +73,8 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
   clearFilter() {
     this.filterByTypeValue = '';
     this.viewDate = new Date();
-    this.loadHistoryPayment();
+    this.isFilterApplied = false; // Reset filter
+    this.loadHistoryPayment(); // Memuat ulang semua data
   }
 
   filterByType(event: any) {
@@ -41,6 +85,8 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
 
   onDateChange(event: any) {
     this.viewDate = new Date(event.detail.value);
+    this.isFilterApplied = true; // Tandai bahwa filter telah diterapkan
+    this.loadHistoryPayment(); // Memuat ulang data berdasarkan tanggal yang dipilih
   }
 
   openDatePicker() {
@@ -71,9 +117,7 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
     }, 'get/payment_history').subscribe((response: any) => {
       const fines = response.result.response_result.fines;
       const bills = response.result.response_result.bills;
-    // console.log(response.result);
-    
-      this.fines = fines.map((fine: any) => {
+      this.fines = fines.map((fine: FinesResponse) => {
         return {
           id: fine.id,
           fines_references: fine.fines_references,
@@ -91,7 +135,7 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
         }
       });
     
-      this.bills = bills.map((bill: any) => {
+      this.bills = bills.map((bill: BillsResponse) => {
         return {
           id: bill.id,
           bill_references: bill.bill_references,
@@ -103,30 +147,51 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
         }
       });
     
-      if (this.filterByTypeValue === 'bills') {
-        this.mergeData = this.bills;
-        // Grouping the data by month and year
-        this.groupedData = this.groupByMonthYear(this.mergeData);
-        this.isLoading = false;
-      } else if (this.filterByTypeValue === 'fines') {
-        this.mergeData = this.fines;
-        this.groupedData = this.groupByMonthYear(this.mergeData);
-        this.isLoading = false;
-      } else {
-        this.mergeData = [...this.fines, ...this.bills];
-        this.groupedData = this.groupByMonthYear(this.mergeData);
-        this.isLoading = false;
-      }
-    
       // Mengurutkan mergeData berdasarkan start_date
       this.mergeData.sort((a, b) => {
         const dateA = new Date(a.start_date);
         const dateB = new Date(b.start_date);
         return dateA.getTime() - dateB.getTime(); // Convert to timestamps before subtraction
       });
+      // Filter berdasarkan tanggal
+
+      // Jika filter belum diterapkan, muat semua data
+      if (!this.isFilterApplied) {
+        if (this.filterByTypeValue === 'bills') {
+          this.mergeData = this.bills;
+          // Grouping the data by month and year
+          this.groupedData = this.groupByMonthYear(this.mergeData);
+          this.isLoading = false;
+        } else if (this.filterByTypeValue === 'fines') {
+          this.mergeData = this.fines;
+          this.groupedData = this.groupByMonthYear(this.mergeData);
+          this.isLoading = false;
+        } else {
+          this.mergeData = [...this.fines, ...this.bills];
+          this.groupedData = this.groupByMonthYear(this.mergeData);
+          this.isLoading = false;
+        }
+      } else {
+        // Filter berdasarkan tanggal
+        const selectedMonth = this.viewDate.getMonth();
+        const selectedYear = this.viewDate.getFullYear();
+
+        this.mergeData = this.mergeData.filter(item => {
+          const date = new Date(item.pay_date || item.start_date);
+          return date.getMonth() === selectedMonth && date.getFullYear() === selectedYear;
+        });
+      }
+
+      // Grouping the data by month and year
+      this.groupedData = this.groupByMonthYear(this.mergeData);
+      this.isLoading = false;
     
       // // console.log(this.mergeData);
     });
+  }
+
+  getMonthYears(): string[] {
+    return Object.keys(this.groupedData);
   }
 
   groupByMonthYear(data: any[]) {

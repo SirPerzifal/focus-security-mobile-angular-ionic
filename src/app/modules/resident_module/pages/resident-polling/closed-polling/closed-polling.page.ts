@@ -197,6 +197,8 @@ export class ClosedPollingPage implements OnInit, OnDestroy {
             }
           });
           this.isLoading = false;
+        } else {
+          this.isLoading = false;
         }
       },
       (error) => {

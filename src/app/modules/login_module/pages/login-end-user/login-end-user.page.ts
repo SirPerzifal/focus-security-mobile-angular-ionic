@@ -77,29 +77,43 @@ export class LoginEndUserPage implements OnInit {
         await this.getNotificationPermission();
         this.authService.postLoginAuthenticate(this.existUser.params.login,this.existUser.params.password, this.fcmToken).subscribe(
           res => {
-            // console.log(res);
+            console.log(res);
             if (res.result.status_code == 200) {
-              const estate = res.result.estates;
-              Preferences.set({
-                key: 'USER_EMAIL',
-                value: String(this.existUser.params.login),
-              }).then(()=>{
+              if (res.result.is_client) {
                 Preferences.set({
-                  key: 'CURRENT_PASS',
-                  value: String(this.existUser.params.password)
-                }).then(() => {
-                  this.router.navigate(['/resident-homepage'], {
-                    state: {
-                      estate: estate,
-                    }
-                  });
+                  key: 'USER_INFO',
+                  value: JSON.stringify(res.result.access_token),
+                }).then(()=>{
+                  this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
                   this.waitingResponseLoginApi = true;
                   this.isAnimating = true;
                   setTimeout(() => {
                     this.isAnimating = false;
                   }, 300); // Match this duration with the CSS animation duration
-                })
-              });
+                });
+              } else if (res.result.is_resident) {
+                const estate = res.result.estates;
+                Preferences.set({
+                  key: 'USER_EMAIL',
+                  value: String(this.existUser.params.login),
+                }).then(()=>{
+                  Preferences.set({
+                    key: 'CURRENT_PASS',
+                    value: String(this.existUser.params.password)
+                  }).then(() => {
+                    this.router.navigate(['/resident-homepage'], {
+                      state: {
+                        estate: estate,
+                      }
+                    });
+                    this.waitingResponseLoginApi = true;
+                    this.isAnimating = true;
+                    setTimeout(() => {
+                      this.isAnimating = false;
+                    }, 300); // Match this duration with the CSS animation duration
+                  })
+                });
+              }
             } else {
               this.waitingResponseLoginApi = false;
               this.isAnimating = true;

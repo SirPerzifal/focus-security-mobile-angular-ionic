@@ -70,8 +70,9 @@ export class BillsMaintenancePage extends ApiService implements OnInit, OnDestro
           id: item.id,
           title: item.bill_references,
           description: item.bill_name,
-          total: item.total_bill,
+          total: Number(item.total_bill),
           date: item.start_date,
+          overdue_in: item.due_date,
           overdue: isOverdue ? 'Yes' : 'No' // Menentukan status overdue
         } as payment; // Menyatakan bahwa objek ini sesuai dengan tipe payment
       });

@@ -21,7 +21,7 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
   previousParentId: number = 0;
   isRoot: boolean = false;
   previousParentIds: number[] = [];
-  previousParentNames: string[] = [];
+  previousParentNames: any = [];
 
   constructor(private noticeAndDocService: NoticeAndDocService, private getUserInfoService: GetUserInfoService, private router: Router) { }
 
@@ -40,7 +40,7 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
   loadFile() {
     this.noticeAndDocService.focusResidentialGetdocs(this.projectId).subscribe(
       (res) => {
-        // // console.log("load", res)
+        console.log("load", res)
         this.files = res.result.result.map((file: any) => ({
           id : file.id,
           parent_id: file.parent_id,
@@ -59,7 +59,7 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
   private loadDocuments(parentId?: number) {
     this.noticeAndDocService.focusResidentialGetdocs(this.projectId, parentId).subscribe(
       (res) => {
-        // // console.log("load", res)
+        console.log("load", res)
         this.files = res.result.result.map((file: any) => ({
           id : file.id,
           parent_id: file.parent_id,
@@ -82,35 +82,47 @@ export class FavouriteAnnouncementPage implements OnInit, OnDestroy {
   }
 
   reqParent(id: number, name: string, parentId: any) {
-    this.previousParentNames.push(name)
-    // // console.log(this.previousParentNames);
+    this.previousParentNames.push({id: id, name: name})
+    // this.currentParentId.push(id)
     this.loadDocuments(id);
     if (parentId != 0) {
         // // console.log('Ada parent');
         this.isRoot = false;
         this.previousParentId = parentId;
-        this.previousParentIds.push(parentId); // Simpan parentId ke array
+        // this.previousParentIds.push(parentId); // Simpan parentId ke array
     } else {
         // // console.log('Gaada parent');
         this.isRoot = true;
-        this.previousParentIds = []; // Reset jika tidak ada parent
+        // this.previousParentIds = []; // Reset jika tidak ada parent
     }
   }
   
   backToPreviousparent() {
     this.previousParentNames.pop(); // Hapus dan ambil parentId terakhir
-    if (this.previousParentIds.length > 0) {
+    // this.currentParentId.pop()
+    if (this.previousParentNames.length > 0) {
         // Ambil parentId terakhir dari array
-        const lastParentId = this.previousParentIds.pop(); // Hapus dan ambil parentId terakhir
+        const lastParentId = this.previousParentNames[this.previousParentNames.length - 1].id // Hapus dan ambil parentId terakhir
         // // console.log(this.previousParentNames);
         this.loadDocuments(lastParentId); // Muat dokumen untuk parentId tersebut
-        this.isRoot = this.previousParentIds.length === 0; // Periksa apakah masih di root
+        this.isRoot = this.previousParentNames.length === 0; // Periksa apakah masih di root
     } else {
         // // console.log("tes");
         this.previousParentId = 0;
         this.isRoot = false;
         this.loadFile(); // Kembali ke file utama jika tidak ada parent
     }
+    console.log(this.previousParentNames)
+  }
+
+  jumpFolder(id: number) {
+    let index = this.previousParentNames.findIndex((item: any) => {console.log(item); return item.id == id})
+    console.log(index)
+    this.previousParentNames = this.previousParentNames.slice(0, index + 1)
+    // this.previousParentIds = this.previousParentIds.slice(0, index + 1)
+    // console.log(this.previousParentIds)
+    console.log(this.previousParentNames)
+    this.loadDocuments(id)
   }
 
   async downloadFile(path: any) {

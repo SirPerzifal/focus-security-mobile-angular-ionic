@@ -59,7 +59,8 @@ export class UpcomingPollingPage implements OnInit {
               };
             });
           this.isloading = false;
-          // // console.log(this.voteData);
+        } else {
+          this.isloading = false;
         }
       },
       (error) => {

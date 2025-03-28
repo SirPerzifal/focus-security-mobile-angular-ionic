@@ -46,6 +46,7 @@ export class RecordsBlacklistFormPage implements OnInit {
       
     } else {
       this.unitShow = true
+      this.refreshVehicle()
     }
   }
 
@@ -64,10 +65,12 @@ export class RecordsBlacklistFormPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_name = value.project_name.toUpperCase()
+      this.project_id = value.project_id
       this.formData.project_id = value.project_id
     })
   }
   project_name = ''
+  project_id = 0
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -136,11 +139,15 @@ export class RecordsBlacklistFormPage implements OnInit {
 
   refreshVehicle() {
     if ((!this.is_ban_visitor && !this.is_ban_notice) || !this.record.vehicle_number ){
-      let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-      let front = ['SBA', 'SBS', 'SAA']
-      let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-      this.formData.vehicle_no = randomVhc
-      console.log("Vehicle Refresh", randomVhc)
+      // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+      // let front = ['SBA', 'SBS', 'SAA']
+      // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+      // this.formData.vehicle_no = randomVhc
+      // console.log("Vehicle Refresh", randomVhc)
+      this.functionMain.getLprConfig(this.project_id).then((value) => {
+        console.log(value)
+        this.formData.vehicle_no = value.vehicle_number ? value.vehicle_number : ''
+      })
     }
   }
 
@@ -154,6 +161,11 @@ export class RecordsBlacklistFormPage implements OnInit {
     // }
     if (!this.formData.contact_no) {
       errMsg += 'Visitor contact number is required! \n'
+    }
+    if (this.formData.contact_no) {
+      if (this.formData.contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (!this.formData.reason) {
       errMsg += 'Reason of ban is required! \n'

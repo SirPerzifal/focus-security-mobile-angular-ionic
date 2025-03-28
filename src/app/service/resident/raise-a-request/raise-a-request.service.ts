@@ -201,10 +201,10 @@ export class RaiseARequestService extends ApiService  {
   private postApiCard = this.baseUrl + '/resident/post/request_access_card';
   private getApiCard = this.baseUrl + '/residential/get/access_card_family_member_data';
   postRequestCard(
-    family_id: number,
+    family_id: number[],
     project_id: number,
     payment_receipt: string,
-    access_card_replacement_id?: number,
+    access_card_replacement_id?: number[],
     reason_for_replacement?: string
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -215,10 +215,10 @@ export class RaiseARequestService extends ApiService  {
     const body = {
         jsonrpc: '2.0',
         params: {
-          family_id: family_id,
+          family_ids: family_id,
           project_id: project_id,
           payment_receipt: payment_receipt,
-          card_replacement_id : access_card_replacement_id,
+          card_replacement_ids : access_card_replacement_id,
           reason_for_replacement : reason_for_replacement
         },
     };
@@ -279,7 +279,7 @@ export class RaiseARequestService extends ApiService  {
           notes: notes,
         },
     };
-
+    
     return this.http.post(`${this.postApiPet}`, body, { headers }).pipe(
         catchError(this.handleError)
     );

@@ -74,9 +74,9 @@ export class ResidentPollingPage implements OnInit {
           const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
   
           this.voteData = response.result.result
-          .filter((polling: any) => {
-            const states = polling.states;
-            return states !== 'closed'; // Memfilter polling yang tidak dalam status 'closed'
+            .filter((polling: any) => {
+              const states = polling.states;
+              return states !== 'closed'; // Memfilter polling yang tidak dalam status 'closed'
           }).map((polling: any) => {
             return {
               polling_name : polling.polling_name,
@@ -100,6 +100,8 @@ export class ResidentPollingPage implements OnInit {
               })
             }
           })
+          this.isLoading = false;
+        } else {
           this.isLoading = false;
         }
       },

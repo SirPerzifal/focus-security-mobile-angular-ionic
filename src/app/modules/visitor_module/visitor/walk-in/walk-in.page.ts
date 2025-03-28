@@ -99,6 +99,11 @@ export class WalkInPage implements OnInit {
     if (!this.formData.visitor_contact_no) {
       errMsg += 'Contact number is required!\n';
     }
+    if (this.formData.visitor_contact_no) {
+      if (this.formData.visitor_contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
+    }
     if (!this.formData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
     }
@@ -147,6 +152,11 @@ export class WalkInPage implements OnInit {
     }
     if (!this.formData.visitor_contact_no) {
       errMsg += 'Contact number is required!\n';
+    }
+    if (this.formData.visitor_contact_no) {
+      if (this.formData.visitor_contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (!this.formData.block || !this.formData.unit) {
       errMsg += 'Block and unit must be selected!\n';
@@ -234,13 +244,13 @@ export class WalkInPage implements OnInit {
       if (this.showQr && this.showClose) {
         this.stopScanner()
       }
-      this
       this.showDriveTrans = true
       this.showWalk = false;
       this.showQr = false;
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
+        this.refreshVehicle()
       }, 300)
     }
   }
@@ -312,11 +322,14 @@ export class WalkInPage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.formData.visitor_vehicle = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.formData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+    })
+    // console.log("Vehicle Refresh", randomVhc)
   }
 
   getContactInfo(contactData: any){

@@ -14,6 +14,7 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 })
 export class MyVehicleFormPage implements OnInit {
   unitId: number = 0;
+  dateNow: string = String(new Date());
 
   // Properti untuk file
   selectedFile: File | null = null;
@@ -34,6 +35,7 @@ export class MyVehicleFormPage implements OnInit {
   Unit: any[] = [];
   FamilyMember: any[] = [];
   showDate = '';
+  projectId: number = 0;
   MaximumVehicle = '';
 
   // State untuk form
@@ -42,8 +44,8 @@ export class MyVehicleFormPage implements OnInit {
   selectedFamilyMember: string = '';
   selectedVehicleMake: string = '';
   selectedVehicleColour: string = '';
-  selectedBlock: string = '1';
-  selectedUnit: string = '1';
+  selectedBlock: string = '';
+  selectedUnit: string = '';
   selectedTemporaryCarReason: string = '';
   isFirstVehicle: boolean = false; // Tambahkan ini
 
@@ -59,9 +61,11 @@ export class MyVehicleFormPage implements OnInit {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
         this.unitId = Number(parseValue.unit_id);
+        this.projectId = Number(parseValue.project_id);
+        this.selectedBlock = String(parseValue.block_id)
+        this.selectedUnit = String(parseValue.unit_id)
         this.loadFamilyMember();
         this.loadVehicleMakeAndType();
-        this.loadBlock();
       }
     })
     
@@ -84,7 +88,6 @@ export class MyVehicleFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
         console.error('Error:', error);
       }
     });
@@ -99,55 +102,20 @@ export class MyVehicleFormPage implements OnInit {
           this.vehicleTypes = response.result.vehicle_types;
           this.vehicleColours = response.result.vehicle_colors;
         } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
         console.error('Error:', error);
       }
     });
   }
 
-  loadBlock() {
-    this.blockUnitService.getBlock().subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Block = response.result.result;
-          // console.log(response)
-        } else {
-          this.presentToast('Failed to load vehicle data', 'danger');
-        }
-      },
-      error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
-        console.error('Error:', error);
-      }
-    });
-  }
-
-  loadUnit() {
-    this.blockUnitService.getUnit(this.selectedBlock).subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
-          // console.log(response)
-        } else {
-          this.presentToast('Failed to load unit data', 'danger');
-          console.error('Error:', response.result);
-        }
-      },
-      error: (error) => {
-        this.presentToast('Error loading unit data', 'danger');
-        console.error('Error:', error.result);
-      }
-    });
-  }
-
+  selectedVehiclelog: string = '';
   // Method untuk menangani pemilihan file
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.selectedVehiclelog = file.name; // Store the selected file name
       this.selectedFile = file;
       
       // Konversi file ke base64
@@ -161,15 +129,6 @@ export class MyVehicleFormPage implements OnInit {
     }
   }
 
-  // Method untuk mengupload file (opsional, bisa dihapus jika tidak diperlukan)
-  uploadFile() {
-    if (this.selectedFile) {
-      this.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
-    } else {
-      this.presentToast('Choose your file first', 'danger');
-    }
-  }
-
   onTypeOfApplicationChange(event: any) {
     this.selectedTypeOfApplication = event.target.value;
   }
@@ -180,11 +139,6 @@ export class MyVehicleFormPage implements OnInit {
 
   onVehicleMakeChange(event: any) {
     this.selectedVehicleMake = event.target.value;
-  }
-
-  onBlockChange(event: any) {
-    this.selectedBlock = event.target.value;
-    this.loadUnit(); // Panggil method load unit
   }
 
   onFamilyMemberChange(event: any) {
@@ -304,12 +258,16 @@ export class MyVehicleFormPage implements OnInit {
             this.endDate,
             states,
             temporaryCarRequest,
-            String(this.isFirstVehicle) // Pastikan ini ada
+            String(this.isFirstVehicle), // Pastikan ini ada
+            this.projectId
         ).subscribe({
             next: (response: any) => {
                 if (response.result.response_code === 200) {
-                    this.presentToast('Success ', 'success');
-                    this.router.navigate(['/resident-my-vehicle']);
+                    this.router.navigate(['/my-vehicle-payment-form'], {
+                      state: {
+                        vehicleId: response.result.vehicle_id
+                      }
+                    });
                     this.resetForm();
                 } else {
                     this.presentToast('Failed', 'danger');

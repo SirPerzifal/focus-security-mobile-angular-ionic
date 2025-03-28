@@ -61,6 +61,7 @@ export class BillsFinesPage implements OnInit, OnDestroy {
           fines_references : fine.fines_references,
           fines_name : fine.fines_name,
           start_date : fine.start_date,
+          due_date : fine.due_date,
           total_bill : fine.total_bill,
           is_pay : fine.is_pay,
           overdue: isOverdue ? true : false, // Menentukan status overdue
@@ -113,10 +114,12 @@ export class BillsFinesPage implements OnInit, OnDestroy {
     return await modal.present();
   }
 
-  payNow(event: any) {
+  payNow(paymentId: number) {
+    console.log(paymentId);
+    
     this.choosePaymentModal = !this.choosePaymentModal;
     // // console.log(event.paymentId);
-    this.paymentid = event.paymentId;
+    this.paymentid = paymentId;
   }
 
   manualPayment() {

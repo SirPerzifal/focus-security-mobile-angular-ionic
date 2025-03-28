@@ -1,0 +1,122 @@
+<app-resident-header [text]="'My Vehicle'" [text_second]="'Vehicle Payment'" />
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start ml-3 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-vehicle']"></ion-icon>
+  </div>
+  
+  <div class="w-full bg-green-100 text-center mt-2 m-0 p-2">
+    <h2 class="text-base font-bold text-black">
+      Vehicle Request Payment
+    </h2>
+  </div>
+
+  <!-- Tampilan setelah pembayaran berhasil -->
+  <ng-container *ngIf="isPaymentProcessed">
+    <div class="text-center mt-4">
+      <div class="text-5xl text-green-500">
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </div>
+      <div class="text-base text-green-500 font-bold my-2">
+        Payment Successful
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="flex flex-col relative mx-4 mb-24">
+    <div id="payment_detail" class="w-full mt-4">
+      <table class="w-full">
+        <tr>
+          <td class="min-w-[130px]"><strong>Vehicle Number</strong></td>
+          <td>: {{ vehicleData?.vehicleNumber }}</td>
+        </tr>
+        <tr>
+          <td class="min-w-[130px]"><strong>Vehicle Make</strong></td>
+          <td>: {{ vehicleData?.vehicleMake }}</td>
+        </tr>
+        <tr>
+          <td class="min-w-[130px]"><strong>Vehicle Colour</strong></td>
+          <td>: {{ vehicleData?.vehicleColor }}</td>
+        </tr>
+        <tr>
+          <td class="min-w-[130px]"><strong>Vehicle Type</strong></td>
+          <td>: {{ vehicleData?.vehicleType }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="payment-breakdown" class="w-full mt-4">
+      <p class="font-bold">Payment Breakdown</p>
+      <div class="flex justify-between">
+        <p>Amount Untaxed</p>
+        <p>S${{ vehicleData?.vehicleAmountUntaxed }}</p>
+      </div>
+      <div class="flex justify-between">
+        <p>Amount Taxed</p>
+        <p>{{ vehicleData?.vehicleAmountTaxed }}%</p>
+      </div>
+      <hr class="my-2">
+      <div class="flex justify-between font-bold">
+        <p>Amount Total</p>
+        <p>S${{ vehicleData?.vehicleAmountTotal }}</p>
+      </div>
+    </div>
+
+    <div id="payment_method" *ngIf="!isPaymentProcessed" class="w-full mt-4">
+      <div class="mt-4 mb-4">
+        <p class="font-bold">Payment Method</p>
+        <div class="flex justify-between items-center mt-2">
+          <button 
+            class="px-4 py-2 rounded {{ selectedPaymentMethod === 'card' ? 'bg-yellow-300' : 'bg-gray-200 text-gray-500' }}"
+            (click)="selectPaymentMethod('card')">
+            Credit / Debit Card
+          </button>
+          <button 
+            class="px-4 py-2 rounded {{ selectedPaymentMethod === 'paynow' ? 'bg-yellow-300' : 'bg-gray-200 text-gray-500' }}"
+            (click)="selectPaymentMethod('paynow')">
+            Paynow
+          </button>
+        </div>
+        
+        <!-- QR Code untuk Paynow -->
+        <div *ngIf="selectedPaymentMethod === 'paynow'" class="mt-4 flex justify-center flex-col items-center">
+          <img [src]="functionMainService.getImage(qrCodeImage)" alt="QR code for Paynow" class="h-24 w-24 cursor-pointer" (click)="donwloadQris()">
+          <div class="w-full mt-2">
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base font-bold">Payment receipt</p>
+            </div>
+            <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+              <input class="w-full rounded text-base hidden" type="file" name="payment_receipt" (change)="onUploadPaymentReceipt($event)" id="payment_receipt">
+              <label class="w-full text-start" [ngClass]="(selectedPaymentReceiptFileName) ? 'text-black' : 'text-gray-400'" for="payment_receipt">
+                {{ selectedPaymentReceiptFileName ? selectedPaymentReceiptFileName : 'Upload your payment receipt' }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-4">
+      <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow'">
+        <app-visitor-button 
+          [text]="'Proceed to Payment'" 
+          [extraClass]="'bg-[#10421d] text-[white] w-full'"
+          (click)="uploadReceipt()">
+        </app-visitor-button>
+      </div>
+      <div *ngIf="isPaymentProcessed">
+        <app-visitor-button
+          [text]="'View Request Vehicle'" 
+          [extraClass]="'bg-[#10421d] text-[white] w-full mb-2'"
+          (click)="proceedToDirectActiveBooking()">
+        </app-visitor-button>
+        <app-visitor-button
+          [text]="'Home Page'" 
+          [extraClass]="'bg-[#10421d] text-[white] w-full'"
+          (click)="proceedToCirectHomepage()">
+        </app-visitor-button>
+      </div>
+    </div>
+  </div>
+
+</ion-content>
+<app-bottom-nav-bar></app-bottom-nav-bar>

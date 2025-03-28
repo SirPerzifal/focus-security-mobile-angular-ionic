@@ -39,8 +39,9 @@ export interface ActiveBooking {
   bookedBy: string;
   statusBooked: string;
   amountUntaxed: string,
-  amountTaxed: string,
-  amount_total: string
+  amount_taxed: string,
+  amount_total: string,
+  amount_deposit: number,
 }
 
 // Tambahkan interface ini di bagian atas file TypeScript Anda
@@ -55,4 +56,5 @@ export interface BookingResponse {
   amount_untaxed: string,
   amount_taxed: string,
   amount_total: string,
+  amount_deposit: string,
 }

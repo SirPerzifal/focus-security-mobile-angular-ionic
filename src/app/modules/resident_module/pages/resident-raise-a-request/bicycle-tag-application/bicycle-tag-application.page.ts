@@ -6,12 +6,10 @@ import { ModalController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
-
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 @Component({
   selector: 'app-bicycle-tag-application',
   templateUrl: './bicycle-tag-application.page.html',
@@ -41,8 +39,16 @@ export class BicycleTagApplicationPage implements OnInit {
     bicycle_image: '',
     bicycle_tag_id: '',
   }
+  amountPayable: string = '';
+  amountType = {
+    amountUntaxed: '',
+    amountTaxed: '',
+    amountTotal: '',
+    isIncludeGST: false,
+    isRequirePayment: false,
+  }
 
-  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService:AuthService) { }
+  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService) { }
 
   termsAndCOndition: string = '';
 
@@ -83,8 +89,44 @@ export class BicycleTagApplicationPage implements OnInit {
         this.condoName = parseValue.project_name;
         this.userName = parseValue.family_name;
         this.userPhoneNumber = parseValue.family_mobile_number;
+        this.loadAmount();
       }
     })
+  }
+
+  loadAmount() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectId
+    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+      this.amountType = {
+        amountUntaxed: result.result.result.amount_untaxed,
+        amountTaxed: result.result.result.amount_taxed,
+        amountTotal: result.result.result.amount_total,
+        isIncludeGST: result.result.result.is_include_gst,
+        isRequirePayment: result.result.result.is_raise_a_request_payment
+      };
+      this.amountPayable = this.amountType.amountTotal;
+    })
+  }
+
+  processSubmit() {
+    if (this.amountType.isRequirePayment) {
+      this.presentChoosePaymentMethodeModal();
+    } else {
+      this.onSubmit('');
+    }
+  }
+
+  onShowAmountChange(event: any) {
+    const type = event.target.value;
+
+    if (type === 'untaxed') {
+      this.amountPayable = this.amountType.amountUntaxed;
+    } else if (type === 'taxed') {
+      this.amountPayable = this.amountType.amountTaxed;
+    } else {
+      this.amountPayable = this.amountType.amountTotal;
+    }
   }
 
   onOptionChange(option: string) {

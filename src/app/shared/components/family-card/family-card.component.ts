@@ -23,11 +23,11 @@ export class FamilyCardComponent implements OnInit {
   @Input() warning: boolean = false;
   @Input() status: string = ""; // Tambahkan ini
   @Input() profile_image: string = "";
+  @Input() reject_reason: string = "";
 
   ngOnInit() {}
 
   openDetails() {
-    console.log(this.end_date);
     this.router.navigate(['/family-edit-member'], {
       state: {
         id: this.id,
@@ -42,7 +42,8 @@ export class FamilyCardComponent implements OnInit {
         tenant: this.tenant,
         warning: this.warning,
         status: this.status, // Tambahkan ini jika perlu
-        profile_image: this.profile_image
+        profile_image: this.profile_image,
+        reject_reason: this.reject_reason
       }
     });
   }

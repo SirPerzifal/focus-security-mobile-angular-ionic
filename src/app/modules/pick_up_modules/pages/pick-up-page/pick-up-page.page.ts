@@ -112,6 +112,7 @@ export class PickUpPagePage implements OnInit {
     this.showDrop = false;
     this.showPick = true;
     this.entryType = 'pick_up';
+    this.refreshVehicle()
   }
 
   resetForm() {
@@ -132,6 +133,7 @@ export class PickUpPagePage implements OnInit {
     this.showPick = false;
     this.showDrop = true;
     this.entryType = 'drop_off';
+    this.refreshVehicle()
   }
 
   useVehicle(val: string) {
@@ -260,9 +262,13 @@ export class PickUpPagePage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicleNumber = randomVhc
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    // this.vehicleNumber = randomVhc
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 }

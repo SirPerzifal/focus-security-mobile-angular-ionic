@@ -69,6 +69,7 @@ export class ClientFacilityDetailPage implements OnInit {
         close_time : this.functionMain.timeToInt(this.submitForm.end_time),
         is_close_for_maintenance : this.submitForm.is_close_for_maintenance,
         terms_and_conditions : this.submitForm.terms_and_conditions,
+        is_need_checked : this.submitForm.is_need_checked,
       }
       console.log(params)
       this.clientMainService.getApi(params, '/client/update/room').subscribe({

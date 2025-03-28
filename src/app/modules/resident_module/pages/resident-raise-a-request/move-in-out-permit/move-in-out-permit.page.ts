@@ -7,12 +7,11 @@ import { ModalController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 @Component({
   selector: 'app-move-in-out-permit',
@@ -38,7 +37,16 @@ export class MoveInOutPermitPage implements OnInit {
   expectedFamilyMember: any = [];
   moveType: string = '';
 
-  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private moveInOutService: RaiseARequestService, private toastController: ToastController, private route: Router, private getUserInfoService: GetUserInfoService, private authService:AuthService) {
+  amountPayable: string = '';
+  amountType = {
+    amountUntaxed: '',
+    amountTaxed: '',
+    amountTotal: '',
+    isIncludeGST: false,
+    isRequirePayment: false,
+  }
+
+  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private moveInOutService: RaiseARequestService, private toastController: ToastController, private route: Router, private mainApiResidentService: MainApiResidentService) {
     this.moveInOutForm = this.fb.group({
       requestorId: [15],
       name_of_resident: ['KingsMan Condominium'],
@@ -111,6 +119,21 @@ export class MoveInOutPermitPage implements OnInit {
     }
   }
 
+  loadAmount() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectId
+    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+      this.amountType = {
+        amountUntaxed: result.result.result.amount_untaxed,
+        amountTaxed: result.result.result.amount_taxed,
+        amountTotal: result.result.result.amount_total,
+        isIncludeGST: result.result.result.is_include_gst,
+        isRequirePayment: result.result.result.is_raise_a_request_payment
+      };
+      this.amountPayable = this.amountType.amountTotal;
+    })
+  }
+
   showTimeInfo() {
     this.isModalOpen = true; // Membuka modal
   }
@@ -137,8 +160,29 @@ export class MoveInOutPermitPage implements OnInit {
         this.userName = parseValue.family_name;
         this.userPhoneNumber = parseValue.family_mobile_number;
         this.loadExpectedFamily();
+        this.loadAmount();
       }
     })
+  }
+
+  onShowAmountChange(event: any) {
+    const type = event.target.value;
+
+    if (type === 'untaxed') {
+      this.amountPayable = this.amountType.amountUntaxed;
+    } else if (type === 'taxed') {
+      this.amountPayable = this.amountType.amountTaxed;
+    } else {
+      this.amountPayable = this.amountType.amountTotal;
+    }
+  }
+
+  processSubmit() {
+    if (this.amountType.isRequirePayment) {
+      this.presentChoosePaymentMethodeModal();
+    } else {
+      this.onSubmit('');
+    }
   }
 
   loadExpectedFamily() {

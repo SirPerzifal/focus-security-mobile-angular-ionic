@@ -1,8 +1,11 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Approvals'" [text_second]="textSecond" />
-  <div class="flex flex-col justify-between mt-2 ml-3">
+  <app-resident-header [is_client]="true"  [text]="'Approvals'" [text_second]="textSecond" />
+  <div class="flex flex-row justify-between items-center mt-2 ml-3 mr-4">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
+    <div class="rounded-full w-10 h-10 bg-[var(--ion-color-primary)] flex flex-row justify-center items-center" (click)="onSetting()">
+      <ion-icon name="settings-outline" size="small" class="text-white size-7"></ion-icon>
+    </div>
   </div>
   <div class="flex flex-row relative mx-4 mb-24" *ngIf="isApprovalHome" @fadeInOut>
     <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
@@ -297,10 +300,10 @@
       <div class="w-full flex flex-col justify-start mt-2" *ngIf="['family'].includes(approval_type) && selectedApproval.tenancy_aggrement">
         <p class="text-base text-black"><b>Tenancy Agreement</b></p>
         <!-- <img [src]="functionMain.getImage(selectedApproval.tenancy_aggrement)" class="h-40 object-contain" *ngIf="selectedApproval.attachment_mimetype.includes('image')"> -->
-        <!-- <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
-            (click)="functionMain.downloadDocument(selectedApproval.tenancy_aggrement, selectedApproval.family_full_name + '_Tenancy Agreement')" *ngIf="selectedApproval.attachment_mimetype.includes('application')" /> -->
+        <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
+            (click)="functionMain.downloadDocument(selectedApproval.tenancy_aggrement, selectedApproval.family_full_name + '_Tenancy Agreement')" *ngIf="selectedApproval.attachment_mimetype.includes('application')" />
         <app-image-zoom [imageZoom]="functionMain.getImage(selectedApproval.tenancy_aggrement)" [imageClass]="'h-40 object-contain'" [bgColor]="getBgClass()" *ngIf="selectedApproval.attachment_mimetype.includes('image')"></app-image-zoom>
-        <app-base64-file-zoom [file]="selectedApproval.tenancy_file_pdf" *ngIf="selectedApproval.attachment_mimetype.includes('application')"></app-base64-file-zoom>
+        <!-- <app-base64-file-zoom [file]="selectedApproval.tenancy_file_pdf" *ngIf="selectedApproval.attachment_mimetype.includes('application')"></app-base64-file-zoom> -->
       </div>
       <div class="flex flex-col mt-4 space-y-2" *ngIf="['pending_approval', 'requested'].includes(selectedApproval.states)">
         <button (click)="approveDetail(selectedApproval)"
@@ -327,6 +330,25 @@
           </textarea>
         </div>
         <app-visitor-button [text]="'Confirm Rejection'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'" (click)="rejectDetail()"></app-visitor-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal id="payment-config-modal" [isOpen]="isPaymentModal" (didDismiss)="closePaymentmodal()">
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full flex flex-col mb-2">
+          <label class="text-base font-bold" for="client_payment_need_payment">Need Payment?</label>
+          <input id="client_payment_need_payment" name="client_payment_need_payment" type="checkbox" class="rounded w-7 h-7 text-[var(--ion-color-primary)]" [(ngModel)]="paymentChange.is_raise_a_request_payment">
+        </div>
+        <div class="w-full mb-2" *ngIf="paymentChange.is_raise_a_request_payment">
+          <label class="text-base font-bold" for="client_payment_need_payment">Payment Amount</label>
+          <input id="client_payment_charges" name="client_payment_charges" placeholder="0.1" type="number" class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base" [(ngModel)]="paymentChange.raise_a_request_charges">
+        </div>
+        <div class="w-full flex flex-col mb-2" *ngIf="paymentChange.is_raise_a_request_payment">
+          <label class="text-base font-bold" for="client_payment_include_tax">Include Tax?</label>
+          <input id="client_payment_include_tax" name="client_payment_include_tax" type="checkbox" class="rounded w-7 h-7 text-[var(--ion-color-primary)]" [(ngModel)]="paymentChange.is_raise_a_request_tax">
+        </div>
+        <app-visitor-button [text]="'Save Change'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-gray-800 p-2 w-40 rounded border border-black font-bold h-12'" (click)="submitConfig()"></app-visitor-button>
       </div>
     </ng-template>
   </ion-modal>

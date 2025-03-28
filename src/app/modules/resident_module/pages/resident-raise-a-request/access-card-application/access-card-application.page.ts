@@ -37,13 +37,14 @@ export class AccessCardApplicationPage implements OnInit {
     amountUntaxed: '',
     amountTaxed: '',
     amountTotal: '',
-    isIncludeGST: false
+    isIncludeGST: false,
+    isRequirePayment: false,
   }
 
   extend_mb = false;
 
   formData = {
-    card_id: 0,
+    card_id: [] as number[],
     block_id: 1,
     unit_id: 1,
     card_number: '',
@@ -52,7 +53,7 @@ export class AccessCardApplicationPage implements OnInit {
     card_type: '',
     card_expiry_date: '',
     card_cvv: '',
-    family_id: 36,
+    family_id: [] as number[],
     reason: '',
   }
 
@@ -62,7 +63,6 @@ export class AccessCardApplicationPage implements OnInit {
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
-        this.formData.family_id = Number(parseValue.family_id)
         this.projectId = Number(parseValue.project_id);
         this.unitId = Number(parseValue.unit_id);
         this.unit = parseValue.unit_name;
@@ -70,7 +70,23 @@ export class AccessCardApplicationPage implements OnInit {
         this.phoneNumber = parseValue.family_mobile_number;
         this.userName = parseValue.family_name;
         this.familyType = parseValue.family_type;
+        this.loadAmount();
       }
+    })
+  }
+
+  loadAmount() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectId
+    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+      this.amountType = {
+        amountUntaxed: result.result.result.amount_untaxed,
+        amountTaxed: result.result.result.amount_taxed,
+        amountTotal: result.result.result.amount_total,
+        isIncludeGST: result.result.result.is_include_gst,
+        isRequirePayment: result.result.result.is_raise_a_request_payment
+      };
+      this.amountPayable = this.amountType.amountTotal;
     })
   }
 
@@ -92,9 +108,35 @@ export class AccessCardApplicationPage implements OnInit {
     if (option === 'replacement') {
       this.loadCards();
       this.agreementChecked = false;
+      this.formData = {
+        card_id: [] as number[],
+        block_id: 1,
+        unit_id: 1,
+        card_number: '',
+        card_holder_name: '',
+        card_holder_type: '',
+        card_type: '',
+        card_expiry_date: '',
+        card_cvv: '',
+        family_id: [] as number[],
+        reason: '',
+      }
     } else if (option === 'new_application') {
       this.loadCards();
       this.agreementChecked = false;
+      this.formData = {
+        card_id: [] as number[],
+        block_id: 1,
+        unit_id: 1,
+        card_number: '',
+        card_holder_name: '',
+        card_holder_type: '',
+        card_type: '',
+        card_expiry_date: '',
+        card_cvv: '',
+        family_id: [] as number[],
+        reason: '',
+      }
       this.expectedCards = [];
     }
   }
@@ -105,8 +147,7 @@ export class AccessCardApplicationPage implements OnInit {
     this.raiseARequestService.getCardFamilyMember(Number(this.unitId)).subscribe(
       (response) => {
         if (response) {
-          // console.log(response);
-          if (response.result.family_data_with_no_ac) {
+          if (response.result) {
             this.expectedFamily = response.result.family_data_with_no_ac.map((family_with_no_ac: any) => {
               return {
                 family_id: family_with_no_ac.id,
@@ -121,7 +162,8 @@ export class AccessCardApplicationPage implements OnInit {
               access_card_id: card.id,
               access_card_number: card.access_card_number,
               access_card_status: card.access_card_status,
-              assigned_resident_name: member.full_name // Assuming you want to show the member's name
+              assigned_resident_name: member.full_name, // Assuming you want to show the member's name
+              assigned_resident_id: member.id // Assuming you want to show the member's name
             }))
           );
         } else {
@@ -135,26 +177,35 @@ export class AccessCardApplicationPage implements OnInit {
   }
 
   onCardSelect(card: any) {
-    
-    if (this.formData.card_id !== 0) { // Periksa jika card_id tidak kosong
-        if (this.formData.card_id === card.access_card_id) { // Gunakan === untuk perbandingan
-            this.formData.card_id = 0; // Kosongkan jika sama
-            // // console.log("tes1", this.formData.card_id);
-        } else {
-            this.formData.card_id = card.access_card_id; // Isi dengan access_card_id jika tidak sama
-            // // console.log("tes2", this.formData.card_id);
-        }
-        // // console.log("tes3", this.formData.card_id);
+    const cardId = card.access_card_id;
+    const familyId = card.assigned_resident_id;
+    const index = this.formData.card_id.indexOf(cardId); // Mencari indeks dari card_id
+    const indexFamily = this.formData.family_id.indexOf(cardId); // Mencari indeks dari card_id
+  
+    if (index === -1) {
+      // Jika card_id tidak ada dalam array, tambahkan
+      this.formData.card_id.push(cardId);
+      if (indexFamily === -1) {
+        this.formData.family_id.push(familyId);
+      } else {
+        this.formData.family_id.push(indexFamily, 1);
+      }
     } else {
-        this.formData.card_id = card.access_card_id; // Isi jika kosong
+      // Jika card_id sudah ada, hapus
+      this.formData.card_id.splice(index, 1); // Menghapus elemen pada indeks yang ditemukan
     }
-    // Lakukan aksi berdasarkan kartu yang dipilih
-}
+  }
 
-  onNewCardSelect(type: any) {
-    // console.log('New Card Type:', type);
-    this.formData.family_id = type;
-    // Perform action based on selected card type
+  onNewCardSelect(type: number) {
+    const index = this.formData.family_id.indexOf(type); // Mencari indeks dari family_id
+  
+    if (index === -1) {
+      // Jika family_id tidak ada dalam array, tambahkan
+      this.formData.family_id.push(type);
+    } else {
+      // Jika family_id sudah ada, hapus
+      this.formData.family_id.splice(index, 1); // Menghapus elemen pada indeks yang ditemukan
+    }
   }
 
   selectPaymentMethod(method: 'card' | 'paynow') {
@@ -190,7 +241,7 @@ export class AccessCardApplicationPage implements OnInit {
         this.formData.reason
       ).subscribe(
         (response) => {
-          // console.log(response);
+          console.log(response);
           if (response.result.status === 'success') {
             this.presentToast('Access card data has been successfully saved!', 'success');
             this.router.navigate(['resident-raise-a-request'])
@@ -210,7 +261,7 @@ export class AccessCardApplicationPage implements OnInit {
         paymentReceipt
       ).subscribe(
         (response) => {
-          // console.log(response);
+          console.log(response);
           if (response.result.status === 'success') {
             this.presentToast('Access card data has been successfully saved!', 'success');
             this.router.navigate(['resident-raise-a-request'])
@@ -249,6 +300,14 @@ export class AccessCardApplicationPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  processSubmit() {
+    if (this.amountType.isRequirePayment) {
+      this.presentChoosePaymentMethodeModal();
+    } else {
+      this.onSubmit('');
+    }
   }
 
   async presentChoosePaymentMethodeModal() {

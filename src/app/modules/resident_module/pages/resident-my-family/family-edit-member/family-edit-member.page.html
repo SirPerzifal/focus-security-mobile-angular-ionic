@@ -65,18 +65,6 @@
         [contactLabel]="'Mobile Number'" [labelClass]="'text-base'" [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"
         ></app-vms-contact-input>
       </div>
-      <!-- <div class="w-full">
-        <app-text-input
-        [labelResidentText]="'Mobile Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-          [id]="'mobile_number'"
-          [placeholder]="'Eg. +65 XXXX XXX'"
-          [customClasses]="{'w-full': true}"
-          [type]="'text'"
-          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-          [value]="formData.mobile_number"
-          (valueChange)="onMobileNumberChange($event)"
-        ></app-text-input>
-      </div> -->
       
       <div class="w-full">
         <label class="text-base font-bold"><p>Type Of Residence</p></label>
@@ -92,18 +80,22 @@
           <option [value]="'tenants'">Tenant</option>
         </select>
       </div>
-      
-      <!-- <div class="w-full" *ngIf="formData.type_of_residence == 'tenants'">
-        <app-text-input
-          [id]="'tenancies.end_of_tenancy_aggrement'"
-          [placeholder]="'End Date of Tenancy Agreement'"
-          [customClasses]="{'w-full': true}"
-          [type]="'date'"
-          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-          [value]="formData.tenancies.end_of_tenancy_aggrement"
-          (valueChange)="onEndOfTenancyAgreementChange($event)"
-        ></app-text-input>
-      </div> -->
+
+      <div class="flex flex-col justify-between mt-2" *ngIf="formData.reject_reason">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Reject Reason</p>
+          </div>
+          <app-text-input [id]="'reject_reason'"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-14':true, 'text-base': true}"
+            [isReadonly]="true"
+            [value]="formData.reject_reason"
+            >
+          </app-text-input>
+        </div>
+      </div>
+
       <ion-modal id="choose-inheritence-modal" [isOpen]="isModalFamilyEditOpen" (didDismiss)="isModalFamilyEditOpen === false">
         <ng-template>
           <div class="wrapper p-4">
@@ -142,6 +134,7 @@
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="changePassDirect()">Change Password</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" [routerLink]="['/resident-my-family']">Send a Reset Password Email</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onDelete()">Delete Family member</button>
+        <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" *ngIf="formData.reject_reason" (click)="resubmitForApproval()">Resubmit For Approval</button>
       </div>
       <div class="w-full" *ngIf="formData.type_of_residence === 'tenants'">
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Update Tenant Details</button>
@@ -149,6 +142,7 @@
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="changePassDirect()">Change Password</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold px-2" (click)="openExtend()">Request for Tenancy Agreement Date Extension</button>
         <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" (click)="onDelete()">Delete User</button>
+        <button class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold" *ngIf="formData.reject_reason">Resubmit For Approval</button>
       </div>
       
     </div>

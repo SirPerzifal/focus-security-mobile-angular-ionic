@@ -29,6 +29,10 @@ export class RecordsWheelClampedNewPage implements OnInit {
         this.typeOfEntry = navParams.get('type_of_entry')
         this.isTypeOfEntryReadonly = true
       }
+    } else {
+      this.loadProjectName().then(() => {
+        this.refreshVehicle()
+      })
     }
     
     this.selectedNotice = this.type
@@ -122,6 +126,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
     }
     if (!this.issueContact) {
       errMsg += 'Offender contact number is required! \n'
+    }
+    if (this.issueContact) {
+      if (this.issueContact.length <= 2 ) {
+        errMsg += 'Offender contact number is required! \n'
+      }
     }
     if (!this.typeOfEntry) {
       errMsg += 'Offender type of entry is required! \n'
@@ -244,10 +253,14 @@ export class RecordsWheelClampedNewPage implements OnInit {
 
   refreshVehicle() {
     if (!this.isVehicleNumberReadonly) {
-      let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-      let front = ['SBA', 'SBS', 'SAA']
-      let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-      this.vehicleNumber = randomVhc
+      // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+      // let front = ['SBA', 'SBS', 'SAA']
+      // let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+      // this.vehicleNumber = randomVhc
+      this.functionMain.getLprConfig(this.project_id).then((value) => {
+        console.log(value)
+        this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
+      })
     }
   }
   

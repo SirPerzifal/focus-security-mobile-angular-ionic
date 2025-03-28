@@ -124,8 +124,10 @@ export class ClientQuickDialsPage implements OnInit {
     if (!this.contactForm.name) {
       errMsg += 'Contact name is required! \n'
     }
-    if (this.contactForm.contact_number.length <= 2 ) {
-      errMsg += 'Contact number is required! \n'
+    if (this.contactForm.contact_number) {
+      if (this.contactForm.contact_number.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')

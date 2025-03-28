@@ -32,10 +32,8 @@ export class HiredCarPage implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   textForHiredCarPages = {
-    title: 'Temporary Pickup/Drop-off Vehicle Authorization',
-    content: ['This temporary vehicle access granted exclusively for the purpose of picking up or dropping off a resident of the unit.',
-    'This vehicle will be registered under the unit’s visitation list history, and by granting access, the registering party acknowledges and agrees that if the vehicle remains on the premises for more than 10 minutes, security personnel will be alerted to wheel-clamp the vehicle without further notice.',
-    'Additionally, the vehicle must enter the premises before midnight; otherwise, a new registration will be required for entry.']
+    title: '',
+    content: []
   }
 
   formData = {
@@ -45,6 +43,8 @@ export class HiredCarPage implements OnInit, OnDestroy {
     unit: 0,
     family_id: 0
   }
+
+  projectId: number = 0;
   
   phv_vehicle = true;
   taxi = false;
@@ -68,22 +68,32 @@ export class HiredCarPage implements OnInit, OnDestroy {
         const parseValue = JSON.parse(value.value);
         this.formData.unit = Number(parseValue.unit_id);
         this.formData.family_id = Number(parseValue.family_id);
+        this.projectId = Number(parseValue.project_id);
         this.loaadTextForPage();
-
-        this.mainApiResidentService.endpointProcess({
-          project_id:parseValue.project_id}, 'get/hired_car_text').subscribe((response) => {
-          if (response.result.response_code == 200) {
-          (response.result.response_description).forEach((line: string, index: number) => {
-              this.textForHiredCarPages.content[index] = line;
-            });
-          }
-        })
       } 
     })
   }
 
   loaadTextForPage() {
     this.isLoading = false;
+  
+    this.mainApiResidentService.endpointProcess(
+      { project_id: this.projectId }, 
+      'get/hired_car_text'
+    ).subscribe((response) => {
+      if (response.result.response_code == 200) {
+        this.textForHiredCarPages = {
+          title: response.result.response_description.title,
+          content: response.result.response_description.content // langsung assign
+        };
+        console.log(this.textForHiredCarPages);
+      } else {
+        this.presentToast('Failed to load text for page', 'danger');
+      }
+    }, (error) => {
+      console.error('API error:', error);
+      this.presentToast('An error occurred while fetching data', 'danger');
+    });
   }
 
   toggleShowInv() {

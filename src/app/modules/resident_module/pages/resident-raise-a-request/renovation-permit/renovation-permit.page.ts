@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ModalController } from '@ionic/angular';
@@ -10,11 +10,10 @@ import { Preferences } from '@capacitor/preferences';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { FamilyService } from 'src/app/service/resident/family/family.service';
 import { SignaturePadComponent } from 'src/app/shared/components/signature-pad/signature-pad.component';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-renovation-permit',
@@ -46,8 +45,17 @@ export class RenovationPermitPage implements OnInit {
   renovationSigned: string = '';
   isRenovationSigned = false
   unitIdForGetFamily: number = 0;
+  amountPayable: string = '';
+  amountType = {
+    amountUntaxed: '',
+    amountTaxed: '',
+    amountTotal: '',
+    isIncludeGST: false,
+    
+    isRequirePayment: false,
+  }
 
-  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private route: Router, private getUserInfoService: GetUserInfoService, private authService:AuthService) {
+  constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private alertController: AlertController,private route: Router, private mainApiResidentService: MainApiResidentService) {
     this.renovationForm = this.fb.group({
       requestorId: [36],
       name_of_resident: ['KingsMan Condominium'],
@@ -122,7 +130,35 @@ export class RenovationPermitPage implements OnInit {
         this.userName = parseValue.family_name;
         this.userPhoneNumber = parseValue.family_mobile_number;
         this.loadExpectedFamily();
+        this.loadAmount();
       }
+    })
+  }
+
+  onShowAmountChange(event: any) {
+    const type = event.target.value;
+
+    if (type === 'untaxed') {
+      this.amountPayable = this.amountType.amountUntaxed;
+    } else if (type === 'taxed') {
+      this.amountPayable = this.amountType.amountTaxed;
+    } else {
+      this.amountPayable = this.amountType.amountTotal;
+    }
+  }
+
+  loadAmount() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectId
+    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+      this.amountType = {
+        amountUntaxed: result.result.result.amount_untaxed,
+        amountTaxed: result.result.result.amount_taxed,
+        amountTotal: result.result.result.amount_total,
+        isIncludeGST: result.result.result.is_include_gst,
+        isRequirePayment: result.result.result.is_raise_a_request_payment
+      };
+      this.amountPayable = this.amountType.amountTotal;
     })
   }
 
@@ -177,6 +213,43 @@ export class RenovationPermitPage implements OnInit {
   onSelect(select: any) {
     // console.log('Selected:', select);
     this.renovationForm.value.contact_person_id = select['id'];
+  }
+
+  public async presentCustomAlert(
+    header: string = 'By clicking "Confirm," you consent to sharing your name, contact number, and address with your designated contractor', 
+    confirmText: string = 'Confirm',
+    cancelText: string = 'Cancel',
+  ) {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: header,
+      message: '', 
+      buttons: [
+        {
+          text: confirmText,
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.processSubmit();
+          }
+        },
+        {
+          text: cancelText,
+          cssClass: 'cancel-button',
+          handler: () => {
+          }
+        },
+      ]
+    });
+  
+    await alert.present(); // Tambahkan baris ini
+  }
+
+  processSubmit() {
+    if (this.amountType.isRequirePayment) {
+      this.presentChoosePaymentMethodeModal();
+    } else {
+      this.onSubmit('');
+    }
   }
 
   async presentChoosePaymentMethodeModal() {

@@ -34,11 +34,10 @@ export class ClientApprovalsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['project_id',]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
-      this.project_id = value.project_id != null ? value.project_id : 751;
+      this.project_id = value.project_id
+      this.loadProjectTax()
     })
     console.log("ahoy")
   }
@@ -326,6 +325,59 @@ export class ClientApprovalsPage implements OnInit {
            this.selectedApproval.states === 'rejected' || this.selectedApproval.states === 'cancel' ? 'bg-[#E3787E]' :
            this.selectedApproval.states === 'requested' ? 'bg-[#F8F1BA]' :
            !this.selectedApproval.states ? 'bg-[#c4c4c4]' : '';
+  }
+  
+  paymentConfig: any = []
+  paymentChange: any = []
+  loadProjectTax(){
+    this.clientMainService.getApi({project_id: this.project_id}, '/client/get/payment_config').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.paymentConfig = results.result.config
+          this.paymentChange = this.paymentConfig
+          console.log(this.paymentConfig)
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get payment config!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  isPaymentModal = false
+  onSetting() {
+    this.paymentChange = this.paymentConfig
+    this.isPaymentModal = true
+  }
+
+  closePaymentmodal() {
+    this.paymentChange = this.paymentConfig
+    this.isPaymentModal = false
+  }
+
+  submitConfig() {
+    console.log(this.paymentChange)
+    this.clientMainService.getApi(this.paymentChange, '/client/post/update_payment_config').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.isPaymentModal = false
+          this.paymentConfig = this.paymentChange 
+          console.log(this.paymentConfig)
+        } else {
+          this.paymentChange = this.paymentConfig
+          this.functionMain.presentToast('An error occurred while trying to update payment config!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.paymentChange = this.paymentConfig
+        this.functionMain.presentToast('An error occurred while trying to update payment config!', 'danger');
+        console.error(error);
+      }
+    });
+    
   }
   
 

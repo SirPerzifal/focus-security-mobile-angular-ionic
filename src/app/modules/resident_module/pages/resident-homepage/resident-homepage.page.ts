@@ -62,6 +62,7 @@ export class ResidentHomepagePage implements OnInit {
         Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
           if (value?.value) {
             const valueUseState = JSON.parse(value.value);
+            this.isLoading = false;
             this.setData(valueUseState, '');
             this.fetchContacts();
             this.loadCountNotification();

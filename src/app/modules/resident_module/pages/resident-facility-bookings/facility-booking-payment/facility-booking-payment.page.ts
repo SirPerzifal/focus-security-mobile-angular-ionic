@@ -1,14 +1,60 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
 import { Subscription } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
+import { AlertController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { BookingDetails } from 'src/models/resident/facility.model';
 import { ToastController } from '@ionic/angular';
+
+interface BookingState {
+  type: 'BookingState'; // Tambahkan properti unik
+  roomId: string; // Ubah ke number jika perlu
+  startTimeString: string;
+  endTimeString: string;
+  unitId: number;
+  partnerId: number;
+  bookingFee: number;
+  deposit: number;
+  eventDate: string;
+  bookingTime: string;
+  facilityName: string;
+  booking_id: number; 
+}
+
+interface FromPlaceBooking {
+  type: 'FromPlaceBooking'; // Tambahkan properti unik
+  amount_deposit: number,
+  amount_taxed: string,
+  amount_total: number,
+  amount_untaxed: string,
+  booked_by: string,
+  booking_date: string,
+  bookingId: number,
+  facility_name: string,
+  start_datetime: string,
+  stop_datettime: string,
+}
+
+interface FromHistoryForm {
+  bookingId: number,
+  type: "FromHistoryForm",
+  facilityName: string,
+  eventDate: string,
+  bookingTime: string,
+  startTime: string,
+  endTime: string,
+  bookingFee: number,
+  bookingTax: string,
+  deposit: number,
+  bookedBy: string,
+  status: string,
+  from: 'Active',
+  amountDeposit: string
+}
+
+type State = BookingState | FromPlaceBooking | FromHistoryForm;
 
 @Component({
   selector: 'app-facility-booking-payment',
@@ -26,37 +72,73 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
   paymentReceipt: any = '';
 
   // Contoh data booking
-  bookingDetails: BookingDetails | null = null; // Atau gunakan BookingDetails jika Anda yakin akan selalu ada
+  bookingDetails: BookingState | FromPlaceBooking | FromHistoryForm | null = null; // Atau gunakan BookingDetails jika Anda yakin akan selalu ada
+  bookingState: BookingState | null = null; // Atau gunakan BookingDetails jika Anda yakin akan selalu ada
+  fromPlaceBooking: FromPlaceBooking | null = null; // Atau gunakan BookingDetails jika Anda yakin akan selalu ada
+  fromHistoryForm: FromHistoryForm | null = null; // Atau gunakan BookingDetails jika Anda yakin akan selalu ada
   eventDate: string = '';
   constructor(
     private router: Router,
-    private alertController: AlertController,
     public functionMainService: FunctionMainService,
-    private facilityService: NewBookingService,
     private toastController: ToastController,
     private mainApiResidentService: MainApiResidentService,
+    private alertController: AlertController
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as {
-      roomId: string; // Ubah ke number jika perlu
-      startTimeString: string;
-      endTimeString: string;
-      unitId: number;
-      partnerId: number;
-      bookingFee: number;
-      deposit: number;
-      eventDate: string;
-      bookingTime: string;
-      facilityName: string;
-      booking_id: string;
-    };
-    if (state) {
-      this.bookingDetails = state
-      this.eventDate = String(state.eventDate)
-      if (this.bookingDetails) {
-        // console.log(this.bookingDetails)
+    const state = navigation?.extras.state as State; // Menggunakan union type
+
+    if (state && 'type' in state) {
+      if (state.type === 'BookingState') {
+        this.bookingDetails = {
+          type: state.type,
+          roomId: state.roomId,
+          startTimeString: state.startTimeString,
+          endTimeString: state.endTimeString,
+          unitId: state.unitId,
+          partnerId: state.partnerId,
+          bookingFee: state.bookingFee,
+          deposit: state.deposit,
+          eventDate: state.eventDate,
+          bookingTime: state.bookingTime,
+          facilityName: state.facilityName,
+          booking_id: state.booking_id, 
+        };
+        this.bookingState = this.bookingDetails;
+      } else if (state.type === 'FromPlaceBooking') {
+        this.bookingDetails = {
+          type: state.type,
+          amount_deposit: state.amount_deposit,
+          amount_taxed: state.amount_taxed,
+          amount_total: state.amount_total,
+          amount_untaxed: state.amount_untaxed,
+          booked_by: state.booked_by,
+          booking_date: state.booking_date,
+          bookingId: state.bookingId,
+          facility_name: state.facility_name,
+          start_datetime: state.start_datetime,
+          stop_datettime: state.stop_datettime,
+        };
+        this.fromPlaceBooking = this.bookingDetails;
+      } else if (state.type === 'FromHistoryForm') {
+        this.bookingDetails = {
+          bookingId: state.bookingId,
+          type: state.type,
+          facilityName: state.facilityName,
+          eventDate: state.eventDate,
+          bookingTime: state.bookingTime,
+          startTime: state.startTime,
+          endTime: state.endTime,
+          bookingFee: state.bookingFee,
+          bookingTax: state.bookingTax,
+          deposit: state.deposit,
+          bookedBy: state.bookedBy,
+          status: state.status,
+          from: state.from,
+          amountDeposit: state.amountDeposit
+        }
+        this.fromHistoryForm = this.bookingDetails;
       }
-    } 
+    }
   }
 
   ngOnInit() {
@@ -67,6 +149,25 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
         this.loadQRCode();
       }
     })
+  }
+
+  formatTime(datetime: string | undefined): string {
+    if (!datetime) return '';
+    const timePart = datetime.split(' ')[1];
+    return timePart ? timePart.substring(0, 5) : '';
+  }
+
+  convertToDDMMYYYY(dateString: string | undefined): string | undefined {
+    // Memisahkan string berdasarkan "-"
+    const parts = dateString?.split('-');
+    
+    // Memastikan bahwa kita memiliki 3 bagian (tahun, bulan, hari)
+    if (parts?.length === 3) {
+      const [year, month, day] = parts; // Pisahkan menjadi tahun, bulan, dan hari
+      return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
+    } else {
+      return dateString; // Kembalikan string asli jika format tidak sesuai
+    }
   }
 
   loadQRCode() {
@@ -169,7 +270,7 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
     toast.present();
   }
 
-  async proceedToPayment() {
+  async proceedToPayment(bookingId: number | undefined) {
     // Validasi metode pembayaran
     if (!this.selectedPaymentMethod) {
       const alert = await this.alertController.create({
@@ -189,7 +290,7 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
       }
 
       this.mainApiResidentService.endpointProcess({
-        booking_id: this.bookingDetails?.booking_id,
+        booking_id: bookingId,
         payment_receipt: this.paymentReceipt
       }, 'post/facility_book_payment').subscribe((response: any) => {
         this.presentToast("Success Book", 'success');
@@ -228,9 +329,15 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
   }
 
   // Metode untuk menghitung total pembayaran
-  calculateTotal(): number {
-    if (this.bookingDetails) {
-      return this.bookingDetails.bookingFee + this.bookingDetails.deposit;
+  calculateTotal(bookingFee: number | undefined, deposit: number | undefined): number | undefined {
+    if (bookingFee || deposit) {
+      const bookingFeeFix = bookingFee
+      if (bookingFee && deposit) {
+        const bookingFeeFix = bookingFee
+        const depositFix = deposit
+        return bookingFeeFix + depositFix
+      }
+      return bookingFeeFix;
     }
     return 0; // Atau nilai default lainnya
   }

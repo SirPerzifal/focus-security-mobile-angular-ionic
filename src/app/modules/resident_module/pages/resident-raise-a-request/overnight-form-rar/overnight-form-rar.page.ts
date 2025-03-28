@@ -7,11 +7,10 @@ import { ModalController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 
 interface Visitor {
   id: number;
@@ -55,7 +54,16 @@ export class OvernightFormRarPage implements OnInit {
     visitor_id: 0,
   }
 
-  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private modalController: ModalController, private authService:AuthService) {
+  amountPayable: string = '';
+  amountType = {
+    amountUntaxed: '',
+    amountTaxed: '',
+    amountTotal: '',
+    isIncludeGST: false,
+    isRequirePayment: false,
+  }
+
+  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private modalController: ModalController) {
     this.form = this.fb.group({
       residentName: this.nameOfResident,
       block: this.blokId,
@@ -108,7 +116,35 @@ export class OvernightFormRarPage implements OnInit {
         this.userName = parseValue.family_name;
         this.userPhoneNumber = parseValue.family_mobile_number;
         this.fetchExpectedVisitors();
+        this.loadAmount();
       }
+    })
+  }
+
+  onShowAmountChange(event: any) {
+    const type = event.target.value;
+
+    if (type === 'untaxed') {
+      this.amountPayable = this.amountType.amountUntaxed;
+    } else if (type === 'taxed') {
+      this.amountPayable = this.amountType.amountTaxed;
+    } else {
+      this.amountPayable = this.amountType.amountTotal;
+    }
+  }
+
+  loadAmount() {
+    this.mainApiResidentService.endpointProcess({
+      project_id: this.projectid
+    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+      this.amountType = {
+        amountUntaxed: result.result.result.amount_untaxed,
+        amountTaxed: result.result.result.amount_taxed,
+        amountTotal: result.result.result.amount_total,
+        isIncludeGST: result.result.result.is_include_gst,
+        isRequirePayment: result.result.result.is_raise_a_request_payment
+      };
+      this.amountPayable = this.amountType.amountTotal;
     })
   }
 
@@ -200,6 +236,14 @@ export class OvernightFormRarPage implements OnInit {
           console.error('Error updating vehicle number:', error);
         }
       )
+    }
+  }
+
+  processSubmit() {
+    if (this.amountType.isRequirePayment) {
+      this.presentChoosePaymentMethodeModal();
+    } else {
+      this.onSubmit('');
     }
   }
 

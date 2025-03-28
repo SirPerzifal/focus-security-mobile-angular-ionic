@@ -14,7 +14,8 @@ export class InputPasswordComponent  implements OnInit {
   @Input() passwordPlaceholder: String = 'Password'
   @Output() password = new EventEmitter<string>()
   @Input() passVal: string = ''
-  @Input() inputClass: string = 'border w-full rounded py-2 pl-3 pr-10 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)]'
+  @Input() inputClass: string = 'border w-full rounded outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)]'
+  @Input() inputFont: string = 'text-sm'
 
   ngOnInit() {}
 

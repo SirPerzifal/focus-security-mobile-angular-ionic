@@ -30,45 +30,70 @@
     <div *ngIf="isLoading" class="flex justify-center items-center h-full">
       <ion-spinner name="circular"></ion-spinner>
     </div>
-    <div *ngFor="let md of mergeData">
-      <!-- <h2>{{ Bulan-tahun group untuk data  }}</h2> -->
-      <ng-container *ngIf="md.bill_references; else finesReferences">
-        <div class="mb-2">
-          <div class="p-4 rounded-lg w-full bg-[var(--ion-color-tertiary)]">
+    <div *ngFor="let monthYear of getMonthYears()">
+      <h2 class="text-lg font-bold">{{ monthYear }}</h2>
+      <div *ngFor="let item of groupedData[monthYear]">
+        <ng-container *ngIf="item.bill_references; else finesReferences">
+          <div class="p-4 rounded-xl w-full bg-[var(--ion-color-tertiary)] mb-2">
+            <div *ngIf="item.is_pay" class="flex flex-col items-center z-10 absolute">
+              <img
+                alt="IFS360"
+                class="w-[6.5rem] h-[6.5rem] mr-[-25px] mt-[-15px] ml-[161px]"
+                src="assets/icon/resident-icon/payment-paid.png"
+              />
+            </div>
             <div class="flex flex-row justify-between font-bold items-center">
-              <div *ngIf="md.is_pay" class="flex flex-col items-center z-10 absolute">
-                <img
-                  alt="IFS360"
-                  class="w-[4.5rem] h-[4.5rem] mr-[-25px] ml-[130px]"
-                  src="assets/icon/resident-icon/payment-paid.png"
-                />
-              </div>
               <div class="flex flex-col w-4/6">
                 <div class="text-base font-extrabold">
-                  {{md.bill_references}}
+                  {{ item.bill_references }}
                 </div>
-                <div *ngIf="md.description" class="text-base cw-3:text-[13px] font-thin">
-                  {{md.bill_name}}
+                <div *ngIf="item.description" class="text-base cw-3:text-[13px] font-thin">
+                  {{ item.description }}
                 </div>
                 <div class="text-base cw-3:text-[13px] font-thin">
-                  {{functionMainService.convertToDDMMYYYY(md.start_date)}}
+                  {{ functionMainService.convertToDDMMYYYY(item.pay_date) }}
                 </div>
-                <div *ngIf="md.overdue === 'Yes'" class="text-base cw-3:text-[13px] font-thin">
+                <div class="text-base cw-3:text-[13px] font-thin">
+                  S${{ item.total_bill.toFixed(2) }}
+                </div>
+                <div *ngIf="item.overdue === 'Yes'" class="text-base cw-3:text-[13px] font-thin">
                   This bill is overdue
-                </div>
-              </div>
-              <div class="flex flex-col w-1/4 cw-3:w-[93px] items-center text-base">
-                <div>
-                  S${{md.total_bill}}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </ng-container>
-      <ng-template #finesReferences>
-        <app-small-bills-card-detailed [fines]="md"></app-small-bills-card-detailed>
-      </ng-template>
+        </ng-container>
+        <ng-template #finesReferences>
+          <div class="p-4 rounded-xl w-full bg-[var(--ion-color-tertiary)] mb-2">
+            <div *ngIf="item.is_pay" class="flex flex-col items-center z-10 absolute">
+              <img
+                alt="IFS360"
+                class="w-[7.5rem] h-[7.5rem] mr-[-25px] mt-[-12px] ml-[148px]"
+                src="assets/icon/resident-icon/payment-paid.png"
+              />
+            </div>
+            <div class="flex flex-row justify-between font-bold items-center">
+              <div class="flex flex-col w-4/6">
+                <div class="text-base font-extrabold">
+                  {{ item.fines_references }}
+                </div>
+                <div *ngIf="item.offence_data" class="text-base cw-3:text-[13px] font-thin">
+                  {{ item.offence_data[0].vehicle_number }}
+                </div>
+                <div class="text-base cw-3:text-[13px] font-thin">
+                  {{ functionMainService.convertToDDMMYYYY(item.pay_date) }}
+                </div>
+                <div class="text-base cw-3:text-[13px] font-thin">
+                  S${{ item.total_bill.toFixed(2) }}
+                </div>
+                <div *ngIf="item.overdue" class="text-base cw-3:text-[13px] font-thin">
+                  This bill is overdue
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
     <ion-modal id="choose-date-modal" keep-contents-mounted="true" [isOpen]="isDatePickerOpen" (didDismiss)="isDatePickerOpen = false">
       <ng-template>

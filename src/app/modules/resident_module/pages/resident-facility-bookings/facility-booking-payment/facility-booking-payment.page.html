@@ -26,35 +26,105 @@
         </div>
       </ng-container>
 
-      <table>
-        <tr>
-          <td><strong>Facility</strong></td>
-          <td>: {{ bookingDetails?.facilityName }}</td>
-        </tr>
-        <tr>
-          <td><strong>Event Date</strong></td>
-          <td>: {{ functionMainService.convertToDDMMYYYY(eventDate) }}</td>
-        </tr>
-        <tr>
-          <td><strong>Booking Time</strong></td>
-          <td>: {{ bookingDetails?.bookingTime }}</td>
-        </tr>
-      </table>
-      
-      <div class="mt-4">
-        <p class="font-bold">Payment Breakdown</p>
-        <div class="flex justify-between">
-          <p>Booking Fee</p>
-          <p>${{ bookingDetails?.bookingFee?.toFixed(2) }}</p>
+      <div *ngIf="bookingDetails?.type === 'BookingState'">
+        <table>
+          <tr>
+            <td><strong>Facility</strong></td>
+            <td>: {{ bookingState?.facilityName || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Event Date</strong></td>
+            <td>: {{ bookingState?.eventDate || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Booking Time</strong></td>
+            <td>: {{ bookingState?.bookingTime || 'N/A' }}</td>
+          </tr>
+        </table>
+        
+        <div class="mt-4">
+          <p class="font-bold">Payment Breakdown</p>
+          <div class="flex justify-between">
+            <p>Booking Fee</p>
+            <p>${{ bookingState?.bookingFee?.toFixed(2) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Deposit</p>
+            <p>${{ bookingState?.deposit?.toFixed(2) }}</p>
+          </div>
+          <hr class="my-2">
+          <div class="flex justify-between font-bold">
+            <p>Grand Total</p>
+            <p>${{ calculateTotal(bookingState?.bookingFee, bookingState?.deposit)?.toFixed(2) }}</p>
+          </div>
         </div>
-        <div class="flex justify-between">
-          <p>Deposit</p>
-          <p>${{ bookingDetails?.deposit?.toFixed(2) }}</p>
+      </div>
+
+      <div *ngIf="bookingDetails?.type === 'FromPlaceBooking'">
+        <table>
+          <tr>
+            <td><strong>Facility</strong></td>
+            <td>: {{ fromPlaceBooking?.facility_name || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Event Date</strong></td>
+            <td>: {{ convertToDDMMYYYY(fromPlaceBooking?.booking_date) || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Booking Time</strong></td>
+            <td>: {{ formatTime(fromPlaceBooking?.start_datetime) || 'N/A' }} - {{ formatTime(fromPlaceBooking?.stop_datettime) || 'N/A' }}</td>
+          </tr>
+        </table>
+        
+        <div class="mt-4">
+          <p class="font-bold">Payment Breakdown</p>
+          <div class="flex justify-between">
+            <p>Booking Fee</p>
+            <p>${{ fromPlaceBooking?.amount_total?.toFixed(2) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Deposit</p>
+            <p>${{ fromPlaceBooking?.amount_deposit?.toFixed(2) }}</p>
+          </div>
+          <hr class="my-2">
+          <div class="flex justify-between font-bold">
+            <p>Grand Total</p>
+            <p>${{ calculateTotal(fromPlaceBooking?.amount_total, fromPlaceBooking?.amount_deposit)?.toFixed(2) }}</p>
+          </div>
         </div>
-        <hr class="my-2">
-        <div class="flex justify-between font-bold">
-          <p>Grand Total</p>
-          <p>${{ calculateTotal().toFixed(2) }}</p>
+      </div>
+
+      <div *ngIf="bookingDetails?.type === 'FromHistoryForm'">
+        <table>
+          <tr>
+            <td><strong>Facility</strong></td>
+            <td>: {{ fromHistoryForm?.facilityName || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Event Date</strong></td>
+            <td>: {{ fromHistoryForm?.eventDate || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Booking Time</strong></td>
+            <td>: {{ fromHistoryForm?.bookingTime || 'N/A' }}</td>
+          </tr>
+        </table>
+        
+        <div class="mt-4">
+          <p class="font-bold">Payment Breakdown</p>
+          <div class="flex justify-between">
+            <p>Booking Fee</p>
+            <p>${{ fromHistoryForm?.bookingFee?.toFixed(2) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Deposit</p>
+            <p>${{ fromHistoryForm?.deposit?.toFixed(2) }}</p>
+          </div>
+          <hr class="my-2">
+          <div class="flex justify-between font-bold">
+            <p>Grand Total</p>
+            <p>${{ calculateTotal(fromHistoryForm?.bookingFee, fromHistoryForm?.deposit)?.toFixed(2) }}</p>
+          </div>
         </div>
       </div>
 
@@ -95,11 +165,25 @@
 
       <!-- Tombol Proceed to Payment -->
       <div class="text-center mb-4">
-        <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow'">
+        <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow' && bookingDetails?.type === 'BookingState'">
           <app-visitor-button 
             [text]="'Proceed to Payment'" 
             [extraClass]="'bg-[#10421d] text-[white] w-full'"
-            (click)="proceedToPayment()">
+            (click)="proceedToPayment(bookingState?.booking_id)">
+          </app-visitor-button>
+        </div>
+        <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow' && bookingDetails?.type === 'FromPlaceBooking'">
+          <app-visitor-button 
+            [text]="'Proceed to Payment'" 
+            [extraClass]="'bg-[#10421d] text-[white] w-full'"
+            (click)="proceedToPayment(fromPlaceBooking?.bookingId)">
+          </app-visitor-button>
+        </div>
+        <div *ngIf="!isPaymentProcessed && selectedPaymentMethod === 'paynow' && bookingDetails?.type === 'FromHistoryForm'">
+          <app-visitor-button 
+            [text]="'Proceed to Payment'" 
+            [extraClass]="'bg-[#10421d] text-[white] w-full'"
+            (click)="proceedToPayment(fromHistoryForm?.bookingId)">
           </app-visitor-button>
         </div>
         <div *ngIf="isPaymentProcessed">

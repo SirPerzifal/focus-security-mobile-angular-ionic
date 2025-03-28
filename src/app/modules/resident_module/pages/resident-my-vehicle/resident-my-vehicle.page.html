@@ -64,7 +64,7 @@
         <!-- </div> -->
         <div class="flex mt-2 space-x-2">
           <div class="flex flex-row items-center w-full space-x-2">
-            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" *ngIf="vehicle.status !== 'approved' && vehicle.status !== 'Approved' && vehicle.status !== 'pending_approval' && vehicle.status !== 'Pending Approval' && vehicle.status !== 'Rejected' && vehicle.status !== 'rejected'">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" *ngIf="vehicle.status !== 'approved' && vehicle.status !== 'Approved' && vehicle.status !== 'pending_approval' && vehicle.status !== 'Pending Approval' && vehicle.status !== 'Rejected' && vehicle.status !== 'rejected'" (click)="navigateToVehiclePayment(vehicle)">
               Pay Now
             </button>
             <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold" (click)="navigateToVehicleDetail(vehicle)">

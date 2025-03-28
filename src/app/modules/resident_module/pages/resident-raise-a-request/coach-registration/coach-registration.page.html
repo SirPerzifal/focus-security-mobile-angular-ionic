@@ -201,6 +201,25 @@
             </app-text-input>
           </div>
         </div>
+
+        <div class="w-full mt-2" *ngIf="amountType.isRequirePayment">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Amount</p>
+            <select name="select_show_amount" id="select_show_amount" (change)="onShowAmountChange($event)" class="ml-1">
+              <option value="total">Total</option>
+              <option value="untaxed">Untaxed</option>
+              <option value="taxed">Taxed</option>
+            </select>
+          </div>
+          <app-text-input [id]="'amount_payable'"
+            [placeholder]="'S$____'"
+            [(ngModel)]="amountPayable"
+            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+            [isReadonly]="true">
+          </app-text-input>
+        </div>
+
         <div class="flex flex-row mt-4 text-base">
           <label class="mr-1 rounded font-bold flex items-center">
             <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
@@ -210,7 +229,7 @@
         <button 
           [disabled]="!agreementChecked"
           [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-          class="mt-2 w-full text-base rounded h-10 font-bold" (click)="presentChoosePaymentMethodeModal()">
+          class="mt-2 w-full text-base rounded h-10 font-bold" (click)="processSubmit()">
           Submit for Approval
         </button>
       </div>

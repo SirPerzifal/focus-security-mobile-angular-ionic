@@ -59,6 +59,16 @@ export class ResidentMyVehiclePage implements OnInit {
     })
   }
 
+  ionViewWillEnter() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value) {
+        const parseValue = JSON.parse(value.value);
+        this.unitId = Number(parseValue.unit_id);
+        this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
+      }
+    })
+  }
+
   // Method untuk navigasi ke halaman detail
   navigateToVehicleDetail(vehicle: Vehicle) {
     // Gunakan NavigationExtras untuk membawa data
@@ -78,6 +88,14 @@ export class ResidentMyVehiclePage implements OnInit {
     });
   }
 
+  navigateToVehiclePayment(vehicle: any) {
+    this.router.navigate(['/my-vehicle-payment-form'], {
+      state: {
+        vehicleId: vehicle.id
+      }
+    });
+  }
+
   loadVehicleDetails() {
     this.myVehicleService.getVehicleDetail(this.unitId).subscribe(
       response => {
@@ -91,7 +109,7 @@ export class ResidentMyVehiclePage implements OnInit {
             make: vehicle.vehicle_make,
             colour: vehicle.vehicle_color || '-',
             type: vehicle.vehicle_type,
-            fees: 'S$0.00', // Anda dapat menyesuaikan ini berdasarkan logika Anda
+            fees: `S$${vehicle.vehicle_fee}`, // Anda dapat menyesuaikan ini berdasarkan logika Anda
             isPrimary:vehicle.is_primary_vehicle
           }));
           this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
@@ -103,7 +121,6 @@ export class ResidentMyVehiclePage implements OnInit {
         }
       },
       error => {
-        this.presentToast('Data fetched failed!', 'danger');
         console.error('HTTP Error:', error);
       }
     );

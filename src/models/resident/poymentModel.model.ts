@@ -2,8 +2,9 @@ export interface payment {
     id: number,
     title: string,
     description: string,
-    total: string,
+    total: number,
     date: string,
+    overdue_in: string,
     overdue: string
 }
 
@@ -12,7 +13,8 @@ export interface fines {
     fines_references : string,
     fines_name : string,
     start_date : string,
-    total_bill : string,
+    due_date : string,
+    total_bill : number,
     is_pay : boolean,
     overdue: boolean, // Menentukan status overdue
     offence_data : [

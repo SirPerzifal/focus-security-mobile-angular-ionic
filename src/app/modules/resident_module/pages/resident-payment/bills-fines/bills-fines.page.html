@@ -18,7 +18,35 @@
               <ion-spinner name="circular"></ion-spinner>
             </div>
             <div *ngFor="let fine of fines">
-              <app-small-bills-card-detailed [fines]="fine" (buttonClick)="payNow($event)"></app-small-bills-card-detailed>
+              <div [ngClass]="fine.overdue ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'" class="p-4 rounded-xl w-full">
+                <div class="flex flex-row justify-between font-bold items-center">
+                  <div class="flex flex-col w-4/6">
+                    <div class="text-base font-extrabold">
+                      {{ fine.fines_references }}
+                    </div>
+                    <div *ngIf="fine.offence_data" class="text-base cw-3:text-[13px] font-thin">
+                      {{ fine.offence_data[0].vehicle_number }}
+                    </div>
+                    <div class="text-base cw-3:text-[13px] font-thin">
+                      {{ functionMainService.convertToDDMMYYYY(fine.start_date) }}
+                    </div>
+                    <div class="text-base cw-3:text-[13px] font-thin">
+                      Overdue In :{{ functionMainService.convertToDDMMYYYY(fine.due_date) }}
+                    </div>
+                    <div *ngIf="fine.overdue" class="text-base cw-3:text-[13px] font-thin">
+                      This bill is overdue
+                    </div>
+                  </div>
+                  <div class="flex flex-col w-1/4 cw-3:w-[93px] items-center text-base">
+                    <div>
+                      S${{ fine.total_bill.toFixed(2) }}
+                    </div>
+                    <button class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full" (click)="payNow(fine.id)">
+                      Pay Now
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

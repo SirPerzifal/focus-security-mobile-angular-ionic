@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
 import { FamilyService } from 'src/app/service/resident/family/family.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-family-edit-member',
@@ -24,6 +24,7 @@ export class FamilyEditMemberPage implements OnInit {
     nickname: '',
     email_address: '',
     image_family: '',
+    reject_reason: '',
     mobile_number: '',
     type_of_residence: "primary_contact",
     tenancies: {
@@ -35,10 +36,10 @@ export class FamilyEditMemberPage implements OnInit {
   end_of_tenancy = ''
   selectedImageName: string = ''; // New property to hold the selected file name
 
-  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController, private getUserInfoService: GetUserInfoService) {
+  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController, private mainApiResident: MainApiResidentService) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, };
+    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
     if (state) {
       this.formData.unit_id = state.id,
       this.formData.type_of_residence = state.hard_type
@@ -48,8 +49,8 @@ export class FamilyEditMemberPage implements OnInit {
       this.formData.email_address= state.email
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
       this.formData.image_family = state.profile_image
-    } 
-    // console.log(this.formData)
+      this.formData.reject_reason = state.reject_reason
+    }
   }
 
   mobile_temp = ''
@@ -394,6 +395,23 @@ export class FamilyEditMemberPage implements OnInit {
         tenant: this.formData.tenancies.tenancies,
       }
     });
+  }
+
+  resubmitForApproval() {
+    this.mainApiResident.endpointProcess({
+      full_name: this.formData.full_name,
+      nickname: this.formData.nickname,
+      email_address: this.formData.email_address,
+      mobile_number: this.formData.mobile_number,
+      type_of_residence: this.formData.type_of_residence,
+      tenancies: this.formData.tenancies,
+      unit: this.unitId,
+      helper_work_permit: '',
+      family_id: this.formData.unit_id,
+      resubmit_id: this.formData.unit_id
+    }, 'post/post_family_detail').subscribe((response: any) => {
+      this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
+    })
   }
 
   ngOnInit() {

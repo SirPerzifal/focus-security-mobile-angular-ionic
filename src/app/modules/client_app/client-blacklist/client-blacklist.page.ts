@@ -318,6 +318,11 @@ export class ClientBlacklistPage implements OnInit {
     if (!this.formData.contact_no) {
       errMsg += 'Visitor contact number is required! \n'
     }
+    if (this.formData.contact_no) {
+      if (this.formData.contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
+    }
     if (!this.formData.reason) {
       errMsg += 'Reason of ban is required! \n'
     }

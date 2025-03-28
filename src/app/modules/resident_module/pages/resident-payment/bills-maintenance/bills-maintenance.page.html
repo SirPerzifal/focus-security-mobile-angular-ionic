@@ -22,13 +22,16 @@
                 <div class="flex flex-row justify-between font-bold items-center">
                   <div class="flex flex-col w-4/6">
                     <div class="text-base font-extrabold">
-                      {{payment.title}}
+                      {{ payment.title }}
                     </div>
                     <div *ngIf="payment.description" class="text-base cw-3:text-[13px] font-thin">
-                      {{payment.description}}
+                      {{ payment.description }}
                     </div>
                     <div class="text-base cw-3:text-[13px] font-thin">
-                      {{functionMain.convertToDDMMYYYY(payment.date)}}
+                      {{ functionMain.convertToDDMMYYYY(payment.date) }}
+                    </div>
+                    <div class="text-base cw-3:text-[13px] font-thin">
+                      Overdue In :{{ functionMain.convertToDDMMYYYY(payment.overdue_in) }}
                     </div>
                     <div *ngIf="payment.overdue === 'Yes'" class="text-base cw-3:text-[13px] font-thin">
                       This bill is overdue
@@ -36,13 +39,13 @@
                   </div>
                   <div class="flex flex-col w-1/4 cw-3:w-[93px] items-center text-base">
                     <div>
-                      S${{payment.total}}
+                      S${{ payment.total.toFixed(2) }}
                     </div>
                     <button class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full" (click)="payNow(payment.id)">
                       Pay Now
                     </button>
                   </div>
-                </div>7
+                </div>
               </div>
             </div>
           </div>

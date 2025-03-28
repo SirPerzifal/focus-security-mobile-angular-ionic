@@ -112,6 +112,7 @@ export class CollectionModulePage implements OnInit {
       setTimeout(()=>{
         this.showDrive = true;
         this.showDriveTrans = false
+        this.refreshVehicle()
       }, 300)
     }
   }
@@ -213,6 +214,11 @@ export class CollectionModulePage implements OnInit {
     if (!this.walkInFormData.visitor_contact_no) {
       errMsg += 'Contact number is required!\n';
     }
+    if (this.walkInFormData.visitor_contact_no) {
+      if (this.walkInFormData.visitor_contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
+    }
     if (!this.walkInFormData.block || !this.walkInFormData.unit) {
       errMsg += 'Block and unit must be selected!\n';
     }
@@ -251,6 +257,11 @@ export class CollectionModulePage implements OnInit {
     }
     if (!this.driveInFormData.visitor_contact_no) {
       errMsg += 'Contact number is required!\n';
+    }
+    if (this.driveInFormData.visitor_contact_no) {
+      if (this.driveInFormData.visitor_contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (!this.driveInFormData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
@@ -303,11 +314,14 @@ export class CollectionModulePage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.driveInFormData.visitor_vehicle = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+    })
+    // console.log("Vehicle Refresh", randomVhc)
   }
 
   contactUnit = ''

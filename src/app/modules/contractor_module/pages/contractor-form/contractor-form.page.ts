@@ -99,8 +99,10 @@ export class ContractorFormPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadProjectName()
-    this.loadBlock();
+    this.loadProjectName().then(() => {
+      this.loadBlock();
+      this.refreshVehicle()
+    })
     this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
   }
 
@@ -154,6 +156,11 @@ export class ContractorFormPage implements OnInit {
     }
     if (!contractorContactNo) {
       errMsg += 'Contact number is required! \n'
+    }
+    if (contractorContactNo) {
+      if (contractorContactNo.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
     }
     if (!this.identificationType) {
       errMsg += 'Identification type must be selected! \n'
@@ -304,11 +311,15 @@ export class ContractorFormPage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.contractorVehicleNumberInput.value = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    // this.contractorVehicleNumberInput.value = randomVhc
+    // console.log("Vehicle Refresh", randomVhc)
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.contractorVehicleNumberInput.value = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 
   formData = {

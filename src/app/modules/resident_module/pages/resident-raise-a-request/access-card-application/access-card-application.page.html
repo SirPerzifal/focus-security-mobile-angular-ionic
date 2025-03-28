@@ -138,7 +138,7 @@
             <tbody>
               <tr *ngFor="let fam of expectedFamily">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="card_data_member_or_family_{{fam.family_id}}" (change)="onNewCardSelect(fam.family_id)" name="new_card" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input id="card_data_member_or_family_{{fam.family_id}}" (change)="onNewCardSelect(fam.family_id)" name="new_card" type="checkbox" class="w-4 h-4 cw-3:w-2 cw-3:h-2" [checked]="formData.family_id === fam.family_id">
                 </td>
                 <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"><label for="card_data_member_or_family_{{fam.family_id}}">{{ fam.family_name }} , {{ fam.member_type }}</label></td>
               </tr>
@@ -161,9 +161,9 @@
       </app-text-input>
     </div>
 
-    <div class="w-full mt-2">
+    <div class="w-full mt-2" *ngIf="amountType.isRequirePayment">
       <div class="flex flex-row justify-start mb-1">
-        <p class="text-base font-bold">Amount Payable</p>
+        <p class="text-base font-bold">Amount</p>
         <select name="select_show_amount" id="select_show_amount" (change)="onShowAmountChange($event)" class="ml-1">
           <option value="total">Total</option>
           <option value="untaxed">Untaxed</option>
@@ -188,7 +188,7 @@
     <button
       [disabled]="!agreementChecked"
       [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="presentChoosePaymentMethodeModal()">
+      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="processSubmit()">
       Submit for Approval
     </button>
   </div>

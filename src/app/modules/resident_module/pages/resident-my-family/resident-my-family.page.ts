@@ -29,6 +29,10 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    this.familyData.pop();
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
@@ -38,9 +42,8 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
     })
   }
 
-
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '' }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '' }
   ];
 
   directTo() {
@@ -58,8 +61,6 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
     this.familyService.getFamilyList(Number(this.unitId)).subscribe(
       res => {
         var result = res.result['response_result'];
-        console.log('unit', res);
-        
         result.forEach((item: any) => {
           // Cek apakah stateFill ada
           if (this.stateFill === 'helper') {
@@ -77,7 +78,8 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
                 end_date: item['end_of_tenancy_aggrement'],
                 status: item['states'],
                 tenancy_agreement: item['tenancy_aggrement'],
-                family_photo: item['family_photo']
+                family_photo: item['family_photo'],
+                reject_reason: item['reject_reason']
               });
             }
           } else {
@@ -94,7 +96,8 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
               end_date: item['end_of_tenancy_aggrement'],
               status: item['states'],
               tenancy_agreement: item['tenancy_aggrement'],
-              family_photo: item['family_photo']
+              family_photo: item['family_photo'],
+              reject_reason: item['reject_reason']
             });
           }
         });

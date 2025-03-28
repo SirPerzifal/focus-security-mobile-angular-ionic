@@ -31,6 +31,7 @@ export class ChangePasswordPage implements OnInit, OnDestroy{
 
   currentPassStore: string = '';
 
+  showPassword: string = 'password';
   passwordForm = {
     currentPassword: '',
     newPassword: '',
@@ -92,7 +93,23 @@ export class ChangePasswordPage implements OnInit, OnDestroy{
     }
   }
 
-  onCurrentPasswordChange(password: string): void {
+  addMarginBottomExtend: boolean = false;
+
+  // Fungsi untuk mengubah nilai addMarginBottomExtend
+  handleFocus() {
+    this.addMarginBottomExtend = true;
+  }
+
+  handleBlur() {
+    this.addMarginBottomExtend = false;
+  }
+
+  onToggleShowPassword() {
+    this.showPassword = this.showPassword === 'password' ? 'text' : 'password';
+  }
+
+  onCurrentPasswordChange(event: any): void {
+    const password = event.target.value;
     this.passwordForm.currentPassword = password;
   }
 

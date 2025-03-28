@@ -6,7 +6,6 @@ import { ModalController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
 import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
@@ -36,7 +35,6 @@ export class FacilityPlaceBookingPage implements OnInit {
     private router: Router, 
     private facilityService: NewBookingService,
     private toastController: ToastController,
-    private getUserInfoService: GetUserInfoService,
     private modalController: ModalController
   ) { }
 
@@ -209,17 +207,17 @@ export class FacilityPlaceBookingPage implements OnInit {
         next: (response) => {
           this.router.navigate(['/facility-booking-payment'], {
             state: {
-              roomId: this.roomId,
-              eventDate: formattedDate,
-              bookingTime: `${this.selectedTimeSlot.start_time} - ${this.selectedTimeSlot.end_time}`,
-              facilityName: this.facilityDetail?.facility_name,
-              startTimeString: startTimeString,
-              endTimeString: endTimeString,
-              unitId: this.unitId,
-              partnerId: this.partnerId,
-              bookingFee: response.result.booking_detail.amount_total,
-              deposit: 0,
-              booking_id: response.result.booking_detail.booking_id
+              type: 'FromPlaceBooking',
+              amount_deposit: response.result.booking_detail.amount_deposit,
+              amount_taxed: response.result.booking_detail.amount_taxed,
+              amount_total: response.result.booking_detail.amount_total,
+              amount_untaxed: response.result.booking_detail.amount_untaxed,
+              booked_by: response.result.booking_detail.booked_by,
+              booking_date: response.result.booking_detail.booking_date,
+              bookingId: response.result.booking_detail.booking_id,
+              facility_name: response.result.booking_detail.facility_name,
+              start_datetime: response.result.booking_detail.start_datetime,
+              stop_datettime: response.result.booking_detail.stop_datettime,
             }
           })
         },

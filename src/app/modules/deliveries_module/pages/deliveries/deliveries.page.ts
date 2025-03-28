@@ -144,6 +144,11 @@ export class DeliveriesPage implements OnInit {
     if (!this.formData.contact_number){
       errMsg += 'Please insert a contact number!\n';
     }
+    if (this.formData.contact_number) {
+      if (this.formData.contact_number.length <= 2 ) {
+        errMsg += 'Please insert a contact number! \n'
+      }
+    }
     if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number){
       errMsg += 'Please insert a vehicle number!\n';
     }
@@ -242,6 +247,11 @@ export class DeliveriesPage implements OnInit {
     }
     if (!this.formData.contact_number){
       errMsg += 'Please insert visitor contact number!\n';
+    }
+    if (this.formData.contact_number) {
+      if (this.formData.contact_number.length <= 2 ) {
+        errMsg += 'Please insert a contact number! \n'
+      }
     }
     if (!this.formData.vehicle_number){
       errMsg += 'Please insert visitor vehicle number!\n';
@@ -354,6 +364,7 @@ export class DeliveriesPage implements OnInit {
       setTimeout(() => {
         this.packageDeliveries = true;
         this.packageDeliveriesTrans = false
+        this.refreshVehicle()
       }, 300)
     }
   }
@@ -447,6 +458,9 @@ export class DeliveriesPage implements OnInit {
       this.food_delivery_type = ''
     } else {
       this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
+      if (selectedButton.text == 'drive_in') {
+        this.refreshVehicle()
+      }
     }
     
     console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
@@ -548,11 +562,15 @@ export class DeliveriesPage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.formData.vehicle_number = randomVhc
-    console.log("Vehicle Refresh", this.formData.vehicle_number)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    // this.formData.vehicle_number = randomVhc
+    // console.log("Vehicle Refresh", this.formData.vehicle_number)
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 
   contactUnit = ''

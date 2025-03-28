@@ -5,15 +5,18 @@ import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 interface BookingData {
+  bookingId: number;
   facilityName: string;
   eventDate: string;
   eventDay: string;
   bookingTime: string;
   bookingFee: number;
+  bookingTax: number;
   deposit: number;
   bookedBy: string;
   status: string;
   from: string;
+  amountDeposit: number;
 }
 
 @Component({
@@ -91,9 +94,30 @@ export class FacilityHistoryFormPage implements OnInit, OnDestroy {
     // console.log('Sending email for booking:', this.bookingData);
   }
 
+  navigateToProcessPayment(bookingData: any) {
+    this.router.navigate(['/facility-booking-payment'], {
+      state: {
+        bookingId: bookingData.booking_id,
+        type: "FromHistoryForm",
+        facilityName: bookingData.facilityName,
+        eventDate: bookingData.eventDate,
+        bookingTime: bookingData.bookingTime,
+        startTime: bookingData.startTime,
+        endTime: bookingData.endTime,
+        bookingFee: bookingData.bookingFee,
+        bookingTax: bookingData.bookingTax,
+        deposit: bookingData.deposit,
+        bookedBy: bookingData.bookedBy,
+        status: bookingData.status,
+        from: 'Active',
+        amountDeposit: bookingData.amountDeposit
+      }
+    })
+  }
+
   calculateTotal(): number {
     if(this.bookingData){
-      return this.bookingData.bookingFee + this.bookingData.deposit;
+      return this.bookingData.bookingFee + this.bookingData.amountDeposit;
     }else{
       return 0
     }

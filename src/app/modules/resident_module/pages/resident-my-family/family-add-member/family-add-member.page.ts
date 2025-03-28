@@ -104,7 +104,7 @@ export class FamilyAddMemberPage implements OnInit {
           this.formData.type_of_residence === 'helper' ? this.formData.helper_work_permit : '' // Tambahkan ini
         ).subscribe(
           res => {
-            // console.log(res);
+            console.log(res);
             if (res.result.response_code == 200) {
               this.presentToast('Success Add Record', 'success');
               this.router.navigate(['resident-my-family']);

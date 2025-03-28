@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="topTitle" [text_second]="secondTitle" />
+  <app-resident-header [is_client]="true"  [text]="topTitle" [text_second]="secondTitle" />
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -7,27 +7,31 @@
   <div class="flex flex-col mx-4 mb-24">
     <div class="flex flex-col w-full">
       <div [ngClass]="'rounded p-5 my-4 mt-4 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
-        <p class="font-bold text-base text-black ">{{ ticketDetail.ticket_name }}</p>
-        <span [innerHtml]="ticketDetail.summary" *ngIf="ticketDetail.summary"></span>
-        <table class="w-full mt-2 mb-2">
-          <tr>
-            <td class="font-bold table-cell text-base text-black">Reported Issue On</td>
-            <td class="ml-2 table-cell text-base text-black">: {{ ticketDetail.issued_on ?
-              functionMain.convertDateExtend(ticketDetail.issued_on) : '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-bold table-cell text-base text-black">Ticket Status</td>
-            <td class="ml-2 table-cell text-base text-black">: {{ ticket.ticket_status == 'New' ? 'Open' : 'Closed' }}</td>
-          </tr>
-          <tr *ngIf="ticketDetail.solved_on">
-            <td class="font-bold table-cell text-base text-black">Solved On</td>
-            <td class="ml-2 table-cell text-base text-black">: {{ functionMain.convertDateExtend(ticketDetail.solved_on)
-              }}</td>
-          </tr>
-        </table>
-        <app-image-zoom [imageZoom]="functionMain.getImage(ticketDetail.attachment)" *ngIf="ticketDetail.attachment && !isLoading" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
-        <div *ngIf="isLoading" class="flex justify-center items-center h-32 w-32">
-          <ion-spinner name="circular"></ion-spinner>
+        <div class="flex flex-row justify-center" *ngIf="isLoading">
+          <div class="flex justify-center items-center h-32 w-32">
+            <ion-spinner name="circular"></ion-spinner>
+          </div>
+        </div>
+        <div class="w-full flex flex-col" *ngIf="!isLoading">
+          <p class="font-bold text-base text-black ">{{ ticketDetail.ticket_name }}</p>
+          <span [innerHtml]="ticketDetail.summary" *ngIf="ticketDetail.summary"></span>
+          <table class="w-full mt-2 mb-2">
+            <tr>
+              <td class="font-bold table-cell text-base text-black">Reported Issue On</td>
+              <td class="ml-2 table-cell text-base text-black">: {{ ticketDetail.issued_on ?
+                functionMain.convertDateExtend(ticketDetail.issued_on) : '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-bold table-cell text-base text-black">Ticket Status</td>
+              <td class="ml-2 table-cell text-base text-black">: {{ ticket.ticket_status == 'New' ? 'Open' : 'Closed' }}</td>
+            </tr>
+            <tr *ngIf="ticketDetail.solved_on">
+              <td class="font-bold table-cell text-base text-black">Solved On</td>
+              <td class="ml-2 table-cell text-base text-black">: {{ functionMain.convertDateExtend(ticketDetail.solved_on)
+                }}</td>
+            </tr>
+          </table>
+          <app-image-zoom [imageZoom]="functionMain.getImage(ticketDetail.attachment)" *ngIf="ticketDetail.attachment" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
         </div>
       </div>
       <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status != 'Solved'">

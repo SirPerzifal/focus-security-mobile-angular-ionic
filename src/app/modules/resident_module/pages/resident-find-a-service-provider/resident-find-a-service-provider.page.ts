@@ -58,8 +58,8 @@ export class ResidentFindAServiceProviderPage implements OnInit {
           // console.log('Mapped Service Providers:', this.quickDials);
           // console.log('Mapped Service Providers:', response);
         } else {
-          this.presentToast('Failed to load booking data', 'danger');
-          console.error('Error:', response);
+            this.isLoading = false;
+            console.error('Error:', response);
         }
       },
       error: (error) => {
@@ -117,5 +117,11 @@ export class ResidentFindAServiceProviderPage implements OnInit {
     record.isResident = true;
     record.requestor_contact_number = record.number;
     await this.webRtcService.createOffer(record);
+  }
+
+  openWhatsApp() {
+    const message = encodeURIComponent("Hello!");
+    const url = `https://wa.me/${this.selectedQuickDial?.number}?text=${message}`;
+    window.open(url, "_blank");
   }
 }

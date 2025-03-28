@@ -41,7 +41,9 @@ export class MoveFormPage implements OnInit {
 
   ngOnInit() {
     // Ambil parameter dari route
-    this.loadProjectName()
+    this.loadProjectName().then(() => {
+      this.refreshVehicle()
+    })
     this.route.queryParams.subscribe(params => {
       console.log(params)
       this.block = params['block'] || '';
@@ -163,6 +165,11 @@ export class MoveFormPage implements OnInit {
     if (!this.contact_number) {
       errMsg += 'Contact number is required! \n'
     }
+    if (this.contact_number) {
+      if (this.contact_number.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
+    }
     if (!this.identificationType) {
       errMsg += 'Identification type must be selected! \n'
     }
@@ -244,11 +251,15 @@ export class MoveFormPage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle() {
-    let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    let front = ['SBA', 'SBS', 'SAA']
-    let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    this.vehicle_number = randomVhc
-    console.log("Vehicle Refresh", randomVhc)
+    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
+    // let front = ['SBA', 'SBS', 'SAA']
+    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+    // this.vehicle_number = randomVhc
+    // console.log("Vehicle Refresh", randomVhc)
+    this.functionMain.getLprConfig(this.project_id).then((value) => {
+      console.log(value)
+      this.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+    })
   }
 
   onBackHome() {
