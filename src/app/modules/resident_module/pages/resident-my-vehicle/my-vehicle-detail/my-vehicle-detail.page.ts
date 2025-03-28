@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { MyVehicleDetailService } from 'src/app/service/resident/my-vehicle/my-vehicle-detail/my-vehicle-detail.service';
 
 interface Vehicle {
@@ -26,14 +27,14 @@ export class MyVehicleDetailPage implements OnInit {
   vehicle: Vehicle | null = null;
   @ViewChild('extensionRequestModal') extensionRequestModal!: ComponentRef<Component>;
 
-  dateNow: string = String(new Date());
+  dateNow: string = '';
   isExtensionRequestModal: boolean = false;
   formData = {
     vehicleId: 0,
     dateForExtensionRequest: ''
   }
 
-  constructor(private router: Router, private myVehicleDetailService: MyVehicleDetailService, private alertController: AlertController, private modalController: ModalController, public functionMain: FunctionMainService) { }
+  constructor(private router: Router, private myVehicleDetailService: MyVehicleDetailService, private alertController: AlertController, private mainApiResident: MainApiResidentService, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
     // Ambil data yang dikirim dari halaman sebelumnya
@@ -46,6 +47,18 @@ export class MyVehicleDetailPage implements OnInit {
     if (!this.vehicle) {
       this.router.navigate(['/resident-my-vehicle']);
     }
+
+    this.getTodayDate();
+  }
+
+  getTodayDate() {
+    const today = new Date();
+    const string = today.toString;
+    const final = String(today);
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+    const yyyy = today.getFullYear();
+    this.dateNow = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
   }
 
   backToVehicle() {
@@ -121,29 +134,18 @@ export class MyVehicleDetailPage implements OnInit {
 
   submitRequest() {
     const dateInput = this.formData.dateForExtensionRequest; // Ambil nilai dari input tanggal
-    this.modalController.dismiss({ date: dateInput }); // Kembalikan tanggal saat modal ditutup
+    this.mainApiResident.endpointProcess({
+      vehicle_id: this.formData.vehicleId,
+      extension_date: this.formData.dateForExtensionRequest || dateInput
+    }, 'post/vehicle_request_for_extension').subscribe((response: any) => {
+      this.isExtensionRequestModal = false
+      this.router.navigate(['resident-my-vehicle'])
+    })
   }
 
   async requestForExtension(vehicleId: number) {
     this.formData.vehicleId = vehicleId;
     this.isExtensionRequestModal = true; // Set modal menjadi terbuka
-  
-    const modal = await this.modalController.create({
-      component: this.extensionRequestModal,
-      cssClass: 'record-modal',
-    });
-  
-    modal.onDidDismiss().then((result) => {
-      if (result.data) {
-        // Pastikan untuk memeriksa apakah data yang diperlukan ada
-        if (result.data.date) {
-          this.formData.dateForExtensionRequest = result.data.date; // Ambil tanggal dari hasil modal
-
-        }
-      }
-    });
-  
-    return await modal.present();
   }
 
   // Method untuk mendapatkan label status

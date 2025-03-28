@@ -66,29 +66,21 @@
     <button class="mt-2 bg-[var(--ion-color-primary)] text-white w-full text-base rounded h-10 font-bold" (click)="requestForExtension(vehicle.id)">Request For Extension</button>
   </div>
 
-  <ion-modal #extensionRequestModal [isOpen]="isExtensionRequestModal" (didDismiss)="isExtensionRequestModal = false">
+  <ion-modal id="extensionRequestModal" [isOpen]="isExtensionRequestModal" (didDismiss)="isExtensionRequestModal = false">
     <ng-template>
       <div class="wrapper">
-        <h1>Extension Request Modal</h1>
-
-        <ion-list lines="none">
-          <ion-item button="true" detail="false">
-            <div class="w-full mt-1">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Till then you want to extend?</p>
-              </div>
-              <div class="w-full">
-                <app-text-input #extensionRequestDate [id]="'extension_request_date'" [placeholder]="'Extension Request Date'" [min]="dateNow"
-                [customClasses]="{'w-full':true}" [type]="'date'" (change)="isExtensionRequestDateChange($event)"
-                [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}" (value)="formData.dateForExtensionRequest"
-                ></app-text-input>
-              </div>
-            </div>
-          </ion-item>
-          <ion-item button="true" detail="false">
-            <button class="bg-[var(--ion-color-primary)] text-white w-full text-base rounded h-10 font-bold" (click)="submitRequest()">Submit Request</button>
-          </ion-item>
-        </ion-list>
+        <div class="w-full mt-1">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Till then you want to extend?</p>
+          </div>
+          <div class="w-full">
+            <app-text-input #extensionRequestDate [id]="'extension_request_date'" [placeholder]="'Extension Request Date'" [min]="dateNow"
+            [customClasses]="{'w-full':true}" [type]="'date'" (change)="isExtensionRequestDateChange($event)"
+            [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}" (value)="formData.dateForExtensionRequest"
+            ></app-text-input>
+          </div>
+        </div>
+        <button class="bg-[var(--ion-color-primary)] text-white w-full text-base rounded h-10 font-bold mt-2" (click)="submitRequest()">Submit Request</button>
       </div>
     </ng-template>
   </ion-modal>
