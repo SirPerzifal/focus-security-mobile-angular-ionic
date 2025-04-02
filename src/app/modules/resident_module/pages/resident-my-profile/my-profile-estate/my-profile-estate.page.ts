@@ -37,6 +37,11 @@ export class MyProfileEstatePage implements OnInit {
         this.loadEstate(value.value);
       }
     })
+    Preferences.get({key: 'USER_MOBILE'}).then(async (value) => {
+      if (value?.value) {
+        this.loadEstate(value.value);
+      }
+    })
   }
 
   loadEstate(email:string) {

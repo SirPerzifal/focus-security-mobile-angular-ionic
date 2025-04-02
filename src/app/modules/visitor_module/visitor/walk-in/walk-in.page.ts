@@ -348,7 +348,8 @@ export class WalkInPage implements OnInit {
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
-    
+    this.stopScanner()
+    console.log("HEY TEST DESTRoy")
     if (this.routerSubscription) {
       this.stopScanner()
       this.routerSubscription.unsubscribe();

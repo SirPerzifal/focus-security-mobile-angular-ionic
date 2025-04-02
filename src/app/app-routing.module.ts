@@ -746,6 +746,10 @@ const routes: Routes = [
     path: 'my-vehicle-payment-form',
     loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-payment-form/my-vehicle-payment-form.module').then( m => m.MyVehiclePaymentFormPageModule)
   },
+  {
+    path: 'client-payment-settings',
+    loadChildren: () => import('./modules/client_app/client-payment-settings/client-payment-settings.module').then( m => m.ClientPaymentSettingsPageModule)
+  },
   // // rewrite code
   // {
   //   path: 'resident-home-page',

@@ -85,11 +85,8 @@ export class RegisterResidentPage implements OnInit {
     if (!this.formData.nickname) {
       errMsg += 'Nickname is required!\n';
     }
-    if (!this.formData.mobile_number) {
-      errMsg += 'Mobile Number is required!\n';
-    }
-    if (!this.formData.email_address) {
-      errMsg += 'Email Address is required!\n';
+    if (!this.formData.mobile_number && !this.formData.email_address) {
+      errMsg += 'Mobile Number or Email Address is required!\n';
     }
     if (!this.formData.block || !this.formData.unit) {
       errMsg += 'Block and unit must be selected!\n';
@@ -106,6 +103,15 @@ export class RegisterResidentPage implements OnInit {
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
+            this.formData = {
+              full_name: '',
+              nickname: '',
+              email_address: '',
+              mobile_number: '',
+              block: '',
+              unit: '',
+              family_type: ''
+            };
 
             this.router.navigate(['login-end-user'])
             this.presentToast('Please wait for approval', 'success');
@@ -128,15 +134,16 @@ export class RegisterResidentPage implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.project_id = params['projectId']
-    });
-    this.loadBlock();
+    // this.route.queryParams.subscribe(params => {
+    //   this.project_id = params['projectId']
+    // });
     this.route.queryParams.subscribe(params => {
       if (params ) {
         if (params['projectId']){
           console.log(params['projectId']);
           console.log("params['projectId']params['projectId']params['projectId']");
+          this.project_id = params['projectId']
+          this.loadBlock();
           
           // this.loadRecordsWheelClamp('wheel_clamp')
         }else{

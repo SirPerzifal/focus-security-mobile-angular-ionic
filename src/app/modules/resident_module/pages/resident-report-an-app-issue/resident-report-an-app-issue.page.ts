@@ -36,7 +36,7 @@ export class ResidentReportAnAppIssuePage implements OnInit {
         const parseValue = JSON.parse(value.value);
         this.reporterDetailsFrom.name = parseValue.family_name;
         this.reporterDetailsFrom.blockAndUnit = parseValue.block_name + ','+ parseValue.unit_name;
-        this.reporterDetailsFrom.contactNumber = parseValue.family_mobile_number;
+        // this.reporterDetailsFrom.contactNumber = parseValue.family_mobile_number;
         this.reporterDetailsFrom.placeOfResidence = parseValue.project_name;
         this.loadType();
       }
@@ -44,6 +44,11 @@ export class ResidentReportAnAppIssuePage implements OnInit {
     Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
       if (value?.value) {
         this.reporterDetailsFrom.email = value.value;
+      }
+    })
+    Preferences.get({key: 'USER_MOBILE'}).then(async (value) => {
+      if (value?.value) {
+        this.reporterDetailsFrom.contactNumber = value?.value;
       }
     })
   }

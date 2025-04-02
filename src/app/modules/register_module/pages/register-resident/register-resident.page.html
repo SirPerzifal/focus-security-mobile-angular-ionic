@@ -34,8 +34,12 @@
     </div>
     <div class="w-full flex mt-2 justify-between">
       <div class="flex items-center me-4">
-        <input id="owner" type="radio" value="primary_contact" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
-        <label for="owner" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Owner</label>
+        <input id="primary_contact" type="radio" value="primary_contact" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+        <label for="primary_contact" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Primary Contact</label>
+      </div>
+      <div class="flex items-center me-4">
+        <input id="secondary_contact" type="radio" value="secondary_contact" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
+        <label for="secondary_contact" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Secondary Contact</label>
       </div>
       <div class="flex items-center me-4">
           <input id="famili_member" type="radio" value="member" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">

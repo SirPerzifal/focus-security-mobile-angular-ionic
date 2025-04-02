@@ -27,7 +27,6 @@ export class ClientMainService extends ApiService {
     return from(this.loadProjectName()).pipe(
       mergeMap(() => {
         params['project_id'] = this.project_id
-        console.log(params)
         return this.http.post(this.baseUrl + apiUrl, { jsonrpc: '2.0', params: params }, { headers }).pipe(
           catchError(this.handleError)
         );

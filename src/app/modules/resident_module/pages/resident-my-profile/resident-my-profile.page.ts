@@ -48,13 +48,18 @@ export class ResidentMyProfilePage implements OnInit {
         this.userData.type = parseValue.family_type;
         this.userData.block = parseValue.block_name;
         this.userData.unit = parseValue.unit_name;
-        this.userData.contact = parseValue.family_mobile_number;
+        // this.userData.contact = parseValue.family_mobile_number;
         this.imageProfile = parseValue.image_profile;
       }
     })
     Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
       if (value?.value) {
         this.userData.email = value.value;
+      }
+    })
+    Preferences.get({key: 'USER_MOBILE'}).then(async (value) => {
+      if (value?.value) {
+        this.userData.contact = value.value;
       }
     })
     Preferences.get({key: 'PROFILE_IMAGE'}).then(async (value) => {

@@ -59,6 +59,7 @@ export class ResidentHomepagePage implements OnInit {
   ionViewWillEnter() {
     Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
       if(value?.value){
+        if(value?.value){
         Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
           if (value?.value) {
             const valueUseState = JSON.parse(value.value);
@@ -72,7 +73,26 @@ export class ResidentHomepagePage implements OnInit {
             await this.presentModal(this.estate);
           }
         })
-      }
+        }
+    }else{
+      Preferences.get({key: 'USER_MOBILE'}).then(async (value) => {
+        if(value?.value){
+        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+          if (value?.value) {
+            const valueUseState = JSON.parse(value.value);
+            this.isLoading = false;
+            this.setData(valueUseState, '');
+            this.fetchContacts();
+            this.loadCountNotification();
+            this.loadHouseRules();
+          } else {
+            this.isLoading = true;
+            await this.presentModal(this.estate);
+          }
+        })
+        }
+    })
+    }
     })
   }
 

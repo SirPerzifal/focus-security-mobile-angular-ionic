@@ -69,6 +69,7 @@ export class ClientApprovalsPage implements OnInit {
     { src: 'assets/icon/resident-icon/icon1.png', alt: 'Account', route: 'family', text: 'Residents' },
     { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility' },
     { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment' },
+    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension' },
   ];
 
   onClickMenu(menu: any) {
@@ -104,7 +105,7 @@ export class ClientApprovalsPage implements OnInit {
         if (results.result.success) {
           if (results.result.booking.length > 0){
             this.activeApprovals = results.result.booking
-            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval'].includes(approval.states) )
+            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) )
           } else {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
@@ -140,16 +141,7 @@ export class ClientApprovalsPage implements OnInit {
     }
   }
 
-  activeApprovals: any = [
-    {
-      status: 'Approved',
-      typeName: 'Access card',
-      applicationDate: '03/02/2025 12:00:00',
-      vehicleNumber: 'GY 7289 V',
-      startDate: '03/02/2025 18:00:00',
-      endDate: '04/02/2025 00:00:00',
-    }
-  ]
+  activeApprovals: any = []
   showApprovals: any = []
 
   isActive = true
@@ -158,7 +150,7 @@ export class ClientApprovalsPage implements OnInit {
   toggleShowActive() {
     this.isClosed = false
     this.isActive = true
-    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval'].includes(approval.states) )
+    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) )
   }
 
   toggleShowClosed() {

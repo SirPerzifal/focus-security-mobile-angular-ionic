@@ -8,12 +8,28 @@ import { LoginUserDto } from 'src/models/resident/auth.model';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 
+interface Estate {
+  family_id: number;
+  family_name: string;
+  family_email: string;
+  family_mobile_number: string;
+  family_type: string;
+  unit_id: number;
+  unit_name: string;
+  block_id: number;
+  block_name: string;
+  project_id: number;
+  project_name: string;
+}
+
 @Component({
   selector: 'app-login-end-user',
   templateUrl: './login-end-user.page.html',
   styleUrls: ['./login-end-user.page.scss'],
 })
 export class LoginEndUserPage implements OnInit {
+
+  
 
   isAnimating: boolean = false;
   waitingResponseLoginApi: boolean = false;
@@ -30,6 +46,11 @@ export class LoginEndUserPage implements OnInit {
 
   addMarginBottomExtend: boolean = false;
 
+  
+  ionViewWillEnter() {
+    this.waitingResponseLoginApi = false
+
+  }
   // Fungsi untuk mengubah nilai addMarginBottomExtend
   handleFocus() {
     this.addMarginBottomExtend = true;
@@ -92,18 +113,43 @@ export class LoginEndUserPage implements OnInit {
                   }, 300); // Match this duration with the CSS animation duration
                 });
               } else if (res.result.is_resident) {
-                const estate = res.result.estates;
+                const estates = res.result.estates;
+                const filteredEstates: Record<string, Estate> = {};
+                Object.entries(estates).forEach(([key, value]) => {
+                    if (key !== "login") {
+                        const estate = value as any;
+                        if (estate.family_email === estates.login || estate.family_mobile_number === estates.login) {
+                            filteredEstates[key] = estate;
+                        }
+                    }
+                });
+              console.log('filteredEstatesfilteredEstatesfilteredEstatesfilteredEstates');
+              console.log(filteredEstates);
+              console.log(Object.entries(filteredEstates)[0]);
+              let [firstKey, firstValue] = Object.entries(filteredEstates)[0]
+              
                 Preferences.set({
                   key: 'USER_EMAIL',
-                  value: String(this.existUser.params.login),
+                  value: String(firstValue.family_email),
                 }).then(()=>{
+                  console.log(firstValue);
+                  console.log("firstValuefirstValuefirstValuefirstValue");
+                  
+                  Preferences.set({
+                    key: 'USER_MOBILE',
+                    value: String(firstValue.family_mobile_number),
+                  }).then(()=>{
                   Preferences.set({
                     key: 'CURRENT_PASS',
                     value: String(this.existUser.params.password)
                   }).then(() => {
+                    this.existUser.params = {
+                      login: '',
+                      password: '',
+                    }
                     this.router.navigate(['/resident-homepage'], {
                       state: {
-                        estate: estate,
+                        estate: estates,
                       }
                     });
                     this.waitingResponseLoginApi = true;
@@ -112,7 +158,8 @@ export class LoginEndUserPage implements OnInit {
                       this.isAnimating = false;
                     }, 300); // Match this duration with the CSS animation duration
                   })
-                });
+                })
+              });
               }
             } else {
               this.waitingResponseLoginApi = false;

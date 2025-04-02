@@ -134,9 +134,17 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Company Name</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.contractor_company_name) }}</p>
               </div>
-              <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking'].includes(approval_type)">
+              <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Number</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.vehicle_number }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.vehicle_number) }}</p>
+              </div>
+              <div class="table-row" *ngIf="['vehicle_extension'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Temporary End Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date_for_temporary_pass ? approval.end_date_for_temporary_pass : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['vehicle_extension'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Requested Extension Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date_extension_request ? approval.end_date_extension_request : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['parking'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Offence Time</p>
@@ -240,9 +248,17 @@
           <p class="font-bold table-cell text-base text-black">Company Name</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.contractor_company_name) }}</p>
         </div>
-        <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking'].includes(approval_type)">
-          <p class="font-bold table-cell text-base text-black">Vehicle Number</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.vehicle_number }}</p>
+        <div class="table-row" *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Number</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.vehicle_number) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['vehicle_extension'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Temporary End Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date_for_temporary_pass ? selectedApproval.end_date_for_temporary_pass : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['vehicle_extension'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Requested Extension Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date_extension_request ? selectedApproval.end_date_extension_request : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['parking'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Offence Time</p>
