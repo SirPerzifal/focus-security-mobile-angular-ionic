@@ -1,7 +1,12 @@
 <app-resident-header [text]="'My Family'" [text_second]="'Edit Member'" />
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-14" [routerLink]="['/resident-my-family']"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-14"
+      [routerLink]="['/family-edit-member']"
+    ></ion-icon>
   </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mt-2 mx-4 mb-24">
@@ -9,33 +14,53 @@
       <div class="w-full text-base">
         Name of Tenant: {{this.formData.full_name}}
       </div>
-      <div class="w-full text-base">
-        Current End Date: {{this.end_date}}
-      </div>
+      <div class="w-full text-base">Current End Date: {{this.end_date}}</div>
       <!-- <div class="w-full flex flex-row justify-between"> -->
       <div class="w-full flex flex-col mt-3">
-        <label class="text-base font-bold mb-[-3px]"><u>Tenant Agreement File</u></label>
-        <label for="tenant_file" class="w-full h-14 border rounded px-3 text-base flex flex-col justify-center"
-          style="border: solid #6B7280 1px;" *ngIf="!fileCheck">Select Tenant Agreement File</label>
-        <input type="file" id="tenant_file" class="w-full h-14 mt-1 border rounded py-2 px-3 text-base"
-          (change)="onTenanciesChange($event)" style="border: #6B7280 solid 1px;"
-          [ngClass]="{'hidden': !fileCheck}" />
+        <label class="text-base font-bold mb-[-2px]"
+          >Tenant Agreement File</label
+        >
+        <label
+          for="tenant_file"
+          class="w-full h-14 border rounded px-3 text-base flex flex-col justify-center"
+          style="border: solid #6b7280 1px"
+          *ngIf="!fileCheck"
+          >Select Tenant Agreement File</label
+        >
+        <input
+          type="file"
+          id="tenant_file"
+          class="w-full h-14 mt-1 border rounded py-2 px-3 text-base"
+          (change)="onTenanciesChange($event)"
+          style="border: #6b7280 solid 1px"
+          [ngClass]="{'hidden': !fileCheck}"
+        />
       </div>
       <div class="w-full mt-3">
-        <app-text-input #tenantExtendDate [labelResidentText]="'End Of Tenancy Agreement'" [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'tenancies_end_of_tenancy_aggrement'" [placeholder]="'DD/MM/YYYY'"
-          [customClasses]="{'w-full': true}" [type]="'date'" [min]="dateNow"
+        <app-text-input
+          #tenantExtendDate
+          [labelResidentText]="'End Of Tenancy Agreement'"
+          [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+          [id]="'tenancies_end_of_tenancy_aggrement'"
+          [placeholder]="'DD/MM/YYYY'"
+          [customClasses]="{'w-full': true}"
+          [type]="'date'"
+          [min]="dateNow"
           [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
           [value]="formData.tenancies.end_of_tenancy_aggrement"
-          (valueChange)="onEndOfTenancyAgreementChange($event)"></app-text-input>
+          (valueChange)="onEndOfTenancyAgreementChange($event)"
+        ></app-text-input>
       </div>
       <div class="w-full">
-        <button class="bg-[var(--ion-color-primary)] text-white mt-6 w-full text-base rounded h-14 font-bold" (click)="onSubmit()">Submit
-          for Approval</button>
-
+        <button
+          class="bg-[var(--ion-color-primary)] text-white mt-6 w-full text-base rounded h-14 font-bold"
+          (click)="onSubmit()"
+        >
+          Submit for Approval
+        </button>
       </div>
     </div>
-    <div class="flex flex-row w-full">
-    </div>
+    <div class="flex flex-row w-full"></div>
   </div>
   <!-- ############################### -->
   <app-bottom-nav-bar></app-bottom-nav-bar>

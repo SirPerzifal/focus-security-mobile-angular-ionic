@@ -32,6 +32,7 @@ export class FamilyEditMemberPage implements OnInit {
       end_of_tenancy_aggrement: new Date()
     }
   }
+  end_date: string=new Date().toISOString().split('T')[0];
 
   end_of_tenancy = ''
   selectedImageName: string = ''; // New property to hold the selected file name
@@ -50,7 +51,13 @@ export class FamilyEditMemberPage implements OnInit {
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
       this.formData.image_family = state.profile_image
       this.formData.reject_reason = state.reject_reason
+      this.end_date = this.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]);
     }
+  }
+
+  convertToDDMMYYYY(dateString: string): string {
+    const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
+    return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
   }
 
   mobile_temp = ''

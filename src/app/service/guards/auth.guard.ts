@@ -13,13 +13,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const tokenData = await Preferences.get({ key: 'USER_EMAIL' });
   const mobiletokenData = await Preferences.get({ key: 'USER_MOBILE' });
   const useStateData = await Preferences.get({ key: 'USESTATE_DATA' });
-
-
-  console.log(tokenData);
-  console.log('tokenDatatokenDatatokenDatatokenDatatokenDatatokenData');
-  console.log(mobiletokenData);
-  console.log('mobiletokenDatamobiletokenDatamobiletokenDatamobiletokenData');
-  
   
   if (!tokenData.value) {
     if(!mobiletokenData.value){
