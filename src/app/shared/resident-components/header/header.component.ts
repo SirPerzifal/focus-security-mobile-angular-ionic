@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -9,9 +11,12 @@ export class HeaderComponent  implements OnInit {
 
   @Input() userName: string = 'Veeknesh';
   @Input() condoName: string = 'KingsMan Condominium';
-  @Input() profileImage: string = 'https://storage.googleapis.com/a1aa/image/NWAf6fQlGwiLJkFZou5lnWGhp97H7gZehBzVmVzlOoIYO4gnA.jpg';
+  @Input() profileImage: string = '';
+  @Input() condoImage: string = '';
 
-  constructor() { }
+  constructor(
+    public functionMain: FunctionMainService
+  ) { }
 
   ngOnInit() {}
 

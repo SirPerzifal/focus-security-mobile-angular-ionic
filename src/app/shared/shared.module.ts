@@ -24,6 +24,11 @@ import { NavTabsComponent } from './resident-components/nav-tabs/nav-tabs.compon
 import { InputComponentComponent } from './resident-components/input-component/input-component.component';
 import { ModalChoosePaymentMethodComponent } from './resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from './resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
+import { SubmitButtonComponent } from './resident-components/submit-button/submit-button.component';
+import { RadioCheckInputCaseComponent } from './resident-components/radio-check-input-case/radio-check-input-case.component';
+import { CardStatusWithButtonComponent } from './resident-components/card-status-with-button/card-status-with-button.component';
+import { CardWithButtonComponent } from './resident-components/card-with-button/card-with-button.component';
+import { CardWithImageComponent } from './resident-components/card-with-image/card-with-image.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +50,12 @@ import { ModalPaymentManualCustomComponent } from './resident-components/modal-p
     NavTabsComponent,
     InputComponentComponent,
     ModalChoosePaymentMethodComponent,
-    ModalPaymentManualCustomComponent
+    ModalPaymentManualCustomComponent,
+    SubmitButtonComponent,
+    RadioCheckInputCaseComponent,
+    CardStatusWithButtonComponent,
+    CardWithButtonComponent,
+    CardWithImageComponent
   ],
   imports: [
     CommonModule,
@@ -72,7 +82,12 @@ import { ModalPaymentManualCustomComponent } from './resident-components/modal-p
     NavTabsComponent,
     InputComponentComponent,
     ModalChoosePaymentMethodComponent,
-    ModalPaymentManualCustomComponent
+    ModalPaymentManualCustomComponent,
+    SubmitButtonComponent,
+    RadioCheckInputCaseComponent,
+    CardStatusWithButtonComponent,
+    CardWithButtonComponent,
+    CardWithImageComponent
   ]
 })
 export class SharedModule { }

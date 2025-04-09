@@ -1,6 +1,19 @@
 <ion-content class="ion-padding h-full flex flex-col">
-  <ion-icon class="text-2xl" name="arrow-back-outline" [routerLink]="['/register']">
-  </ion-icon>
+  <div class="absolute inset-0 overflow-hidden -z-50">
+    <video 
+      autoplay 
+      loop 
+      muted 
+      playsinline 
+      class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
+    >
+      <source src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <div class="w-1/6 flex items-start">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/register']"></ion-icon>
+  </div>
   <div class="fslp-container">
     <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png"/>
     <h2 class="fslp-title font-bold text-[var(--ion-color-primary)]">
@@ -19,6 +32,13 @@
       <app-text-input [(ngModel)]="formData.mobile_number" [id]="'phone'" [placeholder]="'Mobile No'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
     </div>
     <div class="mt-2">
+      <select id="family_type" (change)="onFamilyTypeChange($event)" [(ngModel)]="formData.family_type" name="family_type"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
+        <option value="" selected disabled hidden>Family Type</option>
+        <option *ngFor="let type of selectionFamilyType" [value]="type.value">{{ type.label }}</option>
+      </select>
+    </div>
+    <div class="mt-2">
       <select id="register_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="register_block"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280]">
         <option value="" selected disabled hidden>Block</option>
@@ -31,24 +51,6 @@
         <option value="" selected disabled hidden>Unit</option>
         <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
       </select>
-    </div>
-    <div class="w-full flex mt-2 justify-between">
-      <div class="flex items-center me-4">
-        <input id="primary_contact" type="radio" value="primary_contact" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
-        <label for="primary_contact" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Primary Contact</label>
-      </div>
-      <div class="flex items-center me-4">
-        <input id="secondary_contact" type="radio" value="secondary_contact" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
-        <label for="secondary_contact" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Secondary Contact</label>
-      </div>
-      <div class="flex items-center me-4">
-          <input id="famili_member" type="radio" value="member" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
-          <label for="famili_member" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Family Member</label>
-      </div>
-      <div class="flex items-center">
-        <input id="tenant" type="radio" value="tenant" name="inline-radio-group" [(ngModel)]="formData.family_type" class="w-4 h-4 text-[#673AB7] bg-gray-100 border-gray-300 focus:ring-[#673AB7] dark:focus:ring-[#673AB7] dark:ring-offset-gray-800 focus:ring-2 focus:bg-[#673AB7] dark:bg-gray-700 dark:border-gray-600">
-        <label for="tenant" class="ms-2 text-xs font-bold text-gray-500 dark:text-gray-300">Tenant</label>
-      </div>
     </div>
     <div class="flex items-center mt-5">
       <input checked id="terms_conditions" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">

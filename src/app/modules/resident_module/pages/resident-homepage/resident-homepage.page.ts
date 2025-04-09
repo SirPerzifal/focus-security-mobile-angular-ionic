@@ -6,7 +6,9 @@ import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
+import { Storage } from '@ionic/storage-angular';
 
+import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
 import { EstateModalPage } from './estate-modal/estate-modal.page';
@@ -29,6 +31,9 @@ export class ResidentHomepagePage implements OnInit {
   name: string = '';
   familyType: string = '';
 
+  selectedProfile: string = '';
+  showingProfile: string = '';
+
   estate: any[] = []
   isLoading: boolean = false;
 
@@ -38,30 +43,30 @@ export class ResidentHomepagePage implements OnInit {
     private houseRulesService: HouseRulesService,
     private modalController: ModalController, 
     private router: Router,
+    private storage: Storage,
+    private authService: AuthService,
     public functionMain: FunctionMainService,
     private mainApiResident: MainApiResidentService
   ) {
+    this.storage.create();
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { estate: any };
     if (state) {
       this.estate = state.estate;
     } else {
-      Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
         if (value?.value) {
-          const parseValue = JSON.parse(value.value);
-          this.estate = parseValue;
-          this.isModalUpdateProfile = false;
         }
       })
     }
   }
   
   ionViewWillEnter() {
-    Preferences.get({key: 'USER_EMAIL'}).then(async (value) => {
+    Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
       if(value?.value){
-        if(value?.value){
-        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-          if (value?.value) {
+        const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+        this.storage.get('USESTATE_DATA').then(async (value) => {
+          if (value) {
             const valueUseState = JSON.parse(value.value);
             this.isLoading = false;
             this.setData(valueUseState, '');
@@ -70,33 +75,53 @@ export class ResidentHomepagePage implements OnInit {
             this.loadHouseRules();
           } else {
             this.isLoading = true;
-            await this.presentModal(this.estate);
+            // Mengubah string JSON menjadi objek JavaScript
+            const credential = JSON.parse(decodedEstateString);
+            this.loadEstate(credential.email);
           }
         })
-        }
-    }else{
-      Preferences.get({key: 'USER_MOBILE'}).then(async (value) => {
-        if(value?.value){
-        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-          if (value?.value) {
-            const valueUseState = JSON.parse(value.value);
-            this.isLoading = false;
-            this.setData(valueUseState, '');
-            this.fetchContacts();
-            this.loadCountNotification();
-            this.loadHouseRules();
-          } else {
-            this.isLoading = true;
-            await this.presentModal(this.estate);
-          }
-        })
-        }
-    })
-    }
+      }
     })
   }
 
   ngOnInit() {
+  }
+
+  async loadEstate(email:string) {
+    this.authService.getEstatesByEmail(email).subscribe(
+      response => {
+        if (response.result.status_code === 200) {
+          var listedEstate = []
+          for (var key in response.result.response){
+            if(response.result.response.hasOwnProperty(key)){
+              listedEstate.push({
+                family_id: response.result.response[key]?.family_id,
+                family_name: response.result.response[key]?.family_name || '',
+                image_profile: response.result.response[key]?.image_profile || '',
+                family_email: response.result.response[key]?.family_email || '',
+                family_mobile_number: response.result.response[key]?.family_mobile_number || '',
+                family_type: response.result.response[key]?.family_type || '',
+                unit_id: response.result.response[key]?.unit_id,
+                unit_name: response.result.response[key]?.unit_name || '',
+                block_id: response.result.response[key]?.block_id,
+                block_name: response.result.response[key]?.block_name || '',
+                project_id: response.result.response[key]?.project_id,
+                project_name: response.result.response[key]?.project_name || '',
+                project_image: response.result.response[key]?.project_image || '',
+              })
+            }
+          }
+          this.estate = listedEstate;
+          this.presentModal(this.estate);
+          this.isModalUpdateProfile = false;
+        } else {
+          console.error('Error fetching Estate:', response);
+        }
+      },
+      error => {
+        console.error('HTTP Error:', error);
+      }
+    );
   }
 
   setData(parserValue: any, imageProfile: string) {
@@ -255,8 +280,6 @@ export class ResidentHomepagePage implements OnInit {
     }, 0);
   }
 
-  selectedProfile: string = '';
-  showingProfile: string = '';
   onProfileFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RegisterService } from 'src/app/service/resident/register-resident/register.service';
-import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { RegisterService } from 'src/app/service/resident/register-resident/register.service';
 
 interface ProjectData{
   id:number;
@@ -18,7 +19,7 @@ export class RegisterPage implements OnInit {
 
   constructor(
     private registerService: RegisterService,
-    private toastController: ToastController,
+    private functionMain: FunctionMainService,
     private router: Router,
   ) { }
   projectList: ProjectData[] = [];
@@ -41,14 +42,12 @@ export class RegisterPage implements OnInit {
             name: project.code + ' - ' + project.project_name,
             code:project.code
           }));
-          console.log(response)
         } else {
-          this.presentToast('An error occurred while loading project data!', 'danger');
+          this.functionMain.presentToast('An error occurred while loading project data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading project data!', 'danger');
-        console.error('Error:', error);
+        this.functionMain.presentToast('An error occurred while loading project data!', 'danger');
       }
     })
   }
@@ -59,11 +58,11 @@ export class RegisterPage implements OnInit {
       if(filteredObject){
         this.router.navigate(['/register-resident'], {queryParams: { projectId: filteredObject.id }})
       }else{
-        this.presentToast('Your Location Code is invalid!', 'danger');
+        this.functionMain.presentToast('Your Location Code is invalid!', 'danger');
       }
       
     }else{
-      this.presentToast('Please enter a Location Code!', 'danger');
+      this.functionMain.presentToast('Please enter a Location Code!', 'danger');
     }
   }
 
@@ -74,10 +73,10 @@ export class RegisterPage implements OnInit {
       if(filteredObject){
         this.router.navigate(['/register-commercial'], {queryParams: { projectId: filteredObject.id }})
       }else{
-        this.presentToast('Your Location Code is invalid!', 'danger');
+        this.functionMain.presentToast('Your Location Code is invalid!', 'danger');
       }
     }else{
-      this.presentToast('Please enter a Location Code!', 'danger');
+      this.functionMain.presentToast('Please enter a Location Code!', 'danger');
     }
   }
 
@@ -85,13 +84,4 @@ export class RegisterPage implements OnInit {
   onOptionSelected(option: any) {
     this.selectedOption = option;  // Store the selected option
   }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-  }
-
 }

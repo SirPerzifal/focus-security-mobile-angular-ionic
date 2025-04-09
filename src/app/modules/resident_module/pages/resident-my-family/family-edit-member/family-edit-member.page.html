@@ -62,7 +62,7 @@
         ></app-text-input>
       </div>
 
-      <div class="w-full">
+      <div class="w-full" *ngIf="formData.type_of_residence === 'tenants'">
         <app-text-input
           [labelResidentText]="'End of Tenancy Agreement'"
           [labelResidentClass]="'text-base font-bold mb-[-2px]'"
@@ -71,6 +71,7 @@
           [type]="'text'"
           [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
           [value]="end_date"
+          [isReadonly]="true"
         ></app-text-input>
       </div>
 
@@ -267,7 +268,7 @@
           class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold px-2"
           (click)="openExtend()"
         >
-          Request for Tenancy Agreement Date Extension
+          Request Extension Agreement Date
         </button>
         <button
           class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-14 font-bold"

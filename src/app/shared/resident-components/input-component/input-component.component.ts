@@ -1,4 +1,6 @@
-import { Component, OnInit, Output, Input, output } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-input-component',
@@ -6,23 +8,21 @@ import { Component, OnInit, Output, Input, output } from '@angular/core';
   styleUrls: ['./input-component.component.scss'],
 })
 export class InputComponentComponent  implements OnInit {
-  formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
-  }
-
+  
   @Input() id: string = ''; 
   @Input() type: string = ''; 
   @Input() typeAction: string = ''; 
   @Input() labelParent: string = ''; 
   @Input() labelChild1: string = ''; 
   @Input() labelChild2: string = ''; 
+  @Input() minDate: string = ''; 
+  @Output() eventEmitter = new EventEmitter<any>()
 
   @Output() value: string = '';
 
-  constructor() { }
+  constructor(
+    private functionMain: FunctionMainService
+  ) { }
 
   ngOnInit() {}
 
@@ -35,14 +35,18 @@ export class InputComponentComponent  implements OnInit {
     }, 0);
   }
 
-  onDateChange(event: any) {
-    console.log(event.target.value);
-    if (event.target.value) {
-      const date = new Date(event.target.value);
-      this.value = this.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
-      console.log(this.value); // Log the selected date
+  onValueChange(event: any, type: string) {
+    if (event.target.type === 'text') {
+      const value = event.target.value;
+      this.eventEmitter.emit(value)
     } else {
-      this.value = ''
+      if (event.target.value) {
+        const date = new Date(event.target.value);
+        this.value = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+        this.eventEmitter.emit(this.value)
+      } else {
+        this.value = ''
+      }
     }
   }
 

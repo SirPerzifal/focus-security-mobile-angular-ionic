@@ -96,11 +96,11 @@
             <div class="table w-full">
               <div class="table-row" *ngIf="['move_permit', 'renovation', 'bicycle', 'coach', 'pet', 'vehicle'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black" >Application Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.application_date ? functionMain.convertToDDMMYYYY(approval.application_date.split(' ')[0]) : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.application_date ? functionMain.convertNewDateTZ(approval.application_date).split(' ')[0] : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Event date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertToDDMMYYYY(approval.start_date.split(' ')[0]) : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertNewDateTZ(approval.start_date).split(' ')[0] : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['pet'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Type and Breed</p>
@@ -162,13 +162,21 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Member Type</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ approval.member_type ? functionMain.uppercaseFirstWithUnderscore(approval.member_type) : '-' }}</p>
               </div>
-              <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+              <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? ( approval_type == 'facility' ? approval.start_date.split(' ')[1] : functionMain.convertDateExtend(approval.start_date) ) : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertNewDateTZ(approval.start_date).split(' ')[1] : '-' }}</p>
               </div>
-              <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
+              <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date ? ( approval_type == 'facility' ? approval.end_date.split(' ')[1] : functionMain.convertDateExtend(approval.end_date) ) : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date ? functionMain.convertNewDateTZ(approval.end_date).split(' ')[1] : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['overnight'].includes(approval_type)">
+                <p class="font-bold table-cell text-base text-black">Request Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.request_date ? functionMain.convertNewDateTZ(approval.request_date) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['overnight'].includes(approval_type) && approval.states == 'approved'">
+                <p class="font-bold table-cell text-base text-black">Approved Date</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.approved_date ? functionMain.convertNewDateTZ(approval.approved_date) : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Booked By</p>
@@ -214,7 +222,7 @@
       <div class="table w-full">
         <div class="table-row" *ngIf="['move_permit', 'renovation', 'bicycle', 'coach', 'pet', 'vehicle'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black" >Application Date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.application_date ? functionMain.convertToDDMMYYYY(selectedApproval.application_date.split(' ')[0]) : '-' }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.application_date ? functionMain.convertNewDateTZ(selectedApproval.application_date).split(' ')[0] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Facility name</p>
@@ -222,7 +230,7 @@
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Event date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertToDDMMYYYY(selectedApproval.start_date.split(' ')[0]) : '-' }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertNewDateTZ(selectedApproval.start_date).split(' ')[0] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['access_card'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Family Name</p>
@@ -284,13 +292,21 @@
           <p class="font-bold table-cell text-base text-black">Unit</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.unit_id.name) }}</p>
         </div>
-        <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
-          <p class="font-bold table-cell text-base text-black">Start Date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? ( approval_type == 'facility' ? selectedApproval.start_date.split(' ')[1] : functionMain.convertDateExtend(selectedApproval.start_date) ) : '-' }}</p>
+        <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertNewDateTZ(selectedApproval.start_date).split(' ')[1] : '-' }}</p>
         </div>
-        <div class="table-row" *ngIf="['facility', 'overnight'].includes(approval_type)">
-          <p class="font-bold table-cell text-base text-black">End Date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? ( approval_type == 'facility' ? selectedApproval.end_date.split(' ')[1] : functionMain.convertDateExtend(selectedApproval.end_date) ) : '-' }}</p>
+        <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? functionMain.convertNewDateTZ(selectedApproval.end_date).split(' ')[1] : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['overnight'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Request Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.request_date ? functionMain.convertNewDateTZ(selectedApproval.request_date) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['overnight'].includes(approval_type) && selectedApproval.states == 'approved'">
+          <p class="font-bold table-cell text-base text-black">Approved Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.approved_date ? functionMain.convertNewDateTZ(selectedApproval.approved_date) : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Booked By</p>

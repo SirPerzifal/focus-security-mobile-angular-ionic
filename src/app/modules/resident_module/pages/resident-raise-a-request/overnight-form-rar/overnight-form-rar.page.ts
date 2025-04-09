@@ -284,6 +284,12 @@ export class OvernightFormRarPage implements OnInit {
     return await modal.present();
   }
 
+  requestDate = ''
+
+  onRaiseOvernightDate(value: string): void {
+    this.requestDate = value;
+  }
+
   onSubmit(paymentReceipt: string) {
     if (this.form.valid) {
       const formData = this.form.value;
@@ -298,6 +304,19 @@ export class OvernightFormRarPage implements OnInit {
         const rentalAgreement = formData.agreement; // Convert boolean to string
         const familyId = 15; // Replace with actual family ID logic if needed
 
+        console.log(blockId,
+          unitId,
+          contactNumber,
+          paymentReceipt,
+          this.projectid,
+          applicantType,
+          vehicleNumber,
+          visitorId,
+          purpose,
+          rentalAgreement,
+          familyId,
+          this.requestDate,)
+
         this.requestService.postOvernightFormCar(
           blockId,
           unitId,
@@ -309,7 +328,8 @@ export class OvernightFormRarPage implements OnInit {
           visitorId,
           purpose,
           rentalAgreement,
-          familyId
+          familyId,
+          this.requestDate,
         ).subscribe(
           (response) => {
             // console.log('Response from server:', response);

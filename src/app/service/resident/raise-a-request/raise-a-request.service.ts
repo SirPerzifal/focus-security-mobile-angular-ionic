@@ -67,6 +67,7 @@ export class RaiseARequestService extends ApiService  {
     purpose: string | null,
     rentalAggrement: string | null,
     familyId: number | null,
+    request_date: string | null,
   ): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -87,6 +88,7 @@ export class RaiseARequestService extends ApiService  {
         purpose: purpose,
         rental_agreement: rentalAggrement,
         family_id: familyId,
+        request_date: request_date,
       },
     };
   

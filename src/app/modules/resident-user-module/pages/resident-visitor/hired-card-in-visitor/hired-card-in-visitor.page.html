@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
+    </div>
+    <div class="flex flex-row">
+      <div class="flex flex-col">   
+        <app-input-component [id]="'type_invitation_title'" [type]="'text'" [typeAction]="'Vehicle Number'" [labelParent]="'Entry Details'" [labelChild1]="'Entry Vehicle Number'" [labelChild2]="''" (eventEmitter)="changeVehicleNumber($event)"></app-input-component>
+        <div class="flex flex-row justify-start mt-4">
+          <app-visitor-button [text]="'PICK UP'" [extraClass]="showPick ? 'bg-[var(--ion-color-primary)] w-24 text-base text-white' : 'bg-[#D0D0D0] text-[#757575] w-24 text-base'" (click)="toggleShowPick()"></app-visitor-button>
+          <app-visitor-button [text]="'DROP OFF'" [extraClass]="showDrop ? 'bg-[var(--ion-color-primary)] w-24 ml-2 text-base text-white' : 'bg-[#D0D0D0] text-[#757575] w-24 ml-2 text-base'" (click)="toggleShowDrop()"></app-visitor-button>
+        </div>
+        <div class="flex flex-row justify-start items-start mt-4 space-x-2">
+          <div *ngFor="let button of vehicleTypeButtons">
+            <div class="flex flex-col items-center w-12" (click)="onChangeVehicleType(button)">
+              <button id="shadow_back" [class]="button.active ? 'w-12 h-12 bg-[var(--ion-color-primary)] rounded-xl flex flex-row items-center justify-center' : 'w-12 h-12 bg-[#D0D0D0] rounded-xl flex flex-row items-center justify-center'">
+                <img *ngIf="button.image" alt="{{ button.name }}" [src]="button.image" [class]="button.active ? 'w-[80%]' : 'icon-black w-[80%]'"/>
+                <fa-icon *ngIf="button.icon === 'faTaxi'" [icon]="faTaxi" [class]="button.active ? 'text-white' : 'text-[#000000]'"></fa-icon>
+                <fa-icon *ngIf="button.icon === 'faMotorcycle'" [icon]="faMotorcycle" [class]="button.active ? 'text-white' : 'text-[#000000]'"></fa-icon>
+                <ion-icon *ngIf="button.ion_icon" [name]="button.ion_icon" aria-hidden="true" [color]="button.active ? 'light' : 'dark'" class="w-6 h-6 mt-1"></ion-icon>
+              </button>
+              <div class="text-[12px] flex flex-col relative items-center mt-1">
+                <b>{{ button.name }}</b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-4">
+          <ion-spinner name="circular"></ion-spinner>
+        </div>
+        <div *ngIf="!isLoading" class="flex flex-col mt-4 text-[14px]">
+          <p class="underline underline-offset-1 font-bold text-[#757575] mb-2">{{textForHiredCarPages.title}}</p>
+          <p class="mb-1.5" *ngFor="let text of textForHiredCarPages.content">{{ text }}</p>
+        </div>
+        <div class="flex flex-row mt-4 text-[13px] cw-2:text-xs cw-3:text-[11px]">
+          <label class="mr-1 rounded font-bold flex items-center">
+            <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
+            I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above
+          </label>
+        </div>
+        <div class="flex flex-row mt-2 text-[13px] w-full">
+          <div class="w-full">
+            <app-visitor-button 
+              [text]="'Submit'" 
+              [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base' : 'bg-gray-300 text-gray-500 mt-1 w-full text-base'" 
+              (click)="onSubmit()">
+            </app-visitor-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

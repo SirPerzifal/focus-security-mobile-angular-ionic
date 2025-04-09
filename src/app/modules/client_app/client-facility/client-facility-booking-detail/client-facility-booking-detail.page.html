@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <td><strong>Event Date</strong></td>
-          <td>: {{ functionMain.convertToDDMMYYYY(bookingData.start_datetime.split(' ')[0]) }}, {{ bookingData.eventDay }}</td>
+          <td>: {{ functionMain.convertNewDateTZ(bookingData.start_datetime).split(' ')[0] }}, {{ bookingData.eventDay }}</td>
         </tr>
         <tr>
           <td><strong>Booking Time</strong></td>

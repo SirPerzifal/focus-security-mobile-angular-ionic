@@ -1,0 +1,32 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [is_client]="true"  [text]="'Notifications'" [text_second]="''" />
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  
+  <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+  <div class="px-5 text-center mb-20" *ngIf="Notifications.length > 0; else noNotification">
+    <div class="mt-4 space-y-4">
+      <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
+        <div class="flex justify-between mb-1 text-sm">
+          <p class="italic">{{ notification.date }}</p>
+          <p class="italic">{{ notification.time }}</p>
+        </div>
+        <p class="text-left"><strong>{{ notification.title }}</strong></p>
+        <p class="text-left">{{ notification.body }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ############################### -->
+  <ng-template #noNotification>
+    <div class="w-full bg-transparent mt-8 text-center rounded-lg">
+      <p class="text-gray-600">There are no notifications.....</p>
+    </div>
+  </ng-template>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-content>

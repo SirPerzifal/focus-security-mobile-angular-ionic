@@ -47,4 +47,26 @@ export class FamilyCardComponent implements OnInit {
       }
     });
   }
+
+  openExtend() {
+    this.router.navigate(['/family-tenant-extend'], {
+      state: {
+        id: this.id,
+        type: this.type,
+        hard_type: this.hard_type,
+        name: this.name,
+        mobile: this.mobile,
+        head_type: this.head_type,
+        nickname: this.nickname,
+        email: this.email,
+        end_date: this.end_date,
+        tenant: this.tenant,
+        warning: this.warning,
+        status: this.status, // Tambahkan ini jika perlu
+        profile_image: this.profile_image,
+        reject_reason: this.reject_reason,
+        from_where: 'card'
+      }
+    });
+  }
 }

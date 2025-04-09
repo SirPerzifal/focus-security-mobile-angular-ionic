@@ -6,17 +6,100 @@
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2">
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
     <div id="nav_tabs_main">
       <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
     </div>
     <div id="sub_nav_tabs">
-      <app-nav-tabs [buttons]="navButtonsSub"></app-nav-tabs>
+      <app-nav-tabs [buttons]="navButtonsSub" (eventEmitter)="onClick($event)"></app-nav-tabs>
     </div>
-    <div id="form" class="flex flex-col w-full mt-4">
-      <app-input-component [id]="'choose_entry_date_field'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="'Entry Details'" [labelChild1]="'Entry Date'" [labelChild2]="'Entry date'"></app-input-component>
+    <div id="form" class="flex flex-col w-full mt-4" *ngIf="showNewInv" @fadeInOut>
+      <app-input-component [id]="'choose_entry_date_field'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="'Entry Details'" [labelChild1]="'Entry Date'" [labelChild2]="'Entry date'" (eventEmitter)="onDateChange($event)" [minDate]="minDate"></app-input-component>
+      <div class="flex flex-row justify-between my-2 w-full">
+        <app-radio-check-input-case [type]="'radio'" [id]="'one_time_entry'" [name]="'entry'" [value]="'one_time_entry'" [checkedText]="entryCheck === 'one_time_entry'" [text]="'One-Time Entry'" (valueEmit)="onChangeEntry($event)"></app-radio-check-input-case>
+        <app-radio-check-input-case [type]="'radio'"  [id]="'multiple_entry'" [name]="'entry'" [value]="'multiple_entry'" [checkedText]="entryCheck === 'multiple_entry'" [text]="'Multiple Entry'" (valueEmit)="onChangeEntry($event)"></app-radio-check-input-case>
+      </div>
+      <app-input-component [id]="'type_invitation_title'" [type]="'text'" [typeAction]="'Type title'" [labelParent]="'Invitation Details'" [labelChild1]="'Title of Invitation'" [labelChild2]="'(E.g Alexs Birthday)'" (eventEmitter)="onEntryTitleChange($event)"></app-input-component>
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Message for Invitation</p>
+        </div>
+        <textarea 
+          id="visitor_entry_message" 
+          placeholder="Invitation Message" 
+          (focus)="testAddMb(true)" 
+          (blur)="testAddMb(false)"
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+          type="text" 
+          [(ngModel)]="formData.entryMessage" 
+          name="entryMessage"
+        ></textarea>
+      </div>
+      <app-radio-check-input-case [type]="'checkbox'" [id]="'provide_unit_number'" [name]="'provide_unit_number'" [value]="'1'" (valueEmit)="onProvideUnitChange($event)" [check]="formData.isProvideUnit" [text]="'Provide my unit number to visitor'"></app-radio-check-input-case>
+      <div class="flex flex-row mt-2 text-[13px] w-full">
+        <div class="w-full">
+          <app-submit-button
+            [text]="'Next'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+            (click)="onSubmitNext()">
+          </app-submit-button>
+        </div>
+      </div>
+    </div>
+    <div class="w-full mb-20" *ngIf="showActInv" @fadeInOut>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
+      <div *ngIf="activeInvites.length > 0 || isLoading === true; else noInvites">
+        <div *ngFor="let invite of activeInvites" class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex flex-col items-start">
+          <div class="flex flex-col items-start">
+            <h2 class="text-lg font-bold text-gray-800">
+              <u class="capitalize">{{ invite.name }}</u>
+            </h2>
+            <div>
+              <table>
+                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                  <td class="font-bold w-24">Date of Invite</td>
+                  <td class="w-4">:</td>
+                  <td>{{invite.dateOfInvite}}</td>
+                </tr>
+                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                  <td class="font-bold">Vehicle No</td>
+                  <td>:</td>
+                  <td>{{invite.vehicleNo ? invite.vehicleNo : '-'}}</td>
+                </tr>
+                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                  <td class="font-bold">Type of Entry</td>
+                  <td>:</td>
+                  <td>{{invite.entryType}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="flex flex-row space-x-2 w-full">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full">
+              Resend Invite
+            </button>
+            <button class="bg-[#E3787E] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+              (click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)">
+              Cancel Invite
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Template untuk kondisi tidak ada invite -->
+      <ng-template #noInvites>
+        <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+          <p class="text-gray-600">You have no active invitee.....</p>
+          <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home
+                Page</a></strong> or</p>
+          <p class="text-gray-600"><strong><a href="/resident-visitors">Click Here</a></strong> to
+            invite a friend now.</p>
+        </div>
+      </ng-template>
     </div>
   </div>
+  <div class="h-96" *ngIf="extend_mb"></div>
 </ion-content>
 
 <ion-footer>

@@ -72,13 +72,15 @@ export class ResidentCarListPage implements OnInit {
   isLoading = false
   async toggleShowSearch(vehicle_number: any, is_camera: boolean = false) {
     this.isLoading = true
+    this.showList = false
+    this.vehicle = []
     console.log("PING OVER HERE")
     console.log(vehicle_number)
     this.mainVmsService.getApi({vehicle_number: vehicle_number, project_id: this.project_id}, '/vms/get/search_vehicle' ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.showList = false;
+          // this.showList = false;
           this.vehicle = results.result.result[0]
           this.vehicleNumber = this.vehicle.vehicle_number
           console.log(this.vehicle);

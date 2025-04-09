@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Visitors'" [text_second]="'History Invite'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-16">
+    <div id="nav_tabs_main">
+      <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
+    </div>
+    <div class="flex flex-row w-full">
+      <div class="flex flex-col w-full">
+        <div *ngIf="hideFilter !== 'ban'">
+          <div class="flex flex-row justify-start mt-4">
+            <p class="text-base font-bold">Group By</p>
+          </div>
+          <div class="w-full mt-1">
+              <select id="walk_in_unit" [(ngModel)]="typeFilter"  class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
+                <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
+                <option value="All" selected>All</option >
+                <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="Visiting">Visiting</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Pick Off">Pick Off</option>
+                <option value="Drop Off">Drop Off</option>
+              </select>
+          </div>
+          <div class="flex flex-row w-full mt-2 items-center">
+            <div class="w-full flex flex-col items-center">
+              <div class="flex flex-row justify-between items-center w-full mb-1">
+                <p class="text-base font-bold">Filter Date</p>
+              </div>
+              <div class="flex flex-row space-x-2 w-full">
+                <div class="w-1/2">
+                  <app-text-input #startVisitorHistoryDateInput [id]="'start_visitor_history_date'" [placeholder]="'Start Filter Date'" [(ngModel)]="startDateFilter"
+                    [customClasses]="{'w-full':true}" [type]="'date'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                    (change)="onChangeStartDate($event)"></app-text-input>
+                </div>
+                <div class="w-1/2">
+                  <app-text-input #endVisitorHistoryDateInput [id]="'end_visitor_history_date'" [placeholder]="'End Filter Date'" [min]="startDateFilter" [(ngModel)]="endDateFilter"
+                    [customClasses]="{'w-full':true}" [type]="'date'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                    (change)="onChangeEndDate($event)"></app-text-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-row-reverse w-full mt-4">
+            <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
+          </div>
+        </div>
+        <div class="w-full mt-4">
+          <div clas="flex flex-col w-full justify-start">
+            <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+							<ion-spinner name="circular"></ion-spinner>
+						</div>
+            <div *ngFor="let data of filteredData">
+              <app-history-card [historyData]="data" [hideResinstateButton]="hideFilter" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

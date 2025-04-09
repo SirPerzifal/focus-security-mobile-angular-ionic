@@ -54,8 +54,10 @@ export class MyProfileEstatePage implements OnInit {
               listedEstate.push({
                 family_id: response.result.response[key]?.family_id,
                 family_name: response.result.response[key]?.family_name || '',
-                family_type: response.result.response[key]?.family_type || '',
+                image_profile: response.result.response[key]?.image_profile || '',
+                family_email: response.result.response[key]?.family_email || '',
                 family_mobile_number: response.result.response[key]?.family_mobile_number || '',
+                family_type: response.result.response[key]?.family_type || '',
                 unit_id: response.result.response[key]?.unit_id,
                 unit_name: response.result.response[key]?.unit_name || '',
                 block_id: response.result.response[key]?.block_id,

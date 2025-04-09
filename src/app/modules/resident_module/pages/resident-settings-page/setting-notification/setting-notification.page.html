@@ -10,7 +10,7 @@
         <img alt="Profile picture of a man wearing a hat" class="w-full h-full object-cover" height="128" src="https://storage.googleapis.com/a1aa/image/poewGqkRRRzQfEWv2tOg3taVzSTeX7aRUmmg0kV3KzpOIM9nA.jpg" width="128"/>
       </div>
       <h2 class="text-xl font-bold mb-6">
-        Veeknesh K
+        {{ requestorName }}
       </h2>
     </div>
     <div class="space-y-2">
@@ -21,7 +21,8 @@
           <div class="flex items-center ml-4">
             <input 
               id="checked-checkbox" 
-              type="checkbox" 
+              type="checkbox"
+              [(ngModel)]="activeWalkVisitorAlert" 
               class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
           </div>
       </div>
@@ -32,7 +33,8 @@
         <div class="flex items-center ml-4">
           <input 
             id="checked-checkbox" 
-            type="checkbox" 
+            type="checkbox"
+            [(ngModel)]="activeDriveVisitorAlert" 
             class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
         </div>
       </div>
@@ -40,7 +42,8 @@
         <div class="w-full">
           <app-visitor-button [text]="'Save Changes'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-            [routerLink]="['/resident-settings-page']">
+            (click)="onSaveChanges()"
+            >
           </app-visitor-button>
         </div>
       </div>
