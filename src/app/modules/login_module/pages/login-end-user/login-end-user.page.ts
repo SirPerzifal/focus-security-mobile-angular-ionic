@@ -56,23 +56,29 @@ export class LoginEndUserPage implements OnInit {
   }
 
   async getNotificationPermission() {
-    PushNotifications.requestPermissions().then((result) => {
+    try {
+      console.log('Requesting push notification permissions');
+      const result = await PushNotifications.requestPermissions();
+      console.log('Permission result:', result);
+      
       if (result.receive === 'granted') {
-        PushNotifications.register();
+        console.log('Registering push notifications');
+        await PushNotifications.register();
+        console.log('Push notifications registered');
       }
-    });
-    PushNotifications.addListener('registration', async (token: Token) => {
-      if (token.value) {
-        this.fcmToken = token.value;
-        this.notificationService.registerNotification(token.value).subscribe({
-          next: (res) => {
-          },
-          error: (err) => {
-            this.functionMain.presentToast('An error occurred while registering token push notification', 'danger');
-          }
-        });
-      }
-    });
+      
+      PushNotifications.addListener('registration', async (token: Token) => {
+        console.log('Got FCM token:', token.value);
+        if (token.value) {
+          this.fcmToken = token.value;
+          // Rest of your code...
+        }
+      });
+    } catch (err) {
+      console.error('Push notification error:', err);
+      // Continue with login even if push fails
+      this.fcmToken = '';
+    }
   }
 
   async loginResident(){

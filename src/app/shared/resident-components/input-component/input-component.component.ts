@@ -18,7 +18,7 @@ export class InputComponentComponent  implements OnInit {
   @Input() minDate: string = ''; 
   @Output() eventEmitter = new EventEmitter<any>()
 
-  @Output() value: string = '';
+  @Input() value: string = '';
 
   constructor(
     private functionMain: FunctionMainService

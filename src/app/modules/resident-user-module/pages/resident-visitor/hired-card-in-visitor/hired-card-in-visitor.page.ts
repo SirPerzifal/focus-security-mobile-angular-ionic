@@ -49,21 +49,21 @@ export class HiredCardInVisitorPage implements OnInit {
     },{
       name: 'TAXI',
       value: 'taxi',
-      active: true,
+      active: false,
       image: '',
       icon: 'faTaxi',
       ion_icon: ''
     },{
       name: 'CAR',
       value: 'private_car',
-      active: true,
+      active: false,
       image: '',
       icon: '',
       ion_icon: 'car-sport-outline'
     },{
       name: 'BIKE',
       value: 'motor_bike',
-      active: true,
+      active: false,
       image: '',
       icon: 'faMotorcycle',
       ion_icon: ''

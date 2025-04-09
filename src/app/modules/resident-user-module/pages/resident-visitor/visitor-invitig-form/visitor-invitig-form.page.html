@@ -1,92 +1,124 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Visitors'" [text_second]="'Invite Form'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Visitors'"
+    [text_second]="'Invite Form'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/visitor-main']"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/visitor-main']"
+    ></ion-icon>
   </div>
   <div class="flex flex-col relative mx-4 mb-20">
-		<div class="flex flex-col mt-2">
-			<u class="text-lg font-bold">Invitation List</u>
-			<div *ngIf="!isFormVisible" class="text-center text-gray-500 mt-4 dark:text-[white]">
-				Push "Add Invitee" to add a form or choose to add from history
-			  </div>
-			<div id="form" *ngIf="shouldShowForm()">
-				<div *ngFor="let invitee of inviteeFormList; let i = index" class="mb-4">
-					<div class="w-full flex justify-between flex-row mt-2">
-						<div class="w-full">
-							<div class="flex flex-row justify-start items-center">
-								<p class="text-base font-bold">Entry Name</p>
-								<a class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2" 
-								(click)="presentCustomAlert(i)"><ion-icon class="text-base mt-[2px]" name="trash"></ion-icon></a>
-							</div>
-							<input 
-							[id]="'invf_name_' + i" 
-							name="name_{{i}}"
-							placeholder="Name" 
-							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-							[(ngModel)]="inviteeFormList[i].visitor_name"
-							required
-							/>
-						</div>
-						<div class="flex flex-col justify-end items-end ml-2">
-							<div class="h-12 w-12 flex flex-row justify-center items-center bg-[var(--ion-color-primary)] rounded">
-								<fa-icon class="text-[24px] mt-1 text-white" [icon]="faAddressBook" (click)="currentInviteeIndex = i; fetchContacts()"></fa-icon>
-							</div>
-						</div>
-						
-					</div>
-					<div class="w-full flex flex-row justify-between space-x-2">
-						<div class="w-1/2">
-							<div class="flex flex-row justify-start mt-2">
-								<p class="text-base font-bold cw-3:text-xs">Entry Mobile Number</p>
-							</div>
-							<input 
-							[id]="'invf_phone_' + i" 
-							name="phone_{{i}}"
-							placeholder="Mobile Number" 
-							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-							[(ngModel)]="inviteeFormList[i].contact_number"
-							required>
-						</div>
-						<div class="w-1/2">
-							<div class="flex flex-row justify-start mt-2">
-								<p class="text-base font-bold cw-3:text-xs">Entry Vehicle Number</p>
-							</div>
-							<input 
-							[id]="'invf_plate_' + i" 
-							name="plate_{{i}}"
-							placeholder="Vehicle Number" 
-							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-							[(ngModel)]="inviteeFormList[i].vehicle_number"
-							required>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="flex flex-row justify-end">
-				<u class="text-[14px] font-bold cursor-pointer" (click)="addInvitee()">{{ addInviteeText }}</u>
-			</div>
-			<div class="flex flex-row justify-end mt-1">
-				<u 
-					class="text-[14px] font-bold cursor-pointer" 
-					(click)="navigateToInviteFormHistory()">
-					Add From History List
-				</u>
-			</div>
-			<div class="flex flex-row mt-4 text-[12px] w-full">
-				<div class="w-full">
-					<app-visitor-button 
-					[text]="'Send Invitation'" 
-					[extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-					(click)="onSubmit()"
-					(disabled)="!isFormVisible">
-				  </app-visitor-button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="flex flex-col mt-2">
+      <u class="text-lg font-bold">Invitation List</u>
+      <div
+        *ngIf="!isFormVisible"
+        class="text-center text-gray-500 mt-4 dark:text-[white]"
+      >
+        Push "Add Invitee" to add a form or choose to add from history
+      </div>
+      <div id="form" *ngIf="shouldShowForm()">
+        <div
+          *ngFor="let invitee of inviteeFormList; let i = index"
+          class="mb-4"
+        >
+          <div class="w-full flex justify-between flex-row mt-2">
+            <div class="w-full">
+              <div class="flex flex-row justify-start items-center">
+                <p class="text-base font-bold">Entry Name</p>
+                <a
+                  class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2"
+                  (click)="presentCustomAlert(i)"
+                  ><ion-icon class="text-base mt-[2px]" name="trash"></ion-icon
+                ></a>
+              </div>
+              <input
+                [id]="'invf_name_' + i"
+                name="name_{{i}}"
+                placeholder="Name"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+                [(ngModel)]="inviteeFormList[i].visitor_name"
+                required
+              />
+            </div>
+            <div class="flex flex-col justify-end items-end ml-2">
+              <div
+                class="h-12 w-12 flex flex-row justify-center items-center bg-[var(--ion-color-primary)] rounded"
+              >
+                <fa-icon
+                  class="text-[24px] mt-1 text-white"
+                  [icon]="faAddressBook"
+                  (click)="currentInviteeIndex = i; fetchContacts()"
+                ></fa-icon>
+              </div>
+            </div>
+          </div>
+          <div class="w-full flex flex-row justify-between space-x-2">
+            <div class="w-1/2">
+              <div class="flex flex-row justify-start mt-2">
+                <p class="text-base font-bold cw-3:text-xs">
+                  Entry Mobile Number
+                </p>
+              </div>
+              <input
+                [id]="'invf_phone_' + i"
+                name="phone_{{i}}"
+                placeholder="Mobile Number"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+                [(ngModel)]="inviteeFormList[i].contact_number"
+                required
+              />
+            </div>
+            <div class="w-1/2">
+              <div class="flex flex-row justify-start mt-2">
+                <p class="text-base font-bold cw-3:text-xs">
+                  Entry Vehicle Number
+                </p>
+              </div>
+              <input
+                [id]="'invf_plate_' + i"
+                name="plate_{{i}}"
+                placeholder="Vehicle Number"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+                [(ngModel)]="inviteeFormList[i].vehicle_number"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row justify-end">
+        <u class="text-[14px] font-bold cursor-pointer" (click)="addInvitee()"
+          >{{ addInviteeText }}</u
+        >
+      </div>
+      <div class="flex flex-row justify-end mt-1">
+        <u
+          class="text-[14px] font-bold cursor-pointer"
+          (click)="navigateToInviteFormHistory()"
+        >
+          Add From History List
+        </u>
+      </div>
+      <div class="flex flex-row mt-4 text-[12px] w-full">
+        <div class="w-full">
+          <app-submit-button
+            [text]="'Send Invitation'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+            (click)="onSubmit()"
+            (disabled)="!isFormVisible"
+          >
+          </app-submit-button>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

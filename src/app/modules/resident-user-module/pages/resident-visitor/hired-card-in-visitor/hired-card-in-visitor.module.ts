@@ -8,7 +8,6 @@ import { HiredCardInVisitorPageRoutingModule } from './hired-card-in-visitor-rou
 
 import { HiredCardInVisitorPage } from './hired-card-in-visitor.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -16,8 +15,7 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     FormsModule,
     IonicModule,
     HiredCardInVisitorPageRoutingModule,
-    SharedModule,
-    ComponentsModule
+    SharedModule
   ],
   declarations: [HiredCardInVisitorPage]
 })

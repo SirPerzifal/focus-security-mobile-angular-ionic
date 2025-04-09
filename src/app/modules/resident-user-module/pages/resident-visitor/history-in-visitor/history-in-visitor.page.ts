@@ -173,29 +173,22 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
       this.filteredData = [...this.historyData];
     })
   }
-
-  onChangeDateFilter(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.dateFilter = input.value;
-    const dateParts = this.dateFilter.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; 
-    this.showDate = formattedDate;
-    this.applyFilters();
-  }
   
-  onChangeStartDate(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.startDateFilter = input.value;
-    const dateParts = this.startDateFilter.split('-');
-    this.showStartDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
+  onChangeStartDate(value: any) {
+    const input = value.split('/');
+    // const input = value.target as HTMLInputElement;
+    this.startDateFilter = new Date(String(input[2]) + '-' + String(input[1]) + '-' + String(input[0])).toISOString().split('T')[0];
+    // const dateParts = this.startDateFilter.split('-');
+    this.showStartDate = value
     this.applyFilters();
   }
 
-  onChangeEndDate(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.endDateFilter = input.value;
-    const dateParts = this.endDateFilter.split('-');
-    this.showEndDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
+  onChangeEndDate(value: any) {
+    const input = value.split('/');
+    // const input = value.target as HTMLInputElement;
+    this.endDateFilter = new Date(String(input[2]) + '-' + String(input[1]) + '-' + String(input[0])).toISOString().split('T')[0];
+    // const dateParts = this.endDateFilter.split('-');
+    this.showEndDate = value
     this.applyFilters();
   }
 
@@ -222,7 +215,6 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     this.filteredData = this.historyData.filter(item => {
       const visitorDate = new Date(item.visitor_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-  
       // Convert the selected start and end dates to Date objects
       const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
       const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;

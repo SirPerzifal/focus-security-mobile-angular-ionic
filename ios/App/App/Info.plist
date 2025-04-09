@@ -2,10 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSContactsUsageDescription</key>
+	<string>To access your contact list</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>For secure login authentication</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To capture photos and video</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To record audio with video</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save photos and videos to your library</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To access your photo library</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>focus_security</string>
+	<string>focus_security</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

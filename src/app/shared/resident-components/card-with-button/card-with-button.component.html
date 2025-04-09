@@ -1,3 +1,48 @@
-<p>
-  card-with-button works!
-</p>
+<div
+  [class]="
+    historyData.banned
+      ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'
+      : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'
+  "
+>
+  <div class="text-base font-bold w-[100%]">
+    <table class="w-full table-fixed">
+      <tr class="h-6">
+        <td class="w-[30%]">Purpose</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate font-light">{{ historyData.purpose }}</td>
+      </tr>
+      <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
+        <td>Name</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate font-light">{{ historyData.visitor_name }}</td>
+      </tr>
+      <tr class="h-6" *ngIf="historyData.purpose !== 'Visiting'">
+        <td>Vehicle No</td>
+        <td class="w-[5%]">:</td>
+        <td class="truncate font-light">{{ historyData.vehicle_number }}</td>
+      </tr>
+      <tr class="h-6">
+        <td>Date</td>
+        <td class="w-[5%]">:</td>
+        <td class="font-light">{{ formatDate(historyData.visitor_date) }}</td>
+        <!-- Menggunakan metode formatDate -->
+      </tr>
+    </table>
+  </div>
+  <div class="flex flex-row space-x-1">
+    <button
+      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm"
+      (click)="openDetails()"
+    >
+      View Details
+    </button>
+    <button
+      *ngIf="historyData.banned && hideResinstateButton === 'ban'"
+      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm"
+      (click)="showAlertButtons('Reinstate', 'history-alert', historyData)"
+    >
+      Reinstate
+    </button>
+  </div>
+</div>
