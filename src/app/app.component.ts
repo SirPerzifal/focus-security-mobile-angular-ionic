@@ -16,9 +16,5 @@ export class AppComponent {
     library.addIconPacks(fas, far, fab);
     // Preferences.set({ key: 'usePreferredTextZoom', value: 'false' });
   }
-  
-  async ngOnInit() {
-    // Disable text zoom
-  }
 
 }
