@@ -35,7 +35,6 @@
     "@capacitor/preferences": "^6.0.3",
     "@capacitor/push-notifications": "^6.0.3",
     "@capacitor/status-bar": "6.0.1",
-    "@capacitor/text-zoom": "^7.0.0",
     "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
