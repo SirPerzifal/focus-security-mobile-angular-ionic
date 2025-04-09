@@ -24,6 +24,17 @@ export class MainApiResidentService extends ApiService {
     );
   }
 
+  endpointCustomProcess(params: any, apiUrl: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+    // console.log(params)
+    return this.http.post(this.baseUrl +  apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     

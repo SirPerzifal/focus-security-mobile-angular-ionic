@@ -787,6 +787,58 @@ const routes: Routes = [
     path: 'info-page-settings',
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
   },
+  {
+    path: 'facility-booking-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/facility-booking-main/facility-booking-main.module').then( m => m.FacilityBookingMainPageModule)
+  },
+  {
+    path: 'payments-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/payments-page/payments-main/payments-main.module').then( m => m.PaymentsMainPageModule)
+  },
+  {
+    path: 'family-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/family-page/family-main/family-main.module').then( m => m.FamilyMainPageModule)
+  },
+  {
+    path: 'my-vehicle-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/my-vehicle-main/my-vehicle-main.module').then( m => m.MyVehicleMainPageModule)
+  },
+  {
+    path: 'raise-a-request-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
+  },
+  {
+    path: 'service-provider-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/find-a-service-provider-page/service-provider-main/service-provider-main.module').then( m => m.ServiceProviderMainPageModule)
+  },
+  {
+    path: 'notification-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/notification-page/notification-main/notification-main.module').then( m => m.NotificationMainPageModule)
+  },
+  {
+    path: 'notice-and-docs-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/notice-and-docs-page/notice-and-docs-main/notice-and-docs-main.module').then( m => m.NoticeAndDocsMainPageModule)
+  },
+  {
+    path: 'polling-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/polling-page/polling-main/polling-main.module').then( m => m.PollingMainPageModule)
+  },
+  {
+    path: 'condo-issue-report-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/report-condo-issue-page/condo-issue-report-main/condo-issue-report-main.module').then( m => m.CondoIssueReportMainPageModule)
+  },
+  {
+    path: 'upcoming-event-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/upcoming-event-main/upcoming-event-main.module').then( m => m.UpcomingEventMainPageModule)
+  },
+  {
+    path: 'door-access-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/door-access-page/door-access-main/door-access-main.module').then( m => m.DoorAccessMainPageModule)
+  },
+  {
+    path: 'quick-dials-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
+  },
 ];
 
 @NgModule({

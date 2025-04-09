@@ -45,32 +45,32 @@ export class ResidentHomePagePage implements OnInit {
     {
       name: 'Facility Bookings',
       src: 'assets/icon/resident-icon/icon3.png',
-      routeLinkTo: '',
+      routeLinkTo: '/facility-booking-main',
     },
     {
       name: 'Payments',
       src: 'assets/icon/resident-icon/icon2.png',
-      routeLinkTo: '',
+      routeLinkTo: '/payments-main',
     },
     {
       name: 'My Family',
       src: 'assets/icon/resident-icon/icon1.png',
-      routeLinkTo: '',
+      routeLinkTo: '/family-main',
     },
     {
       name: 'My Vehicle',
       src: 'assets/icon/resident-icon/icon4.png',
-      routeLinkTo: '',
+      routeLinkTo: '/my-vehicle-main',
     },
     {
       name: 'Raise a Request',
       src: 'assets/icon/resident-icon/icon6.png',
-      routeLinkTo: '',
+      routeLinkTo: '/raise-a-request-main',
     },
     {
       name: 'Find Service Providers',
       src: 'assets/icon/resident-icon/icon5.png',
-      routeLinkTo: '',
+      routeLinkTo: '/service-provider-main',
     }
   ];
   squareButton: any[] = [
@@ -78,20 +78,20 @@ export class ResidentHomePagePage implements OnInit {
       id: 1,
       name: 'Notification',
       src: 'assets/icon/resident-icon/notification.png',
-      routeLinkTo: '',
+      routeLinkTo: '/notification-main',
       paramForBadgeNotification: 0
     },
     {
       id: 2,
       name: 'Notice & Docs',
       src: 'assets/icon/home-icon/sound.webp',
-      routeLinkTo: ''
+      routeLinkTo: '/notice-and-docs-main'
     },
     {
       id: 3,
       name: 'Polling',
       src: 'assets/icon/resident-icon/polling.png',
-      routeLinkTo: ''
+      routeLinkTo: '/polling-main'
     },
     {
       id: 4,
@@ -105,25 +105,25 @@ export class ResidentHomePagePage implements OnInit {
       id: 5,
       name: 'Report an Issue',
       src: 'assets/icon/resident-icon/report-an-issue.png',
-      routeLinkTo: ''
+      routeLinkTo: '/condo-issue-report-main'
     },
     {
       id: 6,
       name: 'Upcoming Events',
       src: 'assets/icon/resident-icon/upcoming-event.png',
-      routeLinkTo: ''
+      routeLinkTo: '/upcoming-event-main'
     },
     {
       id: 7,
       name: 'Door Access',
       src: 'assets/icon/home-icon/door.png',
-      routeLinkTo: ''
+      routeLinkTo: '/door-access-main'
     },
     {
       id: 8,
       name: 'Quick Dials',
       src: 'assets/icon/resident-icon/quick-dials.png',
-      routeLinkTo: ''
+      routeLinkTo: '/quick-dials-main'
     }
   ]
 
