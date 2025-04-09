@@ -31,7 +31,7 @@ export class OvernightParkingListPage implements OnInit {
   private refreshInterval: any;
   dateNow = new Date()
   todayDate = this.convertToDDMMYYYY(this.dateNow.toISOString().split('T')[0])
-
+  todayTime = this.todayDate
   showTomorrowdate = ''
 
   convertToDDMMYYYY(dateString: string): string {
@@ -92,6 +92,7 @@ export class OvernightParkingListPage implements OnInit {
     }
     this.mainVmsService.getApi({project_id: this.project_id}, url ).subscribe({
       next: (results) => {
+        console.log(results)
         if (results.result.response_code === 200) {
           console.log(results.result.response_result)
           if (type === 'today') { 
@@ -103,9 +104,14 @@ export class OvernightParkingListPage implements OnInit {
             this.filteredHistorySchedules = this.historySchedules
           }   
         } else {
+          
         }
-
+        if (type === 'today') { 
+          this.todayTime = this.functionMain.convertDateExtend(results.result.start_time)
+          this.showTomorrowdate = this.functionMain.convertDateExtend(results.result.end_time)
+        }
         this.isLoading = false;
+        
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overnight parking data!', 'danger');

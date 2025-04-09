@@ -1,0 +1,33 @@
+<div *ngIf="type === 'radio'; else checkbox" class="flex flex-row items-center">
+  <input 
+    type="radio" 
+    id="{{ id }}" 
+    name="{{ name }}"
+    value="{{ value }}"
+    class="mr-1 accent-[var(--ion-color-primary)] text-[var(--ion-color-primary)] rounded cw-4:text-base text-lg"
+    (change)="onChange($event)"
+    [checked]="checkedText"
+  />
+  <label 
+    for="{{ id }}" 
+    class="cw-4:text-base text-lg"
+  >
+    <b>
+      {{ text }}
+    </b>
+  </label>
+</div>
+<ng-template #checkbox>
+  <div class="flex flex-row mt-2 items-center">
+    <input 
+      type="checkbox" 
+      id="{{ id }}" 
+      name="{{ name }}" 
+      value="{{ value }}"
+      (change)="onChangeCheck($event)" 
+      [checked]="check"
+      class="mr-1 accent-black text-[var(--ion-color-primary)] rounded" 
+    />
+    <label for="provide_unit_number" class="classForLabelCheck"><b>{{ text }}</b></label>
+  </div>
+</ng-template>

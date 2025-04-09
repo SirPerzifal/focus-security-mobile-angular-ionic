@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { RegisterService } from 'src/app/service/resident/register-resident/register.service';
 
@@ -12,16 +13,54 @@ import { RegisterService } from 'src/app/service/resident/register-resident/regi
 export class RegisterResidentPage implements OnInit {
 
   constructor(
-    private router:Router,
-    private route:ActivatedRoute,
-    private toastController:ToastController,
-    private blockUnitService:BlockUnitService,
-    private RegisterService:RegisterService
+    private router: Router,
+    private route: ActivatedRoute,
+    private functionMain: FunctionMainService,
+    private blockUnitService: BlockUnitService,
+    private RegisterService: RegisterService
   ) { }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params ) {
+        if (params['projectId']){
+          this.project_id = params['projectId']
+          this.loadBlock();
+        }else{
+          this.functionMain.presentToast('The Chosen Project from previous page has failed to load here', 'danger')
+        }
+      }else{
+        this.functionMain.presentToast('The Chosen Project from previous page has failed to load here', 'danger')
+      }
+    })
+  }
 
   Block: any[] = [];
   Unit: any[] = [];
   project_id: number = 0;
+
+  selectionFamilyType: any[] = [
+    {
+      id: 'primary_contact',
+      value: 'primary_contact',
+      label: 'Primary Contact'
+    },
+    {
+      id: 'secondary_contact',
+      value: 'secondary_contact',
+      label: 'Secondary Contact'
+    },
+    {
+      id: 'famili_member',
+      value: 'member',
+      label: 'Family Member'
+    },
+    {
+      id: 'tenant',
+      value: 'tenant',
+      label: 'Tenant'
+    }
+  ] 
 
   formData = {
     full_name: '',
@@ -32,6 +71,10 @@ export class RegisterResidentPage implements OnInit {
     unit: '',
     family_type: ''
   };
+
+  onFamilyTypeChange(event: any) {
+    this.formData.family_type = event.target.value;
+  }
 
   onBlockChange(event: any) {
     this.formData.block = event.target.value;
@@ -48,11 +91,11 @@ export class RegisterResidentPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
         } else {
-          this.presentToast('An error occurred while loading block data!', 'danger');
+          this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading block data!', 'danger');
+        this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -65,12 +108,12 @@ export class RegisterResidentPage implements OnInit {
         if (response.result.status_code === 200) {
           this.Unit = response.result.result;
         } else {
-          this.presentToast('An error occurred while loading unit data', 'danger');
+          this.functionMain.presentToast('An error occurred while loading unit data', 'danger');
           console.error('Error:', response.result);
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading unit data', 'danger');
+        this.functionMain.presentToast('An error occurred while loading unit data', 'danger');
         console.error('Error:', error.result);
       }
     });
@@ -95,13 +138,12 @@ export class RegisterResidentPage implements OnInit {
       errMsg += 'Family Type is required!\n';
     }
     if (errMsg != "") {
-      this.presentToast(errMsg, 'danger')
+      this.functionMain.presentToast(errMsg, 'danger')
       return
     }
     try {
       this.RegisterService.postRegister(this.formData.full_name, this.formData.nickname, this.formData.email_address, this.formData.mobile_number, this.formData.block, this.formData.unit, this.formData.family_type).subscribe(
         res => {
-          console.log(res);
           if (res.result.status_code == 200) {
             this.formData = {
               full_name: '',
@@ -114,54 +156,22 @@ export class RegisterResidentPage implements OnInit {
             };
 
             this.router.navigate(['login-end-user'])
-            this.presentToast('Please wait for approval', 'success');
+            this.functionMain.presentToast('Please wait for approval', 'success');
           } else {
-            this.presentToast(res.result.status_desc, 'danger');
+            this.functionMain.presentToast(res.result.status_desc, 'danger');
             console.log(res.result);
           }
 
         },
         error => {
           console.error('Error Here:', error);
-          this.presentToast('An unexpected error has occurred!', 'danger');
+          this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
         }
       );
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast('An unexpected error has occurred!', 'danger');
+      this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
     }
 
   }
-
-  ngOnInit() {
-    // this.route.queryParams.subscribe(params => {
-    //   this.project_id = params['projectId']
-    // });
-    this.route.queryParams.subscribe(params => {
-      if (params ) {
-        if (params['projectId']){
-          console.log(params['projectId']);
-          console.log("params['projectId']params['projectId']params['projectId']");
-          this.project_id = params['projectId']
-          this.loadBlock();
-          
-          // this.loadRecordsWheelClamp('wheel_clamp')
-        }else{
-          this.presentToast('The Chosen Project from previous page has failed to load here', 'danger')
-        }
-      }else{
-        this.presentToast('The Chosen Project from previous page has failed to load here', 'danger')
-      }
-    })
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-    toast.present()
-  }
-
 }

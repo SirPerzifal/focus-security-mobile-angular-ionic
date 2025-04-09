@@ -1,11 +1,3 @@
-export interface LoginUserDto {
-    jsonrpc: string,
-    params: {
-      login: string;
-      password: string;
-    }
-  }
-
 export interface EstateProfile {
   family_id: number;
   family_name: string;

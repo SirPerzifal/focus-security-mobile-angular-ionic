@@ -53,7 +53,7 @@ export class MakeAnEventPage implements OnInit {
     post_to: 'all',
     block_ids: [],
     unit_ids: [],
-    color: [] as string[],
+    color: ['#3b82f6', '#1d4ed8'] as string[],
     is_update: false,
   }
 
@@ -195,7 +195,7 @@ export class MakeAnEventPage implements OnInit {
       end_date: this.selectedDate,
       family_id: this.EventsForm.family_id,
       project_id: this.EventsForm.project_id,
-      color: [] as string[],
+      color: ['#3b82f6', '#1d4ed8'] as string[],
       post_to: event.event.post_to,
       block_ids: event.event.block_ids,
       unit_ids: event.event.unit_ids,
@@ -402,7 +402,7 @@ export class MakeAnEventPage implements OnInit {
           this.loadRegisteredCoach()
           this.EventsForm.event_description = ''
           this.EventsForm.registered_coach_id = 0
-          this.EventsForm.color = []
+          this.EventsForm.color = ['#3b82f6', '#1d4ed8']
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
         }
@@ -552,7 +552,7 @@ export class MakeAnEventPage implements OnInit {
       block_ids: [],
       unit_ids: [],
       project_id: this.EventsForm.project_id,
-      color: [] as string[],
+      color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
     }
     this.selectedEndTime = ''
@@ -585,7 +585,7 @@ export class MakeAnEventPage implements OnInit {
       block_ids: [],
       unit_ids: [],
       project_id: this.EventsForm.project_id,
-      color: [] as string[],
+      color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
     }
     this.isRead = false

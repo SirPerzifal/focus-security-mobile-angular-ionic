@@ -1,11 +1,16 @@
-<div class="flex flex-col">
-  <u class="font-bold text-black text-base"> {{ labelParent }} </u>
+<div *ngIf="type === 'date'" class="flex flex-col">
+  <u *ngIf="labelParent" class="font-bold text-black text-base"> {{ labelParent }} </u>
   <label for="{{ id }}" class="font-bold text-black text-sm" (click)="clickDate(id)"> {{ labelChild1 }} </label>
   <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between mt-1">
-    <input class="hidden" [type]="type" name="entryDate" (change)="onDateChange($event)" id="{{ id }}" style="position: absolute; opacity: 0; pointer-events: none;">
+    <input class="hidden" [type]="type" [min]="minDate" name="entryDate" (change)="onValueChange($event, type)" id="{{ id }}" style="position: absolute; opacity: 0; pointer-events: none;">
     <label class="w-full text-start" [ngClass]="(value) ? 'text-black' : 'text-gray-400'" for="{{ id }}" (click)="clickDate(id)">
       {{ value ? value : typeAction + ' ' + labelChild2 }}
     </label>
     <ion-icon *ngIf="type === 'date'" name="calendar-clear-outline" class="positioning-calendar-icon" (click)="clickDate(id)"></ion-icon>
   </div>
+</div>
+<div *ngIf="type !== 'date'" class="flex flex-col">
+  <u *ngIf="labelParent" class="font-bold text-black text-base"> {{ labelParent }} </u>
+  <label for="{{ id }}" class="font-bold text-black text-sm" (click)="clickDate(id)"> {{ labelChild1 }} </label>
+  <input id="{{ id }}" type="text" class="bg-white p-3 rounded border h-12 border-gray-500 w-full mt-1" style="border: 1px solid #6B7280;" placeholder="{{ typeAction + ' ' + labelChild2 }}" (change)="onValueChange($event, type)">
 </div>

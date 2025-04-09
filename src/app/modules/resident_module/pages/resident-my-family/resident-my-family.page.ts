@@ -32,6 +32,23 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
+    this.familyData = [
+      { 
+        id: 0, 
+        type: '', 
+        hard_type: '' ,
+        name: '', 
+        mobile: '', 
+        nickname: '', 
+        email: '', 
+        head_type: '', 
+        status: '', 
+        tenancy_agreement: '', 
+        end_date: new Date(), 
+        family_photo: '', 
+        reject_reason: '' 
+      }
+    ];
     this.familyData.pop();
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {

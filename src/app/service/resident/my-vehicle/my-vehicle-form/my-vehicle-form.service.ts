@@ -46,6 +46,46 @@ export class MyVehicleFormService extends ApiService{
     );
   }
 
+  getNotificationAlertSettings(familyId:number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        family_id: familyId,
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`/get/notification/alert/settings`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  postNotificationAlertSettings(familyId:number, walkVisitorAlert:boolean,driveVisitorAlert:boolean): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    const body = {
+      jsonrpc: '2.0',
+      params: {
+        family_id: familyId,
+        is_active_walk_visitor_alert: walkVisitorAlert,
+        is_active_drive_visitor_alert: driveVisitorAlert
+      }
+    };
+
+    // Change to send data in request body
+    return this.http.post(`/post/notification/alert/settings`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   postVehicle(
     vehicleNumber: string, 
     iuNumber: string, 

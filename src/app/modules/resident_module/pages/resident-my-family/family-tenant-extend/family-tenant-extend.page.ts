@@ -11,6 +11,7 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 export class FamilyTenantExtendPage implements OnInit {
 
   name: string=""
+  fromWhere: string = '';
   end_date: string=new Date().toISOString().split('T')[0];
 
   formData = {
@@ -82,7 +83,7 @@ export class FamilyTenantExtendPage implements OnInit {
   constructor(private router: Router, private toastController: ToastController, private familyService: FamilyService) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: string, tenant: string, warning: boolean, profile_image: string};
+    const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: string, tenant: string, warning: boolean, profile_image: string, from_where: string};
     if (state) {
       this.formData.unit_id = state.id,
       this.formData.type_of_residence = 'tenants'
@@ -94,8 +95,17 @@ export class FamilyTenantExtendPage implements OnInit {
       this.formData.tenancies.end_of_tenancy_aggrement = state.end_date
       this.formData.tenancies.tenancy_aggrement = state.tenant
       this.end_date = this.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]);
+      this.fromWhere = state.from_where
     } 
-  }  
+  }
+
+  backToWhere() {
+    if (this.fromWhere === 'card') {
+      this.router.navigate(['resident-my-family'])
+    } else {
+      this.router.navigate(['family-edit-member'])
+    }
+  }
 
   onSubmit() {
 

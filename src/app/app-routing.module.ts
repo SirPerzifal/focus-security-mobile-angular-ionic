@@ -714,18 +714,6 @@ const routes: Routes = [
     path: 'client-residents',
     loadChildren: () => import('./modules/client_app/client-residents/client-residents.module').then( m => m.ClientResidentsPageModule)
   },
-  // {
-  //   path: 'incoming-call',
-  //   loadChildren: () => import('./modules/call_modules/pages/incoming-call/incoming-call.module').then( m => m.IncomingCallPageModule)
-  // },
-  // {
-  //   path: 'outgoing-call',
-  //   loadChildren: () => import('./modules/call_modules/pages/outgoing-call/outgoing-call.module').then( m => m.OutgoingCallPageModule)
-  // },
-  // {
-  //   path: 'ongoing-call',
-  //   loadChildren: () => import('./modules/call_modules/pages/ongoing-call/ongoing-call.module').then( m => m.OngoingCallPageModule)
-  // },
   {
     path: 'incoming-call',
     loadChildren: () => import('./modules/call_module/incoming-call/incoming-call.module').then( m => m.IncomingCallPageModule)
@@ -750,23 +738,55 @@ const routes: Routes = [
     path: 'client-payment-settings',
     loadChildren: () => import('./modules/client_app/client-payment-settings/client-payment-settings.module').then( m => m.ClientPaymentSettingsPageModule)
   },
+  {
+    path: 'client-notification',
+    loadChildren: () => import('./modules/client_app/client-notification/client-notification.module').then( m => m.ClientNotificationPageModule)
+  },
   // // rewrite code
-  // {
-  //   path: 'resident-home-page',
-  //   loadChildren: () => import('./modules/resident-user-module/pages/resident-home-page/resident-home-page.module').then( m => m.ResidentHomePagePageModule)
-  // },
-  // {
-  //   path: 'visitor-main',
-  //   loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-main/visitor-main.module').then( m => m.VisitorMainPageModule)
-  // },
-  // {
-  //   path: 'app-report-main',
-  //   loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/app-report-main/app-report-main.module').then( m => m.AppReportMainPageModule)
-  // },
-  // {
-  //   path: 'settings-main',
-  //   loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/settings-main/settings-main.module').then( m => m.SettingsMainPageModule)
-  // },
+  {
+    path: 'resident-home-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-home-page/resident-home-page.module').then( m => m.ResidentHomePagePageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'visitor-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-main/visitor-main.module').then( m => m.VisitorMainPageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'app-report-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/app-report-main/app-report-main.module').then( m => m.AppReportMainPageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'settings-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/settings-main/settings-main.module').then( m => m.SettingsMainPageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'visitor-invitig-form',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-invitig-form/visitor-invitig-form.module').then( m => m.VisitorInvitigFormPageModule)
+  },
+  {
+    path: 'hired-card-in-visitor',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/hired-card-in-visitor/hired-card-in-visitor.module').then( m => m.HiredCardInVisitorPageModule)
+  },
+  {
+    path: 'history-in-visitor',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/history-in-visitor/history-in-visitor.module').then( m => m.HistoryInVisitorPageModule)
+  },
+  {
+    path: 'detail-history-in-visitor',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/detail-history-in-visitor/detail-history-in-visitor.module').then( m => m.DetailHistoryInVisitorPageModule)
+  },
+  {
+    path: 'visitor-inviting-from-history',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-inviting-from-history/visitor-inviting-from-history.module').then( m => m.VisitorInvitingFromHistoryPageModule)
+  },
+  {
+    path: 'info-page-settings',
+    loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
+  },
 ];
 
 @NgModule({

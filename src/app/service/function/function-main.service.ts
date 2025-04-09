@@ -301,6 +301,14 @@ export class FunctionMainService {
     }, 0);
   }
 
+  formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
+  }
+
+
   convertBase64ToBlob(base64: string) {
     const byteCharacters = atob(base64);
     const byteArrays = [];

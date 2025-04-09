@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
+import { Storage } from '@ionic/storage-angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { EstateProfile } from 'src/models/resident/auth.model';
@@ -19,22 +19,29 @@ export class EstateModalPage implements OnInit {
 
   constructor(
     private navParams: NavParams, 
+    private storage: Storage,
     private modalController: ModalController,
     public functionMain: FunctionMainService,
-  ) { }
+  ) {
+    this.storage.create();
+  }
 
   async ngOnInit() {
-    const user_state = await Preferences.get({ key: 'USESTATE_DATA' });
-    if (user_state?.value) {
-      this.activeUnit = JSON.parse(user_state.value).unit_id; // Pastikan untuk mengurai JSON
-    }
+    await this.storage.get('USESTATE_DATA').then((value) => {
+      if (value) {
+        const decodedUserState = decodeURIComponent(escape(atob(value)));
+        this.activeUnit = JSON.parse(decodedUserState).unit_id; // Pastikan untuk mengurai JSON
+      }
+    });
   
     const estate = this.navParams.get('estate');
     this.profileEstate = Object.keys(estate).map(key => ({
       family_id: estate[key]?.family_id,
       family_name: estate[key]?.family_name || '',
-      family_type: estate[key]?.family_type || '',
+      image_profile: estate[key]?.image_profile || '',
+      family_email: estate[key]?.family_email || '',
       family_mobile_number: estate[key]?.family_mobile_number || '',
+      family_type: estate[key]?.family_type || '',
       unit_id: estate[key]?.unit_id,
       unit_name: estate[key]?.unit_name || '',
       block_id: estate[key]?.block_id,
@@ -47,13 +54,14 @@ export class EstateModalPage implements OnInit {
     this.isLoading = false;
   }
   
-  async chooseEstateClick(estate:any){
-    Preferences.set({
-      key: 'USESTATE_DATA',
-      value: JSON.stringify(estate),
-    }).then(()=>{
-      this.modalController.dismiss(JSON.stringify(estate));
-    });
+  async chooseEstateClick(estate: any) {
+    // Mengubah estate menjadi string JSON
+    const estateString = JSON.stringify(estate);
+    // Melakukan encoding ke Base64
+    const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
+    this.storage.set('USESTATE_DATA', encodedEstate).then(() => {
+      this.modalController.dismiss(encodedEstate);
+    })
   }
 
 }

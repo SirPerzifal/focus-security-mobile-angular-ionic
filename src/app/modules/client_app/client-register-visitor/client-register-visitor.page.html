@@ -58,7 +58,7 @@
             <div class="table w-full">
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black">Date of Invite</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertToDDMMYYYY(visitor.entry_date.split(' ')[0]) }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertNewDateTZ(visitor.entry_date).split(' ')[0] }}</p>
               </div>
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black">Type</p>
@@ -141,7 +141,7 @@
           <tr class="h-6">
             <td class="w-2/5  font-bold">Date Of Visit</td>
             <td class="w-[5%]">:</td>
-            <td>{{ visitorDetail.entry_date ? functionMain.convertToDDMMYYYY(visitorDetail.entry_date.split(' ')[0]) : '-' }}</td>
+            <td>{{ visitorDetail.entry_date ? functionMain.convertNewDateTZ(visitorDetail.entry_date).split(' ')[0] : '-' }}</td>
           </tr>
           <tr class="h-6">
             <td class="w-2/5  font-bold">Entry Time</td>

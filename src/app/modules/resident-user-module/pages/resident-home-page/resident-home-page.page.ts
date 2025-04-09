@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavigationStart } from '@angular/router';
 
-import { ToastController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
+import { Preferences } from '@capacitor/preferences';
 import { Contacts } from '@capacitor-community/contacts';
-import { FileOpener } from '@capacitor-community/file-opener';
 
-import { Filesystem, Directory } from '@capacitor/filesystem';
-import { Capacitor } from '@capacitor/core';
-
-import { NotificationService } from 'src/app/service/resident/notification/notification.service';
-import { HouseRulesService } from 'src/app/service/resident/house-rules/house-rules.service';
-import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
+
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -24,15 +21,20 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 })
 export class ResidentHomePagePage implements OnInit {
   
+  estate: Estate[] = [];
+
   isLoading: boolean = false;
-  unit_id: number = 0;
-  partner_id: number = 0;
+  isModalUpdateProfile: boolean = false;
   
   houseRules: { title: string, base64Doc: string }[] = [];
   
   searchTerm: string = '';
-  condominiumName: string='';
-  useName: string='';
+  condominiumName: string = '';
+  condoImage: string = '';
+  userType: string = '';
+  useName: string = '';
+  imageProfile: string = '';
+  familyType: string = '';
 
   longButtondata: any[] = [
     {
@@ -127,74 +129,121 @@ export class ResidentHomePagePage implements OnInit {
 
   constructor(
     private router: Router,
-    private toastController: ToastController, 
-    private modalController: ModalController, 
-    private authService: AuthService,
-    private houseRulesService: HouseRulesService,
-    private notificationService: NotificationService, 
-    private getUserInfoService: GetUserInfoService
-  ) { }
+    private modalController: ModalController,
+    private mainApiResident: MainApiResidentService,
+    private storage: StorageService,
+    private functionMain: FunctionMainService
+  ) {}
 
-  ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage('user').then((value) => {
-      const parse = this.authService.parseJWTParams(value.user);
-      this.partner_id = Number(parse.partner_id);
-      this.useName = parse.name;
-    })
-    this.isLoading = true;
-    this.getUserInfoService.getPreferenceStorage('user').then(async (value) => {
-      if(value.user){
-        var accessToken = this.authService.parseJWTParams(value.user)
-        await this.presentModal(accessToken?.email);
-        
-        this.loadHouseRules();
-        this.fetchContacts();
-        this.loadPreferenceProjectName();
-        this.loadCountNotification();
-        this.router.events.subscribe(event => {
-          if (event instanceof NavigationStart) {
-            if (event['url'] == '/resident-home-page'){
-              this.squareButton[0].paramForBadgeNotification = 0
-              this.loadCountNotification();
+  ionViewWillEnter() {
+    this.fetchContacts();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.setData(estate, estate.image_profile);
+            this.loadCountNotification(estate.unit_id, estate.family_id);
+            this.loadHouseRules(estate.project_id);
+            if (!this.imageProfile) {
+              this.isModalUpdateProfile = false
             }
+            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+              if(value?.value){
+                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                const credential = JSON.parse(decodedEstateString);
+                this.userType = credential.type;
+              }
+            })
           }
-        });
-      }else{
-        await this.presentModal('jenvel@gmail.com');
-        this.loadHouseRules();
-        this.fetchContacts();
-        this.loadPreferenceProjectName();
-        this.loadCountNotification();
-        this.router.events.subscribe(event => {
-          if (event instanceof NavigationStart) {
-            if (event['url'] == '/resident-home-page'){
-              this.squareButton[0].paramForBadgeNotification = 0
-              this.loadCountNotification();
-            }
+        })
+      } else {
+        Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+          if(value?.value){
+            const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+            this.isLoading = true;
+            // Mengubah string JSON menjadi objek JavaScript
+            const credential = JSON.parse(decodedEstateString);
+            this.userType = credential.type;
+            console.log(this.userType);
+            this.loadEstate(credential.emailOrPhone);
           }
-        });
+        })
       }
     })
   }
 
-  async presentModal(email: string= '') {
+  ngOnInit() {
+  }
+
+  async loadEstate( email:string ) {
+    this.mainApiResident.endpointProcess({
+      email: email
+    }, 'get/estate').subscribe((result: any) => {
+      if (result.result.status_code === 200) {
+        var listedEstate = []
+        for (var key in result.result.response){
+          if(result.result.response.hasOwnProperty(key)){
+            listedEstate.push({
+              family_id: result.result.response[key]?.family_id,
+              family_name: result.result.response[key]?.family_name || '',
+              image_profile: result.result.response[key]?.image_profile || '',
+              family_email: result.result.response[key]?.family_email || '',
+              family_mobile_number: result.result.response[key]?.family_mobile_number || '',
+              family_type: result.result.response[key]?.family_type || '',
+              unit_id: result.result.response[key]?.unit_id,
+              unit_name: result.result.response[key]?.unit_name || '',
+              block_id: result.result.response[key]?.block_id,
+              block_name: result.result.response[key]?.block_name || '',
+              project_id: result.result.response[key]?.project_id,
+              project_name: result.result.response[key]?.project_name || '',
+              project_image: result.result.response[key]?.project_image || '',
+            })
+          }
+        }
+        this.estate = listedEstate;
+        this.presentModal(this.estate);
+        this.isModalUpdateProfile = false;
+      } else {
+        console.error('Error fetching Estate:', result);
+      }
+    })
+  }
+
+  async presentModal(estate: any) {
     const modal = await this.modalController.create({
       component: ModalEstateHomepageComponent,
       cssClass: 'record-modal',
       componentProps: {
-        // email: email
-        email: email
+        estate: estate
       }
-  
     });
 
     modal.onDidDismiss().then((result) => {
       if (result) {
-        // this.loadPreferenceProjectName()
         this.isLoading = false;
-        console.log(result.data)
-        if(result.data){
-          console.log("SUCCEED")
+        if ( result.data ) {
+          this.storage.decodeData(result.data).then((value: any) => {
+            if ( value ) {
+              const estate = JSON.parse(value) as Estate;
+              this.setData(estate, estate.image_profile);
+              this.loadCountNotification(estate.unit_id, estate.family_id);
+              this.loadHouseRules(estate.project_id);
+              if (!this.imageProfile) {
+                this.isModalUpdateProfile = true
+              }
+            }
+          })
+        } else {
+          Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+            if(value?.value){
+              const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+              this.isLoading = true;
+              // Mengubah string JSON menjadi objek JavaScript
+              const credential = JSON.parse(decodedEstateString);
+              this.loadEstate(credential.emailOrPhone);
+            }
+          })
         }
       }
     });
@@ -202,134 +251,41 @@ export class ResidentHomePagePage implements OnInit {
     return await modal.present();
   }
 
-  async loadPreferenceProjectName(){
-    // Ambil data unit yang sedang aktif
-    this.getUserInfoService.getPreferenceStorage('project_name').then((value) => {
-      this.condominiumName = value.project_name;
-    })
+  setData(parserValue: any, imageProfile: string) {
+    this.condominiumName = parserValue.project_name;
+    this.condoImage = parserValue.project_image;
+    this.imageProfile = imageProfile;
+    this.useName = parserValue.family_name;
+    this.familyType = parserValue.family_type;
   }
 
   async fetchContacts() {
     const PermissionStatus = await Contacts.requestPermissions();
     if (PermissionStatus.contacts === 'granted') {
-      this.presentToast('Now you app sync with your contact!', 'success');
+      this.functionMain.presentToast('Now you app sync with your contact!', 'success');
     }
   }
 
-  loadCountNotification() {
-    console.log(this.partner_id);
-    console.log('this.partner_idthis.partner_idthis.partner_idthis.partner_id');
-    
-    this.notificationService.countNotifications(this.unit_id, this.partner_id)
-      .subscribe({next: (response: any) => {
-        if (response.result.response_code === 200) {
-          // Map data dengan tipe yang jelas
-          this.squareButton[0].paramForBadgeNotification = response.result.notifications; // Simpan jumlah notifikasi baru
-          // if (this.paramForBadgeNotification) {
-          //   console.log('it works!', this.paramForBadgeNotification)
-          // }
-        } else {
-          console.error('Error:', response);
-        }
-      },
-      error: (error) => {
-        console.error('Error:', error);
-      }
-    });
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-
-    toast.present().then(() => {
-    });
-  }
-
-  loadHouseRules() {
-    this.getUserInfoService.getPreferenceStorage('project_id').then(async (value) => {
-      if(value.project_id){
-        this.houseRulesService.getHouseRules(parseInt(value.value)).subscribe(
-          response => {
-            if (response.result.response_code === 200) {
-              // console.log("heres the data", response);
-              this.squareButton[3].document = response.result.result[0].documents;
-              this.squareButton[3].documentName = response.result.result[0].name;
-            } else {
-              console.error('Error fetching notifications:', response);
-            }
-          },
-          error => {
-            console.error('HTTP Error:', error);
-          }
-        );
-      }else{
-        console.error('No Active Project');
-        console.log(value);
-      }
+  loadCountNotification(unitId: number, partnerId: number) {
+    this.mainApiResident.endpointProcess({
+      unit_id: unitId,
+      partner_id: partnerId
+    }, 'get/notifications_count').subscribe((result: any) => {
+      this.squareButton[0].paramForBadgeNotification = result.result.notifications;
     })
   }
 
-  async downloadDocument(base64Doc: string, title: string) {
-    try {
-      const byteCharacters = atob(base64Doc);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      if (Capacitor.isNativePlatform()) {
-        const base64 = await this.convertBlobToBase64(blob);
-        const saveFile = await Filesystem.writeFile({
-          path: `${title}.pdf`,
-          data: base64,
-          directory: Directory.Data
-        });
-        const path = saveFile.uri;
-        await FileOpener.open({
-          filePath: path,
-          contentType: blob.type
-        });
-        console.log('File is opened');
+  loadHouseRules(project_id: number) {
+    this.mainApiResident.endpointProcess({
+      project_id: project_id
+    }, 'get/house_rules_documents').subscribe((result:any) => {
+      if (result.result.response_code === 200) {
+        // console.log("heres the data", result);
+        this.squareButton[3].document = result.result.result[0].documents;
+        this.squareButton[3].documentName = result.result.result[0].name;
       } else {
-        const href = window.URL.createObjectURL(blob);
-        this.downloadFile(href, `${title}.pdf`);
+        console.error('Error fetching notifications:', result);
       }
-    } catch (error) {
-      console.error('Error downloading document:', error);
-      // Optionally, show an error message to the user
-    }
-  }
-
-  convertBlobToBase64(blob: Blob) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        resolve(reader.result as string);
-      };
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  downloadFile(href: string, filename: string) {
-    const link = document.createElement("a");
-    link.style.display = "none";
-    link.href = href;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-        URL.revokeObjectURL(link.href);
-        // Periksa apakah parentNode tidak null sebelum menghapus
-        if (link.parentNode) {
-            link.parentNode.removeChild(link);
-        }
-    }, 0);
+    })
   }
 }

@@ -21,39 +21,21 @@
       Welcome To <br /> <p class="text-3xl">IFS360 APP</p>
     </h2>
     <div class="w-full">
-      <input id="email" type="text" placeholder="Sample@example.com" 
-      class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)]" 
-      [value]="existUser.params.login" 
+      <input id="email" type="text" placeholder="Email or Phone" 
+      class="border w-full rounded py-2 px-3 outline-none border-none focus:outline-none focus:border-none h-12 text-sm" 
+      [value]="existUser.login" 
       (change)="onLoginChange($event)" 
-      (focus)="handleFocus()" 
-      (blur)="handleBlur()">
+      (focus)="handleFocus()">
     </div>
     <div class="mt-2 w-full ">
-      <!-- <div class="relative">
-        <input 
-        id="password" 
-        [type]="showPassword" 
-        placeholder="Password" 
-        [value]="existUser.params.password" 
-        (change)="onPasswordChange($event)" 
-        (focus)="handleFocus()" 
-        (blur)="handleBlur()"
-        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)] sm:py-3 ps-4 pe-10 block border-gray-200 sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-        <button (click)="onToggleShowPassword()" type="button" class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
-          <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-            <path class="hs-password-active:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-            <path class="hs-password-active:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-            <line class="hs-password-active:hidden" x1="2" x2="22" y1="2" y2="22"></line>
-            <path class="hidden hs-password-active:block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-            <circle class="hidden hs-password-active:block" cx="12" cy="12" r="3"></circle>
-          </svg>
-        </button>
-      </div> -->
-      <app-input-password (password)="onPasswordChange($event)"></app-input-password>
+      <app-input-password
+        [passwordPlaceholder]="'*************'"
+        (addMarginBottomExtend)="handleFocus($event)"
+        (password)="onPasswordChange($event)"
+      ></app-input-password>
     </div>
     <div class="fsles-button-container mt-5">
-      <ion-button fill="clear" [ngClass]="(existUser.params.login && existUser.params.password) ? 'fslp-button h-12 w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 h-12 fslp-button-disabled w-full'" (click)="loginResident()">
+      <ion-button fill="clear" [ngClass]="(existUser.login && existUser.password) ? 'fslp-button h-12 w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 h-12 fslp-button-disabled w-full'" (click)="loginResident()">
        Log In
       </ion-button>
     </div>
