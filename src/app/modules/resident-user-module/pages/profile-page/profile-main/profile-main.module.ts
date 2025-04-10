@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FacilityBookingMainPageRoutingModule } from './facility-booking-main-routing.module';
+import { ProfileMainPageRoutingModule } from './profile-main-routing.module';
 
-import { FacilityBookingMainPage } from './facility-booking-main.page';
+import { ProfileMainPage } from './profile-main.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FacilityBookingMainPageRoutingModule,
+    ProfileMainPageRoutingModule,
     SharedModule
   ],
-  declarations: [FacilityBookingMainPage]
+  declarations: [ProfileMainPage]
 })
-export class FacilityBookingMainPageModule {}
+export class ProfileMainPageModule {}

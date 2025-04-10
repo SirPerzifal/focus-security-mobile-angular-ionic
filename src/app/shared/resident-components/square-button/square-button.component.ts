@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -17,13 +17,20 @@ export class SquareButtonComponent  implements OnInit {
   @Input() paramForBadgeNotification: number = 0;
   @Input() document: string = '';
   @Input() documentName: string = '';
+  @Input() click: boolean = false;
+
+  @Output() eventEmitter = new EventEmitter<any>();
 
   constructor(private router: Router) { }
 
   ngOnInit() {}
 
   routeBasic() {
-    this.router.navigate([this.routeLinkTo])
+    if (this.routeLinkTo) {
+      this.router.navigate([this.routeLinkTo]);
+    } else if (this.click === true) {
+      this.eventEmitter.emit([true, this.name]);
+    }
   }
 
   routeLinkNotification() {

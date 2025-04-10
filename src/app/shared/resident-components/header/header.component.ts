@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
@@ -15,9 +16,13 @@ export class HeaderComponent  implements OnInit {
   @Input() condoImage: string = '';
 
   constructor(
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private router: Router
   ) { }
 
   ngOnInit() {}
 
+  toProfile() {
+    this.router.navigate(['profile-main']);
+  }
 }

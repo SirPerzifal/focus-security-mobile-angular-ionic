@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Profile'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="mb-24">
+    <div
+      *ngIf="!showMain"
+      class="w-full flex items-start justify-start mt-2 ml-3"
+    >
+      <ion-icon
+        name="arrow-back-circle"
+        size="large"
+        class="text-[var(--ion-color-primary)] size-12"
+        (click)="onClickButton('', 'back')"
+      ></ion-icon>
+    </div>
+    <div *ngIf="showMain" @fadeInOut>
+      <div class="flex flex-col justify-center w-full items-center">
+        <div class="rounded-full overflow-hidden w-32 mb-2 mt-10">
+          <div class="w-32 h-32 mb-4 flex flex-col justify-start relative">
+            <img
+              class="w-full h-full object-covern rounded-full"
+              height="128"
+              [src]="functionMain.getImage(imageProfile)"
+              width="128"
+            />
+            <ion-icon
+              class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50"
+              name="pencil"
+              (click)="ableChangeInput()"
+            >
+            </ion-icon>
+          </div>
+        </div>
+        <h2 class="text-xl font-bold">{{ userName }}</h2>
+      </div>
+
+      <div class="mt-4 space-y-2 w-full px-4">
+        <div *ngFor="let id of inputData">
+          <app-input-component
+            [id]="id.id"
+            [type]="'text'"
+            [value]="inputForm[id.formParams]"
+            [disabled]="disabledInput"
+            [labelChild1]="id.name"
+            (eventEmitter)="onChangeValueInput($event, id.id)"
+          ></app-input-component>
+        </div>
+        <div *ngIf="!disabledInput" class="w-full">
+          <app-submit-button
+            [text]="'Save Changes'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+            (click)="saveChangeProfile()"
+          >
+          </app-submit-button>
+        </div>
+      </div>
+
+      <div class="mt-2 flex items-center justify-center flex-col px-4">
+        <div
+          class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5"
+        >
+          <div *ngFor="let sb of squareButton">
+            <app-square-button
+              [name]="sb.name"
+              [srcImage]="sb.src"
+              [click]="true"
+              (eventEmitter)="onClickSquareBottom($event)"
+            >
+            </app-square-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

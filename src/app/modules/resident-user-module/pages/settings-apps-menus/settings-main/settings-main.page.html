@@ -50,7 +50,6 @@
         <input
           id="old_password"
           [type]="showOldPassword"
-          placeholder="Current Password"
           [value]="passwordForm.currentPassword"
           (change)="onNewPasswordChange($event, 'currentPassword')"
           class="!border-2 w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)] sm:py-3 ps-4 pe-10 block !border-gray-300 sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -103,7 +102,6 @@
         <input
           id="password"
           [type]="showPassword"
-          placeholder="New Password"
           [value]="passwordForm.newPassword"
           (change)="onNewPasswordChange($event, 'newPassword')"
           class="!border-2 w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)] sm:py-3 ps-4 pe-10 block !border-gray-300 sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -156,7 +154,6 @@
         <input
           id="password"
           [type]="showConfirmPassword"
-          placeholder="Confirm Password"
           [value]="passwordForm.confirmPassword"
           (change)="onNewPasswordChange($event, 'confirmPassword')"
           class="!border-2 w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-sm focus:outline-[var(--ion-color-primary)] sm:py-3 ps-4 pe-10 block !border-gray-300 sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"

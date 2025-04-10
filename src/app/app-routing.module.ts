@@ -840,8 +840,8 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
   },
   {
-    path: 'profile-page',
-    loadChildren: () => import('./modules/resident-user-module/pages/profile-page/profile-page.module').then( m => m.ProfilePagePageModule)
+    path: 'profile-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/profile-page/profile-main/profile-main.module').then( m => m.ProfileMainPageModule)
   },
 ];
 

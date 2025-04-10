@@ -17,6 +17,7 @@ export class InputComponentComponent  implements OnInit {
   @Input() labelChild1: string = ''; 
   @Input() labelChild2: string = ''; 
   @Input() fontInBoxClass: string = '';
+  @Input() disabled: boolean = false;
   @Input() minDate: string = ''; 
   @Output() eventEmitter = new EventEmitter<any>()
 

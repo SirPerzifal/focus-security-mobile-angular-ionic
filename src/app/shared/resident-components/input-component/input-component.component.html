@@ -56,7 +56,10 @@
   <input
     id="{{ id }}"
     type="text"
+    [disabled]="disabled"
+    [value]="value"
     class="bg-white p-3 rounded border h-12 border-gray-500 w-full mt-1"
+    [ngClass]="disabled ? 'text-gray-500' : ''"
     style="border: 1px solid #6b7280"
     placeholder="{{ typeAction + ' ' + labelChild2 }}"
     (change)="onValueChange($event, type)"

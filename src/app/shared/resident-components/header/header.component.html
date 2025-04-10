@@ -1,18 +1,30 @@
 <div class="header fixed top-0">
   <div class="flex flex-col justify-start">
-    <img alt="Profile picture of a person" height="80" [src]="functionMain.getImage(profileImage)" width="80" class="w-80 h-80"/>
-    <ion-icon class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1" name="pencil">
+    <img
+      alt="Profile picture of a person"
+      height="80"
+      [src]="functionMain.getImage(profileImage)"
+      width="80"
+      class="w-80 h-80"
+    />
+    <ion-icon
+      class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1"
+      name="pencil"
+      (click)="toProfile()"
+    >
     </ion-icon>
     <div class="flex flex-col items-start mt-4">
-      <h1 class="text-[black]">
-        Welcome {{ userName }}
-      </h1>
+      <h1 class="text-[black]">Welcome {{ userName }}</h1>
       <p class="text-[black] font-bold">
         {{ condoName }}
       </p>
     </div>
   </div>
   <div class="logo">
-    <img alt="iFS360 logo" height="60" [src]="functionMain.getImage(condoImage)"/>
+    <img
+      alt="iFS360 logo"
+      height="60"
+      [src]="functionMain.getImage(condoImage)"
+    />
   </div>
 </div>
