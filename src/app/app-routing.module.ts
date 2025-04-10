@@ -839,6 +839,10 @@ const routes: Routes = [
     path: 'quick-dials-main',
     loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
   },
+  {
+    path: 'profile-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/profile-page/profile-page.module').then( m => m.ProfilePagePageModule)
+  },
 ];
 
 @NgModule({

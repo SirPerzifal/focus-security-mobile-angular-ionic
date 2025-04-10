@@ -3,3 +3,15 @@
     left: -5px;
     margin-left: -18px;
 }
+.hidden-datetime {
+    visibility: hidden;
+    height: 0;
+    position: absolute;
+}
+ion-modal#choose-date-modal {
+    --width: fit-content;
+    --min-width: 290px;
+    --height: 250px;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}

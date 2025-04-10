@@ -53,9 +53,12 @@ export class VisitorInvitigFormPage implements OnInit {
     const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
   
     if (state) {
+      const input = state.formData.dateOfInvite.split('/');
+      // const input = value.target as HTMLInputElement;
+      const dateOfInvite = new Date(String(input[2]) + '-' + String(input[1]) + '-' + String(input[0])).toISOString().split('T')[0];
         this.formData = {
           ...state.formData,
-          dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
+          dateOfInvite: new Date(dateOfInvite) // Ensure this is a Date object
         };
   
       if (state.selectedInvitees) {

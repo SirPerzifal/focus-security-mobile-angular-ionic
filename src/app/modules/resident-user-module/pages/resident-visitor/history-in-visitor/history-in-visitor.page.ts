@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -10,8 +12,25 @@ import { Estate } from 'src/models/resident/resident.model';
   selector: 'app-history-in-visitor',
   templateUrl: './history-in-visitor.page.html',
   styleUrls: ['./history-in-visitor.page.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(100%)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
 })
 export class HistoryInVisitorPage implements OnInit, OnDestroy {
+
+  fields: string[] = [
+    'Purpose',
+    'Name',
+    'Date',
+  ]
 
   navButtonsMain: any[] = [
     {
@@ -63,11 +82,12 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   typeFilter = 'All'
 
   unitId: number = 0;
+  blockId: number = 0;
 
   hideFilter: string = '';
   cardIfJustBan: string = '';
 
-  constructor(private router: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) { 
+  constructor(private router: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService, private alertController: AlertController) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -76,6 +96,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
       this.cardIfJustBan = state.from;
     }
   }
+
   ngOnInit() {
   }
 
@@ -86,6 +107,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.unitId = estate.unit_id;
+            this.blockId = estate.block_id;
             this.getHistoryList();
           }
         })
@@ -93,11 +115,16 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     })
   }
 
+  formatDate(dateString: string): string {
+    const dateParts = dateString.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format menjadi '15/10/2023'
+  }
+
   directTo() {
     if (this.cardIfJustBan === 'ban') {
       this.router.navigate(['/resident-my-profile']);
     } else {
-      this.router.navigate(['/resident-homepage'])
+      this.router.navigate(['/resident-home-page'])
     }
   }
 
@@ -243,6 +270,54 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
 
   toggleShowHistory() {
     // this.router.navigate(['history']);
+  }
+
+  openDetails(data: any) {
+    this.router.navigate(['/detail-history-in-visitor'], {
+      state: {
+        historyData: data
+      }
+    });
+  }
+
+  public async showAlertButtons(headerName: string, className: string, historyData: any) {
+    const alertButtons = await this.alertController.create({
+      cssClass: className,
+      header: headerName + " this visitor?",
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.reinstateProcess(historyData);
+            // console.log(historyData);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Alert cancel');
+          },
+        },
+      ]
+    });
+    await alertButtons.present ();
+  }
+
+  reinstateProcess(historyData: any) {
+    console.log("tes");
+    this.mainApiResidentService.endpointProcess({
+      block_id: this.blockId,
+      unit_id: this.unitId,
+      contact_no: historyData.mobile_number,
+      vehicle_no: historyData.vehicle_number
+  }, 'post/reinstate_visitor').subscribe(
+      (response) => {
+        console.log('Success:', response);
+        this.router.navigate(['my-profile-main']);
+      },
+    )
   }
 
   private routerSubscription!: Subscription;

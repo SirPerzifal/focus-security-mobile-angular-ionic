@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { daysInWeek } from 'date-fns/constants';
 import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
 
 @Component({
@@ -15,21 +16,8 @@ export class CardWithButtonComponent  implements OnInit {
   unitId: number = 1;
   blockId: number = 1;
 
-  @Input() historyData!: {
-    purpose: string;
-    visitor_name: string;
-    visitor_date: string; // Ubah tipe menjadi string
-    visitor_entry_time: number;
-    visitor_exit_time: number;
-    mode_of_entry: string;
-    vehicle_number: string;
-    point_of_entry: string;
-    mobile_number: string;
-    delivery_type: string;
-    vehicle_type: string;
-    banned: boolean;
-    id: number;
-  };
+  @Input() data: any = {};
+  @Input() fields: string[] = []
   @Input() hideResinstateButton: string = '';
 
   ngOnInit() {
@@ -38,7 +26,7 @@ export class CardWithButtonComponent  implements OnInit {
   openDetails() {
     this.router.navigate(['/history-details'], {
       state: {
-        historyData: this.historyData
+        historyData: this.data
       }
     });
   }
@@ -86,5 +74,14 @@ export class CardWithButtonComponent  implements OnInit {
         this.router.navigate(['resident-my-profile']);
       },
     )
+  }
+
+  getValueForTable(field: string): string {
+    const fieldMap: { [key: string]: string } = {
+
+    };
+    
+    const mappedField = fieldMap[field.toLowerCase()];
+    return mappedField ? this.data[mappedField] : this.data[field.toLowerCase()];
   }
 }
