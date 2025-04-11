@@ -71,7 +71,7 @@ export class CardWithButtonComponent  implements OnInit {
     ).subscribe(
       (response) => {
         console.log('Success:', response);
-        this.router.navigate(['resident-my-profile']);
+        this.router.navigate(['profile-main']);
       },
     )
   }

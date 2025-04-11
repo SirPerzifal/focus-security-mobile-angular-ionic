@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { QuickDialsMainPageRoutingModule } from './quick-dials-main-routing.module';
 
 import { QuickDialsMainPage } from './quick-dials-main.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    QuickDialsMainPageRoutingModule
+    QuickDialsMainPageRoutingModule,
+    SharedModule
   ],
   declarations: [QuickDialsMainPage]
 })

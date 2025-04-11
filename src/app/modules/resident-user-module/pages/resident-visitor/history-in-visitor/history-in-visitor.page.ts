@@ -122,7 +122,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
 
   directTo() {
     if (this.cardIfJustBan === 'ban') {
-      this.router.navigate(['/resident-my-profile']);
+      this.router.navigate(['/profile-main']);
     } else {
       this.router.navigate(['/resident-home-page'])
     }
@@ -165,8 +165,8 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
               banned: item['is_banned'],
               id: item['visitor_id']
             });
-            this.isLoading = false;
           });
+          this.isLoading = false;
         } else {
           result.forEach((item: any) => {
             const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
@@ -311,11 +311,10 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
       block_id: this.blockId,
       unit_id: this.unitId,
       contact_no: historyData.mobile_number,
-      vehicle_no: historyData.vehicle_number
+      vehicle_number: historyData.vehicle_number
   }, 'post/reinstate_visitor').subscribe(
       (response) => {
-        console.log('Success:', response);
-        this.router.navigate(['my-profile-main']);
+        this.router.navigate(['/profile-main']);
       },
     )
   }

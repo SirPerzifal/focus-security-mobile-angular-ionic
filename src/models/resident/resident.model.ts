@@ -21,6 +21,7 @@ export interface EstateProfile {
 export interface Estate {
     family_id: number;
     family_name: string;
+    family_nickname: string;
     image_profile: string;
     family_email: string;
     family_mobile_number: string;
@@ -32,6 +33,7 @@ export interface Estate {
     project_id: number;
     project_name: string;
     project_image: string;
+    record_type: string;
 }
 
 // visitor

@@ -1,5 +1,8 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Profile'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Profile'"
+    (typeOfUser)="onChangeTypeUser($event)"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -69,6 +72,61 @@
               (eventEmitter)="onClickSquareBottom($event)"
             >
             </app-square-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="showEstate"
+      class="w-full flex items-center justify-center mt-2"
+    >
+      <div class="space-y-4">
+        <div class="text-center">
+          <div
+            *ngIf="isLoading"
+            class="flex justify-center items-center h-full"
+          >
+            <ion-spinner name="circular"></ion-spinner>
+          </div>
+          <div
+            *ngIf="!isLoading"
+            class="space-y-4 h-[47.5rem] overflow-y-auto rounded-lg style-overflow-hidden"
+          >
+            <div
+              class="bg-[#D8ECCF] border rounded-lg p-4 px-6 flex items-center w-full"
+              *ngFor="let estate of profileEstate"
+              (click)="chooseEstateClick(estate)"
+            >
+              <img
+                alt="Profile Picture"
+                class="rounded-full h-12 w-12 mr-4"
+                height="50"
+                [src]="functionMain.getImage(estate.project_image)"
+                width="50"
+              />
+              <div class="flex-1">
+                <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
+                <p class="cw-3:text[13px]">{{estate.family_name}}</p>
+                <p class="cw-3:text[13px]">{{estate.family_type}}</p>
+                <p class="cw-3:text[13px]">
+                  {{estate.block_name}}, {{estate.unit_name}}
+                </p>
+              </div>
+              <div class="ml-2">
+                <ion-icon
+                  *ngIf="activeUnit === estate.unit_id"
+                  class="text-green-500 text-2xl"
+                  name="checkmark-circle"
+                >
+                </ion-icon>
+                <ion-icon
+                  *ngIf="activeUnit !== estate.unit_id"
+                  class="text-red-500 text-2xl"
+                  name="close-circle"
+                >
+                </ion-icon>
+              </div>
+            </div>
           </div>
         </div>
       </div>

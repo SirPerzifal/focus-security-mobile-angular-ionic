@@ -1,5 +1,10 @@
 <ion-header [translucent]="true">
-  <app-header [userName]="useName" [condoName]="condominiumName" [profileImage]="imageProfile" [condoImage]="condoImage"></app-header>
+  <app-header
+    [userName]="useName"
+    [condoName]="condominiumName"
+    [profileImage]="imageProfile"
+    [condoImage]="condoImage"
+  ></app-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -20,24 +25,74 @@
     </div> -->
     <div class="flex flex-col gap-3">
       <div *ngFor="let lb of longButtondata">
-        <app-long-button [name]="lb.name" [srcImage]="lb.src" [routeLinkTo]="lb.routeLinkTo"></app-long-button>
+        <app-long-button
+          [name]="lb.name"
+          [srcImage]="lb.src"
+          [routeLinkTo]="lb.routeLinkTo"
+        ></app-long-button>
       </div>
     </div>
     <div class="flex items-center justify-center flex-col">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div *ngFor="let sb of squareButton">
-          <app-square-button 
-            [name]="sb.name" 
-            [srcImage]="sb.src" 
-            [routeLinkTo]="sb.routeLinkTo" 
-            [paramForBadgeNotification]="sb.paramForBadgeNotification" 
-            [document]="sb.document" 
-            [documentName]="sb.documentName">
+          <app-square-button
+            [name]="sb.name"
+            [srcImage]="sb.src"
+            [routeLinkTo]="sb.routeLinkTo"
+            [paramForBadgeNotification]="sb.paramForBadgeNotification"
+            [document]="sb.document"
+            [documentName]="sb.documentName"
+          >
           </app-square-button>
         </div>
       </div>
     </div>
   </div>
+  <ion-modal
+    [isOpen]="isModalUpdateProfile"
+    (didDismiss)="isModalUpdateProfile === false"
+  >
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Upload Profile</ion-title>
+        </ion-toolbar>
+        <div class="px-5 pb-3 mt-[70px]">
+          <div class="w-full mt-2">
+            <div class="flex flex-row justify-start mb-1"></div>
+            <div
+              class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+            >
+              <input
+                class="w-full rounded text-base hidden"
+                type="file"
+                name="profile_image"
+                (change)="onProfileFileChange($event)"
+                id="profile_image"
+              />
+              <label for="profile_image">
+                <img
+                  height="50"
+                  [src]="showingProfile || functionMain.getImage(imageProfile)"
+                  width="80"
+                  class="w-80 h-50"
+                  accept="image/*"
+                />
+              </label>
+            </div>
+          </div>
+          <button
+            [disabled]="!selectedProfile"
+            (click)="uploadNewProfile()"
+            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
+            class="mt-2 w-full text-base rounded h-10 font-bold"
+          >
+            Upload
+          </button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
 <ion-footer>

@@ -115,7 +115,6 @@ export class LoginEndUserPage implements OnInit {
                 const estates = res.result.estates;
                 const emailOrPhone = res.result.login;
                 const userCredentials = {
-                  type: 'residential',
                   emailOrPhone: emailOrPhone,
                   password: this.existUser.password
                 }

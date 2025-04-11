@@ -36,6 +36,9 @@ export class ResidentHomePagePage implements OnInit {
   imageProfile: string = '';
   familyType: string = '';
 
+  selectedProfile: string = '';
+  showingProfile: string = '';
+
   longButtondata: any[] = [
     {
       name: 'Visitors',
@@ -132,7 +135,7 @@ export class ResidentHomePagePage implements OnInit {
     private modalController: ModalController,
     private mainApiResident: MainApiResidentService,
     private storage: StorageService,
-    private functionMain: FunctionMainService
+    public functionMain: FunctionMainService
   ) {}
 
   ionViewWillEnter() {
@@ -148,13 +151,6 @@ export class ResidentHomePagePage implements OnInit {
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
-              if(value?.value){
-                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-                const credential = JSON.parse(decodedEstateString);
-                this.userType = credential.type;
-              }
-            })
           }
         })
       } else {
@@ -164,8 +160,6 @@ export class ResidentHomePagePage implements OnInit {
             this.isLoading = true;
             // Mengubah string JSON menjadi objek JavaScript
             const credential = JSON.parse(decodedEstateString);
-            this.userType = credential.type;
-            console.log(this.userType);
             this.loadEstate(credential.emailOrPhone);
           }
         })
@@ -187,6 +181,7 @@ export class ResidentHomePagePage implements OnInit {
             listedEstate.push({
               family_id: result.result.response[key]?.family_id,
               family_name: result.result.response[key]?.family_name || '',
+              family_nickname: result.result.response[key]?.family_nickname || '',
               image_profile: result.result.response[key]?.image_profile || '',
               family_email: result.result.response[key]?.family_email || '',
               family_mobile_number: result.result.response[key]?.family_mobile_number || '',
@@ -198,6 +193,7 @@ export class ResidentHomePagePage implements OnInit {
               project_id: result.result.response[key]?.project_id,
               project_name: result.result.response[key]?.project_name || '',
               project_image: result.result.response[key]?.project_image || '',
+              record_type: result.result.response[key]?.record_type || '',
             })
           }
         }
@@ -255,8 +251,93 @@ export class ResidentHomePagePage implements OnInit {
     this.condominiumName = parserValue.project_name;
     this.condoImage = parserValue.project_image;
     this.imageProfile = imageProfile;
-    this.useName = parserValue.family_name;
+    this.useName = parserValue.family_nickname;
     this.familyType = parserValue.family_type;
+    this.userType = parserValue.record_type;
+    
+    if (this.familyType !== 'Primary Contacts' && this.familyType !== 'Secondary Contacts' && this.userType === 'resident') {
+      console.log("resident");
+      this.longButtondata = [
+        {
+            name: 'Visitors',
+            src: 'assets/icon/resident-icon/visitors.png',
+            routeLinkTo: '/visitor-main',
+        },
+        {
+            name: 'Facility Bookings',
+            src: 'assets/icon/resident-icon/icon3.png',
+            routeLinkTo: '/facility-booking-main',
+        },
+        {
+            name: 'Payments',
+            src: 'assets/icon/resident-icon/icon2.png',
+            routeLinkTo: '/payments-main',
+        },
+        {
+            name: 'Raise a Request',
+            src: 'assets/icon/resident-icon/icon6.png',
+            routeLinkTo: '/raise-a-request-main',
+        },
+        {
+            name: 'Find Service Providers',
+            src: 'assets/icon/resident-icon/icon5.png',
+            routeLinkTo: '/service-provider-main',
+        }
+      ];
+    } else if (this.familyType !== 'Primary Contacts' && this.familyType !== 'Secondary Contacts') {
+      console.log("resident");
+      this.longButtondata = [
+        {
+            name: 'Visitors',
+            src: 'assets/icon/resident-icon/visitors.png',
+            routeLinkTo: '/visitor-main',
+        },
+        {
+            name: 'Facility Bookings',
+            src: 'assets/icon/resident-icon/icon3.png',
+            routeLinkTo: '/facility-booking-main',
+        },
+        {
+            name: 'Payments',
+            src: 'assets/icon/resident-icon/icon2.png',
+            routeLinkTo: '/payments-main',
+        },
+        {
+            name: 'Raise a Request',
+            src: 'assets/icon/resident-icon/icon6.png',
+            routeLinkTo: '/raise-a-request-main',
+        },
+        {
+            name: 'Find Service Providers',
+            src: 'assets/icon/resident-icon/icon5.png',
+            routeLinkTo: '/service-provider-main',
+        }
+      ];
+    } else if (this.userType === 'commercial') {
+      console.log("commercial");
+      this.longButtondata = [
+        {
+          name: 'Visitors',
+          src: 'assets/icon/resident-icon/visitors.png',
+          routeLinkTo: '/visitor-main',
+        },
+        {
+          name: 'Contractors',
+          src: 'assets/icon/resident-icon/find_service/Handyman.png',
+          routeLinkTo: '/contractor-commersial-main',
+        },
+        {
+          name: 'Facility Bookings',
+          src: 'assets/icon/resident-icon/icon3.png',
+          routeLinkTo: '/facility-booking-main',
+        },
+        {
+          name: 'My Vehicle',
+          src: 'assets/icon/resident-icon/icon4.png',
+          routeLinkTo: '/my-vehicle-main',
+        },
+      ];
+    }
   }
 
   async fetchContacts() {
@@ -285,6 +366,37 @@ export class ResidentHomePagePage implements OnInit {
         this.squareButton[3].documentName = result.result.result[0].name;
       } else {
         console.error('Error fetching notifications:', result);
+      }
+    })
+  }
+  onProfileFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.showingProfile = e.target.result; // Menyimpan URL gambar untuk preview
+      };
+      reader.readAsDataURL(file); // Membaca file sebagai URL data
+      this.functionMain.convertToBase64(file).then((base64: string) => {
+        // console.log('Base64 successed');
+        this.selectedProfile = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    }
+  }
+
+  uploadNewProfile() {
+    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
+      if (value?.value){
+        const valueUseState = JSON.parse(value.value);
+        const familyId = valueUseState.family_id;
+        this.mainApiResident.endpointProcess({
+          family_id: familyId,
+          new_image_profile: this.selectedProfile
+        }, 'post/change_update_profile_image').subscribe((response: any) => {
+          
+        })
       }
     })
   }
