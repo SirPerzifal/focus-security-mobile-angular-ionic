@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Quick Dials'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-home-page']"
+    ></ion-icon>
+  </div>
+  <div *ngIf="isLoading" class="flex h-[50%] justify-center items-center">
+    <ion-spinner name="circular"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading" class="px-5 text-center mb-24">
+    <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
+      <div *ngFor="let dial of quickDials" class="w-full h-full relative">
+        <ion-button
+          fill="clear"
+          class="w-full flex bg-[#D8ECCF] h-24 rounded-2xl relative p-0 m-0"
+          (click)="selectQuickDial(dial)"
+        >
+          <div class="w-full flex flex-col items-center">
+            <img
+              class="w-12 h-12"
+              [src]="functionMain.getImage(dial.icon)"
+              [alt]="'Icon for ' + dial.name"
+            />
+            <span
+              class="text-xs normal-case cw-3:text-[11px] font-bold text-[black] text-center"
+              >{{ dial.name }}</span
+            >
+          </div>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Overlay and Modal -->
+    <div
+      class="modal-overlay"
+      *ngIf="selectedQuickDial"
+      (click)="closePopup()"
+    ></div>
+    <div class="modal" *ngIf="selectedQuickDial">
+      <div
+        class="bg-[#D8ECCF] p-4 rounded-lg w-full max-w-xs text-center"
+        [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
+      >
+        <p class="text-lg cw-1:text-sm font-bold mb-4">
+          Call {{ selectedQuickDial.name }} Via
+        </p>
+        <p class="text-md mb-4">{{ selectedQuickDial.number }}</p>
+        <div class="flex justify-between space-x-2">
+          <button
+            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
+          >
+            Whatsapp
+          </button>
+          <button
+            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
+            (click)="startCall(selectedQuickDial)"
+          >
+            Phone Call
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

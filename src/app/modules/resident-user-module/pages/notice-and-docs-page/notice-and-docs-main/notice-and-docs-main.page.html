@@ -1,0 +1,82 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page
+    [text]="'Visitors'"
+    [text_second]="'Daily Invite'"
+  ></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="p-5 text-center mb-24">
+    <app-nav-tabs
+      [buttons]="navButtons"
+      (eventEmitter)="onClick($event)"
+    ></app-nav-tabs>
+    <div class="w-full space-y-3 mt-3 text-left">
+      <div class="w-full mt-1 mb-10">
+        <select
+          id="notice_filter"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]"
+          [(ngModel)]="newOrOld"
+          (change)="filtering()"
+        >
+          <option disabled hidden value="">Filter by</option>
+          <option value="all">All</option>
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="favourite">Favourites</option>
+        </select>
+      </div>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
+      <div *ngFor="let notice of notices">
+        <div
+          *ngIf="!isLoading"
+          class="bg-[var(--ion-color-tertiary)] p-4 rounded"
+        >
+          <h2 class="font-bold">{{ notice.notice_title }}</h2>
+          <p>{{ notice.notice_content }}</p>
+          <table>
+            <tr>
+              <td class="pr-2">Start</td>
+              <td>
+                : {{ functionMainService.convertToDDMMYYYY(notice.start_date) }}
+              </td>
+            </tr>
+            <tr>
+              <td class="pr-2">End</td>
+              <td>
+                : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
+              </td>
+            </tr>
+          </table>
+          <div class="flex justify-between items-center">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm"
+              (click)="downloadAttachment(notice.notice_attachment)"
+            >
+              Download Attachment
+            </button>
+            <ion-icon
+              *ngIf="notice.is_prioritize !== false; else notPriority"
+              class="text-yellow-500 text-4xl"
+              name="star"
+              (click)="prioritizeNotice(notice)"
+            >
+            </ion-icon>
+            <ng-template #notPriority>
+              <div (click)="prioritizeNotice(notice)">
+                <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
+                </ion-icon>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>
