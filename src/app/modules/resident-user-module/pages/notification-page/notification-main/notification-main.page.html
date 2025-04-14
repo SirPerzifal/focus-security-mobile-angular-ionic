@@ -14,7 +14,7 @@
       [routerLink]="['/resident-home-page']"
     ></ion-icon>
   </div>
-  <div class="w-5/6 flex flex-row justify-end items-center">
+  <div class="w-full flex flex-row justify-end items-center px-4">
     <u
       class="w-32 text-base cw-1:text-xs font-bold items-end mr-2"
       (click)="clearFilter()"
@@ -55,11 +55,11 @@
   </div>
 
   <ng-template #noNotification>
-    <div *ngIf="isLoading" class="p-5 text-center mb-20">
+    <div *ngIf="!isLoading" class="p-5 text-center mb-20">
       <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
         <p class="text-gray-600">You have no Notification.....</p>
         <p class="text-gray-600">
-          Go to <strong><a href="/resident-homepage">Home Page</a></strong>
+          Go to <strong><a href="/resident-home-page">Home Page</a></strong>
         </p>
       </div>
     </div>

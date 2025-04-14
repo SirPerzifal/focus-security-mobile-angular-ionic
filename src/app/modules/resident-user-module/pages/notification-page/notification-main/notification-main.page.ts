@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 interface Notification {
   id: number;
@@ -19,32 +19,37 @@ interface Notification {
   styleUrls: ['./notification-main.page.scss'],
 })
 export class NotificationMainPage implements OnInit {
-  partnerId = 1;
-  unitId = 1;
+  partnerId: number = 0;
+  unitId: number = 0;
   isLoading: boolean = true;
 
   notifications: Notification[] = []; // Ubah ke array of Notification
   filteredNotifications: Notification[] = []; // Ubah ke array of Notification
   searchTerm: string = '';
 
-  constructor(private notificationService: NotificationService, private toast: ToastController, private getUserInfoService: GetUserInfoService) { }
+  constructor(
+    private notificationService: NotificationService, 
+    private storage: StorageService
+  ) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        // // console.log(value);
-        this.unitId = parseValue.unit_id;
-        // Load polling data
-        this.filteredNotifications = this.notifications; // Initialize with all notifications
-        this.loadNotification();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = estate.unit_id;
+            this.partnerId = estate.family_id;
+            // Load polling data
+            this.filteredNotifications = this.notifications; // Initialize with all notifications
+            this.loadNotification();
+          }
+        })
       }
     })
   }
 
   loadNotification() {
-    // // console.log(this.unitId);
-    
     this.notificationService.getNotifications(this.unitId, this.partnerId).subscribe(
       response => {
         if (response.result.response_code === 200) {
@@ -93,25 +98,6 @@ export class NotificationMainPage implements OnInit {
     
     // Mengembalikan format dd-mm-yyyy hh:mm:ss
     return [`${formattedHours}:${minutes}`, `${day}-${month}-${year}`];
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
-    const toast = await this.toast.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-    
-    const pingSound = new Audio('assets/sound/Ping Alert.mp3');
-    const errorSound = new Audio('assets/sound/Error Alert.mp3');
-
-    toast.present().then(() => {
-      if (color == 'success'){
-        pingSound.play().catch((err) => console.error('Error playing sound:', err));
-      } else {
-        errorSound.play().catch((err) => console.error('Error playing sound:', err));
-      }
-    });
   }
 
   searchNotifications() {

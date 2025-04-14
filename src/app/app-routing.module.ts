@@ -843,6 +843,10 @@ const routes: Routes = [
     path: 'profile-main',
     loadChildren: () => import('./modules/resident-user-module/pages/profile-page/profile-main/profile-main.module').then( m => m.ProfileMainPageModule)
   },
+  {
+    path: 'contractor-commercial-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/contractor-commercial-main/contractor-commercial-main.module').then( m => m.ContractorCommercialMainPageModule)
+  },
 ];
 
 @NgModule({

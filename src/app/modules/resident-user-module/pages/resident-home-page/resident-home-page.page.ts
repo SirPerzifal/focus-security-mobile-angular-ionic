@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ModalController } from '@ionic/angular';
 
@@ -131,7 +130,6 @@ export class ResidentHomePagePage implements OnInit {
   ]
 
   constructor(
-    private router: Router,
     private modalController: ModalController,
     private mainApiResident: MainApiResidentService,
     private storage: StorageService,
@@ -256,7 +254,7 @@ export class ResidentHomePagePage implements OnInit {
     this.userType = parserValue.record_type;
     
     if (this.familyType !== 'Primary Contacts' && this.familyType !== 'Secondary Contacts' && this.userType === 'resident') {
-      console.log("resident");
+      console.log("resident &&");
       this.longButtondata = [
         {
             name: 'Visitors',
@@ -286,6 +284,8 @@ export class ResidentHomePagePage implements OnInit {
       ];
     } else if (this.familyType !== 'Primary Contacts' && this.familyType !== 'Secondary Contacts') {
       console.log("resident");
+      console.log(this.familyType);
+      
       this.longButtondata = [
         {
             name: 'Visitors',
@@ -324,7 +324,7 @@ export class ResidentHomePagePage implements OnInit {
         {
           name: 'Contractors',
           src: 'assets/icon/resident-icon/find_service/Handyman.png',
-          routeLinkTo: '/contractor-commersial-main',
+          routeLinkTo: '/contractor-commercial-main',
         },
         {
           name: 'Facility Bookings',
@@ -336,6 +336,44 @@ export class ResidentHomePagePage implements OnInit {
           src: 'assets/icon/resident-icon/icon4.png',
           routeLinkTo: '/my-vehicle-main',
         },
+      ];
+    } else {
+      this.longButtondata = [
+        {
+          name: 'Visitors',
+          src: 'assets/icon/resident-icon/visitors.png',
+          routeLinkTo: '/visitor-main',
+        },
+        {
+          name: 'Facility Bookings',
+          src: 'assets/icon/resident-icon/icon3.png',
+          routeLinkTo: '/facility-booking-main',
+        },
+        {
+          name: 'Payments',
+          src: 'assets/icon/resident-icon/icon2.png',
+          routeLinkTo: '/payments-main',
+        },
+        {
+          name: 'My Family',
+          src: 'assets/icon/resident-icon/icon1.png',
+          routeLinkTo: '/family-main',
+        },
+        {
+          name: 'My Vehicle',
+          src: 'assets/icon/resident-icon/icon4.png',
+          routeLinkTo: '/my-vehicle-main',
+        },
+        {
+          name: 'Raise a Request',
+          src: 'assets/icon/resident-icon/icon6.png',
+          routeLinkTo: '/raise-a-request-main',
+        },
+        {
+          name: 'Find Service Providers',
+          src: 'assets/icon/resident-icon/icon5.png',
+          routeLinkTo: '/service-provider-main',
+        }
       ];
     }
   }
@@ -387,15 +425,29 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   uploadNewProfile() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value){
-        const valueUseState = JSON.parse(value.value);
-        const familyId = valueUseState.family_id;
-        this.mainApiResident.endpointProcess({
-          family_id: familyId,
-          new_image_profile: this.selectedProfile
-        }, 'post/change_update_profile_image').subscribe((response: any) => {
-          
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            const familyId = estate.family_id;
+            this.mainApiResident.endpointProcess({
+              family_id: familyId,
+              new_image_profile: this.selectedProfile
+            }, 'post/change_update_profile_image').subscribe((response: any) => {
+                const estate = response.result.new_estate as Estate;
+                this.setData(estate, estate.image_profile);
+                this.loadCountNotification(estate.unit_id, estate.family_id);
+                this.loadHouseRules(estate.project_id);
+                // Mengubah estate menjadi string JSON
+                const estateString = JSON.stringify(response.result.new_estate);
+                // Melakukan encoding ke Base64
+                const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
+                this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
+                  this.isModalUpdateProfile = false;
+                })
+            })
+          }
         })
       }
     })

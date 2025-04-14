@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { NoticeAndDocsMainPageRoutingModule } from './notice-and-docs-main-routing.module';
 
 import { NoticeAndDocsMainPage } from './notice-and-docs-main.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NoticeAndDocsMainPageRoutingModule
+    NoticeAndDocsMainPageRoutingModule,
+    SharedModule
   ],
   declarations: [NoticeAndDocsMainPage]
 })
