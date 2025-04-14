@@ -26,28 +26,20 @@ export class M2mSelectionComponent implements OnInit {
 
   @Input()
   set Selected(value: any) {
-    console.log("TEST", value)
     if (this.lock) return
-    console.log("WORK", value)
     this.unitNames = []
     this.unitArrayProcess = []
     this._selected = this.isOne ? value || '' : value || [];
-    console.log(this._selected)
     if (this._selected instanceof Array) {
-      console.log('array')
       for(let i = 0; i < this._selected.length; i++ ){
-        console.log(i, this._selected[i])
         this.onUnitChange(this._selected[i])
       }
     } else {
-      console.log('string')
       this.onUnitChange(this._selected)
     }
-    console.log(this._selected)
   }
 
   get Selected(): any {
-    console.log(this._selected)
     return this.unitArrayProcess
   }
 
@@ -100,25 +92,20 @@ export class M2mSelectionComponent implements OnInit {
   selectOptionChooseUnit(unitId: number) {
     this.unit_key = ''
     this.showUnit = this.Arrays
-    // console.log(`Selected option: ${value}`); // Tindakan yang diinginkan saat opsi dipilih
+
     this.onUnitChange(unitId)
   }
 
   onUnitChange(unitId: any) {
-    console.log(unitId)
     if (unitId) {
       const unit = this.Arrays.find((u: any) => u.id === unitId); // Temukan unit berdasarkan ID
       if (unit) {
         const index = this.unitArrayProcess.indexOf(unitId);
-        console.log(this.unitArrayProcess)
-        console.log(index)
         if (index !== -1) {
-          console.log("WANT TO ERASE")
           // Jika ada, hapus unit_id dari array
           this.unitArrayProcess.splice(index, 1);
-          this.unitNames = this.unitNames.filter((item: any) => { console.log(item, item.id, unitId); return item.id !== unitId }); // Hapus nama dari array
+          this.unitNames = this.unitNames.filter((item: any) => { return item.id !== unitId }); // Hapus nama dari array
         } else {
-          console.log("WANT TO ADD")
           // Jika tidak ada, tambahkan unit_id ke dalam array
           if (this.isOne) {
             this.unitArrayProcess = [unitId]
@@ -130,7 +117,6 @@ export class M2mSelectionComponent implements OnInit {
           }
           
         }
-        console.log("OKEY END", this.unitArrayProcess)
         this.lock = true
         this.outputValue.emit([...this.unitArrayProcess]);
         this.lock = false
@@ -139,7 +125,6 @@ export class M2mSelectionComponent implements OnInit {
   }
 
   onUnitKeyUp(event: any) {
-    console.log(event.target.value)
     this.setDropdownChooseUnit = true
     this.showUnit = this.Arrays.filter((item: any) => item.name.toLowerCase().includes(event.target.value.toLowerCase()))
   }
@@ -155,7 +140,6 @@ export class M2mSelectionComponent implements OnInit {
 
   selectAllSelection() {
     this.selectAll = !this.selectAll
-    console.log(this.selectAll)
     if (this.selectAll) {
       this.unitNames = []
       this.unitArrayProcess = []
@@ -163,7 +147,6 @@ export class M2mSelectionComponent implements OnInit {
         this.onUnitChange(item.id)
       })
       this.showUnit = this.Arrays
-      console.log(this.unitNames)
     } else {
       this.unitNames = []
       this.unitArrayProcess = []

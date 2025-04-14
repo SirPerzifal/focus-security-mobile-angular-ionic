@@ -23,17 +23,9 @@ export class VmsBackgroundComponent  implements OnInit {
         if (value.config.background) {
           this.showImage = this.functionMain.getImage(value.config.background)
         } else {
-          this.showImage = `assets/img/focus_logo-removebg.png`
+          this.showImage = value.config.is_windows ? `assets/img/focus_logo-removebg.jpeg` :  `assets/img/focus_logo-removebg.png`
         }
       } 
-      // this.mainVmsService.getApi(params, '/vms/get/project_background').subscribe({
-      //   next: (results) => {
-          
-      //   },
-      //   error: (error) => {
-      //     console.error(error);
-      //   }
-      // });
     })
   }
 

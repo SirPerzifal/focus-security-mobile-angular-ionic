@@ -10,6 +10,7 @@ export class VisitorButtonComponent  implements OnInit {
   @Input() text: string='';
   @Input() extraClass: string='';
   @Input() customStyle: string='';
+  @Input() isDisable: boolean=false
 
   constructor() { }
 

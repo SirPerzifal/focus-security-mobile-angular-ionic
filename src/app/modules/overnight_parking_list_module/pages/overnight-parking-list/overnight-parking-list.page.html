@@ -18,7 +18,7 @@
         [disableClick]="true" 
       />
     </div>
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
 
       <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
       (click)="toggleSlide('day')" [isActive]="showDayTrans || showDay" [disableClick]="true"/>
@@ -62,7 +62,8 @@
             style="border: 1px solid #6B7280;" [(ngModel)]="searchOption">
             <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
             <option [value]="'date'">DATE</option>
-            <option [value]="'block'">BLOCK</option>
+            <option [value]="'block'" *ngIf="!project_config.is_industrial">BLOCK</option>
+            <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
             <option [value]="'both'">BOTH</option>
           </select>
         </div>
@@ -82,7 +83,7 @@
             </app-text-input>
           </div>
         </div>
-        <div class="w-full" *ngIf="searchOption == 'block' || searchOption == 'both'">
+        <div class="w-full" *ngIf="(searchOption == 'block' || searchOption == 'both') && !project_config.is_industrial">
           <label class="text-2xl"><b><u>BLOCK</u></b></label>
           <select id="pick_up_location"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
@@ -91,8 +92,11 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
+        <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'both') && project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+        </div>
       </div>
-      <div class="flex flex-col w-full space-y-5" *ngIf="showHistory  && (choosenBlock || startDateFilter || endDateFilter) && !isRadioClicked">
+      <div class="flex flex-col w-full space-y-5" *ngIf="showHistory  && (choosenBlock || selectedHost || startDateFilter || endDateFilter) && !isRadioClicked">
         <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let vehicle of filteredHistorySchedules" (click)="form(vehicle)">
           <span class="text-2xl font-bold text-white">{{ vehicle.vehicle_numbers }}</span>
           <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"></ion-icon>

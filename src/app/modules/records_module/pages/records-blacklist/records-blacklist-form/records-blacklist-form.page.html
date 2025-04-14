@@ -13,6 +13,10 @@
         <div class="w-full flex flex-row justify-start mt-4 items-center">
           <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20 ml-3"
             (click)="onBackMove()"></ion-icon>
+          <div 
+            class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-[50%] flex flex-row items-center justify-center">
+            <ion-icon name="home-outline" size="large" class="text-white size-10" (click)="onHomeClick()"></ion-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -41,7 +45,7 @@
         <div class="w-full">
           <app-text-input #blacklistNameInput [id]="'blacklist_name'" [labelText]="'NAME'" [placeholder]="'MIFTAH AKHBAR'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_name"  [isReadonly]="is_readonly"></app-text-input>
         </div> 
-        <div class="w-full flex flex-col">
+        <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><b><u>BLOCK</u></b></label>
           <select id="blacklist_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)" [(ngModel)]="formData.block_id" [disabled]="is_readonly">
             <option value="" selected disabled hidden>CHOOSE BLOCK</option>
@@ -55,9 +59,12 @@
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div>
-        <div class="w-full" *ngIf="unitShow">
+        <div class="w-full" *ngIf="unitShow && !project_config.is_industrial">
           <app-m2m-selection [Arrays]="UnitNew" (outputValue)="onUnitChangeNew($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full">
           <app-file-input class="w-full h-25" [labelText]="'BAN IMAGE'" [buttonText]="'UPLOAD'"
@@ -68,7 +75,7 @@
           <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="ENTER THE REASON HERE..."></textarea>
+            placeholder=""></textarea>
         </div>        
         <div class="w-full">
           <app-text-input #submitNameInput [id]="'submit_name'" [labelText]="'SUBMITTED BY'" [placeholder]="'ERIC'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.banned_by"></app-text-input>

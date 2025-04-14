@@ -12,7 +12,7 @@ export class CollectionService extends ApiService{
     super(http)
   }
 
-  postAddColllection(visitor_name: string, contact_number: string, selection_type: string, vehicle_number: string, block: string, unit: string, project_id: number, camera_id: string): Observable<any> {
+  postAddColllection(visitor_name: string, contact_number: string, selection_type: string, vehicle_number: string, block: string, unit: string, project_id: number, camera_id: string, host: string): Observable<any> {
     
    const requestBody =  {
         jsonrpc: '2.0', 
@@ -24,7 +24,8 @@ export class CollectionService extends ApiService{
             unit_id : unit,
             selection_type,
             project_id: project_id,
-            camera_id: camera_id
+            camera_id: camera_id,
+            host: host
         }
     }
     return this.http.post<any>(`${this.baseUrl}/vms/post/add_collection`, requestBody);

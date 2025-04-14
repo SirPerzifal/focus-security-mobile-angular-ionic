@@ -5,7 +5,7 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-main'" />
+      <app-vms-header [urlCustom]="'/records-main'" [homeRoute]="true" />
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Visitor_Logs.png'" [text]="'VISITOR LOGS'"
@@ -55,7 +55,8 @@
                 style="border: 1px solid #6B7280;" [(ngModel)]="searchOption">
                 <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
                 <option [value]="'date'">ENTRY DATE</option>
-                <option [value]="'block'">BLOCK & UNIT</option>
+                <option [value]="'block'" *ngIf="!project_config.is_industrial">BLOCK & UNIT</option>
+                <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
                 <option [value]="'vehicle_no'" *ngIf="pageType == 'vehicle'">VEHICLE NUMBER</option>
                 <option [value]="'all'">ALL</option>
               </select>
@@ -78,7 +79,7 @@
               </div>
             </div>
             <div class="w-full flex flex-row justify-between space-x-1"
-              *ngIf="searchOption == 'block' || searchOption == 'all'">
+              *ngIf="(searchOption == 'block' || searchOption == 'all') && !project_config.is_industrial">
               <div class="w-1/2">
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
                 <select id="record_visitor_block_filter" (change)="onBlockChange($event)" [(ngModel)]="filter.block"
@@ -105,7 +106,9 @@
                 </app-text-input> -->
               </div>
             </div>
-
+            <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'all') && project_config.is_industrial">
+              <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+            </div>
 
             <div class="w-full"
               *ngIf="(searchOption == 'vehicle_no' || searchOption == 'all') && pageType == 'vehicle'">
@@ -118,7 +121,7 @@
           </div>
 
           <div class="flex flex-col w-full space-y-5"
-            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number) && !isRadioClicked">
+            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) && !isRadioClicked">
             <div *ngIf="isLoading" class="flex justify-center items-center h-20">
               <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
             </div>

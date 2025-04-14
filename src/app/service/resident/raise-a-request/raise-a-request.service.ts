@@ -91,6 +91,8 @@ export class RaiseARequestService extends ApiService  {
         request_date: request_date,
       },
     };
+
+    console.log(body)
   
     return this.http.post(`${this.postApiUrlOvernight}`, body, { headers }).pipe(
       catchError(this.handleError)
@@ -281,6 +283,8 @@ export class RaiseARequestService extends ApiService  {
           notes: notes,
         },
     };
+
+    console.log(body)
     
     return this.http.post(`${this.postApiPet}`, body, { headers }).pipe(
         catchError(this.handleError)
@@ -436,6 +440,8 @@ export class RaiseARequestService extends ApiService  {
           registered_coach_id: registered_coach_id,
         },
     };
+
+    console.log(body)
 
     return this.http.post(`${this.postApiCoach}`, body, { headers }).pipe(
         catchError(this.handleError)

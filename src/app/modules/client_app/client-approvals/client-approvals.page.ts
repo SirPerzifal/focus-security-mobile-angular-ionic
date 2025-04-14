@@ -37,7 +37,13 @@ export class ClientApprovalsPage implements OnInit {
     this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id
+      this.project_config = value.config
       this.loadProjectTax()
+      if (this.project_config.is_industrial) {
+        this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
+      } else {
+        this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
+      }
     })
     console.log("ahoy")
   }
@@ -49,6 +55,8 @@ export class ClientApprovalsPage implements OnInit {
     }
   }
 
+  project_config: any = []
+
   approval_type = ''
   approval_name = ''
   isHome = true
@@ -56,20 +64,22 @@ export class ClientApprovalsPage implements OnInit {
   textSecond = ''
   project_id = 0
 
-  menuItems = [
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work' },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking' },
-    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals' },
-    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Account', route: 'family', text: 'Residents' },
-    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility' },
-    { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment' },
-    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension' },
+  menuItems: any = [
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], },
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], },
+    { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], },
+    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: '', text: 'Employees', permission: [false, true], },
+    { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: '', text: 'Events', permission: [false, true], },
   ];
 
   onClickMenu(menu: any) {
@@ -77,6 +87,8 @@ export class ClientApprovalsPage implements OnInit {
     setTimeout(() => {
       this.isData = true
       this.textSecond = menu.text
+      this.isClosed = false
+      this.isActive = true
     }, 300)
     if (menu.route == "") {
       this.activeApprovals = []
@@ -105,7 +117,7 @@ export class ClientApprovalsPage implements OnInit {
         if (results.result.success) {
           if (results.result.booking.length > 0){
             this.activeApprovals = results.result.booking
-            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) )
+            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
           } else {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
@@ -150,13 +162,13 @@ export class ClientApprovalsPage implements OnInit {
   toggleShowActive() {
     this.isClosed = false
     this.isActive = true
-    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) )
+    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
   }
 
   toggleShowClosed() {
     this.isActive = false
     this.isClosed = true
-    this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) )
+    this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) || ['approved', 'rejected'].includes(approval.appeal_status) )
   }
 
   onStartDateChange(value: Event) {
@@ -237,16 +249,27 @@ export class ClientApprovalsPage implements OnInit {
   isApprovalHome = true
   isDetail = false
 
+  approveData(approval: any) {
+    if (this.project_config.is_industrial && this.approval_type == 'vehicle') {
+      this.openApprovalModal()
+    } else {
+      this.approveDetail(approval)
+    }
+  }
+
   approveDetail(approval: any) {
-    console.log(approval)
-    console.log(this.approval_type)
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id}, '/client/approve').subscribe({
+    if (this.project_config.is_industrial && this.approval_type == 'vehicle' && this.rfid_tag == '') {
+      this.functionMain.presentToast('RFID Tag must be filled in!', 'warning')
+      return
+    }
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag}, '/client/approve').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
           this.selectedApproval.states = 'approved'
           this.loadApproval()
           this.onBack()
+          this.closeApprovalModal()
           this.functionMain.presentToast(`Successfully approved this data!`, 'success');
         } else {
           this.functionMain.presentToast(`An error occurred while trying to approve this data!`, 'danger');
@@ -305,6 +328,18 @@ export class ClientApprovalsPage implements OnInit {
   openRejectModal() {
     this.isRejectModal = true
     this.reject_reason = ''
+  }
+
+  isApproveVehicleModal = false
+  rfid_tag = ''
+  closeApprovalModal() {
+    this.isApproveVehicleModal = false
+    this.rfid_tag = ''
+  }
+
+  openApprovalModal() {
+    this.isApproveVehicleModal = true
+    this.rfid_tag = ''
   }
 
   getPdf(file: any) {

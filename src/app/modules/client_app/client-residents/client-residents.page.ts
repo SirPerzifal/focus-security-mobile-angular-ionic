@@ -25,7 +25,7 @@ export class ClientResidentsPage implements OnInit {
   loadResident(){
     this.isLoading = true
     this.functionMain.vmsPreferences().then((value: any) => {
-      this.recordsResidentService.loadAllResident(value.project_id).subscribe(
+      this.recordsResidentService.loadAllResident(value.project_id, false).subscribe(
         (response: any) => {
           console.log(response)
           if (response.result.status === 'success') {

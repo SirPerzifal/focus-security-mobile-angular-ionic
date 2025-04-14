@@ -47,6 +47,7 @@ export class RecordsContractorPage implements OnInit {
         if (results.result.response_code === 200) {
           if (today){
             this.activeContractor = results.result.response_result;
+            this.filteredActiveContractor = this.activeContractor
           } else {
             this.logsData = results.result.response_result;
             this.historyVehicles = this.logsData
@@ -68,17 +69,23 @@ export class RecordsContractorPage implements OnInit {
   ngOnInit() {
     this.loadProjectName().then(() => {
       this.loadLogs(true)
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
   }
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -126,10 +133,11 @@ export class RecordsContractorPage implements OnInit {
 
   logsData: any[] = [];
   activeContractor: any[] = [];
+  filteredActiveContractor: any[] = []
   historyVehicles: any[] = [];
   sortVehicle: any[] = []
   selectedRadio: string | null = null
-  searchOption: string | null = null
+  searchOption: string = ''
 
   convertToDDMMYYYY(dateString: string): string {
     const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
@@ -228,6 +236,9 @@ export class RecordsContractorPage implements OnInit {
     }
     this.searchOption = event.target.value
     console.log(event.target.value)
+    if (this.searchOption == 'not_checkout' || (this.project_config.is_industrial && this.searchOption == 'all')) {
+      this.applyFilters()
+    }
   }
 
   startDateFilter = ''
@@ -240,31 +251,61 @@ export class RecordsContractorPage implements OnInit {
     this.filter.block = ''
     this.filter.vehicle_number = ''
     this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     this.applyFilters() 
   }
 
   applyFilters() {
-    this.historyVehicles = this.logsData.filter(item => {  
-      const visitorDate = new Date(item.create_date);
-      visitorDate.setHours(0, 0, 0, 0); 
-
-      const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
-      const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
-
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
-      
-      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
-      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
-      const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
-      
-      return blockMatches && startDateMatches && unitMatches && endDateMatches;
-    });
+    if (this.project_config.is_industrial) {
+      this.historyVehicles = this.logsData.filter(item => {  
+        const visitorDate = new Date(item.create_date);
+        visitorDate.setHours(0, 0, 0, 0); 
+  
+        const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+        const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+  
+        if (selectedStartDate) {
+          selectedStartDate.setHours(0, 0, 0, 0);
+        }
+        if (selectedEndDate) {
+          selectedEndDate.setHours(0, 0, 0, 0);
+        }
+        
+        const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+        const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+        const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
+        const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
+        const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
+        const isCheckout = ['not_checkout', 'all'].includes(this.searchOption) ? (item.check_in && !item.check_out) : true;
+        
+        return blockMatches && hostMatches && startDateMatches && unitMatches && endDateMatches && isCheckout;
+      });
+      console.log(this.historyVehicles)
+    } else {
+      this.historyVehicles = this.logsData.filter(item => {  
+        const visitorDate = new Date(item.create_date);
+        visitorDate.setHours(0, 0, 0, 0); 
+  
+        const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+        const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+  
+        if (selectedStartDate) {
+          selectedStartDate.setHours(0, 0, 0, 0);
+        }
+        if (selectedEndDate) {
+          selectedEndDate.setHours(0, 0, 0, 0);
+        }
+        
+        const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+        const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+        const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
+        const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
+        
+        return blockMatches && startDateMatches && unitMatches && endDateMatches;
+      });
+    }
+    
     console.log(this.historyVehicles)
   }
 
@@ -324,6 +365,35 @@ export class RecordsContractorPage implements OnInit {
       this.isRadioClicked = false
       this.searchOption = ''
     }
+  }
+
+  selectedTodayRadio = 'all'
+
+  onTodayRadioClick(value: string): void {
+    this.selectedTodayRadio = value
+    if (value == 'checked_out') {
+      this.filteredActiveContractor = this.activeContractor.filter((item: any) => item.check_out)
+      console.log(this.sortVehicle)
+    } else if (value == 'not_checked_out') {
+      this.filteredActiveContractor = this.activeContractor.filter((item: any) => !item.check_out)
+      console.log(this.sortVehicle)
+    } else if (value == 'all') {
+      this.filteredActiveContractor = this.activeContractor
+    }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+    this.applyFilters()
   }
 
 }

@@ -35,10 +35,12 @@ export class ClientNotificationPage implements OnInit {
           } else {
             this.functionMain.presentToast(`An error occurred while loading notifications!`, 'danger');
           }
+          this.isLoading = false
         },
         error: (error) => {
           this.functionMain.presentToast('An error occurred while loading notifications!', 'danger');
           console.error(error);
+          this.isLoading = false
         }
       });
     })

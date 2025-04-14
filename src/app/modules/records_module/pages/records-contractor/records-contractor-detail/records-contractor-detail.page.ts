@@ -26,9 +26,11 @@ export class RecordsContractorDetailPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_name = value.project_name.toUpperCase()
+      this.project_config = value.config
     })
   }
   project_name = ''
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -50,6 +52,10 @@ export class RecordsContractorDetailPage implements OnInit {
     } else {
       this.isMain = true
     }
+  }
+
+  onHomeClick() {
+    this.router.navigate(['/home-vms'])
   }
 
 }

@@ -32,9 +32,11 @@ export class MoveDetailPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_name = value.project_name.toUpperCase()
+      this.project_config = value.config
     })
   }
   project_name = ''
+  project_config: any = []
 
   pageType = 'move_in'
   record: any

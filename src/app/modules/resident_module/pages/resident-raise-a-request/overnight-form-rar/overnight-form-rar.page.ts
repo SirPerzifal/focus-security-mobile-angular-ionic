@@ -304,18 +304,18 @@ export class OvernightFormRarPage implements OnInit {
         const rentalAgreement = formData.agreement; // Convert boolean to string
         const familyId = 15; // Replace with actual family ID logic if needed
 
-        console.log(blockId,
-          unitId,
-          contactNumber,
-          paymentReceipt,
-          this.projectid,
-          applicantType,
-          vehicleNumber,
-          visitorId,
-          purpose,
-          rentalAgreement,
-          familyId,
-          this.requestDate,)
+        // console.log(blockId,
+        //   unitId,
+        //   contactNumber,
+        //   paymentReceipt,
+        //   this.projectid,
+        //   applicantType,
+        //   vehicleNumber,
+        //   visitorId,
+        //   purpose,
+        //   rentalAgreement,
+        //   familyId,
+        //   this.requestDate,)
 
         this.requestService.postOvernightFormCar(
           blockId,

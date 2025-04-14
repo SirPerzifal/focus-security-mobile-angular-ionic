@@ -9,7 +9,7 @@
     </div>
     <div class="flex flex-row mx-4">
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
-        <table class="text-2xl">
+        <table class="text-2xl" *ngIf="!project_config.is_industrial">
           <tr>
             <td class="font-bold w-2/5">RESIDENT NAME</td>
             <td class="w-[5%]">:</td>
@@ -41,9 +41,36 @@
             <td>{{ functionMain.returnNone(record.tenant_date) }}</td>
           </tr>
         </table>
+        <table class="text-2xl" *ngIf="project_config.is_industrial">
+          <tr>
+            <td class="font-bold w-2/5">EMPLOYEE NAME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.employee_name) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">CONTACT NO</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.contact) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">COMPANY</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.company) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.host_name) }}</td>
+          </tr>      
+          <tr *ngIf="record.is_tenant">
+            <td class="font-bold w-2/5">TENANCY EXPIRY DATE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.tenant_date) }}</td>
+          </tr>
+        </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around mb-4">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL RESIDENT</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT'}}</button>
           </div>
         </div>
       </div>

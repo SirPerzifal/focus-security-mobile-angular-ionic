@@ -100,7 +100,7 @@ export class ClientUpcomingEventsPage implements OnInit {
 
   async loadUpcomingEvents() {
     const now = new Date();
-    this.clientMainService.getApi({ unit_id: 1 }, '/resident/get/upcoming_event').subscribe({
+    this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
@@ -119,24 +119,8 @@ export class ClientUpcomingEventsPage implements OnInit {
             },
           }));
           this.events = [...newEvents];
-
-          this.upcomingEvents = results.result.result.map((result: any) => ({
-            id: result.id,
-            start: new Date(result.start_date), // 12:00 PM
-            end: new Date(result.end_date), // 1:00 PM
-            title: result.event_title,
-            description: result.event_description,
-            registered_coach_id: result.registered_coach_id,
-            registered_coach_name: result.registered_coach_name,
-            facility_name: result.room_name,
-            eventDate: result.start_date.split(' ')[0],
-            bookingTime: result.start_date.split(' ')[1] + ' - ' + result.end_date.split(' ')[1],
-            color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
-            resizable: {
-              beforeStart: true,
-              afterEnd: true,
-            },
-          }));
+          this.upcomingEvents = this.events.filter(item => { console.log(new Date(item.start), now) ;return new Date(item.start) >= now})
+          console.log(this.upcomingEvents)
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
         }

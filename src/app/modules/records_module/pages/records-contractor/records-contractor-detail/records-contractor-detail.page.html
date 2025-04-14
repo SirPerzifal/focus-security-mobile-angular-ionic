@@ -5,7 +5,7 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-contractor'" *ngIf="isMain" />
+      <app-vms-header [urlCustom]="'/records-contractor'" *ngIf="isMain" [homeRoute]="true"/>
       <div class="flex flex-col items-center justify-center text-center mt-4" *ngIf="!isMain">
         <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{ project_name}}</b></span>
         <span
@@ -14,6 +14,9 @@
         <div class="w-full flex flex-row justify-start mt-4 items-center">
           <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20 ml-3"
             (click)="onBack()"></ion-icon>
+          <div class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-[50%] flex flex-row items-center justify-center">
+            <ion-icon name="home-outline" size="large" class="text-white size-10" (click)="onHomeClick()"></ion-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -45,10 +48,15 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.contact_number) }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!record.host_id">
             <td class="font-bold w-2/5">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.block_name) + ' | ' + functionMain.returnNone(record.unit_name) }}</td>
+          </tr>
+          <tr *ngIf="record.host_id">
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.host_name)}}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">NUMBER OF SUBCON</td>
@@ -59,6 +67,16 @@
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
             <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.create_date) : '-' }}</td>
+          </tr>
+          <tr *ngIf="record.check_out">
+            <td class="font-bold w-2/5">EXIT DATE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ record.checkout_time ? functionMain.convertNewDateTZ(record.checkout_time) : '-' }}</td>
+          </tr>
+          <tr *ngIf=project_config.is_industrial>
+            <td class="font-bold w-2/5">PASS NUMBER</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.pass_number) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">REMARKS</td>

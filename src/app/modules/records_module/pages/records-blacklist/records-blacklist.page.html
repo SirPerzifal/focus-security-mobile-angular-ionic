@@ -5,7 +5,7 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-main'" />
+      <app-vms-header [urlCustom]="'/records-main'" [homeRoute]="true" />
     </div>
     <div class="flex flex-row mt-8">
       <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Blacklist.png'" [text]="'BLACKLIST'"
@@ -37,7 +37,8 @@
                 <option [value]="'name'" *ngIf="showVisitor">NAME</option>
                 <option [value]="'vehicle'" *ngIf="showVehicle">VEHICLE NUMBER</option>
                 <option [value]="'contact'">CONTACT NO</option>
-                <option [value]="'block'">BLOCK & UNIT</option>
+                <option [value]="'block'" *ngIf="!project_config.is_industrial">BLOCK & UNIT</option>
+                <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
                 <option [value]="'all'">ALL</option>
               </select>
             </div>
@@ -77,7 +78,7 @@
               </div>
             </div>
             <div class="w-full flex flex-row justify-between space-x-2"
-              *ngIf="searchOption == 'block' || searchOption == 'all'">
+              *ngIf="(searchOption == 'block' || searchOption == 'all') && !project_config.is_industrial">
               <div class="w-1/2">
                 <label class="text-2xl"><u><b>BLOCK</b></u></label>
                 <select id="record_visitor_block_filter" (change)="onBlockChange($event)" [(ngModel)]="filter.block"
@@ -89,8 +90,11 @@
               </div>
               <div class="w-1/2">
                 <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'UNIT'"></app-m2m-selection>
+                  [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
+            </div>
+            <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'all') && project_config.is_industrial">
+              <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
             </div>
           </div>
         </div>

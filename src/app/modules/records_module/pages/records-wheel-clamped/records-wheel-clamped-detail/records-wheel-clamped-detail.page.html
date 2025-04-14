@@ -52,10 +52,15 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnFalse(vehicle.type_of_entry) }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-2/5">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnFalse(vehicle.block_name) }} | {{ returnFalse(vehicle.unit_name) }}</td>
+          </tr>
+          <tr *ngIf="project_config.is_industrial">
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ returnFalse(vehicle.host_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">REASON OF ISSUANCE</td>
@@ -78,7 +83,7 @@
           <div class="flex flex-row w-full justify-around space-x-2">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CALL VISITOR</button>
             <!-- <button *ngIf="pageType == 'wheel_clamp'" class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CHECK VISITOR</button> -->
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" click="callResident(vehicle)">CALL RESIDENT</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" click="callResident(vehicle)">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
           <div class="flex flex-row w-full justify-around space-x-2">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"

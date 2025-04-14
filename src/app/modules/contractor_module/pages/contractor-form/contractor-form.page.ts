@@ -14,6 +14,38 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
   styleUrls: ['./contractor-form.page.scss'],
 })
 export class ContractorFormPage implements OnInit {
+
+  constructor(
+    private contractorService: ContractorsService,
+    private toastController: ToastController,
+    private router: Router,
+    private blockUnitService: BlockUnitService,
+    private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
+  ) { }
+
+  ngOnInit() {
+    this.loadProjectName().then(() => {
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+      this.refreshVehicle()
+    })
+    this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
+  }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_config = value.config
+      this.Camera = value.config.lpr
+    })
+  }
+
+  project_config: any = []
+  
   @ViewChild('contractorNameInput') contractorNameInput!: TextInputComponent;
   @ViewChild('contractorContactNumberInput') contractorContactNumberInput!: TextInputComponent;
   @ViewChild('contractorIdentificationNumberInput') contractorIdentificationNumberInput!: TextInputComponent;
@@ -35,15 +67,6 @@ export class ContractorFormPage implements OnInit {
 
   // Array untuk menyimpan data pax
   paxData: any[] = [];
-
-  constructor(
-    private contractorService: ContractorsService,
-    private toastController: ToastController,
-    private router: Router,
-    private blockUnitService: BlockUnitService,
-    private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
-  ) { }
 
   // Ambil nilai dari input
   getInputValue(id: string): string {
@@ -96,21 +119,6 @@ export class ContractorFormPage implements OnInit {
 
   nricPaxChange(event: any, i: any) {
      this.paxData[i].identification_number = this.functionMain.nricChange(event.target.value)
-  }
-
-  ngOnInit() {
-    this.loadProjectName().then(() => {
-      this.loadBlock();
-      this.refreshVehicle()
-    })
-    this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
-  }
-
-  async loadProjectName() {
-    await this.functionMain.vmsPreferences().then((value) => {
-      this.project_id = value.project_id
-      this.Camera = value.config.lpr
-    })
   }
 
   Camera: any = []
@@ -168,8 +176,11 @@ export class ContractorFormPage implements OnInit {
     if (!identificationNumber) {
       errMsg += 'Identification number is required! \n'
     }
-    if (!this.selectedBlock || !this.selectedUnit) {
+    if ((!this.selectedBlock || !this.selectedUnit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
     }
     if (this.checkPaxData()) {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
@@ -202,7 +213,8 @@ export class ContractorFormPage implements OnInit {
         remarks,
         subContractors,
         this.project_id,
-        camera_id
+        camera_id,
+        this.selectedHost,
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -232,6 +244,8 @@ export class ContractorFormPage implements OnInit {
   resetForm() {
     // Reset semua input
     this.contactUnit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     
     this.contractorNameInput.value = '';
     this.contractorContactNumberInput.value = '';
@@ -332,15 +346,20 @@ export class ContractorFormPage implements OnInit {
   contactUnit = ''
   getContactInfo(contactData: any) {
     this.contactUnit = ''
+    this.contactHost = ''
     if (contactData) {
       this.formData.contractor_name = contactData.visitor_name
       this.formData.contractor_vehicle = contactData.vehicle_number
-      this.selectedBlock = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.selectedBlock = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
   }
 
@@ -397,5 +416,17 @@ export class ContractorFormPage implements OnInit {
     console.log(this.nric_value)
   }
 
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+  }
   
 }

@@ -19,7 +19,7 @@
             <tr>
               <td class="font-bold table-cell text-base text-black">Reported Issue On</td>
               <td class="ml-2 table-cell text-base text-black">: {{ ticketDetail.issued_on ?
-                functionMain.convertDateExtend(ticketDetail.issued_on) : '-' }}</td>
+                functionMain.convertNewDateTZ(ticketDetail.issued_on) : '-' }}</td>
             </tr>
             <tr>
               <td class="font-bold table-cell text-base text-black">Ticket Status</td>
@@ -27,7 +27,7 @@
             </tr>
             <tr *ngIf="ticketDetail.solved_on">
               <td class="font-bold table-cell text-base text-black">Solved On</td>
-              <td class="ml-2 table-cell text-base text-black">: {{ functionMain.convertDateExtend(ticketDetail.solved_on)
+              <td class="ml-2 table-cell text-base text-black">: {{ functionMain.convertNewDateTZ(ticketDetail.solved_on)
                 }}</td>
             </tr>
           </table>
@@ -36,9 +36,9 @@
       </div>
       <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status != 'Solved'">
         <div class="flex flex-row justify-start">
-          <p class="text-base font-bold">Content</p>
+          <p class="text-base font-bold">Reply Message</p>
         </div>
-        <textarea id="client_ticket_detail_summary" placeholder="Reply Message"
+        <textarea id="client_ticket_detail_summary" placeholder=""
           class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
           [(ngModel)]="replyForm.body" name="entryMessage">
           </textarea>
@@ -71,11 +71,11 @@
           </button>
         </div> -->
         <button (click)="submitReply(false)"
-          class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12">
+          class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-14">
           Reply
         </button>
         <button (click)="submitReply(true)"
-          class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12">
+          class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-14">
           Reply & Close Ticket
         </button>
       </div>
@@ -110,7 +110,7 @@
               </div>
               
               <div class="text-sm w-full flex justify-end" [ngClass]="message.is_vms || message.is_resident ? 'flex-row' : 'flex-row-reverse'">
-                {{ functionMain.convertDateExtend(message.message_datetime) }}
+                {{ functionMain.convertNewDateTZ(message.message_datetime) }}
               </div>
             </div>
   

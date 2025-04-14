@@ -36,6 +36,7 @@ export class RecordsBlacklistDetailPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProjectName()
   }
 
   private routerSubscription!: Subscription;
@@ -73,6 +74,16 @@ export class RecordsBlacklistDetailPage implements OnInit {
     )
     await alertButtons.present();
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_name = value.project_name.toUpperCase()
+      this.project_config = value.config
+    })
+  }
+
+  project_name = ''
+  project_config: any = []
 
   async liftBanProc() {
     console.log("TRY OPEN MODAL")

@@ -64,32 +64,32 @@
       <div *ngIf="!isLoading">
         <div *ngIf="showApprovals.length > 0; else noApprovals">
           <div *ngFor="let approval of showApprovals; let i = index" [ngClass]="{
-            'bg-green-100': approval.states === 'approved',
-            'bg-sky-100': approval.states === 'pending_approval' || approval.states === 'pending_payment',
-            'bg-[#E3787E]': approval.states === 'rejected' || approval.states === 'cancel',
+            'bg-green-100': approval.states === 'approved' || approval.appeal_status === 'approved',
+            'bg-sky-100': approval.states === 'pending_approval' || approval.states === 'pending_payment' || approval.appeal_status === 'issued',
+            'bg-[#E3787E]': approval.states === 'rejected' || approval.states === 'cancel' || approval.appeal_status === 'rejected',
             'bg-[#F8F1BA]': approval.states === 'requested',
             'bg-[#c4c4c4]': !approval.states,
             }" class="bg-green-100 rounded-2xl p-5 my-4 mt-4 w-full">
             <h2 [ngClass]="{
-            'text-green-500': approval.states === 'approved',
-            'text-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment',
-            'text-red-700': approval.states === 'rejected' || approval.states === 'cancel',
+            'text-green-500': approval.states === 'approved' || approval.appeal_status === 'approved',
+            'text-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment' || approval.appeal_status === 'issued',
+            'text-red-700': approval.states === 'rejected' || approval.states === 'cancel' || approval.appeal_status === 'rejected',
             'text-yellow-400': approval.states === 'requested',
             }" class="flex text-base font-bold mb-2 justify-items-center items-center text-center">
-              <ion-icon [name]="approval.states === 'approved' ? 'checkmark' : 
-            approval.states === 'pending_approval' ? 'time' : 
+              <ion-icon [name]="approval.states === 'approved' || approval.appeal_status === 'approved' ? 'checkmark' : 
+            approval.states === 'pending_approval' || approval.appeal_status === 'issued' ? 'time' : 
             approval.states === 'pending_payment' ? 'time' : 
             approval.states === 'rejected' ? 'close' : 
             approval.states === 'cancel' ? 'close' : 
-            approval.states === 'requested' ? 'help-circle' : 
+            approval.states === 'requested' || approval.appeal_status === 'rejected' ? 'help-circle' : 
             'help-circle'" [ngClass]="{
-            'bg-green-500': approval.states === 'approved',
-            'bg-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment',
-            'bg-red-700': approval.states === 'rejected' || approval.states === 'cancel',
+            'bg-green-500': approval.states === 'approved' || approval.appeal_status === 'approved',
+            'bg-sky-500': approval.states === 'pending_approval' || approval.states === 'pending_payment' || approval.appeal_status === 'issued',
+            'bg-red-700': approval.states === 'rejected' || approval.states === 'cancel' || approval.appeal_status === 'rejected',
             'bg-yellow-500': approval.states === 'requested'
             }" class="mr-2 p-1 rounded-full text-white text-[18px]">
               </ion-icon>
-              {{ approval.states ? functionMain.uppercaseFirstWithUnderscore(approval.states) : '-' }}
+              {{ approval.states ? functionMain.uppercaseFirstWithUnderscore(approval.states) : ( approval.appeal_status ? functionMain.uppercaseFirstWithUnderscore(approval.appeal_status) :'-') }}
             </h2>
             <p class="font-bold text-base text-black" *ngIf="!['facility'].includes(approval_type)">{{ approval_name }}</p>
             <p class="font-bold text-base text-black" *ngIf="['facility'].includes(approval_type)">{{ functionMain.returnNone(approval.facility_name) }}</p>
@@ -209,9 +209,9 @@
  
   <div class="flex flex-row relative mx-7 mt-4 mb-24" *ngIf="isDetail" @fadeInOut>
     <div class="flex flex-col w-full p-4 rounded" [ngClass]="{
-      'bg-green-100': selectedApproval.states === 'approved',
-      'bg-sky-100': selectedApproval.states === 'pending_approval' || selectedApproval.states === 'pending_payment',
-      'bg-[#E3787E]': selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel',
+      'bg-green-100': selectedApproval.states === 'approved' || selectedApproval.appeal_status === 'approved',
+      'bg-sky-100': selectedApproval.states === 'pending_approval' || selectedApproval.states === 'pending_payment' || selectedApproval.appeal_status === 'issued',
+      'bg-[#E3787E]': selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel' || selectedApproval.appeal_status === 'rejected',
       'bg-[#F8F1BA]': selectedApproval.states === 'requested',
       'bg-[#c4c4c4]': !selectedApproval.states,
       }">
@@ -320,11 +320,19 @@
           <p class="font-bold table-cell text-base text-black">Applied By</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.requestor) }}</p>
         </div>
+        <div class="table-row" *ngIf="selectedApproval.states === 'approved' && ['vehicle'].includes(approval_type) && project_config.is_industrial">
+          <p class="font-bold table-cell text-base text-black">RFID Tag Number</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.rfid_tag)   }}</p>
+        </div>
         <div class="table-row">
           <p class="font-bold table-cell text-base text-black">Status</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.states ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.states) : '-'  }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.states ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.states) : ( selectedApproval.appeal_status ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.appeal_status) :'-') }}</p>
         </div>
-        <div class="table-row" *ngIf="selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel'">
+        <div class="table-row" *ngIf="['parking'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Reason For Appeal</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_appeal) }}</p>
+        </div>
+        <div class="table-row" *ngIf="selectedApproval.appeal_status === 'rejected' || selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel'">
           <p class="font-bold table-cell text-base text-black">Reason For Rejetion</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
         </div>
@@ -337,8 +345,8 @@
         <app-image-zoom [imageZoom]="functionMain.getImage(selectedApproval.tenancy_aggrement)" [imageClass]="'h-40 object-contain'" [bgColor]="getBgClass()" *ngIf="selectedApproval.attachment_mimetype.includes('image')"></app-image-zoom>
         <!-- <app-base64-file-zoom [file]="selectedApproval.tenancy_file_pdf" *ngIf="selectedApproval.attachment_mimetype.includes('application')"></app-base64-file-zoom> -->
       </div>
-      <div class="flex flex-col mt-4 space-y-2" *ngIf="['pending_approval', 'requested'].includes(selectedApproval.states)">
-        <button (click)="approveDetail(selectedApproval)"
+      <div class="flex flex-col mt-4 space-y-2" *ngIf="['pending_approval', 'requested'].includes(selectedApproval.states) || ['issued'].includes(selectedApproval.appeal_status)">
+        <button (click)="approveData(selectedApproval)"
           class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold">
           Approve
         </button>
@@ -356,12 +364,28 @@
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Reason for rejection</p>
           </div>
-          <textarea id="reason_ban_entry_message" placeholder="Type the remarks here. . ."
+          <textarea id="reason_ban_entry_message" placeholder=""
             class="!border-none w-full rounded py-2 px-3 h-20 text-base"
             type="text" name="reasonForbanning" [(ngModel)]="reject_reason">
           </textarea>
         </div>
         <app-visitor-button [text]="'Confirm Rejection'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'" (click)="rejectDetail()"></app-visitor-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal id="text-modal" [isOpen]="isApproveVehicleModal" (didDismiss)="closeApprovalModal()">
+    <ng-template>
+      <div class="wrapper-green">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">RFID Tag Number</p>
+          </div>
+          <textarea id="reason_ban_entry_message" placeholder=""
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
+            type="text" name="reasonForbanning" [(ngModel)]="rfid_tag">
+          </textarea>
+        </div>
+        <app-visitor-button [text]="'Confirm Approval'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'" (click)="approveDetail(selectedApproval)"></app-visitor-button>
       </div>
     </ng-template>
   </ion-modal>

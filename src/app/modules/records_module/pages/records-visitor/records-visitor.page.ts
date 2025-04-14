@@ -79,7 +79,11 @@ export class RecordsVisitorPage implements OnInit {
     })
     this.loadProjectId().then(() => {
       this.loadLogs(this.pageType, true)
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
   }
 
@@ -91,10 +95,12 @@ export class RecordsVisitorPage implements OnInit {
   }
 
   project_id = 0
+  project_config: any = []
 
   async loadProjectId() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
@@ -107,12 +113,13 @@ export class RecordsVisitorPage implements OnInit {
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showActiveTrans) {
-      this.showActive = false;
-      this.showHistory = false;
-      this.showActiveTrans = false;
-      this.showHistoryTrans = false;
       if (type == 'active') {
+        this.showHistory = false;
+        this.showHistoryTrans = false;
         this.showActiveTrans = true
+        this.contactHost = ''
+        this.selectedHost = ''
+        this.clearFilters()
         if (this.activeVehicles.length == 0){
           this.loadLogs(this.pageType, true)
         }
@@ -122,9 +129,9 @@ export class RecordsVisitorPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
+        this.showActive = false;
+        this.showActiveTrans = false;
         this.isRadioClicked = false
-        this.selectedRadio = ''
-        this.clearFilters()
         this.showHistoryTrans = true
         if (this.logsData.length == 0){
           this.loadLogs(this.pageType, false)
@@ -245,6 +252,8 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.block = ''
     this.filter.vehicle_number = ''
     this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     this.applyFilters() 
   }
 
@@ -268,9 +277,10 @@ export class RecordsVisitorPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
       const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
+      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
       const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
-      return blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;
+      return hostMatches && blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;
     });
     console.log(this.historyVehicles)
   }
@@ -296,6 +306,8 @@ export class RecordsVisitorPage implements OnInit {
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
+      this.contactHost = ''
+      this.selectedHost = ''
     }
     console.log(this.selectedRadio)
     this.sortVehicle = this.historyVehicles
@@ -325,6 +337,20 @@ export class RecordsVisitorPage implements OnInit {
       this.isRadioClicked = false
       this.searchOption = ''
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+    this.applyFilters()
   }
 
 }

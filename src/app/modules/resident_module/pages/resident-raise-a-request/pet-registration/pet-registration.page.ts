@@ -78,6 +78,7 @@ export class PetRegistrationPage implements OnInit {
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
+        console.log(parseValue)
         this.formData.unit_id = parseValue.unit_id;
         this.formData.block_id = parseValue.block_id;
       }
@@ -115,6 +116,7 @@ export class PetRegistrationPage implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.formData)
     // Validate each field
     if (!this.formData.type_of_pet) {
         this.presentToast('Type of pet cannot be empty.', 'danger');

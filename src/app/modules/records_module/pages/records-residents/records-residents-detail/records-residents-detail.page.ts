@@ -28,7 +28,12 @@ export class RecordsResidentsDetailPage implements OnInit {
     this.webRtcService.createOffer(recordCopy);
   }
 
+  project_config: any = []
+
   ngOnInit() {
+    this.functionMain.vmsPreferences().then((value) => {
+      this.project_config = value.config
+    })
   }
 
 }

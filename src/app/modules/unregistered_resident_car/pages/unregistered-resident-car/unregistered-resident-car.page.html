@@ -33,7 +33,7 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl" [ngClass]="formData.block_id ? 'text-black' : 'text-[#6B7280]'">
@@ -49,28 +49,31 @@
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="remarks" rows="4"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="A SHORT MEETING WITH THE CLIENT..." [(ngModel)]="formData.reason"></textarea>
+            placeholder="" [(ngModel)]="formData.reason"></textarea>
         </div>
         <!-- <div class="w-full">          
           <app-visitor-button (click)="onSubmit(true)" [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl mt-6 h-20'"></app-visitor-button>
           <app-visitor-button (click)="onSubmit(false)" [text]="'SAVE RECORD ONLY'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-4 w-full text-2xl h-20'"></app-visitor-button>
         </div> -->
         <div class="w-full" *ngFor="let camera of Camera; let i = index">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [isDisable]="submitLoading"
+            [extraClass]="(!submitLoading ? 'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' : 'bg-[#D0D0D0] text-[#757575] w-full text-2xl h-20 ') + (i == 0 ? 'mt-6' : 'mt-1' )"
             (click)="onSubmit(true, camera.CamSentId)"></app-visitor-button>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'SAVE RECORD ONLY'"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
+          <app-visitor-button [text]="'SAVE RECORD ONLY'" [isDisable]="submitLoading"
+            [extraClass]="!submitLoading ? 'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1' : 'bg-[#D0D0D0] text-[#757575] w-full text-2xl h-20 mt-1'"
             (click)="onSubmit()"></app-visitor-button>
         </div>
       </div>

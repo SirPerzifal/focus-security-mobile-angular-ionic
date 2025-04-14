@@ -28,7 +28,11 @@ export class RecordsBlacklistPage implements OnInit {
   ngOnInit() {
     this.loadProjectName().then(() => {
       this.loadBlacklistData()
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
     this.route.queryParams.subscribe(params => {
       if (params ) {
@@ -44,9 +48,11 @@ export class RecordsBlacklistPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
+  project_config: any = []
   project_id = 0
 
   private routerSubscription!: Subscription;
@@ -134,6 +140,7 @@ export class RecordsBlacklistPage implements OnInit {
     this.filter.unit = event[0];
     this.applyFilters()
   }
+  contactUnit = ''
 
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
@@ -191,6 +198,14 @@ export class RecordsBlacklistPage implements OnInit {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.filter.name = ''
+    this.filter.vehicle_number = ''
+    this.filter.contact = ''
+    this.contactUnit = ''
+    this.filter.block = ''
+    this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     console.log(event.target.value)
   }
 
@@ -201,6 +216,11 @@ export class RecordsBlacklistPage implements OnInit {
     this.filter.name = ''
     this.filter.vehicle_number = ''
     this.filter.contact = ''
+    this.contactUnit = ''
+    this.filter.block = ''
+    this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     this.applyFilters() 
   }
 
@@ -213,8 +233,9 @@ export class RecordsBlacklistPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id[0] == this.filter.block : true;
       const unitMatches =  this.filter.unit ? item.unit_id[0] == this.filter.unit : true;
+      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
 
-      return blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
+      return hostMatches && blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
     });
     console.log(this.blacklistData)
   }
@@ -265,5 +286,19 @@ export class RecordsBlacklistPage implements OnInit {
         record: record
       }
     })
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+    this.applyFilters()
   }
 }

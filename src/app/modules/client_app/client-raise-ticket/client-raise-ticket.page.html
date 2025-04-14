@@ -86,7 +86,7 @@
             <div class="table w-full">
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black">Reported Issue On</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertDateExtend(ticket.issued_on) }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertNewDateTZ(ticket.issued_on) }}</p>
               </div>
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black">Ticket Status</p>
@@ -114,14 +114,14 @@
         <p class="text-base font-bold">Type of Issue</p>
       </div>
       <select id="client_ticket_new_type" [(ngModel)]="newTicket.ticket_type_id" disabled
-        class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]">
+        class="bg-[#F5F5F5] border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#7D8390] accent-[var(--ion-color-primary)]">
         <option value="" selected disabled hidden>Choose Issue Type</option>
         <option *ngFor="let item of menuItems" [value]="item.id">{{ item.text }}</option>
       </select>
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Report Summary</p>
       </div>
-      <textarea id="client_ticket_new_summary" placeholder="Report Summary"
+      <textarea id="client_ticket_new_summary" placeholder=""
         class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
         [(ngModel)]="newTicket.summary" name="entryMessage">
         </textarea>
@@ -154,7 +154,7 @@
       </div>
       <div class="w-full ">
         <button (click)="createNewTicket()"
-          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2">
+          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
           Submit
         </button>
       </div>

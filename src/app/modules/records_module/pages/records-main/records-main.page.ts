@@ -115,7 +115,7 @@ export class RecordsMainPage implements OnInit {
         project_config: this.project_config.is_allow_vms_record_blacklist,
       },
       {
-        text: 'RESIDENTS',
+        text: this.project_config.is_industrial ? 'EMPLOYEES' :  'RESIDENTS',
         icon: 'assets/icon-vms/records_menu/Residents.png',
         route: '/records-residents',
         needSize: true,
@@ -129,7 +129,7 @@ export class RecordsMainPage implements OnInit {
   }
 
   toggleRecordsButton(records: any, params: any = false) {
-    if (records.text == 'RESIDENTS'){
+    if (records.text == 'RESIDENTS' || records.text == 'EMPLOYEES'){
       this.presentModal()
     } else {
       if (!params) {

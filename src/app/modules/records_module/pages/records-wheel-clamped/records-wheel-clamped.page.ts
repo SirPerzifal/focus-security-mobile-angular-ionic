@@ -36,6 +36,7 @@ export class RecordsWheelClampedPage implements OnInit {
     private modalController: ModalController,
     private route: ActivatedRoute,
     public functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
   ) { }
 
   async presentModal() {
@@ -79,8 +80,24 @@ export class RecordsWheelClampedPage implements OnInit {
       this.params = params
     })
     console.log(this.pageType)
-    this.loadRecordsWheelClamp()
-    this.loadBlock()
+    this.loadProjectId().then(() => {
+      this.loadRecordsWheelClamp()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+    })
+  }
+
+  project_id = 0
+  project_config: any = []
+
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_config = value.config
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -106,6 +123,7 @@ export class RecordsWheelClampedPage implements OnInit {
         this.showHistory = false;
         this.showHistoryTrans = false;
         this.showActiveTrans = true
+        this.clearFilters()
         if (this.activeVehicles.length == 0){
           this.loadRecordsWheelClamp()
         }
@@ -147,6 +165,7 @@ export class RecordsWheelClampedPage implements OnInit {
       this.selectedRadio = null;
     } else {
       this.selectedRadio = value;
+      this.clearFilters()
     }
     console.log(this.selectedRadio)
     if (this.selectedRadio == 'sort_date') {
@@ -261,6 +280,15 @@ export class RecordsWheelClampedPage implements OnInit {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.filter = {
+      block: '',
+      unit: '',
+      issue_date: '',
+      end_issue_date: '',
+      vehicle_number: ''
+    }
+    this.contactHost = ''
+    this.selectedHost = ''
     console.log(event.target.value)
   }
 
@@ -274,6 +302,8 @@ export class RecordsWheelClampedPage implements OnInit {
     this.filter.block = ''
     this.filter.vehicle_number = ''
     this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     this.applyFilters() 
   }
 
@@ -297,10 +327,11 @@ export class RecordsWheelClampedPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
       const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
+      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
       const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
       console.log(item.vehicle_number, this.filter.vehicle_number)
-      return endDateMatches && blockMatches && startDateMatches && unitMatches && vehicleNumberMatches;
+      return endDateMatches && hostMatches && blockMatches && startDateMatches && unitMatches && vehicleNumberMatches;
     });
     console.log(this.historyVehicles)
   }
@@ -344,6 +375,20 @@ export class RecordsWheelClampedPage implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+    this.applyFilters()
   }
 
 }

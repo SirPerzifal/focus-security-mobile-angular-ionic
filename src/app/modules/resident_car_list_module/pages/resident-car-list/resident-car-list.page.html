@@ -55,15 +55,20 @@
                 <td class="w-[2%]">:</td>
                 <td>{{functionMain.returnNone(vehicle.contact_number)}}</td>
               </tr>
-              <tr class="h-9">
+              <tr class="h-9" *ngIf="!project_config.is_industrial">
                 <td class="w-2/5 font-bold">BLOCK</td>
                 <td class="w-[2%]">:</td>
                 <td>{{functionMain.returnNone(vehicle.block_id)[1]}}</td>
               </tr>
-              <tr class="h-9">
+              <tr class="h-9" *ngIf="!project_config.is_industrial">
                 <td class="w-2/5 font-bold">UNIT</td>
                 <td class="w-[2%]">:</td>
                 <td>{{functionMain.returnNone(vehicle.unit_id)[1]}}</td>
+              </tr>
+              <tr class="h-9" *ngIf="project_config.is_industrial">
+                <td class="w-2/5 font-bold">HOST</td>
+                <td class="w-[2%]">:</td>
+                <td>{{functionMain.returnNone(vehicle.host_id)[1]}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">WARNING ISSUE</td>
@@ -85,7 +90,7 @@
               <div class="w-full flex flex-row justify-around mb-4">
                 <button (click)="callResident(vehicle)"
                   class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">
-                  CALL RESIDENT
+                  CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}
                 </button>
                 <button *ngIf="!vehicle.is_resident" (click)="callVisitor(vehicle)"
                   class="h-14 rounded-md text-center align-middle font-bold text-2xl px-1 w-2/5 bg-white text-black">

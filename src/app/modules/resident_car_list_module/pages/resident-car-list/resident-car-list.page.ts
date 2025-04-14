@@ -65,10 +65,12 @@ export class ResidentCarListPage implements OnInit {
       console.log(value)
       this.project_name = value.project_name.toUpperCase()
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
   project_name = ''
   project_id = 0
+  project_config: any = []
   isLoading = false
   async toggleShowSearch(vehicle_number: any, is_camera: boolean = false) {
     this.isLoading = true

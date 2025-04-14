@@ -22,7 +22,11 @@ export class UnregisteredResidentCarPage implements OnInit {
 
   ngOnInit() {
     this.loadProjectName().then(() => {
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
       this.refreshVehicle()
     })
   }
@@ -30,11 +34,13 @@ export class UnregisteredResidentCarPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.formData.project_id = value.project_id
+      this.project_config = value.config
       this.Camera = value.config.lpr
     })
   }
 
   Camera: any = []
+  project_config: any = []
   formData = {
     name: '',
     contact_number: '',
@@ -45,6 +51,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     project_id: 0
   }
 
+  submitLoading = false
   onSubmit(isOpenBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
     if (!this.formData.name) {
@@ -61,8 +68,11 @@ export class UnregisteredResidentCarPage implements OnInit {
     if (!this.formData.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
     }
-    if (!this.formData.block_id || !this.formData.unit_id) {
+    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
     }
     if (!this.formData.reason) {
       errMsg += 'Reason must be filled! \n'
@@ -75,9 +85,10 @@ export class UnregisteredResidentCarPage implements OnInit {
       } else {
         console.log("BARRIER NOT OPENED");
       }
-      let params = {...this.formData, camera_id: camera_id}
+      let params = {...this.formData, camera_id: camera_id, host: this.selectedHost}
       console.log(params)
-      this.mainVmsService.getApi(this.formData, '/vms/post/unregistered_resident_car').subscribe({
+      this.submitLoading = true
+      this.mainVmsService.getApi(params, '/vms/post/unregistered_resident_car').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -86,10 +97,12 @@ export class UnregisteredResidentCarPage implements OnInit {
           } else {
             this.presentToast('An error occurred while submitting unregistered car!', 'danger');
           }
+          this.submitLoading = false
         },
         error: (error) => {
           this.presentToast('An error occurred while submitting unregistered car!', 'danger');
           console.error(error);
+          this.submitLoading = false
         }
       });
     }
@@ -174,16 +187,34 @@ export class UnregisteredResidentCarPage implements OnInit {
   contactUnit = ''
   getContactInfo(contactData: any){
     this.contactUnit = ''
+    this.contactHost = ''
     if (contactData) {
       this.formData.name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
-      this.formData.block_id = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.formData.block_id = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.formData.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 
 }

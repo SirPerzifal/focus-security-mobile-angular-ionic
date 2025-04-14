@@ -66,6 +66,7 @@ export class ResidentHomepagePage implements OnInit {
       if(value?.value){
         const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
         this.storage.get('USESTATE_DATA').then(async (value) => {
+          console.log(value)
           if (value) {
             const valueUseState = JSON.parse(value.value);
             this.isLoading = false;

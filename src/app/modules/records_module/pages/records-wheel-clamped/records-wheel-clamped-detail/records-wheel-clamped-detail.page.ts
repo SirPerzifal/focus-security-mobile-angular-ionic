@@ -35,10 +35,21 @@ export class RecordsWheelClampedDetailPage implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+      this.loadProjectName()
       this.pageType = params['type']
       this.params = params
     })
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_config = value.config
+    })
+  }
+
+  project_id = 0
+  project_config: any = []
 
   returnFalse(data: any){
     return data ? data : '-'

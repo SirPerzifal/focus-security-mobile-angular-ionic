@@ -54,17 +54,23 @@ export class OvernightParkingListPage implements OnInit {
 
     this.loadProjectName().then(() => {
       this.loadOvernight('today')
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
   }
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -138,6 +144,7 @@ export class OvernightParkingListPage implements OnInit {
         this.showUpcoming = false;
         this.showUpcomingTrans = false;
         this.searchOption = ''
+        this.contactHost = ''
         this.startDateFilter = ''
         this.endDateFilter = ''
         this.choosenBlock = ''
@@ -158,6 +165,7 @@ export class OvernightParkingListPage implements OnInit {
         this.showHistory = false;
         this.showHistoryTrans = false;
         this.searchOption = ''
+        this.contactHost = ''
         this.startDateFilter = ''
         this.endDateFilter = ''
         this.choosenBlock = ''
@@ -198,6 +206,7 @@ export class OvernightParkingListPage implements OnInit {
     this.startDateFilter = ''
     this.endDateFilter = ''
     this.choosenBlock = ''
+    this.contactHost = ''
     this.applyFilters() 
   }
 
@@ -220,8 +229,9 @@ export class OvernightParkingListPage implements OnInit {
 
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
+      const hostMatches = this.selectedHost ? item.host_id == this.selectedHost : true;
 
-      return typeMatches && dateMatches;
+      return typeMatches && dateMatches && hostMatches;
     });
     console.log(this.filteredHistorySchedules)
   }
@@ -310,6 +320,10 @@ export class OvernightParkingListPage implements OnInit {
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
+      this.selectedHost = ''
+      this.choosenBlock = ''
+      this.startDateFilter = ''
+      this.endDateFilter = ''
     }
     console.log(this.selectedRadio)
     this.sortVehicle = this.historySchedules
@@ -339,6 +353,19 @@ export class OvernightParkingListPage implements OnInit {
       this.isRadioClicked = false
       this.searchOption = ''
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 
 }

@@ -13,7 +13,7 @@ export class VmsContactInputComponent  implements OnInit {
 
   constructor(private mainVmsService: MainVmsService, private toastController: ToastController, private functionMain: FunctionMainService) { }
 
-  @Input() placeholder: string = '';
+  @Input() placeholder: string = '821 7263 112';
   @Input() labelText: string = '';
   @Input() id: string = '';
   @Input() name: string = '';
@@ -26,6 +26,7 @@ export class VmsContactInputComponent  implements OnInit {
   @Input() contactLabel: string = '';
   @Input() valueExist: string = '';
   @Input() disableButton: boolean = false
+  @Input() showButton: boolean = true
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
@@ -97,12 +98,7 @@ export class VmsContactInputComponent  implements OnInit {
       }
     
     }, 0);
-    this.functionMain.vmsPreferences().then((value) => {
-      this.project_id = value.project_id
-    })
   }
-
-  project_id = 0
 
   onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
@@ -129,26 +125,27 @@ export class VmsContactInputComponent  implements OnInit {
 
   getContactInformation(){
     if (!this.isReadonly && !this.disableButton){
-      let params = {
-        contact_number: this.combinedValue,
-        project_id: this.project_id
-      }
-      this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
-        next: (results) => {
-          console.log(results)
-          if (results.result.status_code === 200) {
-            this.presentToast('Succesfully get data!', 'success');
-            console.log(results.result.result)
-            this.contactInfo.emit(results.result.result)
-          } else {
-            this.presentToast('Failed to get data!', 'danger');
-          }
-        },
-        error: (error) => {
-          this.presentToast('Failed to get data!', 'danger');
-          console.error(error);
+      this.functionMain.vmsPreferences().then((value) => {
+        let params = {
+          contact_number: this.combinedValue,
+          project_id: value.project_id
         }
-      });
+        this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
+          next: (results) => {
+            if (results.result.status_code === 200) {
+              this.presentToast('Succesfully get data!', 'success');
+              console.log(results.result.result)
+              this.contactInfo.emit(results.result.result)
+            } else {
+              this.presentToast('Failed to get data!', 'danger');
+            }
+          },
+          error: (error) => {
+            this.presentToast('Failed to get data!', 'danger');
+            console.error(error);
+          }
+        });
+      })
     }
   }
 

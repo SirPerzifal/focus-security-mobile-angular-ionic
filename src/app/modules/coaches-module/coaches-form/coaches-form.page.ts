@@ -78,11 +78,13 @@ export class CoachesFormPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.Camera = value.config.lpr
     })
   }
 
   project_id = 0
+  project_config: any = []
   Camera: any = []
 
   private routerSubscription!: Subscription;

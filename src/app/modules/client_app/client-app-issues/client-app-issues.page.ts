@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
@@ -28,7 +30,7 @@ export class ClientAppIssuesPage implements OnInit {
   extend_mb = false
   typeOfReport: any = []
 
-  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService) { }
+  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, private clientMainService: ClientMainService, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
     console.log("tes");
@@ -67,11 +69,11 @@ export class ClientAppIssuesPage implements OnInit {
   }
 
   onBack() {
-    if (this.isMain) {
+    // if (this.isMain) {
       this.router.navigate(['/client-main-app'])
-    } else if (this.isNewReport) {
-      this.toggleShowReport()
-    }
+    // } else if (this.isNewReport) {
+    //   this.toggleShowReport()
+    // }
   }
   
   isMain = true
@@ -158,25 +160,27 @@ export class ClientAppIssuesPage implements OnInit {
 
   loadTicketFromBackend() {
     this.isLoading = true
-    this.reportIssueService.getAllDataReportForUse(
-      this.unitId,
-      this.isReportApp
-    ).subscribe(
-      (response) => {
-        this.isLoading = false
-        console.log(response);
-        if (response.result.response_code === 200) {
-          this.allData = response.result.result;
-          // this.presentToast(response.result.message, 'success');
+    this.clientMainService.getApi({is_report_app: this.isReportApp}, '/client/get/report_issue').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          if (results.result.result.length > 0){
+            this.allData = results.result.result;
+
+          } else {
+          }
+          // this.functionMain.presentToast(`Success!`, 'success');
         } else {
-          // this.presentToast(response.result.error_message, 'danger');
+          this.functionMain.presentToast(`Failed!`, 'danger');
         }
-      },
-      (error) => {
         this.isLoading = false
-        // this.presentToast(error.error.message, 'danger');
+      },
+      error: (error) => {
+        this.isLoading = false
+        this.functionMain.presentToast('Failed!', 'danger');
+        console.error(error);
       }
-    );
+    });
   }
 
   seeDetail(ticket: any) {

@@ -187,7 +187,7 @@ export class ClientFacilityPage implements OnInit {
 
   loadBooking() {
     this.isLoading = true
-    this.clientMainService.getApi({unit_id: this.unit_id}, '/resident/get/facility_book').subscribe({
+    this.clientMainService.getApi({unit_id: this.unit_id}, '/client/get/facility_book').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
@@ -211,7 +211,7 @@ export class ClientFacilityPage implements OnInit {
 
   loadHistoryBooking() {
     this.isLoading = true
-    this.clientMainService.getApi({unit_id: this.unit_id}, '/resident/get/booking_history').subscribe({
+    this.clientMainService.getApi({unit_id: this.unit_id}, '/client/get/booking_history').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)

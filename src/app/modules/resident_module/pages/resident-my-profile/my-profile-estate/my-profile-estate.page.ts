@@ -45,6 +45,7 @@ export class MyProfileEstatePage implements OnInit {
   }
 
   loadEstate(email:string) {
+    console.log(email)
     this.authService.getEstatesByEmail(email).subscribe(
       response => {
         if (response.result.status_code === 200) {

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/vms/user/user.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -26,6 +27,28 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
   ]
 })
 export class PickUpPagePage implements OnInit {
+
+  constructor(
+    private vmsService: VmsServicePickUp,
+    private toastController: ToastController,
+    private userApi: UserService,
+    private router: Router,
+    private blockUnitService: BlockUnitService,
+    public functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
+  ) { }
+
+  ngOnInit() {
+    // this.loadBlock()
+    this.loadProjectId().then(() => {
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+    })
+  }
+
   @ViewChild('vehicleNumberInput') vehicleNumberInput!: TextInputComponent;
   @ViewChild('locationInput') locationInput!: TextInputComponent;
 
@@ -50,6 +73,7 @@ export class PickUpPagePage implements OnInit {
   async loadProjectId() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.Camera = value.config.lpr
       console.log(this.Camera)
     })
@@ -57,6 +81,7 @@ export class PickUpPagePage implements OnInit {
 
   project_id = 0
   Camera: any = []
+  project_config: any = []
 
   Block: any[] = [];
 
@@ -94,15 +119,6 @@ export class PickUpPagePage implements OnInit {
 
   selectedVehicleType = '';
   entryType = '';
-
-  constructor(
-    private vmsService: VmsServicePickUp,
-    private toastController: ToastController,
-    private userApi: UserService,
-    private router: Router,
-    private blockUnitService: BlockUnitService,
-    public functionMain: FunctionMainService
-  ) { }
 
   toggleShowPick() {
     if(this.showDrop){
@@ -183,8 +199,11 @@ export class PickUpPagePage implements OnInit {
       console.log(this.vehicleNumberInput.value)
     }
 
-    if (!location) {
+    if (!location && !this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
+    }
+    if (!this.selectedHost && this.project_config.is_industrial) {
+      errMsg += 'Host is required! \n'
     }
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
@@ -199,7 +218,8 @@ export class PickUpPagePage implements OnInit {
         vehicleNumber, 
         location,
         this.project_id,
-        cameraId ? cameraId : ''
+        cameraId ? cameraId : '',
+        this.selectedHost,
       ).subscribe({
         next: (response) => {
           console.log(response)
@@ -253,11 +273,6 @@ export class PickUpPagePage implements OnInit {
       
     });
   }
-
-  ngOnInit() {
-    this.loadBlock()
-    this.loadProjectId()
-  }
   
   vehicle_number = ''
 
@@ -270,5 +285,17 @@ export class PickUpPagePage implements OnInit {
       console.log(value)
       this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
     })
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 }

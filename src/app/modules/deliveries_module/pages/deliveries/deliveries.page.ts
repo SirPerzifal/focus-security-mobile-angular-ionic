@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-deliveries',
@@ -35,7 +36,14 @@ export class DeliveriesPage implements OnInit {
     { image: 'assets/icon/deliveries-icon/Package.webp', text: 'Not Exist', isActive: false, id: '0' },
   ];
 
-  constructor(private foodPlatform: FoodPlatformService, private router: Router, private toastController: ToastController, private blockUnitService: BlockUnitService, private functionMain: FunctionMainService) { }
+  constructor(
+    private foodPlatform: FoodPlatformService, 
+    private router: Router, 
+    private toastController: ToastController, 
+    private blockUnitService: BlockUnitService, 
+    private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
+  ) { }
 
   package_delivery_type = ""
   food_delivery_type = ""
@@ -70,11 +78,13 @@ export class DeliveriesPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
       this.Camera = value.config.lpr
+      this.project_config = value.config
     })
   }
   
   Camera: any = []
   project_id = 0
+  project_config: any = []
 
   getFoodPlatform() {
     this.foodDeliveryButtons.pop()
@@ -152,8 +162,11 @@ export class DeliveriesPage implements OnInit {
     if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number){
       errMsg += 'Please insert a vehicle number!\n';
     }
-    if (!this.formData.block || !this.formData.unit){
+    if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial){
       errMsg += 'Please insert a block and unit!\n';
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial){
+      errMsg += 'Please insert a host!\n';
     }
     if(errMsg != ""){
       this.presentToast(errMsg, 'danger')
@@ -174,7 +187,8 @@ export class DeliveriesPage implements OnInit {
         this.formData.unit,
         {},
         this.project_id,
-        camera_id
+        camera_id,
+        this.selectedHost,
       ).subscribe(
         res => {
           console.log(res);
@@ -229,6 +243,10 @@ export class DeliveriesPage implements OnInit {
     this.deliveriesType.forEach(button => button.isActive = false);
     this.packageDeliveryButtons.forEach(button => button.isActive = false);
     this.Unit = []
+    this.selectedHost = ''
+    this.contactHost = ''
+    this.contactUnit = ''
+    this.refreshVehicle()
   }
 
   onSubmitPackage(openBarrier: boolean = false, camera_id: string = '') {
@@ -256,8 +274,11 @@ export class DeliveriesPage implements OnInit {
     if (!this.formData.vehicle_number){
       errMsg += 'Please insert visitor vehicle number!\n';
     }
-    if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit)){
+    if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial){
       errMsg += 'Please insert visitor block and unit!\n';
+    }
+    if (this.package_delivery_type == "single" && (!this.selectedHost) && this.project_config.is_industrial){
+      errMsg += 'Please insert a visitor host!\n';
     }
     if (this.package_delivery_type == "multiple" && this.formData.pax == "0"){
       errMsg += 'Please insert number of Pax!\n';
@@ -284,7 +305,8 @@ export class DeliveriesPage implements OnInit {
           remarks: this.formData.remarks
         },
         this.project_id,
-        camera_id
+        camera_id,
+        this.selectedHost,
       ).subscribe(
         res => {
           console.log(res);
@@ -522,7 +544,11 @@ export class DeliveriesPage implements OnInit {
     this.loadProjectName().then(() => {
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
       this.packageDeliveryButtons.forEach(button => button.isActive = false);
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
       this.getFoodPlatform()
       this.getPackagePlatform()
     })
@@ -576,15 +602,33 @@ export class DeliveriesPage implements OnInit {
   contactUnit = ''
   getContactInfo(contactData: any){
     this.contactUnit = ''
+    this.contactHost = ''
     if (contactData) {
       console.log(contactData)
       this.formData.vehicle_number = contactData.vehicle_number
-      this.formData.block = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.formData.block = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 }

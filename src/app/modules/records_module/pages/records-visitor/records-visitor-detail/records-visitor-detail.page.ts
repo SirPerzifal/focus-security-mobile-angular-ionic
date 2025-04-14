@@ -42,10 +42,12 @@ export class RecordsVisitorDetailPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   returnNone(params: string){
     return params ? params : '-'

@@ -122,6 +122,7 @@ export class MakeAnEventPage implements OnInit {
     Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
       if (value?.value) {
         const parseValue = JSON.parse(value.value);
+        console.log(parseValue)
         this.EventsForm.block_id = parseValue.block_id != null ? parseValue.block_id : 1;
         this.EventsForm.project_id = parseValue.project_id != null ? parseValue.project_id : 1;
         this.EventsForm.unit_id = parseValue.unit_id != null ? parseValue.unit_id : 1
@@ -392,9 +393,10 @@ export class MakeAnEventPage implements OnInit {
   coachType = ''
 
   createEvent() {
+    console.log(this.EventsForm)
     this.clientMainService.getApi(this.EventsForm, '/resident/post/upcoming_event').subscribe({
       next: (results) => {
-        // console.log(results)
+        console.log(results)
         if (results.result.response_code == 200) {
           this.functionMain.presentToast(`Successfully add events!`, 'success');
           this.isAddEventClick = false

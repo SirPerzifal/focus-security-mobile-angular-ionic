@@ -1,0 +1,266 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <app-vms-background />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'" />
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" [routerLink]="['/home-vms']" [isActive]="true"
+        [disableClick]="true" />
+    </div>
+    <div class="flex mt-8 flex-row space-x-1">
+      <app-button-icon [text]="'CHECK IN'" [customImageIcon]="'assets/icon-vms/door-check-in-icon-white.png'"
+        (click)="toggleShowCheckIn()" [isActive]="showCheckInTrans || showCheckIn" [disableClick]="true" />
+      <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'"
+        (click)="toggleShowCheckOut()" [isActive]="showCheckOutTrans || showCheckOut" [disableClick]="true" />
+    </div>
+    <div class="flex flex-row mx-4" *ngIf="showCheckIn || is_checkout" @fadeInOut>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4">
+        <div class="w-full" *ngIf="data_is_checkout">
+          <i class="text-2xl font-bold">*THIS CONTRACTOR HAS BEEN CHECKED OUT</i>
+        </div>
+        <div class="w-full" *ngIf="is_checkout">
+          <app-text-input #contractorEntryDate [id]="'contractor_entry_date'" [labelText]="'ENTRY DATE'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="true"
+            [(ngModel)]="contractor_entry_date"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorNameInput [id]="'contractor_name'" [labelText]="'NAME'" [isReadonly]="is_checkout"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+            [(ngModel)]="formData.contractor_name"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-vms-contact-input #contractorContactNumberInput [id]="'contractor_contact_number'" [placeholder]="''"
+            [(value)]="formData.contact_number" [valueExist]="formData.contact_number" [isReadonly]="is_checkout"
+            (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+        </div>
+        <div class="w-full">
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [isReadonly]="is_checkout" [includePassport]="true"
+            [(selectedIdentification)]="identificationType" />
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2" *ngIf="identificationType != 'passport'">
+          <div [ngClass]="project_config.is_windows ? 'w-full' : 'w-[90%]'">
+            <app-text-input #contractorIdentificationNumberInput [id]="'contractor_identification_number'"
+              [labelText]="'NRIC / FIN'" [placeholder]="project_config.is_windows ? (is_allow_scan ? 'SCAN NOW' : 'CLICK THIS INPUT TO SCAN') : 'SCAN NRIC / FIN'" [customClasses]="{'w-full':true}"
+              [type]="'text'" (click)="nricFocus()"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="nric_value" [isReadonly]="true"></app-text-input>
+          </div>
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" *ngIf="!project_config.is_windows"
+            (click)="openNricScan(0, false)">
+            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
+          </div>
+        </div>
+        <div class="w-full" *ngIf="identificationType == 'passport'">
+          <app-text-input #contractorPassport [id]="'contractor_passport'" [labelText]="'PASSPORT NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="is_checkout"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="contractor_passport"></app-text-input>
+        </div>
+        <div class="w-full flex flex-row justify-between space-x-2">
+          <div [ngClass]="project_config.is_windows ? 'w-full' : 'w-[90%]'">
+            <app-text-input #contractorVehicleNumberInput [id]="'contractor_vehicle_number'"
+              [labelText]="'VEHICLE NUMBER'" [placeholder]="''" [customClasses]="{'w-full':true}"
+              [type]="'text'" [isReadonly]="is_checkout"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="formData.contractor_vehicle"></app-text-input>
+          </div>
+          <div class="h-25 flex flex-col justify-end" *ngIf="!project_config.is_windows">
+            <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+          </div>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorCompanyNameInput [id]="'contractor_company_name'" [labelText]="'COMPANY NAME'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="is_checkout"
+            [(ngModel)]="formData.company_name"></app-text-input>
+        </div>
+        <!-- <div class="w-full flex flex-col">
+          <label class="text-2xl"><b><u>BLOCK</u></b></label>
+          <select id="contractor_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)" [(ngModel)]="selectedBlock" name="contractor_block">
+            <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+          </select>
+        </div>
+        <div class="w-full">
+          <label class="text-2xl"><b><u>UNIT</u></b></label>
+          <select id="contractor_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="selectedUnit" name="contractor_unit">
+            <option value="" selected disabled hidden>CHOOSE UNIT</option>
+            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+          </select>
+        </div> -->
+        <!-- <div class="w-full">
+          <label class="text-2xl"><b><u>HOST</u></b></label>
+          <select id="contractor_host" [disabled]="is_checkout"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] bg-white"
+            (change)="onHostChange($event)" [(ngModel)]="selectedHost" name="contractor_host">
+            <option value="" selected disabled hidden>CHOOSE HOST</option>
+            <option *ngFor="let host of Host" [value]="host.id">{{ host.host_name }}</option>
+          </select>
+        </div> -->
+        <div class="w-full" *ngIf="!is_checkout">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [Selected]="selectedUnit"
+            [labelText]="'HOST'"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="is_checkout">
+          <app-text-input #contractorHostName [id]="'checkout_host_name'" [labelText]="'HOST NAME'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="true"
+            [(ngModel)]="checkout_host_name"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorTotalPackage [id]="'contractor_total_package'" [labelText]="'TOTAL PACKAGE'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'number'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="data_is_checkout"
+            [(ngModel)]="contractor_total_package"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input 
+            #contractorExpiredDate
+            [id]="'contractor_expired_date'" 
+            [(ngModel)]="contractor_expired_date"
+            [labelText]="'SIC EXPIRY DATE'" [placeholder]="''" 
+            [customClasses]="{'w-full ':true}" 
+            [type]="'date'" 
+            [isReadonly]="is_checkout"
+            (change)="onExpiredDateChange($event)"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+          </app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorEntryPurpose [id]="'contractor_entry_purpose'" [labelText]="'ENTRY PURPOSE'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="is_checkout"
+            [(ngModel)]="contractor_entry_purpose"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #remarksInput [id]="'remarks'" [labelText]="'REMARKS'" [placeholder]="''"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="remarksValue" [isReadonly]="data_is_checkout"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorGatePass [id]="'contractor_gate_pass'" [labelText]="'GATE PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="is_checkout"
+            [(ngModel)]="contractor_gate_pass_number"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input #contractorPassNumber [id]="'contractor_pass_number'" [labelText]="'PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="data_is_checkout"
+            [(ngModel)]="contractor_pass_number"></app-text-input>
+        </div>        
+        <div class="w-full flex flex-col">
+          <label class="text-2xl"><u><b>NUMBER OF PAX</b></u></label>
+          <select name="no-of-pax" [(ngModel)]="paxCount" id="no-of-pax" [disabled]="is_checkout"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+            (change)="onPaxCountChange($event)">
+            <option *ngFor="let count of [].constructor(maxPax); let i = index" [value]="i" [selected]="i === 0">
+              NO OF PAX {{ i }}
+            </option>
+          </select>
+        </div>
+        <div *ngFor="let count of [].constructor(paxCount); let i = index"
+          class="w-full flex flex-row space-x-2 items-end justify-between">
+          <div class="w-1/2">
+            <app-text-input #textInput [id]="'contractor_name_pax_' + i" [labelText]="'NAME'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="is_checkout"
+              [(ngModel)]="nameIdentity[i]"></app-text-input>
+          </div>
+          <div class="w-1/2 flex flex-col">
+            <div class="flex flex-row justify-between w-full items-center">
+              <label class="text-2xl mr-3"><b><u>{{typeIdentity[i] == 'passport' ? 'PASSPORT' : 'NRIC / FIN'}}</u></b></label>
+              <!-- <img alt="Loading" src="assets/img/Loading_Green.png" class="h-6 w-6" (click)="changeType(i)" /> -->
+              <ion-icon name="swap-horizontal-outline" class="h-6 w-6" (click)="changeType(i)" *ngIf="!is_checkout"></ion-icon>
+            </div>
+            <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" *ngIf="typeIdentity[i] != 'passport'"
+              [placeholder]="project_config.is_windows ? (is_pax && pax_id == i.toString() ? 'SCAN NOW' : 'CLICK THIS INPUT TO SCAN') : 'SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" (click)="nricPaxFocus(i)"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="paxIdentity[i]" [isReadonly]="true"></app-text-input>
+
+            <app-text-input #textInput [id]="'contractor_passport_pax_' + i" *ngIf="typeIdentity[i] == 'passport'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" 
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="paxIdentity[i]" [isReadonly]="is_checkout"></app-text-input>
+          </div>
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" *ngIf="!project_config.is_windows && typeIdentity[i] != 'passport'"
+            (click)="openNricScan(i, true)">
+            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
+          </div>
+        </div>
+        <div class="w-full flex flex-col">
+          <!-- <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
+              (click)="saveRecord(true)"></app-visitor-button>
+          </div> -->
+          <div class="w-full">
+            <app-visitor-button [text]="'SAVE RECORD'" *ngIf="!is_checkout"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-5 text-2xl h-20'"
+              (click)="saveRecord()"></app-visitor-button>
+            <app-visitor-button [text]="'CHECKOUT'" *ngIf="is_checkout && !data_is_checkout"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-5 text-2xl h-20'"
+              (click)="checkoutSelected()"></app-visitor-button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="flex flex-row mx-4" *ngIf="showCheckoutSearch" @fadeInOut>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4">
+        <div class="w-full">
+          <app-nric-fin-selection (change)="onCheckoutIdentificationTypeChange($event)" [isReadonly]="is_checkout" [includePassport]="true"
+            [(selectedIdentification)]="checkoutForm.identification_type" />
+        </div>
+        <div class="w-full" *ngIf="checkoutForm.identification_type == 'passport'">
+          <app-text-input #contractorCheckoutPassport [id]="'contractor_checkout_passport'" [labelText]="'PASSPORT NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="is_checkout"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="checkoutForm.passport"></app-text-input>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2" *ngIf="checkoutForm.identification_type != 'passport'">
+          <div [ngClass]="project_config.is_windows ? 'w-full' : 'w-[90%]'">
+            <app-text-input #contractorCheckOutNricSearch [id]="'contractor_checkout_nric_search'"
+              [labelText]="'NRIC / FIN'" [placeholder]="project_config.is_windows ? (is_checkout_scan ? 'SCAN NOW' : 'CLICK THIS INPUT TO SCAN') : 'SCAN NRIC / FIN'" [customClasses]="{'w-full':true}"
+              (click)="nricCheckoutFocus()" 
+              [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="checkoutForm.identification_number" [isReadonly]="true"></app-text-input>
+          </div>
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded"
+            (click)="openNricScan(0, false, true)" *ngIf="!project_config.is_windows">
+            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
+          </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2">
+          <div class="w-full">
+            <app-vms-contact-input #contractorCheckOutContactSearch [id]="'contractor_checkout_contact_search'" [placeholder]="''"
+            [(value)]="checkoutForm.contact_number" [valueExist]="checkoutForm.contact_number" [showButton]="false"
+            (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2">
+          <div class="w-full">
+            <app-text-input #contractorCheckOutPassSearch [id]="'contractor_checkout_pass_search'"
+              [labelText]="'PASS NUMBER'" [placeholder]="''" [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="checkoutForm.pass" [isReadonly]="false"></app-text-input>
+          </div>
+        </div>
+        <div class="w-full flex flex-col">
+          <div class="w-full">
+            <app-visitor-button [text]="'SUBMIT'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
+              (click)="searchData('all')"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

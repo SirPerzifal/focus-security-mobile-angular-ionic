@@ -27,7 +27,18 @@ export class RecordsFacilityDetailPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProjectName()
   }
+
+  async loadProjectName() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_name = value.project_name.toUpperCase()
+      this.project_config = value.config
+    })
+  }
+
+  project_name = ''
+  project_config: any = []
 
   record: any
 

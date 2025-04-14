@@ -51,19 +51,23 @@
             <td class="w-[5%]">:</td>
             <td>{{ record.contact_number ? functionMain.returnNone(record.contact_number) : functionMain.returnNone(record.contact_no) }}</td>
           </tr>
-          <tr *ngIf="['coach'].includes(pageType)">
+          <tr *ngIf="['coach'].includes(pageType) && !project_config.is_industrial">
             <td class="font-bold w-2/5">BLOCK AND UNIT</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.block_name) }} | {{ functionMain.returnNone(record.unit_name) }}</td>
           </tr>
-         
+          <tr *ngIf="['coach'].includes(pageType) && project_config.is_industrial">
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.host_name) }}</td>
+          </tr>
           <tr *ngIf="['move_in', 'renov'].includes(pageType)">
             <td class="font-bold w-2/5">CONTRACTOR PASS NO</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.contractor_pass_no) }}</td>
           </tr>
           <tr *ngIf="['coach'].includes(pageType)">
-            <td class="font-bold w-2/5">BLOCK AND UNIT</td>
+            <td class="font-bold w-2/5">COACH TYPE</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.coach_type) }}</td>
           </tr>
@@ -103,7 +107,7 @@
         </table>
         <div class="flex flex-row justify-between w-full" *ngIf="['move_in', 'renov'].includes(pageType)">
           <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL CONTRACTOR</button>
-          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="callResident()">CALL RESIDENT</button>
+          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
         </div>
       </div>
 

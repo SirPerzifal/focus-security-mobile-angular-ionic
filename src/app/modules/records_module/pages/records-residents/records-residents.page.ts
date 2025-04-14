@@ -26,23 +26,23 @@ export class RecordsResidentsPage implements OnInit {
   isLoading = false
   initTemp() {
     this.isLoading = true
-    this.recordsResidentService.loadAllResident(this.project_id).subscribe(
+    this.recordsResidentService.loadAllResident(this.project_id, this.project_config.is_industrial).subscribe(
       (response: any) => {
         console.log(response)
         if (response.result.status === 'success') {
-          console.log(response)
           this.logsData = response.result.data;
+          this.historyVehicles = this.logsData
         } else {
           // this.presentToast('Failed to load resident data', 'danger');
         }
         this.isLoading = false
       },
     )
-    this.historyVehicles = this.logsData
   }
 
   ngOnInit() {
     this.loadProjectName().then(() => {
+      console.log(this.project_config)
       this.initTemp()
       this.loadBlock()
     })
@@ -51,10 +51,12 @@ export class RecordsResidentsPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {

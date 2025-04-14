@@ -425,7 +425,7 @@ export class ClientEventsDayViewPage implements OnInit {
   selectedUnit: any = []
   async loadUpcomingEvents() {
     const now = new Date();
-    this.clientMainService.getApi({ unit_id: 1 }, '/resident/get/upcoming_event').subscribe({
+    this.clientMainService.getApi({ is_active: true }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

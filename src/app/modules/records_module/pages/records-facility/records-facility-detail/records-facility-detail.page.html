@@ -5,7 +5,7 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-facility'"/>
+      <app-vms-header [urlCustom]="'/records-facility'" [homeRoute]="true"/>
     </div>
     <!-- <div class="flex flex-row mt-8">
       <app-button-icon 
@@ -40,10 +40,15 @@
             <td class="w-[5%]">:</td>
             <td>-</td>
           </tr> -->
-          <tr>
+          <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-[45%]">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td> 
             <td>{{record.block_name ? record.block_name : '-' }} | {{ record.unit_name  ? record.unit_name : '-' }}</td>
+          </tr>
+          <tr *ngIf="project_config.is_industrial">
+            <td class="font-bold w-[45%]">HOST</td>
+            <td class="w-[5%]">:</td> 
+            <td>{{record.host_name ? record.host_name : '-' }}</td>
           </tr>
           <!-- <tr *ngIf="record.resident_check_in && record.officer_check_in">
             <td class="font-bold w-[45%]">CHECKED IN</td>
@@ -72,7 +77,7 @@
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')" *ngIf="record.is_history || (record.is_form_check_in && (!record.resident_check_out || !record.officer_check_out))">CHECK OUT</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4" *ngIf="!record.is_history && (!record.resident_check_out || !record.officer_check_out)">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident(record)">CALL RESIDENT</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident(record)">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
         </div>
       </div>

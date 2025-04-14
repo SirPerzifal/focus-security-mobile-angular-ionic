@@ -50,14 +50,14 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Terms & Conditions</p>
         </div>
-        <textarea id="client_facility_edit_terms" placeholder="Terms & Conditions"
+        <textarea id="client_facility_edit_terms" placeholder=""
           class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
           [(ngModel)]="submitForm.terms_and_conditions" name="client_facility_edit_terms">
           </textarea>
       </div>
       <div class="w-full "  *ngIf="selectedRoomId">
         <button (click)="onSubmit()"
-          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2">
+          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
           Save
         </button>
       </div>

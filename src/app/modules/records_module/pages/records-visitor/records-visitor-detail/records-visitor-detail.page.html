@@ -36,17 +36,22 @@
             <td class="w-[5%]">:</td>
             <td>{{ record.entry_datetime ? record.entry_datetime.split(' ')[1] : '-' }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.block_name) }} | {{ returnNone(record.unit_name) }}</td>
+          </tr>
+          <tr *ngIf="project_config.is_industrial">
+            <td class="font-bold w-2/5">VISITING HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ returnNone(record.host_name) }}</td>
           </tr>
           <tr *ngIf="pageType == 'visitor' && record.vehicle_number">
             <td class="font-bold w-2/5">VEHICLE NUMBER</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.vehicle_number) }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-2/5">RESIDENT NAME</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.resident_name) }}</td>
@@ -70,7 +75,7 @@
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 ">CALL VISITOR</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL RESIDENT</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4" >
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onBlacklist()" *ngIf="blacklist.length == 0">BLACKLIST VISITOR</button>

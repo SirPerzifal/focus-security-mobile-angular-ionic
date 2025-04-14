@@ -742,6 +742,10 @@ const routes: Routes = [
     path: 'client-notification',
     loadChildren: () => import('./modules/client_app/client-notification/client-notification.module').then( m => m.ClientNotificationPageModule)
   },
+  {
+    path: 'contractor-commercial-form',
+    loadChildren: () => import('./modules/contractor_module/pages/contractor-commercial-form/contractor-commercial-form.module').then( m => m.ContractorCommercialFormPageModule)
+  },
   // // rewrite code
   {
     path: 'resident-home-page',
@@ -786,6 +790,10 @@ const routes: Routes = [
   {
     path: 'info-page-settings',
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
+  },
+  {
+    path: 'client-employees',
+    loadChildren: () => import('./modules/client_app/client-employees/client-employees.module').then( m => m.ClientEmployeesPageModule)
   },
 ];
 

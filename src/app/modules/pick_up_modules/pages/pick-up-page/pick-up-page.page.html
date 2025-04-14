@@ -43,7 +43,7 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
             </div>
           </div>
-          <div class="w-full flex flex-col">
+          <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
             <label class="text-2xl"><b><u>LOCATION</u></b></label>
             <!-- <app-text-input #locationInput [id]="'pick_up_location'" [placeholder]="'EG. BLK / PICK UP POINT'" [labelText]="'LOCATION'"
               [customClasses]="{'w-full':true}" [type]="'text'"
@@ -55,6 +55,9 @@
               <option selected disabled hidden [value]="''">CHOOSE BLOCK / PICK UP POINT</option>
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
+          </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'"></app-m2m-selection>
           </div>
           <div class="w-full" *ngFor="let camera of Camera; let i = index">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"

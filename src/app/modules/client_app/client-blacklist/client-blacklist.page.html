@@ -165,7 +165,7 @@
           <label class="text-base"><b>Reason</b></label>
           <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
             class="bg-white border border-[#6B7280] text-gray-900 text-base rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="Enter ban reason here..."></textarea>
+            placeholder=""></textarea>
         </div>
         <div class="w-full">
           <app-text-input #submitNameInput [id]="'submit_name'" [labelResidentText]="'Submitted By'"
@@ -210,12 +210,12 @@
             <tr>
               <td class="font-bold w-[45%]">BANNED DATE</td>
               <td class="w-[5%]">:</td>
-              <td>{{ blacklistDetail.create_date ? functionMain.convertDateExtend(blacklistDetail.create_date) : '-' }}</td>
+              <td>{{ blacklistDetail.create_date ? functionMain.convertNewDateTZ(blacklistDetail.create_date) : '-' }}</td>
             </tr>
             <tr>
               <td class="font-bold w-[45%]">LAST ENTRY DATE & TIME</td>
               <td class="w-[5%]">:</td>
-              <td>{{ blacklistDetail.last_entry_date_time ? functionMain.convertDateExtend(blacklistDetail.last_entry_date_time) : '-' }}</td>
+              <td>{{ blacklistDetail.last_entry_date_time ? functionMain.convertNewDateTZ(blacklistDetail.last_entry_date_time) : '-' }}</td>
             </tr>
             <tr>
               <td class="font-bold w-[45%]">TYPE OF ENTRY</td>

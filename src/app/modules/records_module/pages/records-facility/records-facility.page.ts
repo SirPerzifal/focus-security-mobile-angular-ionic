@@ -44,9 +44,25 @@ export class RecordsFacilityPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadBlock()
-    this.getFacilities()
-    this.getFacilityData()
+    this.loadProjectId().then(() => {
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+      this.getFacilities()
+      this.getFacilityData()
+    })
+  }
+
+  project_id = 0
+  project_config: any = []
+
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
+      this.project_config = value.config
+    })
   }
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
@@ -89,7 +105,7 @@ export class RecordsFacilityPage implements OnInit {
     if (this.showDay){
       if (this.daySchedules.length == 0){
         this.isLoading = true
-        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/facility_book' ).subscribe({
+        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/facility_book' ).subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.response_code == 200) {
@@ -111,7 +127,7 @@ export class RecordsFacilityPage implements OnInit {
     } else if (this.showUpcoming) {
       if (this.upcomingSchedules.length == 0){
         this.isLoading = true
-        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/facility_book_upcoming' ).subscribe({
+        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/facility_book_upcoming' ).subscribe({
           next: (results) => {
             if (results.result.response_code == 200) {
               // this.presentToast('Coach data successfully submitted!', 'success');
@@ -133,7 +149,7 @@ export class RecordsFacilityPage implements OnInit {
       console.log(this.historySchedules)
       if (this.historySchedules.length == 0) {
         this.isLoading = true
-        this.mainVmsService.getApi({unit_id: 1}, '/vms/get/booking_history' ).subscribe({
+        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/booking_history' ).subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.success) {
@@ -241,9 +257,10 @@ export class RecordsFacilityPage implements OnInit {
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
       const unitMatches = this.choosenUnit ? item.unit_id == this.choosenUnit : true;
+      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
       const facilityMatches = this.choosenFacility ? item.facility_id == this.choosenFacility : true;
 
-      return typeMatches && unitMatches && facilityMatches && dateMatches;
+      return hostMatches && typeMatches && unitMatches && facilityMatches && dateMatches;
     });
     console.log(this.filteredHistorySchedules)
   }
@@ -301,7 +318,7 @@ export class RecordsFacilityPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.choosenUnit = event.target.value;
+    this.choosenUnit = event[0];
     this.applyFilters()
   }
 
@@ -358,6 +375,11 @@ export class RecordsFacilityPage implements OnInit {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.choosenBlock = ''
+    this.choosenUnit = ''
+    this.choosenFacility = ''
+    this.contactHost = ''
+    this.selectedHost = ''
     console.log(event.target.value)
   }
 
@@ -385,6 +407,11 @@ export class RecordsFacilityPage implements OnInit {
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
+      this.choosenBlock = ''
+      this.choosenUnit = ''
+      this.choosenFacility = ''
+      this.contactHost = ''
+      this.selectedHost = ''
     }
     console.log(this.selectedRadio)
     this.sortVehicle = this.historySchedules
@@ -407,6 +434,20 @@ export class RecordsFacilityPage implements OnInit {
 
   returnStatus(record: any) {
     return (record.resident_check_in && record.officer_check_in) ? ((record.resident_check_out && record.officer_check_out) ? '(CHECKED OUT)' : '(CHECKED IN)') : ''
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
+    this.applyFilters()
   }
 
 }

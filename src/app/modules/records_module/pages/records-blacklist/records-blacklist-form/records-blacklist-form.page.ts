@@ -58,19 +58,26 @@ export class RecordsBlacklistFormPage implements OnInit {
   unitShow = true
 
   ngOnInit() {
-    this.loadBlock()
-    this.loadProjectName()
+    this.loadProjectName().then(() => {
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+    })
   }
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_name = value.project_name.toUpperCase()
       this.project_id = value.project_id
+      this.project_config = value.config
       this.formData.project_id = value.project_id
     })
   }
   project_name = ''
   project_id = 0
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -170,8 +177,11 @@ export class RecordsBlacklistFormPage implements OnInit {
     if (!this.formData.reason) {
       errMsg += 'Reason of ban is required! \n'
     }
-    if (!this.formData.block_id || !this.formData.unit_id) {
+    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
     }
     if (!this.formData.ban_image) {
       errMsg += 'Ban image is required! \n'
@@ -204,15 +214,22 @@ export class RecordsBlacklistFormPage implements OnInit {
     }
   }
 
+  contactUnit = ''
   getContactInfo(contactData: any) {
     if (!this.is_ban_visitor && !this.is_ban_notice) {
+      this.contactHost = ''
+      this.contactUnit = ''
       if (contactData) {
         this.formData.visitor_name = contactData.visitor_name
         this.formData.vehicle_no = contactData.vehicle_number
-        this.formData.block_id = contactData.block_id
-        this.loadUnit().then(() => {
-          this.formData.unit_id = contactData.unit_id
-        })
+        if (this.project_config.is_industrial) {
+          this.contactHost = contactData.host_id
+        } else {
+          this.formData.block_id = contactData.block_id
+          this.loadUnit().then(() => {
+            this.contactUnit = contactData.unit_id
+          })
+        }
       }
     }
     
@@ -282,6 +299,22 @@ export class RecordsBlacklistFormPage implements OnInit {
 
       reader.readAsDataURL(file);
     });
+  }
+  onHomeClick() {
+    this.router.navigate(['/home-vms'])
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 
 }

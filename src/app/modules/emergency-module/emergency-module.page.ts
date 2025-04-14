@@ -136,6 +136,8 @@ export class EmergencyModulePage implements OnInit {
     }
     this.refreshVehicle()
     this.contactUnit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
   }
 
   refreshVehicle() {
@@ -152,7 +154,11 @@ export class EmergencyModulePage implements OnInit {
 
   ngOnInit() {
     this.loadProjectName().then(() => {
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
       this.formData.project_id = this.project_id
     })
   }
@@ -160,25 +166,32 @@ export class EmergencyModulePage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.Camera = value.config.lpr
     })
   }
-  
+
   project_id = 0
+  project_config: any = []
   Camera: any = []
 
   contactUnit = ''
   getContactInfo(contactData: any){
     this.contactUnit = ''
+    this.contactHost = ''
     if (contactData) {
       this.formData.officer_name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
-      this.formData.block_id = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.formData.block_id = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
   }
 
@@ -229,8 +242,39 @@ export class EmergencyModulePage implements OnInit {
   }
   
   onSubmit(isOpenBarrier: boolean = false, camera_id: string = ''){
-    let params = { ...this.formData, camera_id: camera_id };
-    console.log(this.formData)
+    let errMsg = ''
+    if (!this.formData.officer_name && (this.showPolice || this.showOthers)) {
+      errMsg += "Rank and name is required! \n"
+    }
+    if (!this.formData.contact_number) {
+      errMsg += "Contact number is required! \n"
+    }
+    if (this.formData.contact_number) {
+      if (this.formData.contact_number.length <= 2) {
+        errMsg += "Contact number is required! \n"
+      }
+    }
+    if (!this.formData.station_devision && (this.showPolice || this.showSCDF || this.showAmbulance)) {
+      errMsg += "Station & division is required! \n"
+    }
+    if (!this.formData.govtAgency && (this.showOthers)) {
+      errMsg += "Station & division is required! \n"
+    }
+    if (!this.formData.vehicle_number) {
+      errMsg += "Rank and name is required! \n"
+    }
+    if ((!this.formData.block_id || this.formData.unit_id) && !this.project_config.is_industrial) {
+      errMsg += "Block and unit is required! \n"
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += "Host is required! \n"
+    }
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger')
+      return
+    }
+    let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost };
+    console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
       next: (results) => {
         console.log(results)
@@ -253,6 +297,19 @@ export class EmergencyModulePage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 
 }

@@ -8,6 +8,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class NricFinSelectionComponent  implements OnInit {
 
   @Input() selectedIdentification!: string;
+  @Input() isReadonly: boolean = false
+  @Input() includePassport: boolean = false
   @Output() selectedIdentificationChange = new EventEmitter<string>();
 
   onSelectionChange(event: any) {

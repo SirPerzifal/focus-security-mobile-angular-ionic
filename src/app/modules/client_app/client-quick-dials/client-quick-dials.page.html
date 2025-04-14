@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [is_client]="true"  [text]="'House Rules'" [text_second]="''" />
+  <app-resident-header [is_client]="true"  [text]="'Quick Dials'" [text_second]="''" />
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -55,16 +55,16 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mx-4 mt-4" *ngIf="isSetting" @fadeInOut>
-    <div class="flex flex-row justify-center space-x-4 w-full" *ngIf="isEdit" @fadeInOut>
-      <div class="w-[45%]">
+  <div class="flex flex-col relative mx-4 mt-2" *ngIf="isSetting" @fadeInOut>
+    <div class="flex flex-row justify-center space-x-3 w-full" *ngIf="isEdit" @fadeInOut>
+      <div class="w-full">
         <app-visitor-button [text]="'Edit My Contacts'"
-          [extraClass]="'w-full leading-none cw-4:text-xs text-sm ' + (isEdit ? 'bg-[var(--ion-color-secondary)] text-black': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isEdit ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleShowEdit()"></app-visitor-button>
       </div>
-      <div class="w-[45%]">
+      <div class="w-full">
         <app-visitor-button [text]="'Add New Contact'"
-          [extraClass]="'w-full leading-none cw-4:text-xs text-sm ' + (!isEdit ? 'bg-[var(--ion-color-secondary)] text-black': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (!isEdit ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleShowAdd()"></app-visitor-button>
       </div>
     </div>
@@ -122,14 +122,14 @@
         </div>
         <div class="flex flex-row justify start items-center">
           <input id="client_contact_add_close" name="client_contact_add_close" type="checkbox"
-            class="rounded w-6 h-6 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_add">
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_add">
           <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Add to Resident App Quick
             Dials</label>
         </div>
 
         <div class="w-full ">
           <button (click)="onSubmit()"
-            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-4">
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-4 h-14">
             {{isCurrentEdit ? 'Edit Contact' : 'Add Contact'}}
           </button>
         </div>

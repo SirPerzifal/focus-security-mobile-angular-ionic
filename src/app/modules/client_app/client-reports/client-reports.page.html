@@ -70,7 +70,7 @@
           class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
           *ngFor="let data of showReports">
           <span class="text-lg font-bold">{{ functionMain.returnNone(data.vehicle_number ? data.vehicle_number : data.visitor_name) }}</span>
-          <!-- , {{ data.entry_datetime ? functionMain.convertDateExtend(data.entry_datetime) : '-' }} -->
+          <!-- , {{ data.entry_datetime ? functionMain.convertNewDateTZ(data.entry_datetime) : '-' }} -->
           <div
             class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
             <ion-icon size="large" class="text-white size-7" name="arrow-forward"></ion-icon>

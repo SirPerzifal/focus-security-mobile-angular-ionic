@@ -26,8 +26,8 @@
       <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor"
         [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" *ngIf="project_config.is_allow_vms_contractor"
-        [routerLink]="['/contractor-form']" [isActive]="true" [disableClick]="true"/>
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor')" *ngIf="project_config.is_allow_vms_contractor" 
+        [isActive]="true" [disableClick]="true"/>
 
       <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule"
         [isActive]="true" [disableClick]="true" />
@@ -65,79 +65,9 @@
       <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts"
         [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal"/>
 
-
+        
     </div>
-    <!-- <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
-      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" [routerLink]="['/pick-up-page']"
-        [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_entry"/>
 
-      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" [routerLink]="['/walk-in']" [isActive]="true"
-        [disableClick]="true" *ngIf="project_config.is_allow_vms_visitor" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" [routerLink]="['/contractor-form']"
-        [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_contractor" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')"
-        [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')"
-        [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" [routerLink]="['/deliveries']" [isActive]="true"
-        [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" [routerLink]="['/collection-module']"
-        [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']"
-        (click)="onClickMoveCustom('coach')" [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true"
-        [routerLink]="['/emergency-module']" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor')" [text]="'MA VISITOR'"
-        [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'"
-        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true"
-        [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true"
-        [routerLink]="['/resident-car-list']" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true"
-        [routerLink]="['/records-main']" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true"
-        [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal" />
-
-
-    </div> -->
-    <!-- <div class="bottom-0 w-full p-4 justify-items-end">
-      <div class="grid grid-cols-2 w-full">
-        <ion-button fill="clear"
-          class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] h-20 text-2xl"
-          [routerLink]="['/vehicle-records-page']">
-          VEHICLE RECORDS
-        </ion-button>
-        <ion-button fill="clear"
-          class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] h-20 text-2xl"
-          [routerLink]="['/visitor-records']">
-          VISITOR RECORDS
-        </ion-button>
-      </div>
-      <div class="relative w-full mt-4">
-        <ion-button expand="block" fill="clear"
-          class="w-full fsh-alert-button bg-[red] text-[var(--ion-color-medium-contrast)] h-20 text-2xl" [routerLink]="['/alert-main']">
-          ALERTS
-        </ion-button>
-        <span class="fsh-badge-button bg-[var(--ion-color-danger)] text-xl text-white">
-          1
-        </span>
-      </div>
-    </div> -->
   </div>
   <ion-modal id="text-modal" [isOpen]="isLogoutModal" (didDismiss)="closeModal()">
     <ng-template>

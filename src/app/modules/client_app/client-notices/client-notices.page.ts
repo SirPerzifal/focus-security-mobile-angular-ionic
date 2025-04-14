@@ -31,7 +31,6 @@ export class ClientNoticesPage implements OnInit {
         console.log(value)
         this.dataUser.block_id = value.block
         this.dataUser.unit_id = value.unit
-        this.newNoticeForm.project_id = value.project_id
         this.loadNotice();
       }
     )
@@ -78,21 +77,16 @@ export class ClientNoticesPage implements OnInit {
     this.isNotice = false
     this.isNew = true
     this.textSecond = 'New Notices'
-    this.getUserInfoService.getPreferenceStorage(['project_id']).then(
-      (value) => {
-        this.newNoticeForm.project_id = value.project_id
-      }
-    )
   }
 
   showNotice: any = []
-
+  isLoading = false
   loadNotice() {
     const params = {
       unit_id: [this.dataUser .unit_id], // Pastikan ini adalah array
       block_id: [this.dataUser .block_id] // Pastikan ini adalah array
     };
-  
+    this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/notice').subscribe(
       (results) => {
         console.log(results)
@@ -109,9 +103,11 @@ export class ClientNoticesPage implements OnInit {
             };
           })
         }
+        this.isLoading = false
       },
       (error) => {
         console.error('Error fetching notices:', error);
+        this.isLoading = false
       }
     );
   }
@@ -407,7 +403,7 @@ export class ClientNoticesPage implements OnInit {
 
   startDate = '';
   endDate = '';
-  newNoticeForm: NewNoticeForm = {
+  newNoticeForm: any = {
     notice_title: '',
     notice_content: '',
     notice_attachment: '',
@@ -416,7 +412,6 @@ export class ClientNoticesPage implements OnInit {
     block_ids: [], // Sekarang ini adalah array of numbers
     start_time: new Date(),
     end_time: new Date(),
-    project_id: 191,
   }
   onSubmitPost() {
     console.log(this.newNoticeForm)

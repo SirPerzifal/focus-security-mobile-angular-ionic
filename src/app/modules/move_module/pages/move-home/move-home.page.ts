@@ -58,7 +58,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
         this.pageType = params['type']
         this.loadSchedulesHistory('today');
         this.loadSchedulesHistory('history');
-        this.loadBlock()
+        if (this.project_config.is_industrial) {
+          this.loadHost()
+        } else {
+          this.loadBlock()
+        }
+  
       })
     })
   }
@@ -73,10 +78,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
     await this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   loadSchedulesHistory(type: string = 'today') {
     let url = ''
@@ -494,5 +501,18 @@ export class MoveHomePage implements OnInit, OnDestroy {
       this.isRadioClicked = false
       this.clearFilters()
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 }

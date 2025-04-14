@@ -1,9 +1,10 @@
 <div class="w-full">
   <label class="text-2xl"><b><u>IDENTIFICATION</u></b></label>
-  <select id="contractor_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" [(ngModel)]="selectedIdentification"
-  (change)="onSelectionChange($event)">
+  <select id="contractor_block" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] bg-white" [(ngModel)]="selectedIdentification"
+  (change)="onSelectionChange($event)" [disabled]="isReadonly">
     <option value="" selected disabled hidden>CHOOSE IDENTIFICATION TYPE</option>
     <option value="nric">NRIC</option>
     <option value="fin">FIN</option>
+    <option value="passport" *ngIf="includePassport">PASSPORT</option>
   </select>
 </div>

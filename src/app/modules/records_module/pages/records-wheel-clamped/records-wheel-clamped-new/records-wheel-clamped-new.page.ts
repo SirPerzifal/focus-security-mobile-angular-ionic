@@ -47,16 +47,22 @@ export class RecordsWheelClampedNewPage implements OnInit {
 
   ngOnInit() {
     this.loadProjectName().then(() => {
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
   }
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
+  project_config: any = []
   project_id = 0
 
   type = 'first_warning'
@@ -135,8 +141,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.typeOfEntry) {
       errMsg += 'Offender type of entry is required! \n'
     }
-    if (!this.blockId || !this.unitId) {
+    if ((!this.blockId || !this.unitId) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
     }
     if (!this.reasonOfIssuance) {
       errMsg += 'You must provide an issue reason! \n'
@@ -190,14 +199,23 @@ export class RecordsWheelClampedNewPage implements OnInit {
     }
   }
 
+  contactUnit = ''
   getContactInfo(contactData: any){
+    this.contactUnit = ''
+    this.contactHost = ''
     if (contactData) {
       this.issueName = contactData.visitor_name
       this.vehicleNumber = contactData.vehicle_number
-      this.blockId = contactData.block_id
-      this.loadUnit().then(() => {
-        this.unitId = contactData.unit_id
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.blockId = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
   }
 
@@ -262,6 +280,19 @@ export class RecordsWheelClampedNewPage implements OnInit {
         this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
       })
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
   
 }

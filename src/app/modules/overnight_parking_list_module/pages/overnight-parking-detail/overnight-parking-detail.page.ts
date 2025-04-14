@@ -46,11 +46,13 @@ export class OvernightParkingDetailPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.getOffence(this.vehicle.vehicle_numbers, this.vehicle.id, this.project_id)
     })
   }
 
   project_id = 0
+  project_config: any = []
 
   vehicle: any
   vehicleDetail: any = []

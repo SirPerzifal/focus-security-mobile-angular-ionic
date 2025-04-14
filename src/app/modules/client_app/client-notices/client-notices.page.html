@@ -18,6 +18,9 @@
             (click)="toggleShowNew()"></app-visitor-button>
         </div>
       </div>
+      <div *ngIf="isLoading" class="flex justify-center items-center w-full h-20">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
       <div *ngIf="showNotice.length > 0 && isNotice">
         <div *ngFor="let notice of showNotice; let i = index"
           class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full">

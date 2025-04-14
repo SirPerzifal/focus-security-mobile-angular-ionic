@@ -5,6 +5,7 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-collection-module',
@@ -29,7 +30,8 @@ export class CollectionModulePage implements OnInit {
     private toastController: ToastController, 
     private router: Router,
     private blockUnitService: BlockUnitService,
-    private functionMain: FunctionMainService
+    private functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService
   ) { }
 
   walkInFormData = {
@@ -61,10 +63,12 @@ export class CollectionModulePage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.Camera = value.config.lpr
     })
   }
 
+  project_config: any = []
   project_id = 0
   Camera: any = []
 
@@ -91,6 +95,10 @@ export class CollectionModulePage implements OnInit {
       block: '',
       unit: ''
     };
+
+    this.contactUnit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
   
     this.driveInFormData = {
       visitor_name: '',
@@ -219,16 +227,18 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.walkInFormData.block || !this.walkInFormData.unit) {
+    if ((!this.walkInFormData.block || !this.walkInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected!\n';
     }
     if (errMsg != "") {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    console.log(this.walkInFormData)
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '').subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost).subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -266,8 +276,11 @@ export class CollectionModulePage implements OnInit {
     if (!this.driveInFormData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if (!this.driveInFormData.block || !this.driveInFormData.unit) {
+    if ((!this.driveInFormData.block || !this.driveInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected!\n';
     }
     if (errMsg != "") {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -278,9 +291,8 @@ export class CollectionModulePage implements OnInit {
     } else {
       console.log("BARRIER NOT OPENED");
     }
-    console.log(this.driveInFormData)
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -305,9 +317,14 @@ export class CollectionModulePage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadProjectName()
+    this.loadProjectName().then(() => {
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
+    })
     this.isLoadingBlock =true
-    this.loadBlock(); 
     this.isLoadingBlock =false
   }
 
@@ -330,12 +347,16 @@ export class CollectionModulePage implements OnInit {
     if (contactData) {
       this.driveInFormData.visitor_name = contactData.visitor_name
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number
-      this.driveInFormData.block = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.driveInFormData.block = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
   }
 
@@ -344,13 +365,30 @@ export class CollectionModulePage implements OnInit {
     if (contactData) {
       this.walkInFormData.visitor_name = contactData.visitor_name
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number
-      this.walkInFormData.block = contactData.block_id
-      this.loadUnit().then(() => {
-        setTimeout(() => {
-          this.contactUnit = contactData.unit_id
-        }, 300)
-      })
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.host_id
+      } else {
+        this.walkInFormData.block = contactData.block_id
+        this.loadUnit().then(() => {
+          setTimeout(() => {
+            this.contactUnit = contactData.unit_id
+          }, 300)
+        })
+      }
     }
+  }
+
+  Host: any[] = [];
+  selectedHost: string = '';
+  contactHost = ''
+  loadHost() {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.selectedHost = event[0]
   }
 
 }

@@ -35,7 +35,7 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <!-- <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="schedule.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" disabled>
@@ -53,7 +53,7 @@
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
           <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="schedule.unit_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" disabled>

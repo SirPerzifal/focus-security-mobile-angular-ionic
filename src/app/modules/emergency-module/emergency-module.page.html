@@ -32,7 +32,7 @@
         <div class="w-full flex flex-row">
           <div class="w-[90%]">
             <app-text-input [id]="'vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
-              [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.vehicle_number"
+              [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.vehicle_number"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
@@ -44,7 +44,7 @@
             [placeholder]="'EG. CENTRAL DIVISION'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="deliveries_block" [(ngModel)]="formData.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
@@ -60,15 +60,18 @@
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
           <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="ENTER PURPOSE HERE..."></textarea>
+            placeholder=""></textarea>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
@@ -97,7 +100,7 @@
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'"
               [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="formData.vehicle_number"></app-text-input>
+              [(ngModel)]="formData.vehicle_number"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -108,7 +111,7 @@
             [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="emergency_police_block" [(ngModel)]="formData.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
@@ -124,15 +127,18 @@
            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
           <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="ENTER PURPOSE HERE..."></textarea>
+            placeholder=""></textarea>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
@@ -140,7 +146,7 @@
       <div class="mt-8 flex flex-col items-center w-full mx-4 space-y-5 mb-4" *ngIf="showOthers" @fadeInOut>
         <div class="w-full">
           <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. LEE HAO MIN'"
-            [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.officer_name"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.officer_name"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
@@ -156,7 +162,7 @@
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'"
               [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [value]="formData.vehicle_number"></app-text-input>
+              [(ngModel)]="formData.vehicle_number"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -167,7 +173,7 @@
             [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="emergency_other_block" [(ngModel)]="formData.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
@@ -183,15 +189,18 @@
            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
           <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="ENTER PURPOSE HERE..."></textarea>
+            placeholder=""></textarea>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>
@@ -200,7 +209,7 @@
         <div class="w-full flex flex-row">
           <div class="w-[90%]">
             <app-text-input [id]="'emergency_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8291 X'"
-              [customClasses]="{'w-full':true}" [type]="'text'" [value]="formData.vehicle_number"
+              [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.vehicle_number"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
@@ -212,7 +221,7 @@
             [placeholder]="'EG. CENTRAL DIVISION'" [customClasses]="{'w-full':true}" [type]="'text'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
           <select id="deliveries_block" [(ngModel)]="formData.block_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onBlockChange($event)">
@@ -228,15 +237,18 @@
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
         </div> -->
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>PURPOSE</b></u></label>
           <textarea id="purpose" rows="4" [(ngModel)]="formData.purpose"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="ENTER PURPOSE HERE..."></textarea>
+            placeholder=""></textarea>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
       </div>

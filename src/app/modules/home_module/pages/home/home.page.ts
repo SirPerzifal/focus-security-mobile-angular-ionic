@@ -102,9 +102,14 @@ export class HomePage implements OnInit {
   }
 
   onClickMoveCustom(type: string) {
-    this.router.navigate(['move-home'], {
-      queryParams: { type: type }
-    });
+    if (type == 'contractor') {
+      console.log(this.project_config)
+      this.router.navigate([this.project_config.is_windows ? 'contractor-commercial-form' : 'contractor-form']);
+    } else {
+      this.router.navigate(['move-home'], {
+        queryParams: { type: type }
+      });
+    }
   }
 
   alertTotal = 0
