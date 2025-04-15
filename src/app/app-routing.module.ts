@@ -792,9 +792,13 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
   },
   {
-    path: 'client-employees',
-    loadChildren: () => import('./modules/client_app/client-employees/client-employees.module').then( m => m.ClientEmployeesPageModule)
+    path: 'contractor-commercial-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/contractor-commercial-main/contractor-commercial-main.module').then( m => m.ContractorCommercialMainPageModule)
   },
+  // {
+  //   path: 'client-employees',
+  //   loadChildren: () => import('./modules/client_app/client-employees/client-employees.module').then( m => m.ClientEmployeesPageModule)
+  // },
 ];
 
 @NgModule({

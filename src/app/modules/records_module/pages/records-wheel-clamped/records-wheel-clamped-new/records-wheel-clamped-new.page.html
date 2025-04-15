@@ -61,7 +61,7 @@
           </select> -->
         </div>
         <div class="w-full" *ngIf="project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full">
           <app-text-input [id]="'record_issue_reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'EG. ILLEGAL PARKING'"

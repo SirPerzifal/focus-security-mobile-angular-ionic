@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Preferences } from '@capacitor/preferences';
 
+import { StorageService } from 'src/app/service/storage/storage.service';
 import { MyVehicleService } from 'src/app/service/resident/my-vehicle/my-vehicle.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 interface Vehicle {
   unit_id: string;
@@ -32,7 +33,7 @@ export class ResidentMyVehiclePage implements OnInit {
   vehicles: Vehicle[] = [];
   fromWhere: boolean = false; //
 
-  constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router) {
+  constructor(private myVehicleService: MyVehicleService, private toast: ToastController, private router: Router, private storage: StorageService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -50,21 +51,29 @@ export class ResidentMyVehiclePage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.loadVehicleDetails();
+          }
+        })
       }
     })
   }
 
   ionViewWillEnter() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.loadVehicleDetails(); // Replace with the actual unit ID you want to fetch
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.loadVehicleDetails();
+          }
+        })
       }
     })
   }

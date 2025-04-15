@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
 
 import { FamilyService } from 'src/app/service/resident/family/family.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-family-add-member',
@@ -12,15 +13,19 @@ import { FamilyService } from 'src/app/service/resident/family/family.service';
 })
 export class FamilyAddMemberPage implements OnInit {
 
-  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router) { }
+  constructor(private familyService: FamilyService, private toastController: ToastController, private router: Router, private storage: StorageService) { }
 
   
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.familyId = Number(parseValue.family_id);
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.familyId = estate.family_id;
+          }
+        })
       }
     })
   }

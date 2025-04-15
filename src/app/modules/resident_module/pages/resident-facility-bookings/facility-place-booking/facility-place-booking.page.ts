@@ -3,9 +3,10 @@ import { ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
 
 import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 
 @Component({
@@ -34,16 +35,21 @@ export class FacilityPlaceBookingPage implements OnInit {
     private route: ActivatedRoute, 
     private router: Router, 
     private facilityService: NewBookingService,
+    private storage: StorageService,
     private toastController: ToastController,
     private modalController: ModalController
   ) { }
 
   ngOnInit() {    // Ambil data unit yang sedang aktif
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.loadFacilityDetail();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = estate.unit_id;
+            this.loadFacilityDetail();
+          }
+        })
       }
     })
     this.route.queryParams.subscribe(params => {

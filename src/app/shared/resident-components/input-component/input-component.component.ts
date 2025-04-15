@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angular/core';
+import { IonDatetime, Platform } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
@@ -15,16 +16,37 @@ export class InputComponentComponent  implements OnInit {
   @Input() labelParent: string = ''; 
   @Input() labelChild1: string = ''; 
   @Input() labelChild2: string = ''; 
+  @Input() fontInBoxClass: string = '';
   @Input() minDate: string = ''; 
   @Output() eventEmitter = new EventEmitter<any>()
 
   @Output() value: string = '';
 
+  @ViewChild('dateTimePicker') dateTimePicker!: IonDatetime;
+  
+  isoStringValue: string = '';
+  isOpen: boolean = false;
+
   constructor(
-    private functionMain: FunctionMainService
+    private functionMain: FunctionMainService,
+    private platform: Platform
   ) { }
 
   ngOnInit() {}
+
+  openDateTimePicker() {
+    // Fix 2: Instead of open(), use isOpen property with modal presentation
+    this.isOpen = true;
+  }
+  
+  cancelDateChange() {
+    this.isOpen = false;
+  }
+  
+  confirmDateChange() {
+    this.isOpen = false;
+    // Handle confirmation if needed
+  }
 
   clickDate(id: string) {
     setTimeout(() => {
@@ -47,6 +69,16 @@ export class InputComponentComponent  implements OnInit {
       } else {
         this.value = ''
       }
+    }
+  }
+
+  onDateTimeChange(event: any) {
+    const isoDate = event.detail.value;
+    if (isoDate) {
+      const date = new Date(isoDate);
+      this.value = this.functionMain.formatDate(date);
+      this.isOpen = false;
+      this.eventEmitter.emit(this.value);
     }
   }
 

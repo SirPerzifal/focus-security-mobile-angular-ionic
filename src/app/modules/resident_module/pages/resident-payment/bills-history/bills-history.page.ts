@@ -3,6 +3,8 @@ import { Preferences } from '@capacitor/preferences';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { Subscription } from 'rxjs';
 
 interface FinesResponse {
@@ -93,16 +95,20 @@ export class BillsHistoryPage implements OnInit, OnDestroy {
     this.isDatePickerOpen = true; // Membuka modal pemilih tanggal
   }
 
-  constructor(private mainApiResidentService: MainApiResidentService, public functionMainService: FunctionMainService) { }
+  constructor(private mainApiResidentService: MainApiResidentService, public functionMainService: FunctionMainService, private storage: StorageService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = parseValue.unit_id; // Ambil data unit_id
-        this.blockId = parseValue.block_id; // Ambil data block_id
-        this.projectId = parseValue.project_id; // Ambil data project_id
-        this.loadHistoryPayment()
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.blockId = estate.block_id;
+            this.projectId = estate.project_id
+            this.loadHistoryPayment();
+          }
+        })
       }
     })
   }

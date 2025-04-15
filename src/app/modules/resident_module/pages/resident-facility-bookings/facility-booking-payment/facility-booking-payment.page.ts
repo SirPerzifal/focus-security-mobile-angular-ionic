@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Preferences } from '@capacitor/preferences';
 import { AlertController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ToastController } from '@ionic/angular';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 interface BookingState {
   type: 'BookingState'; // Tambahkan properti unik
@@ -82,7 +83,8 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
     public functionMainService: FunctionMainService,
     private toastController: ToastController,
     private mainApiResidentService: MainApiResidentService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private storage: StorageService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as State; // Menggunakan union type
@@ -142,11 +144,15 @@ export class FacilityBookingPaymentPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectId = Number(parseValue.project_id);
-        this.loadQRCode();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = Number(estate.project_id);
+            this.loadQRCode();
+          }
+        })
       }
     })
   }

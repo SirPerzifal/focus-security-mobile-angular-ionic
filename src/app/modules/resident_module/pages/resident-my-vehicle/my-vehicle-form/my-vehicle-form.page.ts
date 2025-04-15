@@ -6,6 +6,8 @@ import { Preferences } from '@capacitor/preferences';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { MyVehicleFormService } from 'src/app/service/resident/my-vehicle/my-vehicle-form/my-vehicle-form.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-my-vehicle-form',
@@ -53,19 +55,24 @@ export class MyVehicleFormPage implements OnInit {
     private myVehicleFormService: MyVehicleFormService,
     private blockUnitService: BlockUnitService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private storage: StorageService
   ) {}
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.projectId = Number(parseValue.project_id);
-        this.selectedBlock = String(parseValue.block_id)
-        this.selectedUnit = String(parseValue.unit_id)
-        this.loadFamilyMember();
-        this.loadVehicleMakeAndType();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.projectId = Number(estate.project_id);
+            this.selectedBlock = String(estate.block_id)
+            this.selectedUnit = String(estate.unit_id)
+            this.loadFamilyMember();
+            this.loadVehicleMakeAndType();
+          }
+        })
       }
     })
     

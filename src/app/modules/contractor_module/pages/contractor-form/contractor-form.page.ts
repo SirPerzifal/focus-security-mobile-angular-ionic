@@ -8,10 +8,23 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { Html5Qrcode } from 'html5-qrcode';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-contractor-form',
   templateUrl: './contractor-form.page.html',
   styleUrls: ['./contractor-form.page.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(100%)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
 })
 export class ContractorFormPage implements OnInit {
 
@@ -28,8 +41,12 @@ export class ContractorFormPage implements OnInit {
     this.loadProjectName().then(() => {
       if (this.project_config.is_industrial) {
         this.loadHost()
+        this.showDrive = false
+        this.showWalk = false
+        this.showQr = false
       } else {
         this.loadBlock()
+        this.showDrive = true
       }
       this.refreshVehicle()
     })
@@ -59,6 +76,7 @@ export class ContractorFormPage implements OnInit {
   paxCount = 0;
   selectedBlock: string = '';
   selectedUnit: string = '';
+  remarksValue = ''
 
   faBarcode = faBarcode
 
@@ -126,7 +144,9 @@ export class ContractorFormPage implements OnInit {
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
+    this.stopScanner()
     if (this.routerSubscription) {
+      this.stopScanner()
       this.routerSubscription.unsubscribe();
     }
   }
@@ -149,12 +169,12 @@ export class ContractorFormPage implements OnInit {
   async saveRecord(openBarrier: boolean = false, camera_id: string = '') {  
     let errMsg = ''
     // Validasi input
-    const contractorName = this.contractorNameInput.value;
-    const contractorContactNo = this.contractorContactNumberInput.value;
+    const contractorName = this.formData.contractor_name;
+    const contractorContactNo = this.formData.contact_number;
     const identificationNumber = this.nric_value;
-    const contractorVehicle = this.contractorVehicleNumberInput.value;
-    const companyName = this.contractorCompanyNameInput.value;
-    const remarks = this.remarksInput.value;
+    const contractorVehicle = this.formData.contractor_vehicle;
+    const companyName = this.formData.company_name;
+    const remarks = this.remarksValue;
 
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
@@ -176,11 +196,32 @@ export class ContractorFormPage implements OnInit {
     if (!identificationNumber) {
       errMsg += 'Identification number is required! \n'
     }
+    if (!contractorVehicle && this.showDrive) {
+      errMsg += 'Vehicle number is required! \n'
+    }
     if ((!this.selectedBlock || !this.selectedUnit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
+    }
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
+    }
+    if (!this.contractor_total_package && this.project_config.is_industrial) {
+      errMsg += 'Total package is required! \n'
+    }
+    if (!this.contractor_entry_purpose && this.project_config.is_industrial) {
+      errMsg += 'Entry purpose is required! \n'
+    }
+    if (!this.contractor_expired_date && this.project_config.is_industrial) {
+      errMsg += 'SIC expiry date is required! \n'
+    }
+    if (!this.contractor_gate_pass_number && this.project_config.is_industrial) {
+      errMsg += 'Gate pass number is required! \n'
+    }
+    if (!this.contractor_pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
     }
     if (this.checkPaxData()) {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
@@ -215,6 +256,11 @@ export class ContractorFormPage implements OnInit {
         this.project_id,
         camera_id,
         this.selectedHost,
+        this.contractor_total_package,
+        this.contractor_expired_date,
+        this.contractor_entry_purpose,
+        this.contractor_gate_pass_number,
+        this.contractor_pass_number,
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -247,29 +293,32 @@ export class ContractorFormPage implements OnInit {
     this.contactHost = ''
     this.selectedHost = ''
     
-    this.contractorNameInput.value = '';
-    this.contractorContactNumberInput.value = '';
-    this.contractorIdentificationNumberInput.value = '';
-    this.contractorVehicleNumberInput.value = '';
-    this.contractorCompanyNameInput.value = '';
-    this.remarksInput.value = '';
+    this.formData.contact_number = '';
+    this.formData.company_name = '';
+    this.formData.contractor_name = '';
+    this.formData.contractor_vehicle = '';
+    this.nric_value = '';
+    this.remarksValue = '';
 
     // Reset pilihan
     this.identificationType = '';
+
     this.selectedBlock = '';
+    this.contactUnit = ''
     this.selectedUnit = '';
 
-    // Reset radio button
-    const nricRadio = document.getElementById('nric_identification') as HTMLInputElement;
-    const finRadio = document.getElementById('fin_identification') as HTMLInputElement;
-    if (nricRadio) nricRadio.checked = false;
-    if (finRadio) finRadio.checked = false;
+    this.contactHost = ''
+    this.selectedHost = ''
 
-    // Reset select
-    const blockSelect = document.getElementById('contractor_block') as HTMLSelectElement;
-    const unitSelect = document.getElementById('contractor_unit') as HTMLSelectElement;
-    if (blockSelect) blockSelect.selectedIndex = 0;
-    if (unitSelect) unitSelect.selectedIndex = 0;
+    this.paxCount = 0
+
+    this.contractor_pass_number = ''
+    this.contractor_gate_pass_number = ''
+    this.contractor_expired_date = ''
+    this.contractor_total_package = 0
+    this.contractor_entry_purpose = ''
+    this.contractor_entry_date = ''
+
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -332,7 +381,7 @@ export class ContractorFormPage implements OnInit {
     // console.log("Vehicle Refresh", randomVhc)
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.contractorVehicleNumberInput.value = value.vehicle_number ? value.vehicle_number : ''
+      this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number : ''
     })
   }
 
@@ -390,7 +439,9 @@ export class ContractorFormPage implements OnInit {
                 this.formData.contractor_name = data.contractor_name
                 this.formData.company_name = data.company_name
                 this.formData.contact_number = data.contact_number
-                this.formData.contractor_vehicle =  data.vehicle_number
+                if (this.showDrive) {
+                  this.formData.contractor_vehicle =  data.vehicle_number
+                }
               } 
             } else {
               if (is_pax) {
@@ -427,6 +478,174 @@ export class ContractorFormPage implements OnInit {
 
   onHostChange(event: any) {
     this.selectedHost = event[0]
+  }
+
+  contractor_pass_number = ''
+  contractor_gate_pass_number = ''
+  contractor_expired_date = ''
+  contractor_total_package = 0
+  contractor_entry_purpose = ''
+  contractor_entry_date = ''
+  contractor_id = 0
+
+  onExpiredDateChange(event: any) {
+    console.log(event.target.value)
+    this.contractor_expired_date = event.target.value
+  }
+
+  showWalk = false;
+  showDrive = false;
+  showQr = false;
+  showWalkTrans = false;
+  showDriveTrans = false;
+  showQrTrans = false;
+  showClose = false
+
+  toggleShowQr() {
+    if (!this.showDriveTrans && !this.showWalkTrans) {
+      if ( !this.isFromScan) {
+        this.resetForm()
+      }
+      this.showQrTrans = true
+      this.showDrive = false;
+      this.showWalk = false;
+      this.isHidden = true
+      setTimeout(() => {
+        this.showQr = true;
+        this.showQrTrans = false
+        this.startScanner()
+      }, 300)
+    }
+  }
+
+  toggleShowWalk() {
+    if (!this.showQrTrans && !this.showDriveTrans) {
+      if (this.showDrive && !this.isFromScan) {
+        this.resetForm() 
+      }
+      if (this.showQr && this.showClose) {
+        this.stopScanner()
+      }
+      this.showWalkTrans = true
+      this.showDrive = false;
+      this.showQr = false;
+      setTimeout(() => {
+        this.showWalk = true;
+        this.showWalkTrans = false
+      }, 300)
+    }
+  }
+
+  toggleShowDrive() {
+    if (!this.showQrTrans && !this.showWalkTrans) {
+      if (this.showWalk && !this.isFromScan) {
+        this.resetForm() 
+      }
+      if (this.showQr && this.showClose) {
+        this.stopScanner()
+      }
+      this.showDriveTrans = true
+      this.showWalk = false;
+      this.showQr = false;
+      setTimeout(() => {
+        this.showDrive = true;
+        this.showDriveTrans = false
+        this.refreshVehicle()
+      }, 300)
+    }
+  }
+
+  searchData: any
+
+  htmlScanner!: Html5Qrcode
+  scannerId = 'reader'
+
+  imageSrc: string | ArrayBuffer | null = null;
+  barcodeResult: string | null = null;
+
+  scanResult: string = ''
+  isHidden = false
+  isFromScan = false
+  startScanner(){
+    setTimeout(() => {
+
+      const closeModalOnBack = () => {
+        this.stopScanner()
+        window.removeEventListener('popstate', closeModalOnBack);
+      };
+      window.addEventListener('popstate', closeModalOnBack)
+
+      this.htmlScanner = new Html5Qrcode(this.scannerId);
+      console.log("Scanner Initialized:", this.htmlScanner);
+      this.isHidden = true
+      console.log("WORK")
+      this.htmlScanner.start(
+        { 
+          facingMode: "environment"
+        },
+        {
+          fps: 10,
+          qrbox: {
+            width: 500,
+            height: 500,
+          }
+        },
+        (decodedText) => {
+          this.scanResult = decodedText
+          console.log(this.scanResult)
+          this.checkResult()
+        },
+        (errorMessage) => {
+          console.log(errorMessage)
+        }
+        
+      ).catch(err => console.log(err));
+      this.showClose = true
+    }, 500)
+    
+  }
+
+  stopScanner() {
+    if (this.htmlScanner) {
+      this.htmlScanner.stop().catch( err => console.log(err))
+    }
+    this.isHidden = false
+    this.showClose = false
+  }
+
+  errorSound = new Audio('assets/sound/Error Alert.mp3');
+  checkResult(){
+    this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.isFromScan = true
+          this.stopScanner()
+          this.searchData = results.result.result[0]
+          if (this.project_config.is_industrial) {
+            this.contactHost = this.searchData.host_id
+          } else {
+            // this.formData.block = this.searchData.block_id[0]
+            // this.loadUnit().then(() => {
+            //   this.contactUnit = this.searchData.unit_id[0]
+            // })
+          }
+          // if (this.formData.visitor_type == 'walk_in') {
+          //   this.toggleShowWalk()
+          // } else {
+          //   this.toggleShowDrive()
+          // }
+        } else {
+          this.functionMain.presentToast('Expected visitor not found!', 'danger');
+          this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
+        this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
+        console.error(error);
+      }
+    });
   }
   
 }

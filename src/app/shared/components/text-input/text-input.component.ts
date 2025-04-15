@@ -15,6 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string = '';
+  @Input() showPlaceholder: boolean = false;
   @Input() autoComplete: string = 'on'
   @Input() labelText: string = '';
   @Input() labelResidentText: string = '';

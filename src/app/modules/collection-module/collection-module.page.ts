@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { faBarcode } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-collection-module',
@@ -40,7 +41,9 @@ export class CollectionModulePage implements OnInit {
     visitor_type: 'walk_in',
     visitor_vehicle: '',
     block: '',
-    unit: ''
+    unit: '',
+    company_name: '',
+    remarks: '',
   };
 
   driveInFormData = {
@@ -49,7 +52,9 @@ export class CollectionModulePage implements OnInit {
     visitor_type: 'drive_in',
     visitor_vehicle: '',
     block: '',
-    unit: ''
+    unit: '',
+    company_name: '',
+    remarks: '',
   };
 
   Block: any[] = [];
@@ -93,7 +98,9 @@ export class CollectionModulePage implements OnInit {
       visitor_type: 'walk_in',
       visitor_vehicle: '',
       block: '',
-      unit: ''
+      unit: '',
+      company_name: '',
+      remarks: '',
     };
 
     this.contactUnit = ''
@@ -106,8 +113,14 @@ export class CollectionModulePage implements OnInit {
       visitor_type: 'drive_in',
       visitor_vehicle: '',
       block: '',
-      unit: ''
+      unit: '',
+      company_name: '',
+      remarks: '',
     };
+
+    this.nric_value = ''
+    this.identificationType = ''
+
   }
 
   toggleShowDrive() {
@@ -213,6 +226,62 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
+  identificationType = ''
+  nric_value = ''
+  faBarcode = faBarcode
+  onIdentificationTypeChange(event: any) {
+    this.identificationType = event.target.value;
+    console.log(this.identificationType)
+  }
+
+  openNricScan() {
+    this.functionMain.presentModalNric().then(value => {
+      if (value) {
+        console.log(value)
+        this.identificationType = value.is_fin ? 'fin' : 'nric'
+        this.nric_value = value.data;
+        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+          next: (results) => {
+            console.log(results)
+            if (results.result.status_code === 200) {
+              let data = results.result.result[0]
+              
+              console.log(value)
+              if (this.showWalk) {
+                this.walkInFormData.visitor_name = data.contractor_name
+                this.walkInFormData.company_name = data.company_name
+                this.walkInFormData.visitor_contact_no = data.contact_number
+              } else {
+                this.driveInFormData.visitor_vehicle =  data.vehicle_number
+                this.driveInFormData.visitor_name = data.contractor_name
+                this.driveInFormData.company_name = data.company_name
+                this.driveInFormData.visitor_contact_no = data.contact_number
+              }
+            } else {
+                console.log(value)
+                if (this.showWalk) {
+                  this.walkInFormData.visitor_name = this.walkInFormData.visitor_name ? this.walkInFormData.visitor_name : ''
+                  this.walkInFormData.company_name = this.walkInFormData.company_name ? this.walkInFormData.company_name : ''
+                  this.walkInFormData.visitor_contact_no = this.walkInFormData.visitor_contact_no ? this.walkInFormData.visitor_contact_no : '65'
+                } else {
+                  this.walkInFormData.visitor_name = this.walkInFormData.visitor_name ? this.walkInFormData.visitor_name : ''
+                  this.walkInFormData.company_name = this.walkInFormData.company_name ? this.walkInFormData.company_name : ''
+                  this.walkInFormData.visitor_contact_no = this.walkInFormData.visitor_contact_no ? this.walkInFormData.visitor_contact_no : '65'
+                  this.driveInFormData.visitor_vehicle = this.driveInFormData.visitor_vehicle ? this.driveInFormData.visitor_vehicle : ''
+                }
+              this.functionMain.presentToast(`No data found in the system for ${value.data}!`, 'warning')
+            }
+          },
+          error: (error) => {
+            this.functionMain.presentToast('An error occurred while searching for nric!', 'danger');
+            console.error(error);
+          }
+        });
+      }
+      
+    });
+    console.log(this.nric_value)
+  }
 
   onSubmitWalkIn(){
     let errMsg = ""
@@ -227,18 +296,27 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += (this.identificationType == 'nric' ? 'NRIC' : 'FIN') + ' is required!\n';
+    }
     if ((!this.walkInFormData.block || !this.walkInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
+    if ((!this.walkInFormData.company_name) && this.project_config.is_industrial) {
+      errMsg += 'Company name is required!\n';
+    }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
+    }
+    if ((!this.walkInFormData.remarks) && this.project_config.is_industrial) {
+      errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost).subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value).subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -273,14 +351,23 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.driveInFormData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
     }
     if ((!this.driveInFormData.block || !this.driveInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
+    if ((!this.driveInFormData.company_name) && this.project_config.is_industrial) {
+      errMsg += 'Company name is required!\n';
+    }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
+    }
+    if ((!this.driveInFormData.remarks) && this.project_config.is_industrial) {
+      errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -292,7 +379,7 @@ export class CollectionModulePage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);

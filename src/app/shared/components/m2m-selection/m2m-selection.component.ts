@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-m2m-selection',
@@ -49,9 +50,11 @@ export class M2mSelectionComponent implements OnInit {
   @Input() isVMS: boolean = false
   @Input() divOuterClass: string = 'min-h-14 text-base'
   @Input() customTextClass: string = 'p-0'
+  @Input() showButton: boolean = false
 
   @Output() outputValue = new EventEmitter<any>();
 
+  faPhone = faPhone
 
   constructor() { }
 
@@ -156,5 +159,9 @@ export class M2mSelectionComponent implements OnInit {
   }
 
   selectAll = false
+
+  onClickCall() {
+    console.log(this.unitArrayProcess)
+  }
 
 }

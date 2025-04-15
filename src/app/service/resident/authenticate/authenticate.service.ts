@@ -74,7 +74,7 @@ export class AuthService extends ApiService{
         },
     };
 
-    return this.http.post(this.baseUrl + '/residential/post/update_password', body, { headers }).pipe(
+    return this.http.post(this.baseUrl + '/resident/post/update_password', body, { headers }).pipe(
         catchError(this.handleError)
     );
   }

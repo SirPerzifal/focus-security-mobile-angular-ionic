@@ -25,6 +25,11 @@ export class ContractorsService extends ApiService {
     project_id: number,
     camera_id: string,
     host: string,
+    total_package: any,
+    expired_date: any,
+    purpose: any,
+    gate_pass: any,
+    pass_number: any,
   ): Observable<any> {
     const body = {
       jsonrpc: '2.0',
@@ -42,6 +47,11 @@ export class ContractorsService extends ApiService {
         project_id: project_id,
         camera_id: camera_id,
         host: host,
+        total_package: total_package,
+        expired_date: expired_date,
+        purpose: purpose,
+        gate_pass: gate_pass,
+        pass_number: pass_number,
       }
     };
 

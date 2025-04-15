@@ -122,11 +122,11 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Coach Name</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.coach_type_id.name) }}</p>
               </div>
-              <div class="table-row" *ngIf="['family'].includes(approval_type)">
+              <div class="table-row" *ngIf="['family', 'employee'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Full Name</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_full_name) }}</p>
               </div>
-              <!-- <div class="table-row" *ngIf="['family'].includes(approval_type)">
+              <!-- <div class="table-row" *ngIf="['family', 'employee'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Contact Number</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_mobile_number) }}</p>
               </div> -->
@@ -162,6 +162,14 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Member Type</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ approval.member_type ? functionMain.uppercaseFirstWithUnderscore(approval.member_type) : '-' }}</p>
               </div>
+              <div class="table-row" *ngIf="['employee'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">Department</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.department_id ? functionMain.uppercaseFirstWithUnderscore(approval.department_id.name) : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="['employee'].includes(approval_type)">
+                <p class="font-bold table-cell text-base text-black">Contact Number</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.family_mobile_number) }}</p>
+              </div>
               <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertNewDateTZ(approval.start_date).split(' ')[1] : '-' }}</p>
@@ -187,7 +195,7 @@
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.requestor) }}</p>
               </div>
             </div>
-            <!-- <div class="w-full flex flex-row justify-center mt-2" *ngIf="['family'].includes(approval_type) && approval.image_profile">
+            <!-- <div class="w-full flex flex-row justify-center mt-2" *ngIf="['family', 'employee'].includes(approval_type) && approval.image_profile">
               <img [src]="functionMain.getImage(approval.image_profile)" class="h-40" >
             </div> -->
             <div class="flex mt-2 space-x-2">
@@ -215,7 +223,7 @@
       'bg-[#F8F1BA]': selectedApproval.states === 'requested',
       'bg-[#c4c4c4]': !selectedApproval.states,
       }">
-      <div class="w-full flex flex-col justify-center items-center my-2" *ngIf="['family'].includes(approval_type) && selectedApproval.image_profile">
+      <div class="w-full flex flex-col justify-center items-center my-2" *ngIf="['family', 'employee'].includes(approval_type) && selectedApproval.image_profile">
         <img [src]="functionMain.getImage(selectedApproval.image_profile)" class="h-40" >
         <p class="text-base text-black font-bold">{{ functionMain.returnNone(selectedApproval.family_full_name) }}</p>
       </div>
@@ -272,17 +280,13 @@
           <p class="font-bold table-cell text-base text-black">Offence Time</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.issue_time) }}</p>
         </div>
-        <!-- <div class="table-row" *ngIf="['family'].includes(approval_type)">
+        <!-- <div class="table-row" *ngIf="['family', 'employee'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Full Name</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_full_name) }}</p>
         </div> -->
-        <div class="table-row" *ngIf="['family'].includes(approval_type)">
+        <div class="table-row" *ngIf="['family', 'employee'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Contact Number</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_mobile_number) }}</p>
-        </div>
-        <div class="table-row" *ngIf="['family'].includes(approval_type)">
-          <p class="font-bold table-cell text-base text-black">Member Type</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.member_type ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.member_type) : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Block</p>
@@ -291,6 +295,14 @@
         <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle', 'coach'].includes(approval_type)">
           <p class="font-bold table-cell text-base text-black">Unit</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.unit_id.name) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['family'].includes(approval_type)">
+          <p class="font-bold table-cell text-base text-black">Member Type</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.member_type ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.member_type) : '-' }}</p>
+        </div>
+        <div class="table-row" *ngIf="['employee'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Department</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.department_id ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.department_id.name) : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
@@ -312,7 +324,7 @@
           <p class="font-bold table-cell text-base text-black">Booked By</p>
           <p class="ml-2 table-cell text-base text-black truncate">: {{ functionMain.returnNone(selectedApproval.partner_id.name) }}</p>
         </div>
-        <div class="table-row" *ngIf="['family'].includes(approval_type) && selectedApproval.end_of_tenancy">
+        <div class="table-row" *ngIf="['family', 'employee'].includes(approval_type) && selectedApproval.end_of_tenancy">
           <p class="font-bold table-cell text-base text-black w-2/5">End Of Tenancy Agreement</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertToDDMMYYYY(selectedApproval.end_of_tenancy) }}</p>
         </div>
@@ -337,7 +349,7 @@
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
         </div>
       </div>
-      <div class="w-full flex flex-col justify-start mt-2" *ngIf="['family'].includes(approval_type) && selectedApproval.tenancy_aggrement">
+      <div class="w-full flex flex-col justify-start mt-2" *ngIf="['family', 'employee'].includes(approval_type) && selectedApproval.tenancy_aggrement">
         <p class="text-base text-black"><b>Tenancy Agreement</b></p>
         <!-- <img [src]="functionMain.getImage(selectedApproval.tenancy_aggrement)" class="h-40 object-contain" *ngIf="selectedApproval.attachment_mimetype.includes('image')"> -->
         <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"

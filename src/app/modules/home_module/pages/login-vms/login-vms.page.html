@@ -19,6 +19,7 @@
           [type]="'text'" 
           [autoComplete]="'off'"
           [(ngModel)]="project_key"
+          [showPlaceholder]="true"
           [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
         </app-text-input>
         <button class="h-20 w-1/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white" (click)="searchBarcode(project_key)">LOGIN</button>

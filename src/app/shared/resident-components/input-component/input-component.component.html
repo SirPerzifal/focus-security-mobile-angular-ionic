@@ -1,14 +1,47 @@
+<!-- In your component.html file -->
 <div *ngIf="type === 'date'" class="flex flex-col">
-  <u *ngIf="labelParent" class="font-bold text-black text-base"> {{ labelParent }} </u>
-  <label for="{{ id }}" class="font-bold text-black text-sm" (click)="clickDate(id)"> {{ labelChild1 }} </label>
-  <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between mt-1">
-    <input class="hidden" [type]="type" [min]="minDate" name="entryDate" (change)="onValueChange($event, type)" id="{{ id }}" style="position: absolute; opacity: 0; pointer-events: none;">
-    <label class="w-full text-start" [ngClass]="(value) ? 'text-black' : 'text-gray-400'" for="{{ id }}" (click)="clickDate(id)">
-      {{ value ? value : typeAction + ' ' + labelChild2 }}
+  <u *ngIf="labelParent" class="font-bold text-black text-base">
+    {{ labelParent }}
+  </u>
+  <label
+    for="{{ id }}"
+    class="font-bold text-black text-sm"
+  >
+    {{ labelChild1 }}
+  </label>
+  <div
+    class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between mt-1"
+    (click)="openDateTimePicker()"
+  >
+    <label
+      class="w-full text-start"
+      [ngClass]="fontInBoxClass ? fontInBoxClass : ''"
+      [ngClass]="value ? 'text-black' : 'text-gray-400'"
+    >
+      {{ value }}
     </label>
-    <ion-icon *ngIf="type === 'date'" name="calendar-clear-outline" class="positioning-calendar-icon" (click)="clickDate(id)"></ion-icon>
+    <ion-icon
+      name="calendar-clear-outline"
+      class="positioning-calendar-icon"
+    ></ion-icon>
   </div>
+  
+  <!-- Ion Modal approach for datetime -->
+  <ion-modal id="choose-date-court-modal" [isOpen]="isOpen" (didDismiss)="isOpen = false">
+    <ng-template>
+      <ion-content>
+        <ion-datetime
+          #dateTimePicker
+          [presentation]="'date'" 
+          [min]="minDate"
+          (ionChange)="onDateTimeChange($event)"
+          [value]="isoStringValue"
+        ></ion-datetime>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </div>
+
 <div *ngIf="type !== 'date'" class="flex flex-col">
   <u *ngIf="labelParent" class="font-bold text-black text-base"> {{ labelParent }} </u>
   <label for="{{ id }}" class="font-bold text-black text-sm" (click)="clickDate(id)"> {{ labelChild1 }} </label>

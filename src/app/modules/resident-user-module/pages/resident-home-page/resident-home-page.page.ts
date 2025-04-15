@@ -148,13 +148,6 @@ export class ResidentHomePagePage implements OnInit {
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
-              if(value?.value){
-                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-                const credential = JSON.parse(decodedEstateString);
-                this.userType = credential.type;
-              }
-            })
           }
         })
       } else {
@@ -164,8 +157,6 @@ export class ResidentHomePagePage implements OnInit {
             this.isLoading = true;
             // Mengubah string JSON menjadi objek JavaScript
             const credential = JSON.parse(decodedEstateString);
-            this.userType = credential.type;
-            console.log(this.userType);
             this.loadEstate(credential.emailOrPhone);
           }
         })
@@ -187,6 +178,7 @@ export class ResidentHomePagePage implements OnInit {
             listedEstate.push({
               family_id: result.result.response[key]?.family_id,
               family_name: result.result.response[key]?.family_name || '',
+              family_nickname: result.result.response[key]?.family_nickname || '',
               image_profile: result.result.response[key]?.image_profile || '',
               family_email: result.result.response[key]?.family_email || '',
               family_mobile_number: result.result.response[key]?.family_mobile_number || '',
@@ -198,6 +190,7 @@ export class ResidentHomePagePage implements OnInit {
               project_id: result.result.response[key]?.project_id,
               project_name: result.result.response[key]?.project_name || '',
               project_image: result.result.response[key]?.project_image || '',
+              record_type: result.result.response[key]?.record_type || '',
             })
           }
         }
@@ -229,7 +222,7 @@ export class ResidentHomePagePage implements OnInit {
               this.setData(estate, estate.image_profile);
               this.loadCountNotification(estate.unit_id, estate.family_id);
               this.loadHouseRules(estate.project_id);
-              if (!this.imageProfile) {
+              if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
               }
             }
@@ -251,12 +244,107 @@ export class ResidentHomePagePage implements OnInit {
     return await modal.present();
   }
 
-  setData(parserValue: any, imageProfile: string) {
+  setData(parserValue: Estate, imageProfile: string) {
     this.condominiumName = parserValue.project_name;
     this.condoImage = parserValue.project_image;
     this.imageProfile = imageProfile;
-    this.useName = parserValue.family_name;
+    this.useName = parserValue.family_nickname;
     this.familyType = parserValue.family_type;
+    this.userType = parserValue.record_type;
+    console.log(this.familyType, this.userType);
+    
+    if (this.userType === 'resident') {
+      if (this.familyType !== 'Secondary Contacts' && this.familyType !== 'Primary Contacts') {
+        this.longButtondata = [
+          {
+            name: 'Visitors',
+            src: 'assets/icon/resident-icon/visitors.png',
+            routeLinkTo: '/visitor-main',
+          },
+          {
+            name: 'Facility Bookings',
+            src: 'assets/icon/resident-icon/icon3.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Payments',
+            src: 'assets/icon/resident-icon/icon2.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Raise a Request',
+            src: 'assets/icon/resident-icon/icon6.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Find Service Providers',
+            src: 'assets/icon/resident-icon/icon5.png',
+            routeLinkTo: '',
+          }
+        ];
+      } else {
+        this.longButtondata = [
+          {
+            name: 'Visitors',
+            src: 'assets/icon/resident-icon/visitors.png',
+            routeLinkTo: '/visitor-main',
+          },
+          {
+            name: 'Facility Bookings',
+            src: 'assets/icon/resident-icon/icon3.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Payments',
+            src: 'assets/icon/resident-icon/icon2.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'My Family',
+            src: 'assets/icon/resident-icon/icon1.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'My Vehicle',
+            src: 'assets/icon/resident-icon/icon4.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Raise a Request',
+            src: 'assets/icon/resident-icon/icon6.png',
+            routeLinkTo: '',
+          },
+          {
+            name: 'Find Service Providers',
+            src: 'assets/icon/resident-icon/icon5.png',
+            routeLinkTo: '',
+          }
+        ];
+      }
+    } else if (this.userType === 'commercial') {
+      this.longButtondata = [
+        {
+          name: 'Visitors',
+          src: 'assets/icon/resident-icon/visitors.png',
+          routeLinkTo: '/visitor-main',
+        },
+        {
+          name: 'Contractors',
+          src: 'assets/icon/resident-icon/find_service/Contractor.png',
+          routeLinkTo: '/contractor-commercial-main',
+        },
+        {
+          name: 'Facility Bookings',
+          src: 'assets/icon/resident-icon/icon3.png',
+          routeLinkTo: '',
+        },
+        {
+          name: 'My Vehicle',
+          src: 'assets/icon/resident-icon/icon4.png',
+          routeLinkTo: '',
+        },
+      ];
+    }
   }
 
   async fetchContacts() {

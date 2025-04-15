@@ -20,7 +20,6 @@ export class StorageService {
 
   async getValueFromStorage(key: key) {
     const response = await this.storage.get(`${key}`);
-    
     if (response) {
       return response;
     } else {

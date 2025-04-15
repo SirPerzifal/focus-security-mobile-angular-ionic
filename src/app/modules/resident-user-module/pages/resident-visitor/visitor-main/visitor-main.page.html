@@ -19,14 +19,14 @@
         <app-radio-check-input-case [type]="'radio'" [id]="'one_time_entry'" [name]="'entry'" [value]="'one_time_entry'" [checkedText]="entryCheck === 'one_time_entry'" [text]="'One-Time Entry'" (valueEmit)="onChangeEntry($event)"></app-radio-check-input-case>
         <app-radio-check-input-case [type]="'radio'"  [id]="'multiple_entry'" [name]="'entry'" [value]="'multiple_entry'" [checkedText]="entryCheck === 'multiple_entry'" [text]="'Multiple Entry'" (valueEmit)="onChangeEntry($event)"></app-radio-check-input-case>
       </div>
-      <app-input-component [id]="'type_invitation_title'" [type]="'text'" [typeAction]="'Type title'" [labelParent]="'Invitation Details'" [labelChild1]="'Title of Invitation'" [labelChild2]="'(E.g Alexs Birthday)'" (eventEmitter)="onEntryTitleChange($event)"></app-input-component>
+      <app-input-component [id]="'type_invitation_title'" [type]="'text'" [typeAction]="''" [labelParent]="'Invitation Details'" [labelChild1]="'Title of Invitation'" [labelChild2]="''" (eventEmitter)="onEntryTitleChange($event)"></app-input-component>
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Message for Invitation</p>
         </div>
         <textarea 
           id="visitor_entry_message" 
-          placeholder="Invitation Message" 
+          placeholder="" 
           (focus)="testAddMb(true)" 
           (blur)="testAddMb(false)"
           class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"

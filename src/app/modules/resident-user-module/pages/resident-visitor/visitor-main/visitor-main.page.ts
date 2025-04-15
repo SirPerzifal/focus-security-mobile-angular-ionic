@@ -189,7 +189,7 @@ export class VisitorMainPage implements OnInit {
 
   getActiveInvites() {
     try {
-      this.mainApiResidentService.endpointProcess({unit_id: this.unitId}, 'get/active_invites').subscribe(
+      this.mainApiResidentService.endpointMainProcess({}, 'get/active_invites').subscribe(
         res => {
           var result = res.result['response_status'];
           // console.log(result)
@@ -353,4 +353,5 @@ export class VisitorMainPage implements OnInit {
   testAddMb(status: boolean = false) {
     this.extend_mb = status
   }
+
 }

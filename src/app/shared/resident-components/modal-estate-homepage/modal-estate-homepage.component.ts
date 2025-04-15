@@ -37,6 +37,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
     this.profileEstate = Object.keys(estate).map(key => ({
       family_id: estate[key]?.family_id,
       family_name: estate[key]?.family_name || '',
+      family_nickname: estate[key]?.family_nickname || '',
       image_profile: estate[key]?.image_profile || '',
       family_email: estate[key]?.family_email || '',
       family_mobile_number: estate[key]?.family_mobile_number || '',
@@ -48,6 +49,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
       project_id: estate[key]?.project_id,
       project_name: estate[key]?.project_name || '',
       project_image: estate[key]?.project_image || '',
+      record_type: estate[key]?.record_type || '',
     }));
   
     this.isLoading = false;

@@ -93,7 +93,7 @@
           </select>
         </div>
         <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'both') && project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
       </div>
       <div class="flex flex-col w-full space-y-5" *ngIf="showHistory  && (choosenBlock || selectedHost || startDateFilter || endDateFilter) && !isRadioClicked">

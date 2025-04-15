@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
 import { FamilyService } from 'src/app/service/resident/family/family.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-resident-my-family',
@@ -18,7 +20,7 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
   stateFill: string = '';
   isLoading: boolean = true;
 
-  constructor(private familyService: FamilyService, private router: Router) {
+  constructor(private familyService: FamilyService, private router: Router, private storage: StorageService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -50,11 +52,15 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
       }
     ];
     this.familyData.pop();
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.getFamilyList();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.getFamilyList();
+          }
+        })
       }
     })
   }

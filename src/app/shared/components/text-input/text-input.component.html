@@ -51,7 +51,7 @@
       [id]="id" 
       [class]="getFilteredCustomClasses(customInputClasses)" 
       [type]="type" 
-      [placeholder]="''" 
+      [placeholder]="showPlaceholder ? placeholder : ''" 
       [(ngModel)]="value"
       (keyup)="onKeyUp($event)"
       [name]="name"

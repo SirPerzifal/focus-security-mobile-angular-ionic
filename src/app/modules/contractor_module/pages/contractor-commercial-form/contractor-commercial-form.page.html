@@ -103,7 +103,7 @@
           </select>
         </div> -->
         <div class="w-full" *ngIf="!is_checkout">
-          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [Selected]="selectedUnit"
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [Selected]="selectedUnit"
             [labelText]="'HOST'"></app-m2m-selection>
         </div>
         <div class="w-full" *ngIf="is_checkout">

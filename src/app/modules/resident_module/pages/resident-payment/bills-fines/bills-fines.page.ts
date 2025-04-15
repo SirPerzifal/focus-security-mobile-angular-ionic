@@ -7,6 +7,8 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { PaymentService } from 'src/app/service/resident/payment/payment.service';
 import { fines } from 'src/models/resident/poymentModel.model';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 
 declare var Stripe: any; // Declare Stripe
@@ -31,16 +33,20 @@ export class BillsFinesPage implements OnInit, OnDestroy {
   selectedFileName: string = '';
   paymentid: number = 0;
   receiptBase64: string = '';
-  constructor( private modalController: ModalController, private paymentService: PaymentService, private mainApiResidentService: MainApiResidentService, public functionMainService: FunctionMainService) { }
+  constructor( private modalController: ModalController, private paymentService: PaymentService, private mainApiResidentService: MainApiResidentService, public functionMainService: FunctionMainService, private storage: StorageService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = parseValue.unit_id; // Ambil data unit_id
-        this.blockId = parseValue.block_id; // Ambil data block_id
-        this.projectId = parseValue.project_id; // Ambil data project_id
-        this.loadFinesData();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+            this.blockId = estate.block_id;
+            this.projectId = estate.project_id
+            this.loadFinesData();
+          }
+        })
       }
     })
     this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK'); // Replace with your actual publishable key

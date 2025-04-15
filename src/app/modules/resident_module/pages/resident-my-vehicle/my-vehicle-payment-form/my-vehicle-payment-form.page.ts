@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Preferences } from '@capacitor/preferences';
 import { ToastController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 interface Vehicle {
   vehicleId: number,
@@ -50,7 +51,7 @@ export class MyVehiclePaymentFormPage implements OnInit {
   selectedPaymentReceiptFileName: string = '';
   paymentReceipt: string = '';
   
-  constructor(private route: Router, private mainApiResident: MainApiResidentService, public functionMainService: FunctionMainService, private toastController: ToastController) {
+  constructor(private route: Router, private mainApiResident: MainApiResidentService, public functionMainService: FunctionMainService, private toastController: ToastController, private storage: StorageService) {
     const navigation = this.route.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicleId: number };
     if (state) {
@@ -59,11 +60,15 @@ export class MyVehiclePaymentFormPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectId = Number(parseValue.project_id);
-        this.loadQRCode();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = Number(estate.project_id);
+            this.loadQRCode();
+          }
+        })
       }
     })
   }

@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Preferences } from '@capacitor/preferences';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Subscription } from 'rxjs';
 
 import { BookingData } from 'src/models/resident/facility.model';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-facility-history',
@@ -47,14 +48,18 @@ export class FacilityHistoryPage implements OnInit, OnDestroy {
   endDate: string = '';
   bookingList: any[] = [];
 
-  constructor(private router: Router, private facilityBookingService: FacilityBookingsService, private getUserInfoService: GetUserInfoService) { }
+  constructor(private router: Router, private facilityBookingService: FacilityBookingsService, private getUserInfoService: GetUserInfoService, private storage: StorageService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unit_id = parseValue.unit_id;
-        this.loadHistoryBookings();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unit_id = String(estate.unit_id);
+            this.loadHistoryBookings();
+          }
+        })
       }
     })
   }

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Preferences } from '@capacitor/preferences';
 
 import { FamilyService } from 'src/app/service/resident/family/family.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class FamilyEditMemberPage implements OnInit {
   end_of_tenancy = ''
   selectedImageName: string = ''; // New property to hold the selected file name
 
-  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController, private mainApiResident: MainApiResidentService) {
+  constructor(private router: Router, private familyService: FamilyService, private alertController: AlertController, private toastController: ToastController, private mainApiResident: MainApiResidentService, private storage: StorageService) {
     // Ambil data dari state jika tersedia
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
@@ -422,10 +423,14 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = Number(estate.unit_id);
+          }
+        })
       }
     })
   }

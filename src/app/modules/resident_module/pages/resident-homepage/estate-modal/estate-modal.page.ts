@@ -27,7 +27,7 @@ export class EstateModalPage implements OnInit {
   }
 
   async ngOnInit() {
-    await this.storage.get('USESTATE_DATA').then((value) => {
+    await this.storage.get('USESATE_DATA').then((value) => {
       if (value) {
         const decodedUserState = decodeURIComponent(escape(atob(value)));
         this.activeUnit = JSON.parse(decodedUserState).unit_id; // Pastikan untuk mengurai JSON
@@ -59,7 +59,7 @@ export class EstateModalPage implements OnInit {
     const estateString = JSON.stringify(estate);
     // Melakukan encoding ke Base64
     const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
-    this.storage.set('USESTATE_DATA', encodedEstate).then(() => {
+    this.storage.set('USESATE_DATA', encodedEstate).then(() => {
       this.modalController.dismiss(encodedEstate);
     })
   }

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { AlertController } from '@ionic/angular';
 
 import { ActiveBooking, BookingResponse } from 'src/models/resident/facility.model';
+import { StorageService } from 'src/app/service/storage/storage.service';
 import { FacilityBookingsService } from 'src/app/service/resident/facility-bookings/facility-bookings.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-resident-facility-bookings',
@@ -21,39 +23,24 @@ export class ResidentFacilityBookingsPage implements OnInit {
   constructor(
     private router:Router, 
     private alertController: AlertController,
-    private activeRoute: ActivatedRoute,
     private toastController: ToastController,
+    private storage: StorageService,
     private facilityBookingsService: FacilityBookingsService,
   ) { }
   
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unit_id = Number(parseValue.unit_id);
-        this.loadActiveBookings();
-      }
-    })
-
-    this.activeRoute.queryParams.subscribe(params => {
-      if (params['restart']) {
-        Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-          if (value?.value) {
-            const parseValue = JSON.parse(value.value);
-            this.unit_id = Number(parseValue.unit_id);
-            this.loadActiveBookings();
-          }
-        })
-      }
-    });
   }
 
   ionViewWillEnter() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unit_id = Number(parseValue.unit_id);
-        this.loadActiveBookings();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unit_id = estate.unit_id;
+            this.loadActiveBookings();
+          }
+        })
       }
     })
   }

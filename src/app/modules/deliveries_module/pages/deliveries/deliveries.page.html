@@ -87,7 +87,7 @@
                   [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
               <div class="w-full" *ngIf="project_config.is_industrial">
-                <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
               </div>
               <div class="w-full space-y-5" *ngIf="food_delivery_type == 'drive_in'">
                 <div class="w-full " *ngFor="let camera of Camera; let i = index">
@@ -198,7 +198,7 @@
                   [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
               <div class="w-full" *ngIf="showUnit && project_config.is_industrial">
-                <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
               </div>
               <div class="w-full " *ngFor="let camera of Camera; let i = index">
                 <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
