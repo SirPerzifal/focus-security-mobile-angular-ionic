@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ModalController } from '@ionic/angular';
 
@@ -127,12 +126,14 @@ export class ResidentHomePagePage implements OnInit {
     }
   ]
 
+  showingProfile: string = '';
+  selectedProfile: string = '';
+
   constructor(
-    private router: Router,
     private modalController: ModalController,
     private mainApiResident: MainApiResidentService,
     private storage: StorageService,
-    private functionMain: FunctionMainService
+    public functionMain: FunctionMainService
   ) {}
 
   ionViewWillEnter() {
@@ -143,8 +144,8 @@ export class ResidentHomePagePage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
-            this.loadCountNotification(estate.unit_id, estate.family_id);
-            this.loadHouseRules(estate.project_id);
+            this.loadCountNotification(estate.family_id);
+            this.loadHouseRules();
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
@@ -220,8 +221,8 @@ export class ResidentHomePagePage implements OnInit {
             if ( value ) {
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);
-              this.loadCountNotification(estate.unit_id, estate.family_id);
-              this.loadHouseRules(estate.project_id);
+              this.loadCountNotification(estate.family_id);
+              this.loadHouseRules();
               if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
               }
@@ -354,19 +355,16 @@ export class ResidentHomePagePage implements OnInit {
     }
   }
 
-  loadCountNotification(unitId: number, partnerId: number) {
-    this.mainApiResident.endpointProcess({
-      unit_id: unitId,
+  loadCountNotification( partnerId: number) {
+    this.mainApiResident.endpointMainProcess({
       partner_id: partnerId
     }, 'get/notifications_count').subscribe((result: any) => {
       this.squareButton[0].paramForBadgeNotification = result.result.notifications;
     })
   }
 
-  loadHouseRules(project_id: number) {
-    this.mainApiResident.endpointProcess({
-      project_id: project_id
-    }, 'get/house_rules_documents').subscribe((result:any) => {
+  loadHouseRules() {
+    this.mainApiResident.endpointMainProcess({}, 'get/house_rules_documents').subscribe((result:any) => {
       if (result.result.response_code === 200) {
         // console.log("heres the data", result);
         this.squareButton[3].document = result.result.result[0].documents;
@@ -375,5 +373,54 @@ export class ResidentHomePagePage implements OnInit {
         console.error('Error fetching notifications:', result);
       }
     })
+  }
+
+  onProfileFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.showingProfile = e.target.result; // Menyimpan URL gambar untuk preview
+      };
+      reader.readAsDataURL(file); // Membaca file sebagai URL data
+      this.convertToBase64(file).then((base64: string) => {
+        // console.log('Base64 successed');
+        this.selectedProfile = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    }
+  }
+
+  uploadNewProfile() {
+    this.mainApiResident.endpointMainProcess({
+      new_image_profile: this.selectedProfile
+    }, 'post/change_update_profile_image').subscribe((response: any) => {
+      const estateString = JSON.stringify(response.result.new_estate);
+      console.log(estateString);
+      // Melakukan encoding ke Base64
+      const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
+      console.log(encodedEstate);
+      this.setData(response.result.new_estate, response.result.new_estate.image_profile);
+      this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
+        this.isModalUpdateProfile = false;
+      })
+    })
+  }
+
+  convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 }

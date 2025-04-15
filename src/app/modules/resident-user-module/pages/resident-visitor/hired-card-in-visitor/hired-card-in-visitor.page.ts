@@ -123,8 +123,8 @@ export class HiredCardInVisitorPage implements OnInit {
   loaadTextForPage() {
     this.isLoading = false;
   
-    this.mainApiResidentService.endpointProcess(
-      { project_id: this.projectId }, 
+    this.mainApiResidentService.endpointMainProcess(
+      {}, 
       'get/hired_car_text'
     ).subscribe((response) => {
       if (response.result.response_code == 200) {

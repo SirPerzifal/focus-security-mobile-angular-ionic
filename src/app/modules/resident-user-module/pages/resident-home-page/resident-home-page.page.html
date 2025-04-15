@@ -38,6 +38,34 @@
       </div>
     </div>
   </div>
+  <ion-modal [isOpen]="isModalUpdateProfile" (didDismiss)="isModalUpdateProfile === false">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Upload Profile</ion-title>
+        </ion-toolbar>
+        <div class="px-5 pb-3 mt-[70px]">
+          <div class="w-full mt-2">
+            <div class="flex flex-row justify-start mb-1">
+            </div>
+            <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+              <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
+              <label for="profile_image">
+                <img height="50" [src]="showingProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
+              </label>
+            </div>
+          </div>
+          <button 
+            [disabled]="!selectedProfile"
+            (click)="uploadNewProfile()"
+            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+            class="mt-2 w-full text-base rounded h-10 font-bold">
+            Upload
+          </button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
 <ion-footer>

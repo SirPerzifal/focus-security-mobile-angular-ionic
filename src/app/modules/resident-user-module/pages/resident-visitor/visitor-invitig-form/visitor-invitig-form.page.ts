@@ -5,9 +5,8 @@ import { AlertController } from '@ionic/angular';
 import { Contacts } from '@capacitor-community/contacts';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
-import { FormData, Invitee, Estate } from 'src/models/resident/resident.model';
+import { FormData, Invitee } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-visitor-invitig-form',
@@ -32,7 +31,6 @@ export class VisitorInvitigFormPage implements OnInit {
     entryMessage: "",
     isProvideUnit: false,
     hiredCar: "",
-    unit: 0,
   }
 
   nameFromContact = '';
@@ -43,7 +41,6 @@ export class VisitorInvitigFormPage implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private storage: StorageService,
     private alertController: AlertController,
     private mainApiResidentService: MainApiResidentService,
     public functionMain: FunctionMainService
@@ -57,6 +54,8 @@ export class VisitorInvitigFormPage implements OnInit {
           ...state.formData,
           dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
         };
+        console.log(state.formData.dateOfInvite);
+        
   
       if (state.selectedInvitees) {
         this.inviteeFormList = state.selectedInvitees; // Update local list
@@ -67,17 +66,6 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.familyId = estate.family_id;
-            this.formData.unit = estate.unit_id
-          }
-        })
-      }
-    })
     this.isFormInitialized = false;
     // Gunakan setTimeout untuk memastikan rendering
     this.route.queryParams.subscribe(params => {
@@ -247,7 +235,6 @@ export class VisitorInvitigFormPage implements OnInit {
     });
   }
 
-  familyId: number = 0;
   onSubmit() {
     const isValid = this.inviteeFormList.every((invitee:any) => 
       invitee.visitor_name.trim() !== '' && 
@@ -256,8 +243,7 @@ export class VisitorInvitigFormPage implements OnInit {
 
     if (isValid) {
       try {
-        this.mainApiResidentService.endpointProcess({
-          family_id: this.familyId,
+        this.mainApiResidentService.endpointMainProcess({
           date_of_visit: this.formData.dateOfInvite, 
           entry_type: this.formData.entryType, 
           entry_title: this.formData.entryTitle,
@@ -265,7 +251,6 @@ export class VisitorInvitigFormPage implements OnInit {
           is_provide_unit: this.formData.isProvideUnit,
           invitees: this.inviteeFormList,
           hired_car: this.formData.hiredCar,
-          unit: this.formData.unit,
         }, 'post/create_expected_visitors').subscribe((response: any) => {
           if (response.result.response_code == 200) {
             this.functionMain.presentToast('Success Add Invite', 'success');
@@ -279,7 +264,6 @@ export class VisitorInvitigFormPage implements OnInit {
               entryMessage: "",
               isProvideUnit: false,
               hiredCar: "",
-              unit: 0,
             }
             this.router.navigate(['/visitor-main'], {
               queryParams: {

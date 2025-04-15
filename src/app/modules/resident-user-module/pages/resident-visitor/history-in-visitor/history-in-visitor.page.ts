@@ -103,7 +103,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
 
   getHistoryList() {
     this.historyData.pop();
-    this.mainApiResidentService.endpointProcess({unit_id: this.unitId}, 'get/visitor_history').subscribe((response) => {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_history').subscribe((response) => {
       var result = response.result['response_result']
       this.historyData = []
       if (response.result.response_status === 400) {

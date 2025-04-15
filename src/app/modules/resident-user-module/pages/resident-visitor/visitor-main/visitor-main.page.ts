@@ -3,10 +3,8 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
-import { StorageService } from 'src/app/service/storage/storage.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
-import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-visitor-main',
@@ -62,7 +60,6 @@ export class VisitorMainPage implements OnInit {
     }
   ]
   
-  unitId: number = 0;
   formData = {
     dateOfInvite: "",
     vehicleNumber: "",
@@ -71,7 +68,6 @@ export class VisitorMainPage implements OnInit {
     entryMessage: "",
     isProvideUnit: false,
     hiredCar: "",
-    unit: 0,
   }
   selectedDate: string = '';
   
@@ -101,23 +97,12 @@ export class VisitorMainPage implements OnInit {
     private route: Router,
     private activeRoute: ActivatedRoute,
     private mainApiResidentService: MainApiResidentService,
-    private storage: StorageService,
     private alertController: AlertController
   ) { }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = estate.unit_id;
-            this.getTodayDate();
-            this.getActiveInvites();
-          }
-        })
-      } 
-    })
+    this.getTodayDate();
+    this.getActiveInvites();
     const navigation = this.route.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: any };
     if (state) {
@@ -136,7 +121,6 @@ export class VisitorMainPage implements OnInit {
           entryMessage: "",
           isProvideUnit: false,
           hiredCar: "",
-          unit: 0,
         }
       } else if (params['formData']) {
         this.formData = {
@@ -147,7 +131,6 @@ export class VisitorMainPage implements OnInit {
           entryMessage: "",
           isProvideUnit: false,
           hiredCar: "",
-          unit: 0,
         }
       } else {
         this.toggleShowNewInv()
@@ -277,6 +260,10 @@ export class VisitorMainPage implements OnInit {
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
       errMsg += 'Please fill date of invite! \n';
+    }
+    if (this.formData.dateOfInvite) {
+      const [ day, month, year ] = this.formData.dateOfInvite.split('/');
+      this.formData.dateOfInvite = `${year}-${month}-${day}`
     }
     if (this.formData.entryType == "") {
       errMsg += "Please choose entry type! \n";

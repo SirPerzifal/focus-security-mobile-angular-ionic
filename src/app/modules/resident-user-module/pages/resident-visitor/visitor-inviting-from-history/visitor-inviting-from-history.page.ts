@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { Preferences } from '@capacitor/preferences';
 
-import { VisitorService } from 'src/app/service/resident/visitor/visitor.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
-import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-visitor-inviting-from-history',
@@ -21,27 +18,10 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
 
   faCheck = faCheck
 
-  constructor(private router: Router, private visitorService: VisitorService, private functionMain: FunctionMainService, private storage: StorageService) { }
+  constructor(private router: Router, private mainApi: MainApiResidentService, private functionMain: FunctionMainService) { }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            const unitId = Number(estate.unit_id);
-            this.loadDistinctInviteHistory(unitId);
-          }
-        })
-      } 
-    })
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        const unitId = Number(parseValue.unit_id);
-        this.loadDistinctInviteHistory(unitId);
-      } 
-    })
+    this.loadDistinctInviteHistory();
     // Cek apakah ada existing invitees yang dikirim dari invite-form
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -64,8 +44,8 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
     }
   }
 
-  loadDistinctInviteHistory(unitId: number) {
-    this.visitorService.getDistinctInviteHistory(unitId).subscribe({
+  loadDistinctInviteHistory() {
+    this.mainApi.endpointMainProcess({}, 'get/distinct_visitor_history').subscribe({
       next: (response: any) => {
         if (response.result.response_status === 200) {
           this.historyData = response.result.response_result;
@@ -136,20 +116,6 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
   }
 
   confirmSelection() {
-    // // Hapus undangan yang di-uncheck dari existingInvitees
-    // this.selectedInvitees.forEach(invitee => {
-    //   const ifExist = this.existingInvitees.findIndex(existing => 
-    //     existing.visitor_name === invitee.visitor_name && 
-    //     existing.contact_number === invitee.contact_number && 
-    //     existing.vehicle_number === invitee.vehicle_number
-    //   );
-  
-    //   // Jika invitee tidak ada di selectedInvitees, hapus dari existingInvitees
-    //   if (ifExist > -1) {
-    //     this.existingInvitees.splice(ifExist, 1);
-    //   }
-    // });
-  
     // Gabungkan selectedInvitees dan existingInvitees
     const navigationExtras: NavigationExtras = {
       state: {
