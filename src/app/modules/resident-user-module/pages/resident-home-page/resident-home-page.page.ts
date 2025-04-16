@@ -44,32 +44,32 @@ export class ResidentHomePagePage implements OnInit {
     {
       name: 'Facility Bookings',
       src: 'assets/icon/resident-icon/icon3.png',
-      routeLinkTo: '',
+      routeLinkTo: '/facility-booking-main',
     },
     {
       name: 'Payments',
       src: 'assets/icon/resident-icon/icon2.png',
-      routeLinkTo: '',
+      routeLinkTo: '/payment-page-main',
     },
     {
       name: 'My Family',
       src: 'assets/icon/resident-icon/icon1.png',
-      routeLinkTo: '',
+      routeLinkTo: '/family-page-main',
     },
     {
       name: 'My Vehicle',
       src: 'assets/icon/resident-icon/icon4.png',
-      routeLinkTo: '',
+      routeLinkTo: '/my-vehicle-page-main',
     },
     {
       name: 'Raise a Request',
       src: 'assets/icon/resident-icon/icon6.png',
-      routeLinkTo: '',
+      routeLinkTo: '/raise-a-request-page-main',
     },
     {
       name: 'Find Service Providers',
       src: 'assets/icon/resident-icon/icon5.png',
-      routeLinkTo: '',
+      routeLinkTo: '/find-a-service-provider-page-main',
     }
   ];
   squareButton: any[] = [
@@ -77,26 +77,25 @@ export class ResidentHomePagePage implements OnInit {
       id: 1,
       name: 'Notification',
       src: 'assets/icon/resident-icon/notification.png',
-      routeLinkTo: '',
+      routeLinkTo: '/notification-page-main',
       paramForBadgeNotification: 0
     },
     {
       id: 2,
       name: 'Notice & Docs',
       src: 'assets/icon/home-icon/sound.webp',
-      routeLinkTo: ''
+      routeLinkTo: '/notice-and-docs-page-main'
     },
     {
       id: 3,
       name: 'Polling',
       src: 'assets/icon/resident-icon/polling.png',
-      routeLinkTo: ''
+      routeLinkTo: '/polling-page-main'
     },
     {
       id: 4,
       name: 'House Rule',
       src: 'assets/icon/resident-icon/house-rule.png',
-      routeLinkTo: '',
       document: '',
       documentName: ''
     },
@@ -104,25 +103,25 @@ export class ResidentHomePagePage implements OnInit {
       id: 5,
       name: 'Report an Issue',
       src: 'assets/icon/resident-icon/report-an-issue.png',
-      routeLinkTo: ''
+      routeLinkTo: '/app-report-main'
     },
     {
       id: 6,
       name: 'Upcoming Events',
       src: 'assets/icon/resident-icon/upcoming-event.png',
-      routeLinkTo: ''
+      routeLinkTo: '/upcoming-event-page-main'
     },
     {
       id: 7,
       name: 'Door Access',
       src: 'assets/icon/home-icon/door.png',
-      routeLinkTo: ''
+      routeLinkTo: '/door-access-main'
     },
     {
       id: 8,
       name: 'Quick Dials',
       src: 'assets/icon/resident-icon/quick-dials.png',
-      routeLinkTo: ''
+      routeLinkTo: '/quick-dial-page-main'
     }
   ]
 
@@ -144,7 +143,7 @@ export class ResidentHomePagePage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
-            this.loadCountNotification(estate.family_id);
+            this.loadCountNotification();
             this.loadHouseRules();
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
@@ -221,7 +220,7 @@ export class ResidentHomePagePage implements OnInit {
             if ( value ) {
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);
-              this.loadCountNotification(estate.family_id);
+              this.loadCountNotification();
               this.loadHouseRules();
               if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
@@ -265,22 +264,22 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Facility Bookings',
             src: 'assets/icon/resident-icon/icon3.png',
-            routeLinkTo: '',
+            routeLinkTo: '/facility-booking-main',
           },
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '',
+            routeLinkTo: '/payment-page-main',
           },
           {
             name: 'Raise a Request',
             src: 'assets/icon/resident-icon/icon6.png',
-            routeLinkTo: '',
+            routeLinkTo: '/raise-a-request-page-main',
           },
           {
             name: 'Find Service Providers',
             src: 'assets/icon/resident-icon/icon5.png',
-            routeLinkTo: '',
+            routeLinkTo: '/find-a-service-provider-page-main',
           }
         ];
       } else {
@@ -293,32 +292,32 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Facility Bookings',
             src: 'assets/icon/resident-icon/icon3.png',
-            routeLinkTo: '',
+            routeLinkTo: '/facility-booking-main',
           },
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '',
+            routeLinkTo: '/payment-page-main',
           },
           {
             name: 'My Family',
             src: 'assets/icon/resident-icon/icon1.png',
-            routeLinkTo: '',
+            routeLinkTo: '/family-page-main',
           },
           {
             name: 'My Vehicle',
             src: 'assets/icon/resident-icon/icon4.png',
-            routeLinkTo: '',
+            routeLinkTo: '/my-vehicle-page-main',
           },
           {
             name: 'Raise a Request',
             src: 'assets/icon/resident-icon/icon6.png',
-            routeLinkTo: '',
+            routeLinkTo: '/raise-a-request-page-main',
           },
           {
             name: 'Find Service Providers',
             src: 'assets/icon/resident-icon/icon5.png',
-            routeLinkTo: '',
+            routeLinkTo: '/find-a-service-provider-page-main',
           }
         ];
       }
@@ -337,12 +336,12 @@ export class ResidentHomePagePage implements OnInit {
         {
           name: 'Facility Bookings',
           src: 'assets/icon/resident-icon/icon3.png',
-          routeLinkTo: '',
+          routeLinkTo: '/facility-booking-main',
         },
         {
           name: 'My Vehicle',
           src: 'assets/icon/resident-icon/icon4.png',
-          routeLinkTo: '',
+          routeLinkTo: '/my-vehicle-page-main',
         },
       ];
     }
@@ -355,10 +354,8 @@ export class ResidentHomePagePage implements OnInit {
     }
   }
 
-  loadCountNotification( partnerId: number) {
-    this.mainApiResident.endpointMainProcess({
-      partner_id: partnerId
-    }, 'get/notifications_count').subscribe((result: any) => {
+  loadCountNotification() {
+    this.mainApiResident.endpointMainProcess({}, 'get/notifications_count').subscribe((result: any) => {
       this.squareButton[0].paramForBadgeNotification = result.result.notifications;
     })
   }

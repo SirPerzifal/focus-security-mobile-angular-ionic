@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Contractors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
-import { Estate } from 'src/models/resident/resident.model';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-history-in-visitor',
@@ -54,20 +54,16 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
 
   filteredData: any[] = [];
 
-  showStartDate = '';
-  showEndDate = '';
   startDateFilter = '';
   endDateFilter = '';
   showDate = ''
   dateFilter = ''
   typeFilter = 'All'
 
-  unitId: number = 0;
-
   hideFilter: string = '';
   cardIfJustBan: string = '';
 
-  constructor(private router: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) { 
+  constructor(private router: Router, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService, private alertController: AlertController) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -80,17 +76,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter(){
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = estate.unit_id;
-            this.getHistoryList();
-          }
-        })
-      } 
-    })
+    this.getHistoryList();
   }
 
   directTo() {
@@ -174,34 +160,26 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     })
   }
 
-  onChangeDateFilter(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.dateFilter = input.value;
-    const dateParts = this.dateFilter.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; 
-    this.showDate = formattedDate;
+  onChangeVisitorType(event: Event) {
+    const target = event.target as HTMLInputElement;
+    // console.log("typefilter", target.value)
+    this.typeFilter = target.value;
     this.applyFilters();
   }
   
-  onChangeStartDate(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.startDateFilter = input.value;
-    const dateParts = this.startDateFilter.split('-');
-    this.showStartDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
+  onChangeStartDate(value: any) {
+    const date = new Date(value);
+    this.startDateFilter = this.functionMain.formatDate(date);
     this.applyFilters();
   }
 
-  onChangeEndDate(value: Event) {
-    const input = value.target as HTMLInputElement;
-    this.endDateFilter = input.value;
-    const dateParts = this.endDateFilter.split('-');
-    this.showEndDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Format to dd/mm/yyyy
+  onChangeEndDate(value: any) {
+    const date = new Date(value);
+    this.endDateFilter = this.functionMain.formatDate(date);
     this.applyFilters();
   }
 
   clearDateFilter() {
-    this.showStartDate = '';
-    this.showEndDate = '';
     this.startDateFilter = '';
     this.endDateFilter = '';
     this.typeFilter = 'All';
@@ -210,22 +188,19 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     this.applyFilters();
   }
   
-  onChangeVisitorType(event: Event) {
-    const target = event.target as HTMLInputElement;
-    // console.log("typefilter", target.value)
-    this.typeFilter = target.value;
-  
-    this.applyFilters();
-  }
-  
   applyFilters() {
     this.filteredData = this.historyData.filter(item => {
       const visitorDate = new Date(item.visitor_date);
       visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-  
+      
+      const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
+      const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`
+      const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
+      const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`
+      
       // Convert the selected start and end dates to Date objects
-      const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+      const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
+      const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
   
       // Set time to 00:00:00 for comparison
       if (selectedStartDate) {
@@ -241,16 +216,50 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     });
   }
 
-  toggleShowInv() {
-    this.router.navigate(['resident-visitors']);
+  openDetails(historyData: any) {
+    this.router.navigate(['/detail-history-in-visitor'], {
+      state: {
+        historyData: historyData
+      }
+    });
   }
 
-  toggleShowHired() {
-    this.router.navigate(['hired-car']);
+  public async showAlertButtons(headerName: string, className: string, historyData: any) {
+    const alertButtons = await this.alertController.create({
+      cssClass: className,
+      header: headerName + " this visitor?",
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.reinstateProcess(historyData);
+            // console.log(historyData);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Alert cancel');
+          },
+        },
+      ]
+    });
+    await alertButtons.present ();
   }
 
-  toggleShowHistory() {
-    // this.router.navigate(['history']);
+  reinstateProcess(historyData: any) {
+    console.log("tes");
+    this.mainApiResidentService.endpointMainProcess({
+      contact_no: historyData.mobile_number,
+      vehicle_number: historyData.vehicle_number
+    }, 'post/reinstate_visitor').subscribe(
+      (response) => {
+        console.log('Success:', response);
+        // this.router.navigate(['resident-my-profile']);
+      },
+    )
   }
 
   private routerSubscription!: Subscription;

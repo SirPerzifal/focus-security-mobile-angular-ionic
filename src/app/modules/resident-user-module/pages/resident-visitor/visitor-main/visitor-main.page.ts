@@ -6,6 +6,9 @@ import { AlertController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
+import { ApiService } from 'src/app/service/api.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 @Component({
   selector: 'app-visitor-main',
   templateUrl: './visitor-main.page.html',
@@ -22,7 +25,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
     ])
   ]
 })
-export class VisitorMainPage implements OnInit {
+export class VisitorMainPage extends ApiService implements OnInit  {
 
   navButtonsMain: any[] = [
     {
@@ -97,8 +100,9 @@ export class VisitorMainPage implements OnInit {
     private route: Router,
     private activeRoute: ActivatedRoute,
     private mainApiResidentService: MainApiResidentService,
-    private alertController: AlertController
-  ) { }
+    private alertController: AlertController,
+    http: HttpClient
+  ) { super(http) }
 
   ngOnInit() {
     this.getTodayDate();
@@ -211,6 +215,25 @@ export class VisitorMainPage implements OnInit {
     }
   }
 
+  resendInvite(invite_id: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    this.http.post<any>(
+      `${this.baseUrl}/resident/post/resend_invite`, 
+      {
+        jsonrpc: '2.0', 
+        params: {
+          invite_id: invite_id,
+        }
+      },
+      { headers }
+    ).subscribe();
+
+  }
+
   toggleShowNewInv() {
     if (!this.showNewInv){
       this.showActInvTrans = true;
@@ -228,6 +251,8 @@ export class VisitorMainPage implements OnInit {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
       this.formData.dateOfInvite = event;
+      console.log(event, this.formData.dateOfInvite);
+      
     } else {
       this.selectedDate = ''
     }
@@ -260,10 +285,6 @@ export class VisitorMainPage implements OnInit {
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
       errMsg += 'Please fill date of invite! \n';
-    }
-    if (this.formData.dateOfInvite) {
-      const [ day, month, year ] = this.formData.dateOfInvite.split('/');
-      this.formData.dateOfInvite = `${year}-${month}-${day}`
     }
     if (this.formData.entryType == "") {
       errMsg += "Please choose entry type! \n";

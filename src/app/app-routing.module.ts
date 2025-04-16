@@ -753,11 +753,6 @@ const routes: Routes = [
     // canActivate:[authGuard]
   },
   {
-    path: 'visitor-main',
-    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-main/visitor-main.module').then( m => m.VisitorMainPageModule),
-    // canActivate:[authGuard]
-  },
-  {
     path: 'app-report-main',
     loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/app-report-main/app-report-main.module').then( m => m.AppReportMainPageModule),
     // canActivate:[authGuard]
@@ -765,6 +760,15 @@ const routes: Routes = [
   {
     path: 'settings-main',
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/settings-main/settings-main.module').then( m => m.SettingsMainPageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'info-page-settings',
+    loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
+  },
+  {
+    path: 'visitor-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-main/visitor-main.module').then( m => m.VisitorMainPageModule),
     // canActivate:[authGuard]
   },
   {
@@ -788,17 +792,77 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/resident-visitor/visitor-inviting-from-history/visitor-inviting-from-history.module').then( m => m.VisitorInvitingFromHistoryPageModule)
   },
   {
-    path: 'info-page-settings',
-    loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/info-page-settings/info-page-settings.module').then( m => m.InfoPageSettingsPageModule)
-  },
-  {
     path: 'contractor-commercial-main',
     loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/contractor-commercial-main/contractor-commercial-main.module').then( m => m.ContractorCommercialMainPageModule)
   },
-  // {
-  //   path: 'client-employees',
-  //   loadChildren: () => import('./modules/client_app/client-employees/client-employees.module').then( m => m.ClientEmployeesPageModule)
-  // },
+  {
+    path: 'contractor-inviting-form',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/contractor-inviting-form/contractor-inviting-form.module').then( m => m.ContractorInvitingFormPageModule)
+  },
+  {
+    path: 'contractor-inviting-from-history',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/contractor-inviting-from-history/contractor-inviting-from-history.module').then( m => m.ContractorInvitingFromHistoryPageModule)
+  },
+  {
+    path: 'detail-history-in-commercial',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/detail-history-in-commercial/detail-history-in-commercial.module').then( m => m.DetailHistoryInCommercialPageModule)
+  },
+  {
+    path: 'history-in-contractor',
+    loadChildren: () => import('./modules/resident-user-module/pages/contractor-commercial/history-in-contractor/history-in-contractor.module').then( m => m.HistoryInContractorPageModule)
+  },
+  {
+    path: 'door-access-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/door-access-page/door-access-main/door-access-main.module').then( m => m.DoorAccessMainPageModule)
+  },
+  {
+    path: 'facility-booking-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/facility-booking-main/facility-booking-main.module').then( m => m.FacilityBookingMainPageModule)
+  },
+  {
+    path: 'family-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/family-page/family-main/family-main.module').then( m => m.FamilyMainPageModule)
+  },
+  {
+    path: 'find-a-service-provider-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/find-a-service-provider-page/service-provider-main/service-provider-main.module').then( m => m.ServiceProviderMainPageModule)
+  },
+  {
+    path: 'my-vehicle-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/my-vehicle-main/my-vehicle-main.module').then( m => m.MyVehicleMainPageModule)
+  },
+  {
+    path: 'notice-and-docs-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/notice-and-docs-page/notice-and-docs-main/notice-and-docs-main.module').then( m => m.NoticeAndDocsMainPageModule)
+  },
+  {
+    path: 'notification-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/notification-page/notification-main/notification-main.module').then( m => m.NotificationMainPageModule)
+  },
+  {
+    path: 'payment-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/payments-page/payments-main/payments-main.module').then( m => m.PaymentsMainPageModule)
+  },
+  {
+    path: 'polling-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/polling-page/polling-main/polling-main.module').then( m => m.PollingMainPageModule)
+  },
+  {
+    path: 'profile-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/profile-page/profile-main/profile-main.module').then( m => m.ProfileMainPageModule)
+  },
+  {
+    path: 'quick-dial-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
+  },
+  {
+    path: 'raise-a-request-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
+  },
+  {
+    path: 'upcoming-event-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/upcoming-event-main/upcoming-event-main.module').then( m => m.UpcomingEventMainPageModule)
+  },
 ];
 
 @NgModule({

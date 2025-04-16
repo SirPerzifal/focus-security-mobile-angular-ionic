@@ -33,7 +33,7 @@
         <ion-datetime
           #dateTimePicker
           [presentation]="'date'" 
-          [min]="minDate"
+          [min]="changeDateFormatToDefault(minDate)"
           (ionChange)="onDateTimeChange($event)"
           [value]="isoStringValue"
         ></ion-datetime>

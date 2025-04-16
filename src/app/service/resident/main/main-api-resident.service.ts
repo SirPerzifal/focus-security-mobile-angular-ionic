@@ -43,8 +43,12 @@ export class MainApiResidentService extends ApiService {
         // Set ID berdasarkan tipe estate
         if (estate.record_type === 'commercial') {
           this.hostId = estate.family_id;
+          this.familyId = 0
+          this.unitId = 0
+          this.blockId = 0
         } else if (estate.record_type === 'resident') {
           this.familyId = estate.family_id;
+          this.hostId = 0
         }
         
         // Set ID yang sama untuk kedua tipe

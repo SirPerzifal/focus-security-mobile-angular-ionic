@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ContractorCommercialMainPageRoutingModule } from './contractor-commercial-main-routing.module';
 
 import { ContractorCommercialMainPage } from './contractor-commercial-main.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ContractorCommercialMainPageRoutingModule
+    ContractorCommercialMainPageRoutingModule,
+    SharedModule
   ],
   declarations: [ContractorCommercialMainPage]
 })

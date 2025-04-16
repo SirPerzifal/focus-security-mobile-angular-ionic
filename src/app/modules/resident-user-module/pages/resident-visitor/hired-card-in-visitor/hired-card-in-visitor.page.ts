@@ -15,7 +15,7 @@ import { Estate } from 'src/models/resident/resident.model';
   templateUrl: './hired-card-in-visitor.page.html',
   styleUrls: ['./hired-card-in-visitor.page.scss'],
 })
-export class HiredCardInVisitorPage implements OnInit {
+export class HiredCardInVisitorPage implements OnInit, OnDestroy {
 
   navButtonsMain: any[] = [
     {
@@ -49,21 +49,21 @@ export class HiredCardInVisitorPage implements OnInit {
     },{
       name: 'TAXI',
       value: 'taxi',
-      active: true,
+      active: false,
       image: '',
       icon: 'faTaxi',
       ion_icon: ''
     },{
       name: 'CAR',
       value: 'private_car',
-      active: true,
+      active: false,
       image: '',
       icon: '',
       ion_icon: 'car-sport-outline'
     },{
       name: 'BIKE',
       value: 'motor_bike',
-      active: true,
+      active: false,
       image: '',
       icon: 'faMotorcycle',
       ion_icon: ''
@@ -105,28 +105,13 @@ export class HiredCardInVisitorPage implements OnInit {
   )  {}
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.formData.unit = Number(estate.unit_id);
-            this.formData.family_id = Number(estate.family_id);
-            this.projectId = Number(estate.project_id);
-            this.loaadTextForPage();
-          }
-        })
-      } 
-    })
+    this.loaadTextForPage();
+    this.formData.vehicle_type = 'phv_vehicle';
   }
 
   loaadTextForPage() {
     this.isLoading = false;
-  
-    this.mainApiResidentService.endpointMainProcess(
-      {}, 
-      'get/hired_car_text'
-    ).subscribe((response) => {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/hired_car_text').subscribe((response) => {
       if (response.result.response_code == 200) {
         this.textForHiredCarPages = {
           title: response.result.response_description.title,
@@ -190,12 +175,10 @@ export class HiredCardInVisitorPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger');
     } else {
       try {
-        this.mainApiResidentService.endpointProcess({
+        this.mainApiResidentService.endpointMainProcess({
           entry_type: this.formData.entry_type,
           vehicle_type: this.formData.vehicle_type,
           vehicle_number: this.formData.vehicle_number,
-          unit: this.formData.unit,
-          family_id: this.formData.family_id
         }, 'post/create_expected_entry').subscribe((response) => {
           if (response.result.response_code == 200) {
             this.functionMain.presentToast('Success Add Record', 'success');

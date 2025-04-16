@@ -20,13 +20,20 @@ export class WebRtcService extends ApiService{
   private peerConnection!: RTCPeerConnection;
   private localStream!: MediaStream;
   private remoteStream!: MediaStream;
-  private iceServers: RTCIceServer[] = [{ urls: 'stun:stun.l.google.com:19302'}];
+  private iceServers: RTCIceServer[] = [
+    { urls: 'stun:stun.l.google.com:19302'},
+  ];
+  // private iceServers: RTCIceServer[] = [ 
+  //   { urls: 'stun:stun.l.google.com:19302:'} 
+  // ]
   private activeModal: HTMLIonModalElement | null = null;
   private callerName: string = '';
   private receiverName: string = '';
   private callerSocketId: any;
   private receiverSocketId: any;
   private nativeOffer: any;
+  private targetSocketIds: any;
+  private candidateObj: any;
   private callAction: string = '';
   private callerId: number = 0;
   private receiverId: number = 0;
@@ -61,39 +68,36 @@ export class WebRtcService extends ApiService{
     this.receiverName = '';
     this.callerSocketId = null;
     this.receiverSocketId = null;
+    this.targetSocketIds = null;
     this.nativeOffer = null;
     this.callAction = '';
+    this.candidateObj = null;
   }
   
 
   initializeSocket() {
-    Preferences.get({ key: 'USER_INFO' }).then(userData => {
-      
+    
+    Preferences.get({ key: 'USESTATE_DATA' }).then(async (userData) => {
+      if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+        this.socket.close();
+      }
+
       let userInfo = {
-        mobile_number: '0812345678-Security',
+        family_mobile_number: '0812345678-Security',
         family_id: '',
-        name: 'Security',
+        family_name: 'Security',
         email: 'admin@example.com',
       }
       
       if (userData.value) {
-        try {
-          userInfo = jwtDecode<{ 
-            mobile_number: string; 
-            family_id: string; 
-            name: string; 
-            email: string; 
-            exp: number;
-          }>(userData.value);
-        } catch (error) {
-          console.error('Gagal decode token:', error);
-        }
+        userInfo = JSON.parse(userData.value);
+        
       }
-      this.userName = userInfo.name ? userInfo.name : 'Security';
+      // this.presentToast(JSON.stringify(userInfo), 'danger');
+      this.userName = userInfo.family_name ? userInfo.family_name : 'Security';
       this.userId = userInfo.family_id ? parseInt(userInfo.family_id, 10) || 0 : 0;
-      console.log(this.callerName, " | ", userInfo);
       this.socket = io('wss://ws.sgeede.com', {
-        query: { phoneNumber: userInfo.mobile_number? userInfo.mobile_number : '0812345678-Security' }
+        query: { phoneNumber: userInfo.family_mobile_number? userInfo.family_mobile_number : '0812345678-Security' }
       });
       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
       this.socket.on('answer', (answer: any) => this.handleAnswer(answer));
@@ -240,6 +244,7 @@ export class WebRtcService extends ApiService{
     this.receiverName = offer.receiverName;
     this.callerSocketId = offer.callerSocketId;
     this.receiverSocketId = offer.receiverSocketId;
+    this.targetSocketIds = offer.targetSocketIds;
     await this.showIncomingCallModal(offer.offerObj);
   }
 
@@ -247,6 +252,7 @@ export class WebRtcService extends ApiService{
   async handleAnswer(answer: any) {
     this.callerName = answer.callerName;
     this.receiverName = answer.receiverName;
+    this.receiverSocketId = answer.receiverSocketId;
     const description = new RTCSessionDescription(answer.answerObj);
     await this.peerConnection.setRemoteDescription(description);
 
@@ -261,10 +267,12 @@ export class WebRtcService extends ApiService{
   }
 
   handleICECandidate(candidate: RTCIceCandidate) {
+    this.candidateObj = candidate;
     if (this.peerConnection) {
       this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     } else {
-      console.error("peerConnection is not initialized yet.");
+      this.candidateObj = candidate;
+      // this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     }
   }
 
@@ -329,7 +337,10 @@ export class WebRtcService extends ApiService{
   
   async acceptCall(offer: any) {
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-  
+    // if(this.candidateObj){
+    //   this.peerConnection.addIceCandidate(new RTCIceCandidate(this.candidateObj));
+    // }
+    
     this.localStream.getTracks().forEach(track => {
       this.peerConnection.addTrack(track, this.localStream);
     });
@@ -344,6 +355,12 @@ export class WebRtcService extends ApiService{
       callerSocketId: this.callerSocketId,
       receiverSocketId: this.receiverSocketId
     });
+    if(this.targetSocketIds){
+      let newTargetSocketIds = this.targetSocketIds.filter((target:any) => target != this.receiverSocketId);
+      this.socket.emit('reject-call', {
+        targetSocketIds: newTargetSocketIds,
+      });
+    }
   
     await this.showOngoingCallModal(true);
   }
@@ -398,6 +415,7 @@ export class WebRtcService extends ApiService{
     this.socket.emit('reject-call', {
       callerSocketId: this.callerSocketId,
       receiverSocketId: this.receiverSocketId,
+      targetSocketIds: this.targetSocketIds,
       receiverId: this.receiverId,
       callerId: this.callerId,
       callerName: this.callerName
@@ -434,6 +452,7 @@ export class WebRtcService extends ApiService{
     this.receiverName = data.receiverName;
     this.callerSocketId = data.callerSocketId;
     this.receiverSocketId = data.receiverSocketId;
+    this.targetSocketIds = data.targetSocketIds;
     await this.showOutgoingCallModal();
   }
 

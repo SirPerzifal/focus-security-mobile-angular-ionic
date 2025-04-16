@@ -20,7 +20,7 @@ export class InputComponentComponent  implements OnInit {
   @Input() minDate: string = ''; 
   @Output() eventEmitter = new EventEmitter<any>()
 
-  @Output() value: string = '';
+  @Input() value: string = '';
 
   @ViewChild('dateTimePicker') dateTimePicker!: IonDatetime;
   
@@ -76,9 +76,17 @@ export class InputComponentComponent  implements OnInit {
     const isoDate = event.detail.value;
     if (isoDate) {
       const date = new Date(isoDate);
-      this.value = this.functionMain.formatDate(date);
       this.isOpen = false;
-      this.eventEmitter.emit(this.value);
+      this.eventEmitter.emit(date);
+    }
+  }
+
+  public changeDateFormatToDefault(date: any) {
+    const [ day, month, year ] = date.split('/');
+    if (month && year) {
+      return `${year}-${month}-${day}`
+    } else {
+      return date
     }
   }
 
