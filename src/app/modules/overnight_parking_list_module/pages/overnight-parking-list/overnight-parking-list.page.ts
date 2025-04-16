@@ -359,7 +359,7 @@ export class OvernightParkingListPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

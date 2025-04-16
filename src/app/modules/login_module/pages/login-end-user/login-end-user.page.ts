@@ -76,6 +76,7 @@ export class LoginEndUserPage implements OnInit {
   }
 
   async loginResident(){
+    if (!this.existUser.login && !this.existUser.password) return
     this.waitingResponseLoginApi = true;
     this.isAnimating = true;
     setTimeout(() => {
@@ -92,6 +93,7 @@ export class LoginEndUserPage implements OnInit {
           this.fcmToken
         ).subscribe(
           res => {
+            console.log(res);            
             if (res.result.status_code == 200) {
               if (res.result.is_client) {
                 Preferences.set({
@@ -103,6 +105,7 @@ export class LoginEndUserPage implements OnInit {
                   this.isAnimating = true;
                   setTimeout(() => {
                     this.isAnimating = false;
+                    this.waitingResponseLoginApi = false;
                   }, 300); // Match this duration with the CSS animation duration
                 });
               } else if (res.result.is_resident) {
@@ -157,7 +160,7 @@ export class LoginEndUserPage implements OnInit {
         setTimeout(() => {
           this.isAnimating = false;
         }, 300); // Match this duration with the CSS animation duration
-        this.functionMain.presentToast("There's somrthing wrong with Server.", 'danger');
+        this.functionMain.presentToast("There's something wrong with Server.", 'danger');
       }
     }
   }

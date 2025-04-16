@@ -334,7 +334,7 @@ export class ContractorCommercialFormPage implements OnInit {
   Host: any[] = [];
   selectedHost: string = '';
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -407,7 +407,7 @@ export class ContractorCommercialFormPage implements OnInit {
       this.formData.contractor_name = contactData.visitor_name
       this.formData.contractor_vehicle = contactData.vehicle_number
       setTimeout(()=>{
-        this.selectedUnit = contactData.host_id
+        this.selectedUnit = contactData.industrial_host_id
       }, 300)
       // this.selectedBlock = contactData.block_id
       // this.loadUnit().then(() => {

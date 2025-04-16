@@ -25,16 +25,8 @@
         <div class="w-full">
           <app-vms-contact-input [(value)]="walkInFormData.visitor_contact_no" [id]="'walk_in_contact_collection'" (contactInfo)="getWalkInContactInfo($event)"></app-vms-contact-input>
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
-          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType"/>
-        </div>
-        <div class="w-full flex flex-row justify-between items-end space-x-2" *ngIf="project_config.is_industrial">
-          <div class="w-[90%]">
-            <app-text-input #contractorIdentificationNumberInput [id]="'contractor_identification_number'" [labelText]="'NRIC / FIN'" [placeholder]="'SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nric_value" [isReadonly]="true"></app-text-input>
-          </div>
-          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan()">
-            <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
-          </div>
+        <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
         </div>
         <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
           <label class="text-2xl"><u><b>BLOCK</b></u></label>
@@ -72,6 +64,9 @@
         <div class="w-full">
           <app-vms-contact-input [(value)]="driveInFormData.visitor_contact_no" [id]="'drive_in_contact_collection'" (contactInfo)="getDriveInContactInfo($event)"></app-vms-contact-input>
         </div>
+        <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+        </div>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
             <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'"  [(ngModel)]="driveInFormData.visitor_vehicle" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
@@ -93,7 +88,7 @@
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
         <div class="w-full" *ngIf="project_config.is_industrial">
-          <app-text-input [id]="'collection_drive_in_company'" [(ngModel)]="walkInFormData.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input [id]="'collection_drive_in_company'" [(ngModel)]="driveInFormData.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
         <div class="w-full" *ngIf="project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
@@ -102,7 +97,7 @@
           <label class="text-2xl"><u><b>REMARKS</b></u></label>
           <textarea id="collection_drive_in_remarks" rows="4" name="collection_drive_in_remarks"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-            placeholder="" [(ngModel)]="walkInFormData.remarks"></textarea>
+            placeholder="" [(ngModel)]="driveInFormData.remarks"></textarea>
         </div>
         <div class="w-full" *ngFor="let camera of Camera; let i = index">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="onSubmitDriveIn(true, camera.CamSentId)"></app-visitor-button>

@@ -27,6 +27,11 @@ export class ClientRaiseTicketPage implements OnInit {
 
   ngOnInit() {
     this.loadMenuItems()
+    this.functionMain.vmsPreferences().then((value) => {
+      this.newTicket.user_id = value.user_id
+      console.log(this.newTicket);
+      
+    })
   }
   
 
@@ -194,14 +199,17 @@ export class ClientRaiseTicketPage implements OnInit {
   }
 
   toggleShowNew() {
-    this.isActive = false
-    this.isClosed = false
-    this.isNew = true
-    this.isData = false
-    this.newTicket.ir_attachment_datas = ''
-    this.newTicket.ir_attachment_mimetype = ''
-    this.newTicket.ir_attachment_name = ''
-    this.newTicket.summary = ''
+    if (!this.isNew) {
+      this.isActive = false
+      this.isClosed = false
+      this.isNew = true
+      this.isData = false
+      this.newTicket.ir_attachment_datas = ''
+      this.newTicket.ir_attachment_mimetype = ''
+      this.newTicket.ir_attachment_name = ''
+      this.newTicket.summary = ''
+      this.fileName = ''
+    }
   }
 
   onStartDateChange(value: Event) {
@@ -267,6 +275,7 @@ export class ClientRaiseTicketPage implements OnInit {
     ir_attachment_datas: '',
     ir_attachment_name: '',
     ir_attachment_mimetype: '',
+    user_id: '',
   }
 
   @ViewChild('clientTicketNewAttachment') fileInput!: ElementRef;

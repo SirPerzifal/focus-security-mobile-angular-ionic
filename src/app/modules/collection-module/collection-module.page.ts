@@ -120,7 +120,7 @@ export class CollectionModulePage implements OnInit {
 
     this.nric_value = ''
     this.identificationType = ''
-
+    this.selectedNric = ''
   }
 
   toggleShowDrive() {
@@ -226,63 +226,6 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
-  identificationType = ''
-  nric_value = ''
-  faBarcode = faBarcode
-  onIdentificationTypeChange(event: any) {
-    this.identificationType = event.target.value;
-    console.log(this.identificationType)
-  }
-
-  openNricScan() {
-    this.functionMain.presentModalNric().then(value => {
-      if (value) {
-        console.log(value)
-        this.identificationType = value.is_fin ? 'fin' : 'nric'
-        this.nric_value = value.data;
-        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
-          next: (results) => {
-            console.log(results)
-            if (results.result.status_code === 200) {
-              let data = results.result.result[0]
-              
-              console.log(value)
-              if (this.showWalk) {
-                this.walkInFormData.visitor_name = data.contractor_name
-                this.walkInFormData.company_name = data.company_name
-                this.walkInFormData.visitor_contact_no = data.contact_number
-              } else {
-                this.driveInFormData.visitor_vehicle =  data.vehicle_number
-                this.driveInFormData.visitor_name = data.contractor_name
-                this.driveInFormData.company_name = data.company_name
-                this.driveInFormData.visitor_contact_no = data.contact_number
-              }
-            } else {
-                console.log(value)
-                if (this.showWalk) {
-                  this.walkInFormData.visitor_name = this.walkInFormData.visitor_name ? this.walkInFormData.visitor_name : ''
-                  this.walkInFormData.company_name = this.walkInFormData.company_name ? this.walkInFormData.company_name : ''
-                  this.walkInFormData.visitor_contact_no = this.walkInFormData.visitor_contact_no ? this.walkInFormData.visitor_contact_no : '65'
-                } else {
-                  this.walkInFormData.visitor_name = this.walkInFormData.visitor_name ? this.walkInFormData.visitor_name : ''
-                  this.walkInFormData.company_name = this.walkInFormData.company_name ? this.walkInFormData.company_name : ''
-                  this.walkInFormData.visitor_contact_no = this.walkInFormData.visitor_contact_no ? this.walkInFormData.visitor_contact_no : '65'
-                  this.driveInFormData.visitor_vehicle = this.driveInFormData.visitor_vehicle ? this.driveInFormData.visitor_vehicle : ''
-                }
-              this.functionMain.presentToast(`No data found in the system for ${value.data}!`, 'warning')
-            }
-          },
-          error: (error) => {
-            this.functionMain.presentToast('An error occurred while searching for nric!', 'danger');
-            console.error(error);
-          }
-        });
-      }
-      
-    });
-    console.log(this.nric_value)
-  }
-
   onSubmitWalkIn(){
     let errMsg = ""
     if (!this.walkInFormData.visitor_name) {
@@ -296,8 +239,11 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
     if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += (this.identificationType == 'nric' ? 'NRIC' : 'FIN') + ' is required!\n';
+      errMsg += 'Identification number is required!\n';
     }
     if ((!this.walkInFormData.block || !this.walkInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
@@ -316,7 +262,7 @@ export class CollectionModulePage implements OnInit {
       return
     }
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value).subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value,this.identificationType).subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -351,6 +297,9 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
     if ((!this.nric_value) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
@@ -379,7 +328,7 @@ export class CollectionModulePage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value, this.identificationType).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -435,7 +384,7 @@ export class CollectionModulePage implements OnInit {
       this.driveInFormData.visitor_name = contactData.visitor_name
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.driveInFormData.block = contactData.block_id
         this.loadUnit().then(() => {
@@ -453,7 +402,7 @@ export class CollectionModulePage implements OnInit {
       this.walkInFormData.visitor_name = contactData.visitor_name
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.walkInFormData.block = contactData.block_id
         this.loadUnit().then(() => {
@@ -469,7 +418,7 @@ export class CollectionModulePage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -477,5 +426,30 @@ export class CollectionModulePage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
   }
+
+  setFromScan(event: any) {
+    console.log(event)
+    this.nric_value = event.data.identification_number
+    this.identificationType = event.type
+    if (event.data.is_server) {
+      if (this.showDrive) {
+        this.driveInFormData.visitor_name = event.data.contractor_name
+        this.driveInFormData.visitor_contact_no = event.data.contact_number
+        this.driveInFormData.visitor_vehicle = event.data.vehicle_number
+        this.driveInFormData.company_name = event.data.company_name
+      }
+      if (this.showWalk) {
+        this.walkInFormData.visitor_name = event.data.contractor_name
+        this.walkInFormData.visitor_contact_no = event.data.contact_number
+        this.walkInFormData.visitor_vehicle = event.data.vehicle_number
+        this.walkInFormData.company_name = event.data.company_name
+      }
+    } 
+    console.log(this.nric_value, this.identificationType)
+  }
+
+  identificationType = ''
+  nric_value = ''
+  selectedNric = ''
 
 }

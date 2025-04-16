@@ -144,9 +144,7 @@ export class ContractorFormPage implements OnInit {
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
-    this.stopScanner()
     if (this.routerSubscription) {
-      this.stopScanner()
       this.routerSubscription.unsubscribe();
     }
   }
@@ -400,7 +398,7 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_name = contactData.visitor_name
       this.formData.contractor_vehicle = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.selectedBlock = contactData.block_id
         this.loadUnit().then(() => {
@@ -471,7 +469,7 @@ export class ContractorFormPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -575,9 +573,9 @@ export class ContractorFormPage implements OnInit {
       };
       window.addEventListener('popstate', closeModalOnBack)
 
+      this.isHidden = true
       this.htmlScanner = new Html5Qrcode(this.scannerId);
       console.log("Scanner Initialized:", this.htmlScanner);
-      this.isHidden = true
       console.log("WORK")
       this.htmlScanner.start(
         { 
@@ -646,6 +644,17 @@ export class ContractorFormPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  onBackHome() {
+    if (this.isHidden){
+      this.stopScanner()
+      setTimeout(() => {
+        this.router.navigate(['home-vms'])
+      }, 300);
+    } else {
+      this.router.navigate(['home-vms'])
+    }
   }
   
 }

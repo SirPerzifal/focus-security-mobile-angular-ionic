@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ContractorInvitingFormPageRoutingModule } from './contractor-inviting-form-routing.module';
 
 import { ContractorInvitingFormPage } from './contractor-inviting-form.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ContractorInvitingFormPageRoutingModule
+    ContractorInvitingFormPageRoutingModule,
+    SharedModule
   ],
   declarations: [ContractorInvitingFormPage]
 })

@@ -192,7 +192,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       this.formData.name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.formData.block_id = contactData.block_id
         this.loadUnit().then(() => {
@@ -208,7 +208,7 @@ export class UnregisteredResidentCarPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.formData.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.formData.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

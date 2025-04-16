@@ -74,9 +74,14 @@
           
         </div> -->
         <div class="w-full">
-          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType"/>
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial"/>
         </div>
-        <div class="w-full flex flex-row justify-between items-end space-x-2">
+        <div class="w-full" *ngIf="identificationType == 'passport'">
+          <app-text-input #contractorCheckoutPassport [id]="'contractor_checkout_passport'" [labelText]="'PASSPORT NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nric_value"></app-text-input>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2" *ngIf="identificationType != 'passport'">
           <div class="w-[90%]">
             <app-text-input 
               #textInput

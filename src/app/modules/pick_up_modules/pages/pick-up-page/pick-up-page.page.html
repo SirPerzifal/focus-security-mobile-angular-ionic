@@ -43,6 +43,9 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
             </div>
           </div>
+          <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          </div>
           <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
             <label class="text-2xl"><b><u>LOCATION</u></b></label>
             <!-- <app-text-input #locationInput [id]="'pick_up_location'" [placeholder]="'EG. BLK / PICK UP POINT'" [labelText]="'LOCATION'"

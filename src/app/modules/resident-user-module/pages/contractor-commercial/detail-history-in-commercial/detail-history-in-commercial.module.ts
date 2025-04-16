@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { DetailHistoryInCommercialPageRoutingModule } from './detail-history-in-commercial-routing.module';
 
 import { DetailHistoryInCommercialPage } from './detail-history-in-commercial.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DetailHistoryInCommercialPageRoutingModule
+    DetailHistoryInCommercialPageRoutingModule,
+    SharedModule
   ],
   declarations: [DetailHistoryInCommercialPage]
 })

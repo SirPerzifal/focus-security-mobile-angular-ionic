@@ -108,6 +108,7 @@ export class WalkInPage implements OnInit {
     this.contactUnit = ''
     this.selectedHost = ''
     this.contactHost = ''
+    this.selectedNric = ''
   }
 
   onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '') {
@@ -128,6 +129,12 @@ export class WalkInPage implements OnInit {
     if (!this.formData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
     }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
@@ -142,7 +149,7 @@ export class WalkInPage implements OnInit {
       return
     }
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -190,6 +197,12 @@ export class WalkInPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
@@ -205,7 +218,7 @@ export class WalkInPage implements OnInit {
     }
     console.log(this.formData)
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -368,7 +381,7 @@ export class WalkInPage implements OnInit {
       this.formData.visitor_name = contactData.visitor_name
       this.formData.visitor_vehicle = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.formData.block = contactData.block_id
         this.loadUnit().then(() => {
@@ -382,10 +395,7 @@ export class WalkInPage implements OnInit {
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
-    this.stopScanner()
-    console.log("HEY TEST DESTRoy")
     if (this.routerSubscription) {
-      this.stopScanner()
       this.routerSubscription.unsubscribe();
     }
   }
@@ -407,9 +417,9 @@ export class WalkInPage implements OnInit {
       };
       window.addEventListener('popstate', closeModalOnBack)
 
+      this.isHidden = true
       this.htmlScanner = new Html5Qrcode(this.scannerId);
       console.log("Scanner Initialized:", this.htmlScanner);
-      this.isHidden = true
       console.log("WORK")
       this.htmlScanner.start(
         { 
@@ -491,15 +501,19 @@ export class WalkInPage implements OnInit {
   onBackHome() {
     if (this.isHidden){
       this.stopScanner()
+      setTimeout(() => {
+        this.router.navigate(['home-vms'])
+      }, 300);
+    } else {
+      this.router.navigate(['home-vms'])
     }
-    this.router.navigate(['home-vms'])
   }
 
   Host: any[] = [];
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -507,4 +521,22 @@ export class WalkInPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
   }
+
+  setFromScan(event: any) {
+    console.log(event)
+    this.nric_value = event.data.identification_number
+    this.identificationType = event.type
+    if (event.data.is_server) {
+      this.formData.visitor_name = event.data.contractor_name
+      this.formData.visitor_contact_no = event.data.contact_number
+      if (this.showDrive) {
+        this.formData.visitor_vehicle = event.data.vehicle_number
+      }
+    } 
+    console.log(this.nric_value, this.identificationType)
+  }
+
+  identificationType = ''
+  nric_value = ''
+  selectedNric = ''
 }

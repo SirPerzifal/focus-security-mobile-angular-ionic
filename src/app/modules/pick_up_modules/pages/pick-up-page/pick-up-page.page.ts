@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
-import { faL, faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faL, faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
 import { VmsServicePickUp } from 'src/app/service/vms/pick_up/pick-up.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
 import { ToastController } from '@ionic/angular';
@@ -139,6 +139,7 @@ export class PickUpPagePage implements OnInit {
     this.valBike = false
     this.vehicleNumber = ''
     this.blkLocation = ''
+    this.selectedNric = ''
   }
 
   toggleShowDrop() {
@@ -205,6 +206,12 @@ export class PickUpPagePage implements OnInit {
     if (!this.selectedHost && this.project_config.is_industrial) {
       errMsg += 'Host is required! \n'
     }
+    if (this.project_config.is_industrial && !this.identificationType) {
+      errMsg += 'Identification type is required! \n'
+    }
+    if (this.project_config.is_industrial && !this.nric_value) {
+      errMsg += 'Identification number is required! \n'
+    }
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
       return
@@ -220,6 +227,8 @@ export class PickUpPagePage implements OnInit {
         this.project_id,
         cameraId ? cameraId : '',
         this.selectedHost,
+        this.identificationType,
+        this.nric_value,
       ).subscribe({
         next: (response) => {
           console.log(response)
@@ -290,7 +299,7 @@ export class PickUpPagePage implements OnInit {
   Host: any[] = [];
   selectedHost: string = '';
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -298,4 +307,18 @@ export class PickUpPagePage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
   }
+
+  setFromScan(event: any) {
+    console.log(event)
+    this.nric_value = event.data.identification_number
+    this.identificationType = event.type
+    if (event.data.is_server) {
+      this.vehicleNumber = event.data.vehicle_number
+    } 
+    console.log(this.nric_value, this.identificationType)
+  }
+
+  identificationType = ''
+  nric_value = ''
+  selectedNric = ''
 }

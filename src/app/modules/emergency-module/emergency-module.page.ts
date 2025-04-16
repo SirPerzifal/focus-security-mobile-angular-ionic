@@ -183,7 +183,7 @@ export class EmergencyModulePage implements OnInit {
       this.formData.officer_name = contactData.visitor_name
       this.formData.vehicle_number = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.formData.block_id = contactData.block_id
         this.loadUnit().then(() => {
@@ -243,13 +243,17 @@ export class EmergencyModulePage implements OnInit {
   
   onSubmit(isOpenBarrier: boolean = false, camera_id: string = ''){
     let errMsg = ''
-    if (!this.formData.officer_name && (this.showPolice || this.showOthers)) {
+    console.log(this.formData)
+    if (!this.formData.officer_name && (this.showPolice)) {
       errMsg += "Rank and name is required! \n"
     }
-    if (!this.formData.contact_number) {
+    if (!this.formData.officer_name && (this.showOthers)) {
+      errMsg += "Govt agency name is required! \n"
+    }
+    if (!this.formData.contact_number && (this.showOthers || this.showPolice)) {
       errMsg += "Contact number is required! \n"
     }
-    if (this.formData.contact_number) {
+    if (this.formData.contact_number && (this.showOthers || this.showPolice)) {
       if (this.formData.contact_number.length <= 2) {
         errMsg += "Contact number is required! \n"
       }
@@ -258,12 +262,12 @@ export class EmergencyModulePage implements OnInit {
       errMsg += "Station & division is required! \n"
     }
     if (!this.formData.govtAgency && (this.showOthers)) {
-      errMsg += "Station & division is required! \n"
+      errMsg += "Govt agency name is required! \n"
     }
     if (!this.formData.vehicle_number) {
-      errMsg += "Rank and name is required! \n"
+      errMsg += "Vehicle number is required! \n"
     }
-    if ((!this.formData.block_id || this.formData.unit_id) && !this.project_config.is_industrial) {
+    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += "Block and unit is required! \n"
     }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
@@ -303,7 +307,7 @@ export class EmergencyModulePage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from './button/button.component';
@@ -25,6 +28,7 @@ import { M2mSelectionReadonlyComponent } from './m2m-selection-readonly/m2m-sele
 import { ImageZoomComponent } from './image-zoom/image-zoom.component';
 import { InputPasswordComponent } from './input-password/input-password.component';
 import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.component';
+import { NricScanInputComponent } from './nric-scan-input/nric-scan-input.component';
 
 @NgModule({
   declarations: [
@@ -49,14 +53,17 @@ import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.com
     ImageZoomComponent,
     InputPasswordComponent,
     Base64FileZoomComponent,
+    NricScanInputComponent,
   ],
   imports: [
     CommonModule,
     IonicModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule,
   ],
   exports: [
     ButtonComponent,
+    FontAwesomeModule,
     VisitorButtonComponent,
     VisitorInputComponent,
     TextInputComponent,
@@ -77,6 +84,7 @@ import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.com
     ImageZoomComponent,
     InputPasswordComponent,
     Base64FileZoomComponent,
+    NricScanInputComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

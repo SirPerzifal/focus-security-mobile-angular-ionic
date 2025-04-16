@@ -169,7 +169,8 @@ export class RecordsWheelClampedNewPage implements OnInit {
         notice_image: this.type != 'wheel_clamp' ? this.beforeClampImageFile : false,
         before_clamp_image: this.type == 'wheel_clamp' ? this.beforeClampImageFile : false,
         after_clamp_image: this.type == 'wheel_clamp' ? this.afterClampImageFile : false,
-        project_id: this.project_id
+        project_id: this.project_id,
+        host: this.selectedHost
       }
       
       console.log(params)
@@ -207,7 +208,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
       this.issueName = contactData.visitor_name
       this.vehicleNumber = contactData.vehicle_number
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.host_id
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         this.blockId = contactData.block_id
         this.loadUnit().then(() => {
@@ -286,7 +287,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/commercial/get/host').subscribe((value: any) => {
+    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

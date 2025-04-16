@@ -86,32 +86,33 @@ export class ClientReportsPage implements OnInit {
   showReports: any = []
 
   onClickMenu(menu: any) {
-    this.isHome = false
-    setTimeout(() => {
-      this.isData = true
-      this.textSecond = menu.text
-    }, 300)
-    if (menu.route == "") {
-      this.reportsData = []
-      this.showReports = this.reportsData
-    } else {
-      console.log(menu.route)
-      this.clientMainService.getApi(menu.params, '/vms/get/visitor_log').subscribe({
-        next: (results) => {
-          console.log(results)
-          if (results.result.response_code === 200) {
-            this.reportsData = results.result.response_result
-          } else {
-            this.reportsData = []
-          }
-          this.showReports = this.reportsData
-        },
-        error: (error) => {
-          this.functionMain.presentToast('An error occurred while loading reports!', 'danger');
-          console.error(error);
-        }
-      });
-    }
+    // this.viewDetail(menu)
+    // this.isHome = false
+    // setTimeout(() => {
+    //   this.isData = true
+    //   this.textSecond = menu.text
+    // }, 300)
+    // if (menu.route == "") {
+    //   this.reportsData = []
+    //   this.showReports = this.reportsData
+    // } else {
+    //   console.log(menu.route)
+    //   this.clientMainService.getApi(menu.params, '/vms/get/visitor_log').subscribe({
+    //     next: (results) => {
+    //       console.log(results)
+    //       if (results.result.response_code === 200) {
+    //         this.reportsData = results.result.response_result
+    //       } else {
+    //         this.reportsData = []
+    //       }
+    //       this.showReports = this.reportsData
+    //     },
+    //     error: (error) => {
+    //       this.functionMain.presentToast('An error occurred while loading reports!', 'danger');
+    //       console.error(error);
+    //     }
+    //   });
+    // }
   }
 
   onBack() {
@@ -185,6 +186,21 @@ export class ClientReportsPage implements OnInit {
   }
 
   viewDetail(report: any) {
+    // this.clientMainService.getApi({}, '/client/get/report').subscribe({
+    //   next: (results) => {
+    //     console.log(results)
+    //     if (results.result.response_code === 200) {
+    //       this.functionMain.downloadDocument(results.result.results, 'File Name')
+    //       this.functionMain.presentToast(`Successfully get the report!`, 'success');
+    //     } else {
+    //       this.functionMain.presentToast(`An error occurred while trying to get the report!`, 'danger');
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.functionMain.presentToast('An error occurred while trying to get the report!', 'danger');
+    //     console.error(error);
+    //   }
+    // });
     // this.router.navigate(['/client-Reports-details'], {
     //   state: {
     //     report: report

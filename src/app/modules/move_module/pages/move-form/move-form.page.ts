@@ -151,6 +151,7 @@ export class MoveFormPage implements OnInit {
 
   onIdentificationTypeChange(event: any) {
     this.identificationType = event.target.value;
+    this.nric_value = ''
     console.log(this.identificationType)
   }
 
