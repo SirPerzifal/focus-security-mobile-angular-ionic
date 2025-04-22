@@ -885,6 +885,10 @@ const routes: Routes = [
     path: 'facility-booking-see-detail',
     loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/facility-booking-see-detail/facility-booking-see-detail.module').then( m => m.FacilityBookingSeeDetailPageModule)
   },
+  {
+    path: 'pets-detail-for-profile',
+    loadChildren: () => import('./modules/resident-user-module/pages/profile-page/pets-detail-for-profile/pets-detail-for-profile.module').then( m => m.PetsDetailForProfilePageModule)
+  },
 ];
 
 @NgModule({

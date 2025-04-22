@@ -1,43 +1,44 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="facilityDetail?.facility_name || 'Court Detail'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="facilityDetail?.facility_name || 'Court Detail'"
+  ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
-
   <div class="flex flex-col relative mt-2 mb-32">
-    <!-- <div class="mx-4">
-      <div class="flex flex-row mt-4 justify-between w-full">
-        <app-multi-line-button [text]="'Active Booking'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20 leading-none'" (click)="toggleShowActBk()"></app-multi-line-button>
-        <app-multi-line-button [text]="'New Booking'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-20 leading-none'" (click)="toggleShowNewBk()"></app-multi-line-button>
-        <app-visitor-button [text]="'Deposits'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowDep()"></app-visitor-button>
-        <app-visitor-button [text]="'History'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-20'" (click)="toggleShowHis()"></app-visitor-button>
-      </div>
-    </div> -->
-
     <div class="flex flex-row w-full bg-[#CDF8DA] my-4 m-0 py-2">
-      <div class="w-full flex flex-col justify-center items-center text-black text-center">
+      <div
+        class="w-full flex flex-col justify-center items-center text-black text-center"
+      >
         <h2 class="text-base font-bold text-black">
           {{ facilityDetail?.facility_name || 'Place Name' }}
         </h2>
         <p class="text-base text-black">
-         ( {{ facilityDetail?.total_facilities || 0 }} Facilities )
+          ( {{ facilityDetail?.total_facilities || 0 }} Facilities )
         </p>
       </div>
     </div>
-    
+
     <div class="mx-4 flex flex-col relative">
       <div class="flex flex-row items-center mb-4">
-        <ion-button class="w1/5 mr-1.5 flex flex-row justify-center items-center icon" fill="clear" [routerLink]="['/facility-booking-main']">
+        <ion-button
+          class="w1/5 mr-1.5 flex flex-row justify-center items-center icon"
+          fill="clear"
+          [routerLink]="['/facility-booking-main']"
+        >
           <div class="flex flex-col items-center text-black">
             <ion-icon name="arrow-back"></ion-icon>
           </div>
         </ion-button>
-        <ion-datetime-button class="w-4/5 mt-0.5" datetime="datetime"></ion-datetime-button>
+        <ion-datetime-button
+          class="w-4/5 mt-0.5"
+          datetime="datetime"
+        ></ion-datetime-button>
         <ion-modal id="choose-date-court-modal" keep-contents-mounted="true">
           <ng-template>
-            <ion-datetime 
-              id="datetime" 
+            <ion-datetime
+              id="datetime"
               min="{{minDate}}"
-              presentation="date" 
+              presentation="date"
               [(ngModel)]="selectedDate"
               (ionChange)="onDateChange($event)"
               [formatOptions]="{
@@ -53,17 +54,33 @@
       </div>
 
       <div class="flex flex-row justify-center space-x-3 w-full mb-3">
-        <select id="ch_room" [(ngModel)]="selectedRoom" (change)="loadRoomSchedule($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1">
-          <option [value]="'default'" disabled hidden>Choose {{ facilityDetail?.facility_name || 'Room' }}</option>
-          <option *ngFor="let room of facilityDetail?.facility_detail" [value]="room.room_id">{{ room.is_close_for_maintenance ? room.room_name + ' (This court / room is under maintenance)' : room.room_name }}</option>
+        <select
+          id="ch_room"
+          [(ngModel)]="selectedRoom"
+          (change)="loadRoomSchedule($event)"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1"
+        >
+          <option [value]="'default'" disabled hidden>
+            Choose {{ facilityDetail?.facility_name || 'Room' }}
+          </option>
+          <option
+            *ngFor="let room of facilityDetail?.facility_detail"
+            [value]="room.room_id"
+          >
+            {{ room.is_close_for_maintenance ? room.room_name + ' (This court /
+            room is under maintenance)' : room.room_name }}
+          </option>
         </select>
       </div>
 
-      <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
-				<ion-spinner name="circular"></ion-spinner>
-			</div>
+      <div
+        *ngIf="isLoading"
+        class="flex justify-center items-center h-full mt-[50px]"
+      >
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
       <div *ngIf="!isLoading" class="grid grid-cols-3 gap-2 mb-4">
-        <button 
+        <button
           *ngFor="let timeSlot of roomSchedule"
           [ngClass]="getTimeSlotClass(timeSlot)"
           (click)="selectTimeSlot(timeSlot)"
@@ -75,23 +92,26 @@
 
       <div *ngIf="!isCloseForMaintenance">
         <div class="flex items-start mb-4">
-          <input 
-          id="termsCheckbox"
-            class="mr-2 mt-1" 
-            type="checkbox" 
-            [(ngModel)]="isTermsAccepted" 
+          <input
+            id="termsCheckbox"
+            class="mr-2 mt-1"
+            type="checkbox"
+            [(ngModel)]="isTermsAccepted"
           />
           <label for="termsCheckbox" class="text-base font-bold">
-            By clicking "Book Now," I acknowledge that I have read and agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">Terms and Conditions</u>&nbsp;for using this facility.
+            By clicking "Book Now," I acknowledge that I have read and agree to
+            the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()"
+              >Terms and Conditions</u
+            >&nbsp;for using this facility.
           </label>
         </div>
-  
+
         <div class="text-center mb-4">
-          <app-visitor-button 
-            [text]="'Book Now'" 
+          <app-submit-button
+            [text]="'Book Now'"
             [extraClass]="isTermsAccepted ? 'bg-[#10421d] text-[white] w-full text-base' : 'bg-[#D0D0D0] text-[#757575] w-full text-base cursor-not-allowed'"
             (click)="uploadFacilityBooking()"
-          ></app-visitor-button>
+          ></app-submit-button>
         </div>
       </div>
     </div>

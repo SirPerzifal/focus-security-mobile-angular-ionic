@@ -8,7 +8,6 @@ import { PollingMainPageRoutingModule } from './polling-main-routing.module';
 
 import { PollingMainPage } from './polling-main.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -17,7 +16,6 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     IonicModule,
     PollingMainPageRoutingModule,
     SharedModule,
-    ComponentsModule
   ],
   declarations: [PollingMainPage]
 })

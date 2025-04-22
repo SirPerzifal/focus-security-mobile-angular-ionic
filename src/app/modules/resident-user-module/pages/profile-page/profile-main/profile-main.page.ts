@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
+import { Subscription } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -24,6 +25,15 @@ interface InputData {
   name: string;
 }
 
+interface pet {
+  id: number;
+  notes: string;
+  pet_breed: string;
+  pet_image: string;
+  type_of_pet: string;
+  upload_license: string;
+}
+
 @Component({
   selector: 'app-profile-main',
   templateUrl: './profile-main.page.html',
@@ -40,12 +50,13 @@ interface InputData {
     ])
   ]
 })
-export class ProfileMainPage implements OnInit {
+export class ProfileMainPage implements OnInit, OnDestroy {
 
   pageName: string = '';
   showMain: boolean = true;
   showEstate: boolean = false;
   showBanVisitorContractor: boolean = false;
+  showPets: boolean = false;
 
   imageProfile: string = '';
   userName: string = '';
@@ -109,27 +120,6 @@ export class ProfileMainPage implements OnInit {
     }
   ]
 
-  // navButtonsMain: any[] = [
-  //   {
-  //     text: 'Daily Invite',
-  //     active: false,
-  //     action: 'route',
-  //     routeTo: '/visitor-main'
-  //   },
-  //   {
-  //     text: 'Hired Car',
-  //     active: false,
-  //     action: 'route',
-  //     routeTo: '/hired-card-in-visitor'
-  //   },
-  //   {
-  //     text: 'History',
-  //     active: true,
-  //     action: 'route',
-  //     routeTo: '/hired-card-in-visitor'
-  //   },
-  // ]
-
   disabledInput: boolean = true;
 
   //for estate
@@ -155,6 +145,7 @@ export class ProfileMainPage implements OnInit {
     id: number;
   }> = [];
 
+  //for contractor
   filteredData: Array<{
     purpose: string;
     visitor_name: string;
@@ -171,6 +162,9 @@ export class ProfileMainPage implements OnInit {
     id: number;
   }> = [];
 
+  //for pet
+  petList: pet[] = [];
+
   constructor(
     public functionMain: FunctionMainService,
     private storage: StorageService,
@@ -179,33 +173,74 @@ export class ProfileMainPage implements OnInit {
     private alertController: AlertController
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { openBan: boolean };
+    const state = navigation?.extras.state as { from: any };
     if (state) {
-      this.pageName = 'Ban'
-      this.showMain = false;
-      this.showEstate = false;
-      this.showBanVisitorContractor = true;
-      this.getHistoryList();
-      if (this.userType) {
-        this.getHistoryContrctorList();
+      if (state.from === 'detail-history-in-visitor') {
+        this.pageName = 'Ban'
+        this.showMain = false;
+        this.showEstate = false;
+        this.showPets = false;
+        this.showBanVisitorContractor = true;
+        this.getHistoryList();
+        if (this.userType) {
+          this.getHistoryContrctorList();
+        }
+      } else if (state.from === 'pets-detail-for-profile') {
+        this.pageName = 'My Pets';
+        this.showMain = false;
+        this.showEstate = false;
+        this.showBanVisitorContractor = false;
+        this.showPets = true;
+        this.loadPet();
       }
     }
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       this.storage.decodeData(value).then((value: any) => {
         if ( value ) {
           const estate = JSON.parse(value) as Estate;
           this.imageProfile = estate.image_profile;
           this.userName = estate.family_name;
-          this.inputForm = {
-            nameCondominium: estate.project_name,
-            statusOwner: estate.family_type,
-            blockName: estate.block_name,
-            unitName: estate.unit_name,
-            email: estate.family_email,
-            phone: estate.family_mobile_number,
+          this.userType = estate.record_type;
+          if (this.userType === 'industrial') {
+            this.inputData = [
+              {
+                id: 'condominium_name',
+                formParams: 'nameCondominium',
+                name: 'Condominium Name'
+              },    {
+                id: 'status_owner',
+                formParams: 'statusOwner',
+                name: 'Status'
+              },    {
+                id: 'email_owner',
+                formParams: 'email',
+                name: 'Email'
+              },    {
+                id: 'phone_number',
+                formParams: 'phone',
+                name: 'Contact'
+              }
+            ]
+            this.inputForm = {
+              nameCondominium: estate.project_name,
+              statusOwner: estate.family_type,
+              blockName: estate.block_name,
+              unitName: estate.unit_name,
+              email: estate.family_email,
+              phone: estate.family_mobile_number,
+            }
+          } else {
+            this.inputForm = {
+              nameCondominium: estate.project_name,
+              statusOwner: estate.family_type,
+              blockName: estate.block_name,
+              unitName: estate.unit_name,
+              email: estate.family_email,
+              phone: estate.family_mobile_number,
+            }
           }
           this.activeUnit = estate.unit_id;
           Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
@@ -220,6 +255,17 @@ export class ProfileMainPage implements OnInit {
         }
       })
     })
+  }
+
+  ngOnInit() {
+    
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   onChangeTypeUser(event: any) {
@@ -256,6 +302,7 @@ export class ProfileMainPage implements OnInit {
       this.showEstate = false;
       this.showMain = true;
       this.showBanVisitorContractor = false;
+      this.showPets = false;
       this.historyData.pop();
     }
   }
@@ -283,12 +330,13 @@ export class ProfileMainPage implements OnInit {
 
   onClickSquareBottom(event: any) {
     if (event[1] === 'Ban') {
-      this.pageName = 'Ban'
+      this.pageName = 'Ban';
       this.showMain = false;
       this.showEstate = false;
+      this.showPets = false;
       this.showBanVisitorContractor = true;
       this.getHistoryList();
-      if (this.userType) {
+      if (this.userType === 'industrial') {
         this.getHistoryContrctorList();
       }
     } else if (event[1] === 'Family') {
@@ -310,12 +358,18 @@ export class ProfileMainPage implements OnInit {
         }
       });
     } else if (event[1] === 'Estate') {
-      this.pageName = 'Choose Estate'
+      this.pageName = 'Choose Estate';
       this.showMain = false;
-      this.showEstate = true;
+      this.showPets = false;
       this.showBanVisitorContractor = false;
+      this.showEstate = true;
     } else if (event[1] === 'Pets') {
-      this.router.navigate(['/my-profile-my-pets']);
+      this.pageName = 'My Pets';
+      this.showMain = false;
+      this.showEstate = false;
+      this.showBanVisitorContractor = false;
+      this.showPets = true;
+      this.loadPet();
     }
   }
 
@@ -530,4 +584,90 @@ export class ProfileMainPage implements OnInit {
       this.isLoading = false; // Set loading to false after processing all items
     });
   }
+
+  loadPet() {
+    this.petList = [];
+    this.mainResident.endpointMainProcess({}, 'get/pet_registration').subscribe((response: any) => {
+      if (response) {
+        if (response.result.status === "success") {
+          this.petList = response.result.data.map((pet: pet) => ({
+            id: pet.id,
+            notes: pet.notes,
+            pet_breed: pet.pet_breed,
+            pet_image: pet.pet_image,
+            type_of_pet: pet.type_of_pet,
+            upload_license: pet.upload_license,
+          }));
+        } else {
+          this.functionMain.presentToast('Maybe you dont have a registered pet or not approved yet.', 'danger');
+        }
+        // console.log(response);
+      } else {
+        this.functionMain.presentToast('Failed to load pet data', 'danger');
+      }
+    })
+  }
+
+  async deletePets(petID: number) {
+    const alert = await this.alertController.create({
+      cssClass: 'manage-payment-alert',
+      header: 'Delete Pet',
+      message: 'Are you sure you want to delete this pet?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass:'secondary',
+          handler: (blah) => {
+            // console.log('Confirm Cancel: blah', blah);
+          }
+        }, {
+          text: 'Delete',
+          handler: () => {
+            this.deletePetsProses(petID);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  deletePetsProses(petId: number) {
+    this.mainResident.endpointMainProcess({
+      pet_id: petId,
+    }, 'delete/pet_registration').subscribe((response: any) => {
+      if (response) {
+        if (response.result.status === "success") {
+          this.pageName = 'My Pets';
+          this.showMain = false;
+          this.showEstate = false;
+          this.showBanVisitorContractor = false;
+          this.showPets = true;
+          this.loadPet();
+        } else {
+          this.functionMain.presentToast('Failed to delete pet data', 'danger');
+        }
+        // console.log(response);
+      } else {
+        this.functionMain.presentToast('Failed to load pet data', 'danger');
+      }
+    })
+  }
+
+  navigateToDetailpets(pet: any) {
+    this.router.navigate(['pets-detail-for-profile'], {
+      state: {
+        pet: pet
+      }
+    })
+  }
+
+  toWhere() {
+    this.router.navigate(['/pet-registration'], {
+      state: {
+        from: 'profile'
+      }
+    })
+  }
+
 }

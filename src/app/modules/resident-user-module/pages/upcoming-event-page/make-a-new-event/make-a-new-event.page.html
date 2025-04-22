@@ -1,381 +1,470 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Upcoming Event'"
+    [text_second]="'Make an Event'"
+  ></app-header-inner-page>
 </ion-header>
-
 <ion-content [fullscreen]="true">
-    <div class="w-full flex flex-row items-center justify-between">
-        <div class="w-1/6 flex items-start ml-4 mt-2">
-            <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-                (click)="onBack()"></ion-icon>
-        </div>
-        <ion-datetime-button class="w-5/6 mt-2" datetime="datetime"></ion-datetime-button>
-        <div class="w-1/6 flex items-start ml-4 mt-2">
-        </div>
+  <div class="w-full flex flex-row items-center justify-between">
+    <div class="w-1/6 flex items-start ml-4 mt-2">
+      <ion-icon
+        name="arrow-back-circle"
+        size="large"
+        class="text-[var(--ion-color-primary)] size-12"
+        (click)="onBack()"
+      >
+      </ion-icon>
     </div>
-    <ion-modal keep-contents-mounted="true">
-        <ng-template>
-            <ion-datetime id="datetime" presentation="date" [(ngModel)]="selectedDate" [formatOptions]="{
-            date: {
-            day: '2-digit',
-            weekday: 'short',
-            month: 'long',
-            },
-            }"></ion-datetime>
-        </ng-template>
-    </ion-modal>
-    <div class="pb-2.5 pt-2 mb-16">
-        <!-- <div class="shadow-md rounded-2xl px-3.5 py-1 mb-3 overflow-auto max-h-28 style-overflow">
-            <div *ngIf="hasTasks">
-                <button (click)="showCompletedTasks = !showCompletedTasks" class="text-blue-500 text-sm">
-                {{ showCompletedTasks ? 'Hide Completed Tasks' : 'Show Completed Tasks' }}
-                </button>
-            </div>
-            Tampilkan pesan jika tidak ada tugas
-            <div *ngIf="!hasTasks" class="text-center text-gray-500 mt-4">
-                You don't have tasks today.
-            </div>
-            <ng-container *ngFor="let task of task">
-                <div *ngIf="showCompletedTasks || !task.completed" class="mt-2">
-                    <div id="task.id" class="flex items-center mb-2">
-                        <label class="flex items-center cursor-pointer relative" for="taskComplete{{task.id}}">
-                            <input type="checkbox"
-                            class="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-[var(--ion-color-primary)] checked:border-[var(--ion-color-primary)]"
-                            id="taskComplete{{task.id}}" [checked]="task.completed" (change)="toggleTaskCompletion(task)" />
-                            <span class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
-                                    stroke="currentColor" stroke-width="1">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </span>
-                        </label>
-                        <div class="w-full flex flex-row justify-between ml-1.5">
-                            <p class="font-bold text-sm"><label for="taskComplete{{task.id}}">{{ task.title }}</label></p>
-                            <p class="text-sm font-bold text-gray-500">{{ task.due_date }}</p>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-        </div> -->
-        <div class="cal-day-view">
-            <mwl-calendar-day-view [viewDate]="ViewDate" [events]="Events" [refresh]="refresh"
-                (eventTimesChanged)="eventTimesChanged($event)" [snapDraggedEvents]="snapDraggedEvents"
-                (eventClicked)="eventClicked($event)"
-                (hourSegmentClicked)="clickedDate($event.date)"></mwl-calendar-day-view>
-        </div>
+    <ion-datetime-button class="w-5/6 mt-2" datetime="datetime">
+    </ion-datetime-button>
+    <div class="w-1/6 flex items-start ml-4 mt-2"></div>
+  </div>
+  <ion-modal keep-contents-mounted="true">
+    <ng-template>
+      <ion-datetime
+        id="datetime"
+        presentation="date"
+        [(ngModel)]="selectedDate"
+        [formatOptions]="{
+			date: {
+			day: '2-digit',
+			weekday: 'short',
+			month: 'long',
+			},
+			}"
+      >
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <div class="pb-2.5 pt-2 mb-16">
+    <div class="cal-day-view">
+      <mwl-calendar-day-view
+        [viewDate]="ViewDate"
+        [events]="Events"
+        [refresh]="refresh"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        [snapDraggedEvents]="snapDraggedEvents"
+        (eventClicked)="eventClicked($event)"
+        (hourSegmentClicked)="clickedDate($event.date)"
+      >
+      </mwl-calendar-day-view>
     </div>
-    <!-- Modal Untuk Add event -->
-    <ion-modal id="new-task-modal" keep-contents-mounted="true" [isOpen]="isTaskClick"
-        (didDismiss)="isTaskClick = false">
-        <ng-template>
-            <ion-header>
-                <ion-toolbar>
-                    <ion-buttons slot="start">
-                        <ion-icon name="close-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-                            (click)="isAddEventClick = false"></ion-icon>
-                    </ion-buttons>
-                    <ion-title slot="end" class="text-center font-bold">Add new task</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content class="ion-padding">
-                <!-- Input untuk menambahkan tugas baru -->
-                <div class="flex mb-2 flex-col space-y-2">
-                    <app-text-input [id]="'new-task'" [placeholder]="'Type your task name'" [(ngModel)]="newTaskTitle"
-                        [customClasses]="{'w-full':true}" [type]="'text'"
-                        [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true}">
-                    </app-text-input>
-                    <app-text-input [id]="'new-task'" [placeholder]="'Tap to add task'" [(ngModel)]="timeTask"
-                        [customClasses]="{'w-full':true}" [type]="'time'"
-                        [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-base':true}">
-                    </app-text-input>
-                    <button (click)="addTask()"
-                        class="bg-[var(--ion-color-primary)] text-white rounded px-4 h-8">Add</button>
-                </div>
-            </ion-content>
-        </ng-template>
-    </ion-modal>
-    <!-- Modal Untuk Add event -->
-    <ion-modal id="click-date-modal" keep-contents-mounted="true" [isOpen]="isAddEventClick" (didDismiss)="onClose()">
-        <ng-template>
-            <ion-header>
-                <ion-toolbar>
-                    <ion-buttons slot="start">
-                        <ion-icon name="close-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-                            (click)="onClose()"></ion-icon>
-                    </ion-buttons>
-                    <h2 slot="end" class="text-2xl font-semibold mr-2">{{ isRead ? 'Event Detail' : 'Create new event'}}
-                    </h2>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content class="ion-padding">
-                <div class="px-1">
-                    <!-- <div class="mb-2">
-                        <label class="block text-black font-bold mb-1 text-base">Title</label>
-                        <app-text-input [id]="'new_event_title'" [placeholder]="'Type your event title'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="EventsForm.event_title">
-                        </app-text-input>
-                    </div> -->
-                    <div class="mb-2" *ngIf="!isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Title</label>
-                        <app-text-input [id]="'new_event_title'" [placeholder]="'Type your event title'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="event_title">
-                        </app-text-input>
-                    </div>
-                    <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Coach</label>
-                        <select id="event_form_coach" [disabled]="isRead"
-                            class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
-                            (change)="onCoachChange($event)" [(ngModel)]="selectedCoach" [disabled]="false"
-                            [(ngModel)]="EventsForm.registered_coach_id">
-                            <option value="0" selected disabled hidden>Choose Coach</option>
-                            <option *ngFor="let coach of Coach" [value]="coach.id">{{ coach.name }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-2" *ngIf="isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Coach Type</label>
-                        <app-text-input [id]="'new_event_facility_name'" [placeholder]="'Choose Coach Type'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="true"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="this.EventsForm.coach_type">
-                        </app-text-input>
-                    </div>
-                    <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Facility</label>
-                        <select id="event_form_coach" [disabled]="isRead"  (change)="onFacilityChange($event)"
-                            class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]" 
-                            [(ngModel)]="EventsForm.facility_id">
-                            <option value="" selected disabled hidden>Choose Facility</option>
-                            <option *ngFor="let facility of Facilities" [value]="facility.facility_id">{{ facility.facility_name }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-2" *ngIf="!isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Facility</label>
-                        <app-text-input [id]="'new_event_facility_name'" [placeholder]="'Type your event title'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead" (change)="onFacilityChange($event)"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="EventsForm.facility_name">
-                        </app-text-input>
-                    </div>
-                    <div class="mb-2" *ngIf="isRead">
-                        <label class="block text-black font-bold mb-1 text-base">Room</label>
-                        <app-text-input [id]="'new_event_title'" [placeholder]="'Type your event title'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="EventsForm.room_name">
-                        </app-text-input>
-                    </div>
-                    <div class="w-full flex flex-col mb-2" *ngIf="!isRead">
-                        <label class="block text-black font-bold mb-1 text-base">Room</label>
-                        <select id="event_form_coach" [disabled]="isRead" 
-                            class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
-                            [(ngModel)]="EventsForm.room_id">
-                            <option value="" selected disabled hidden>Choose Room</option>
-                            <option *ngFor="let room of Rooms" [value]="room.room_id">{{
-                                room.room_name }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-2" *ngIf="isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Contact Number</label>
-                        <app-text-input [id]="'new_event_contact_number'" [placeholder]="'Type your contact number'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="this.EventsForm.contact_number">
-                        </app-text-input>
-                    </div>
-                    <div class="mb-2" *ngIf="isCoachData">
-                        <label class="block text-black font-bold mb-1 text-base">Vehicle Number</label>
-                        <app-text-input [id]="'new_event_vehicle_number'" [placeholder]="'Type your vehicle number'"
-                            [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="isRead"
-                            [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
-                            [(ngModel)]="this.EventsForm.vehicle_number">
-                        </app-text-input>
-                    </div>
-                    <div class="flex flex-col w-full mb-2" *ngIf="!isCoachData">
-                        <div class="flex flex-row justify-start">
-                            <p class="text-base font-bold">Post To</p>
-                        </div>
-                        <select id="post_to_selection"  [disabled]="isRead"
-                            class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
-                            [(ngModel)]="EventsForm.post_to">
-                            <option value="" selected disabled hidden>Select a posting option</option>
-                            <option value="all">All Users</option>
-                            <option value="block">To Certain Blocks</option>
-                            <option value="unit">To Certain Units</option>
-                        </select>
-                    </div>
-                    <div class="w-full mb-2" *ngIf="EventsForm.post_to === 'block' && !isCoachData">
-                        <app-m2m-selection-readonly [unitNames]="EventsForm.block_ids" [placeholder]="'Select Blocks'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
-                            [labelText]="'Block'"></app-m2m-selection-readonly>
-                    </div>
-                    
-                    <div class="w-full mb-2" *ngIf="EventsForm.post_to === 'unit' && !isCoachData">
-                        <app-m2m-selection-readonly [unitNames]="EventsForm.unit_ids" [placeholder]="'Select Units'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
-                            [labelText]="'Unit'"></app-m2m-selection-readonly>
-                    </div>
-                    <div class="mb-2">
-                        <label class="block text-black font-bold mb-1 text-base">Remarks</label>
-                        <textarea placeholder="Enter remarks of your event"
-                            class="bg-white text-sm p-3 rounded-lg border border-gray-500 w-full flex flex-row text-start items-center justify-start cw-3:text-xs"
-                            [(ngModel)]="EventsForm.event_description" [readonly]="isRead"></textarea>
-                        <div class="text-right text-gray-400 text-sm">000/400</div>
-                    </div>
-                    <!-- <div class="w-full mb-2 flex flex-row justify-between items-center">
-                    <span class="font-semibold">All day</span>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer" [(ngModel)]="EventsForm.allDay">
-                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                </div> -->
-                    <div class="w-full flex mb-2 flex-col items-center">
-                        <div class="w-full mb-2">
-                            <label class="block text-black font-bold mb-1 text-base">Start Event</label>
-                            <div class="relative flex flex-row justify-between space-x-1">
-                                <app-text-input [id]="'start_date_event'" [placeholder]="'Date event start'"
-                                    [isReadonly]="true" [customClasses]="{'w-full':true}" [type]="'date'"
-                                    [(ngModel)]="selectedStartDate"
-                                    [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'text-black':true, 'px-3':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
-                                    (change)="onStartDateChange($event)" [(ngModel)]="selectedEndDate">
-                                </app-text-input>
-                                <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs"
-                                    [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'">
-                                    <input id="startTimeEventInput" type="time" (change)="onStartTimeChange($event)"
-                                        class="w-[95%] text-sm" [(ngModel)]="selectedStartTime" #startTimeEventInput
-                                        [readonly]="isRead">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <label class="block text-black font-bold mb-1 text-base">End Event</label>
-                            <div class="relative flex flex-row justify-between space-x-1">
-                                <app-text-input [id]="'end_date_event'" [placeholder]="'Date event start'"
-                                    [customClasses]="{'w-full':true}" [type]="'date'" [(ngModel)]="selectedEndDate"
-                                    [isReadonly]="true"
-                                    [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'px-3':true, 'outline-gray-500':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
-                                    (change)="onEndDateChange($event)" [min]="selectedStartDate">
-                                </app-text-input>
-                                <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs"
-                                    [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'">
-                                    <input id="endTimeEventInput" type="time" (change)="onEndTimeChange($event)"
-                                        class="w-[95%] text-sm" [min]="selectedStartTime" [(ngModel)]="selectedEndTime"
-                                        [readonly]="isRead" #endTimeEventInput>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="mb-4">
-                    <div class="w-full">
-                        <div class="flex flex-row justify-start mb-1">
-                            <p class="text-base font-bold">Event Image</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border border-gray-500 w-full flex flex-row text-start items-center justify-start">
-                            <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onImageChange($event)" accept="image/*">
-                            <label class="w-full text-start cw-3:text-xs" [ngClass]="(selectedImage) ? 'text-black' : 'text-gray-400'"  for="image">
-                                {{ selectedImage ? selectedImage : 'Upload your event image' }}
-                            </label>
-                        </div>
-                    </div>
-                </div> -->
-                    <div class="mb-4" *ngIf="!isRead">
-                        <label class="block text-black font-bold mb-2">Label Color</label>
-                        <div class="flex space-x-2">
-                            <button (click)="onChooseLabelColour('#3b82f6', '#1d4ed8')"
-                                class="w-6 h-6 rounded-full bg-blue-500 "
-                                [ngClass]="EventsForm.color[0] == '#3b82f6' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#f97316', '#c2410c')"
-                                class="w-6 h-6 rounded-full bg-orange-500"
-                                [ngClass]="EventsForm.color[0] == '#f97316' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#6b7280', '#374151')"
-                                class="w-6 h-6 rounded-full bg-gray-500"
-                                [ngClass]="EventsForm.color[0] == '#6b7280' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#eab308', '#a16207')"
-                                class="w-6 h-6 rounded-full bg-yellow-500"
-                                [ngClass]="EventsForm.color[0] == '#eab308' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#ec4899', '#be185d')"
-                                class="w-6 h-6 rounded-full bg-pink-500"
-                                [ngClass]="EventsForm.color[0] == '#ec4899' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#ef4444', '#b91c1c')"
-                                class="w-6 h-6 rounded-full bg-red-500"
-                                [ngClass]="EventsForm.color[0] == '#ef4444' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#a855f7', '#7e22ce')"
-                                class="w-6 h-6 rounded-full bg-purple-500"
-                                [ngClass]="EventsForm.color[0] == '#a855f7' ? 'border-4 border-black border-solid' : ''"></button>
-
-                            <button (click)="onChooseLabelColour('#22c55e', '#15803d')"
-                                class="w-6 h-6 rounded-full bg-green-500"
-                                [ngClass]="EventsForm.color[0] == '#22c55e' ? 'border-4 border-black border-solid' : ''"></button>
-
-                        </div>
-                    </div>
-                    <div class="flex justify-end">
-                        <button class="bg-[var(--ion-color-primary)] text-white rounded-lg px-4 py-2 font-bold"
-                            (click)="submitForm()" *ngIf="!isRead">Create Event</button>
-                        <button class="bg-[#E3787E] text-black rounded-lg px-4 py-2 font-bold mt-2" (click)="onCancel()"
-                            *ngIf="isRead && isCoachData">Cancel Event</button>
-                    </div>
-                </div>
-            </ion-content>
-        </ng-template>
-    </ion-modal>
-    <ion-modal id="contact-number-changed" [isOpen]="contactNumberModal" (didDismiss)="closeContactNumberModal()">
-        <ng-template>
-            <div class="wrapper">
-                <div class="w-full">
-                    <div class="flex flex-row justify-start mb-1">
-                        <p class="text-base font-bold">Contact number seems different from the registered coach, want to use
-                            this contact number?</p>
-                    </div>
-                    <div class="w-full flex flex-col justify-between mt-2 items-center space-y-2">
-                        <button
-                            class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
-                            (click)="oneUse()">Yes, for one time</button>
-                        <button
-                            class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
-                            (click)="updateContact()">Yes, update phone number</button>
-                        <button
-                            class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
-                            (click)="contactNumberModal = false">Cancel</button>
-                    </div>
-    
-                </div>
+  </div>
+  <!-- Modal Untuk Add event -->
+  <ion-modal
+    id="click-date-modal"
+    keep-contents-mounted="true"
+    [isOpen]="isAddEventClick"
+    (didDismiss)="onClose()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-icon
+              name="close-circle"
+              size="large"
+              class="text-[var(--ion-color-primary)] size-12"
+              (click)="onClose()"
+            ></ion-icon>
+          </ion-buttons>
+          <h2 slot="end" class="text-2xl font-semibold mr-2">
+            {{ isRead ? 'Event Detail' : 'Create new event'}}
+          </h2>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="px-1">
+          <div class="mb-2" *ngIf="!isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Title</label
+            >
+            <app-text-input
+              [id]="'new_event_title'"
+              [placeholder]="'Type your event title'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="isRead"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="event_title"
+            >
+            </app-text-input>
+          </div>
+          <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Coach</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              (change)="onCoachChange($event)"
+              [(ngModel)]="selectedCoach"
+              [disabled]="false"
+              [(ngModel)]="EventsForm.registered_coach_id"
+            >
+              <option value="0" selected disabled hidden>Choose Coach</option>
+              <option *ngFor="let coach of Coach" [value]="coach.id">
+                {{ coach.name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-2" *ngIf="isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Coach Type</label
+            >
+            <app-text-input
+              [id]="'new_event_facility_name'"
+              [placeholder]="'Choose Coach Type'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="true"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="this.EventsForm.coach_type"
+            >
+            </app-text-input>
+          </div>
+          <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Facility</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              (change)="onFacilityChange($event)"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              [(ngModel)]="EventsForm.facility_id"
+            >
+              <option value="" selected disabled hidden>Choose Facility</option>
+              <option
+                *ngFor="let facility of Facilities"
+                [value]="facility.facility_id"
+              >
+                {{ facility.facility_name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-2" *ngIf="!isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Facility</label
+            >
+            <app-text-input
+              [id]="'new_event_facility_name'"
+              [placeholder]="'Type your event title'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="isRead"
+              (change)="onFacilityChange($event)"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="EventsForm.facility_name"
+            >
+            </app-text-input>
+          </div>
+          <div class="mb-2" *ngIf="isRead">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Room</label
+            >
+            <app-text-input
+              [id]="'new_event_title'"
+              [placeholder]="'Type your event title'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="isRead"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="EventsForm.room_name"
+            >
+            </app-text-input>
+          </div>
+          <div class="w-full flex flex-col mb-2" *ngIf="!isRead">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Room</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              [(ngModel)]="EventsForm.room_id"
+            >
+              <option value="" selected disabled hidden>Choose Room</option>
+              <option *ngFor="let room of Rooms" [value]="room.room_id">
+                {{ room.room_name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-2" *ngIf="isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Contact Number</label
+            >
+            <app-text-input
+              [id]="'new_event_contact_number'"
+              [placeholder]="'Type your contact number'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="isRead"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="this.EventsForm.contact_number"
+            >
+            </app-text-input>
+          </div>
+          <div class="mb-2" *ngIf="isCoachData">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Vehicle Number</label
+            >
+            <app-text-input
+              [id]="'new_event_vehicle_number'"
+              [placeholder]="'Type your vehicle number'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="isRead"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="this.EventsForm.vehicle_number"
+            >
+            </app-text-input>
+          </div>
+          <div class="flex flex-col w-full mb-2" *ngIf="!isCoachData">
+            <div class="flex flex-row justify-start">
+              <p class="text-base font-bold">Post To</p>
             </div>
-        </ng-template>
-    </ion-modal>
-  </ion-content>
+            <select
+              id="post_to_selection"
+              [disabled]="isRead"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              [(ngModel)]="EventsForm.post_to"
+            >
+              <option value="" selected disabled hidden>
+                Select a posting option
+              </option>
+              <option value="all">All Users</option>
+              <option value="block">To Certain Blocks</option>
+              <option value="unit">To Certain Units</option>
+            </select>
+          </div>
+          <div
+            class="w-full mb-2"
+            *ngIf="EventsForm.post_to === 'block' && !isCoachData"
+          >
+            <app-m2m-selection-readonly
+              [unitNames]="EventsForm.block_ids"
+              [placeholder]="'Select Blocks'"
+              [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
+              [labelText]="'Block'"
+            ></app-m2m-selection-readonly>
+          </div>
+          <div
+            class="w-full mb-2"
+            *ngIf="EventsForm.post_to === 'unit' && !isCoachData"
+          >
+            <app-m2m-selection-readonly
+              [unitNames]="EventsForm.unit_ids"
+              [placeholder]="'Select Units'"
+              [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
+              [labelText]="'Unit'"
+            ></app-m2m-selection-readonly>
+          </div>
+          <div class="mb-2">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Remarks</label
+            >
+            <textarea
+              placeholder="Enter remarks of your event"
+              class="bg-white text-sm p-3 rounded-lg border border-gray-500 w-full flex flex-row text-start items-center justify-start cw-3:text-xs"
+              [(ngModel)]="EventsForm.event_description"
+              [readonly]="isRead"
+            ></textarea>
+            <div class="text-right text-gray-400 text-sm">000/400</div>
+          </div>
+          <div class="w-full flex mb-2 flex-col items-center">
+            <div class="w-full mb-2">
+              <label class="block text-black font-bold mb-1 text-base"
+                >Start Event</label
+              >
+              <div class="relative flex flex-row justify-between space-x-1">
+                <app-text-input
+                  [id]="'start_date_event'"
+                  [placeholder]="'Date event start'"
+                  [isReadonly]="true"
+                  [customClasses]="{'w-full':true}"
+                  [type]="'date'"
+                  [(ngModel)]="selectedStartDate"
+                  [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'text-black':true, 'px-3':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
+                  (change)="onStartDateChange($event)"
+                  [(ngModel)]="selectedEndDate"
+                >
+                </app-text-input>
+                <div
+                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                  [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"
+                >
+                  <input
+                    id="startTimeEventInput"
+                    type="time"
+                    (change)="onStartTimeChange($event)"
+                    class="w-full text-sm"
+                    [(ngModel)]="selectedStartTime"
+                    #startTimeEventInput
+                    [readonly]="isRead"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="w-full">
+              <label class="block text-black font-bold mb-1 text-base"
+                >End Event</label
+              >
+              <div class="relative flex flex-row justify-between space-x-1">
+                <app-text-input
+                  [id]="'end_date_event'"
+                  [placeholder]="'Date event start'"
+                  [customClasses]="{'w-full':true}"
+                  [type]="'date'"
+                  [(ngModel)]="selectedEndDate"
+                  [isReadonly]="true"
+                  [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'px-3':true, 'outline-gray-500':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
+                  (change)="onEndDateChange($event)"
+                  [min]="selectedStartDate"
+                >
+                </app-text-input>
+                <div
+                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                  [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"
+                >
+                  <input
+                    id="endTimeEventInput"
+                    type="time"
+                    (change)="onEndTimeChange($event)"
+                    class="w-[95%] text-sm"
+                    [min]="selectedStartTime"
+                    [(ngModel)]="selectedEndTime"
+                    [readonly]="isRead"
+                    #endTimeEventInput
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-4" *ngIf="!isRead">
+            <label class="block text-black font-bold mb-2">Label Color</label>
+            <div class="flex space-x-2">
+              <button
+                (click)="onChooseLabelColour('#3b82f6', '#1d4ed8')"
+                class="w-6 h-6 rounded-full bg-blue-500"
+                [ngClass]="EventsForm.color[0] == '#3b82f6' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#f97316', '#c2410c')"
+                class="w-6 h-6 rounded-full bg-orange-500"
+                [ngClass]="EventsForm.color[0] == '#f97316' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#6b7280', '#374151')"
+                class="w-6 h-6 rounded-full bg-gray-500"
+                [ngClass]="EventsForm.color[0] == '#6b7280' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#eab308', '#a16207')"
+                class="w-6 h-6 rounded-full bg-yellow-500"
+                [ngClass]="EventsForm.color[0] == '#eab308' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#ec4899', '#be185d')"
+                class="w-6 h-6 rounded-full bg-pink-500"
+                [ngClass]="EventsForm.color[0] == '#ec4899' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#ef4444', '#b91c1c')"
+                class="w-6 h-6 rounded-full bg-red-500"
+                [ngClass]="EventsForm.color[0] == '#ef4444' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#a855f7', '#7e22ce')"
+                class="w-6 h-6 rounded-full bg-purple-500"
+                [ngClass]="EventsForm.color[0] == '#a855f7' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+              <button
+                (click)="onChooseLabelColour('#22c55e', '#15803d')"
+                class="w-6 h-6 rounded-full bg-green-500"
+                [ngClass]="EventsForm.color[0] == '#22c55e' ? 'border-4 border-black border-solid' : ''"
+              ></button>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white rounded-lg px-4 py-2 font-bold"
+              (click)="submitForm()"
+              *ngIf="!isRead"
+            >
+              Create Event
+            </button>
+            <button
+              class="bg-[#E3787E] text-black rounded-lg px-4 py-2 font-bold mt-2"
+              (click)="onCancel()"
+              *ngIf="isRead && isCoachData"
+            >
+              Cancel Event
+            </button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal
+    id="contact-number-changed"
+    [isOpen]="contactNumberModal"
+    (didDismiss)="closeContactNumberModal()"
+  >
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">
+              Contact number seems different from the registered coach, want to
+              use this contact number?
+            </p>
+          </div>
+          <div
+            class="w-full flex flex-col justify-between mt-2 items-center space-y-2"
+          >
+            <button
+              class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
+              (click)="oneUse()"
+            >
+              Yes, for one time
+            </button>
+            <button
+              class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
+              (click)="updateContact()"
+            >
+              Yes, update phone number
+            </button>
+            <button
+              class="bg-gray-300 text-gray-800 p-2 w-4/5 rounded border border-black font-bold"
+              (click)="contactNumberModal = false"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>
 <ion-footer>
   <app-botton-nav-bar></app-botton-nav-bar>
 </ion-footer>
-<!-- <div class="absolute bottom-[12rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2">
-    <span class="font-bold">Add Task</span>
-    <button class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5" (click)="isTaskClick = true">
-        <ion-icon id="addIcon" slot="end" name="clipboard" class="text-white font-bold size-5"></ion-icon>
-    </button>
-</div> -->
-<!-- <div class="absolute bottom-[9rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2">
-    <span class="font-bold">Add Event</span>
-    <button class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5" (click)="isAddEventClick = true">
-        <ion-icon id="addIcon" slot="end" name="calendar" class="text-white font-bold size-5"></ion-icon>
-    </button>
-</div> -->
-<!-- <button id="addEventButton" class="absolute bottom-[5.5rem] right-[18px] z-50 bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-1.5">
-    <ion-icon id="addIcon" slot="end" name="add" class="text-white font-bold size-9"></ion-icon>
-</button> -->
-<div class="absolute bottom-[5.5rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2">
-    <span class="font-bold">Add Event</span>
-    <button
-        class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5"
-        (click)="openNewModal()">
-        <ion-icon id="addIcon" slot="end" name="calendar" class="text-white font-bold size-5"></ion-icon>
-    </button>
+<div
+  class="absolute bottom-[5.5rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2"
+>
+  <span class="font-bold">Add Event</span>
+  <button
+    class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5"
+    (click)="openNewModal()"
+  >
+    <ion-icon
+      id="addIcon"
+      slot="end"
+      name="calendar"
+      class="text-white font-bold size-5"
+    ></ion-icon>
+  </button>
 </div>
-

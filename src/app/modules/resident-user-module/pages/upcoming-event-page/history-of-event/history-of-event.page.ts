@@ -12,8 +12,27 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class HistoryOfEventPage implements OnInit {
   upcomingEvents: any[] = [];
+  navButtonsMain: any[] = [
+    {
+      text: 'Calendar View',
+      active: false,
+      action: 'route',
+      routeTo: '/upcoming-event-page-main'
+    },
+    {
+      text: 'Active Event',
+      active: true,
+      action: 'route',
+      routeTo: '/history-of-event'
+    },
+  ]
 
-  constructor(private router: Router, private functionMain: FunctionMainService, private alertController: AlertController, private mainApi: MainApiResidentService) { }
+  constructor(
+    private router: Router, 
+    private functionMain: FunctionMainService, 
+    private alertController: AlertController,
+    private mainApi: MainApiResidentService
+  ) { }
 
   ngOnInit() {
     this.loadUpcomingEvents()

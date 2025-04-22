@@ -88,7 +88,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
     if (this.hideFilter === 'profile') {
       this.router.navigate(['profile-page-main'], {
         state: {
-          openBan: true
+          from: 'detail-history-in-visitor'
         }
       })
     } else {

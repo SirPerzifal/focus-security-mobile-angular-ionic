@@ -8,7 +8,6 @@ import { FacilityBookingSeeDetailPageRoutingModule } from './facility-booking-se
 
 import { FacilityBookingSeeDetailPage } from './facility-booking-see-detail.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -17,7 +16,6 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     IonicModule,
     FacilityBookingSeeDetailPageRoutingModule,
     SharedModule,
-    ComponentsModule
   ],
   declarations: [FacilityBookingSeeDetailPage]
 })

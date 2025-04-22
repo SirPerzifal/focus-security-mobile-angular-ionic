@@ -8,7 +8,6 @@ import { DetailHistoryInVisitorPageRoutingModule } from './detail-history-in-vis
 
 import { DetailHistoryInVisitorPage } from './detail-history-in-visitor.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -17,7 +16,6 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     IonicModule,
     DetailHistoryInVisitorPageRoutingModule,
     SharedModule,
-    ComponentsModule
   ],
   declarations: [DetailHistoryInVisitorPage]
 })

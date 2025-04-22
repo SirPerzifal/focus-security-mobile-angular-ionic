@@ -3,10 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import {
-  CalendarEvent,
   CalendarEventTimesChangedEvent,
-  CalendarWeekViewBeforeRenderEvent,
-  CalendarDayViewBeforeRenderEvent
 } from 'angular-calendar';
 import { CalendarEventTitleFormatter } from 'angular-calendar';
 import { AlertController } from '@ionic/angular';
@@ -52,19 +49,10 @@ export class MakeANewEventPage implements OnInit {
     is_update: false,
   }
 
-  selectedImage: string = '';
-
   isAddEventClick: boolean = false; // Menyimpan status modal
-  isTaskClick: boolean = false; //
-  // isBgOn: boolean = false; // Pastikan ini diinisialisasi di constructor atau di tempat yang sesuai
 
   private _selectedDate: string = '';
 
-  task: any = [];
-  hasTasks: boolean = false; // Menyimpan status apakah ada tugas
-  showCompletedTasks: boolean = false; // Menyimpan status untuk menampilkan tugas yang diselesaikan
-  newTaskTitle: string = ''; // Menyimpan judul tugas baru
-  timeTask: string = '';
   snapDraggedEvents = true;
 
   isRead = false
@@ -96,24 +84,7 @@ export class MakeANewEventPage implements OnInit {
 
   }
 
-  addTask() {
-    if (this.newTaskTitle.trim()) { // Pastikan input tidak kosong
-      const newTask = {
-        id: this.task.length + 1, // Atur ID baru (Anda mungkin ingin menggunakan cara yang lebih baik untuk mengelola ID)
-        title: this.newTaskTitle,
-        completed: false,
-        due_date: this.timeTask, // Atur tanggal jatuh tempo (Anda bisa menyesuaikannya)
-        day: this.ViewDate // Atur hari tugas baru (Anda bisa menyesuaikannya)
-      };
-      this.task.push(newTask); // Tambahkan tugas baru ke array
-      this.newTaskTitle = ''; // Reset input
-      this.isTaskClick = false;
-      this.hasTasks = true
-    }
-  }
-
   ngOnInit() {
-
     this.loadRegisteredCoach()
     this.loadUpcomingEvents()
     this.loadFacilityList()

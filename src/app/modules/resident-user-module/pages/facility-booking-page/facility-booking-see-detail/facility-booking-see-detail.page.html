@@ -1,20 +1,28 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Facility Bookings'" [text_second]="'Booking Detail'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Facility Bookings'"
+    [text_second]="'Booking Detail'"
+  ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToHistoryList()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="backToHistoryList()"
+    ></ion-icon>
   </div>
   <div class="flex flex-col relative mb-24" *ngIf="bookingData">
     <div class="w-full bg-[#D8ECCF] text-center mb-2 m-0 p-2">
       <h2 class="text-base font-bold text-black">
-        {{ bookingData.facilityName }} {{ bookingData.from ? bookingData.from : '' }} Booking details {{ bookingData.status }}
+        {{ bookingData.facilityName }} {{ bookingData.from ? bookingData.from :
+        '' }} Booking details {{ bookingData.status }}
       </h2>
     </div>
 
     <div class="flex flex-col relative mx-4">
-
-      <table class="w-full" style="border-collapse: collapse;">
+      <table class="w-full" style="border-collapse: collapse">
         <tr>
           <td><strong>Facility</strong></td>
           <td>: {{ bookingData.facilityName }}</td>
@@ -48,22 +56,27 @@
 
       <!-- Tombol Proceed to Payment -->
       <div class="text-center">
-        <app-visitor-button
-          [text]="'Email Receipt'" 
+        <app-submit-button
+          [text]="'Email Receipt'"
           [extraClass]="'bg-[#10421d] text-[white] w-full mt-4'"
-          (click)="proceedToEmail()">
-        </app-visitor-button>
+          (click)="proceedToEmail()"
+        >
+        </app-submit-button>
       </div>
-      <div class="text-center mb-4" *ngIf="bookingData.status === 'Pending Payment'">
-        <app-visitor-button
-          [text]="'Process Payment'" 
+      <div
+        class="text-center mb-4"
+        *ngIf="bookingData.status === 'Pending Payment'"
+      >
+        <app-submit-button
+          [text]="'Process Payment'"
           [extraClass]="'bg-[#10421d] text-[white] w-full mt-4 mb-2'"
-          (click)="navigateToProcessPayment(bookingData)">
-        </app-visitor-button>
+          (click)="navigateToProcessPayment(bookingData)"
+        >
+        </app-submit-button>
       </div>
     </div>
   </div>
 </ion-content>
 <ion-footer>
-	<app-bottom-nav-bar></app-bottom-nav-bar>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-footer>

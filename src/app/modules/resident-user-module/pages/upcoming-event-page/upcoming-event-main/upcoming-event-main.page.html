@@ -1,31 +1,48 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Upcoming Event'"
+    [text_second]="'Calendar View'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-home-page']"
+    ></ion-icon>
   </div>
-
-  <div class="px-5 text-center mb-48">
-    <div class="flex flex-row justify-start items-center w-full space-x-3">
-      <div class="w-full">
-        <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full'" (click)="toggleDirecttoHis()"></app-visitor-button>
-      </div>
-      <div class="w-full">
-        <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
-      </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
     </div>
+
     <div class="h-full w-full mt-2">
       <div class="flex flex-row justify-between items-center w-full">
         <div class="w-full flex items-start mb-2 mt-2">
-          <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="prev()"></ion-icon>
+          <ion-icon
+            name="arrow-back-circle"
+            size="large"
+            class="text-[var(--ion-color-primary)] size-12"
+            (click)="prev()"
+          ></ion-icon>
         </div>
-        <div class="w-[550px] flex items-center justify-center mb-2 mt-2 font-bold text-lg" (click)="openDatePicker()">
-          {{ viewDate | date:'MMMM y' }} <!-- Menampilkan bulan dan tahun -->
+        <div
+          class="w-[550px] flex items-center justify-center mb-2 mt-2 font-bold text-lg"
+          (click)="openDatePicker()"
+        >
+          {{ viewDate | date:'MMMM y' }}
+          <!-- Menampilkan bulan dan tahun -->
         </div>
         <div class="w-full flex items-end mb-2 mt-2 justify-end">
-          <ion-icon name="arrow-forward-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="next()"></ion-icon>
+          <ion-icon
+            name="arrow-forward-circle"
+            size="large"
+            class="text-[var(--ion-color-primary)] size-12"
+            (click)="next()"
+          ></ion-icon>
         </div>
       </div>
       <div class="cal-month-view" *ngIf="view === CalendarView.Month">
@@ -35,204 +52,24 @@
           [cellTemplate]="customCellTemplate"
           [locale]="'en-US'"
           (dayClicked)="handleClickDay($event.day)"
-          (eventClicked)="handleEvent($event.event)">
+          (eventClicked)="handleEvent($event.event)"
+        >
         </mwl-calendar-month-view>
       </div>
     </div>
-  </div>
 
-  <ng-template #customCellTemplate let-day="day" let-locale="locale">
-    <div class="cal-cell-top">
-      <span class="cal-day-number"
-        >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
-      >
-      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0"
-        >{{ day.badgeTotal }}</span
-      >
-    </div>
-  </ng-template>
-
-  <!-- Modal untuk pemilih tanggal -->
-  <ion-modal id="choose-date-modal" keep-contents-mounted="true" [isOpen]="isDatePickerOpen" (didDismiss)="isDatePickerOpen = false">
-    <ng-template>
-      <ion-datetime
-        presentation="month-year" 
-        [(ngModel)]="viewDateForDatet"
-        (ionChange)="onDateChange($event)"
-        [formatOptions]="{
-          date: {
-            day: '2-digit',
-            weekday: 'short',
-            month: 'long',
-          },
-        }"
-      ></ion-datetime>
-    </ng-template>
-  </ion-modal>
-
-  <!-- Modal Untuk Click day -->
-  <ion-modal id="click-date-modal" keep-contents-mounted="true" [isOpen]="isDayClick" (didDismiss)="isDayClick = false">
-    <ng-template>
-      <div class="flex flex-col items-center w-full">
-        <ion-title class="bg-[var(--ion-color-tertiary)] text-start text-xl font-bold w-full py-3">{{ showDate }}</ion-title>
-        <!-- <div class="bg-[var(--ion-color-tertiary)] text-xl text-start mb-4 font-bold w-full">
-          <p class="mt-2 ml-1 mb-1">{{ showDate }}</p>
-        </div> -->
-        <div class="cal-day-view-modal-di-calendar">
-          <!-- Events -->
-          <div class="bg-[var(--ion-color-tertiary)] rounded-lg shadow p-4 mt-4 w-full max-w-[90%] h-full max-h-[340px] overflow-y-auto">
-            <div class="flex justify-between items-center mb-2">
-              <h2 class="text-black font-bold text-xl">Event</h2>
-              <app-visitor-button [text]="'Add Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32'" (click)="isAddEventClick = true"></app-visitor-button>
-            </div>
-            <div *ngFor="let event of eventDayClick" class="space-y-2">
-              <div>
-                  <div class="text-base font-semibold">{{ event.title }}</div>
-                  <div class="text-sm text-gray-500">{{ calculateEventDuration(event) }}</div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Notes Section -->
-          <div class="bg-[var(--ion-color-tertiary)] rounded-lg shadow p-4 mt-4 w-full max-w-[90%] h-full max-h-[340px] overflow-y-auto">
-            <div class="flex justify-start items-center mb-2">
-              <h2 class="text-gray-500 font-bold">Notes</h2>
-            </div>
-            
-            <!-- Input untuk menambahkan tugas baru -->
-            <div class="flex mb-2">
-              <app-text-input 
-                [id]="'new-task'"
-                [placeholder]="'Tap to add task'"
-                [(ngModel)]="newTaskTitle"
-                [customClasses]="{'w-full':true}" 
-                [type]="'text'"
-                [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-              </app-text-input>
-              <button (click)="addTask()" class="bg-[var(--ion-color-primary)] text-white rounded px-4 ml-2">Add</button>
-            </div>
-
-            <ng-container *ngFor="let task of task">
-              <div *ngIf="showCompletedTasks || !task.completed" class="space-y-2 mt-2">
-                <div id="task.id" class="flex items-center mb-2">
-                  <input type="checkbox" class="mr-2" [checked]="task.completed" (change)="toggleTaskCompletion(task)">
-                  <div>
-                    <p>{{ task.title }}</p>
-                    <p class="text-sm text-gray-500">{{ task.due_date }}</p>
-                  </div>
-                  <i class="fas fa-info-circle ml-auto text-blue-500">i</i>
-                </div>
-              </div>
-            </ng-container>
-
-            <div class="mt-2">
-              <button (click)="showCompletedTasks = !showCompletedTasks" class="text-blue-500">
-                {{ showCompletedTasks ? 'Hide Completed Tasks' : 'Show Completed Tasks' }}
-              </button>
-            </div>
-          </div>
-        </div>
-        <ion-footer class="fixed bottom-0 py-3 px-5 w-full bg-[var(--ion-color-tertiary)]">
-          <div class="flex w-full justify-end">
-            <app-visitor-button [text]="'Close'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-32'" (click)="isDayClick = false"></app-visitor-button>
-          </div>
-        </ion-footer>
+    <ng-template #customCellTemplate let-day="day" let-locale="locale">
+      <div class="cal-cell-top">
+        <span class="cal-day-number"
+          >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
+        >
+        <span class="cal-day-badge" *ngIf="day.badgeTotal > 0"
+          >{{ day.badgeTotal }}</span
+        >
       </div>
     </ng-template>
-  </ion-modal>
-
-  <!-- Modal untuk nambah event -->
-  <ion-modal id="add-event-modal" [isOpen]="isAddEventClick" (didDismiss)="isAddEventClick = false" [initialBreakpoint]="0.25" [breakpoints]="[0, 0.25, 0.5, 0.85]">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <app-visitor-button [text]="'Cancel'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-28'"></app-visitor-button>
-          </ion-buttons>
-          <ion-title class="text-center font-bold">Add Event</ion-title>
-          <ion-buttons slot="end">
-            <app-visitor-button [text]="'Confirm'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-28'"></app-visitor-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <!-- Icons Row -->
-        <div class="flex items-center justify-between mb-4">
-          <i class="fas fa-check-square text-blue-500 text-2xl"></i>
-          <i class="fas fa-bell text-gray-400 text-2xl"></i>
-          <i class="fas fa-flag text-gray-400 text-2xl"></i>
-          <i class="fas fa-star text-gray-400 text-2xl"></i>
-        </div>
-
-        <!-- Event Name Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Event name" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <!-- All Day Toggle -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">All day</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-          </label>
-        </div>
-
-        <!-- From Date -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">From</span>
-            <app-text-input 
-              [id]="'date_event'"
-              [placeholder]="'dd/mm/yyyy, --:-- --'"
-              [customClasses]="{'w-full':true}" 
-              [type]="'date'"
-              [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-            </app-text-input>
-          </div>
-
-        <!-- To Date -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">To</span>
-          <app-text-input 
-            [id]="'date_event'"
-            [placeholder]="'dd/mm/yyyy, --:-- --'"
-            [customClasses]="{'w-full':true}" 
-            [type]="'date'"
-            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-          </app-text-input>
-        </div>
-
-        <!-- Repeat -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Repeat</span>
-          <span>One-time event</span>
-        </div>
-
-        <!-- Reminders -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Reminders</span>
-          <span>5 minutes before</span>
-        </div>
-
-        <!-- Time Zone -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Time zone</span>
-          <span>(GMT+8:00) Singapore</span>
-        </div>
-
-        <!-- Location Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Location" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <!-- Description Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Description" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-  <div class="h-[4.5rem]"></div>
+    <div class="h-[4.5rem]"></div>
+  </div>
 </ion-content>
 
 <ion-footer>
