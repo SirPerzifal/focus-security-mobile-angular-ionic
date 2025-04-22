@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -51,6 +51,17 @@ export class ClientEmployeesPage implements OnInit {
     email_address: '',
     image_family: '',
     department_id: '',
+    rfid_number: '',
+    card_number: '',
+    extension_number: '',
+    vehicle_number: '',
+    employee_code: '',
+    employment_type: '',
+  }
+
+  @ViewChild('clientNewEmployeeProfile') fileInput!: ElementRef;
+  onImageClick() {
+    this.fileInput?.nativeElement.click();
   }
 
   selectedImageName = ''
@@ -73,12 +84,27 @@ export class ClientEmployeesPage implements OnInit {
   onSubmit() {
     console.log(this.formData)
     let errMsg = ''
+    if (this.formData.image_family == ''){
+      errMsg += 'Profile image is required \n'
+    }
     if (this.formData.full_name == ''){
       errMsg += 'Full name is required! \n'
+    }
+    if (this.formData.employment_type == ''){
+      errMsg += 'Employment type is required! \n'
     }
     // if (this.formData.nickname == ''){
     //   errMsg += 'Nickname is required \n'
     // }
+    if (this.formData.department_id == ''){
+      errMsg += 'Department is required \n'
+    }
+    if (this.formData.employee_code == ''){
+      errMsg += 'Employee code is required! \n'
+    }
+    if (this.formData.vehicle_number == ''){
+      errMsg += 'Vehicle number is required! \n'
+    }
     if (this.formData.email_address == ''){
       errMsg += 'Email address is required \n'
     }
@@ -90,11 +116,14 @@ export class ClientEmployeesPage implements OnInit {
         errMsg += 'Contact number is required \n \n'
       }
     }
-    if (this.formData.department_id == ''){
-      errMsg += 'Department is required \n'
+    if (this.formData.extension_number == ''){
+      errMsg += 'Extension number is required! \n'
     }
-    if (this.formData.image_family == ''){
-      errMsg += 'Profile image is required \n'
+    if (this.formData.card_number == ''){
+      errMsg += 'Card number is required! \n'
+    }
+    if (this.formData.rfid_number == ''){
+      errMsg += 'Rfid number is required! \n'
     }
     console.log(this.formData)
     if (errMsg != '') {
@@ -131,6 +160,12 @@ export class ClientEmployeesPage implements OnInit {
       email_address: '',
       image_family: '',
       department_id: '',
+      rfid_number: '',
+      card_number: '',
+      extension_number: '',
+      vehicle_number: '',
+      employee_code: '',
+      employment_type: '',
     }
     this.selectedImageName = ''
   }

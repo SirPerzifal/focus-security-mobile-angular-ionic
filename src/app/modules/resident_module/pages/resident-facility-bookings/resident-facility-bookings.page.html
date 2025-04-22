@@ -4,7 +4,7 @@
 <ion-content [fullscreen]="true">
 	<div class="scrollale-content">
 		<div class="w-full flex items-start mt-2 ml-3">
-			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+			<ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
 		</div>
 		<!-- CONTENT -->
 		<div class="flex flex-col relative mx-4 mb-52">
@@ -84,7 +84,7 @@
 		<ng-template #noActiveBookings>
 			<div *ngIf="!isLoading" class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
 				<p class="text-gray-600">You have no active bookings.....</p>
-				<p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong> or</p>
+				<p class="text-gray-600">Go to <strong><a href="/resident-home-page">Home Page</a></strong> or</p>
 				<p class="text-gray-600"><strong><a routerLink="/facility-new-booking">Click Here</a></strong> to make a new booking now.</p>
 			</div>
 		</ng-template>

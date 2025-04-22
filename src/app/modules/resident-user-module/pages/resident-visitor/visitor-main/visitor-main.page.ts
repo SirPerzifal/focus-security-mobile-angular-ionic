@@ -27,6 +27,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class VisitorMainPage extends ApiService implements OnInit  {
 
+  userType: string = '';
   navButtonsMain: any[] = [
     {
       text: 'Daily Invite',
@@ -70,6 +71,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     entryTitle: "",
     entryMessage: "",
     isProvideUnit: false,
+    facility: '',
     hiredCar: "",
   }
   selectedDate: string = '';
@@ -124,6 +126,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryTitle: "",
           entryMessage: "",
           isProvideUnit: false,
+          facility: '',
           hiredCar: "",
         }
       } else if (params['formData']) {
@@ -134,12 +137,17 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryTitle: "",
           entryMessage: "",
           isProvideUnit: false,
+          facility: '',
           hiredCar: "",
         }
       } else {
         this.toggleShowNewInv()
       }
     });
+  }
+
+  onChangeTypeUser(event: any) {
+    this.userType = event;
   }
 
   getTodayDate() {
@@ -281,6 +289,10 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.formData.isProvideUnit = !this.formData.isProvideUnit;
   }
 
+  onEntryfacilityChange(event: string) {
+    this.formData.facility = event;
+  }
+
   onSubmitNext() {
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
@@ -341,7 +353,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       this.mainApiResidentService.endpointProcess(
         {
           entry_id: !invite.is_entry ? false : invite.invite_id, 
-          visitor_id: invite.is_entry ? false : invite.invite_id
+          visitor_id: invite.is_entry ? false : invite.invite_id,
+          contractor_id: false,
         },
         'post/cancel_invite'
       ).subscribe(

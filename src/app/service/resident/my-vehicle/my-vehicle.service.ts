@@ -14,7 +14,7 @@ export class MyVehicleService extends ApiService {
     super(http);
   }
 
-  getVehicleDetail(unitId: number): Observable<any> {
+  getVehicleDetail(unitId: number, projectId: number, hostId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -24,6 +24,8 @@ export class MyVehicleService extends ApiService {
       jsonrpc: '2.0',
       params: {
         unit_id: unitId,
+        project_id: projectId,
+        host: hostId
       }
     };
 

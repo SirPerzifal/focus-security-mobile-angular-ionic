@@ -60,17 +60,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   dateFilter = ''
   typeFilter = 'All'
 
-  hideFilter: string = '';
-  cardIfJustBan: string = '';
-
   constructor(private router: Router, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService, private alertController: AlertController) { 
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { from: any};
-    if (state) {
-      // // console.log(state.from);
-      this.hideFilter = state.from;
-      this.cardIfJustBan = state.from;
-    }
   }
   ngOnInit() {
   }
@@ -80,11 +70,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   }
 
   directTo() {
-    if (this.cardIfJustBan === 'ban') {
-      this.router.navigate(['/resident-my-profile']);
-    } else {
-      this.router.navigate(['/resident-homepage'])
-    }
+    this.router.navigate(['/resident-home-page'])
   }
 
   getHistoryList() {
@@ -96,65 +82,33 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
         this.isLoading = false;
         return;
       } else {
-        if (this.cardIfJustBan === 'ban') {
-          const bannedItems = result.filter((item: any) => item['is_banned'] === true);
-          
-          bannedItems.forEach((item: any) => {
-            const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
-            const entryDate = new Date();
-            entryDate.setHours(entryHours, entryMinutes, 0, 0); 
-            entryDate.setHours(entryDate.getHours() + 1);
-            const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
-            const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
-            const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-        
-            this.historyData.push({
-              purpose: item['purpose'],
-              visitor_name: item['visitor_name'],
-              visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
-              visitor_entry_time: item['entry_time'],
-              visitor_exit_time: exitTime,
-              mode_of_entry: item['mode_of_entry'],
-              vehicle_number: item['vehicle_number'],
-              point_of_entry: item['point_of_entry'],
-              mobile_number: item['contact_number'],
-              delivery_type: item['delivery_type'],
-              vehicle_type: item['vehicle_type'],
-              banned: item['is_banned'],
-              id: item['visitor_id']
-            });
-            this.isLoading = false;
+        result.forEach((item: any) => {
+          const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
+          const entryDate = new Date();
+          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+          entryDate.setHours(entryDate.getHours() + 1);
+          const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
+          const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
+          const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+
+          this.historyData.push({
+            purpose: item['purpose'],
+            visitor_name: item['visitor_name'],
+            visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
+            visitor_entry_time: item['entry_time'],
+            visitor_exit_time: exitTime,
+            mode_of_entry: item['mode_of_entry'],
+            vehicle_number: item['vehicle_number'],
+            point_of_entry: item['point_of_entry'],
+            mobile_number: item['contact_number'],
+            delivery_type: item['delivery_type'],
+            vehicle_type: item['vehicle_type'],
+            banned: item['is_banned'],
+            id: item['visitor_id']
           });
-        } else {
-          result.forEach((item: any) => {
-            const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
-            const entryDate = new Date();
-            entryDate.setHours(entryHours, entryMinutes, 0, 0); 
-            entryDate.setHours(entryDate.getHours() + 1);
-            const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
-            const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
-            const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-  
-            this.historyData.push({
-              purpose: item['purpose'],
-              visitor_name: item['visitor_name'],
-              visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
-              visitor_entry_time: item['entry_time'],
-              visitor_exit_time: exitTime,
-              mode_of_entry: item['mode_of_entry'],
-              vehicle_number: item['vehicle_number'],
-              point_of_entry: item['point_of_entry'],
-              mobile_number: item['contact_number'],
-              delivery_type: item['delivery_type'],
-              vehicle_type: item['vehicle_type'],
-              banned: item['is_banned'],
-              id: item['visitor_id']
-            });
-            this.isLoading = false;
-          });
-        }
+          this.isLoading = false;
+        });
       }
       this.filteredData = [...this.historyData];
     })

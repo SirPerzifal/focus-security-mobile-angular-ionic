@@ -94,6 +94,7 @@ export class ContractorFormPage implements OnInit {
 
   paxIdentity: string[] = []
   nameIdentity: string[] = []
+  typeIdentity: string[] = ['nric']
 
   // Update jumlah pax
   onPaxCountChange(event: any) {
@@ -654,6 +655,15 @@ export class ContractorFormPage implements OnInit {
       }, 300);
     } else {
       this.router.navigate(['home-vms'])
+    }
+  }
+
+  changeType(i: number) {
+    this.paxIdentity[i] = ''
+    if (['nric', 'fin'].includes(this.typeIdentity[i]) ) {
+      this.typeIdentity[i] = 'passport'
+    } else {
+      this.typeIdentity[i] = 'nric'
     }
   }
   

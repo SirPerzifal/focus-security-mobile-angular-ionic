@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -19,13 +19,14 @@ export class ClientAppIssuesPage implements OnInit {
     requestorId: 1,
     blokId: 1,
     unitId: 1,
-    name: 'John Doe',
-    contactNumber: '1234567890',
-    email: 'johndoe@example.com',
-    blockAndUnit: 'Block 123, Unit 456',
-    placeOfResidence: '123 Main St, City',
+    name: '',
+    contactNumber: '',
+    email: '',
+    blockAndUnit: '',
+    placeOfResidence: '',
     typeReport: 0,
-    summaryReport: ''
+    summaryReport: '',
+    ticketAttachment: '',
   };
   extend_mb = false
   typeOfReport: any = []
@@ -42,25 +43,20 @@ export class ClientAppIssuesPage implements OnInit {
   userData = {
     name: '',
     name_condo: '',
-    type: '',
-    block: '',
-    unit: '',
     email: '',
+    project_id: 1,
     contact: ''
   };
 
   loadUserInfo() {
-    this.getUserInfoService.getPreferenceStorage(['user', 'family', 'type_family', 'block_name', 'unit_name']).then((value) => {
-      const parse_user = this.authService.parseJWTParams(value.user);
-
+    this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
       this.userData = {
-        name: parse_user.name,
-        name_condo: 'KingsMan Condo',
-        type: value.type_family,
-        block: value.block_name ? value.block_name : '-',
-        unit: value.unit_name ? value.unit_name : '-',
-        email: parse_user.email,
-        contact: parse_user.email,
+        name: value.name,
+        name_condo: value.project_name,
+        project_id: value.project_id,
+        email: value.email,
+        contact: value.contact_number,
       }
 
       console.log(this.userData);
@@ -93,6 +89,7 @@ export class ClientAppIssuesPage implements OnInit {
     this.isNewReport = false
     this.isMain = true
     this.textSecond = 'Record of Report'
+    this.resetForm()
     // setTimeout(() => {
     //   this.isMain = true
     // }, 300)
@@ -120,26 +117,50 @@ export class ClientAppIssuesPage implements OnInit {
 
   onSubmit() {
     // Simpan data ke server
-    this.reportIssueService.postReportIssue(
-      this.reporterDetailsFrom.typeReport,
-      this.reporterDetailsFrom.requestorId,
-      this.reporterDetailsFrom.summaryReport,
-      this.reporterDetailsFrom.unitId,
-      this.reporterDetailsFrom.blokId,
-    ).subscribe(
-      (response) => {
-        // console.log(response);
-        if (response.result.response_code === 200) {
+    let errMsg = ''
+    if (!this.reporterDetailsFrom.typeReport) {
+      errMsg += 'Type of issue is required!'
+    }
+    if (!this.reporterDetailsFrom.summaryReport) {
+      errMsg += 'Summary is required!'
+    }
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger')
+      return
+    }
+    let params = {
+      type_of_issue: this.reporterDetailsFrom.typeReport,
+      requestor_id: this.reporterDetailsFrom.requestorId,
+      summary: this.reporterDetailsFrom.summaryReport,
+      unit_id: 0,
+      block_id: 0,
+      project_id: this.userData.project_id,
+      ir_attachment_datas: this.reporterDetailsFrom.ticketAttachment
+    }
+    this.clientMainService.getApi(params, '/resident/post/report_issue').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.functionMain.presentToast('Successfully report new issue!')
+          this.loadTicketFromBackend()
           this.toggleShowReport()
+          this.resetForm()
         } else {
-          // this.presentToast(response.result.message, 'danger');
+          this.functionMain.presentToast(results.result.message, 'danger');
         }
       },
-      (error) => {
-        // this.presentToast('Failed to submit your report. Please try again later.', 'danger');
+      error: (error) => {
+        this.functionMain.presentToast('Failed to create new issue!', 'danger');
         console.error(error);
       }
-    );
+    });
+  }
+
+  resetForm() {
+    this.reporterDetailsFrom.summaryReport = ''
+    this.reporterDetailsFrom.ticketAttachment = ''
+    this.fileName = ''
+    this.reporterDetailsFrom.typeReport = 0
   }
 
   testAddMb(status: boolean = false) {
@@ -194,6 +215,47 @@ export class ClientAppIssuesPage implements OnInit {
         issue: true
       },
     });
+  }
+
+  @ViewChild('clientIssueNewAttachment') fileInput!: ElementRef;
+  openFileInput() {
+    this.fileInput?.nativeElement.click();
+  }
+  fileName = ''
+
+  selectedFile: File | null = null;
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      console.log(file)
+      if (['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+        this.selectedFile = file;
+        this.fileName = file.name
+        console.log(file.name)
+  
+        // Konversi file ke base64
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          // Hapus prefix data URL jika ada
+          const base64 = e.target.result.split(',')[1] || e.target.result;
+          this.reporterDetailsFrom.ticketAttachment = base64;
+        };
+        reader.readAsDataURL(file);
+        
+      } else {
+        this.fileName = ''
+        this.functionMain.presentToast("Can only receive png, jpg, and jpg files!", 'danger')
+      }
+      
+    }
+  }
+
+  uploadFile() {
+    if (this.selectedFile) {
+      this.functionMain.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
+    } else {
+      this.functionMain.presentToast('Choose your file first', 'danger');
+    }
   }
 
 }

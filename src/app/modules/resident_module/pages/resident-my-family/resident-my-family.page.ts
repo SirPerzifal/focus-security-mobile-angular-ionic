@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Preferences } from '@capacitor/preferences';
 
 import { FamilyService } from 'src/app/service/resident/family/family.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
-import { Estate } from 'src/models/resident/resident.model';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-resident-my-family',
@@ -20,7 +18,7 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
   stateFill: string = '';
   isLoading: boolean = true;
 
-  constructor(private familyService: FamilyService, private router: Router, private storage: StorageService) {
+  constructor(private familyService: FamilyService, private router: Router, private mainApi: MainApiResidentService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -52,17 +50,7 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
       }
     ];
     this.familyData.pop();
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = Number(estate.unit_id);
-            this.getFamilyList();
-          }
-        })
-      }
-    })
+    this.getFamilyList();
   }
 
   familyData = [
@@ -74,39 +62,19 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
       this.router.navigate(['/resident-my-profile']);
     }
      else {
-      this.router.navigate(['/resident-homepage']);
+      this.router.navigate(['/resident-home-page']);
     }
   }
 
   getFamilyList() {
-    // // console.log(this.stateFill);
     this.familyData.pop();
-    this.familyService.getFamilyList(Number(this.unitId)).subscribe(
-      res => {
-        var result = res.result['response_result'];
-        result.forEach((item: any) => {
-          // Cek apakah stateFill ada
-          if (this.stateFill === 'helper') {
-            // Hanya tambahkan item jika member_type atau member_hard_type adalah 'helper'
-            if (item['member_type'] === 'Helper' || item['member_hard_type'] === 'helper') {
-              this.familyData.push({
-                id: item['family_id'], 
-                type: item['member_type'], 
-                hard_type: item['member_hard_type'], 
-                name: item['family_full_name'], 
-                mobile: item['family_mobile_number'], 
-                nickname: item['family_nickname'], 
-                email: item['family_email'], 
-                head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
-                end_date: item['end_of_tenancy_aggrement'],
-                status: item['states'],
-                tenancy_agreement: item['tenancy_aggrement'],
-                family_photo: item['family_photo'],
-                reject_reason: item['reject_reason']
-              });
-            }
-          } else {
-            // Jika stateFill tidak ada, tambahkan semua item
+    this.mainApi.endpointMainProcess({}, 'get/get_family').subscribe((response: any) => {
+      var result = response.result['response_result'];
+      result.forEach((item: any) => {
+        // Cek apakah stateFill ada
+        if (this.stateFill === 'helper') {
+          // Hanya tambahkan item jika member_type atau member_hard_type adalah 'helper'
+          if (item['member_type'] === 'Helper' || item['member_hard_type'] === 'helper') {
             this.familyData.push({
               id: item['family_id'], 
               type: item['member_type'], 
@@ -123,16 +91,30 @@ export class ResidentMyFamilyPage implements OnInit, OnDestroy {
               reject_reason: item['reject_reason']
             });
           }
-        });
-        if (this.familyData) {
-          this.isLoading = false;
+        } else {
+          // Jika stateFill tidak ada, tambahkan semua item
+          this.familyData.push({
+            id: item['family_id'], 
+            type: item['member_type'], 
+            hard_type: item['member_hard_type'], 
+            name: item['family_full_name'], 
+            mobile: item['family_mobile_number'], 
+            nickname: item['family_nickname'], 
+            email: item['family_email'], 
+            head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
+            end_date: item['end_of_tenancy_aggrement'],
+            status: item['states'],
+            tenancy_agreement: item['tenancy_aggrement'],
+            family_photo: item['family_photo'],
+            reject_reason: item['reject_reason']
+          });
         }
-      },
-      error => {
-        // console.log(error);
+      });
+      if (this.familyData) {
+        this.isLoading = false;
       }
-    );
-    
+    })
+    // // console.log(this.stateFill);
     // console.log("tes", this.familyData);
   }
 

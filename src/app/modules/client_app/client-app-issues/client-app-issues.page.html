@@ -31,7 +31,7 @@
             'bg-[#E3787E]': report.ticket_status === 'Canceled',
             'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
             }" class="bg-[#F8F1BA] p-4 rounded shadow">
-            <h2 class="font-bold text-left">{{ report.ticket_name }} - {{ report.ticket_type }}</h2>
+            <h2 class="font-bold text-left">{{ report.ticket_type }}</h2>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
                 <tr>
@@ -73,12 +73,12 @@
           <select id="type_of_issue" placeholder="Type of Issue"
             class="border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
             (change)="onTypeReportChange($event)">
-            <option selected disabled hidden>Choose Type of Issue</option>
+            <option value="0" selected disabled hidden>Choose Type of Issue</option>
             <option *ngFor="let tor of typeOfReport" [value]="tor.id">{{ tor.name }}</option>
           </select>
         </div>
         <u class="text-base font-bold mb-1.5 text-start">Reporter Details</u>
-        <div class="space-y-2">
+        <div class="space-y-2 flex flex-col justify-between">
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Name</p>
@@ -88,16 +88,6 @@
               [isReadonly]="true" [(ngModel)]="userData.name">
             </app-text-input>
           </div>
-          <!-- <div class="w-full">
-            <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Contact Number</p>
-            </div>
-            <app-text-input [id]="'report_contact_number'" [placeholder]="'Contact Number'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-              [isReadonly]="true" [(ngModel)]="userData.contactNumber">
-            </app-text-input>
-          </div> -->
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Contact Email</p>
@@ -108,36 +98,6 @@
               [isReadonly]="true" [(ngModel)]="userData.contact">
             </app-text-input>
           </div>
-          <!-- <div class="w-full">
-            <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Block</p>
-            </div>
-            <app-text-input [id]="'report_block_and_unit'" [placeholder]="'Block'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-              [isReadonly]="true" [(ngModel)]="userData.block">
-            </app-text-input>
-          </div>
-          <div class="w-full">
-            <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Unit</p>
-            </div>
-            <app-text-input [id]="'report_block_and_unit'" [placeholder]="'Unit'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-              [isReadonly]="true" [(ngModel)]="userData.unit">
-            </app-text-input>
-          </div> -->
-          <!-- <div class="w-full">
-            <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Place of Residence</p>
-            </div>
-            <app-text-input [id]="'report_place_of_residence'" [placeholder]="'Place of Residence'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-              [isReadonly]="true" [(ngModel)]="userData.placeOfResidence">
-            </app-text-input>
-          </div> -->
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Summary Report</p>
@@ -146,6 +106,20 @@
               class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
               [(ngModel)]="reporterDetailsFrom.summaryReport">
             </textarea>
+          </div>
+          <div class="w-full flex flex-row justify-between items-end">
+            <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientIssueNewAttachment
+              class="hidden" accept="image/*"/>
+            <div class="w-4/6 mb-2 flex flex-col items-start">
+              <label class="text-base"><b>Attachment</b></label>
+              <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+                class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem]  file:mr-4 "
+                readonly />
+            </div>
+            <button id="client_ticket_detail_upload_attachment" (click)="uploadFile()"
+              class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold mb-2">
+              Upload
+            </button>
           </div>
         </div>
       </div>

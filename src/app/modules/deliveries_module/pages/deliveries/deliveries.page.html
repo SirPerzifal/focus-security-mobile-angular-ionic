@@ -24,7 +24,7 @@
     </div>
 
     <div class="w-full flex flex-row mt-6">
-      <form class="justify-between items-center w-full mb-4" #foodForm="ngForm" *ngIf="foodDeliveries" @fadeInOut>
+      <div class="justify-between items-center w-full mb-4" *ngIf="foodDeliveries" @fadeInOut>
         <div class="w-full">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
           <div class="flex flex-col">
@@ -93,10 +93,17 @@
                 <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
                   [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
               </div>
-              <div class="w-full" *ngIf="project_config.is_industrial">
-                <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
-                  (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+              <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
+                <div class="w-full">
+                  <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
+                    (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
+                    [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                </div>
+                <div class="w-full">
+                  <app-text-input #deliveryFoodPass [id]="'delivery_food_pass_number'" [labelText]="'PASS NUMBER'"
+                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+                </div>
               </div>
               <div class="w-full space-y-5" *ngIf="food_delivery_type == 'drive_in'">
                 <div class="w-full " *ngFor="let camera of Camera; let i = index">
@@ -113,9 +120,9 @@
             </div>
           </div>
         </div>
-      </form>
+      </div>
 
-      <form class="justify-between items-center mb-4 w-full" #packageForm="ngForm" *ngIf="packageDeliveries" @fadeInOut>
+      <div class="justify-between items-center mb-4 w-full" *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
           <div class="flex flex-row w-full flex-wrap">
             <div *ngFor="let button of packageDeliveryButtons">
@@ -228,7 +235,7 @@
             </div>
           </div>
         </div>
-      </form>
+      </div>
 
       <div class="mt-8 flex flex-col justify-between items-center h-80 w-full" *ngIf="bulkyItemDeliveries" @fadeInOut>
 
@@ -241,7 +248,7 @@
         <div class="w-full">
           <app-vms-contact-input [(value)]="otherDeliveryForm.visitor_contact_no" [id]="'drive_in_contact_collection'" (contactInfo)="getDriveInContactInfo($event)"></app-vms-contact-input>
         </div>
-        <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+        <div class="w-full flex flex-col">
           <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
         </div>
         <div class="w-full flex flex-row justify-between">
@@ -252,11 +259,16 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <div class="w-full">
           <app-text-input [id]="'collection_drive_in_company'" [(ngModel)]="otherDeliveryForm.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <div class="w-full">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+        </div>
+        <div class="w-full">
+          <app-text-input #deliveryOtherPass [id]="'delivery_other_pass_number'" [labelText]="'PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REMARKS</b></u></label>

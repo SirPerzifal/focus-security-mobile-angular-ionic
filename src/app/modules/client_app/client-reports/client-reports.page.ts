@@ -58,68 +58,42 @@ export class ClientReportsPage implements OnInit {
   textSecond = ''
 
   menuItems = [
-    { src: 'assets/icon/exc-client/report.png', alt: 'Clocking Reports', route: '', params: {}, text: 'Clocking Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Security Attendance', route: '', params: {}, text: 'Security Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Cleaners Attendance', route: '', params: {}, text: 'Cleaners Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Landscape Attendance', route: '', params: {}, text: 'Landscape Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Contractor Records', route: '', params: {}, text: 'Contractor Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Visitor Records', route: '/vms/get/visitor_log', params: {is_today: true, log_type: 'visitor', project_id: this.project_id}, text: 'Visitor Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Vehicle Records', route: '/vms/get/visitor_log', params: {is_today: true, log_type: 'vehicle', project_id: this.project_id}, text: 'Vehicle Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Facility Booking Report', route: '', params: {}, text: 'Facility Booking Report', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Ticket Reports', route: '', params: {}, text: 'Ticket Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'OBA Reports', route: '', params: {}, text: 'OBA Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Polling Reports', route: '', params: {}, text: 'Polling Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Incident Reports', route: '', params: {}, text: 'Incident Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Security Occurrence', route: '', params: {}, text: 'Security Occurrence', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Book Reports', route: '', params: {}, text: 'Book Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Key Movement Reports', route: '', params: {}, text: 'Key Movement Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Shift HOTO Reports', route: '', params: {}, text: 'Shift HOTO Reports', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Renovation Work/Fines/Access card', route: '', params: {}, text: 'Renovation Work/Fines/Access card', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Overnight parking', route: '', params: {}, text: 'Overnight parking', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Bicycle Tags/Pet Registration', route: '', params: {}, text: 'Bicycle Tags/Pet Registration', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Move In/Out', route: '', params: {}, text: 'Move In/Out', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Coach Registration', route: '', params: {}, text: 'Coach Registration', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Parking Appeal Reports', route: '', params: {}, text: 'Parking Appeal Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Clocking Reports', model: '', params: {}, text: 'Clocking Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Security Attendance', model: '', params: {}, text: 'Security Attendance', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Cleaners Attendance', model: '', params: {}, text: 'Cleaners Attendance', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Landscape Attendance', model: '', params: {}, text: 'Landscape Attendance', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Contractor Records', model: 'fs.residential.contractor', params: {}, text: 'Contractor Records', permission: [true, true]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Visitor Records', model: 'fs.residential.visitors', params: {is_today: true, log_type: 'visitor', project_id: this.project_id}, text: 'Visitor Records', permission: [true, true]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Vehicle Records', model: 'fs.residential.vehicle', params: {is_today: true, log_type: 'vehicle', project_id: this.project_id}, text: 'Vehicle Records', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Facility Booking Report', model: 'room.booking', params: {}, text: 'Facility Booking Report', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Ticket Reports', model: 'helpdesk.ticket', params: {}, text: 'Ticket Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'OBA Reports', model: '', params: {}, text: 'OBA Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Polling Reports', model: 'fs.residential.polling', params: {}, text: 'Polling Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Incident Reports', model: '', params: {}, text: 'Incident Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Security Occurrence', model: '', params: {}, text: 'Security Occurrence', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Book Reports', model: '', params: {}, text: 'Book Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Key Movement Reports', model: '', params: {}, text: 'Key Movement Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Shift HOTO Reports', model: '', params: {}, text: 'Shift HOTO Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Renovation Work/Fines/Access card', model: '', params: {}, text: 'Renovation Work/Fines/Access card', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Overnight parking', model: 'fs.vms.overnight.parking.list', params: {}, text: 'Overnight parking', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Bicycle Tags', model: 'fs.residential.bicycle.tag', params: {}, text: 'Bicycle Tags/Pet Registration', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Pet Registration', model: 'fs.residential.pet', params: {}, text: 'Bicycle Tags/Pet Registration', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Move In/Out', model: 'fs.residential.schedule', params: {}, text: 'Move In/Out', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Coach Registration', model: 'fs.residential.registered.coaches', params: {}, text: 'Coach Registration', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Parking Appeal Reports', model: 'fs.vms.offence', params: {}, text: 'Parking Appeal Reports', permission: [true, false]},
   ];
   
   reportsData: any = []
   showReports: any = []
 
-  onClickMenu(menu: any) {
-    // this.viewDetail(menu)
-    // this.isHome = false
-    // setTimeout(() => {
-    //   this.isData = true
-    //   this.textSecond = menu.text
-    // }, 300)
-    // if (menu.route == "") {
-    //   this.reportsData = []
-    //   this.showReports = this.reportsData
-    // } else {
-    //   console.log(menu.route)
-    //   this.clientMainService.getApi(menu.params, '/vms/get/visitor_log').subscribe({
-    //     next: (results) => {
-    //       console.log(results)
-    //       if (results.result.response_code === 200) {
-    //         this.reportsData = results.result.response_result
-    //       } else {
-    //         this.reportsData = []
-    //       }
-    //       this.showReports = this.reportsData
-    //     },
-    //     error: (error) => {
-    //       this.functionMain.presentToast('An error occurred while loading reports!', 'danger');
-    //       console.error(error);
-    //     }
-    //   });
-    // }
-  }
-
   onBack() {
     if (this.isHome) {
       this.router.navigate(['/client-main-app'])
     } else {
+      this.checkedFields = []
+      this.reportFields = []
       this.isData = false
+      this.is_check_all = false
       setTimeout(() => {
         this.textSecond = ''
         this.isHome = true
@@ -185,27 +159,71 @@ export class ClientReportsPage implements OnInit {
     });
   }
 
-  viewDetail(report: any) {
-    // this.clientMainService.getApi({}, '/client/get/report').subscribe({
-    //   next: (results) => {
-    //     console.log(results)
-    //     if (results.result.response_code === 200) {
-    //       this.functionMain.downloadDocument(results.result.results, 'File Name')
-    //       this.functionMain.presentToast(`Successfully get the report!`, 'success');
-    //     } else {
-    //       this.functionMain.presentToast(`An error occurred while trying to get the report!`, 'danger');
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.functionMain.presentToast('An error occurred while trying to get the report!', 'danger');
-    //     console.error(error);
-    //   }
-    // });
-    // this.router.navigate(['/client-Reports-details'], {
-    //   state: {
-    //     report: report
-    //   }
-    // })
+  reportFields: any = []
+  isLoading = false
+
+  checkedFields: any = []
+
+  onClickMenu(report: any) {
+    this.is_check_all = false
+    this.reportFields = []
+    this.checkedFields = []
+    this.isHome = false
+    setTimeout(() => {
+      this.textSecond = 'Fields Selection'
+      this.isData = true
+    }, 300)
+    if (report.model) {
+      this.isLoading = true
+      this.clientMainService.getApi({model_name: report.model}, '/get/model/fields').subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.reportFields = results.result.result
+          } else {
+            this.functionMain.presentToast(`An error occurred while trying to get the fields!`, 'danger');
+          }
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.functionMain.presentToast('An error occurred while trying to get the fields!', 'danger');
+          console.error(error);
+          this.isLoading = false
+        }
+      });
+    }
   }
 
+  checkInput(field: string) {
+    let index = this.checkedFields.find((item: any) => item == field)
+    if (index) {
+      this.checkedFields = this.checkedFields.filter((item: any) => item != field)
+    } else {
+      this.checkedFields.push(field)
+    }
+    console.log(this.checkedFields)
+  }
+  
+  is_check_all = false
+  checkAll() {
+    this.is_check_all = !this.is_check_all
+    if (this.is_check_all) {
+      this.checkedFields = this.reportFields.map((item: any) => item.field)
+    } else {
+      this.checkedFields = []
+    }
+  }
+
+  returnCheckTrue(field: string) {
+    let index = this.checkedFields.find((item: any) => item == field)
+    if (index) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  onSubmit() {
+    console.log(this.checkedFields)
+  }
 }

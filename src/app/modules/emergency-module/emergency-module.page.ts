@@ -138,6 +138,7 @@ export class EmergencyModulePage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     this.selectedHost = ''
+    this.pass_number = ''
   }
 
   refreshVehicle() {
@@ -273,11 +274,14 @@ export class EmergencyModulePage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += "Host is required! \n"
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost };
+    let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost, pass_number: this.pass_number };
     console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
       next: (results) => {
@@ -315,5 +319,7 @@ export class EmergencyModulePage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
   }
+
+  pass_number = ''
 
 }

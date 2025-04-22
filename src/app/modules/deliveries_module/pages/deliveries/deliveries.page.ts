@@ -174,6 +174,9 @@ export class DeliveriesPage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial){
       errMsg += 'Please insert a host!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if(errMsg != ""){
       this.presentToast(errMsg, 'danger')
       return
@@ -197,6 +200,7 @@ export class DeliveriesPage implements OnInit {
         this.selectedHost,
         this.identificationType,
         this.nric_value,
+        this.pass_number
       ).subscribe(
         res => {
           console.log(res);
@@ -262,6 +266,7 @@ export class DeliveriesPage implements OnInit {
       company_name: '',
       remarks: '',
     };
+    this.pass_number = ''
     this.refreshVehicle()
   }
 
@@ -331,6 +336,7 @@ export class DeliveriesPage implements OnInit {
         this.selectedHost,
         this.identificationType,
         this.nric_value,
+        ''
       ).subscribe(
         res => {
           console.log(res);
@@ -703,6 +709,7 @@ export class DeliveriesPage implements OnInit {
   identificationType = ''
   nric_value = ''
   selectedNric = ''
+  pass_number = ''
 
   otherDeliveryForm = {
     visitor_name: '',
@@ -740,6 +747,9 @@ export class DeliveriesPage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if ((!this.otherDeliveryForm.remarks) && this.project_config.is_industrial) {
       errMsg += 'Remarks is required!\n';
     }
@@ -753,7 +763,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value
+      ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value, pass_number: this.pass_number
     }
     console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/add_deliveries_other').subscribe({

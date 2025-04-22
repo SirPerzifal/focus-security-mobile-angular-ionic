@@ -1,6 +1,7 @@
 <ion-header [translucent]="true">
   <app-header-inner-page
     [text]="'Profile'"
+    [text_second]="pageName"
     (typeOfUser)="onChangeTypeUser($event)"
   ></app-header-inner-page>
 </ion-header>
@@ -18,6 +19,7 @@
         (click)="onClickButton('', 'back')"
       ></ion-icon>
     </div>
+    
     <div *ngIf="showMain" @fadeInOut>
       <div class="flex flex-col justify-center w-full items-center">
         <div class="rounded-full overflow-hidden w-32 mb-2 mt-10">
@@ -76,6 +78,7 @@
         </div>
       </div>
     </div>
+
     <div
       *ngIf="showEstate"
       class="w-full flex items-center justify-center mt-2"
@@ -104,7 +107,7 @@
                 [src]="functionMain.getImage(estate.project_image)"
                 width="50"
               />
-              <div class="flex-1">
+              <div class="flex-1 px-2">
                 <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_type}}</p>
@@ -112,7 +115,7 @@
                   {{estate.block_name}}, {{estate.unit_name}}
                 </p>
               </div>
-              <div class="ml-2">
+              <div>
                 <ion-icon
                   *ngIf="activeUnit === estate.unit_id"
                   class="text-green-500 text-2xl"
@@ -125,6 +128,100 @@
                   name="close-circle"
                 >
                 </ion-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="showBanVisitorContractor"
+      class="w-full flex items-center justify-center mt-2"
+    >
+      <div class="pb-4 px-4 pt-1.5 space-y-2 mb-16 w-full">
+        <!-- <div id="nav_tabs_main">
+          <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
+        </div> -->
+        <div class="flex flex-row w-full">
+          <div class="flex flex-col w-full">
+            <div class="w-full mt-1.5">
+              <div class="flex flex-col w-full justify-start space-y-2">
+                <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
+                  <ion-spinner name="circular"></ion-spinner>
+                </div>
+                <div *ngFor="let data of historyData">
+                  <div [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full'">
+                    <div class="text-base font-bold w-[100%]">
+                      <table class="w-full table-fixed">
+                        <tr class="h-6">
+                          <td class="w-[30%]">Purpose</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.purpose}}</td>
+                        </tr>
+                        <tr class="h-6" *ngIf="data.purpose === 'Visiting'">
+                          <td>Name</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.visitor_name}}</td>
+                        </tr>
+                        <tr class="h-6"  *ngIf="data.purpose !== 'Visiting'">
+                          <td>Vehicle No</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.vehicle_number}}</td>
+                        </tr>
+                        <tr class="h-6">
+                          <td>Date</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="font-light">{{ functionMain.convertToDDMMYYYY(data.visitor_date) }}</td> <!-- Menggunakan metode formatDate -->
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="flex flex-row space-x-1 w-full">
+                      <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-full" (click)="openDetails(data)">
+                        View Details
+                      </button>
+                      <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-full" (click)="showAlertButtons('Reinstate', 'history-alert', data)">
+                        Reinstate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div *ngFor="let data of filteredData">
+                  <div [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'">
+                    <div class="text-base font-bold w-[100%]">
+                      <table class="w-full table-fixed">
+                        <tr class="h-6">
+                          <td class="w-[30%]">Purpose</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.purpose}}</td>
+                        </tr>
+                        <tr class="h-6" *ngIf="data.purpose === 'Visiting'">
+                          <td>Name</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.visitor_name}}</td>
+                        </tr>
+                        <tr class="h-6"  *ngIf="data.purpose !== 'Visiting'">
+                          <td>Vehicle No</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="truncate font-light">{{data.vehicle_number}}</td>
+                        </tr>
+                        <tr class="h-6">
+                          <td>Date</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="font-light">{{ functionMain.convertToDDMMYYYY(data.visitor_date) }}</td> <!-- Menggunakan metode formatDate -->
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="flex flex-row space-x-1 w-full">
+                      <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]" (click)="openDetails(data)">
+                        View Details
+                      </button>
+                      <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-full" (click)="showAlertButtons('Reinstate', 'history-alert', data)">
+                        Reinstate
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

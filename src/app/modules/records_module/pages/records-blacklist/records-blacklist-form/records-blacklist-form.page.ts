@@ -195,8 +195,9 @@ export class RecordsBlacklistFormPage implements OnInit {
       console.log("SAVE")
       let tempDate = new Date().toISOString().split('T')
       this.formData.last_entry_date_time = tempDate[0] + ' ' + tempDate[1].split('.')[0]
-      console.log(this.formData)
-      this.mainVmsService.getApi(this.formData, '/resident/post/ban_visitor').subscribe({
+      let params = {...this.formData, host: this.selectedHost}
+      console.log(params)
+      this.mainVmsService.getApi(params, '/resident/post/ban_visitor').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_status === 200) {

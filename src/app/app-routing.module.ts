@@ -75,11 +75,11 @@ const routes: Routes = [
     path: 'register-commercial',
     loadChildren: () => import('./modules/register_module/pages/register-commercial/register-commercial.module').then( m => m.RegisterCommercialPageModule)
   },
-  {
-    path: 'resident-homepage',
-    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule),
-    canActivate:[authGuard]
-  },
+  // {
+  //   path: 'resident-homepage',
+  //   loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule),
+  //   canActivate:[authGuard]
+  // },
   {
     path: 'resident-visitors',
     loadChildren: () => import('./modules/resident_module/pages/resident-visitors/resident-visitors.module').then( m => m.ResidentVisitorsPageModule),
@@ -138,21 +138,6 @@ const routes: Routes = [
   {
     path: 'bills-history',
     loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-history/bills-history.module').then( m => m.BillsHistoryPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'manage-add',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-add/manage-add.module').then( m => m.ManageAddPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'manage-new-card',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-new-card/manage-new-card.module').then( m => m.ManageNewCardPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'manage-payment-method',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/manage-payment-method/manage-payment-method.module').then( m => m.ManagePaymentMethodPageModule),
     canActivate:[authGuard]
   },
   {
@@ -313,10 +298,10 @@ const routes: Routes = [
     path: 'overnight-parking-modal',
     loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.module').then( m => m.OvernightParkingModalPageModule)
   },
-  {
-    path: 'estate-modal',
-    loadChildren: () => import('./modules/resident_module/pages/resident-homepage/estate-modal/estate-modal.module').then( m => m.EstateModalPageModule)
-  },
+  // {
+  //   path: 'estate-modal',
+  //   loadChildren: () => import('./modules/resident_module/pages/resident-homepage/estate-modal/estate-modal.module').then( m => m.EstateModalPageModule)
+  // },
   {
     path: 'records-blacklist',
     loadChildren: () => import('./modules/records_module/pages/records-blacklist/records-blacklist.module').then( m => m.RecordsBlacklistPageModule)
@@ -743,6 +728,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/client_app/client-notification/client-notification.module').then( m => m.ClientNotificationPageModule)
   },
   {
+    path: 'client-employees',
+    loadChildren: () => import('./modules/client_app/client-employees/client-employees.module').then( m => m.ClientEmployeesPageModule)
+  },
+  {
     path: 'contractor-commercial-form',
     loadChildren: () => import('./modules/contractor_module/pages/contractor-commercial-form/contractor-commercial-form.module').then( m => m.ContractorCommercialFormPageModule)
   },
@@ -754,6 +743,11 @@ const routes: Routes = [
   },
   {
     path: 'app-report-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/app-report-main/app-report-main.module').then( m => m.AppReportMainPageModule),
+    // canActivate:[authGuard]
+  },
+  {
+    path: 'condo-report-main',
     loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/app-report-main/app-report-main.module').then( m => m.AppReportMainPageModule),
     // canActivate:[authGuard]
   },
@@ -862,6 +856,34 @@ const routes: Routes = [
   {
     path: 'upcoming-event-page-main',
     loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/upcoming-event-main/upcoming-event-main.module').then( m => m.UpcomingEventMainPageModule)
+  },
+  {
+    path: 'issue-app-detail-new',
+    loadChildren: () => import('./modules/resident-user-module/pages/app-report-an-issue/issue-app-detail/issue-app-detail.module').then( m => m.IssueAppDetailPageModule)
+  },
+  {
+    path: 'vms-checkout',
+    loadChildren: () => import('./modules/vms-checkout/vms-checkout.module').then( m => m.VmsCheckoutPageModule)
+  },
+  {
+    path: 'history-of-event',
+    loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/history-of-event/history-of-event.module').then( m => m.HistoryOfEventPageModule)
+  },
+  {
+    path: 'make-a-new-event',
+    loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/make-a-new-event/make-a-new-event.module').then( m => m.MakeANewEventPageModule)
+  },
+  {
+    path: 'place-facility-booking',
+    loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/place-facility-booking/place-facility-booking.module').then( m => m.PlaceFacilityBookingPageModule)
+  },
+  {
+    path: 'facility-process-to-payment',
+    loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/facility-process-to-payment/facility-process-to-payment.module').then( m => m.FacilityProcessToPaymentPageModule)
+  },
+  {
+    path: 'facility-booking-see-detail',
+    loadChildren: () => import('./modules/resident-user-module/pages/facility-booking-page/facility-booking-see-detail/facility-booking-see-detail.module').then( m => m.FacilityBookingSeeDetailPageModule)
   },
 ];
 

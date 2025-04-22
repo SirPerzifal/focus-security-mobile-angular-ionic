@@ -6,6 +6,8 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Subscription } from 'rxjs';
+import { Platform } from '@ionic/angular';
+import { App } from '@capacitor/app'
 
 @Component({
   selector: 'app-client-main-app',
@@ -36,7 +38,15 @@ export class ClientMainAppPage implements OnInit {
     private getUserInfoService: GetUserInfoService, 
     private authService: AuthService, 
     private route: ActivatedRoute,
-    public functionMain: FunctionMainService) { }
+    private platform: Platform,
+    public functionMain: FunctionMainService) {
+      console.log(this.router.url.split('?')[0])
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        if ( this.router.url.split('?')[0] === 'home-vms') {
+          App.exitApp()
+        }
+    });
+     }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {

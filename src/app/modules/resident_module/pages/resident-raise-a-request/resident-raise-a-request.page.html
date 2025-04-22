@@ -1,7 +1,9 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Raise a Request'" [text_second]="'New Request'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Raise A Request'" [text_second]="'New Request'" />
   <div class="w-full flex items-start ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
@@ -68,5 +70,7 @@
     </div>
   </div>
 
-	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

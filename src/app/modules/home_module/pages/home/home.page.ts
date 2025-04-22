@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
@@ -6,6 +6,8 @@ import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { IonRouterOutlet, Platform } from '@ionic/angular';
+import { App } from '@capacitor/app'
 
 @Component({
   selector: 'app-home',
@@ -14,7 +16,15 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService) { }
+  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform) { 
+    console.log(this.router.url.split('?')[0])
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      if ( this.router.url.split('?')[0] === 'home-vms') {
+        App.exitApp()
+      }
+    });
+  
+  }
 
   alertColor = 'red'
 

@@ -8,6 +8,7 @@ import { AppReportMainPageRoutingModule } from './app-report-main-routing.module
 
 import { AppReportMainPage } from './app-report-main.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     AppReportMainPageRoutingModule,
-    SharedModule
+    SharedModule,
+    ComponentsModule
   ],
   declarations: [AppReportMainPage]
 })

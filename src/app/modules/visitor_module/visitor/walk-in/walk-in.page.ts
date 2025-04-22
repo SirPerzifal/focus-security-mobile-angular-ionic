@@ -138,6 +138,9 @@ export class WalkInPage implements OnInit {
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
@@ -149,7 +152,7 @@ export class WalkInPage implements OnInit {
       return
     }
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value,this.pass_number,).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -185,6 +188,7 @@ export class WalkInPage implements OnInit {
   purpose = ''
   onSubmitWalkIn(openBarrier: boolean = false) {
     console.log(this.formData)
+    console.log(this.pass_number)
     let errMsg = ""
     if (!this.formData.visitor_name) {
       errMsg += 'Visitor is required!\n';
@@ -206,6 +210,9 @@ export class WalkInPage implements OnInit {
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
@@ -218,7 +225,7 @@ export class WalkInPage implements OnInit {
     }
     console.log(this.formData)
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value).subscribe(
+      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value,this.pass_number,).subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -539,4 +546,5 @@ export class WalkInPage implements OnInit {
   identificationType = ''
   nric_value = ''
   selectedNric = ''
+  pass_number = ''
 }

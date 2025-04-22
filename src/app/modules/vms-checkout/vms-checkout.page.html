@@ -1,0 +1,45 @@
+<ion-content [fullscreen]="true" class="vms-body">
+  <!-- Gambar sebagai latar belakang -->
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <app-vms-background />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header (click)="onBack()" />
+    </div>
+    <div class="flex flex-row mt-8">
+      <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'"
+        (click)="onBack()" [isActive]="true" [disableClick]="true" />
+    </div>
+    <div class="flex flex-row mx-4" *ngIf="isMain" @fadeInOut>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4">
+        <div class="w-full">
+          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2">
+          <div class="w-full">
+            <app-vms-contact-input #pageCheckOutContactSearch [id]="'page_checkout_contact_search'" [placeholder]="''"
+            [(value)]="checkoutForm.contact_number" [valueExist]="checkoutForm.contact_number" [showButton]="false"></app-vms-contact-input>
+          </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end space-x-2">
+          <div class="w-full">
+            <app-text-input #pageCheckOutPassSearch [id]="'page_checkout_pass_search'"
+              [labelText]="'PASS NUMBER'" [placeholder]="''" [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+              [(ngModel)]="checkoutForm.pass" [isReadonly]="false"></app-text-input>
+          </div>
+        </div>
+        <div class="w-full flex flex-col">
+          <div class="w-full">
+            <app-visitor-button [text]="'SUBMIT'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
+              (click)="searchData()"></app-visitor-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

@@ -25,7 +25,11 @@ export class BottonNavBarComponent implements OnInit {
 
   reportIssue() {
     this.navigationService.setActiveButton('report');
-    this.router.navigate(['/app-report-main']);
+    this.router.navigate(['/app-report-main'], {
+      state: {
+        fromWhere: 'app-report',
+      }
+    });
   }
 
   settings() {

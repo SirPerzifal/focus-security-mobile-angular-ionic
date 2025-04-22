@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-resident-header [is_client]="true"  [text]="'Employees'" [text_second]="textSecond" />
+  <app-resident-header [is_client]="true" [text]="'Employees'" [text_second]="textSecond" />
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -25,15 +25,14 @@
       <div class="my-4" *ngIf="!isLoading && !isNew">
         <div class="space-y-3" *ngIf="showVisitorList.length > 0; else noVisitor">
           <div (click)="viewDetail(employee)"
-              class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
-              *ngFor="let employee of showVisitorList">
-              <span class="text-lg font-bold">{{ employee.family_full_name }}</span>
-              <div
-                class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
-                <fa-icon [icon]="faArrow"
-                  class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
-              </div>
+            class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
+            *ngFor="let employee of showVisitorList">
+            <span class="text-lg font-bold">{{ employee.family_full_name }}</span>
+            <div
+              class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
+              <fa-icon [icon]="faArrow" class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
             </div>
+          </div>
         </div>
         <ng-template #noVisitor>
           <div class="w-full bg-transparent mt-8 text-center rounded-lg">
@@ -41,21 +40,44 @@
           </div>
         </ng-template>
       </div>
-     
+
       <div class="flex flex-col w-full" *ngIf="isNew">
-        <div class="flex flex-col justify-between mt-4 space-y-3">
-          <div class="w-full">
-            <app-text-input
-            [labelResidentText]="'Full Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-              [id]="'full_name'"
-              [placeholder]="'EG. Sanchez Venez'"
-              [customClasses]="{'w-full': true}"
-              [type]="'text'"
-              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-              [(ngModel)]="formData.full_name"
-            ></app-text-input>
+        <div class="flex flex-col justify-between mt-7 space-y-3">
+          <div class="w-full flex flex-col justify-center items-center">
+            <input #clientNewEmployeeProfile type="file" class="hidden" (change)="onImageChange($event)"
+              accept="image/jpg, image/png, image/jpeg">
+            <div
+              class="w-24 h-24 rounded-full flex flex-col justify-center items-center bg-[var(--ion-color-secondary)]"
+              (click)="onImageClick()">
+              <img *ngIf="!formData.image_family" src="assets/icon/exc-client/add_image.png" alt="Contact Picture"
+                class="w-12 h-12 object-cover rounded-2xl">
+              <img *ngIf="formData.image_family" [src]="functionMain.getImage(formData.image_family)"
+                alt="Contact Picture" class="w-24 h-24 object-cover rounded-full">
+            </div>
+            <label class="text-xl font-bold mt-2" (click)="onImageClick()">{{selectedImageName ? selectedImageName :
+              'Add Image'}}</label>
           </div>
-          
+
+          <div class="w-full">
+            <app-text-input [labelResidentText]="'Full Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+              [id]="'full_name'" [placeholder]="'EG. Sanchez Venez'" [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.full_name"></app-text-input>
+          </div>
+
+          <div class="w-full mb-2">
+            <div class="flex flex-row justify-start mb-1 mt-1">
+              <p class="text-base font-bold">Employment Type</p>
+            </div>
+            <select id="employement_type" placeholder=""
+              class="border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
+              [(ngModel)]="formData.employment_type">
+              <option selected disabled hidden>Choose Employment Type</option>
+              <option value="full_time">Full Time</option>
+              <option value="part_time">Part Time</option>
+            </select>
+          </div>
+
           <div class="w-full flex flex-col">
             <label class="text-base"><b>Department</b></label>
             <select id="employee_department"
@@ -65,24 +87,62 @@
               <option *ngFor="let department of Department" [value]="department.id">{{ department.name }}</option>
             </select>
           </div>
-          
+
           <div class="w-full">
-            <app-text-input
-            [labelResidentText]="'Email Address'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-              [id]="'email_address'"
-              [placeholder]="'sanchezvenez@email.com'"
-              [customClasses]="{'w-full': true}"
-              [type]="'text'"
+            <app-text-input [labelResidentText]="'Employee ID / Code'"
+              [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'employee_client_employee_code'"
+              [placeholder]="'sanchezvenez@email.com'" [customClasses]="{'w-full': true}" [type]="'text'"
               [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-              [(ngModel)]="formData.email_address"
-            ></app-text-input>
+              [(ngModel)]="formData.employee_code"></app-text-input>
           </div>
+
           <div class="w-full">
-            <app-vms-contact-input [(value)]="formData.contact_number" [id]="'regiter_contact_number'" [vmsPage]="false"
-              [contactLabel]="'Contact Number'" [labelClass]="'text-base'"
+            <app-text-input [labelResidentText]="'Vehicle Number'"
+              [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'employee_client_vehicle_number'"
+              [placeholder]="'sanchezvenez@email.com'" [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.vehicle_number"></app-text-input>
+          </div>
+
+          <div class="w-full">
+            <app-text-input [labelResidentText]="'Email Address'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+              [id]="'employee_client_email_address'" [placeholder]="'sanchezvenez@email.com'"
+              [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.email_address"></app-text-input>
+          </div>
+
+          <div class="w-full">
+            <app-vms-contact-input [(value)]="formData.contact_number" [id]="'employee_client_regiter_contact_number'"
+              [vmsPage]="false" [contactLabel]="'Contact Number'" [labelClass]="'text-base'"
               [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"></app-vms-contact-input>
           </div>
-          <div class="w-full mt-2">
+
+          <div class="w-full">
+            <app-text-input [labelResidentText]="'Extension Number'"
+              [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'employee_client_extension_number'"
+              [placeholder]="'sanchezvenez@email.com'" [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.extension_number"></app-text-input>
+          </div>
+
+          <div class="w-full">
+            <app-text-input [labelResidentText]="'Card Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+              [id]="'employee_client_card_number'" [placeholder]="'sanchezvenez@email.com'"
+              [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.card_number"></app-text-input>
+          </div>
+
+          <div class="w-full">
+            <app-text-input [labelResidentText]="'RFID Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+              [id]="'employee_client_rfid_number'" [placeholder]="'sanchezvenez@email.com'"
+              [customClasses]="{'w-full': true}" [type]="'text'"
+              [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+              [(ngModel)]="formData.rfid_number"></app-text-input>
+          </div>
+
+          <!-- <div class="w-full mt-2">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Upload Profile Image</p>
             </div>
@@ -92,7 +152,7 @@
                 {{ selectedImageName ? selectedImageName : 'Upload your profile image' }}
               </label>
             </div>
-          </div>
+          </div> -->
           <div class="w-full">
             <button class="bg-[var(--ion-color-primary)] text-white mt-3 w-full text-base rounded h-14 font-bold"
               (click)="onSubmit()">Register Visitor</button>
@@ -107,16 +167,11 @@
       [class]="visitorDetail.banned ? 'bg-[#E3787E] p-4 rounded flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded flex flex-col justify-between w-full mb-1'">
       <div class="text-base w-ful">
         <div class="w-full flex flex-col justify-center items-center my-2">
-          <img [src]="functionMain.getImage(visitorDetail.image_profile)" class="h-40" >
+          <img [src]="functionMain.getImage(visitorDetail.image_profile)" class="h-40">
           <p class="text-lg my-2 text-black font-bold">{{ functionMain.returnNone(visitorDetail.family_full_name) }}</p>
         </div>
         <!-- <div class="text-base font-bold mb-2">{{ functionMain.returnNone(visitorDetail.family_full_name)}}</div> -->
         <table class="w-full">
-          <tr class="h-6">
-            <td class="w-2/5  font-bold">Nickname</td>
-            <td class="w-[5%]">:</td>
-            <td>{{ functionMain.returnNone(visitorDetail.family_nickname)}}</td>
-          </tr>
           <tr class="h-6">
             <td class="w-2/5  font-bold">Email Address</td>
             <td class="w-[5%]">:</td>
@@ -128,14 +183,39 @@
             <td>{{ functionMain.returnNone(visitorDetail.family_mobile_number)}}</td>
           </tr>
           <tr class="h-6">
-            <td class="w-2/5  font-bold">Block & Unit</td>
+            <td class="w-2/5 font-bold">Department</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.returnNone(visitorDetail.block_id.name) }} | {{ functionMain.returnNone(visitorDetail.unit_id.name) }}</td>
+            <td> {{ visitorDetail.department_id ? functionMain.uppercaseFirstWithUnderscore(visitorDetail.department_id.name) : '-' }}</td>
           </tr>
           <tr class="h-6">
-            <td class="w-2/5  font-bold">Department</td>
+            <td class="w-2/5 font-bold">Employment Type</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.returnNone(visitorDetail.department_id.name) }}</td>
+            <td> {{ visitorDetail.employment_type ? functionMain.uppercaseFirstWithUnderscore(visitorDetail.employment_type) : '-' }}</td>
+          </tr>
+          <tr class="h-6">
+            <td class="w-2/5 font-bold">Employee ID / Code</td>
+            <td class="w-[5%]">:</td>
+            <td> {{ functionMain.returnNone(visitorDetail.employee_code)}}</td>
+          </tr>
+          <tr class="h-6">
+            <td class="w-2/5 font-bold">Vehicle Number</td>
+            <td class="w-[5%]">:</td>
+            <td> {{ functionMain.returnNone(visitorDetail.employee_vehicle_number)}}</td>
+          </tr>
+          <tr class="h-6">
+            <td class="w-2/5 font-bold">Extension Number</td>
+            <td class="w-[5%]">:</td>
+            <td> {{ functionMain.returnNone(visitorDetail.employee_extension_number)}}</td>
+          </tr>
+          <tr class="h-6">
+            <td class="w-2/5 font-bold">RFID Number</td>
+            <td class="w-[5%]">:</td>
+            <td> {{ functionMain.returnNone(visitorDetail.employee_rfid)}}</td>
+          </tr>
+          <tr class="h-6">
+            <td class="w-2/5 font-bold">Card Number</td>
+            <td class="w-[5%]">:</td>
+            <td> {{ functionMain.returnNone(visitorDetail.employee_card_number)}}</td>
           </tr>
         </table>
       </div>

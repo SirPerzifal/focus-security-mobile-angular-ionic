@@ -87,7 +87,7 @@ export class MyProfileEstatePage implements OnInit {
       value: JSON.stringify(estate),
     }).then(()=>{
       this.activeUnit = estate.unit_id;
-      this.router.navigate(['/resident-homepage']);
+      this.router.navigate(['/resident-home-page']);
     });
   }
 }

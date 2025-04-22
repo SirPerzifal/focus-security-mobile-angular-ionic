@@ -1,22 +1,35 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { Subscription } from 'rxjs';
-import { Router, NavigationStart } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 
-import { NoticeAndDocService } from 'src/app/service/resident/notice-and-doc/notice-and-doc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
-import { Estate } from 'src/models/resident/resident.model';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-notice-and-docs-main',
   templateUrl: './notice-and-docs-main.page.html',
   styleUrls: ['./notice-and-docs-main.page.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(100%)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
 })
 export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
 
+  isLoading: boolean = true;
+  pageName: string = '';
+  showNotice: boolean = true;
+  showDocs: boolean = false;
   navButtons: any[] = [
     { 
       text: 'Notices', 
@@ -30,37 +43,49 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     },
   ]
 
-  unitId: number = 0;
-  blockId: number = 0;
-
   notices: any = [];
+  originalNotices: any[] = []; // Menyimpan salinan dari notices asli
+  newOrOld: string = '';
 
-  isLoading: boolean = true;
+  //docs
+  files: any = [];
 
-  constructor(private noticeAndDocService: NoticeAndDocService, private router: Router, public functionMainService: FunctionMainService, private storage: StorageService) { }
+  isRoot: boolean = false;
+  previousParentId: number = 0;
+  previousParentIds: number[] = [];
+  previousParentNames: any = [];
+
+  constructor(
+    public functionMainService: FunctionMainService,
+    private mainApi: MainApiResidentService,
+  ) { }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = estate.unit_id;
-            this.blockId = estate.block_id;
-            
-            this.loadNotice();
-          }
-        })
-      } 
-    })
+    this.pageName = 'Notice'
+    this.loadNotice();
   }
 
   onClick(event: any) {
     console.log(event);
-    
+    if (this.pageName === 'Notice') {
+      this.notices = [];
+      this.originalNotices = [];
+      this.navButtons[0].active = false;
+      this.navButtons[1].active = true;
+      this.pageName = 'Docs';
+      this.loadFile();
+      this.showNotice = false;
+      this.showDocs = true;
+    } else {
+      this.navButtons[1].active = false;
+      this.navButtons[0].active = true;
+      this.pageName = 'Notice';
+      this.loadNotice();
+      this.showDocs = false;
+      this.showNotice = true;
+    }
   }
 
-  newOrOld: string = '';
   filtering() {
     // // console.log(this.newOrOld);
     
@@ -77,63 +102,134 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     }
   }
 
-  originalNotices: any[] = []; // Menyimpan salinan dari notices asli
-
   loadNotice() {
-    this.noticeAndDocService.focusResidentialGetNotices(
-      this.unitId,
-      this.blockId
-    ).subscribe(
-      (response) => {
-        this.notices = response.result.response_result
-          .map((notice: any) => ({
-            id: notice.id,
-            name: notice.name,
-            notice_title: notice.notice_title,
-            notice_content: notice.notice_content,
-            notice_attachment: notice.notice_attachment,
-            start_date: notice.start_date,
-            end_date: notice.end_date,
-            create_date: notice.create_date,
-            is_prioritize: notice.is_prioritize
-          }))
-          .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0)); // Mengurutkan berdasarkan prioritas
-  
-        this.originalNotices = [...this.notices]; // Simpan salinan asli
-        if (this.originalNotices) {
-          this.isLoading = false;
-        }
-        // // console.log(this.notices);
-      }, (error) => {
-        console.error(error);
+    this.isLoading = true;
+    this.mainApi.endpointMainProcess({}, 'get/notice').subscribe((response: any) => {
+      this.notices = response.result.response_result
+      .map((notice: any) => ({
+        id: notice.id,
+        name: notice.name,
+        notice_title: notice.notice_title,
+        notice_content: notice.notice_content,
+        notice_attachment: notice.notice_attachment,
+        start_date: notice.start_date,
+        end_date: notice.end_date,
+        create_date: notice.create_date,
+        is_prioritize: notice.is_prioritize
+      }))
+      .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0)); // Mengurutkan berdasarkan prioritas
+
+      this.originalNotices = [...this.notices]; // Simpan salinan asli
+      if (this.originalNotices) {
+        this.isLoading = false;
       }
-    );
+    })
   }
 
   prioritizeNotice(noticeid: any) {
     if (noticeid.is_prioritize) {
-      // // console.log("suk sini", noticeid.id);
-      this.noticeAndDocService.focusResidentialPostNoticesDeletePriority(this.unitId, Number(noticeid.id)).subscribe(
-        (response) => {
-          // // console.log(response);
-          this.notices = [];
-          this.loadNotice();
-        }, (error) => {
-          console.error(error);
-        }
-      )
+      this.mainApi.endpointMainProcess({
+        notice_id: Number(noticeid.id)
+      }, 'post/delete_notice_priority').subscribe((response: any) => {
+        // // console.log(response);
+        this.notices = [];
+        this.loadNotice();
+      }, (error) => {
+        console.error(error);
+      })
     } else {
-      // console.log("suk sini ni", noticeid.id);
-      this.noticeAndDocService.focusResidentialPostNoticesSetPriority(this.unitId, Number(noticeid.id)).subscribe(
-        (response) => {
-          // console.log(response);
-          this.notices = [];
-          this.loadNotice();
-        }, (error) => {
-          console.error(error);
-        }
-      )
+      this.mainApi.endpointMainProcess({
+        notice_id: Number(noticeid.id)
+      }, 'post/notice_set_priority').subscribe((response: any) => {
+        // // console.log(response);
+        this.notices = [];
+        this.loadNotice();
+      }, (error) => {
+        console.error(error);
+      })
     }
+  }
+
+  loadFile() {
+    this.isLoading = true;
+    this.mainApi.endpointMainProcess({}, 'get/docs').subscribe((response: any) => {
+      console.log("load", response)
+      this.files = response.result.result.map((file: any) => ({
+        id : file.id,
+        parent_id: file.parent_id,
+        is_root : file.is_root,
+        name : file.name,
+        document : file.document,
+        document_type : file.document_type,
+        path : file.path,
+      }));
+      this.isLoading = false;
+    })
+  }
+
+  private loadDocuments(parentId?: number) {
+    this.mainApi.endpointMainProcess({
+      parent_id: parentId
+    }, 'get/docs').subscribe((response: any) => {
+      console.log("load", response)
+      this.files = response.result.result.map((file: any) => ({
+        id : file.id,
+        parent_id: file.parent_id,
+        is_root : file.is_root,
+        name : file.name,
+        document : file.document,
+        document_type : file.document_type,
+        path : file.path,
+      }));
+      this.isLoading = false
+      // if (this.files.is_root = true) {
+      //   this.previousParentId = 0;
+      // } 
+    })
+  }
+
+  reqParent(id: number, name: string, parentId: any) {
+    this.previousParentNames.push({id: id, name: name})
+    // this.currentParentId.push(id)
+    this.loadDocuments(id);
+    if (parentId != 0) {
+        // // console.log('Ada parent');
+        this.isRoot = false;
+        this.previousParentId = parentId;
+        // this.previousParentIds.push(parentId); // Simpan parentId ke array
+    } else {
+        // // console.log('Gaada parent');
+        this.isRoot = true;
+        // this.previousParentIds = []; // Reset jika tidak ada parent
+    }
+  }
+  
+  backToPreviousparent() {
+    this.previousParentNames.pop(); // Hapus dan ambil parentId terakhir
+    // this.currentParentId.pop()
+    if (this.previousParentNames.length > 0) {
+        // Ambil parentId terakhir dari array
+        const lastParentId = this.previousParentNames[this.previousParentNames.length - 1].id // Hapus dan ambil parentId terakhir
+        // // console.log(this.previousParentNames);
+        this.loadDocuments(lastParentId); // Muat dokumen untuk parentId tersebut
+        this.isRoot = this.previousParentNames.length === 0; // Periksa apakah masih di root
+    } else {
+        // // console.log("tes");
+        this.previousParentId = 0;
+        this.isRoot = false;
+        this.loadFile(); // Kembali ke file utama jika tidak ada parent
+    }
+    console.log(this.previousParentNames)
+  }
+
+  jumpFolder(id: number) {
+    let index = this.previousParentNames.findIndex((item: any) => {console.log(item); return item.id == id})
+    console.log(index)
+    this.previousParentNames = this.previousParentNames.slice(0, index + 1)
+    // this.previousParentIds = this.previousParentIds.slice(0, index + 1)
+    // console.log(this.previousParentIds)
+    console.log(this.previousParentNames)
+    this.loadDocuments(id)
   }
 
   async downloadAttachment(base64Attachment: any) {

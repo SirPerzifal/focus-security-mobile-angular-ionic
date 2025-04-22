@@ -2,7 +2,7 @@
   <app-resident-header [text]="'Notification'"/>
   <div class="mt-2 pr-5 pl-4 w-full flex flex-row justify-between items-center">
     <div class="w-1/6 flex items-start mr-10">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-homepage']"></ion-icon>
+      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
     </div>
     <div class="w-5/6 flex flex-row justify-end items-center">
       <u class="w-32 text-base cw-1:text-xs font-bold items-end mr-2" (click)="clearFilter()">Clear Filter</u>
@@ -32,7 +32,7 @@
     <div *ngIf="isLoading" class="p-5 text-center mb-20">
       <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
         <p class="text-gray-600">You have no Notification.....</p>
-        <p class="text-gray-600">Go to <strong><a href="/resident-homepage">Home Page</a></strong></p>
+        <p class="text-gray-600">Go to <strong><a href="/resident-home-page">Home Page</a></strong></p>
       </div>
     </div>
   </ng-template>

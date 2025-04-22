@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
 
-import { NotificationService } from 'src/app/service/resident/notification/notification.service';
-import { StorageService } from 'src/app/service/storage/storage.service';
-import { Estate } from 'src/models/resident/resident.model';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 interface Notification {
   id: number;
@@ -19,8 +16,6 @@ interface Notification {
   styleUrls: ['./notification-main.page.scss'],
 })
 export class NotificationMainPage implements OnInit {
-  partnerId: number = 0;
-  unitId: number = 0;
   isLoading: boolean = true;
 
   notifications: Notification[] = []; // Ubah ke array of Notification
@@ -28,59 +23,40 @@ export class NotificationMainPage implements OnInit {
   searchTerm: string = '';
 
   constructor(
-    private notificationService: NotificationService, 
-    private storage: StorageService
+    private mainApi: MainApiResidentService
   ) { }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = estate.unit_id;
-            this.partnerId = estate.family_id;
-            // Load polling data
-            this.filteredNotifications = this.notifications; // Initialize with all notifications
-            this.loadNotification();
-          }
-        })
-      }
-    })
+    this.loadNotification();
   }
 
   loadNotification() {
-    this.notificationService.getNotifications(this.unitId, this.partnerId).subscribe(
-      response => {
-        if (response.result.response_code === 200) {
-          // Mengisi notifications dengan objek
-          this.notifications = response.result.notifications; // Simpan objek notifikasi
-          // // console.log(response.result.notifications);
-          
-          
-          // Format tanggal untuk setiap notifikasi
-          this.notifications = this.notifications.map(notification => {
-            const formattedDate = this.formatDate(notification.date); // Format the date
+    this.mainApi.endpointMainProcess({}, 'get/notifications').subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        // Mengisi notifications dengan objek
+        this.notifications = response.result.notifications; // Simpan objek notifikasi
+        // // console.log(response.result.notifications);
+        
+        
+        // Format tanggal untuk setiap notifikasi
+        this.notifications = this.notifications.map(notification => {
+          const formattedDate = this.formatDate(notification.date); // Format the date
 
-            return {
-              ...notification,
-              time: formattedDate[0], // Set the time
-              date: formattedDate[1], // Set the date
-            };
-          });
-          this.filteredNotifications = this.notifications; // Update filtered notifications
-          this.isLoading = false; // Ubah loading status ke false
+          return {
+            ...notification,
+            time: formattedDate[0], // Set the time
+            date: formattedDate[1], // Set the date
+          };
+        });
+        this.filteredNotifications = this.notifications; // Update filtered notifications
+        this.isLoading = false; // Ubah loading status ke false
 
-          // // console.log("this notifications", this.notifications)
-          // // console.log("thisfilterednotifications", this.filteredNotifications)
-        } else {
-          console.error('Error fetching notifications:', response);
-        }
-      },
-      error => {
-        console.error('HTTP Error:', error);
+        // // console.log("this notifications", this.notifications)
+        // // console.log("thisfilterednotifications", this.filteredNotifications)
+      } else {
+        console.error('Error fetching notifications:', response);
       }
-    );
+    })
   }
 
   formatDate(dateString: string): Array<string> {

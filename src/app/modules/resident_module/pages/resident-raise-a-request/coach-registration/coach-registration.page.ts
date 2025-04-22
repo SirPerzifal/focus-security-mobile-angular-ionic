@@ -5,8 +5,8 @@ import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
-
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
@@ -69,7 +69,7 @@ export class CoachRegistrationPage implements OnInit {
   otherCoachType: string = '';
   otherFacility: string = '';
 
-  constructor(private modalController: ModalController, private alertController: AlertController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService) { }
+  constructor(private modalController: ModalController, private alertController: AlertController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) { }
 
   termsAndCOndition: string = '';
 
@@ -98,15 +98,19 @@ export class CoachRegistrationPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.formData.unit_id = Number(parseValue.unit_id); // Mengambil nilai unit dari objek
-        this.formData.block_id = Number(parseValue.block_id); // Mengambil nilai block dari objek
-        this.project_id = Number(parseValue.project_id)
-        this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.formData.unit_id = Number(estate.unit_id); // Mengambil nilai unit dari objek
+            this.formData.block_id = Number(estate.block_id); // Mengambil nilai block dari objek
+            this.project_id = Number(estate.project_id)
+            this.loadAmount();
+          }
+        })
       }
-    });
+    })
   }
 
   project_id = 0

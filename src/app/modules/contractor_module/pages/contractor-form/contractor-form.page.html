@@ -147,10 +147,19 @@
           <div class="w-1/2">
               <app-text-input #textInput [id]="'contractor_name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nameIdentity[i]"></app-text-input>
           </div>
-          <div class="w-1/2">
-              <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" [labelText]="'NRIC / FIN'" [placeholder]="'EG. SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxIdentity[i]" (keyup)="nricPaxChange($event, i)" [isReadonly]="true"></app-text-input>
+          <div class="w-1/2 flex flex-col">
+            <div class="flex flex-row justify-between w-full items-center">
+              <label class="text-2xl mr-3"><b><u>{{typeIdentity[i] == 'passport' && project_config.is_industrial ? 'PASSPORT' : 'NRIC / FIN'}}</u></b></label>
+              <!-- <img alt="Loading" src="assets/img/Loading_Green.png" class="h-6 w-6" (click)="changeType(i)" /> -->
+              <ion-icon name="swap-horizontal-outline" class="h-6 w-6" (click)="changeType(i)" *ngIf="project_config.is_industrial"></ion-icon>
+            </div>
+            <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxIdentity[i]" (keyup)="nricPaxChange($event, i)" [isReadonly]="true" *ngIf="typeIdentity[i] != 'passport'"></app-text-input>
+
+            <app-text-input #textInput [id]="'contractor_passport_pax_' + i" *ngIf="typeIdentity[i] == 'passport'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" 
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxIdentity[i]"></app-text-input>
           </div>
-          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(i, true)">
+          <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(i, true)" *ngIf="typeIdentity[i] != 'passport' && project_config.is_industrial">
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
         </div>

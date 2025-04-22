@@ -4,8 +4,8 @@
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
   </div>
-  <div class="flex flex-col relative mx-4 mb-24">
-    <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
+  <div class="flex flex-col relative mx-4 h-full">
+    <div class="flex items-center justify-center flex-col mb-24" *ngIf="isHome" @fadeInOut>
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems">
           <ion-button fill="clear" class="w-full h-[150px] flex bg-[var(--ion-color-tertiary)] rounded-2xl relative p-0 m-0"
@@ -20,68 +20,35 @@
       </div>
     </div>
 
-    <div *ngIf="isData" @fadeInOut>
-      <!-- <div class="flex flex-col w-full mt-4">
-        <div class="w-full flex flex-col">
-          <div class="w-full justify-between flex flex-row">
-            <label class="text-base"><b>Search Option</b></label>
-            <label class="text-base" (click)="clearFilters()"><b><u>Clear Search</u></b></label>
-          </div>
-          <select id="search_option" (change)="onSearchOptionChange($event)" [(ngModel)]="searchOption"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] my-1"
-            style="border: 1px solid #6B7280;">
-            <option selected disabled hidden value="">Choose Search By</option>
-            <option [value]="'name'">Name</option>
-            <option [value]="'vehicle'">Vehicle Number</option>
-            <option [value]="'contact'">Contact no</option>
-            <option [value]="'all'">All</option>
-          </select>
-        </div>
-        <div class="w-full flex flex-row space-x-2 justify-between">
-          <div class="w-full" *ngIf="searchOption == 'name' || searchOption == 'all'">
-            <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelResidentText]="'Name'"
-              [labelResidentClass]="'text-base font-bold'" [placeholder]="'Vhasya'" [customClasses]="{'w-full ':true}"
-              [type]="'text'" [(ngModel)]="filter.name" (keyup)="onNameFilterChange($event)"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
-            </app-text-input>
-          </div>
-          <div class="w-full" *ngIf="searchOption == 'vehicle' || searchOption == 'all'">
-            <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'"
-              [labelResidentText]="'Vehicle Number'" [labelResidentClass]="'text-base font-bold'"
-              [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
-              [(ngModel)]="filter.vehicle_number" (keyup)="onVehicleFilterChange($event)"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
-            </app-text-input>
-          </div>
-          <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
-            <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelResidentText]="'Contact'"
-              [labelResidentClass]="'text-base font-bold'" [placeholder]="'+65 7827 323'"
-              [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.contact"
-              (keyup)="onContactFilterChange($event)"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
-            </app-text-input>
-          </div>
-        </div>
-
-      </div> -->
-
-      <div *ngIf="showReports.length > 0; else noReports" class="flex flex-col space-y-3 mt-4">
-        <div (click)="viewDetail(data)"
-          class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
-          *ngFor="let data of showReports">
-          <span class="text-lg font-bold">{{ functionMain.returnNone(data.vehicle_number ? data.vehicle_number : data.visitor_name) }}</span>
-          <!-- , {{ data.entry_datetime ? functionMain.convertNewDateTZ(data.entry_datetime) : '-' }} -->
-          <div
-            class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
-            <ion-icon size="large" class="text-white size-7" name="arrow-forward"></ion-icon>
-          </div>
-        </div>
+    <div class="mt-3 h-full" *ngIf="isData" @fadeInOut>
+      <span class="font-bold text-xl">Select the fields you want to display on the report.</span>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+        <ion-spinner name="dots"></ion-spinner>
       </div>
-      <ng-template #noReports>
-        <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
-          <p class="text-gray-600">There is no data found for this reports...</p>
+      <div class="w-full h-full" *ngIf="!isLoading">
+        <div class="w-full h-full" *ngIf="reportFields.length > 0; else noReports">
+          <div class="w-full flex flex-row justify-between items-center !border p-3 rounded mt-3">
+            <label class="text-base mt-1 w-full" for="report_page_check_all">Check All Fields</label>
+            <input id="report_page_check_all" name="report_page_check_all" type="checkbox" class="rounded w-5 h-5 mt-1 text-[var(--ion-color-primary)]"  [(ngModel)]="is_check_all" (click)="checkAll()">
+          </div>
+          <div class="w-full !border p-3 space-y-3 mt-3 rounded max-h-[45%] overflow-y-auto">
+            <div class="w-full flex flex-row justify-between items-center" *ngFor="let field of reportFields">
+              <label class="text-base mt-1 w-full" [for]="'field_select_' + field.field">{{ field.name}}</label>
+              <input [id]="'field_select_' + field.field" [name]="'field_select_' + field.field" type="checkbox" class="rounded w-5 h-5 mt-1 text-[var(--ion-color-primary)]" (click)="checkInput(field.field)" [checked]="returnCheckTrue(field.field)">
+            </div>
+          </div>
+          <div class="w-full">
+            <app-visitor-button [text]="'Get Report'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-3 w-full text-base h-14'" (click)="onSubmit()">
+            </app-visitor-button>
+          </div>
         </div>
-      </ng-template>
+        <ng-template #noReports>
+          <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+            <p class="text-gray-600">There is no data found for this reports...</p>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

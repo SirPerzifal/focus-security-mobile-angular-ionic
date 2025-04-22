@@ -121,6 +121,7 @@ export class CollectionModulePage implements OnInit {
     this.nric_value = ''
     this.identificationType = ''
     this.selectedNric = ''
+    this.pass_number = ''
   }
 
   toggleShowDrive() {
@@ -254,6 +255,9 @@ export class CollectionModulePage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if ((!this.walkInFormData.remarks) && this.project_config.is_industrial) {
       errMsg += 'Remarks is required!\n';
     }
@@ -262,7 +266,7 @@ export class CollectionModulePage implements OnInit {
       return
     }
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value,this.identificationType).subscribe(
+      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value,this.identificationType,this.pass_number).subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
@@ -315,6 +319,9 @@ export class CollectionModulePage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
+    }
     if ((!this.driveInFormData.remarks) && this.project_config.is_industrial) {
       errMsg += 'Remarks is required!\n';
     }
@@ -328,7 +335,7 @@ export class CollectionModulePage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value, this.identificationType).subscribe(
+      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value, this.identificationType,this.pass_number).subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -451,5 +458,6 @@ export class CollectionModulePage implements OnInit {
   identificationType = ''
   nric_value = ''
   selectedNric = ''
+  pass_number = ''
 
 }

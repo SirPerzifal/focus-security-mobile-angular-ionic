@@ -1,4 +1,6 @@
-<app-resident-header [text]="'My Family'" [text_second]="'Edit Member'" />
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'My Family'" [text_second]="'Edit Member'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start mt-2 ml-3">
     <ion-icon
@@ -64,5 +66,7 @@
     <div class="flex flex-row w-full"></div>
   </div>
   <!-- ############################### -->
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

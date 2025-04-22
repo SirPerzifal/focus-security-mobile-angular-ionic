@@ -1,4 +1,6 @@
-<app-resident-header [text]="'My Vehicle'" [text_second]="'Vehicle Payment'" />
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'My Vehicle'" [text_second]="'Vehicle Payments'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start ml-3 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-my-vehicle']"></ion-icon>
@@ -119,4 +121,6 @@
   </div>
 
 </ion-content>
-<app-bottom-nav-bar></app-bottom-nav-bar>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

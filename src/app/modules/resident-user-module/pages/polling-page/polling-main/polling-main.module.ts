@@ -7,13 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { PollingMainPageRoutingModule } from './polling-main-routing.module';
 
 import { PollingMainPage } from './polling-main.page';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PollingMainPageRoutingModule
+    PollingMainPageRoutingModule,
+    SharedModule,
+    ComponentsModule
   ],
   declarations: [PollingMainPage]
 })

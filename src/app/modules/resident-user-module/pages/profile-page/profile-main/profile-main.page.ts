@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
+import { AlertController } from '@ionic/angular';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
@@ -41,8 +42,10 @@ interface InputData {
 })
 export class ProfileMainPage implements OnInit {
 
+  pageName: string = '';
   showMain: boolean = true;
   showEstate: boolean = false;
+  showBanVisitorContractor: boolean = false;
 
   imageProfile: string = '';
   userName: string = '';
@@ -106,6 +109,27 @@ export class ProfileMainPage implements OnInit {
     }
   ]
 
+  // navButtonsMain: any[] = [
+  //   {
+  //     text: 'Daily Invite',
+  //     active: false,
+  //     action: 'route',
+  //     routeTo: '/visitor-main'
+  //   },
+  //   {
+  //     text: 'Hired Car',
+  //     active: false,
+  //     action: 'route',
+  //     routeTo: '/hired-card-in-visitor'
+  //   },
+  //   {
+  //     text: 'History',
+  //     active: true,
+  //     action: 'route',
+  //     routeTo: '/hired-card-in-visitor'
+  //   },
+  // ]
+
   disabledInput: boolean = true;
 
   //for estate
@@ -114,12 +138,59 @@ export class ProfileMainPage implements OnInit {
   activeUnit : number = 0;
   noData: boolean = false;
 
+  //for ban
+  historyData: Array<{
+    purpose: string;
+    visitor_name: string;
+    visitor_date: string;
+    visitor_entry_time: string;
+    visitor_exit_time: string;
+    mode_of_entry: string;
+    vehicle_number: string;
+    point_of_entry: string;
+    mobile_number: string;
+    delivery_type: string;
+    vehicle_type: string;
+    banned: boolean;
+    id: number;
+  }> = [];
+
+  filteredData: Array<{
+    purpose: string;
+    visitor_name: string;
+    visitor_date: string;
+    visitor_entry_time: string;
+    visitor_exit_time: string;
+    mode_of_entry: string;
+    vehicle_number: string;
+    point_of_entry: string;
+    mobile_number: string;
+    delivery_type: string;
+    vehicle_type: string;
+    banned: boolean;
+    id: number;
+  }> = [];
+
   constructor(
     public functionMain: FunctionMainService,
     private storage: StorageService,
     private router: Router,
-    private mainResident: MainApiResidentService
-  ) { }
+    private mainResident: MainApiResidentService,
+    private alertController: AlertController
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { openBan: boolean };
+    if (state) {
+      this.pageName = 'Ban'
+      this.showMain = false;
+      this.showEstate = false;
+      this.showBanVisitorContractor = true;
+      this.getHistoryList();
+      if (this.userType) {
+        this.getHistoryContrctorList();
+      }
+    }
+  }
 
   ngOnInit() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
@@ -153,7 +224,7 @@ export class ProfileMainPage implements OnInit {
 
   onChangeTypeUser(event: any) {
     this.userType = event;
-    if (event === 'commercial') {
+    if (event === 'industrial') {
       this.squareButton = [
         {
           name: 'Estate',
@@ -181,8 +252,11 @@ export class ProfileMainPage implements OnInit {
   onClickButton(button?: any, type?: string) {
     console.log('Button clicked:', button, 'Type:', type);
     if (type === 'back') {
+      this.pageName = '';
       this.showEstate = false;
       this.showMain = true;
+      this.showBanVisitorContractor = false;
+      this.historyData.pop();
     }
   }
 
@@ -208,34 +282,40 @@ export class ProfileMainPage implements OnInit {
   }
 
   onClickSquareBottom(event: any) {
-    console.log(event);
     if (event[1] === 'Ban') {
-      this.router.navigate(['/history-in-visitor'], {
-        state: {
-          from: "ban",
-        }
-      });
+      this.pageName = 'Ban'
+      this.showMain = false;
+      this.showEstate = false;
+      this.showBanVisitorContractor = true;
+      this.getHistoryList();
+      if (this.userType) {
+        this.getHistoryContrctorList();
+      }
     } else if (event[1] === 'Family') {
-      this.router.navigate(['/family-main'], {
+      this.router.navigate(['/resident-my-family'], {
         state: {
           from: "profile",
         }
       });
     } else if (event[1] === 'Vehicles') {
-      this.router.navigate(['/my-vehicle-main'], {
+      this.router.navigate(['/resident-my-vehicle'], {
         state: {
           from: "profile",
         }
       });
     } else if (event[1] === 'Employee') {
-      this.router.navigate(['/family-main'], {
+      this.router.navigate(['/resident-my-family'], {
         state: {
           from: "helper",
         }
       });
     } else if (event[1] === 'Estate') {
+      this.pageName = 'Choose Estate'
       this.showMain = false;
       this.showEstate = true;
+      this.showBanVisitorContractor = false;
+    } else if (event[1] === 'Pets') {
+      this.router.navigate(['/my-profile-my-pets']);
     }
   }
 
@@ -316,5 +396,138 @@ export class ProfileMainPage implements OnInit {
       this.showEstate = false;
       this.showMain = true;
     })
+  }
+
+  getHistoryList() {
+    this.isLoading = true;
+    this.historyData.pop();
+    this.mainResident.endpointMainProcess({}, 'get/visitor_history').subscribe((response) => {
+      var result = response.result['response_result']
+      this.historyData = []
+      if (response.result.response_status === 400) {
+        this.isLoading = false;
+        return;
+      } else {
+        const bannedItems = result.filter((item: any) => item['is_banned'] === true);
+        
+        bannedItems.forEach((item: any) => {
+          const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
+          const entryDate = new Date();
+          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+          entryDate.setHours(entryDate.getHours() + 1);
+          const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
+          const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
+          const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+      
+          this.historyData.push({
+            purpose: item['purpose'],
+            visitor_name: item['visitor_name'],
+            visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
+            visitor_entry_time: item['entry_time'],
+            visitor_exit_time: exitTime,
+            mode_of_entry: item['mode_of_entry'],
+            vehicle_number: item['vehicle_number'],
+            point_of_entry: item['point_of_entry'],
+            mobile_number: item['contact_number'],
+            delivery_type: item['delivery_type'],
+            vehicle_type: item['vehicle_type'],
+            banned: item['is_banned'],
+            id: item['visitor_id']
+          });
+          this.isLoading = false;
+        });
+      }
+    })
+  }
+
+  openDetails(historyData: any) {
+    this.router.navigate(['/detail-history-in-visitor'], {
+      state: {
+        historyData: historyData,
+        from: 'profile'
+      }
+    });
+  }
+
+  public async showAlertButtons(headerName: string, className: string, historyData: any) {
+    const alertButtons = await this.alertController.create({
+      cssClass: className,
+      header: headerName + " this visitor?",
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.reinstateProcess(historyData);
+            // console.log(historyData);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Alert cancel');
+          },
+        },
+      ]
+    });
+    await alertButtons.present ();
+  }
+
+  reinstateProcess(historyData: any) {
+    console.log("tes");
+    this.mainResident.endpointMainProcess({
+      contact_no: historyData.mobile_number,
+      vehicle_number: historyData.vehicle_number
+    }, 'post/reinstate_visitor').subscribe(
+      (response) => {
+        console.log('Success:', response);
+        // this.router.navigate(['resident-my-profile']);
+      },
+    )
+  }
+
+  getHistoryContrctorList() {
+    this.mainResident.endpointMainProcess({}, 'get/contractor_history').subscribe((response) => {
+      this.isLoading = true; // Set loading to true at the start
+      var result = response.result['response_result'];
+      
+      if (response.result.response_status === 400) {
+        this.isLoading = false;
+        return;
+      } else {
+        const bannedItems = result.filter((item: any) => item['is_banned'] === true);
+
+        bannedItems.forEach((item: any) => {
+          const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
+          const entryDate = new Date();
+          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+          entryDate.setHours(entryDate.getHours() + 1);
+          const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
+          
+          const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
+          const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
+          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+  
+          this.filteredData.push({
+            purpose: item['purpose'],
+            visitor_name: item['contractor_name'],
+            visitor_date: formattedDate, // Use formattedDate here
+            visitor_entry_time: item['entry_time'],
+            visitor_exit_time: exitTime,
+            mode_of_entry: item['mode_of_entry'],
+            vehicle_number: item['vehicle_number'],
+            point_of_entry: item['point_of_entry'],
+            mobile_number: item['contact_number'],
+            delivery_type: item['delivery_type'],
+            vehicle_type: item['vehicle_type'],
+            banned: item['is_banned'],
+            id: item['contractor_id']
+          });
+        });
+      }
+      this.isLoading = false; // Set loading to false after processing all items
+    });
   }
 }

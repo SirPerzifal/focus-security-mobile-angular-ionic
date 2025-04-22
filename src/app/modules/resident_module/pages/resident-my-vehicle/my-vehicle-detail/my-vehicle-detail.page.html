@@ -1,5 +1,7 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'My Vehicle'" [text_second]="'Vehicle Details'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'My Vehicle'" [text_second]="'Vehicle Detail'" />
   <div class="w-full mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToVehicle()"></ion-icon>
   </div>
@@ -85,5 +87,7 @@
     </ng-template>
   </ion-modal>
 
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

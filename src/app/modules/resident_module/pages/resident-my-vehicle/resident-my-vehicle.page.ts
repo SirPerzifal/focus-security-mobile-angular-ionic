@@ -27,6 +27,8 @@ interface Vehicle {
 export class ResidentMyVehiclePage implements OnInit {
   userRole: string = 'household';
   unitId: number = 0;
+  projectId: number = 0;
+  hostId: number = 0;
   isLoading: boolean = true;
 
   MaximumVehicle: boolean = false;
@@ -46,22 +48,12 @@ export class ResidentMyVehiclePage implements OnInit {
     if (this.fromWhere) {
       this.router.navigate(['/resident-my-profile']);
     } else {
-      this.router.navigate(['/resident-homepage']);
+      this.router.navigate(['/resident-home-page']);
     }
   }
 
   ngOnInit() {
-    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            const estate = JSON.parse(value) as Estate;
-            this.unitId = Number(estate.unit_id);
-            this.loadVehicleDetails();
-          }
-        })
-      }
-    })
+
   }
 
   ionViewWillEnter() {
@@ -70,8 +62,15 @@ export class ResidentMyVehiclePage implements OnInit {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
-            this.unitId = Number(estate.unit_id);
-            this.loadVehicleDetails();
+            if (estate.record_type === 'industrial') {
+              this.hostId = Number(estate.family_id);
+              this.projectId = Number(estate.project_id)
+              this.loadVehicleDetails();
+            } else {
+              this.unitId = Number(estate.unit_id);
+              this.projectId = Number(estate.project_id)
+              this.loadVehicleDetails();
+            }
           }
         })
       }
@@ -106,7 +105,7 @@ export class ResidentMyVehiclePage implements OnInit {
   }
 
   loadVehicleDetails() {
-    this.myVehicleService.getVehicleDetail(this.unitId).subscribe(
+    this.myVehicleService.getVehicleDetail(this.unitId, this.projectId, this.hostId).subscribe(
       response => {
         if (response.result.response_code === 200) {
           this.vehicles = response.result.response_result.vehicles.map((vehicle: any) => ({

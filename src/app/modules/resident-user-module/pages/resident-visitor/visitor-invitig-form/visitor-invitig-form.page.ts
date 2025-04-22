@@ -30,6 +30,7 @@ export class VisitorInvitigFormPage implements OnInit {
     entryTitle: "",
     entryMessage: "",
     isProvideUnit: false,
+    facility: '',
     hiredCar: "",
   }
 
@@ -248,7 +249,8 @@ export class VisitorInvitigFormPage implements OnInit {
           entry_type: this.formData.entryType, 
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
-          is_provide_unit: this.formData.isProvideUnit,
+          is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
+          facility: this.formData.facility ? this.formData.facility : '',
           invitees: this.inviteeFormList,
           hired_car: this.formData.hiredCar,
         }, 'post/create_expected_visitors').subscribe((response: any) => {
@@ -263,6 +265,7 @@ export class VisitorInvitigFormPage implements OnInit {
               entryTitle: "",
               entryMessage: "",
               isProvideUnit: false,
+              facility: '',
               hiredCar: "",
             }
             this.router.navigate(['/visitor-main'], {

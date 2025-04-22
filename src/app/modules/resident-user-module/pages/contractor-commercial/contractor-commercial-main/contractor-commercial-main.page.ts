@@ -60,8 +60,8 @@ export class ContractorCommercialMainPage implements OnInit {
     entryType: "",
     entryTitle: "",
     entryMessage: "",
-    isProvideUnit: false,
-    hiredCar: "",
+    // hiredCar: "",
+    // isProvideUnit: false,
   }
   selectedDate: string = '';
   
@@ -113,8 +113,8 @@ export class ContractorCommercialMainPage implements OnInit {
           entryType: "",
           entryTitle: "",
           entryMessage: "",
-          isProvideUnit: false,
-          hiredCar: "",
+          // hiredCar: "",
+          // isProvideUnit: false,
         }
       } else if (params['formData']) {
         this.formData = {
@@ -123,8 +123,8 @@ export class ContractorCommercialMainPage implements OnInit {
           entryType: "",
           entryTitle: "",
           entryMessage: "",
-          isProvideUnit: false,
-          hiredCar: "",
+          // hiredCar: "",
+          // isProvideUnit: false,
         }
       } else {
         this.toggleShowNewInv()
@@ -166,7 +166,7 @@ export class ContractorCommercialMainPage implements OnInit {
 
   getActiveInvites() {
     try {
-      this.mainApiResidentService.endpointMainProcess({}, 'get/active_invites').subscribe(
+      this.mainApiResidentService.endpointMainProcess({}, 'get/contractor_active_invites').subscribe(
         res => {
           var result = res.result['response_status'];
           // console.log(result)
@@ -248,9 +248,9 @@ export class ContractorCommercialMainPage implements OnInit {
     this.formData.entryType = entryType;
   }
 
-  onProvideUnitChange(event: any) {
-    this.formData.isProvideUnit = !this.formData.isProvideUnit;
-  }
+  // onProvideUnitChange(event: any) {
+  //   this.formData.isProvideUnit = !this.formData.isProvideUnit;
+  // }
 
   onSubmitNext() {
     let errMsg = '';
@@ -312,7 +312,8 @@ export class ContractorCommercialMainPage implements OnInit {
       this.mainApiResidentService.endpointProcess(
         {
           entry_id: !invite.is_entry ? false : invite.invite_id, 
-          visitor_id: invite.is_entry ? false : invite.invite_id
+          visitor_id: false,
+          contractor_id: invite.is_entry ? false : invite.invite_id
         },
         'post/cancel_invite'
       ).subscribe(

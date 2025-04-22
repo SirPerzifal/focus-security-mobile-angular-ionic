@@ -53,14 +53,15 @@ export class DetailHistoryInVisitorPage implements OnInit {
     image: '',
   }
 
+  hideFilter: string = '';
+  cardIfJustBan: string = '';
+
   constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, private functionMain: FunctionMainService) { 
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { historyData: any };
+    const state = navigation?.extras.state as { historyData: any, from: string };
     if (state) {
       this.historyData = state.historyData;
       if (this.historyData) {
-        console.log(this.historyData);
-        
         const visitorDate = new Date(state.historyData.visitor_date); // Ensure this is a Date object
         const visitorEntryTime = state.historyData.visitor_entry_time; // HH:mm format
         this.formData = {
@@ -71,11 +72,28 @@ export class DetailHistoryInVisitorPage implements OnInit {
           last_entry_date_time: this.formatDateTime(visitorDate, visitorEntryTime), 
           image: '',
         }
+        if (state) {
+          // // console.log(state.from);
+          this.hideFilter = state.from;
+          this.cardIfJustBan = state.from;
+        }
       }
     }
   }
 
   ngOnInit() {
+  }
+
+  bacToWhere() {
+    if (this.hideFilter === 'profile') {
+      this.router.navigate(['profile-page-main'], {
+        state: {
+          openBan: true
+        }
+      })
+    } else {
+      this.router.navigate(['history-in-visitor'])
+    }
   }
 
   getTodayDate(): string {

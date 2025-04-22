@@ -27,7 +27,7 @@ export class BottomNavBarComponent implements OnInit {
   
   routeTo() {
     this.navigationService.setActiveButton('home');
-    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-homepage']);
+    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-home-page']);
   }
 
   reportIssue() {
@@ -47,10 +47,10 @@ export class BottomNavBarComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
-        if (url !== '/resident-homepage' && url !== '/record-app-report' && url !== '/resident-settings-page') {
+        if (url !== '/resident-home-page' && url !== '/record-app-report' && url !== '/resident-settings-page') {
           this.navigationService.setActiveButton('');
         }
-        if (url === '/resident-homepage' || url === '/client-main-app') {
+        if (url === '/resident-home-page' || url === '/client-main-app') {
           this.navigationService.setActiveButton('home');
         }
         if (url === '/record-app-report' || url === '/client-app-issues') {

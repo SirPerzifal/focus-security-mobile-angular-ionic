@@ -1,4 +1,6 @@
-<app-resident-header [text]="'Payments'" [text_second]="'Bills History'" />
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Payments'" [text_second]="'Bills History'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full mt-2 ml-[10px]">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-payment']"></ion-icon>
@@ -113,5 +115,7 @@
     </ion-modal>
   </div>
 
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

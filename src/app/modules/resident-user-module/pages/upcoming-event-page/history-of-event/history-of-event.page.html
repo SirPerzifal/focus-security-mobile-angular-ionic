@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-1/6 flex items-start mr-10 mb-2 ml-4 mt-2">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="onBack()"></ion-icon>
+  </div>
+
+  <div class="px-5 text-center mb-24">
+    <div class="flex flex-row justify-start items-center w-full space-x-3">
+      <div class="w-full">
+        <app-visitor-button [text]="'Calendar View'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-full'" (click)="toggleDirecttoHis()"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'Active Event'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full leading-none'" (click)="toggleDirecttoActiveEvent()"></app-visitor-button>
+      </div>
+    </div>
+    
+    <!-- Display upcoming events -->
+    <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
+      <div *ngFor="let upcomingEvent of upcomingEvents; let i = index"  class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100">
+        <p class="font-bold text-xl text-black text-left mt-2">{{ upcomingEvent.title }}</p>
+        <div class="table text-left">
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Event Date</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnDate(upcomingEvent.start) }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Coach Name</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ? upcomingEvent.registered_coach_name : '-' }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Event Start</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.start) }}</p>
+          </div>
+          <div class="table-row">
+            <p class="font-bold table-cell text-base text-black">Event End</p>
+            <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.end) }}</p>
+          </div>
+        </div>
+        <div class="flex mt-2 space-x-2 mb-2">
+					  <button class="bg-[#E3787E] text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold" (click)="onLiftBan(upcomingEvent)">
+						  Cancel Events
+					  </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noupcomingEvents>
+      <div class="w-full bg-transparent p-4 text-center rounded-lg mt">
+        <p class="text-gray-600">You have no active upcoming events.....</p>
+        <p class="text-gray-600">Go to <strong><a href="/resident-home-page">Home Page</a></strong> or</p>
+        <p class="text-gray-600"><strong><a routerLink="/facility-new-upcomingEvent">Click Here</a></strong> to make a new upcoming event now.</p>
+      </div>
+    </ng-template>
+  </div>
+
+</ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

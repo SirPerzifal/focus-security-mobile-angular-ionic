@@ -19,7 +19,7 @@ export class NavTabsComponent  implements OnInit {
 
   onClickValue(event: any, button: any) {
     if (event && button.active === false) {
-      this.eventEmitter.emit(true)
+      this.eventEmitter.emit([true, button.text])
     }
   }
 

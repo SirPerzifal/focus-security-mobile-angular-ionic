@@ -140,6 +140,7 @@ export class PickUpPagePage implements OnInit {
     this.vehicleNumber = ''
     this.blkLocation = ''
     this.selectedNric = ''
+    this.pass_number = ''
   }
 
   toggleShowDrop() {
@@ -203,14 +204,17 @@ export class PickUpPagePage implements OnInit {
     if (!location && !this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
-    if (!this.selectedHost && this.project_config.is_industrial) {
-      errMsg += 'Host is required! \n'
-    }
     if (this.project_config.is_industrial && !this.identificationType) {
       errMsg += 'Identification type is required! \n'
     }
     if (this.project_config.is_industrial && !this.nric_value) {
       errMsg += 'Identification number is required! \n'
+    }
+    if (!this.selectedHost && this.project_config.is_industrial) {
+      errMsg += 'Host is required! \n'
+    }
+    if (!this.pass_number && this.project_config.is_industrial) {
+      errMsg += 'Pass number is required! \n'
     }
     if (errMsg) {
       this.presentToast(errMsg, 'danger');
@@ -229,6 +233,7 @@ export class PickUpPagePage implements OnInit {
         this.selectedHost,
         this.identificationType,
         this.nric_value,
+        this.pass_number,
       ).subscribe({
         next: (response) => {
           console.log(response)
@@ -321,4 +326,5 @@ export class PickUpPagePage implements OnInit {
   identificationType = ''
   nric_value = ''
   selectedNric = ''
+  pass_number = ''
 }

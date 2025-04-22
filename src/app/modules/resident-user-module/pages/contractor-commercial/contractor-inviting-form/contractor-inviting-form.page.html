@@ -4,9 +4,125 @@
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backWithState()"></ion-icon>
   </div>
-
+  <div class="flex flex-col relative mx-4 mb-20">
+		<div class="flex flex-col mt-2">
+			<u class="text-lg font-bold">Invitation List</u>
+			<div *ngIf="!isFormVisible" class="text-center text-gray-500 mt-4 dark:text-[white]">
+				Push "Add Invitee" to add a form or choose to add from history
+			  </div>
+			<div id="form" *ngIf="shouldShowForm()">
+				<div *ngFor="let invitee of inviteeFormList; let i = index" class="mb-4">
+					<div class="w-full flex justify-between flex-row mt-2">
+						<div class="w-full">
+							<div class="flex flex-row justify-start items-center">
+								<p class="text-base font-bold">Entry Name</p>
+								<a class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2" 
+								(click)="presentCustomAlert(i)"><ion-icon class="text-base mt-[2px]" name="trash"></ion-icon></a>
+							</div>
+							<input 
+							[id]="'invf_name_' + i" 
+							name="name_{{i}}"
+							placeholder="" 
+							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].contractor_name"
+							required
+							/>
+						</div>
+						<div class="flex flex-col justify-end items-end ml-2">
+							<div class="h-12 w-12 flex flex-row justify-center items-center bg-[var(--ion-color-primary)] rounded">
+								<fa-icon class="text-[24px] mt-1 text-white" [icon]="faAddressBook" (click)="currentInviteeIndex = i; fetchContacts()"></fa-icon>
+							</div>
+						</div>
+					</div>
+					<div class="w-full flex flex-col justify-between">
+						<div class="w-full">
+							<div class="flex flex-row justify-start mt-2">
+								<p class="text-base font-bold cw-3:text-xs">Entry Mobile Number</p>
+							</div>
+							<input 
+							[id]="'invf_phone_' + i" 
+							name="phone_{{i}}"
+							placeholder="" 
+							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].contact_number"
+							required>
+						</div>
+						<div class="w-full">
+							<div class="flex flex-row justify-start mt-2">
+								<p class="text-base font-bold cw-3:text-xs">Entry Vehicle Number</p>
+							</div>
+							<input 
+							[id]="'invf_plate_' + i" 
+							name="plate_{{i}}"
+							placeholder="" 
+							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].vehicle_number"
+							required>
+						</div>
+						<div class="w-full">
+							<div class="flex flex-row justify-start mt-2">
+								<p class="text-base font-bold cw-3:text-xs">Entry Company Name</p>
+							</div>
+							<input 
+							[id]="'invf_company_name_' + i" 
+							name="company_name_{{i}}"
+							placeholder="" 
+							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].company_name"
+							required>
+						</div>
+						<div class="w-full">
+							<div class="flex flex-row justify-start mt-2">
+								<p class="text-base font-bold cw-3:text-xs">Entry Type Of Work</p>
+							</div>
+							<input 
+							[id]="'invf_type_of_work_' + i" 
+							name="type_of_work_{{i}}"
+							placeholder="" 
+							class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].type_of_work"
+							required>
+						</div>
+						<div class="w-full">
+							<div class="flex flex-row justify-start mt-2">
+								<p class="text-base font-bold cw-3:text-xs">Expected Number of Work</p>
+							</div>
+							<input 
+							[id]="'invf_expected_number_of_visit_' + i"
+							type="number"
+							name="expected_number_of_visit_{{i}}"
+							placeholder="" 
+							class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+							[(ngModel)]="inviteeFormList[i].expected_number_of_visit"
+							required>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="flex flex-row justify-end">
+				<u class="text-[14px] font-bold cursor-pointer" (click)="addInvitee()">{{ addInviteeText }}</u>
+			</div>
+			<div class="flex flex-row justify-end mt-1">
+				<u 
+					class="text-[14px] font-bold cursor-pointer" 
+					(click)="navigateToInviteFormHistory()">
+					Add From History List
+				</u>
+			</div>
+			<div class="flex flex-row mt-4 text-[12px] w-full">
+				<div class="w-full">
+					<app-submit-button 
+					[text]="'Send Invitation'" 
+					[extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+					(click)="onSubmit()"
+					(disabled)="!isFormVisible">
+				  </app-submit-button>
+				</div>
+			</div>
+		</div>
+	</div>
 </ion-content>
 
 <ion-footer>

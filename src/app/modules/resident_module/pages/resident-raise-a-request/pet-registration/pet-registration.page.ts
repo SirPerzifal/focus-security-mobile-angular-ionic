@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Preferences } from '@capacitor/preferences';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { ModalController } from '@ionic/angular';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
@@ -31,7 +32,7 @@ export class PetRegistrationPage implements OnInit {
   }
   fromWhere: boolean = false; //
   
-  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService) { 
+  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private storage: StorageService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any};
     if (state) {
@@ -75,12 +76,15 @@ export class PetRegistrationPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        console.log(parseValue)
-        this.formData.unit_id = parseValue.unit_id;
-        this.formData.block_id = parseValue.block_id;
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.formData.unit_id = estate.unit_id;
+            this.formData.block_id = estate.block_id;
+          }
+        })
       }
     })
   }

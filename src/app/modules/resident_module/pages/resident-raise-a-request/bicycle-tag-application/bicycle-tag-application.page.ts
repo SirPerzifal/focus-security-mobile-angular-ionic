@@ -10,6 +10,9 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
+
 @Component({
   selector: 'app-bicycle-tag-application',
   templateUrl: './bicycle-tag-application.page.html',
@@ -48,7 +51,7 @@ export class BicycleTagApplicationPage implements OnInit {
     isRequirePayment: false,
   }
 
-  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService) { }
+  constructor(private modalController: ModalController, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) { }
 
   termsAndCOndition: string = '';
 
@@ -77,19 +80,23 @@ export class BicycleTagApplicationPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectId = Number(parseValue.project_id)
-        this.unitId = Number(parseValue.unit_id);
-        this.formData.unit_id = parseValue.unit_id;
-        this.unit = parseValue.unit_name;
-        this.block = parseValue.block_name;
-        this.formData.block_id = parseValue.block_id;
-        this.condoName = parseValue.project_name;
-        this.userName = parseValue.family_name;
-        this.userPhoneNumber = parseValue.family_mobile_number;
-        this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = Number(estate.project_id)
+            this.unitId = Number(estate.unit_id);
+            this.formData.unit_id = estate.unit_id;
+            this.unit = estate.unit_id;
+            this.block = estate.block_id;
+            this.formData.block_id = estate.block_id;
+            this.condoName = estate.project_name;
+            this.userName = estate.family_name;
+            this.userPhoneNumber = estate.family_mobile_number;
+            this.loadAmount();
+          }
+        })
       }
     })
   }

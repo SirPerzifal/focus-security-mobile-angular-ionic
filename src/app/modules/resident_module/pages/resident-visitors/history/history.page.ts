@@ -79,7 +79,7 @@ export class HistoryPage implements OnInit, OnDestroy {
     if (this.cardIfJustBan === 'ban') {
       this.router.navigate(['/resident-my-profile']);
     } else {
-      this.router.navigate(['/resident-homepage'])
+      this.router.navigate(['/resident-home-page'])
     }
   }
 

@@ -1,5 +1,7 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Raise a Request'" [text_second]="'Appeal Form'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
-	<app-resident-header [text]="'Raise A Request'" [text_second]="'Appeal Form'" />
   <div class="w-full flex items-start ml-[15px] mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToAppealParkingFines()"></ion-icon>
   </div>
@@ -63,5 +65,7 @@
     </div>
   </div>
 
-	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

@@ -18,8 +18,8 @@ import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-resident-homepage',
-  templateUrl: './resident-homepage.page.html',
-  styleUrls: ['./resident-homepage.page.scss'],
+  templateUrl: './resident-home-page.page.html',
+  styleUrls: ['./resident-home-page.page.scss'],
 })
 export class ResidentHomepagePage implements OnInit {
   paramForBadgeNotification: number = 0;

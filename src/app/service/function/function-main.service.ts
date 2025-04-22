@@ -29,12 +29,12 @@ export class FunctionMainService {
     toast.present();
   }
 
-  convertToDDMMYYYY(dateString: string): string {
+  convertToDDMMYYYY(dateString: string | undefined): string | undefined {
     // Memisahkan string berdasarkan "-"
-    const parts = dateString.split('-');
+    const parts = dateString?.split('-');
     
     // Memastikan bahwa kita memiliki 3 bagian (tahun, bulan, hari)
-    if (parts.length === 3) {
+    if (parts?.length === 3) {
       const [year, month, day] = parts; // Pisahkan menjadi tahun, bulan, dan hari
       return `${day}/${month}/${year}`; // Gabungkan dalam format dd/mm/yyyy
     } else {
@@ -299,6 +299,20 @@ export class FunctionMainService {
             link.parentNode.removeChild(link);
         }
     }, 0);
+  }
+
+  formatDateFacility(dateString: string): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-GB', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      });
+    } catch {
+      return dateString;
+    }
   }
 
   formatDate(date: Date): string {

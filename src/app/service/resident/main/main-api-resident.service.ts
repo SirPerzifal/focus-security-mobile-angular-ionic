@@ -41,7 +41,7 @@ export class MainApiResidentService extends ApiService {
         const estate = JSON.parse(decodedValue) as Estate;
         
         // Set ID berdasarkan tipe estate
-        if (estate.record_type === 'commercial') {
+        if (estate.record_type === 'industrial') {
           this.hostId = estate.family_id;
           this.familyId = 0
           this.unitId = 0
@@ -63,7 +63,7 @@ export class MainApiResidentService extends ApiService {
         
         // Body request berdasarkan ada/tidaknya data estate
         let body;
-        if (estate.record_type === 'commercial' || estate.record_type === 'resident') {
+        if (estate.record_type === 'industrial' || estate.record_type === 'resident') {
           body = {
             jsonrpc: '2.0',
             params: {

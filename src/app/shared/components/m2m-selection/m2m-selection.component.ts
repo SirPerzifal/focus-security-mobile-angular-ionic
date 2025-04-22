@@ -51,6 +51,7 @@ export class M2mSelectionComponent implements OnInit {
   @Input() divOuterClass: string = 'min-h-14 text-base'
   @Input() customTextClass: string = 'p-0'
   @Input() showButton: boolean = false
+  @Input() isReadonly: boolean = false
 
   @Output() outputValue = new EventEmitter<any>();
 
@@ -100,6 +101,7 @@ export class M2mSelectionComponent implements OnInit {
   }
 
   onUnitChange(unitId: any) {
+    if (this.isReadonly) return
     if (unitId) {
       const unit = this.Arrays.find((u: any) => u.id === unitId); // Temukan unit berdasarkan ID
       if (unit) {

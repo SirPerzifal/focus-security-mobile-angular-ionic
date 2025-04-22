@@ -44,6 +44,7 @@ export interface FormData {
     entryTitle: string;
     entryMessage: string;
     isProvideUnit: boolean;
+    facility: string,
     hiredCar: string;
     unit: number;
   }

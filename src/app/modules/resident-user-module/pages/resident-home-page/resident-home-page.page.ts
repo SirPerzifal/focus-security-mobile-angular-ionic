@@ -124,6 +124,7 @@ export class ResidentHomePagePage implements OnInit {
       routeLinkTo: '/quick-dial-page-main'
     }
   ]
+  is_door_access: boolean = false;
 
   showingProfile: string = '';
   selectedProfile: string = '';
@@ -269,12 +270,12 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '/payment-page-main',
+            routeLinkTo: '/resident-payment',
           },
           {
             name: 'Raise a Request',
             src: 'assets/icon/resident-icon/icon6.png',
-            routeLinkTo: '/raise-a-request-page-main',
+            routeLinkTo: '/resident-raise-a-request',
           },
           {
             name: 'Find Service Providers',
@@ -297,22 +298,22 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '/payment-page-main',
+            routeLinkTo: '/resident-payment',
           },
           {
             name: 'My Family',
             src: 'assets/icon/resident-icon/icon1.png',
-            routeLinkTo: '/family-page-main',
+            routeLinkTo: '/resident-my-family',
           },
           {
             name: 'My Vehicle',
             src: 'assets/icon/resident-icon/icon4.png',
-            routeLinkTo: '/my-vehicle-page-main',
+            routeLinkTo: '/resident-my-vehicle',
           },
           {
             name: 'Raise a Request',
             src: 'assets/icon/resident-icon/icon6.png',
-            routeLinkTo: '/raise-a-request-page-main',
+            routeLinkTo: '/resident-raise-a-request',
           },
           {
             name: 'Find Service Providers',
@@ -321,7 +322,7 @@ export class ResidentHomePagePage implements OnInit {
           }
         ];
       }
-    } else if (this.userType === 'commercial') {
+    } else if (this.userType === 'industrial') {
       this.longButtondata = [
         {
           name: 'Visitors',
@@ -341,7 +342,7 @@ export class ResidentHomePagePage implements OnInit {
         {
           name: 'My Vehicle',
           src: 'assets/icon/resident-icon/icon4.png',
-          routeLinkTo: '/my-vehicle-page-main',
+          routeLinkTo: '/resident-my-vehicle',
         },
       ];
     }
@@ -366,6 +367,55 @@ export class ResidentHomePagePage implements OnInit {
         // console.log("heres the data", result);
         this.squareButton[3].document = result.result.result[0].documents;
         this.squareButton[3].documentName = result.result.result[0].name;
+        this.is_door_access = result.result.result[0].is_door_access;
+        if (this.is_door_access === false) {
+          this.squareButton = [
+            {
+              id: 1,
+              name: 'Notification',
+              src: 'assets/icon/resident-icon/notification.png',
+              routeLinkTo: '/notification-page-main',
+              paramForBadgeNotification: 0
+            },
+            {
+              id: 2,
+              name: 'Notice & Docs',
+              src: 'assets/icon/home-icon/sound.webp',
+              routeLinkTo: '/notice-and-docs-page-main'
+            },
+            {
+              id: 3,
+              name: 'Polling',
+              src: 'assets/icon/resident-icon/polling.png',
+              routeLinkTo: '/polling-page-main'
+            },
+            {
+              id: 4,
+              name: 'House Rule',
+              src: 'assets/icon/resident-icon/house-rule.png',
+              document: '',
+              documentName: ''
+            },
+            {
+              id: 5,
+              name: 'Report an Issue',
+              src: 'assets/icon/resident-icon/report-an-issue.png',
+              routeLinkTo: '/app-report-main'
+            },
+            {
+              id: 6,
+              name: 'Upcoming Events',
+              src: 'assets/icon/resident-icon/upcoming-event.png',
+              routeLinkTo: '/upcoming-event-page-main'
+            },
+            {
+              id: 7,
+              name: 'Quick Dials',
+              src: 'assets/icon/resident-icon/quick-dials.png',
+              routeLinkTo: '/quick-dial-page-main'
+            }
+          ]
+        }
       } else {
         console.error('Error fetching notifications:', result);
       }

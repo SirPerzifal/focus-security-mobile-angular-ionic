@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastController, AlertController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 
@@ -25,16 +26,20 @@ export class MyProfileMyPetsPage implements OnInit {
   unitId: number = 0;
   petList: pet[] = [];
 
-  constructor(private router: Router, private petService: RaiseARequestService, private toastController: ToastController, private alertController: AlertController) {}
+  constructor(private router: Router, private petService: RaiseARequestService, private toastController: ToastController, private alertController: AlertController, private storage: StorageService) {}
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
         // this.userId = parseValue.family_id
-        this.blokId = Number(parseValue.block_id);
-        this.unitId = Number(parseValue.unit_id);
+        this.blokId = Number(estate.block_id);
+        this.unitId = Number(estate.unit_id);
         this.loadPet();
+          }
+        })
       }
     })
   }

@@ -11,6 +11,8 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-access-card-application',
@@ -57,20 +59,24 @@ export class AccessCardApplicationPage implements OnInit {
     reason: '',
   }
 
-  constructor(private modalController: ModalController, private router: Router, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService) { }
+  constructor(private modalController: ModalController, private router: Router, private raiseARequestService: RaiseARequestService, private toastController: ToastController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService, private storage: StorageService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectId = Number(parseValue.project_id);
-        this.unitId = Number(parseValue.unit_id);
-        this.unit = parseValue.unit_name;
-        this.block = parseValue.block_name;
-        this.phoneNumber = parseValue.family_mobile_number;
-        this.userName = parseValue.family_name;
-        this.familyType = parseValue.family_type;
-        this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = Number(estate.project_id);
+            this.unitId = Number(estate.unit_id);
+            this.unit = estate.unit_id;
+            this.block = estate.unit_id;
+            this.phoneNumber = estate.family_mobile_number;
+            this.userName = estate.family_name;
+            this.familyType = estate.family_type;
+            this.loadAmount();
+          }
+        })
       }
     })
   }

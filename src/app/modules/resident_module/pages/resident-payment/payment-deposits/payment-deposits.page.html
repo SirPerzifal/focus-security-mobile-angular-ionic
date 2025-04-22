@@ -1,5 +1,7 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Payments'" [text_second]="'Deposits'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
-  <app-resident-header [text]="'Payments'" [text_second]="'Deposits'" />
 
   <div class="flex flex-col relative mt-2 mb-16">
     <div class="w-1/6 flex items-start ml-3">
@@ -120,5 +122,7 @@
     </div>
   </div>
 
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

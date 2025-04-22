@@ -5,7 +5,8 @@ import { ToastController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
-import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-appeal-parking-fines',
@@ -18,14 +19,18 @@ export class AppealParkingFinesPage implements OnInit {
 
   appealData: any = [];
 
-  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router) { }
+  constructor(private raiseARequestService: RaiseARequestService, private toastController: ToastController, private router: Router, private storage: StorageService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.unitId = Number(parseValue.unit_id);
-        this.loadOffence();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.unitId = estate.unit_id
+            this.loadOffence();
+          }
+        })
       }
     })
   }

@@ -8,7 +8,6 @@ import { VisitorInvitigFormPageRoutingModule } from './visitor-invitig-form-rout
 
 import { VisitorInvitigFormPage } from './visitor-invitig-form.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -16,8 +15,7 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     FormsModule,
     IonicModule,
     VisitorInvitigFormPageRoutingModule,
-    SharedModule,
-    ComponentsModule
+    SharedModule
   ],
   declarations: [VisitorInvitigFormPage]
 })

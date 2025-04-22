@@ -25,7 +25,7 @@
         <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60 mb-4" (click)="startScanner()" *ngIf="!isHidden"/>
         <div id="reader" class="w-full mb-4"></div>
       </div>
-      <form class="justify-between items-center w-full mx-4" #walkInForm="ngForm" *ngIf="showWalk" @fadeInOut>
+      <div class="justify-between items-center w-full mx-4" *ngIf="showWalk" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5 mb-4">
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>NAME</u></b></label>
@@ -44,21 +44,28 @@
               <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
             </select>
           </div>
-          <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
+            <div class="w-full">
+              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+            </div>
+            <div class="w-full" *ngIf="project_config.is_industrial">
+              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial"></app-m2m-selection>
+            </div>
+            <div class="w-full">
+              <app-text-input #visitorWalkInUpPass [id]="'visitor_walk_in_pass_number'" [labelText]="'PASS NUMBER'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+            </div>
+            <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+              <label class="text-2xl"><u><b>PURPOSE</b></u></label>
+              <textarea id="walk_in_purpose" rows="4" (change)="purposeInput($event)"
+                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                placeholder=""></textarea>
+            </div>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">
             <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
               [labelText]="textUnit" [Selected]="contactUnit" [showButton]="project_config.is_industrial"></app-m2m-selection>
-          </div>
-          <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial"></app-m2m-selection>
-          </div>
-          <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-            <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-            <textarea id="walk_in_purpose" rows="4" (change)="purposeInput($event)"
-              class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-              placeholder=""></textarea>
           </div>
           <!-- <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>UNIT</u></b></label>
@@ -74,9 +81,9 @@
               (click)="onSubmitWalkIn()"></app-visitor-button>
           </div>
         </div>
-      </form>
+      </div>
 
-      <form class="justify-between items-center w-full mx-4" #driveInForm="ngForm" *ngIf="showDrive" @fadeInOut>
+      <div class="justify-between items-center w-full mx-4" *ngIf="showDrive" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5  mb-4">
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>NAME</u></b></label>
@@ -114,21 +121,28 @@
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div> -->
-          <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
+            <div class="w-full">
+              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+            </div>
+            <div class="w-full">
+              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+            </div>
+            <div class="w-full">
+              <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+            </div>
+            <div class="w-full flex flex-col">
+              <label class="text-2xl"><u><b>PURPOSE</b></u></label>
+              <textarea id="purpose" rows="4" (change)="purposeInput($event)"
+                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                placeholder=""></textarea>
+            </div>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">
             <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
               [labelText]="textUnit" [Selected]="contactUnit"></app-m2m-selection>
-          </div>
-          <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
-          </div>
-          <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-            <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-            <textarea id="purpose" rows="4" (change)="purposeInput($event)"
-              class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-              placeholder=""></textarea>
           </div>
           <div class="w-full" *ngFor="let camera of Camera; let i = index">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
@@ -141,7 +155,7 @@
               (click)="onSubmitDriveIn()"></app-visitor-button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
 
   </div>

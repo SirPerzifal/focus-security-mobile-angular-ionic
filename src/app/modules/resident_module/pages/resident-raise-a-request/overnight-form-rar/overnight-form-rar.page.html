@@ -1,5 +1,6 @@
-<ion-content [fullscreen]="true" [formGroup]="form">
-	<app-resident-header [text]="'Raise A Request'" [text_second]="'New Overnight Request'" />
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'Raise A Request'" [text_second]="'New Overnight Request'"></app-header-inner-page>
+</ion-header><ion-content [fullscreen]="true" [formGroup]="form">
   <div class="w-full flex items-start ml-4 mt-2">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
   </div>
@@ -220,5 +221,7 @@
   </div>
   <div class="h-96" *ngIf="extend_mb === true"></div>
 
-	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

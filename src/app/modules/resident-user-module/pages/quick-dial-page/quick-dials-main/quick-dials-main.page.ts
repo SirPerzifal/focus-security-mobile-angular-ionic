@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';

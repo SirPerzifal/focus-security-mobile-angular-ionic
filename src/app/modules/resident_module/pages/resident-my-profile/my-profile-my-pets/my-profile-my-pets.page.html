@@ -1,4 +1,6 @@
-<app-resident-header [text]="'My Profile'" [text_second]="'Pets'"/>
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'My Profile'" [text_second]="'Pets'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
 
   <div class="p-5 text-center mb-20">
@@ -36,5 +38,7 @@
      </div>
   </div>
 
-	<app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

@@ -4,7 +4,7 @@
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-home-page']"></ion-icon>
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2 mb-16">
     <div id="nav_tabs_main">
@@ -12,7 +12,7 @@
     </div>
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
-        <div *ngIf="hideFilter !== 'ban'">
+        <div>
           <div class="flex flex-row justify-start mt-4">
             <p class="text-base font-bold">Group By</p>
           </div>
@@ -77,11 +77,8 @@
                   </table>
                 </div>
                 <div class="flex flex-row space-x-1 w-full">
-                  <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-full" (click)="openDetails(data)">
+                  <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]" (click)="openDetails(data)">
                     View Details
-                  </button>
-                  <button [ngClass]="data.banned && hideFilter === 'ban' ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-transparent text-transparent'" [disabled]="!data.banned && hideFilter !== 'ban'" class="px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-full" (click)="showAlertButtons('Reinstate', 'history-alert', data)">
-                    Reinstate
                   </button>
                 </div>
               </div>

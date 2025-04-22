@@ -1,4 +1,6 @@
-<app-resident-header [text]="'My Family'" />
+<ion-header [translucent]="true">
+  <app-header-inner-page [text]="'My Family'"></app-header-inner-page>
+</ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-1/6 flex items-start mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
@@ -38,5 +40,7 @@
     </div>
   </div>
   <!-- ############################### -->
-  <app-bottom-nav-bar></app-bottom-nav-bar>
 </ion-content>
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

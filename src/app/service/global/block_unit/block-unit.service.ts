@@ -21,7 +21,6 @@ export class BlockUnitService extends ApiService {
     await this.getUserInfoService.getPreferenceStorage(
         'project_id',
     ).then((value) => {
-      console.log(value);
       this.project_id = value.project_id != null ? value.project_id : 1;
       console.log(this.project_id)
     })

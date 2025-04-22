@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { Subscription } from 'rxjs';
+import { StorageService } from 'src/app/service/storage/storage.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AllData, AccessCard, OvernightParking, BicycleTag, RegisteredCoach, RequestSchedule, PetRegistration, Appeal } from 'src/models/resident/raiseRequestModel.model';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-rejected-request',
@@ -90,10 +92,21 @@ export class RejectedRequestPage implements OnInit, OnDestroy {
     }
   }
   
-  constructor(private raiseARequestService: RaiseARequestService, private getUserInfoService: GetUserInfoService) { }
+  constructor(private raiseARequestService: RaiseARequestService, private getUserInfoService: GetUserInfoService, private storage: StorageService) { }
 
   ngOnInit() {
-    this.loadHistoryRequests();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.requestorId = estate.family_id
+            this.unitId = estate.unit_id
+            this.loadHistoryRequests();
+          }
+        })
+      }
+    })
   }
 
   // Tambahkan metode untuk menangani perubahan pada dropdown jika diperlukan

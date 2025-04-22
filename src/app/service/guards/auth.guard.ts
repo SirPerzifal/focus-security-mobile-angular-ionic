@@ -12,8 +12,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   const tokenData = await Preferences.get({ key: 'USER_CREDENTIAL' });
   const useStateData = await Preferences.get({ key: 'USESTATE_DATA' });
+  const userInfoData = await Preferences.get({ key: 'USER_INFO'})
   
-  if (!tokenData.value) {
+  if (!tokenData.value && !userInfoData.value) {
     if(state.url=='/'){
       return true;
     }else if(state.url!='/login-end-user'){
@@ -22,7 +23,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
     }else{
       return true;
     }
-  }
+  } 
 
   // const isTokenValid = authService.isTokenValid(useStateData.value);
   
@@ -45,7 +46,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
       } else if (value.is_vms) {
         router.navigate(['/home-vms']);
       } else if (value.is_client) {
-        router.navigate(['/client-main-app']);
+        router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       } else {
         Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
           if(value?.value){

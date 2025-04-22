@@ -70,7 +70,7 @@
                 class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md w-2/5 font-bold">
                 View Details
               </button>
-              <button (click)="onCancel(visitor)"
+              <button (click)="onCancel(visitor)" *ngIf="isActive"
                 class="cw-2:text-[13px] bg-[#E3787E] text-black px-3 py-2 text-base rounded-md w-2/5 font-bold">
                 Cancel Invite
               </button>

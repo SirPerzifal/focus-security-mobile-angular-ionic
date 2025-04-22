@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
-
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
@@ -63,7 +63,7 @@ export class OvernightFormRarPage implements OnInit {
     isRequirePayment: false,
   }
 
-  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private modalController: ModalController) {
+  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private modalController: ModalController, private storage: StorageService) {
     this.form = this.fb.group({
       residentName: this.nameOfResident,
       block: this.blokId,
@@ -105,18 +105,22 @@ export class OvernightFormRarPage implements OnInit {
   }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectid = Number(parseValue.project_id);
-        this.unitId = Number(parseValue.unit_id);
-        this.unit = parseValue.unit_name;
-        this.block = parseValue.block_name;
-        this.condoName = parseValue.project_name;
-        this.userName = parseValue.family_name;
-        this.userPhoneNumber = parseValue.family_mobile_number;
-        this.fetchExpectedVisitors();
-        this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectid = Number(estate.project_id);
+            this.unitId = Number(estate.unit_id);
+            this.unit = estate.unit_id;
+            this.block = estate.block_id;
+            this.condoName = estate.project_name;
+            this.userName = estate.family_name;
+            this.userPhoneNumber = estate.family_mobile_number;
+            this.fetchExpectedVisitors();
+            this.loadAmount();
+          }
+        })
       }
     })
   }

@@ -48,6 +48,7 @@ export class ClientEventsDayViewPage implements OnInit {
     post_to: 'all',
     block_ids: [],
     unit_ids: [],
+    host_ids: [],
     color: [] as string[],
   }
 
@@ -114,32 +115,38 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['unit',
-        'block_name',
-        'block',
-        'unit_name',
-        'project_id'
-      ]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       // console.log(value);
       console.log(value)
       // NOTE THIS SEMI HARD CODE
       this.EventsForm.block_id = value.block != null ? value.block : 1;
       this.EventsForm.project_id = value.project_id != null ? value.project_id : 751;
       this.EventsForm.unit_id = value.unit != null ? value.unit : 1
-      this.block_id = value.block != null ? value.block : 1;
       this.project_id = value.project_id != null ? value.project_id : 1;
-      this.unit_id = value.unit != null ? value.unit : 1
+      this.project_config = value.config
       this.loadFacilityList()
       this.loadUpcomingEvents()
-      this.loadBlock()
-      this.loadUnit()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+        this.loadUnit()
+      }
     })
   }
 
+  project_config: any = {}
+
   Block: any = []
   Unit: any = []
+  Host: any = []
+  selectedHost: any = []
+
+  loadHost() {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
 
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
@@ -203,6 +210,11 @@ export class ClientEventsDayViewPage implements OnInit {
     this.EventsForm.facility_id = event.target.value
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.target.value)[0].room_ids
     console.log(this.Rooms)
+  }
+
+  hostChange(event: any) {
+    console.log(event)
+    this.EventsForm.host_ids = event
   }
 
   unitChange(event: any) {
@@ -273,8 +285,12 @@ export class ClientEventsDayViewPage implements OnInit {
       post_to: event.event.post_to,
       block_ids: event.event.block_ids,
       unit_ids: event.event.unit_ids,
+      host_ids: event.event.host_ids,
       color: [] as string[],
     }
+    this.selectedHost = event.event.host_ids
+    this.selectedBlock = event.event.block_ids
+    this.selectedUnit = event.event.unit_ids
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.event.facility_id)[0].room_ids
     this.EventsForm.room_id = event.event.room_id
 
@@ -425,7 +441,7 @@ export class ClientEventsDayViewPage implements OnInit {
   selectedUnit: any = []
   async loadUpcomingEvents() {
     const now = new Date();
-    this.clientMainService.getApi({ is_active: true }, '/client/get/upcoming_event').subscribe({
+    this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
@@ -441,6 +457,7 @@ export class ClientEventsDayViewPage implements OnInit {
             post_to: result.post_to,
             block_ids: result.block_ids,
             unit_ids: result.unit_ids,
+            host_ids: result.host_ids,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
               beforeStart: true,
@@ -483,7 +500,11 @@ export class ClientEventsDayViewPage implements OnInit {
       post_to: 'all',
       block_ids: [],
       unit_ids: [],
+      host_ids: [],
     }
+    this.selectedHost = []
+    this.selectedBlock = []
+    this.selectedUnit = []
     this.selectedEndTime = ''
     this.selectedStartTime = ''
     this.selectedStartDate = this.selectedDate
@@ -509,7 +530,11 @@ export class ClientEventsDayViewPage implements OnInit {
       post_to: 'all',
       block_ids: [],
       unit_ids: [],
+      host_ids: [],
     }
+    this.selectedHost = []
+    this.selectedBlock = []
+    this.selectedUnit = []
     this.isRead = false
     this.selectedEndTime = ''
     this.selectedStartTime = ''

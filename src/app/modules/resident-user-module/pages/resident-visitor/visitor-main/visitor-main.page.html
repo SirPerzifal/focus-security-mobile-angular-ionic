@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'"></app-header-inner-page>
+  <app-header-inner-page [text]="'Visitors'" [text_second]="'Daily Invite'" (typeOfUser)="onChangeTypeUser($event)"></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -35,7 +35,8 @@
           name="entryMessage"
         ></textarea>
       </div>
-      <app-radio-check-input-case [type]="'checkbox'" [id]="'provide_unit_number'" [name]="'provide_unit_number'" [value]="'1'" (valueEmit)="onProvideUnitChange($event)" [check]="formData.isProvideUnit" [text]="'Provide my unit number to visitor'"></app-radio-check-input-case>
+      <app-radio-check-input-case *ngIf="userType !== 'industrial'" [type]="'checkbox'" [id]="'provide_unit_number'" [name]="'provide_unit_number'" [value]="'1'" (valueEmit)="onProvideUnitChange($event)" [check]="formData.isProvideUnit" [text]="'Provide my unit number to visitor'"></app-radio-check-input-case>
+      <app-input-component *ngIf="userType === 'industrial'" [id]="'type_facility_industrial'" [type]="'text'" [typeAction]="''" [labelParent]="''" [labelChild1]="'Facility'" [labelChild2]="''" (eventEmitter)="onEntryfacilityChange($event)"></app-input-component>
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">
           <app-submit-button
