@@ -158,11 +158,11 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Offence Time</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.issue_time) }}</p>
               </div>
-              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
+              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type) && !project_config.is_industrial">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Block</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.block_id.name) }}</p>
               </div>
-              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle', 'coach'].includes(approval_type)">
+              <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle', 'coach'].includes(approval_type) && !project_config.is_industrial">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Unit</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.unit_id.name) }}</p>
               </div>
@@ -312,11 +312,11 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">Email Address</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_email) }}</p>
         </div>
-        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
+        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type) && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Block</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.block_id.name) }}</p>
         </div>
-        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type)">
+        <div class="table-row" *ngIf="['access_card', 'family', 'move_permit', 'overnight', 'renovation', 'bicycle', 'parking', 'vehicle'].includes(approval_type) && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Unit</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.unit_id.name) }}</p>
         </div>
@@ -335,10 +335,6 @@
         <div class="table-row" *ngIf="['employee'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Employee ID / Code</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.employee_code)}}</p>
-        </div>
-        <div class="table-row" *ngIf="['employee'].includes(approval_type)">
-          <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Number</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.employee_vehicle_number)}}</p>
         </div>
         <div class="table-row" *ngIf="['employee'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Extension Number</p>
@@ -360,20 +356,20 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
           <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? functionMain.convertNewDateTZ(selectedApproval.end_date).split(' ')[1] : '-' }}</p>
         </div>
-        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to">
+        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to  && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Post To</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.uppercaseFirstWithUnderscore(selectedApproval.post_to) }}</p>
         </div>
-        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to == 'block'">
+        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to == 'block'  && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Blocks</p>
           <p class="ml-2 table-cell text-base text-black">: {{ returnArray(selectedApproval.block_ids) }}</p>
         </div>
-        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to == 'unit'">
+        <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to == 'unit'  && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Units</p>
           <p class="ml-2 table-cell text-base text-black">: {{ returnArray(selectedApproval.unit_ids) }}</p>
         </div>
         <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.industrial_host_ids.length > 0">
-          <p class="font-bold table-cell w-1/2 text-base text-black">Units</p>
+          <p class="font-bold table-cell w-1/2 text-base text-black">Hosts</p>
           <p class="ml-2 table-cell text-base text-black">: {{ returnArray(selectedApproval.industrial_host_ids) }}</p>
         </div>
         <div class="table-row" *ngIf="['overnight'].includes(approval_type)">

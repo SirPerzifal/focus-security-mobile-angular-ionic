@@ -385,8 +385,8 @@ export class WalkInPage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     if (contactData) {
-      this.formData.visitor_name = contactData.visitor_name
-      this.formData.visitor_vehicle = contactData.vehicle_number
+      this.formData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.formData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
@@ -442,7 +442,9 @@ export class WalkInPage implements OnInit {
         (decodedText) => {
           this.scanResult = decodedText
           console.log(this.scanResult)
-          this.checkResult()
+          if (!this.isProcess) {
+            this.checkResult()
+          }
         },
         (errorMessage) => {
           console.log(errorMessage)
@@ -465,7 +467,9 @@ export class WalkInPage implements OnInit {
   entry_id = 0
   entry_type = ''
   errorSound = new Audio('assets/sound/Error Alert.mp3');
+  isProcess = false
   checkResult(){
+    this.isProcess = true
     this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
       next: (results) => {
         console.log(results)
@@ -496,11 +500,13 @@ export class WalkInPage implements OnInit {
           this.functionMain.presentToast('Expected visitor not found!', 'danger');
           this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         }
+        this.isProcess = false
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
         this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         console.error(error);
+        this.isProcess = false
       }
     });
   }

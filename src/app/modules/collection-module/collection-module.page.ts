@@ -388,8 +388,8 @@ export class CollectionModulePage implements OnInit {
   getDriveInContactInfo(contactData: any){
     this.contactUnit = ''
     if (contactData) {
-      this.driveInFormData.visitor_name = contactData.visitor_name
-      this.driveInFormData.visitor_vehicle = contactData.vehicle_number
+      this.driveInFormData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
@@ -406,8 +406,8 @@ export class CollectionModulePage implements OnInit {
   getWalkInContactInfo(contactData: any){
     this.contactUnit = ''
     if (contactData) {
-      this.walkInFormData.visitor_name = contactData.visitor_name
-      this.walkInFormData.visitor_vehicle = contactData.vehicle_number
+      this.walkInFormData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {

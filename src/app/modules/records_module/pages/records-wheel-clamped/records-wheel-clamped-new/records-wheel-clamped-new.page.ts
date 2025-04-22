@@ -205,8 +205,8 @@ export class RecordsWheelClampedNewPage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     if (contactData) {
-      this.issueName = contactData.visitor_name
-      this.vehicleNumber = contactData.vehicle_number
+      this.issueName = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.vehicleNumber = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {

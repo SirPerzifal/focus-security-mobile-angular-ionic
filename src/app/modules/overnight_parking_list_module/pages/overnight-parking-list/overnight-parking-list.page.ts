@@ -229,7 +229,7 @@ export class OvernightParkingListPage implements OnInit {
 
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
-      const hostMatches = this.selectedHost ? item.host_id == this.selectedHost : true;
+      const hostMatches = this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
 
       return typeMatches && dateMatches && hostMatches;
     });

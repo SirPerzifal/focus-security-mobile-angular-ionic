@@ -129,6 +129,9 @@ export class RecordsVisitorPage implements OnInit {
         }, 300)
       }
       if (type == 'history') {
+        if(!this.showHistory) {
+          this.clearFilters()
+        }
         this.showActive = false;
         this.showActiveTrans = false;
         this.isRadioClicked = false
@@ -254,6 +257,7 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
+    this.selectedRadio = null
     this.applyFilters() 
   }
 
@@ -277,7 +281,7 @@ export class RecordsVisitorPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
       const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
+      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
       const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
       return hostMatches && blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;

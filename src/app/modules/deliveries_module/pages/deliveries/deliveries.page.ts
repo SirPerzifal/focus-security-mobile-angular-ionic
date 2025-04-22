@@ -662,11 +662,11 @@ export class DeliveriesPage implements OnInit {
     if (contactData) {
       console.log(contactData)
       if (this.otherDeliveries) {
-        this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number
-        this.otherDeliveryForm.visitor_name = contactData.visitor_name
+        this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+        this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
         this.otherDeliveryForm.company_name = contactData.company_name
       }
-      this.formData.vehicle_number = contactData.vehicle_number
+      this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
@@ -790,8 +790,8 @@ export class DeliveriesPage implements OnInit {
   getDriveInContactInfo(contactData: any){
     this.contactUnit = ''
     if (contactData) {
-      this.otherDeliveryForm.visitor_name = contactData.visitor_name
-      this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number
+      this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {

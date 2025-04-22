@@ -257,7 +257,7 @@ export class RecordsFacilityPage implements OnInit {
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
       const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
       const unitMatches = this.choosenUnit ? item.unit_id == this.choosenUnit : true;
-      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
+      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
       const facilityMatches = this.choosenFacility ? item.facility_id == this.choosenFacility : true;
 
       return hostMatches && typeMatches && unitMatches && facilityMatches && dateMatches;

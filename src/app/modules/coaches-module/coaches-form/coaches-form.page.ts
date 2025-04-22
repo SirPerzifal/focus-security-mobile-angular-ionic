@@ -296,8 +296,8 @@ export class CoachesFormPage implements OnInit {
 
   getContactInfo(contactData: any){
     if (contactData) {
-      this.schedule.coach_name = contactData.visitor_name
-      this.schedule.vehicle_number = contactData.vehicle_number
+      this.schedule.coach_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.schedule.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.schedule.vehicle_number != ''){
         this.toggleShowDrive()
       }

@@ -152,8 +152,17 @@ export class ContractorFormPage implements OnInit {
 
   onIdentificationTypeChange(event: any) {
     this.identificationType = event.target.value;
+    if ((this.identificationType == 'nric' || this.identificationType == 'fin') && this.temp_type == 'passport') {
+      this.nric_value = ''
+    }
+    if ((this.temp_type == 'nric' || this.temp_type == 'fin') && this.identificationType == 'passport') {
+      this.nric_value = ''
+    }
+    this.temp_type = this.identificationType
     console.log(this.identificationType)
   }
+
+  temp_type = 'nric'
 
   onBlockChange(event: any) {
     this.selectedBlock = event.target.value;
@@ -260,6 +269,9 @@ export class ContractorFormPage implements OnInit {
         this.contractor_entry_purpose,
         this.contractor_gate_pass_number,
         this.contractor_pass_number,
+        this.isFromScan,
+        this.isFromScan ? this.entry_id : false,
+        this.isFromScan ? this.entry_type : ''
       ).subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
@@ -291,6 +303,10 @@ export class ContractorFormPage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     this.selectedHost = ''
+
+    this.entry_type = ''
+    this.entry_id = 0
+    this.isFromScan = false
     
     this.formData.contact_number = '';
     this.formData.company_name = '';
@@ -396,8 +412,8 @@ export class ContractorFormPage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     if (contactData) {
-      this.formData.contractor_name = contactData.visitor_name
-      this.formData.contractor_vehicle = contactData.vehicle_number
+      this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
@@ -502,9 +518,6 @@ export class ContractorFormPage implements OnInit {
 
   toggleShowQr() {
     if (!this.showDriveTrans && !this.showWalkTrans) {
-      if ( !this.isFromScan) {
-        this.resetForm()
-      }
       this.showQrTrans = true
       this.showDrive = false;
       this.showWalk = false;
@@ -592,7 +605,9 @@ export class ContractorFormPage implements OnInit {
         (decodedText) => {
           this.scanResult = decodedText
           console.log(this.scanResult)
-          this.checkResult()
+          if (!this.isProcess){
+            this.checkResult()
+          }
         },
         (errorMessage) => {
           console.log(errorMessage)
@@ -612,37 +627,50 @@ export class ContractorFormPage implements OnInit {
     this.showClose = false
   }
 
+  isProcess = false
+  entry_id = 0
+  entry_type = ''
   errorSound = new Audio('assets/sound/Error Alert.mp3');
   checkResult(){
-    this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
+    this.isProcess = true
+    this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_contractor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
           this.isFromScan = true
           this.stopScanner()
           this.searchData = results.result.result[0]
+          if (this.searchData.visitor_type == 'walk_in') {
+            this.toggleShowWalk()
+          } else {
+            this.toggleShowDrive()
+          }
+          this.entry_id = this.searchData.id
+          this.entry_type = this.searchData.entry_type
+          this.formData.contact_number = this.searchData.contact_number;
+          this.formData.company_name = this.searchData.company_name;
+          this.formData.contractor_name = this.searchData.contractor_name;
+          this.formData.contractor_vehicle = this.searchData.vehicle_number;
+
           if (this.project_config.is_industrial) {
-            this.contactHost = this.searchData.host_id
+            this.contactHost = this.searchData.industrial_host_id[0]
           } else {
             // this.formData.block = this.searchData.block_id[0]
             // this.loadUnit().then(() => {
             //   this.contactUnit = this.searchData.unit_id[0]
             // })
           }
-          // if (this.formData.visitor_type == 'walk_in') {
-          //   this.toggleShowWalk()
-          // } else {
-          //   this.toggleShowDrive()
-          // }
         } else {
-          this.functionMain.presentToast('Expected visitor not found!', 'danger');
+          this.functionMain.presentToast('Expected contractor not found!', 'danger');
           this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         }
+        this.isProcess = false
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while searching the expected visitor!', 'danger');
         this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         console.error(error);
+        this.isProcess = false
       }
     });
   }

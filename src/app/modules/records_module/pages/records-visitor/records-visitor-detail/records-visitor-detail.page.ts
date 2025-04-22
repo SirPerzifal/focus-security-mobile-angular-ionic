@@ -24,7 +24,6 @@ export class RecordsVisitorDetailPage implements OnInit {
       this.loadProjectName().then(() => {
         this.getBlacklist()
         this.record = state.logs
-        this.record.entry_datetime = functionMain.convertNewDateTZ(this.record.entry_datetime);
       })
     } 
    }

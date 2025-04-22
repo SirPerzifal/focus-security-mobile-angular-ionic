@@ -275,8 +275,8 @@ export class MoveFormPage implements OnInit {
 
   getContactInfo(contactData: any){
     if (contactData) {
-      this.requestor_name = contactData.visitor_name
-      this.requestor_vehicle = contactData.vehicle_number
+      this.requestor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.requestor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
     }
   }
 

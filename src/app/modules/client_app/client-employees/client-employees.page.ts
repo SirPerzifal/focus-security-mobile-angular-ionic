@@ -102,9 +102,9 @@ export class ClientEmployeesPage implements OnInit {
     if (this.formData.employee_code == ''){
       errMsg += 'Employee code is required! \n'
     }
-    if (this.formData.vehicle_number == ''){
-      errMsg += 'Vehicle number is required! \n'
-    }
+    // if (this.formData.vehicle_number == ''){
+    //   errMsg += 'Vehicle number is required! \n'
+    // }
     if (this.formData.email_address == ''){
       errMsg += 'Email address is required \n'
     }

@@ -181,8 +181,8 @@ export class EmergencyModulePage implements OnInit {
     this.contactUnit = ''
     this.contactHost = ''
     if (contactData) {
-      this.formData.officer_name = contactData.visitor_name
-      this.formData.vehicle_number = contactData.vehicle_number
+      this.formData.officer_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {

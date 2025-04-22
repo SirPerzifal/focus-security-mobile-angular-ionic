@@ -221,8 +221,8 @@ export class RecordsBlacklistFormPage implements OnInit {
       this.contactHost = ''
       this.contactUnit = ''
       if (contactData) {
-        this.formData.visitor_name = contactData.visitor_name
-        this.formData.vehicle_no = contactData.vehicle_number
+        this.formData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+        this.formData.vehicle_no = contactData.vehicle_number ? contactData.vehicle_number  : ''
         if (this.project_config.is_industrial) {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         } else {

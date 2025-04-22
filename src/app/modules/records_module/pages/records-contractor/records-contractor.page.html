@@ -48,6 +48,7 @@
                 <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
                 <option [value]="'date'">ENTRY DATE</option>
                 <option [value]="'block'" *ngIf="!project_config.is_industrial && !project_config.is_windows">BLOCK & UNIT</option>
+                <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
                 <option [value]="'not_checkout'" *ngIf="project_config.is_windows">NOT CHECKED OUT</option>
                 <option [value]="'all'">ALL</option>
               </select>

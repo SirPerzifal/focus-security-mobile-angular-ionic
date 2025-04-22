@@ -48,15 +48,20 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.contact_number) }}</td>
           </tr>
-          <tr *ngIf="!record.host_id">
+          <tr *ngIf="!project_config.is_industrial && !project_config.is_windows">
             <td class="font-bold w-2/5">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.block_name) + ' | ' + functionMain.returnNone(record.unit_name) }}</td>
           </tr>
-          <tr *ngIf="record.host_id">
+          <tr *ngIf="project_config.is_windows">
             <td class="font-bold w-2/5">HOST</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.host_name)}}</td>
+          </tr>
+          <tr *ngIf="project_config.is_industrial">
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.industrial_host_name)}}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">NUMBER OF SUBCON</td>

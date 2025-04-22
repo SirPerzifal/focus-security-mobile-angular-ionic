@@ -327,7 +327,7 @@ export class RecordsWheelClampedPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
       const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
+      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
       const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
       console.log(item.vehicle_number, this.filter.vehicle_number)

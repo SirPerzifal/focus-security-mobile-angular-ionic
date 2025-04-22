@@ -275,7 +275,7 @@ export class RecordsContractorPage implements OnInit {
         const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
         const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
         const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-        const hostMatches =  this.selectedHost ? item.host_id == this.selectedHost : true;
+        const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
         const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
         const isCheckout = ['not_checkout', 'all'].includes(this.searchOption) ? (item.check_in && !item.check_out) : true;
         

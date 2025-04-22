@@ -404,8 +404,8 @@ export class ContractorCommercialFormPage implements OnInit {
   getContactInfo(contactData: any) {
     this.selectedUnit = ''
     if (contactData) {
-      this.formData.contractor_name = contactData.visitor_name
-      this.formData.contractor_vehicle = contactData.vehicle_number
+      this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       setTimeout(()=>{
         this.selectedUnit = contactData.industrial_host_id
       }, 300)

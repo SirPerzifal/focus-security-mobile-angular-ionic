@@ -29,12 +29,12 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.entry_datetime ? record.entry_datetime.split(' ')[0] : '-' }}</td>
+            <td>{{ record.entry_datetime ? functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[0] : '-' }}</td>
           </tr>         
           <tr>
             <td class="font-bold w-2/5">ENTRY TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.entry_datetime ? record.entry_datetime.split(' ')[1] : '-' }}</td>
+            <td>{{ record.entry_datetime ? functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[1] : '-' }}</td>
           </tr>
           <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING BLOCK & UNIT</td>

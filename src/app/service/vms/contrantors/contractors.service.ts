@@ -30,6 +30,9 @@ export class ContractorsService extends ApiService {
     purpose: any,
     gate_pass: any,
     pass_number: any,
+    is_pre_entry: boolean,
+    entry_id: any,
+    entry_type: any,
   ): Observable<any> {
     const body = {
       jsonrpc: '2.0',
@@ -52,6 +55,9 @@ export class ContractorsService extends ApiService {
         purpose: purpose,
         gate_pass: gate_pass,
         pass_number: pass_number,
+        is_pre_entry: is_pre_entry,
+        entry_id: entry_id,
+        entry_type: entry_type,
       }
     };
 
