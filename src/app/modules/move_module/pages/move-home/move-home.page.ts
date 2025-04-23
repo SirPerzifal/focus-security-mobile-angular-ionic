@@ -452,12 +452,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
-    if (this.searchOption == 'block') {
-      this.startDateFilter = ''
-      this.endDateFilter = ''
-    } else if (this.searchOption == 'date') {
-      this.choosenBlock = ''
-    } else {}
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+    this.choosenBlock = ''
     this.applyFilters()
     console.log(event.target.value)
   }

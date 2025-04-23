@@ -107,7 +107,7 @@
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
           </div>
         </div>
-        <div class="w-full flex flex-col">
+        <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
           <label class="text-2xl"><u><b>REMARKS</b></u></label>
           <textarea id="collection_drive_in_remarks" rows="4" name="collection_drive_in_remarks"
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"

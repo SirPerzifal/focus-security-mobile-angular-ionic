@@ -186,12 +186,14 @@ export class EmergencyModulePage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.formData.block_id = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.formData.block_id = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }

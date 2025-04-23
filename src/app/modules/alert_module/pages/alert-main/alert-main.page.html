@@ -4,7 +4,7 @@
     <app-vms-background />
   </div>
 
-  <div class="flex flex-col relative mt-2 mx-4">
+  <div class="flex flex-col relative mt-2 mx-4 mb-8">
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'" *ngIf="main" [isRefresh]="true" (refreshClicked)="refreshClicked()"/>
       <div class="flex flex-col items-center justify-center text-center mt-3" *ngIf="!main">
@@ -24,8 +24,8 @@
           [disableClick]="true" [totalWarning]="issueTotal" [isWarning]="issueRedTotal" />
       </div>
       <div class="flex flex-col">
-        <div class="grid grid-cols-3 gap-4 justify-between mt-8">
-          <div *ngFor="let records of recordsMenu">
+        <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-start items-center mt-8 space-y-4' : 'grid grid-cols-3 gap-4 justify-between mt-8'">
+          <div *ngFor="let records of recordsMenu" class="mt-4">
             <app-button-icon [customImageIcon]="records.icon" [text]="records.text"
               [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''"
               [extraTextClass]="records.extraTextClass" [isWarning]="records.isWarning" [totalWarning]="records.totalWarning" [isActive]="records.isActive"

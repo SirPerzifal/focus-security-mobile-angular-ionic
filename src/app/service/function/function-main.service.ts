@@ -20,7 +20,7 @@ export class FunctionMainService {
     private authService: AuthService
   ) { }
 
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
+  async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
     const toast = await this.toastController.create({
       message: message,
       duration: 4000,

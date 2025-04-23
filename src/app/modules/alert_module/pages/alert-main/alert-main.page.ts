@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,9 @@ export class AlertMainPage implements OnInit {
     private route: ActivatedRoute,
     private alertController: AlertController,
     public functionMain: FunctionMainService,
-  ) { }
+  ) {
+    this.checkScreenSize();
+   }
 
   alertsIssues: any[] = [];
 
@@ -488,5 +490,17 @@ export class AlertMainPage implements OnInit {
   refreshClicked() {
     this.loadAll()
   }
+
+  isSmallScreen = false;
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isSmallScreen = window.innerWidth < 720;
+  }
+
 
 }

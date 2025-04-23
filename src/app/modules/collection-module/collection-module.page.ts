@@ -393,12 +393,14 @@ export class CollectionModulePage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.driveInFormData.block = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.driveInFormData.block = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }
@@ -411,12 +413,14 @@ export class CollectionModulePage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.walkInFormData.block = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.walkInFormData.block = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }

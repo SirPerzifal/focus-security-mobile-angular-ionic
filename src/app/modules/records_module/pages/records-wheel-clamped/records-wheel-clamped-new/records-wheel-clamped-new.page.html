@@ -16,11 +16,11 @@
           </div>
         </div>
         <app-file-input class="w-full h-25" [labelText]="type == 'wheel_clamp' ? 'UPLOAD IMAGE (BEFORE)' : 'UPLOAD IMAGE'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
-        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
+          [extraButtonClass]="'rounded text-white'" [customPlaceholder]="'EG. VIOLATION.png'" [isCamera]="true"
+          (cameraSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
+        <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'" [isCamera]="true"
           [extraButtonClass]="'rounded text-white'" [customPlaceholder]="'EG. VIOLATION.png'" *ngIf="type == 'wheel_clamp'"
-          (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
+          (cameraSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">
             <app-text-input [id]="'record_issue_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="vehicleNumber" [isReadonly]="isVehicleNumberReadonly"></app-text-input>

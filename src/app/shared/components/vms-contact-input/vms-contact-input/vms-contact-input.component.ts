@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { ToastController } from '@ionic/angular';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -133,15 +134,15 @@ export class VmsContactInputComponent  implements OnInit {
         this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
           next: (results) => {
             if (results.result.status_code === 200) {
-              this.presentToast('Succesfully get data!', 'success');
+              this.functionMain.presentToast('Succesfully get data!', 'success');
               console.log(results.result.result)
               this.contactInfo.emit(results.result.result)
             } else {
-              this.presentToast('Failed to get data!', 'danger');
+              this.functionMain.presentToast('Failed to get data!', 'danger');
             }
           },
           error: (error) => {
-            this.presentToast('Failed to get data!', 'danger');
+            this.functionMain.presentToast('Failed to get data!', 'danger');
             console.error(error);
           }
         });
@@ -149,15 +150,10 @@ export class VmsContactInputComponent  implements OnInit {
     }
   }
 
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
+   faQuestion = faQuestionCircle
 
-    toast.present().then(() => {
-    });
+  showMessage() {
+    this.functionMain.presentToast("Press field below code to choose country extension code!", 'dark');
   }
 
 }

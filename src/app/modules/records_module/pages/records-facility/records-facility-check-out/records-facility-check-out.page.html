@@ -119,7 +119,7 @@
             <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="submitForm()">SUBMIT FORM</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4 mt-4" *ngIf="(!isOfficerSigned || !isResidentSigned) && (purpose == 'check_in' ? record.is_form_check_in : record.is_form_check_out ) && record.is_today" >
-            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="onSubmit()">{{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}}</button>
+            <button class="w-2/5 text-black bg-white text-2xl font-bold rounded mt-5 h-14" (click)="onSubmit()">{{ isLoading ? 'LOADING..' : (purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT')}}</button>
           </div>
         </div>
       </div>

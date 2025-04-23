@@ -12,11 +12,11 @@
           <p>SCAN RESULT: {{ barcodeResult }}</p>
         </div> -->
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (BEFORE)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'" [isCamera]="true"
+          (cameraSelected)="onBeforeClampImageFileSelected($event)"></app-file-input>
         <app-file-input class="w-full h-25" [labelText]="'UPLOAD IMAGE (AFTER)'" [buttonText]="'UPLOAD'"
-          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
+          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'" [isCamera]="true"
+          (cameraSelected)="onAfterClampImageFileSelected($event)"></app-file-input>
         <div class="flex flex-row w-full justify-between space-x-1">
           <!-- <button class="w-full bg-[var(--ion-color-primary)] text-white text-2xl font-bold rounded h-20" (click)="takePicture()">
             {{ showImage ? 'CHANGE IMAGE' : upload_text}}

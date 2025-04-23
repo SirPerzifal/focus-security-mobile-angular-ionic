@@ -21,7 +21,7 @@
     </div>
     <div class="mt-8 flex flex-row mb-4">
       <div class="flex flex-col w-full" *ngIf="showForm" @fadeInOut>
-        <div id="vehicle_type" class="flex w-full flex-row space-x-1">
+        <div id="vehicle_type" class="flex w-full flex-row space-x-1 overflow-x-auto">
           <app-button-icon [customNameIcon]="'faTaxi'" [text]="'Taxi'" (click)="useVehicle('taxi')"
             [isActive]="valTaxi" [disableClick]="true" />
           <app-button-icon [customImageIcon]="'assets/icon/pick_up-page/Grab_Outline.png'" [text]="'PHV CAR'"

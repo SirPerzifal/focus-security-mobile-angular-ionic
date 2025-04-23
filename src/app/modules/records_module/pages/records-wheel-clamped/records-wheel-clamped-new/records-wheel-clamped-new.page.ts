@@ -83,27 +83,29 @@ export class RecordsWheelClampedNewPage implements OnInit {
   unitId = ''
   reasonOfIssuance = ''
 
-  onBeforeClampImageFileSelected(file: File) {
-    let data = file;
-    if (data){
-      this.functionMain.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.beforeClampImageFile = base64.split(',')[1]
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
+  onBeforeClampImageFileSelected(file: any) {
+    if (file){
+      let data = file;
+      this.beforeClampImageFile = data.image
+      // this.functionMain.convertToBase64(data).then((base64: string) => {
+      //   console.log('Base64 successed');
+      //   this.beforeClampImageFile = base64.split(',')[1]
+      // }).catch(error => {
+      //   console.error('Error converting to base64', error);
+      // });
     } 
   }
 
-  onAfterClampImageFileSelected(file: File) {
-    let data = file;
-    if (data){
-      this.functionMain.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.afterClampImageFile = base64.split(',')[1]
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
+  onAfterClampImageFileSelected(file: any) {
+    if (file){
+      let data = file;
+      this.afterClampImageFile = data.image
+      // this.functionMain.convertToBase64(data).then((base64: string) => {
+      //   console.log('Base64 successed');
+      //   this.afterClampImageFile = base64.split(',')[1]
+      // }).catch(error => {
+      //   console.error('Error converting to base64', error);
+      // });
     } 
   }
 
@@ -210,12 +212,14 @@ export class RecordsWheelClampedNewPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.blockId = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.blockId = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }

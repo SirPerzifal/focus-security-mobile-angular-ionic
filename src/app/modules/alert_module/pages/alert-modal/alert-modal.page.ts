@@ -181,28 +181,34 @@ export class AlertModalPage implements OnInit {
   beforeClampImageFile: string = '';
   afterClampImageFile: string = '';
 
-  onBeforeClampImageFileSelected(file: File): void {
-    let data = file;
-    if (data){
-      this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.beforeClampImageFile = base64.split(',')[1]
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
-    } 
+  onBeforeClampImageFileSelected(file: any): void {
+    if (file) {
+      let data = file;
+      this.beforeClampImageFile = data.image
+    }
+    // if (data){
+    //   this.convertToBase64(data).then((base64: string) => {
+    //     console.log('Base64 successed');
+    //     this.beforeClampImageFile = base64.split(',')[1]
+    //   }).catch(error => {
+    //     console.error('Error converting to base64', error);
+    //   });
+    // } 
   }
 
-  onAfterClampImageFileSelected(file: File) {
-    let data = file;
-    if (data){
-      this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.afterClampImageFile = base64.split(',')[1]
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
-    } 
+  onAfterClampImageFileSelected(file: any) {
+    if (file) {
+      let data = file;
+      this.afterClampImageFile = data.image
+    }
+    // if (data){
+    //   this.convertToBase64(data).then((base64: string) => {
+    //     console.log('Base64 successed');
+    //     this.afterClampImageFile = base64.split(',')[1]
+    //   }).catch(error => {
+    //     console.error('Error converting to base64', error);
+    //   });
+    // } 
   }
 
   convertToBase64(file: File): Promise<string> {

@@ -29,9 +29,9 @@
             <hr class="" style="height: 20px; border-top: 5px solid white;">
 
             <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'"
-              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black'"
+              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black'" [isCamera]="true"
               [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"
-              [fileAccept]="'image/*'" (fileSelected)="onUploadImage($event)"></app-file-input>
+              [fileAccept]="'image/*'" (cameraSelected)="onUploadImage($event)"></app-file-input>
             <div class="w-full mt-4">
               <app-text-input [id]="'reply_message'" [(ngModel)]="reply_message" [labelText]="'REPLY MESSAGE'"
                 [placeholder]="'EG. NEW STATUS IS . . .'" [customClasses]="{'w-full':true}" [type]="'text'"

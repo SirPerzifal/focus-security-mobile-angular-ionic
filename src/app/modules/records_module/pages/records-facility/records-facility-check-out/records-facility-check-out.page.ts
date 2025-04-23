@@ -132,7 +132,6 @@ export class RecordsFacilityCheckOutPage implements OnInit {
 
   onResidentSign(event: any) {
     this.residentSign = event
-    console.log(event)
   }
 
   onOfficerSign(event: any) {
@@ -188,7 +187,10 @@ export class RecordsFacilityCheckOutPage implements OnInit {
     });
   }
 
+  isLoading = false
   submitForm() {
+    if (this.isLoading) return
+    this.isLoading = true
     let errMsg = ''
     this.formData.map((item: any) => {
       if (!item.quantity) {
@@ -232,10 +234,12 @@ export class RecordsFacilityCheckOutPage implements OnInit {
         } else {
           this.functionMainService.presentToast(results.result.response_description, 'danger');
         }
+        this.isLoading = false
       },
       error: (error) => {
         this.functionMainService.presentToast('An error occurred while submitting the form!', 'danger');
         console.error(error);
+        this.isLoading = false
       }
     });
   }

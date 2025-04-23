@@ -242,6 +242,11 @@ export class RecordsVisitorPage implements OnInit {
 
   onSearchOptionChange(event: any) {
     this.searchOption = event.target.value
+    this.filter.issue_date = ''
+    this.filter.end_issue_date = ''
+    this.filter.block = ''
+    this.filter.vehicle_number = ''
+    this.filter.unit = ''
     console.log(event.target.value)
   }
 

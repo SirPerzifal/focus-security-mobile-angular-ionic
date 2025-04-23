@@ -151,9 +151,16 @@ export class MoveFormPage implements OnInit {
 
   onIdentificationTypeChange(event: any) {
     this.identificationType = event.target.value;
-    this.nric_value = ''
-    console.log(this.identificationType)
+    if ((this.identificationType == 'nric' || this.identificationType == 'fin') && this.temp_type == 'passport') {
+      this.nric_value = ''
+    }
+    if ((this.temp_type == 'nric' || this.temp_type == 'fin') && this.identificationType == 'passport') {
+      this.nric_value = ''
+    }
+    this.temp_type = this.identificationType
   }
+
+  temp_type = 'nric'
 
   contact_number = ''
   contractor_name = ''

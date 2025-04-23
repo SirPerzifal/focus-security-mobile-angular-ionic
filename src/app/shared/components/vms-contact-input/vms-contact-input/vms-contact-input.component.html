@@ -1,6 +1,9 @@
 <div class="w-full flex flex-row justify-between" *ngIf="vmsPage">
   <div class="w-[20%] flex flex-col justify-start">
-    <label class="text-2xl"><b><u>CODE</u></b></label>
+    <div class="flex flex-row justify-between items-center">
+      <label class="text-2xl"><b><u>CODE</u></b></label>
+      <fa-icon [icon]="faQuestion" class="text-2xl text-black" (click)="showMessage()"></fa-icon>
+    </div>
     <select [id]="id" [class]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" [disabled]="isReadonly">
       <option hidden selected disabled value="+65">SG +65</option>
@@ -28,7 +31,10 @@
 
 <div class="w-full flex flex-row justify-between" *ngIf="!vmsPage">
   <div class="w-[30%] flex flex-col justify-start">
-    <label [class]="labelClass"><b>Code</b></label>
+    <div class="flex flex-row justify-between items-center">
+      <label class="text-2xl"><b><u>CODE</u></b></label>
+      <fa-icon [icon]="faQuestion" class="text-2xl text-black" (click)="showMessage()"></fa-icon>
+    </div>
     <select [id]="id" [class]="inputClass + ' resident-selection'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >
       <option hidden selected disabled value="+65">SG +65</option>

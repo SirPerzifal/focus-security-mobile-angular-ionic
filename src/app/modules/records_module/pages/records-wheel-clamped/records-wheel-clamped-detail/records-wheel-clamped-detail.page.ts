@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
+import { AlertModalPage } from 'src/app/modules/alert_module/pages/alert-modal/alert-modal.page';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -29,6 +30,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     const state = navigation?.extras.state as { vehicle: any[]};
     if (state) {
       this.vehicle = state.vehicle
+      console.log(this.vehicle)
       this.issue_time = this.vehicle.issue_time.split(' ')[1]
     } 
    }
@@ -124,27 +126,30 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   }
 
   public async showCheckoutAlert(id: number, type: string) {
-    const alertButtons = await this.alertController.create({
-      cssClass: 'checkout-alert',
-      header: `Are you sure you want to ${type} this vehicle?`,
-      buttons: [
-        {
-          text: 'Confirm',
-          role: 'confirm',
-          handler: () => {
-            this.onCheckOut(id, type)
+    if (type == 'release') {
+      this.presentModalRelease(id, 'release', this.vehicle)
+    } else {
+      const alertButtons = await this.alertController.create({
+        cssClass: 'checkout-alert',
+        header: `Are you sure you want to ${type} this vehicle?`,
+        buttons: [
+          {
+            text: 'Confirm',
+            role: 'confirm',
+            handler: () => {
+              this.onCheckOut(id, type)
+            },
           },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+            },
           },
-        },
-      ]
+        ]
+      })
+      await alertButtons.present();
     }
-    )
-    await alertButtons.present();
   }
 
   onCheckOut(id: number, type: string) {
@@ -177,5 +182,28 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     // record.requestor_contact_number = record.contact;
     console.log("record wheel clamped ==========", record);
     // this.webRtcService.createOffer(record);
+  }
+
+  async presentModalRelease(id: number, type: string, vehicle: any) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: 'nric-scan-modal',
+      componentProps: {
+        id: id,
+        type: type
+      }
+  
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        if(result.data){
+          this.router.navigate(['/records-wheel-clamped'], {queryParams: this.params}) 
+          this.functionMain.presentToast(`Successfully release vehicle!`, 'success');
+        }
+      }
+    });
+
+    return await modal.present();
   }
 }

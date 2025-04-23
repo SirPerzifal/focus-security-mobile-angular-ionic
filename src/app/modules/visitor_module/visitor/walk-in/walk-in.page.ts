@@ -261,8 +261,9 @@ export class WalkInPage implements OnInit {
 
   toggleShowQr() {
     if (!this.showDriveTrans && !this.showWalkTrans) {
-      if ( !this.isFromScan) {
+      if (this.showWalk || this.showDrive) {
         this.resetForm()
+        this.isFromScan = false
       }
       this.showQrTrans = true
       this.showDrive = false;
@@ -390,12 +391,14 @@ export class WalkInPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.formData.block = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.formData.block = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }

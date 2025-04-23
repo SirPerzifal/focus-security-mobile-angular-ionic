@@ -67,9 +67,9 @@
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full">
-          <app-file-input class="w-full h-25" [labelText]="'BAN IMAGE'" [buttonText]="'UPLOAD'"
+          <app-file-input class="w-full h-25" [labelText]="'BAN IMAGE'" [buttonText]="'UPLOAD'" [isCamera]="true"
           [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
-          (fileSelected)="onBanImage($event)"></app-file-input>
+          (cameraSelected)="onBanImage($event)"></app-file-input>
         </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REASON</b></u></label>

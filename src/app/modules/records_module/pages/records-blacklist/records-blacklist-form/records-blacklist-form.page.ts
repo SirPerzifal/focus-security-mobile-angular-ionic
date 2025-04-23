@@ -226,10 +226,12 @@ export class RecordsBlacklistFormPage implements OnInit {
         if (this.project_config.is_industrial) {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         } else {
-          this.formData.block_id = contactData.block_id
-          this.loadUnit().then(() => {
-            this.contactUnit = contactData.unit_id
-          })
+          if (contactData.block_id) {
+            this.formData.block_id = contactData.block_id
+            this.loadUnit().then(() => {
+              this.contactUnit = contactData.unit_id
+            })
+          }
         }
       }
     }
@@ -274,16 +276,19 @@ export class RecordsBlacklistFormPage implements OnInit {
     }
   }
 
-  onBanImage(file: File): void {
-    let data = file;
-    if (data){
-      this.convertToBase64(data).then((base64: string) => {
-        console.log('Base64 successed');
-        this.formData.ban_image = base64.split(',')[1]
-      }).catch(error => {
-        console.error('Error converting to base64', error);
-      });
-    } 
+  onBanImage(file: any): void {
+    if (file) {
+      let data = file;
+      this.formData.ban_image = data.image
+    }
+    // if (data){
+    //   this.convertToBase64(data).then((base64: string) => {
+    //     console.log('Base64 successed');
+    //     this.formData.ban_image = base64.split(',')[1]
+    //   }).catch(error => {
+    //     console.error('Error converting to base64', error);
+    //   });
+    // } 
   }
 
   convertToBase64(file: File): Promise<string> {

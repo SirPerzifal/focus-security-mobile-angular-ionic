@@ -14,13 +14,13 @@
             VISITOR MANAGEMENT SYSTEM</b></span>
       </div>
       <div
-        class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-[50%] flex flex-row items-center justify-center">
+        class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-full flex flex-row items-center justify-center">
         <ion-icon name="log-out-outline" size="large" class="text-white size-10"
           (click)="isLogoutModal = true"></ion-icon>
       </div>
     </div>
-    <div class="grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8">
-      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry"
+    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around items-center mt-8 mb-8 space-y-4' : 'grid grid-cols-3 gap-4 justify-items-center space-y-4  mt-8 mb-8'">
+      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry" class="mt-4"
         [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor"

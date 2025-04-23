@@ -114,23 +114,26 @@ export class AlertTicketDetailPage implements OnInit {
 
   image_file = ''
   image_name = ''
-  onUploadImage(file: File): void {
-    let data = file;
-    console.log(data)
-    if (data){
-      if (['image/png', 'application/pdf', 'application/msword', 'image/jpeg', 'image/jpg'].includes(data.type)) {
-        this.image_name = data.name
-        console.log(this.image_name)
-        this.convertToBase64(data).then((base64: string) => {
-          this.image_file = base64.split(',')[1]
-        }).catch(error => {
-          console.error('Error converting to base64', error);
-        });
-      } else {
-        this.image_name = ''
-        this.functionMain.presentToast("Can only receive pdf, doc, png, jpg, and jpg files!", 'danger')
-      }
-    } 
+  onUploadImage(file: any): void {
+    if (file){
+      let data = file;
+      this.image_file = file.image
+      this.image_name = file.name
+      console.log(data)
+    }
+    //   if (['image/png', 'application/pdf', 'application/msword', 'image/jpeg', 'image/jpg'].includes(data.type)) {
+    //     this.image_name = data.name
+    //     console.log(this.image_name)
+    //     this.convertToBase64(data).then((base64: string) => {
+    //       this.image_file = base64.split(',')[1]
+    //     }).catch(error => {
+    //       console.error('Error converting to base64', error);
+    //     });
+    //   } else {
+    //     this.image_name = ''
+    //     this.functionMain.presentToast("Can only receive pdf, doc, png, jpg, and jpg files!", 'danger')
+    //   }
+    // } 
   }
 
   convertToBase64(file: File): Promise<string> {

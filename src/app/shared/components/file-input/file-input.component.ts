@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, SimpleChanges } from '@angular/core';
+import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 
 @Component({
   selector: 'app-file-input',
@@ -22,7 +23,10 @@ export class FileInputComponent  implements OnInit {
   @Input() fileAccept: string = ''
   @Input() labelClass: string = ''
 
+  @Input() isCamera: boolean=false
+
   @Output() fileSelected = new EventEmitter<File>();
+  @Output() cameraSelected = new EventEmitter<any>()
   
   @ViewChild('fileInput') fileInput!: ElementRef;
   selectedFile: File | null = null;
@@ -31,9 +35,39 @@ export class FileInputComponent  implements OnInit {
   triggerFileInput() {
     // Programmatically click the hidden file input
     if(!this.disableUpload){
-      this.fileInput?.nativeElement.click();
+      if (!this.isCamera) {
+        this.fileInput?.nativeElement.click();
+      } else {
+        this.takePicture()
+      }
+      
     }
   }
+
+  async takePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        source: CameraSource.Camera,
+        allowEditing: true,
+        resultType: CameraResultType.Base64
+      });
+      console.log(image)
+      const dateStr = (() => { const n = new Date(), p = (v: any) => v.toString().padStart(2, '0'); return `${p(n.getDate())}_${p(n.getMonth()+1)}_${n.getFullYear()}_${p(n.getHours())}_${p(n.getMinutes())}_${p(n.getSeconds())}` })();
+      this.selectedFileName = dateStr + '.' + image.format
+      this.cameraSelected.emit({image: image.base64String, is_camera: false, name: this.selectedFileName});
+    } catch (error) {
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as { message: string }).message;
+        if (errorMessage === 'User cancelled photos app') {
+          return;
+        }
+      }
+  
+      console.error(error)
+    }
+    
+  };
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['fileName'] && this.isCustomName) {
@@ -45,6 +79,7 @@ export class FileInputComponent  implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      console.log(file)
       this.selectedFile = file;
       this.selectedFileName = this.isCustomName ? this.fileName : file.name;
       this.fileSelected.emit(file);

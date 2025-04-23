@@ -26,17 +26,21 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="flex flex-col justify-end w-1/4 ">
-          <button id="middle_button"
+          <button id="middle_button" 
             class="bg-[var(--ion-color-primary)] w-full text-white text-2xl font-bold rounded h-20"
             (click)="onSearch(vehicleNumber)">SEARCH</button>
+          <!-- <div id="middle_button" *ngIf="isLoading"
+            class="bg-[#D0D0D0] w-full text-2xl font-bold rounded h-20 flex flex-row justify-center items-center">
+            <ion-spinner name="dots" class="text-[#F5F5F5]"></ion-spinner>
+          </div> -->
         </div>
 
       </div>
     </div>
     <div class="flex flex-row mx-4">
-      <div *ngIf="isLoading" class="flex justify-center items-center h-20 w-full mt-8" @fadeInOut>
+      <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20 w-full mt-8" @fadeInOut>
         <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
-      </div>
+      </div> -->
       <div class="flex flex-col w-full" *ngIf="!isLoading && showList" @fadeInOut>
         <div
           class="move_in_box flex flex-col mt-8 self-start rounded border-2 w-[100%] p-[10px] overflow-scroll scrollbar overflow-x-hidden"

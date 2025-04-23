@@ -417,12 +417,14 @@ export class ContractorFormPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
-        this.selectedBlock = contactData.block_id
-        this.loadUnit().then(() => {
-          setTimeout(() => {
-            this.contactUnit = contactData.unit_id
-          }, 300)
-        })
+        if (contactData.block_id) {
+          this.selectedBlock = contactData.block_id
+          this.loadUnit().then(() => {
+            setTimeout(() => {
+              this.contactUnit = contactData.unit_id
+            }, 300)
+          })
+        }
       }
     }
   }

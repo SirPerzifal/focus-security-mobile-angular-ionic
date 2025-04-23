@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { RecordsResidentsModalPage } from '../records-residents/records-residents-modal/records-residents-modal.page';
@@ -11,7 +11,9 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class RecordsMainPage implements OnInit {
 
-  constructor(private router: Router, private modalController: ModalController, public functionMain: FunctionMainService) { }
+  constructor(private router: Router, private modalController: ModalController, public functionMain: FunctionMainService) {
+    this.checkScreenSize();
+   }
 
   ngOnInit() {
     this.loadProjectName().then(() => {
@@ -158,5 +160,16 @@ export class RecordsMainPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  isSmallScreen = false;
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isSmallScreen = window.innerWidth < 720;
   }
 }

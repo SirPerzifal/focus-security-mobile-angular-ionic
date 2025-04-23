@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
@@ -18,6 +18,7 @@ export class HomePage implements OnInit {
 
   constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform) { 
     console.log(this.router.url.split('?')[0])
+    this.checkScreenSize()
     this.platform.backButton.subscribeWithPriority(10, () => {
       if ( this.router.url.split('?')[0] === 'home-vms') {
         App.exitApp()
@@ -139,6 +140,17 @@ export class HomePage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  isSmallScreen = false;
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isSmallScreen = window.innerWidth < 720;
   }
 
 }

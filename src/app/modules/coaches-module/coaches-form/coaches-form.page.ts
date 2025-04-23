@@ -301,10 +301,12 @@ export class CoachesFormPage implements OnInit {
       if (this.schedule.vehicle_number != ''){
         this.toggleShowDrive()
       }
-      this.schedule.block_id = contactData.block_id
-      this.loadUnit().then(() => {
-        this.schedule.unit_id = contactData.unit_id
-      })
+      if (contactData.block_id) {
+        this.schedule.block_id = contactData.block_id
+        this.loadUnit().then(() => {
+          this.schedule.unit_id = contactData.unit_id
+        })
+      }
     }
   }
 }

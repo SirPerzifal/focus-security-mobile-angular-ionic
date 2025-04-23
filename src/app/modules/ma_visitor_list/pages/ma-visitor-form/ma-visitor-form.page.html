@@ -107,7 +107,7 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
           </div>
-          <div class="w-full" *ngIf="record.selection_type == 'drive_in'">
+          <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in'">
             <div class="w-full" *ngFor="let camera of Camera; let i = index">
               <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"  (click)="onSubmitRecord(true)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (i == 0 ? 'mt-6' : 'mt-1' )"></app-visitor-button>

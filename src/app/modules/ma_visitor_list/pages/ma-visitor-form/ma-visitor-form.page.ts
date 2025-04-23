@@ -72,7 +72,7 @@ export class MaVisitorFormPage implements OnInit {
       next: (results) => {
         console.log(results.result)
         if (results.result.status_code === 200) {
-          this.functionMain.presentToast('Successfully update this visitor' + is_open ? ' and open the barrier!' : '!', 'success');
+          this.functionMain.presentToast('Successfully update this visitor' + (is_open ? ' and open the barrier!' : '!'), 'success');
           this.onBackMove()
         } else {
           this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
