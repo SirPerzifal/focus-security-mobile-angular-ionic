@@ -18,17 +18,16 @@
       </div>
     </div>
 
-    <div class="mx-4 flex flex-col relative">
-      <div class="flex flex-row items-center mb-4">
-        <ion-button
-          class="w1/5 mr-1.5 flex flex-row justify-center items-center icon"
-          fill="clear"
-          [routerLink]="['/facility-booking-main']"
-        >
-          <div class="flex flex-col items-center text-black">
-            <ion-icon name="arrow-back"></ion-icon>
-          </div>
-        </ion-button>
+    <div class="flex flex-col relative">
+      <div class="flex flex-row items-center mb-4 pl-[11px] pr-[14px]">
+        <div class="w-full flex items-start justify-start mt-2 mr-[20px]">
+          <ion-icon
+            name="arrow-back-circle"
+            size="large"
+            class="text-[var(--ion-color-primary)] size-12"
+            [routerLink]="['/facility-booking-main']"
+          ></ion-icon>
+        </div>
         <ion-datetime-button
           class="w-4/5 mt-0.5"
           datetime="datetime"
@@ -53,7 +52,7 @@
         </ion-modal>
       </div>
 
-      <div class="flex flex-row justify-center space-x-3 w-full mb-3">
+      <div class="px-4 flex flex-row justify-center space-x-3 w-full mb-3">
         <select
           id="ch_room"
           [(ngModel)]="selectedRoom"
@@ -79,7 +78,7 @@
       >
         <ion-spinner name="circular"></ion-spinner>
       </div>
-      <div *ngIf="!isLoading" class="grid grid-cols-3 gap-2 mb-4">
+      <div *ngIf="!isLoading" class="grid grid-cols-3 gap-2 mb-4 px-4">
         <button
           *ngFor="let timeSlot of roomSchedule"
           [ngClass]="getTimeSlotClass(timeSlot)"
@@ -90,7 +89,7 @@
         </button>
       </div>
 
-      <div *ngIf="!isCloseForMaintenance">
+      <div *ngIf="!isCloseForMaintenance" class="px-4">
         <div class="flex items-start mb-4">
           <input
             id="termsCheckbox"

@@ -1,0 +1,308 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page
+    [text]="'My Payments'"
+    [text_second]="'Bills & Fines'"
+  ></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/payment-page-main']"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs
+        [buttons]="navButtonsMain"
+        (eventEmitter)="onClick($event)"
+      ></app-nav-tabs>
+    </div>
+
+    <div *ngIf="showBills" @fadeInOut>
+      <div class="flex flex-row w-full">
+        <div class="flex flex-col w-full">
+          <div class="w-full mt-2">
+            <div class="flex flex-col w-full space-y-1.5 justify-start">
+              <div
+                *ngIf="isLoading"
+                class="flex justify-center items-center h-full mt-7"
+              >
+                <ion-spinner name="circular"></ion-spinner>
+              </div>
+              <div *ngFor="let payment of billsLoaded">
+                <div
+                  [ngClass]="payment.overdue === 'Yes' ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'"
+                  class="p-4 rounded-xl w-full"
+                >
+                  <div
+                    class="flex flex-row justify-between font-bold items-center"
+                  >
+                    <div class="flex flex-col w-4/6">
+                      <div class="text-base font-extrabold">
+                        {{ payment.title }}
+                      </div>
+                      <div
+                        *ngIf="payment.description"
+                        class="text-base cw-3:text-[13px] font-thin"
+                      >
+                        {{ payment.description }}
+                      </div>
+                      <div class="text-base cw-3:text-[13px] font-thin">
+                        {{ functionMain.convertToDDMMYYYY(payment.date) }}
+                      </div>
+                      <div class="text-base cw-3:text-[13px] font-thin">
+                        Overdue In :{{
+                        functionMain.convertToDDMMYYYY(payment.overdue_in) }}
+                      </div>
+                      <div
+                        *ngIf="payment.overdue === 'Yes'"
+                        class="text-base cw-3:text-[13px] font-thin"
+                      >
+                        This bill is overdue
+                      </div>
+                    </div>
+                    <div
+                      class="flex flex-col w-1/4 cw-3:w-[93px] items-center text-base"
+                    >
+                      <div>S${{ payment.total.toFixed(2) }}</div>
+                      <button
+                        class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full"
+                        (click)="payNow(payment.id)"
+                      >
+                        Pay Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showFines" @fadeInOut>
+      <div class="flex flex-row w-full">
+        <div class="flex flex-col w-full">
+          <div class="w-full mt-4">
+            <div clas="flex flex-col w-full justify-start">
+              <div
+                *ngIf="isLoading"
+                class="flex justify-center items-center h-full"
+              >
+                <ion-spinner name="circular"></ion-spinner>
+              </div>
+              <div *ngFor="let fine of fines">
+                <div
+                  [ngClass]="fine.overdue ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'"
+                  class="p-4 rounded-xl w-full"
+                >
+                  <div
+                    class="flex flex-row justify-between font-bold items-center"
+                  >
+                    <div class="flex flex-col w-4/6">
+                      <div class="text-base font-extrabold">
+                        {{ fine.fines_references }}
+                      </div>
+                      <div
+                        *ngIf="fine.offence_data"
+                        class="text-base cw-3:text-[13px] font-thin"
+                      >
+                        {{ fine.offence_data[0].vehicle_number }}
+                      </div>
+                      <div class="text-base cw-3:text-[13px] font-thin">
+                        {{ functionMain.convertToDDMMYYYY(fine.start_date) }}
+                      </div>
+                      <div class="text-base cw-3:text-[13px] font-thin">
+                        Overdue In :{{
+                        functionMain.convertToDDMMYYYY(fine.due_date) }}
+                      </div>
+                      <div
+                        *ngIf="fine.overdue"
+                        class="text-base cw-3:text-[13px] font-thin"
+                      >
+                        This bill is overdue
+                      </div>
+                    </div>
+                    <div
+                      class="flex flex-col w-1/4 cw-3:w-[93px] items-center text-base"
+                    >
+                      <div>S${{ fine.total_bill.toFixed(2) }}</div>
+                      <button
+                        class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full"
+                        (click)="payNow(fine.id)"
+                      >
+                        Pay Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showHistory" @fadeInOut>
+      <div class="flex items-end mt-2">
+        <u
+          class="w-full text-base font-bold mt-2 text-right underline mr-0.5"
+          (click)="clearFilter()"
+          >Clear Filter</u
+        >
+      </div>
+      <div class="w-full mt-4 mb-3 flex flex-row space-x-1.5">
+        <select
+          id="walk_in_unit"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base cw-3:text-xs text-[#6B7280]"
+          (change)="filterByType($event)"
+          [(ngModel)]="filterByTypeValue"
+        >
+          <option hidden disabled selected value="">Type of History</option>
+          <option
+            class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]"
+            value="All"
+          >
+            All
+          </option>
+          <option value="bills">Maintenance Fee</option>
+          <option value="fines">Wheel Clamped</option>
+        </select>
+        <div
+          class="w-full flex items-center justify-start font text-base cw-3:text-xs border border-black rounded outline-black py-2 px-3"
+          (click)="openDatePicker()"
+        >
+          {{ viewDate | date:'MMMM y' }}
+          <!-- Menampilkan bulan dan tahun -->
+        </div>
+      </div>
+      <div class="flex flex-col space-y-1 mb-2">
+        <p class="text-justify">
+          The app provides payment history for up to 13 months from the current
+          date. For invoices older than this period, please contact MA for
+          assistance.
+        </p>
+      </div>
+      <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
+      <div *ngFor="let monthYear of getMonthYears()">
+        <h2 class="text-lg font-bold">{{ monthYear }}</h2>
+        <div *ngFor="let item of groupedData[monthYear]">
+          <ng-container *ngIf="item.bill_references; else finesReferences">
+            <div
+              class="p-4 rounded-xl w-full bg-[var(--ion-color-tertiary)] mb-2"
+            >
+              <div
+                *ngIf="item.is_pay"
+                class="flex flex-col items-center z-10 absolute"
+              >
+                <img
+                  alt="IFS360"
+                  class="w-[6.5rem] h-[6.5rem] mr-[-25px] mt-[-15px] ml-[161px]"
+                  src="assets/icon/resident-icon/payment-paid.png"
+                />
+              </div>
+              <div class="flex flex-row justify-between font-bold items-center">
+                <div class="flex flex-col w-4/6">
+                  <div class="text-base font-extrabold">
+                    {{ item.bill_references }}
+                  </div>
+                  <div
+                    *ngIf="item.description"
+                    class="text-base cw-3:text-[13px] font-thin"
+                  >
+                    {{ item.description }}
+                  </div>
+                  <div class="text-base cw-3:text-[13px] font-thin">
+                    {{ functionMain.convertToDDMMYYYY(item.pay_date) }}
+                  </div>
+                  <div class="text-base cw-3:text-[13px] font-thin">
+                    S${{ item.total_bill.toFixed(2) }}
+                  </div>
+                  <div
+                    *ngIf="item.overdue === 'Yes'"
+                    class="text-base cw-3:text-[13px] font-thin"
+                  >
+                    This bill is overdue
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #finesReferences>
+            <div
+              class="p-4 rounded-xl w-full bg-[var(--ion-color-tertiary)] mb-2"
+            >
+              <div
+                *ngIf="item.is_pay"
+                class="flex flex-col items-center z-10 absolute"
+              >
+                <img
+                  alt="IFS360"
+                  class="w-[7.5rem] h-[7.5rem] mr-[-25px] mt-[-12px] ml-[148px]"
+                  src="assets/icon/resident-icon/payment-paid.png"
+                />
+              </div>
+              <div class="flex flex-row justify-between font-bold items-center">
+                <div class="flex flex-col w-4/6">
+                  <div class="text-base font-extrabold">
+                    {{ item.fines_references }}
+                  </div>
+                  <div
+                    *ngIf="item.offence_data"
+                    class="text-base cw-3:text-[13px] font-thin"
+                  >
+                    {{ item.offence_data[0].vehicle_number }}
+                  </div>
+                  <div class="text-base cw-3:text-[13px] font-thin">
+                    {{ functionMain.convertToDDMMYYYY(item.pay_date) }}
+                  </div>
+                  <div class="text-base cw-3:text-[13px] font-thin">
+                    S${{ item.total_bill.toFixed(2) }}
+                  </div>
+                  <div
+                    *ngIf="item.overdue"
+                    class="text-base cw-3:text-[13px] font-thin"
+                  >
+                    This bill is overdue
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <ion-modal
+        id="choose-date-modal"
+        keep-contents-mounted="true"
+        [isOpen]="isDatePickerOpen"
+        (didDismiss)="isDatePickerOpen = false"
+      >
+        <ng-template>
+          <ion-datetime
+            presentation="month-year"
+            [(ngModel)]="viewDateForDatet"
+            (ionChange)="onDateChange($event)"
+            [formatOptions]="{
+              date: {
+                day: '2-digit',
+                weekday: 'short',
+                month: 'long',
+              },
+            }"
+          ></ion-datetime>
+        </ng-template>
+      </ion-modal>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

@@ -1,13 +1,152 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>family-main</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page [text]="'My Family'"></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">family-main</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="directTo()"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div class="flex flex-col justify-between mt-1">
+      <button
+        class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base"
+        [routerLink]="['/family-form']"
+      >
+        Add New Family Member
+      </button>
+    </div>
+
+    <div class="flex flex-row w-full">
+      <div class="flex flex-col w-full">
+        <div class="w-full">
+          <div
+            *ngIf="isLoading"
+            class="flex justify-center items-center h-[50%] mt-24"
+          >
+            <ion-spinner name="circular"></ion-spinner>
+          </div>
+          <div
+            *ngIf="!isLoading"
+            class="flex flex-col w-full justify-start space-y-2"
+          >
+            <div *ngFor="let data of familyData">
+              <div
+                [ngClass]="{
+                  'bg-[var(--ion-color-tertiary)]':
+                  data.status === 'approved' || data.status === 'Approved',
+                  'bg-[#F8F1BA]':
+                  data.status === 'pending_approval' || data.status === 'Pending Approval',
+                  'bg-[#E3787E]': data.status === 'Rejected' || data.status === 'rejected',
+                  'bg-sky-100': data.status === 'pending_payment' || data.status === 'Pending Payment'
+                }"
+                [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col'"
+              >
+                <div class="flex flex-col justify-start items-start mb-2">
+                  <div class="flex flex-row items-center justify-end mt-2">
+                    <ng-container
+                      *ngIf="data.status === 'approved' || data.status === 'Approved'"
+                    >
+                      <ion-icon
+                        name="checkmark"
+                        class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
+                      ></ion-icon>
+                      <p
+                        class="text-[var(--ion-color-primary)] font-bold text-base"
+                      >
+                        Approved
+                      </p>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="
+                        data.status === 'pending_approval' ||
+                        data.status === 'Pending Approval' ||
+                        data.status === 'pending_payment' ||
+                        data.status === 'Pending Payment'
+                      "
+                    >
+                      <ion-icon
+                        name="alert"
+                        class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
+                      ></ion-icon>
+                      <p class="text-yellow-500 font-bold text-base">
+                        Pending Approval
+                      </p>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="data.status === 'rejected' || data.status === 'Rejected'"
+                    >
+                      <ion-icon
+                        name="close"
+                        class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+                      ></ion-icon>
+                      <p class="text-red-700 font-bold text-base">Rejected</p>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="flex flex-row">
+                  <img
+                    alt="Profile picture of {{ data.name }}"
+                    class="h-16 w-16 rounded-full"
+                    height="50"
+                    [src]="
+                    data.family_photo
+                        ? 'data:image/png;base64,' + data.family_photo
+                        : 'https://placehold.co/600x400?text=' + data.name.charAt(0)
+                    "
+                    width="50"
+                  />
+                  <div class="ml-4 text-start">
+                    <h2 class="text-lg font-bold">{{ data.name }}</h2>
+                    <p class="text-sm text-gray-600">
+                      {{ data.head_type }} ({{ data.type }})
+                    </p>
+                  </div>
+                </div>
+                <div
+                  *ngIf="data.type !== 'Tenants'; else buttonForTenant"
+                  fill="clear"
+                  class="button-card-facility flex items-center font-bold w-full mt-2"
+                >
+                  <button
+                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                    (click)="openDetails(data)"
+                  >
+                    View Details
+                  </button>
+                </div>
+                <ng-template #buttonForTenant>
+                  <div
+                    fill="clear"
+                    class="button-card-facility flex items-center font-bold w-full mt-2 space-x-1.5"
+                  >
+                    <button
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                      (click)="openDetails(data)"
+                    >
+                      View Details
+                    </button>
+                    <button
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                      (click)="openExtend(data)"
+                    >
+                      Tenancies
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

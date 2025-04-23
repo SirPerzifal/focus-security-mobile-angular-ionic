@@ -7,6 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentsMainPage implements OnInit {
 
+  longButtondata: any[] = [
+    {
+      id: 1,
+      name: 'My Bills & Fines',
+      src: 'assets/icon/resident-icon/payment-bills.png',
+      routeLinkTo: '/bills-and-fines-page',
+    },
+    {
+      id: 2,
+      name: 'My Deposit',
+      src: 'assets/icon/resident-icon/payment-manage.png',
+      routeLinkTo: '/deposits-page',
+    },
+  ];
+
   constructor() { }
 
   ngOnInit() {

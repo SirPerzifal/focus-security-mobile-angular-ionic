@@ -1,0 +1,11 @@
+select:disabled {
+    background-color: #F5F5F5 !important;
+    color: #7D8390;
+    opacity: 1 !important;
+    background-image: none;
+}
+
+input:read-only {
+    background-color: #F5F5F5;
+    color: #7D8390;
+}

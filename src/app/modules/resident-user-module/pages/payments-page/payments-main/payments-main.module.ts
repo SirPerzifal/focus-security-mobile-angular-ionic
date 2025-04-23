@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { PaymentsMainPageRoutingModule } from './payments-main-routing.module';
 
 import { PaymentsMainPage } from './payments-main.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PaymentsMainPageRoutingModule
+    PaymentsMainPageRoutingModule,
+    SharedModule
   ],
   declarations: [PaymentsMainPage]
 })

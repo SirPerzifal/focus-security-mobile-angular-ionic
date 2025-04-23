@@ -340,19 +340,19 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         this.getHistoryContrctorList();
       }
     } else if (event[1] === 'Family') {
-      this.router.navigate(['/resident-my-family'], {
+      this.router.navigate(['/family-page-main'], {
         state: {
-          from: "profile",
+          from: "family",
         }
       });
     } else if (event[1] === 'Vehicles') {
-      this.router.navigate(['/resident-my-vehicle'], {
+      this.router.navigate(['/my-vehicle-page-main'], {
         state: {
           from: "profile",
         }
       });
     } else if (event[1] === 'Employee') {
-      this.router.navigate(['/resident-my-family'], {
+      this.router.navigate(['/family-page-main'], {
         state: {
           from: "helper",
         }

@@ -270,7 +270,7 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '/resident-payment',
+            routeLinkTo: '/payment-page-main',
           },
           {
             name: 'Raise a Request',
@@ -298,7 +298,7 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'Payments',
             src: 'assets/icon/resident-icon/icon2.png',
-            routeLinkTo: '/resident-payment',
+            routeLinkTo: '/payment-page-main',
           },
           {
             name: 'My Family',

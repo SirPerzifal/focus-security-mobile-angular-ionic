@@ -889,6 +889,22 @@ const routes: Routes = [
     path: 'pets-detail-for-profile',
     loadChildren: () => import('./modules/resident-user-module/pages/profile-page/pets-detail-for-profile/pets-detail-for-profile.module').then( m => m.PetsDetailForProfilePageModule)
   },
+  {
+    path: 'bills-and-fines-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/payments-page/bills-and-fines-page/bills-and-fines-page.module').then( m => m.BillsAndFinesPagePageModule)
+  },
+  {
+    path: 'deposits-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/payments-page/deposits-page/deposits-page.module').then( m => m.DepositsPagePageModule)
+  },
+  {
+    path: 'family-form',
+    loadChildren: () => import('./modules/resident-user-module/pages/family-page/family-form/family-form.module').then( m => m.FamilyFormPageModule)
+  },
+  {
+    path: 'vehicle-form',
+    loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/vehicle-form/vehicle-form.module').then( m => m.VehicleFormPageModule)
+  },
 ];
 
 @NgModule({

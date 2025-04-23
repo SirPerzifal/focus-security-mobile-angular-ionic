@@ -91,7 +91,18 @@ export class SettingsMainPage implements OnInit {
     public functionMain: FunctionMainService,
     private authService: AuthService,
     private mainApi: MainApiResidentService
-  ) { }
+  ) {
+    const navigation = this.route.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: any};
+    if (state) {
+      console.log(state.formData.unit_id);
+      this.familyIdFromFamilyPage = state.formData.unit_id;      
+      this.pageName = 'Change Password';
+      this.showMain = false;
+      this.showChangePassword = true;
+      this.showNotificationSettings = false;
+    } 
+  }
 
   ngOnInit() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
@@ -144,10 +155,10 @@ export class SettingsMainPage implements OnInit {
       return
     }
 
-    if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
-      this.functionMain.presentToast("New password and confirm password not match.", 'danger');
-      return
-    }
+    // if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
+    //   this.functionMain.presentToast("New password and confirm password not match.", 'danger');
+    //   return
+    // }
 
     if (this.fromFamily) {
       this.authService.changePassword(this.passwordForm.newPassword, this.familyIdFromFamilyPage).subscribe((result) => {

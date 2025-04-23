@@ -1,0 +1,275 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page
+    [text]="'My Family'"
+    [text_second]="pageName"
+  ></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="directTo()"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div
+      *ngIf="pageForWhat === 'editData'"
+      class="w-full mt-2 flex items-center justify-center"
+    >
+      <img
+        alt="Profile picture of Maria"
+        class="h-24 w-24 rounded-full"
+        height="50"
+        [src]="formData.image_family ? 'data:image/png;base64,'+ formData.image_family : 'https://placehold.co/600x400?text=' + formData.full_name.charAt(0)"
+        width="50"
+      />
+    </div>
+
+    <app-input-component
+      [id]="'type_family_name'"
+      [type]="'text'"
+      [typeAction]="''"
+      [labelParent]="''"
+      [labelChild1]="'Family Name'"
+      [labelChild2]="''"
+      [value]="formData.full_name"
+      (eventEmitter)="onValueChange($event, 'name')"
+    ></app-input-component>
+
+    <app-input-component
+      [id]="'type_family_nickname'"
+      [type]="'text'"
+      [typeAction]="''"
+      [labelParent]="''"
+      [labelChild1]="'Family Nickname'"
+      [labelChild2]="''"
+      [value]="formData.nickname"
+      (eventEmitter)="onValueChange($event, 'nickname')"
+    ></app-input-component>
+
+    <app-input-component
+      [id]="'type_family_email'"
+      [type]="'text'"
+      [typeAction]="''"
+      [labelParent]="''"
+      [labelChild1]="'Family Email'"
+      [labelChild2]="''"
+      [value]="formData.email_address"
+      (eventEmitter)="onValueChange($event, 'email')"
+    ></app-input-component>
+
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-sm font-bold">Family Image Profile</p>
+      </div>
+      <div
+        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="family_image_profile"
+          (change)="onUploadImageProfile($event)"
+          id="family_image_profile"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-white'"
+          for="family_image_profile"
+        >
+          {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Upload
+          image profile' }}
+        </label>
+      </div>
+    </div>
+
+    <div class="w-full flex flex-row justify-between">
+      <div class="w-[30%] flex flex-col justify-start">
+        <label class="text-sm"><b>Code</b></label>
+        <select
+          id="contry_code"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-xs"
+          [(ngModel)]="selectedCode"
+          name="contry_code"
+          style="border: 1px solid #6b7280"
+          (change)="onCountryCodeChange($event)"
+        >
+          <option hidden selected disabled value="+65">SG +65</option>
+          <option *ngFor="let code of countryCodes" [value]="code.code">
+            {{ code.country }} +{{ code.code }}
+          </option>
+        </select>
+      </div>
+      <div class="w-[65%] flex flex-col justify-start">
+        <label class="text-sm"><b>Mobile Number</b></label>
+        <input
+          id="contry_code"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
+          type="number"
+          placeholder=""
+          [(ngModel)]="contactValue"
+          (keyup)="onKeyUp($event)"
+          name="contry_code"
+          style="border: 1px solid #6b7280"
+        />
+      </div>
+    </div>
+
+    <div class="w-full mt-1">
+      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <select
+        id="type_of_residence"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+        (change)="onValueChange($event, 'select_type_resident')"
+        [(ngModel)]="formData.type_of_residence"
+        name="type_of_residence"
+      >
+        <option [value]="'primary_contact'">Family, Primary Contact</option>
+        <option [value]="'secondary_contact'">Family, Secondary Contact</option>
+        <option [value]="'member'">Family, Member</option>
+        <option [value]="'helper'">Family, Helper</option>
+        <option [value]="'tenants'">Tenant</option>
+      </select>
+    </div>
+
+    <app-input-component
+      *ngIf="formData.reject_reason"
+      [id]="'reject_reason'"
+      [type]="'text'"
+      [typeAction]="''"
+      [labelParent]="''"
+      [labelChild1]="'Reject Reason'"
+      [labelChild2]="''"
+      [disabled]="true"
+      [value]="formData.reject_reason"
+    ></app-input-component>
+
+    <div *ngIf="formData.type_of_residence === 'helper'" class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-sm font-bold">Helper Work Permit File</p>
+      </div>
+      <div
+        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="helper_work_permit"
+          (change)="onUploadHelperWorkPermit($event)"
+          id="helper_work_permit"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-white'"
+          for="helper_work_permit"
+        >
+          {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
+          'Upload Helper Work Permit' }}
+        </label>
+      </div>
+    </div>
+
+    <div
+      *ngIf="pageForWhat !== 'editData' && formData.type_of_residence === 'tenants'"
+    >
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-sm font-bold">Tenants Agreement File</p>
+        </div>
+        <div
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="tenants"
+            (change)="onUploadTenantsWorkPermit($event)"
+            id="tenants"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-white'"
+            for="tenants"
+          >
+            {{ selectedNameTenantsWorkPermit ? selectedNameTenantsWorkPermit :
+            'Upload Tenants Agreement File' }}
+          </label>
+        </div>
+      </div>
+
+      <app-input-component
+        [id]="'end_tenants_agreement'"
+        [type]="'date'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'End Tenants Agreement'"
+        [labelChild2]="''"
+        (eventEmitter)="onValueChange($event, 'end_tenants_agreement')"
+        [value]="selectedDate"
+        [minDate]="minDate"
+      ></app-input-component>
+    </div>
+
+    <div *ngIf="pageForWhat !== 'editData'" class="w-full">
+      <app-submit-button
+        [text]="'Save to Add New Family'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants'"
+    >
+      <app-submit-button
+        [text]="'Save Edit Changes'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+      <app-submit-button
+        [text]="'Change Password'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+      <app-submit-button
+        [text]="'Delete Family Member'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
+    >
+      <app-submit-button
+        [text]="'Change Password'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+      <app-submit-button
+        [text]="'Request Extension Agreement'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+      <app-submit-button
+        [text]="'Delete User'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

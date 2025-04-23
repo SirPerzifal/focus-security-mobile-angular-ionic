@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FamilyMainPageRoutingModule } from './family-main-routing.module';
+import { DepositsPagePageRoutingModule } from './deposits-page-routing.module';
 
-import { FamilyMainPage } from './family-main.page';
+import { DepositsPagePage } from './deposits-page.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FamilyMainPageRoutingModule,
-    SharedModule
+    DepositsPagePageRoutingModule,
+    SharedModule,
   ],
-  declarations: [FamilyMainPage]
+  declarations: [DepositsPagePage]
 })
-export class FamilyMainPageModule {}
+export class DepositsPagePageModule {}

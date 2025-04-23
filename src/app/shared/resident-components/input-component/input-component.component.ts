@@ -58,10 +58,41 @@ export class InputComponentComponent  implements OnInit {
     }, 0);
   }
 
+  convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  onUploadPaymentReceipt(event: any) {
+    let data = event.target.files[0];
+    if (data) {
+      this.value = String(data.name); // Update selectedDate with the chosen date in dd/mm/yyyy format
+      this.convertToBase64(data).then((base64: string) => {
+        // console.log('Base64 successed');
+        const image = base64.split(',')[1]; // Update the form control for image file
+        this.eventEmitter.emit(image)// Store the selected file name
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    } else {
+      this.value = ''; // Reset if no file is selected
+    }
+  }
+
   onValueChange(event: any, type: string) {
     if (event.target.type === 'text') {
       const value = event.target.value;
       this.eventEmitter.emit(value)
+    } else if (event.target.type === 'file') {
+      this.onUploadPaymentReceipt(event)
     } else {
       if (event.target.value) {
         const date = new Date(event.target.value);

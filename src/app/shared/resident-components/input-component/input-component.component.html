@@ -3,10 +3,7 @@
   <u *ngIf="labelParent" class="font-bold text-black text-base">
     {{ labelParent }}
   </u>
-  <label
-    for="{{ id }}"
-    class="font-bold text-black text-sm"
-  >
+  <label for="{{ id }}" class="font-bold text-black text-sm">
     {{ labelChild1 }}
   </label>
   <div
@@ -25,14 +22,18 @@
       class="positioning-calendar-icon"
     ></ion-icon>
   </div>
-  
+
   <!-- Ion Modal approach for datetime -->
-  <ion-modal id="choose-date-court-modal" [isOpen]="isOpen" (didDismiss)="isOpen = false">
+  <ion-modal
+    id="choose-date-court-modal"
+    [isOpen]="isOpen"
+    (didDismiss)="isOpen = false"
+  >
     <ng-template>
       <ion-content>
         <ion-datetime
           #dateTimePicker
-          [presentation]="'date'" 
+          [presentation]="'date'"
           [min]="changeDateFormatToDefault(minDate)"
           (ionChange)="onDateTimeChange($event)"
           [value]="isoStringValue"
@@ -43,7 +44,25 @@
 </div>
 
 <div *ngIf="type !== 'date'" class="flex flex-col">
-  <u *ngIf="labelParent" class="font-bold text-black text-base"> {{ labelParent }} </u>
-  <label for="{{ id }}" class="font-bold text-black text-sm" (click)="clickDate(id)"> {{ labelChild1 }} </label>
-  <input id="{{ id }}" type="text" [value]="value" [ngClass]="disabled ? 'text-gray-500' : ''" class="bg-white p-3 rounded border h-12 border-gray-500 w-full mt-1" style="border: 1px solid #6B7280;" placeholder="{{ typeAction + ' ' + labelChild2 }}" [disabled]="disabled" (change)="onValueChange($event, type)">
+  <u *ngIf="labelParent" class="font-bold text-black text-base">
+    {{ labelParent }}
+  </u>
+  <label
+    for="{{ id }}"
+    class="font-bold text-black text-sm"
+    (click)="clickDate(id)"
+  >
+    {{ labelChild1 }}
+  </label>
+  <input
+    id="{{ id }}"
+    [type]="type"
+    [value]="value"
+    [ngClass]="disabled ? 'text-gray-500' : ''"
+    class="bg-white p-3 rounded border h-12 border-gray-500 w-full mt-1"
+    style="border: 1px solid #6b7280"
+    placeholder="{{ typeAction + ' ' + labelChild2 }}"
+    [disabled]="disabled"
+    (change)="onValueChange($event, type)"
+  />
 </div>

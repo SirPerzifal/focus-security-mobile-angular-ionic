@@ -1,0 +1,181 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page
+    [text]="'Visitors'"
+    [text_second]="pageName"
+  ></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/payment-page-main']"
+    ></ion-icon>
+  </div>
+  <div class="pb-4 pt-1.5 space-y-2 mb-28">
+    <div *ngIf="showMainContent" @fadeInOut>
+      <div
+        class="w-full bg-sky-200 px-7 py-[15px] mt-4 flex flex-row items-center justify-center relative"
+        (click)="showDepositHistoryPage()"
+      >
+        <h2 class="text-base font-bold text-black">Refunded deposits</h2>
+        <ion-icon
+          name="arrow-forward-circle"
+          size="large"
+          class="text-[var(--ion-color-primary)] size-12 right-[5px] absolute"
+        ></ion-icon>
+      </div>
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
+        <h2 class="text-base font-bold text-black">Active Deposits History</h2>
+      </div>
+      <div class="flex flex-col relative mx-4 mt-4">
+        <div class="bg-[#D8ECCF] p-4 rounded-lg text-left font-bold text-black">
+          <h3 class="text-green-700 underline underline-offset-1 text-base">
+            Current Deposit Balance
+          </h3>
+          <h4 class="ml-2 text-base">S${{ totalCurrentDeposit.toFixed(2) }}</h4>
+        </div>
+        <div
+          class="bg-[#D8ECCF] p-4 mt-2 rounded-lg"
+          *ngFor="let ad of activeDeposit"
+        >
+          <div class="">
+            <div
+              class="text-green-700 font-bold underline underline-offset-1 text-base"
+            >
+              <a href="#">{{ ad.facility }}</a>
+            </div>
+            <div class="font-bold text-black text-base">
+              S${{ ad.depositAmount.toFixed(2) }}
+            </div>
+          </div>
+          <div class="text-black">
+            <table>
+              <tr class="h-1">
+                <td class="font-bold">Deposited On</td>
+                <td>:</td>
+                <td>{{ functionMain.convertToDDMMYYYY(ad.depositDate) }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Event Date</td>
+                <td>:</td>
+                <td>{{ functionMain.convertToDDMMYYYY(ad.eventDate) }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Expected Refund</td>
+                <td>:</td>
+                <td>
+                  {{
+                  functionMain.convertToDDMMYYYY(ad.expectedReturnDepositDate)
+                  }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Konten Deposit History -->
+    <div *ngIf="showDepositHistory" @fadeInOut>
+      <div class="w-full bg-[#D8ECCF] text-center mt-4 m-0 p-3">
+        <h2 class="text-base font-bold text-black">Deposits History</h2>
+      </div>
+      <div class="p-4">
+        <div class="flex flex-row justify-end items-end mb-4 relative">
+          <ion-icon
+            name="arrow-back-circle"
+            size="large"
+            (click)="backToMainDeposits()"
+            class="text-[var(--ion-color-primary)] size-12 left-[-3px] absolute"
+          ></ion-icon>
+          <div class="flex flex-col items-end">
+            <button
+              class="bg-[var(--ion-color-primary)] py-2 px-4 rounded mb-[3px] text-white text-base"
+              (click)="clearDateFilter()"
+            >
+              All Records
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-row space-x-2 w-full mb-4">
+          <div class="w-1/2">
+            <app-input-component
+              [id]="'start_deposits_history_date'"
+              [type]="'date'"
+              [typeAction]="'Choose'"
+              [labelParent]="''"
+              [labelChild1]="''"
+              [labelChild2]="''"
+              [value]="startDateFilter"
+              (eventEmitter)="onChangeStartDate($event)"
+            ></app-input-component>
+          </div>
+          <div class="w-1/2">
+            <app-input-component
+              [id]="'end_deposits_history_date'"
+              [type]="'date'"
+              [typeAction]="'Choose'"
+              [labelParent]="''"
+              [labelChild1]="''"
+              [labelChild2]="''"
+              [value]="endDateFilter"
+              (eventEmitter)="onChangeEndDate($event)"
+              [minDate]="startDateFilter"
+            ></app-input-component>
+          </div>
+        </div>
+        <div
+          class="bg-sky-200 p-4 rounded-lg text-left font-bold text-black mb-4"
+        >
+          <p class="underline underline-offset-1 text-base">
+            Refunded Deposit Till Date
+          </p>
+          <p class="ml-2 text-base">S${{ totalRefundedDeposit.toFixed(2) }}</p>
+        </div>
+        <div
+          class="bg-[#D8ECCF] p-4 mt-2 rounded-lg"
+          *ngFor="let dh of filteredData"
+        >
+          <div class="">
+            <div class="text-green-700 font-bold">
+              <a class="underline underline-offset-1 text-base" href="#"
+                >{{ dh.facility }}</a
+              >
+            </div>
+            <div class="font-bold text-black text-base">
+              S${{ dh.depositAmount.toFixed(2) }}
+            </div>
+          </div>
+          <div class="text-black">
+            <table>
+              <tr class="h-1">
+                <td class="font-bold w-[57%]">Deposited On</td>
+                <td>:</td>
+                <td>{{ functionMain.convertToDDMMYYYY(dh.depositDate) }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Event Date</td>
+                <td>:</td>
+                <td>{{ functionMain.convertToDDMMYYYY(dh.eventDate) }}</td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Refund Date</td>
+                <td>:</td>
+                <td>
+                  {{ functionMain.convertToDDMMYYYY(dh.returnDepositDate) }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

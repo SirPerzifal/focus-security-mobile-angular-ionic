@@ -1,13 +1,29 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>payments-main</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page [text]="'Payments'"></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">payments-main</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-home-page']"
+    ></ion-icon>
+  </div>
+  <div class="px-4 text-center mb-24">
+    <div class="flex flex-col gap-3">
+      <div *ngFor="let lb of longButtondata">
+        <app-long-button
+          [name]="lb.name"
+          [srcImage]="lb.src"
+          [routeLinkTo]="lb.routeLinkTo"
+        ></app-long-button>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

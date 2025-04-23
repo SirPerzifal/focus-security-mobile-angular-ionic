@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FamilyMainPageRoutingModule } from './family-main-routing.module';
+import { BillsAndFinesPagePageRoutingModule } from './bills-and-fines-page-routing.module';
 
-import { FamilyMainPage } from './family-main.page';
+import { BillsAndFinesPagePage } from './bills-and-fines-page.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FamilyMainPageRoutingModule,
+    BillsAndFinesPagePageRoutingModule,
     SharedModule
   ],
-  declarations: [FamilyMainPage]
+  declarations: [BillsAndFinesPagePage]
 })
-export class FamilyMainPageModule {}
+export class BillsAndFinesPagePageModule {}

@@ -111,7 +111,7 @@ export class FamilyEditMemberPage implements OnInit {
   }
 
   changePassDirect() {
-    this.router.navigate(['/change-password'], { state: { formData: this.formData } });
+    this.router.navigate(['/settings-main'], { state: { formData: this.formData } });
   }
 
   onSubmit() {

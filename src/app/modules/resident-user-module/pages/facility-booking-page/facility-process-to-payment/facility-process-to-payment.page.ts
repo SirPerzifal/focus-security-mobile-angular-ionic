@@ -64,6 +64,7 @@ export class FacilityProcessToPaymentPage implements OnInit {
   selectedPaymentMethod: 'card' | 'paynow' | null = null;
   projectId: number = 0;
 
+  paymentMethodAllowed: string = ''; // Default value
   qrCodeImage: string = '';
 
   selectedPaymentReceiptFileName: string = '';
@@ -151,6 +152,9 @@ export class FacilityProcessToPaymentPage implements OnInit {
   loadQRCode() {
     this.mainApiResidentService.endpointMainProcess({}, 'get/payment_qr_code').subscribe((result: any) => {
       this.qrCodeImage = result.result.qr_code;
+      if (result.result.config.allowed_payment) {
+        this.paymentMethodAllowed = result.result.config.allowed_payment;
+      }
     })
   }
 
