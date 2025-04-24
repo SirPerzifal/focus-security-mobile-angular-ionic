@@ -91,4 +91,11 @@ export class QuickDialsMainPage implements OnInit {
     await this.webRtcService.createOffer(record);
     // this.router.navigate(['/outgoing-call']);
   }
+
+  openWhatsApp() {
+    const message = encodeURIComponent("Hello!");
+    const url = `https://wa.me/${this.selectedQuickDial?.number}?text=${message}`;
+    window.open(url, "_blank");
+    this.closePopup()
+  }
 }

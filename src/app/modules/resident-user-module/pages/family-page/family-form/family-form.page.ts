@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -11,10 +12,12 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 })
 export class FamilyFormPage implements OnInit {
 
+  buttonNameEdit: string = 'Click To Edit'
   selectedCode: string = '65';
   selectedDate: string = '';
   pageForWhat: string = '';
   pageName: string = '';
+  disableForm: boolean = false;
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   contactValue: string = '';
   countryCodes: any[] = [
@@ -56,10 +59,18 @@ export class FamilyFormPage implements OnInit {
   familyId: number = 0;
   end_date: string=new Date().toISOString().split('T')[0];
 
+  isModalFamilyEditOpen: boolean = false; // Status modal
+  isModalAddFamilyMessageOpen: boolean = false; // Status modal
+  selectedFamilyMemberId: number | undefined = 0; // Menyimpan ID anggota keluarga yang dipilih
+  familyEditData = [
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
+  ];
+
   constructor(
     private router: Router,
     public functionMain: FunctionMainService,
-    private mainApi: MainApiResidentService
+    private mainApi: MainApiResidentService,
+    private alertController: AlertController
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { for: any, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
@@ -67,6 +78,7 @@ export class FamilyFormPage implements OnInit {
       this.familyId = state.id;
       this.pageName = 'Edit Member';
       this.pageForWhat = state.for;
+      this.disableForm = true;
       this.formData.type_of_residence = state.hard_type
       this.formData.full_name= state.name
       this.formData.mobile_number= state.mobile
@@ -214,6 +226,17 @@ export class FamilyFormPage implements OnInit {
     }
   }
 
+  ableChangeInput() {
+    this.disableForm = !this.disableForm;
+    if (this.disableForm === true) {
+      this.functionMain.presentToast('You can not change your profile data', 'danger');
+      this.buttonNameEdit = 'Click To Edit';
+      return;
+    }
+    this.buttonNameEdit = 'Save Edit Change';
+    this.functionMain.presentToast('You can change your profile data now', 'success');
+  }
+
   processAddNewFamily() {
     let errMsg = ''
     if (this.formData.full_name == '') {
@@ -246,7 +269,7 @@ export class FamilyFormPage implements OnInit {
       try {
         if (this.pageForWhat === 'editData') {
           this.mainApi.endpointProcess({
-            unit_id: this.familyId,
+            family_id_for_update: this.familyId,
             full_name: this.formData.full_name,
             nickname: this.formData.nickname,
             email_address: this.formData.email_address,
@@ -289,7 +312,151 @@ export class FamilyFormPage implements OnInit {
         this.functionMain.presentToast(String(error), 'danger');
       }
     }
+  }
 
+  changePassDirect() {
+    this.router.navigate(['/settings-main'], { state: { formData: this.formData, familyId: this.familyId } });
+  }
+
+  getFamilyList() {
+    this.familyEditData.pop()
+    this.mainApi.endpointMainProcess({}, 'get/get_family').subscribe((response: any) => {
+      const result = response.result['response_result'];
+      // console.log(result);
+      
+      // Filter data sesuai dengan kriteria yang diinginkan
+      const filteredData = result.filter((item: any) => 
+        item['member_hard_type'] !== 'primary_contact' && item['member_hard_type'] !== 'secondary_contact' // Ganti dengan kriteria yang sesuai
+      );
+
+      // Push data yang sudah difilter ke familyEditData
+      filteredData.forEach((item: any) => {
+        this.familyEditData.push({
+          id: item['family_id'], 
+          type: item['member_type'], 
+          hard_type: item['member_hard_type'], 
+          name: item['family_full_name'], 
+          mobile: item['family_mobile_number'], 
+          nickname: item['family_nickname'], 
+          email: item['family_email'], 
+          head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
+          end_date: item['end_of_tenancy_aggrement'],
+          status: item['states'],
+          tenancy_agreement: item['tenancy_aggrement']
+        });
+      });
+
+      // Perform validation after the data is loaded
+    if (this.familyEditData.length > 0) {
+      // Open modal if there's data
+      this.isModalFamilyEditOpen = true;
+      // console.log('Opening modal with family data:', this.familyEditData);
+    } else {
+      this.isModalAddFamilyMessageOpen = true;
+      // Handle case when there's no data
+      // console.log('No family data available to show in the modal.');
+    }
+    })
+  }
+  
+  async onDelete() {
+    this.isModalFamilyEditOpen = false;
+    this.familyEditData = [
+      { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
+    ];
+    // console.log(this.formData.unit_id)
+    const alertButtons = await this.alertController.create({
+      cssClass: 'manage-payment-alert',
+      header: `Are you sure you want to delete ${this.formData.full_name}?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            // Pengecekan untuk primary_contact dan secondary_contact
+            if (this.formData.type_of_residence === 'primary_contact' || this.formData.type_of_residence === 'secondary_contact') {
+              this.getFamilyList();
+            } else {
+              // Jika bukan primary atau secondary, langsung lakukan update
+              this.deleteProcess();
+            }
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    })
+    await alertButtons.present();456
+  }
+
+  deleteProcess(family_member_choose_id?: number, type_of_residence?: string) {
+    this.isModalFamilyEditOpen = false; // Menutup modal
+    try {
+      this.mainApi.endpointMainProcess({
+        family_id_to_change: this.familyId,
+        targeted_family_id: family_member_choose_id, 
+        type_of_residence: type_of_residence
+      }, 'post/delete_family').subscribe((response: any) => {
+        // console.log(res);
+        if (response.result.response_code == 200) {
+          this.functionMain.presentToast('Successfully deleted this member.', 'success');
+          this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
+          this.isModalFamilyEditOpen = false; // Menutup modal
+        } else {
+          this.functionMain.presentToast('Error occurred while deleting this member.', 'danger');
+        }
+      })
+    } catch (error) {
+        console.error('Unexpected error:', error);
+        this.functionMain.presentToast(String(error), 'danger');
+    }
+  }
+
+  resubmitForApproval() {
+    this.mainApi.endpointMainProcess({
+      full_name: this.formData.full_name,
+      nickname: this.formData.nickname,
+      email_address: this.formData.email_address,
+      mobile_number: this.formData.mobile_number,
+      type_of_residence: this.formData.type_of_residence,
+      tenancies: this.formData.tenancies,
+      helper_work_permit: '',
+      resubmit_id: this.familyId
+    }, 'post/post_family_detail').subscribe((response: any) => {
+      this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
+    })
+  }
+
+  openExtend() {
+    this.router.navigate(['/tenant-extend-page'], {
+      state: {
+        from: 'family-form',
+        id: this.familyId,
+        type: this.formData.type_of_residence,
+        name: this.formData.full_name,
+        mobile: this.formData.mobile_number,
+        nickname: this.formData.nickname,
+        email: this.formData.email_address,
+        profile_image: this.formData.image_family,
+        end_date: this.formData.tenancies.end_of_tenancy_aggrement,
+        tenant: this.formData.tenancies,
+      }
+    });
+  }
+
+  processEdit() {
+    this.disableForm = !this.disableForm;
+    if (this.disableForm === true) {
+      this.functionMain.presentToast('You can not change your profile data', 'danger');
+      this.processAddNewFamily();
+      return;
+    }
+    this.buttonNameEdit = 'Save Edit Change';
+    this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 
 }

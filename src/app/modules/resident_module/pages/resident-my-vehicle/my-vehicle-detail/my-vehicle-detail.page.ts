@@ -45,7 +45,7 @@ export class MyVehicleDetailPage implements OnInit {
 
     // Jika tidak ada data, kembalikan ke halaman sebelumnya
     if (!this.vehicle) {
-      this.router.navigate(['/resident-my-vehicle']);
+      this.router.navigate(['/my-vehicle-page-main']);
     }
 
     this.getTodayDate();
@@ -63,7 +63,7 @@ export class MyVehicleDetailPage implements OnInit {
 
   backToVehicle() {
     this.vehicle = null;
-    this.router.navigate(['/resident-my-vehicle']);
+    this.router.navigate(['/my-vehicle-page-main']);
   }
 
   public async deleteVehicle(
@@ -120,9 +120,12 @@ export class MyVehicleDetailPage implements OnInit {
   }
 
   navigateToVehiclePayment(vehicle: any) {
-    this.router.navigate(['/my-vehicle-payment-form'], {
+    console.log(vehicle);
+    
+    this.router.navigate(['/payment-form-vehicle'], {
       state: {
-        vehicleId: vehicle
+        vehicleId: vehicle,
+        from: 'main'
       }
     });
   }
@@ -139,7 +142,7 @@ export class MyVehicleDetailPage implements OnInit {
       extension_date: this.formData.dateForExtensionRequest || dateInput
     }, 'post/vehicle_request_for_extension').subscribe((response: any) => {
       this.isExtensionRequestModal = false
-      this.router.navigate(['resident-my-vehicle'])
+      this.router.navigate(['my-vehicle-page-main'])
     })
   }
 

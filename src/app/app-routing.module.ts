@@ -905,6 +905,18 @@ const routes: Routes = [
     path: 'vehicle-form',
     loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/vehicle-form/vehicle-form.module').then( m => m.VehicleFormPageModule)
   },
+  {
+    path: 'tenant-extend-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/family-page/tenant-extend-page/tenant-extend-page.module').then( m => m.TenantExtendPagePageModule)
+  },
+  {
+    path: 'raise-a-request-history',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-history/raise-a-request-history.module').then( m => m.RaiseARequestHistoryPageModule)
+  },
+  {
+    path: 'payment-form-vehicle',
+    loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/payment-form-vehicle/payment-form-vehicle.module').then( m => m.PaymentFormVehiclePageModule)
+  },
 ];
 
 @NgModule({

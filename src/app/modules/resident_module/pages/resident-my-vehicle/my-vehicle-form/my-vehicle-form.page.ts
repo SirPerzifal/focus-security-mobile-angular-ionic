@@ -250,46 +250,46 @@ export class MyVehicleFormPage implements OnInit {
         }
     }
 
-    try {
-        this.myVehicleFormService.postVehicle(
-            vehicleNumber,
-            iuNumber,
-            this.selectedTypeOfApplication,
-            this.selectedVehicleType,
-            this.selectedVehicleMake,
-            vehicle_color,
-            this.selectedBlock,
-            this.selectedFamilyMember,
-            this.selectedUnit,
-            this.uploadedFileBase64, // Kirim base64
-            this.endDate,
-            states,
-            temporaryCarRequest,
-            String(this.isFirstVehicle), // Pastikan ini ada
-            this.projectId
-        ).subscribe({
-            next: (response: any) => {
-                if (response.result.response_code === 200) {
-                    this.router.navigate(['/my-vehicle-payment-form'], {
-                      state: {
-                        vehicleId: response.result.vehicle_id
-                      }
-                    });
-                    this.resetForm();
-                } else {
-                    this.presentToast('Failed', 'danger');
-                    console.error('Error:', response.result.message);
-                }
-            },
-            error: (error: any) => {
-                console.error('Error:', error);
-                this.presentToast('There was an error', 'danger');
+  try {
+    this.myVehicleFormService.postVehicle(
+      vehicleNumber,
+      iuNumber,
+      this.selectedTypeOfApplication,
+      this.selectedVehicleType,
+      this.selectedVehicleMake,
+      vehicle_color,
+      this.selectedBlock,
+      this.selectedFamilyMember,
+      this.selectedUnit,
+      this.uploadedFileBase64, // Kirim base64
+      this.endDate,
+      states,
+      temporaryCarRequest,
+      String(this.isFirstVehicle), // Pastikan ini ada
+      this.projectId
+    ).subscribe({
+      next: (response: any) => {
+        if (response.result.response_code === 200) {
+          this.router.navigate(['/my-vehicle-payment-form'], {
+            state: {
+              vehicleId: response.result.vehicle_id
             }
-        });
-    } catch (error) {
-        console.error('Unexpected error:', error);
+          });
+          this.resetForm();
+        } else {
+          this.presentToast('Failed', 'danger');
+          console.error('Error:', response.result.message);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error:', error);
         this.presentToast('There was an error', 'danger');
-    }
+      }
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    this.presentToast('There was an error', 'danger');
+  }
 }
 
   resetForm() {

@@ -93,10 +93,10 @@ export class SettingsMainPage implements OnInit {
     private mainApi: MainApiResidentService
   ) {
     const navigation = this.route.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: any};
+    const state = navigation?.extras.state as { formData: any, familyId: any };
     if (state) {
       console.log(state.formData.unit_id);
-      this.familyIdFromFamilyPage = state.formData.unit_id;      
+      this.familyIdFromFamilyPage = state.formData.unit_id ? state.formData.unit_id : this.familyId ? this.familyId : 0;      
       this.pageName = 'Change Password';
       this.showMain = false;
       this.showChangePassword = true;

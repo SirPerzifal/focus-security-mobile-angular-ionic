@@ -47,7 +47,7 @@
             [id]="id.id"
             [type]="'text'"
             [value]="inputForm[id.formParams]"
-            [disabled]="disabledInput"
+            [disabled]="id.disabledInput"
             [labelChild1]="id.name"
             (eventEmitter)="onChangeValueInput($event, id.id)"
           ></app-input-component>
@@ -261,9 +261,9 @@
     </div>
 
     <div *ngIf="showPets" @fadeInOut>
-      <div class="px-5 mt-2 text-center mb-20">
+      <div class="px-5 text-center mb-20">
         <div class="space-y-4">
-          <div class="flex flex-col justify-between mt-1">
+          <div class="flex flex-col justify-between">
             <button
               class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base"
               (click)="toWhere()"

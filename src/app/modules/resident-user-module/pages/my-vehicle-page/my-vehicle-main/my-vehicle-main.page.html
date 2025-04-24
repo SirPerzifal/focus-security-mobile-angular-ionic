@@ -1,13 +1,142 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>my-vehicle-main</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page
+    [text]="'My Vehicle'"
+    [text_second]="pageName"
+    (typeOfFamily)="onChangeTypeFamily($event)"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-vehicle-main</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="directTo()"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 space-y-2 mb-28">
+    <div class="flex flex-col space-y-2">
+      <button
+        [ngClass]="userRole === 'Tenants' || userRole === 'Helper' ? 'bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base' : 'bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base'"
+        [disabled]="userRole === 'Tenants' || userRole === 'Helper'"
+        (click)="navigateToAddNewVehicle()"
+      >
+        Add New Vehicle
+      </button>
+      <div
+        *ngIf="userRole === 'Tenants' || userRole === 'Helper'"
+        class="text-center text-base white:text-black mx-5 mb-2"
+      >
+        "Please contact your primary or secondary contact of the household to
+        add a new vehicle"
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div
+        *ngIf="isLoading"
+        class="flex justify-center items-center h-[50%] w-full mt-24"
+      >
+        <ion-spinner name="circular"></ion-spinner>
+      </div>
+      <div
+        *ngFor="let vehicle of vehicles"
+        [ngClass]="{
+        'bg-[var(--ion-color-tertiary)]': vehicle.status === 'approved' || vehicle.status === 'Approved',
+        'bg-[#F8F1BA]': vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval',
+        'bg-[#E3787E]': vehicle.status === 'Rejected' || vehicle.status === 'rejected',
+        'bg-sky-100': vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'
+        }"
+        class="bg-[var(--ion-color-tertiary)] p-3 mt-3 rounded-2xl w-full"
+      >
+        <div class="flex flex-row items-center justify-start mb-2">
+          <ng-container
+            *ngIf="vehicle.status === 'approved' || vehicle.status === 'Approved'"
+          >
+            <ion-icon
+              name="checkmark"
+              class="bg-[var(--ion-color-primary)] mr-3 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-[var(--ion-color-primary)] font-bold text-base">
+              Approved
+            </p>
+          </ng-container>
+          <ng-container
+            *ngIf="vehicle.status === 'pending_approval' || vehicle.status === 'Pending Approval'"
+          >
+            <ion-icon
+              name="alert-circle-outline"
+              class="bg-yellow-500 mr-3 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+          </ng-container>
+          <ng-container
+            *ngIf="vehicle.status === 'pending_payment' || vehicle.status === 'Pending Payment'"
+          >
+            <ion-icon
+              name="alert-circle-outline"
+              class="bg-blue-500 mr-3 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-blue-500 font-bold text-base">Pending Payment</p>
+          </ng-container>
+          <ng-container
+            *ngIf="vehicle.status === 'rejected' || vehicle.status === 'Rejected'"
+          >
+            <ion-icon
+              name="close"
+              class="bg-red-700 mr-3 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-red-700 font-bold text-base">Rejected</p>
+          </ng-container>
+        </div>
+        <p *ngIf="vehicle.isPrimary" class="font-bold text-base text-black">
+          {{ vehicle.type_application + ' (Primary Vehicle)' | titlecase }}
+        </p>
+        <p *ngIf="!vehicle.isPrimary" class="font-bold text-base text-black">
+          {{ vehicle.type_application | titlecase }}
+        </p>
+        <div class="flex flex-col justify-between w-full">
+          <div class="w-full">
+            <table class="w-full">
+              <tr
+                class="text-base text-black"
+                *ngFor="let field of ['Vehicle Number', 'Vehicle Make', 'Vehicle Colour', 'Vehicle Type', 'Fees']"
+              >
+                <td class="font-bold text-base w-[40%] cw-3:w-[50%]">
+                  {{ field }}
+                </td>
+                <td class="font-bold text-base">:</td>
+                <td class="text-base text-black">
+                  {{ getVehicleValue(vehicle, field) }}
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- </div> -->
+          <div class="flex mt-2 space-x-2">
+            <div class="flex flex-row items-center w-full space-x-2">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                *ngIf="vehicle.status !== 'approved' && vehicle.status !== 'Approved' && vehicle.status !== 'pending_approval' && vehicle.status !== 'Pending Approval' && vehicle.status !== 'Rejected' && vehicle.status !== 'rejected'"
+                (click)="navigateToVehiclePayment(vehicle)"
+              >
+                Pay Now
+              </button>
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                (click)="navigateToVehicleDetail(vehicle)"
+              >
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

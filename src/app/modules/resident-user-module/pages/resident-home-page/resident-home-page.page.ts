@@ -64,7 +64,7 @@ export class ResidentHomePagePage implements OnInit {
     {
       name: 'Raise a Request',
       src: 'assets/icon/resident-icon/icon6.png',
-      routeLinkTo: '/raise-a-request-page-main',
+      routeLinkTo: '/resident-raise-a-request',
     },
     {
       name: 'Find Service Providers',
@@ -303,12 +303,12 @@ export class ResidentHomePagePage implements OnInit {
           {
             name: 'My Family',
             src: 'assets/icon/resident-icon/icon1.png',
-            routeLinkTo: '/resident-my-family',
+            routeLinkTo: '/family-page-main',
           },
           {
             name: 'My Vehicle',
             src: 'assets/icon/resident-icon/icon4.png',
-            routeLinkTo: '/resident-my-vehicle',
+            routeLinkTo: '/my-vehicle-page-main',
           },
           {
             name: 'Raise a Request',
@@ -342,7 +342,7 @@ export class ResidentHomePagePage implements OnInit {
         {
           name: 'My Vehicle',
           src: 'assets/icon/resident-icon/icon4.png',
-          routeLinkTo: '/resident-my-vehicle',
+          routeLinkTo: '/my-vehicle-page-main',
         },
       ];
     }

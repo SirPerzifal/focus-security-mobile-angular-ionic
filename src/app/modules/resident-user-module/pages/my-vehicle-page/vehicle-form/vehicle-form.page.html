@@ -1,13 +1,193 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>vehicle-form</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page
+    [text]="'My Vehicle'"
+    [text_second]="'Add New Vehicle'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">vehicle-form</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/my-vehicle-page-main']"
+    ></ion-icon>
+  </div>
+
+  <div class="px-4 pb-4 mb-28">
+    <div class="w-full mt-1">
+      <label class="text-sm font-bold mb-[-4px]">Type Of Application</label>
+      <select
+        id="type-of-application"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+        (change)="onValueChange($event, 'select_type_resident')"
+        [(ngModel)]="vehicleForm.typeOfApplication"
+        name="type-of-application"
+      >
+        <option *ngFor="let tor of valueForSelect" [value]="tor.value">
+          {{ tor.text }}
+        </option>
+      </select>
+    </div>
+
+    <div
+      *ngIf="!maximumVehicle && vehicleForm.typeOfApplication !== 'temporary_vehicle'"
+      class="w-full flex flex-row justify-between items-center mt-4 mb-2"
+    >
+      <div class="flex flex-row justify-start">
+        <p class="text-sm font-bold">Primary Vehicle</p>
+      </div>
+      <div class="flex items-center ml-4">
+        <input
+          id="is_first_vehicle"
+          type="checkbox"
+          (click)="onValueChange($event, 'primary_vehicle')"
+          [(ngModel)]="vehicleForm.isFirstVehicle"
+          class="w-7 h-7 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded dark:bg-gray-700 dark:border-gray-600"
+        />
+      </div>
+    </div>
+
+    <div class="w-full">
+      <label class="text-sm font-bold mb-[-4px]">Owned By</label>
+      <select
+        id="rv_unit"
+        (change)="onValueChange($event, 'owned_vehicle')"
+        [(ngModel)]="vehicleForm.ownedBy"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+      >
+        <option *ngFor="let fm of FamilyMember" [value]="fm.id">
+          {{ fm.full_name }}
+        </option>
+      </select>
+    </div>
+
+    <app-input-component
+      [id]="'vehicle_number'"
+      [type]="'text'"
+      [labelChild1]="'Vehicle Number'"
+      (eventEmitter)="onValueChange($event, 'vehicle_number')"
+    ></app-input-component>
+
+    <app-input-component
+      [id]="'iu_number'"
+      [type]="'text'"
+      [labelChild1]="'IU Number'"
+      (eventEmitter)="onValueChange($event, 'iu_number')"
+    ></app-input-component>
+
+    <div class="w-full">
+      <label class="text-sm font-bold mb-[-4px]">Type of Vehicle</label>
+      <select
+        id="type_vehicle"
+        (change)="onValueChange($event, 'type_vehicle')"
+        [(ngModel)]="vehicleForm.typeOfVehicle"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+      >
+        <option *ngFor="let fm of vehicleTypes" [value]="fm.id">
+          {{ fm.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="w-full">
+      <label class="text-sm font-bold mb-[-4px]">Vehicle Make</label>
+      <select
+        id="make_vehicle"
+        (change)="onValueChange($event, 'make_vehicle')"
+        [(ngModel)]="vehicleForm.vehicleMake"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+      >
+        <option *ngFor="let fm of vehicleMakes" [value]="fm.id">
+          {{ fm.name }}
+        </option>
+      </select>
+    </div>
+
+    <app-input-component
+      [id]="'vehicle_colour'"
+      [type]="'text'"
+      [labelChild1]="'Vehicle Colour'"
+      (eventEmitter)="onValueChange($event, 'vehicle_colour')"
+    ></app-input-component>
+
+    <div class="w-full mt-2">
+      <div class="flex flex-row justify-start mb-1">
+        <p class="text-sm font-bold">Vehicle Log</p>
+      </div>
+      <div
+        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="vehicle_log"
+          (change)="onValueChange($event, 'vehicle_log')"
+          id="vehicle_log"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedNameVehicleLog) ? 'text-black' : 'text-white'"
+          for="vehicle_log"
+        >
+          {{ selectedNameVehicleLog ? selectedNameVehicleLog : 'Upload Helper
+          Work Permit' }}
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="vehicleForm.typeOfApplication === 'temporary_vehicle'">
+      <div class="w-full mt-1">
+        <label class="text-sm font-bold mb-[-4px]">Temporary Car Reason</label>
+        <select
+          id="temporary_car_reason"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+          (change)="onValueChange($event, 'temporary_reason')"
+          [(ngModel)]="additionalTemporary.temporaryCarRequest"
+          name="temporary_car_reason"
+        >
+          <option value="car_at_workshop">Car at Workshop</option>
+          <option value="rental_car">Rental Car</option>
+          <option value="work_vehicle">Work Vehicle</option>
+          <option value="others">Others</option>
+        </select>
+      </div>
+
+      <app-input-component
+        [id]="'temporary_vehicle_end_date'"
+        [type]="'date'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'Temporary End Date'"
+        [labelChild2]="''"
+        (eventEmitter)="onValueChange($event, 'temporary_vehicle_end_date')"
+        [value]="selectedDate"
+        [minDate]="minDate"
+      ></app-input-component>
+
+      <!-- <div class="w-full mt-1">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Temporary End Date</p>
+        </div>
+        <div class="w-full">
+          <app-text-input #temporaryVehicleEndDate [id]="'temporary_vehicle_end_date'" [placeholder]="'Temporary End Date'" [min]="dateNow"
+          [customClasses]="{'w-full':true}" [type]="'date'"
+          [customInputClasses]="{'border':true, '!border-[#BDBDBD]':true , 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}" (change)="onEndDateChange($event)" (value)="showDate"
+          ></app-text-input>
+        </div>
+      </div> -->
+    </div>
+
+    <button
+      (click)="saveRecord()"
+      class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-sm rounded h-12 font-bold"
+    >
+      Submit for Approval
+    </button>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

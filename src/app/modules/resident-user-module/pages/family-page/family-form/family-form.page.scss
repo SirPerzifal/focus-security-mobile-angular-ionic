@@ -9,3 +9,26 @@ input:read-only {
     background-color: #F5F5F5;
     color: #7D8390;
 }
+ion-modal#choose-inheritence-modal {
+    --width: 80%;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#choose-inheritence-modal ion-icon {
+    margin-right: 6px;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 4px 0;
+
+    color: #E3787E;
+}
+
+ion-modal#choose-inheritence-modal .wrapper {
+    margin: 0;
+    background-color: #E3787E;
+}

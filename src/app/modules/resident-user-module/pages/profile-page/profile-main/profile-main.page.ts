@@ -23,6 +23,7 @@ interface InputData {
   id: string;
   formParams: keyof InputForm; // Menggunakan keyof untuk memastikan hanya kunci yang valid
   name: string;
+  disabledInput: boolean;
 }
 
 interface pet {
@@ -74,27 +75,33 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     {
       id: 'condominium_name',
       formParams: 'nameCondominium',
-      name: 'Condominium Name'
+      name: 'Condominium Name',
+      disabledInput: true
     },    {
       id: 'status_owner',
       formParams: 'statusOwner',
-      name: 'Status'
+      name: 'Status',
+      disabledInput: true
     },    {
       id: 'block_name',
       formParams: 'blockName',
-      name: 'Block'
+      name: 'Block',
+      disabledInput: true
     },    {
       id: 'unit_name',
       formParams: 'unitName',
-      name: 'Unit'
+      name: 'Unit',
+      disabledInput: true
     },    {
       id: 'email_owner',
       formParams: 'email',
-      name: 'Email'
+      name: 'Email',
+      disabledInput: true
     },    {
       id: 'phone_number',
       formParams: 'phone',
-      name: 'Contact'
+      name: 'Contact',
+      disabledInput: true
     }
   ]
 
@@ -209,19 +216,23 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
-                name: 'Condominium Name'
+                name: 'Condominium Name',
+                disabledInput: true
               },    {
                 id: 'status_owner',
                 formParams: 'statusOwner',
-                name: 'Status'
+                name: 'Status',
+                disabledInput: true
               },    {
                 id: 'email_owner',
                 formParams: 'email',
-                name: 'Email'
+                name: 'Email',
+                disabledInput: this.disabledInput
               },    {
                 id: 'phone_number',
                 formParams: 'phone',
-                name: 'Contact'
+                name: 'Contact',
+                disabledInput: this.disabledInput
               }
             ]
             this.inputForm = {
@@ -233,6 +244,39 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               phone: estate.family_mobile_number,
             }
           } else {
+            this.inputData = [
+              {
+                id: 'condominium_name',
+                formParams: 'nameCondominium',
+                name: 'Condominium Name',
+                disabledInput: true
+              },    {
+                id: 'status_owner',
+                formParams: 'statusOwner',
+                name: 'Status',
+                disabledInput: true
+              },    {
+                id: 'block_name',
+                formParams: 'blockName',
+                name: 'Block',
+                disabledInput: true
+              },    {
+                id: 'unit_name',
+                formParams: 'unitName',
+                name: 'Unit',
+                disabledInput: true
+              },    {
+                id: 'email_owner',
+                formParams: 'email',
+                name: 'Email',
+                disabledInput: this.disabledInput
+              },    {
+                id: 'phone_number',
+                formParams: 'phone',
+                name: 'Contact',
+                disabledInput: this.disabledInput
+              }
+            ]
             this.inputForm = {
               nameCondominium: estate.project_name,
               statusOwner: estate.family_type,
@@ -287,12 +331,21 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   }
 
   ableChangeInput() {
+    // Toggle the disabledInput state
     this.disabledInput = !this.disabledInput;
+  
+    // Update the disabledInput for email and phone fields
+    this.inputData.forEach(input => {
+      if (input.formParams === 'email' || input.formParams === 'phone') {
+        input.disabledInput = this.disabledInput;
+      }
+    });
+  
     if (this.disabledInput === true) {
       this.functionMain.presentToast('You can not change your profile data', 'danger');
-      return;
+    } else {
+      this.functionMain.presentToast('You can change your profile data now', 'success');
     }
-    this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 
   onClickButton(button?: any, type?: string) {

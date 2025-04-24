@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <app-header-inner-page
+    [text]="'My Family'"
+    [text_second]="'Request Extension Tenants'"
+  ></app-header-inner-page>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="backToWhere()"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div class="flex flex-col justify-between">
+      <div class="w-full text-base">
+        Name of Tenant: {{this.formData.full_name}}
+      </div>
+      <div class="w-full text-base">Current End Date: {{this.end_date}}</div>
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-sm font-bold">Tenant Agreement File</p>
+        </div>
+        <div
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="tenant_file"
+            (change)="onTenanciesChange($event)"
+            id="tenant_file"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameFileOfAgreement) ? 'text-black' : 'text-white'"
+            for="tenant_file"
+          >
+            {{ selectedNameFileOfAgreement ? selectedNameFileOfAgreement :
+            'Upload image profile' }}
+          </label>
+        </div>
+      </div>
+
+      <div class="w-full mt-3">
+        <app-input-component
+          [id]="'choose_entry_date_field'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'End Of Tenancy Agreement'"
+          [labelChild2]="''"
+          (eventEmitter)="onDateChange($event)"
+          [value]="selectedDate"
+          [minDate]="minDate"
+        ></app-input-component>
+      </div>
+      <div class="w-full">
+        <button
+          class="bg-[var(--ion-color-primary)] text-white mt-6 w-full text-sm rounded h-12 font-bold"
+          (click)="onSubmit()"
+        >
+          Submit for Approval
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

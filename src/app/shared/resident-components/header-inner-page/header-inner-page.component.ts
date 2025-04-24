@@ -19,6 +19,7 @@ export class HeaderInnerPageComponent  implements OnInit {
   @Input() text: string = "";
   @Input() text_second: string = "";
   @Output() typeOfUser = new EventEmitter<any>();
+  @Output() typeOfFamily = new EventEmitter<any>();
   condoImage: string = '';
 
   userType: string = '';
@@ -31,7 +32,8 @@ export class HeaderInnerPageComponent  implements OnInit {
             const estate = JSON.parse(value) as Estate;
             this.condoImage = estate.project_image;
             this.userType = estate.record_type;
-            this.typeOfUser.emit(this.userType)
+            this.typeOfUser.emit(this.userType);
+            this.typeOfFamily.emit(estate.family_type);
           }
         })
       } 

@@ -19,6 +19,29 @@
       *ngIf="pageForWhat === 'editData'"
       class="w-full mt-2 flex items-center justify-center"
     >
+      <div
+        class="w-32 h-32 mb-4 flex flex-col justify-center items-center relative"
+      >
+        <img
+          alt="Profile picture of Maria"
+          class="w-24 h-24 object-cover rounded-full"
+          height="50"
+          [src]="formData.image_family ? 'data:image/png;base64,'+ formData.image_family : 'https://placehold.co/600x400?text=' + formData.full_name.charAt(0)"
+          width="50"
+        />
+        <ion-icon
+          class="absolute top-[5.5rem] right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50"
+          name="pencil"
+          (click)="ableChangeInput()"
+        >
+        </ion-icon>
+      </div>
+    </div>
+
+    <!-- <div
+      *ngIf="pageForWhat === 'editData'"
+      class="w-full mt-2 flex items-center justify-center"
+    >
       <img
         alt="Profile picture of Maria"
         class="h-24 w-24 rounded-full"
@@ -26,7 +49,7 @@
         [src]="formData.image_family ? 'data:image/png;base64,'+ formData.image_family : 'https://placehold.co/600x400?text=' + formData.full_name.charAt(0)"
         width="50"
       />
-    </div>
+    </div> -->
 
     <app-input-component
       [id]="'type_family_name'"
@@ -35,6 +58,7 @@
       [labelParent]="''"
       [labelChild1]="'Family Name'"
       [labelChild2]="''"
+      [disabled]="disableForm"
       [value]="formData.full_name"
       (eventEmitter)="onValueChange($event, 'name')"
     ></app-input-component>
@@ -46,6 +70,7 @@
       [labelParent]="''"
       [labelChild1]="'Family Nickname'"
       [labelChild2]="''"
+      [disabled]="disableForm"
       [value]="formData.nickname"
       (eventEmitter)="onValueChange($event, 'nickname')"
     ></app-input-component>
@@ -57,6 +82,7 @@
       [labelParent]="''"
       [labelChild1]="'Family Email'"
       [labelChild2]="''"
+      [disabled]="disableForm"
       [value]="formData.email_address"
       (eventEmitter)="onValueChange($event, 'email')"
     ></app-input-component>
@@ -110,6 +136,7 @@
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
           type="number"
           placeholder=""
+          [disabled]="disableForm"
           [(ngModel)]="contactValue"
           (keyup)="onKeyUp($event)"
           name="contry_code"
@@ -126,6 +153,7 @@
         (change)="onValueChange($event, 'select_type_resident')"
         [(ngModel)]="formData.type_of_residence"
         name="type_of_residence"
+        [disabled]="disableForm"
       >
         <option [value]="'primary_contact'">Family, Primary Contact</option>
         <option [value]="'secondary_contact'">Family, Secondary Contact</option>
@@ -216,8 +244,20 @@
     <div *ngIf="pageForWhat !== 'editData'" class="w-full">
       <app-submit-button
         [text]="'Save to Add New Family'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="processAddNewFamily()"
+      >
+      </app-submit-button>
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.reject_reason"
+      class="w-full"
+    >
+      <app-submit-button
+        [text]="'Resubmit For Approval'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="resubmitForApproval()"
       >
       </app-submit-button>
     </div>
@@ -226,21 +266,21 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants'"
     >
       <app-submit-button
-        [text]="'Save Edit Changes'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [text]="buttonNameEdit"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="processEdit()"
       >
       </app-submit-button>
       <app-submit-button
         [text]="'Change Password'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="changePassDirect()"
       >
       </app-submit-button>
       <app-submit-button
         [text]="'Delete Family Member'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="onDelete()"
       >
       </app-submit-button>
     </div>
@@ -250,24 +290,92 @@
     >
       <app-submit-button
         [text]="'Change Password'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="changePassDirect()"
       >
       </app-submit-button>
       <app-submit-button
         [text]="'Request Extension Agreement'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="openExtend()"
       >
       </app-submit-button>
       <app-submit-button
         [text]="'Delete User'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-        (click)="processAddNewFamily()"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="onDelete()"
       >
       </app-submit-button>
     </div>
   </div>
+  <ion-modal
+    id="choose-inheritence-modal"
+    [isOpen]="isModalFamilyEditOpen"
+    (didDismiss)="isModalFamilyEditOpen === false"
+  >
+    <ng-template>
+      <div class="wrapper p-4">
+        <p class="mt-2 text-sm text-black mb-2">
+          If you want to delete this contact, you have to choose which family
+          member to promote as a replacement for {{ formData.type_of_residence
+          === 'primary_contact' ? 'Primary Contacts' : 'Secondary Contacts' }}
+        </p>
+        <div class="w-full">
+          <label class="text-base font-bold"
+            ><p>Family Member to Choose</p></label
+          >
+          <select
+            id="family_member_to_choose"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
+            [(ngModel)]="selectedFamilyMemberId"
+          >
+            <option selected disabled hidden>Family Member to Choose</option>
+            <option *ngFor="let fd of familyEditData" [value]="fd.id">
+              {{ fd.name }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-row justify-between space-x-2">
+          <button
+            class="mt-4 bg-[#D0D0D0] text-black rounded p-2 w-28"
+            (click)="deleteProcess(selectedFamilyMemberId, formData.type_of_residence)"
+          >
+            Confirm
+          </button>
+          <button
+            class="mt-4 bg-[#D0D0D0] text-black rounded p-2 w-28"
+            (click)="isModalFamilyEditOpen = false"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal
+    id="choose-inheritence-modal"
+    [isOpen]="isModalAddFamilyMessageOpen"
+    (didDismiss)="isModalAddFamilyMessageOpen === false"
+  >
+    <ng-template>
+      <div class="wrapper p-4">
+        <p class="mt-2 text-md text-black mb-2">
+          There is No Member to be updated as a {{ formData.type_of_residence
+          === 'primary_contact' ? 'Primary Contacts' : 'Secondary Contacts' }},
+          please make a new family member records
+        </p>
+        <div class="flex flex-row justify-center">
+          <button
+            class="mt-4 bg-[#D0D0D0] text-black rounded p-3 w-28"
+            (click)="isModalAddFamilyMessageOpen = false"
+          >
+            Confirm
+          </button>
+          <!-- <button class="mt-4 bg-[#D0D0D0] text-black rounded p-3 w-28" (click)="isModalAddFamilyMessageOpen = false">Close</button> -->
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
 <ion-footer>

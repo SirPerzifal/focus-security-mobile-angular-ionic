@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { VehicleFormPageRoutingModule } from './vehicle-form-routing.module';
+import { PaymentFormVehiclePageRoutingModule } from './payment-form-vehicle-routing.module';
 
-import { VehicleFormPage } from './vehicle-form.page';
+import { PaymentFormVehiclePage } from './payment-form-vehicle.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    VehicleFormPageRoutingModule,
+    PaymentFormVehiclePageRoutingModule,
     SharedModule
   ],
-  declarations: [VehicleFormPage]
+  declarations: [PaymentFormVehiclePage]
 })
-export class VehicleFormPageModule {}
+export class PaymentFormVehiclePageModule {}

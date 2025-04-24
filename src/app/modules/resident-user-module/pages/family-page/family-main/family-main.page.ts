@@ -155,8 +155,9 @@ export class FamilyMainPage implements OnInit {
   }
 
   openExtend(data: any) {
-    this.router.navigate(['/family-tenant-extend'], {
+    this.router.navigate(['/tenant-extend-page'], {
       state: {
+        from: 'family-main',
         id: data.id,
         type: data.type,
         hard_type: data.hard_type,
