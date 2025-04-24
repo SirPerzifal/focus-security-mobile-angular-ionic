@@ -31,7 +31,10 @@
           <option value="favourite">Favourites</option>
         </select>
       </div>
-      <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+      <div
+        *ngIf="isLoading"
+        class="flex justify-center items-center h-[50%] !mt-[100px]"
+      >
         <ion-spinner name="circular"></ion-spinner>
       </div>
       <div *ngFor="let notice of notices">
