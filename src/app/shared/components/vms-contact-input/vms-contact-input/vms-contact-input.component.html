@@ -32,8 +32,8 @@
 <div class="w-full flex flex-row justify-between" *ngIf="!vmsPage">
   <div class="w-[30%] flex flex-col justify-start">
     <div class="flex flex-row justify-between items-center">
-      <label class="text-2xl"><b><u>CODE</u></b></label>
-      <fa-icon [icon]="faQuestion" class="text-2xl text-black" (click)="showMessage()"></fa-icon>
+      <label [class]="labelClass"><b><u>Code</u></b></label>
+      <fa-icon [icon]="faQuestion" class="text-base text-black" (click)="showMessage()"></fa-icon>
     </div>
     <select [id]="id" [class]="inputClass + ' resident-selection'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >

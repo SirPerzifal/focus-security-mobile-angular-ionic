@@ -350,9 +350,9 @@ export class ResidentHomePagePage implements OnInit {
 
   async fetchContacts() {
     const PermissionStatus = await Contacts.requestPermissions();
-    if (PermissionStatus.contacts === 'granted') {
-      this.functionMain.presentToast('Now you app sync with your contact!', 'success');
-    }
+    // if (PermissionStatus.contacts === 'granted') {
+    //   this.functionMain.presentToast('Now you app sync with your contact!', 'success');
+    // }
   }
 
   loadCountNotification() {

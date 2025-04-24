@@ -144,7 +144,9 @@ export class ClientRegisterVisitorPage implements OnInit {
 
   changePageList(){
     console.log(this.isActive)
-    this.showVisitorList = this.isActive ? this.visitorList.filter((item: any) => new Date(item.entry_date).setHours(0,0,0,0) == this.today) : this.visitorList
+    console.log(this.today)
+    this.showVisitorList = this.isActive ? (this.visitorList.filter((item: any) => new Date(item.entry_date).setHours(0,0,0,0) == this.today)) : this.visitorList.filter((item: any) => new Date(item.entry_date).setHours(0,0,0,0) < this.today)
+    console.log(this.showVisitorList)
   }
 
   textSecond = 'Active Visitor'
@@ -167,10 +169,10 @@ export class ClientRegisterVisitorPage implements OnInit {
   toggleShowHistory() {
     this.isActive = false
     this.isHistory = true
+    this.resetFilter()
     this.isNew = false
     this.textSecond = 'Visitor History'
     this.changePageList()
-    this.resetFilter()
   }
 
   toggleShowNew() {

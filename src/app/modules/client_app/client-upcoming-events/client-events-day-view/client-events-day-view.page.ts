@@ -294,6 +294,9 @@ export class ClientEventsDayViewPage implements OnInit {
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.event.facility_id)[0].room_ids
     this.EventsForm.room_id = event.event.room_id
 
+    this.selectedStartDate = event.event.start
+    this.selectedEndDate = event.event.end
+
     this.selectedStartTime = `${event.event.start.getHours().toString().padStart(2, '0')}:${event.event.start.getMinutes().toString().padStart(2, '0')}`
     this.selectedEndTime = `${event.event.end.getHours().toString().padStart(2, '0')}:${event.event.end.getMinutes().toString().padStart(2, '0')}`
   }

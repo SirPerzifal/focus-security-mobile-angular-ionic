@@ -1,6 +1,15 @@
+.video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1; // Behind everything
+}
+
 .fslp-container {
     text-align: center;
-    padding: 30px 5px 30px 5px;
 }
 .fslp-logo {
     width: 200px;

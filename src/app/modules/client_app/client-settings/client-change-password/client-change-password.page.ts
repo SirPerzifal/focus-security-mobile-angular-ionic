@@ -102,6 +102,7 @@ export class ClientChangePasswordPage implements OnInit {
         console.log(results)
         if (results.result.response_code == 200) {
           this.functionMain.presentToast('Password successfully changed!', 'success');
+          this.router.navigate(['/client-settings'])
         } else if (results.result.response_code == 401) {
           this.functionMain.presentToast(results.result.response_description, 'danger');
         }

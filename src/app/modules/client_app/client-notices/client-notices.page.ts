@@ -26,17 +26,21 @@ export class ClientNoticesPage implements OnInit {
   constructor(private router: Router, public functionMain: FunctionMainService, private blockUnitService: BlockUnitService, private clientMainService: ClientMainService, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(['block', 'unit', 'project_id']).then(
+    this.functionMain.vmsPreferences().then(
       (value) => {
         console.log(value)
-        this.dataUser.block_id = value.block
-        this.dataUser.unit_id = value.unit
+        this.project_config = value.config
         this.loadNotice();
+        if (this.project_config.is_industrial) {
+          this.loadHost()
+        } else {
+          this.loadBlock()
+          this.loadUnit()
+        }
       }
     )
-    this.loadBlock()
-    this.loadUnit()
   }
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -401,6 +405,11 @@ export class ClientNoticesPage implements OnInit {
     this.newNoticeForm.block_ids = event
   }
 
+  hostChange(event: any) {
+    console.log(event)
+    this.newNoticeForm.host_ids = event
+  }
+
   startDate = '';
   endDate = '';
   newNoticeForm: any = {
@@ -410,9 +419,11 @@ export class ClientNoticesPage implements OnInit {
     post_to: 'all',
     unit_ids: [], // Sekarang ini adalah array of numbers
     block_ids: [], // Sekarang ini adalah array of numbers
+    host_ids: [],
     start_time: new Date(),
     end_time: new Date(),
   }
+  selectedHost: any = []
   onSubmitPost() {
     console.log(this.newNoticeForm)
     let errMsg = ''
@@ -433,6 +444,9 @@ export class ClientNoticesPage implements OnInit {
     }
     if (this.newNoticeForm.post_to == 'unit' && this.newNoticeForm.unit_ids.length == 0) {
       errMsg += "At least one unit must be selected! \n"
+    }
+    if (this.newNoticeForm.post_to == 'host' && this.newNoticeForm.host_ids.length == 0) {
+      errMsg += "At least one host must be selected! \n"
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -472,5 +486,12 @@ export class ClientNoticesPage implements OnInit {
         this.functionMain.presentToast('Failed to post notice', 'danger');
       }
     )
+  }
+  
+  Host: any = []
+  loadHost() {
+    this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
   }
 }
