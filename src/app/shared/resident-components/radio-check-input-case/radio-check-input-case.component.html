@@ -4,12 +4,12 @@
     id="{{ id }}"
     name="{{ name }}"
     value="{{ value }}"
-    class="mr-1 accent-[var(--ion-color-primary)] text-[var(--ion-color-primary)] rounded cw-4:text-base text-lg"
+    class="mr-1 accent-[var(--ion-color-primary)] text-[var(--ion-color-primary)] rounded cw-4:text-sm text-sm"
     (change)="onChange($event)"
     [checked]="checkedText"
   />
-  <label for="{{ id }}" class="cw-4:text-base text-base">
-    <b class="cw-4:text-base text-base">
+  <label for="{{ id }}" class="cw-4:text-sm text-sm">
+    <b class="cw-4:text-sm text-sm">
       {{ text }}
     </b>
   </label>
@@ -25,7 +25,7 @@
       [checked]="check"
       class="mr-1 accent-black text-[var(--ion-color-primary)] rounded"
     />
-    <label for="provide_unit_number" class="classForLabelCheck text-base"
+    <label for="provide_unit_number" class="classForLabelCheck text-sm"
       ><b>{{ text }}</b></label
     >
   </div>

@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { RaiseARequestMainPageRoutingModule } from './raise-a-request-main-routing.module';
+import { RaiseRequestFormPagePageRoutingModule } from './raise-request-form-page-routing.module';
 
-import { RaiseARequestMainPage } from './raise-a-request-main.page';
+import { RaiseRequestFormPagePage } from './raise-request-form-page.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    RaiseARequestMainPageRoutingModule,
+    RaiseRequestFormPagePageRoutingModule,
     SharedModule
   ],
-  declarations: [RaiseARequestMainPage]
+  declarations: [RaiseRequestFormPagePage]
 })
-export class RaiseARequestMainPageModule {}
+export class RaiseRequestFormPagePageModule {}

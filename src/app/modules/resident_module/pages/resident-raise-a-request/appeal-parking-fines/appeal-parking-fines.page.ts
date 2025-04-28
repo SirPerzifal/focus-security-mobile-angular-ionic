@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { StorageService } from 'src/app/service/storage/storage.service';

@@ -36,7 +36,7 @@ export class RaiseARequestService extends ApiService  {
     super(http);
   }
 
-  getExpectedVisitors(unitId: number): Observable<any> {
+  getExpectedVisitors(unitId: number, projectId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -46,6 +46,7 @@ export class RaiseARequestService extends ApiService  {
       jsonrpc: '2.0',
       params: {
         unit_id: unitId,
+        project_id: projectId
       }
     };
 
@@ -147,7 +148,7 @@ export class RaiseARequestService extends ApiService  {
 
   // Bicycle API methods
   private postApiBicycle = this.baseUrl + '/resident/post/request_bicycle_tag';
-  private getApiBicycle = this.baseUrl + '/residential/get/bicycle_tag_based_on_unit';
+  private getApiBicycle = this.baseUrl + '/resident/get/bicycle_tag_based_on_unit';
   postRequestBicycle(
     block_id: number,
     unit_id: number,
@@ -203,7 +204,7 @@ export class RaiseARequestService extends ApiService  {
 
   // Appclication card API methods
   private postApiCard = this.baseUrl + '/resident/post/request_access_card';
-  private getApiCard = this.baseUrl + '/residential/get/access_card_family_member_data';
+  private getApiCard = this.baseUrl + '/resident/get/access_card_family_member_data';
   postRequestCard(
     family_id: number[],
     project_id: number,
@@ -364,7 +365,7 @@ export class RaiseARequestService extends ApiService  {
   private getFacilityApi = this.baseUrl + '/resident/get/facilities';
   private getTypeApiCoach = this.baseUrl + '/vms/get/get_coach_type';
   private postApiCoach = this.baseUrl + '/resident/post/request_register_coach';
-  private getExpectedCoachByUnitApi = this.baseUrl + '/residential/get/registered_coaches_based_on_unit';
+  private getExpectedCoachByUnitApi = this.baseUrl + '/resident/get/registered_coaches_based_on_unit';
   getFacilities(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Platform } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -70,7 +72,8 @@ export class FamilyFormPage implements OnInit {
     private router: Router,
     public functionMain: FunctionMainService,
     private mainApi: MainApiResidentService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { for: any, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
@@ -184,17 +187,53 @@ export class FamilyFormPage implements OnInit {
   onUploadImageProfile(event: any) {
     let data = event.target.files[0];
     if (data) {
-      this.selectedNameProfileFamily = data.name; // Store the selected file name
+      this.selectedNameProfileFamily = data.name;
       this.convertToBase64(data).then((base64: string) => {
-        // console.log('Base64 successed');
-        this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
+        this.formData.image_family = base64.split(',')[1];
       }).catch(error => {
         console.error('Error converting to base64', error);
       });
     } else {
-      this.selectedNameProfileFamily = ''; // Reset if no file is selected
+      this.selectedNameProfileFamily = '';
     }
   }
+
+  // New function to handle camera capture
+  async openCamera() {
+    try {
+      // Request camera permissions
+      const permissionStatus = await Camera.checkPermissions();
+      if (permissionStatus.camera !== 'granted') {
+        await Camera.requestPermissions();
+      }
+      
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+        promptLabelHeader: 'Take a photo',
+        promptLabelCancel: 'Cancel',
+        promptLabelPhoto: 'Take Photo',
+      });
+      
+      if (image && image.base64String) {
+        // Update the form data with the base64 image
+        this.formData.image_family = image.base64String;
+        
+        // Update display name to show a camera capture was made
+        const timestamp = new Date().toISOString().split('T')[0];
+        this.selectedNameProfileFamily = `Camera_Photo_${timestamp}`;
+        
+        // Display success message
+        this.functionMain.presentToast('Photo captured successfully', 'success');
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      this.functionMain.presentToast('Failed to capture photo', 'danger');
+    }
+  }
+
 
   onUploadHelperWorkPermit(event: any) {
     let data = event.target.files[0];

@@ -1,0 +1,35 @@
+<div class="wrapper">
+  <h1>Payment Methode</h1>
+  <ion-list lines="none">
+    <div *ngIf="paymentMethodAllowed === 'both'">
+      <ion-item button="true" detail="false">
+        <ion-label
+          class="text-center"
+          (click)="onClickPaymentChoose('electronic')"
+          >Electronic Pay</ion-label
+        >
+      </ion-item>
+      <ion-item button="true" detail="false">
+        <ion-label class="text-center" (click)="onClickPaymentChoose('manual')"
+          >Manual Pay</ion-label
+        >
+      </ion-item>
+    </div>
+    <div *ngIf="paymentMethodAllowed === 'manual_payment'">
+      <ion-item button="true" detail="false">
+        <ion-label
+          class="text-center"
+          (click)="onClickPaymentChoose('electronic')"
+          >Electronic Pay</ion-label
+        >
+      </ion-item>
+    </div>
+    <div *ngIf="paymentMethodAllowed === 'payment_gateway'">
+      <ion-item button="true" detail="false">
+        <ion-label class="text-center" (click)="onClickPaymentChoose('manual')"
+          >Manual Pay</ion-label
+        >
+      </ion-item>
+    </div>
+  </ion-list>
+</div>

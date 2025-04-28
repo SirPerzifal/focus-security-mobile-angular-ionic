@@ -29,6 +29,8 @@ export class SquareButtonComponent  implements OnInit {
       this.eventEmitter.emit([true, name])
     } else {
       this.router.navigate([this.routeLinkTo])
+      console.log("tes", this.routeLinkTo);
+      
       if (name === 'Report an Issue') {
         this.router.navigate(['/condo-report-main'], {
           state: {

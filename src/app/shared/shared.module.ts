@@ -29,6 +29,8 @@ import { RadioCheckInputCaseComponent } from './resident-components/radio-check-
 import { CardStatusWithButtonComponent } from './resident-components/card-status-with-button/card-status-with-button.component';
 import { CardWithButtonComponent } from './resident-components/card-with-button/card-with-button.component';
 import { CardWithImageComponent } from './resident-components/card-with-image/card-with-image.component';
+import { ModalComponent } from './resident-components/choose-payment-methode/modal/modal.component';
+import { UploadReceiptModalComponent } from './resident-components/upload-receipt-modal/upload-receipt-modal.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { CardWithImageComponent } from './resident-components/card-with-image/ca
     RadioCheckInputCaseComponent,
     CardStatusWithButtonComponent,
     CardWithButtonComponent,
-    CardWithImageComponent
+    CardWithImageComponent,
+    ModalComponent,
+    UploadReceiptModalComponent
   ],
   imports: [
     CommonModule,
@@ -87,7 +91,9 @@ import { CardWithImageComponent } from './resident-components/card-with-image/ca
     RadioCheckInputCaseComponent,
     CardStatusWithButtonComponent,
     CardWithButtonComponent,
-    CardWithImageComponent
+    CardWithImageComponent,
+    ModalComponent,
+    UploadReceiptModalComponent
   ]
 })
 export class SharedModule { }

@@ -1,9 +1,17 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Raise A Request'" [text_second]="'Pet Registration'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Raise A Request'"
+    [text_second]="'Pet Registration'"
+  ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="directTo()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="directTo()"
+    ></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
@@ -11,9 +19,11 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Type of Pet</p>
       </div>
-      <app-text-input [id]="'type_of_pet'"
+      <app-text-input
+        [id]="'type_of_pet'"
         [placeholder]="'Type of Pet (e.g. Dog, Cat)'"
-        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customClasses]="{'w-full':true}"
+        [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
         [(ngModel)]="formData.type_of_pet"
       >
@@ -23,9 +33,11 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Breed</p>
       </div>
-      <app-text-input [id]="'breed'"
+      <app-text-input
+        [id]="'breed'"
         [placeholder]="'Type your pet breed'"
-        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customClasses]="{'w-full':true}"
+        [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
         [(ngModel)]="formData.pet_breed"
       >
@@ -35,10 +47,23 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Upload Licence</p>
       </div>
-      <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
-        <input class="w-full rounded text-base hidden" type="file" name="licence" (change)="onLicenceChange($event)" id="licence">
-        <label class="w-full text-start" [ngClass]="(selectedLicencName) ? 'text-black' : 'text-gray-400'" for="licence">
-          {{ selectedLicencName ? selectedLicencName : 'Upload your pet licence' }}
+      <div
+        class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="licence"
+          (change)="onLicenceChange($event)"
+          id="licence"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedLicencName) ? 'text-black' : 'text-gray-400'"
+          for="licence"
+        >
+          {{ selectedLicencName ? selectedLicencName : 'Upload your pet licence'
+          }}
         </label>
       </div>
     </div>
@@ -46,9 +71,22 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Upload Pet Image</p>
       </div>
-      <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
-        <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onImageChange($event)" accept="image/*">
-        <label class="w-full text-start" [ngClass]="(selectedImageName) ? 'text-black' : 'text-gray-400'" for="image">
+      <div
+        class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="image"
+          id="image"
+          (change)="onImageChange($event)"
+          accept="image/*"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedImageName) ? 'text-black' : 'text-gray-400'"
+          for="image"
+        >
           {{ selectedImageName ? selectedImageName : 'Upload your pet image' }}
         </label>
       </div>
@@ -57,26 +95,43 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Notes for Management</p>
       </div>
-      <textarea id="notes_for_management" placeholder="Notes for Management"
+      <textarea
+        id="notes_for_management"
         class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
-        type="text" name="notes_for_management" [(ngModel)]="formData.notes">
+        type="text"
+        name="notes_for_management"
+        [(ngModel)]="formData.notes"
+      >
       </textarea>
     </div>
     <div class="flex flex-row mt-4 text-base">
       <label class="mr-1 rounded font-bold flex items-center">
-        <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
-        <p class="text-start">I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above</p>
+        <input
+          type="checkbox"
+          [checked]="agreementChecked"
+          [(ngModel)]="agreementChecked"
+          [ngModelOptions]="{standalone: true}"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-start">
+          I agree to the&nbsp;<u
+            class="text-blue-400"
+            (click)="presentModalAgreement()"
+            >terms and condition</u
+          >&nbsp;above
+        </p>
       </label>
     </div>
-    <button 
+    <button
       [disabled]="!agreementChecked"
-      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-      class="mt-2 w-full text-base rounded h-10 font-bold" (click)="onSubmit()">
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
+      class="mt-2 w-full text-base rounded h-10 font-bold"
+      (click)="onSubmit()"
+    >
       Submit for Approval
     </button>
   </div>
   <div class="h-96" *ngIf="extend_mb === true"></div>
-
 </ion-content>
 <ion-footer>
   <app-botton-nav-bar></app-botton-nav-bar>

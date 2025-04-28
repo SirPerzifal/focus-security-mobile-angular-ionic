@@ -69,7 +69,7 @@ export class PetRegistrationPage implements OnInit {
 
   directTo() {
     if (this.fromWhere) {
-      this.router.navigate(['/my-profile-my-pets']);
+      this.router.navigate(['/profile-page-main']);
     } else {
       this.router.navigate(['/resident-raise-a-request']);
     }

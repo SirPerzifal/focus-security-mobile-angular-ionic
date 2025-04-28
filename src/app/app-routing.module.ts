@@ -54,11 +54,6 @@ const routes: Routes = [
     loadChildren: () => import('./modules/deliveries_module/pages/deliveries/deliveries.module').then( m => m.DeliveriesPageModule)
   },
   {
-    path: 'hired-car',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/hired-car/hired-car.module').then( m => m.HiredCarPageModule),
-    canActivate:[authGuard]
-  },
-  {
     path: 'login-end-user',
     loadChildren: () => import('./modules/login_module/pages/login-end-user/login-end-user.module').then( m => m.LoginEndUserPageModule),
     canActivate:[authGuard]
@@ -74,106 +69,6 @@ const routes: Routes = [
   {
     path: 'register-commercial',
     loadChildren: () => import('./modules/register_module/pages/register-commercial/register-commercial.module').then( m => m.RegisterCommercialPageModule)
-  },
-  // {
-  //   path: 'resident-homepage',
-  //   loadChildren: () => import('./modules/resident_module/pages/resident-homepage/resident-homepage.module').then( m => m.ResidentHomepagePageModule),
-  //   canActivate:[authGuard]
-  // },
-  {
-    path: 'resident-visitors',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/resident-visitors.module').then( m => m.ResidentVisitorsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'invite-form',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/invite-form/invite-form.module').then( m => m.InviteFormPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'invite-from-history',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/invite-from-history/invite-from-history.module').then( m => m.InviteFromHistoryPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'history',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/history/history.module').then( m => m.HistoryPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'history-details',
-    loadChildren: () => import('./modules/resident_module/pages/resident-visitors/history-details/history-details.module').then( m => m.HistoryDetailsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-facility-bookings',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/resident-facility-bookings.module').then( m => m.ResidentFacilityBookingsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-new-booking',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-new-booking/facility-new-booking.module').then( m => m.FacilityNewBookingPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-place-booking',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-place-booking/facility-place-booking.module').then( m => m.FacilityPlaceBookingPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-payment',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/resident-payment.module').then( m => m.ResidentPaymentPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'bills-maintenance',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-maintenance/bills-maintenance.module').then( m => m.BillsMaintenancePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'bills-fines',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-fines/bills-fines.module').then( m => m.BillsFinesPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'bills-history',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/bills-history/bills-history.module').then( m => m.BillsHistoryPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-booking-payment',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-booking-payment/facility-booking-payment.module').then( m => m.FacilityBookingPaymentPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-deposits',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-deposits/facility-deposits.module').then( m => m.FacilityDepositsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-history',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history/facility-history.module').then( m => m.FacilityHistoryPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-my-family',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/resident-my-family.module').then( m => m.ResidentMyFamilyPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'family-add-member',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-add-member/family-add-member.module').then( m => m.FamilyAddMemberPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'family-edit-member',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-edit-member/family-edit-member.module').then( m => m.FamilyEditMemberPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'family-tenant-extend',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-family/family-tenant-extend/family-tenant-extend.module').then( m => m.FamilyTenantExtendPageModule),
-    canActivate:[authGuard]
   },
   {
     path: 'unregistered-resident-car',
@@ -202,21 +97,6 @@ const routes: Routes = [
   {
     path: 'coaches-form',
     loadChildren: () => import('./modules/coaches-module/coaches-form/coaches-form.module').then( m => m.CoachesFormPageModule)
-  },
-  {
-    path: 'resident-my-vehicle',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/resident-my-vehicle.module').then( m => m.ResidentMyVehiclePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-vehicle-form',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-form/my-vehicle-form.module').then( m => m.MyVehicleFormPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-vehicle-detail',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-detail/my-vehicle-detail.module').then( m => m.MyVehicleDetailPageModule),
-    canActivate:[authGuard]
   },
   {
     path: 'vehicle-records-page',
@@ -298,10 +178,6 @@ const routes: Routes = [
     path: 'overnight-parking-modal',
     loadChildren: () => import('./modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.module').then( m => m.OvernightParkingModalPageModule)
   },
-  // {
-  //   path: 'estate-modal',
-  //   loadChildren: () => import('./modules/resident_module/pages/resident-homepage/estate-modal/estate-modal.module').then( m => m.EstateModalPageModule)
-  // },
   {
     path: 'records-blacklist',
     loadChildren: () => import('./modules/records_module/pages/records-blacklist/records-blacklist.module').then( m => m.RecordsBlacklistPageModule)
@@ -335,146 +211,6 @@ const routes: Routes = [
     loadChildren: () => import('./modules/records_module/pages/records-facility/records-facility-check-out/records-facility-check-out.module').then( m => m.RecordsFacilityCheckOutPageModule)
   },
   {
-    path: 'resident-notification',
-    loadChildren: () => import('./modules/resident_module/pages/resident-notification/resident-notification.module').then( m => m.ResidentNotificationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-quick-dials',
-    loadChildren: () => import('./modules/resident_module/pages/resident-quick-dials/resident-quick-dials.module').then( m => m.ResidentQuickDialsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-polling',
-    loadChildren: () => import('./modules/resident_module/pages/resident-polling/resident-polling.module').then( m => m.ResidentPollingPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'upcoming-polling',
-    loadChildren: () => import('./modules/resident_module/pages/resident-polling/upcoming-polling/upcoming-polling.module').then( m => m.UpcomingPollingPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'closed-polling',
-    loadChildren: () => import('./modules/resident_module/pages/resident-polling/closed-polling/closed-polling.module').then( m => m.ClosedPollingPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-house-rules',
-    loadChildren: () => import('./modules/resident_module/pages/resident-house-rules/resident-house-rules.module').then( m => m.ResidentHouseRulesPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-report-an-issue',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-issue/resident-report-an-issue.module').then( m => m.ResidentReportAnIssuePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'record',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-issue/record/record.module').then( m => m.RecordPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-report-an-app-issue',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-app-issue/resident-report-an-app-issue.module').then( m => m.ResidentReportAnAppIssuePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'record-app-report',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-app-issue/record-app-report/record-app-report.module').then( m => m.RecordAppReportPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-upcoming-event',
-    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/resident-upcoming-event.module').then( m => m.ResidentUpcomingEventPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'history-upcoming-event',
-    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/history-upcoming-event/history-upcoming-event.module').then( m => m.HistoryUpcomingEventPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-door-access',
-    loadChildren: () => import('./modules/resident_module/pages/resident-door-access/resident-door-access.module').then( m => m.ResidentDoorAccessPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-deals-page',
-    loadChildren: () => import('./modules/resident_module/pages/resident-deals-page/resident-deals-page.module').then( m => m.ResidentDealsPagePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-announcement-page',
-    loadChildren: () => import('./modules/resident_module/pages/resident-announcement-page/resident-announcement-page.module').then( m => m.ResidentAnnouncementPagePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'favourite-announcement',
-    loadChildren: () => import('./modules/resident_module/pages/resident-announcement-page/favourite-announcement/favourite-announcement.module').then( m => m.FavouriteAnnouncementPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-find-a-service-provider',
-    loadChildren: () => import('./modules/resident_module/pages/resident-find-a-service-provider/resident-find-a-service-provider.module').then( m => m.ResidentFindAServiceProviderPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-raise-a-request',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'rejected-request',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/rejected-request/rejected-request.module').then( m => m.RejectedRequestPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-settings-page',
-    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/resident-settings-page.module').then( m => m.ResidentSettingsPagePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'setting-notification',
-    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/setting-notification/setting-notification.module').then( m => m.SettingNotificationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'resident-my-profile',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/resident-my-profile.module').then( m => m.ResidentMyProfilePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-profile-family-member',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-family-member/my-profile-family-member.module').then( m => m.MyProfileFamilyMemberPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-profile-house-employee',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-house-employee/my-profile-house-employee.module').then( m => m.MyProfileHouseEmployeePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-profile-my-pets',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-my-pets/my-profile-my-pets.module').then( m => m.MyProfileMyPetsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-profile-estate',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-estate/my-profile-estate.module').then( m => m.MyProfileEstatePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'my-profile-add-estate',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-add-estate/my-profile-add-estate.module').then( m => m.MyProfileAddEstatePageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'overnight-form-rar',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule),
-    canActivate:[authGuard]
-  },
-  {
     path: 'records-residents',
     loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents.module').then( m => m.RecordsResidentsPageModule)
   },
@@ -483,76 +219,16 @@ const routes: Routes = [
     loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents-detail/records-residents-detail.module').then( m => m.RecordsResidentsDetailPageModule)
   },
   {
-    path: 'move-in-out-permit',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/move-in-out-permit/move-in-out-permit.module').then( m => m.MoveInOutPermitPageModule),
-    canActivate:[authGuard]
-  },
-  {
     path: 'client-main-app',
     loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule)
-  },
-  {
-    path: 'upcoming-event-calendar-view',
-    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/upcoming-event-calendar-view/upcoming-event-calendar-view.module').then( m => m.UpcomingEventCalendarViewPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'renovation-permit',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/renovation-permit/renovation-permit.module').then( m => m.RenovationPermitPageModule),
-    canActivate:[authGuard]
   },
   {
     path: 'records-residents-modal',
     loadChildren: () => import('./modules/records_module/pages/records-residents/records-residents-modal/records-residents-modal.module').then( m => m.RecordsResidentsModalPageModule)
   },
   {
-    path: 'appeal-parking-fines',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-parking-fines.module').then( m => m.AppealParkingFinesPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'appeal-form',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-form/appeal-form.module').then( m => m.AppealFormPageModule),
-    canActivate:[authGuard]
-  },
-  {
     path: 'alert-modal',
     loadChildren: () => import('./modules/alert_module/pages/alert-modal/alert-modal.module').then( m => m.AlertModalPageModule)
-  },
-  {
-    path: 'payment-deposits',
-    loadChildren: () => import('./modules/resident_module/pages/resident-payment/payment-deposits/payment-deposits.module').then( m => m.PaymentDepositsPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'facility-history-form',
-    loadChildren: () => import('./modules/resident_module/pages/resident-facility-bookings/facility-history-form/facility-history-form.module').then( m => m.FacilityHistoryFormPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'access-card-application',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/access-card-application/access-card-application.module').then( m => m.AccessCardApplicationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'bicycle-tag-application',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/bicycle-tag-application/bicycle-tag-application.module').then( m => m.BicycleTagApplicationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'coach-registration',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/coach-registration/coach-registration.module').then( m => m.CoachRegistrationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'pet-registration',
-    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule),
-    canActivate:[authGuard]
-  },
-  {
-    path: 'make-an-event',
-    loadChildren: () => import('./modules/resident_module/pages/resident-upcoming-event/make-an-event/make-an-event.module').then( m => m.MakeAnEventPageModule),
-    canActivate:[authGuard]
   },
   {
     path: 'client-register-visitor',
@@ -561,11 +237,6 @@ const routes: Routes = [
   {
     path: 'search-nric-confirmation',
     loadChildren: () => import('./modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.module').then( m => m.SearchNricConfirmationPageModule)
-  },
-  {
-    path: 'my-pets-detail',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-profile/my-profile-my-pets/my-pets-detail/my-pets-detail.module').then( m => m.MyPetsDetailPageModule),
-    canActivate:[authGuard]
   },
   {
     path: 'alert-ticket-detail',
@@ -640,24 +311,8 @@ const routes: Routes = [
     loadChildren: () => import('./modules/client_app/client-wheel-clamp/client-wheel-clamp.module').then( m => m.ClientWheelClampPageModule)
   },
   {
-    path: 'change-password',
-    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/change-password/change-password.module').then( m => m.ChangePasswordPageModule)
-  },
-  {
-    path: 'privacy-policy',
-    loadChildren: () => import('./modules/resident_module/pages/resident-settings-page/privacy-policy/privacy-policy.module').then( m => m.PrivacyPolicyPageModule)
-  },
-  {
     path: 'client-events-day-view',
     loadChildren: () => import('./modules/client_app/client-upcoming-events/client-events-day-view/client-events-day-view.module').then( m => m.ClientEventsDayViewPageModule)
-  },
-  {
-    path: 'issue-app-detail',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-app-issue/issue-app-detail/issue-app-detail.module').then( m => m.IssueAppDetailPageModule)
-  },
-  {
-    path: 'issue-an-detail',
-    loadChildren: () => import('./modules/resident_module/pages/resident-report-an-issue/issue-an-detail/issue-an-detail.module').then( m => m.IssueAnDetailPageModule)
   },
   {
     path: 'client-login',
@@ -714,10 +369,6 @@ const routes: Routes = [
   {
     path: 'client-docs',
     loadChildren: () => import('./modules/client_app/client-docs/client-docs.module').then( m => m.ClientDocsPageModule)
-  },
-  {
-    path: 'my-vehicle-payment-form',
-    loadChildren: () => import('./modules/resident_module/pages/resident-my-vehicle/my-vehicle-payment-form/my-vehicle-payment-form.module').then( m => m.MyVehiclePaymentFormPageModule)
   },
   {
     path: 'client-payment-settings',
@@ -849,10 +500,70 @@ const routes: Routes = [
     path: 'quick-dial-page-main',
     loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
   },
+  // {
+  //   path: 'raise-a-request-page-main',
+  //   loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
+  // },
+  //  {
+  //   path: 'raise-a-request-page-main',
+  //   loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule)
+  // },
   {
-    path: 'raise-a-request-page-main',
-    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
+    path: 'resident-raise-a-request',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule),
+    canActivate:[authGuard]
   },
+  {
+    path: 'rejected-request',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/rejected-request/rejected-request.module').then( m => m.RejectedRequestPageModule),
+    canActivate:[authGuard]
+  },
+    {
+    path: 'overnight-form-rar',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule),
+    canActivate:[authGuard]
+  },
+    {
+    path: 'move-in-out-permit',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/move-in-out-permit/move-in-out-permit.module').then( m => m.MoveInOutPermitPageModule),
+    canActivate:[authGuard]
+  },
+    {
+    path: 'renovation-permit',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/renovation-permit/renovation-permit.module').then( m => m.RenovationPermitPageModule),
+    canActivate:[authGuard]
+  },
+    {
+    path: 'appeal-parking-fines',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-parking-fines.module').then( m => m.AppealParkingFinesPageModule),
+    canActivate:[authGuard]
+  },
+  {
+    path: 'appeal-form',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-form/appeal-form.module').then( m => m.AppealFormPageModule),
+    canActivate:[authGuard]
+  },
+  {
+    path: 'access-card-application',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/access-card-application/access-card-application.module').then( m => m.AccessCardApplicationPageModule),
+    canActivate:[authGuard]
+  },
+  {
+    path: 'bicycle-tag-application',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/bicycle-tag-application/bicycle-tag-application.module').then( m => m.BicycleTagApplicationPageModule),
+    canActivate:[authGuard]
+  },
+  {
+    path: 'coach-registration',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/coach-registration/coach-registration.module').then( m => m.CoachRegistrationPageModule),
+    canActivate:[authGuard]
+  },
+  {
+    path: 'pet-registration',
+    loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule),
+    canActivate:[authGuard]
+  },
+
   {
     path: 'upcoming-event-page-main',
     loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/upcoming-event-main/upcoming-event-main.module').then( m => m.UpcomingEventMainPageModule)
@@ -910,16 +621,16 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/family-page/tenant-extend-page/tenant-extend-page.module').then( m => m.TenantExtendPagePageModule)
   },
   {
-    path: 'raise-a-request-history',
-    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-history/raise-a-request-history.module').then( m => m.RaiseARequestHistoryPageModule)
-  },
-  {
     path: 'payment-form-vehicle',
     loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/payment-form-vehicle/payment-form-vehicle.module').then( m => m.PaymentFormVehiclePageModule)
   },
   {
     path: 'records-alert-next',
     loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.module').then( m => m.RecordsAlertNextPageModule)
+  },
+  {
+    path: 'raise-request-form-page',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-request-form-page/raise-request-form-page.module').then( m => m.RaiseRequestFormPagePageModule)
   },
 ];
 

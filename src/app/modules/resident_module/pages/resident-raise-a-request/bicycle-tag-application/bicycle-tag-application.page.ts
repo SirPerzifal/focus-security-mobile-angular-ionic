@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
 
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
@@ -139,15 +138,25 @@ export class BicycleTagApplicationPage implements OnInit {
   onOptionChange(option: string) {
     this.extend_mb = true
     this.selectedOption = '';
-    this.formData = {
-      id: 0,
-      block_id: 1,
-      unit_id: 1,
-      bicycle_brand: '',
-      bicycle_colour: '',
-      bicycle_image: '',
-      bicycle_tag_id: '',
-    }
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = Number(estate.project_id)
+            this.unitId = Number(estate.unit_id);
+            this.formData.unit_id = estate.unit_id;
+            this.unit = estate.unit_id;
+            this.block = estate.block_id;
+            this.formData.block_id = estate.block_id;
+            this.condoName = estate.project_name;
+            this.userName = estate.family_name;
+            this.userPhoneNumber = estate.family_mobile_number;
+            this.loadAmount();
+          }
+        })
+      }
+    })
     this.selectedFileName = '';
     this.selectedOption = option;
     if (option === 'replacement') {

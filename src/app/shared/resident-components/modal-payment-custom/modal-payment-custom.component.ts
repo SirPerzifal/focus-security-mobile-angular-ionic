@@ -68,7 +68,7 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
     // Navigate after 2 seconds
     setTimeout(() => {
       this.modalController.dismiss(true);
-      this.router.navigate(['/resident-payment']);
+      this.router.navigate(['/bills-and-fines-page']);
     }, 2000);
   }
   

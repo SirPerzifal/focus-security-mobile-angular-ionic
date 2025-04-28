@@ -259,7 +259,7 @@ export class RejectedRequestPage implements OnInit, OnDestroy {
     }
 
     return '';
-}
+  }
 
   getIconName(state: string): string {
     switch (state) {

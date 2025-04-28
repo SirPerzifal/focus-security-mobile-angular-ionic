@@ -282,7 +282,7 @@
         id="choose-date-modal"
         keep-contents-mounted="true"
         [isOpen]="isDatePickerOpen"
-        (didDismiss)="isDatePickerOpen = false"
+        (didDismiss)="isDatePickerOpen === false"
       >
         <ng-template>
           <ion-datetime

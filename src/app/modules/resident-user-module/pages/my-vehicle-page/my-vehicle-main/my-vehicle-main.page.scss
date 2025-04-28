@@ -1,0 +1,12 @@
+ion-modal#extension-request-modal {
+    --width: 90%;
+    --padding: 10px
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#extension-request-modal .wrapper {
+    padding: 15px;
+}
