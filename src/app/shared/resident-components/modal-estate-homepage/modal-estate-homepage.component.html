@@ -80,17 +80,18 @@
           </p>
         </div>
         <ion-icon
-          *ngIf="activeUnit == estate.unit_id"
+          *ngIf="
+            activeUnit === estate.unit_id || activeUnit === estate.family_id;
+            else noActive
+          "
           class="text-green-500 text-2xl"
           name="checkmark-circle"
         >
         </ion-icon>
-        <ion-icon
-          *ngIf="activeUnit != estate.unit_id"
-          class="text-red-500 text-2xl"
-          name="close-circle"
-        >
-        </ion-icon>
+        <ng-template #noActive>
+          <ion-icon class="text-red-500 text-2xl" name="close-circle">
+          </ion-icon>
+        </ng-template>
       </div>
     </div>
     <div *ngIf="noData">No Data</div>

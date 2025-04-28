@@ -8,6 +8,7 @@ import { NewBookingService } from 'src/app/service/resident/facility-bookings/ne
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-place-facility-booking',
@@ -37,7 +38,8 @@ export class PlaceFacilityBookingPage implements OnInit {
     private facilityService: NewBookingService,
     private storage: StorageService,
     private toastController: ToastController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private mainApi: MainApiResidentService
   ) { }
 
   ngOnInit() {    // Ambil data unit yang sedang aktif
@@ -47,6 +49,7 @@ export class PlaceFacilityBookingPage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.unitId = estate.unit_id;
+            this.partnerId = estate.family_id;
             this.loadFacilityDetail();
           }
         })
@@ -203,14 +206,12 @@ export class PlaceFacilityBookingPage implements OnInit {
       const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
       const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
   
-      this.facilityService.postFacilityBook(
-        this.roomId,
-        startTimeString,
-        endTimeString,
-        this.unitId,
-        this.partnerId
-      ).subscribe({
-        next: (response) => {
+      this.mainApi.endpointMainProcess({
+        room_id: Number(this.roomId),
+        start_time: startTimeString,
+        end_time: endTimeString,
+      }, 'post/facility_book').subscribe(
+        (response: any) => {
           this.router.navigate(['/facility-process-to-payment'], {
             state: {
               type: 'FromPlaceBooking',
@@ -226,12 +227,8 @@ export class PlaceFacilityBookingPage implements OnInit {
               stop_datettime: response.result.booking_detail.stop_datettime,
             }
           })
-        },
-        error: (error) => {
-          this.errorMessage = 'Failed to load room schedule';
-          console.error('Error loading room schedule', error);
         }
-      });
+      )
     } else {
       if (!this.selectedTimeSlot) {
         // Tampilkan pesan error jika tidak ada slot yang dipilih
@@ -249,26 +246,29 @@ export class PlaceFacilityBookingPage implements OnInit {
       const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
       const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
   
-      this.facilityService.postFacilityBook(
-        this.roomId,
-        startTimeString,
-        endTimeString,
-        this.unitId,
-        this.partnerId
-      ).subscribe({
-        next: (response) => {
-          this.roomSchedule = response.result.success;
-          const message = response.result.message;
-          this.presentToast(message, 'success');
-          console.log('Room Schedule:', this.roomSchedule);
-          this.resetForm();
-          this.router.navigate(['/facility-booking-main'])
-        },
-        error: (error) => {
-          this.errorMessage = 'Failed to load room schedule';
-          console.error('Error loading room schedule', error);
+      this.mainApi.endpointMainProcess({
+        room_id: Number(this.roomId),
+        start_time: startTimeString,
+        end_time: endTimeString,
+      }, 'post/facility_book').subscribe(
+        (response: any) => {
+          this.router.navigate(['/facility-process-to-payment'], {
+            state: {
+              type: 'FromPlaceBooking',
+              amount_deposit: response.result.booking_detail.amount_deposit,
+              amount_taxed: response.result.booking_detail.amount_taxed,
+              amount_total: response.result.booking_detail.amount_total,
+              amount_untaxed: response.result.booking_detail.amount_untaxed,
+              booked_by: response.result.booking_detail.booked_by,
+              booking_date: response.result.booking_detail.booking_date,
+              bookingId: response.result.booking_detail.booking_id,
+              facility_name: response.result.booking_detail.facility_name,
+              start_datetime: response.result.booking_detail.start_datetime,
+              stop_datettime: response.result.booking_detail.stop_datettime,
+            }
+          })
         }
-      });
+      )
     }
 
   }

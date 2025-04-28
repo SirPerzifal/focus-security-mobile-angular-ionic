@@ -230,7 +230,7 @@ export class FamilyFormPage implements OnInit {
       }
     } catch (error) {
       console.error('Camera error:', error);
-      this.functionMain.presentToast('Failed to capture photo', 'danger');
+      this.functionMain.presentToast(String(error), 'danger');
     }
   }
 

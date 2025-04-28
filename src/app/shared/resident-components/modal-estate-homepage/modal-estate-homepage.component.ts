@@ -30,6 +30,10 @@ export class ModalEstateHomepageComponent  implements OnInit {
       if (value) {
         const decodedUserState = decodeURIComponent(escape(atob(value)));
         this.activeUnit = JSON.parse(decodedUserState).unit_id; // Pastikan untuk mengurai JSON
+        console.log(JSON.parse(decodedUserState).unit_id); // Pastikan untuk mengurai JSON
+      } else {
+        console.log(value); // Pastikan untuk mengurai JSON
+        this.activeUnit = 0
       }
     })
 

@@ -118,11 +118,11 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
           content: response.result.response_description.content // langsung assign
         };
       } else {
-        this.functionMain.presentToast('Failed to load text for page', 'danger');
+        // this.functionMain.presentToast('Failed to load text for page', 'danger');
       }
     }, (error) => {
       console.error('API error:', error);
-      this.functionMain.presentToast('An error occurred while fetching data', 'danger');
+      // this.functionMain.presentToast('An error occurred while fetching data', 'danger');
     });
   }
 

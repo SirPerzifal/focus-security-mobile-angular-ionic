@@ -286,7 +286,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               phone: estate.family_mobile_number,
             }
           }
-          this.activeUnit = estate.unit_id;
+          if (estate.unit_id) {
+            this.activeUnit = estate.unit_id;
+          } else {
+            this.activeUnit = estate.family_id;
+          }
           Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
             if(value?.value){
               const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
@@ -486,7 +490,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               email: estate.family_email,
               phone: estate.family_mobile_number,
             }
-            this.activeUnit = estate.unit_id;
+            if (estate.unit_id) {
+              this.activeUnit = estate.unit_id;
+            } else {
+              this.activeUnit = estate.family_id;
+            }
             Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
               if(value?.value){
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
@@ -499,7 +507,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           }
         })
       })
-      this.activeUnit = estate.unit_id;
+      if (estate.unit_id) {
+        this.activeUnit = estate.unit_id;
+      } else {
+        this.activeUnit = estate.family_id;
+      }
       this.showEstate = false;
       this.showMain = true;
     })
@@ -591,11 +603,15 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       (response) => {
         console.log('Success:', response);
         // this.router.navigate(['resident-my-profile']);
+        this.getHistoryList();
+        this.getHistoryContrctorList();
       },
     )
   }
 
   getHistoryContrctorList() {
+    this.isLoading = true;
+    this.filteredData.pop();
     this.mainResident.endpointMainProcess({}, 'get/contractor_history').subscribe((response) => {
       this.isLoading = true; // Set loading to true at the start
       var result = response.result['response_result'];

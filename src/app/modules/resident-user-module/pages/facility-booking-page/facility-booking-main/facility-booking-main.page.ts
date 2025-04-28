@@ -85,6 +85,24 @@ export class FacilityBookingMainPage implements OnInit {
   ) {}
 
   ionViewWillEnter() {
+    this.navButtonsMain = [
+      {
+        text: 'Active',
+        active: true,
+        action: 'click',
+      },
+      {
+        text: 'New',
+        active: false,
+        action: 'click',
+      },
+      {
+        text: 'History',
+        active: false,
+        action: 'click'
+      },
+    ];
+    this.subPageName = 'Active Bookings';
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { restart: boolean };
     if (state) {
