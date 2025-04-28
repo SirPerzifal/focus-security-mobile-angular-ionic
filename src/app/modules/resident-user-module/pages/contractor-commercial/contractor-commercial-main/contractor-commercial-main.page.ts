@@ -49,9 +49,6 @@ export class ContractorCommercialMainPage implements OnInit {
       active: false,
       action: 'click'
     },
-    {
-      text: ''
-    }
   ]
   
   formData = {
