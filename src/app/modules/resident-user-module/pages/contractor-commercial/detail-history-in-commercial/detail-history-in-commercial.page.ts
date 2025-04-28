@@ -30,7 +30,8 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
   }
 
   historyData!: {
-    purpose: 'Drop Off' | 'Pick Up' | 'Visiting' | 'Delivery' | string;
+    company_name: string
+    purpose: string;
     visitor_name: string;
     visitor_date: Date;
     visitor_entry_time: string;
@@ -250,7 +251,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
   }
 
   backToPrevPage() {
-    this.router.navigate(['contractor-commercial-main'])
+    this.router.navigate(['/history-in-contractor'])
   }
 
 }

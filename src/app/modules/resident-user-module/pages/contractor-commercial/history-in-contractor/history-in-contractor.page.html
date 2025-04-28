@@ -1,10 +1,18 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Contractors'" [text_second]="'History'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Contractors'"
+    [text_second]="'History'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToPrevPage()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="backToPrevPage()"
+    ></ion-icon>
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
     <div id="nav_tabs_main">
@@ -17,45 +25,79 @@
             <p class="text-base font-bold">Group By</p>
           </div>
           <div class="w-full mt-1">
-              <select id="walk_in_unit" [(ngModel)]="typeFilter"  class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]" (change)="onChangeVisitorType($event)">
-                <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
-                <option value="All" selected>All</option >
-                <option class="accent-[var(--ion-color-primary)] focus:bg-[var(--ion-color-primary)]" value="Visiting">Visiting</option>
-                <option value="Delivery">Delivery</option>
-                <option value="Pick Off">Pick Off</option>
-                <option value="Drop Off">Drop Off</option>
-              </select>
+            <select
+              id="walk_in_unit"
+              [(ngModel)]="typeFilter"
+              class="bg-white border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280] accent-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] focus:border-[var(--ion-color-primary)]"
+              (change)="onChangeVisitorType($event)"
+            >
+              <!-- <option value="" selected disabled hidden>Type of Invite History</option> -->
+              <option value="All" selected>All</option>
+              <option value="Delivery">Delivery</option>
+              <option value="Collections">Collections</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Other">Others</option>
+              \
+            </select>
           </div>
           <div class="flex flex-row w-full mt-2 items-center">
             <div class="w-full flex flex-col items-center">
-              <div class="flex flex-row justify-between items-center w-full mb-1">
+              <div
+                class="flex flex-row justify-between items-center w-full mb-1"
+              >
                 <p class="text-base font-bold">Filter Date</p>
               </div>
               <div class="flex flex-row space-x-2 w-full">
                 <div class="w-1/2">
-                  <app-input-component [id]="'start_visitor_history_date'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="''" [labelChild1]="''" [labelChild2]="''" [value]="startDateFilter" (eventEmitter)="onChangeStartDate($event)"></app-input-component>
+                  <app-input-component
+                    [id]="'start_visitor_history_date'"
+                    [type]="'date'"
+                    [typeAction]="'Choose'"
+                    [labelParent]="''"
+                    [labelChild1]="''"
+                    [labelChild2]="''"
+                    [value]="startDateFilter"
+                    (eventEmitter)="onChangeStartDate($event)"
+                  ></app-input-component>
                 </div>
                 <div class="w-1/2">
-                  <app-input-component [id]="'end_visitor_history_date'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="''" [labelChild1]="''" [labelChild2]="''" [value]="endDateFilter" (eventEmitter)="onChangeEndDate($event)" [minDate]="startDateFilter"></app-input-component>
+                  <app-input-component
+                    [id]="'end_visitor_history_date'"
+                    [type]="'date'"
+                    [typeAction]="'Choose'"
+                    [labelParent]="''"
+                    [labelChild1]="''"
+                    [labelChild2]="''"
+                    [value]="endDateFilter"
+                    (eventEmitter)="onChangeEndDate($event)"
+                    [minDate]="startDateFilter"
+                  ></app-input-component>
                 </div>
               </div>
             </div>
           </div>
           <div class="flex flex-row-reverse w-full mt-4">
-            <u class="text-base font-bold" (click)="clearDateFilter()">Clear Filter</u>
+            <u class="text-base font-bold" (click)="clearDateFilter()"
+              >Clear Filter</u
+            >
           </div>
         </div>
         <div class="w-full mt-4">
           <div clas="flex flex-col w-full justify-start">
-            <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-[50px]">
-							<ion-spinner name="circular"></ion-spinner>
-						</div>
+            <div
+              *ngIf="isLoading"
+              class="flex justify-center items-center h-full mt-[50px]"
+            >
+              <ion-spinner name="circular"></ion-spinner>
+            </div>
             <div *ngFor="let data of filteredData">
-              <div [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'">
+              <div
+                [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'"
+              >
                 <div class="text-base font-bold w-[100%]">
                   <table class="w-full table-fixed">
                     <tr class="h-6">
-                      <td class="w-[30%]">Purpose</td>
+                      <td class="w-[35%]">Purpose</td>
                       <td class="w-[5%]">:</td>
                       <td class="truncate font-light">{{data.purpose}}</td>
                     </tr>
@@ -64,20 +106,28 @@
                       <td class="w-[5%]">:</td>
                       <td class="truncate font-light">{{data.visitor_name}}</td>
                     </tr>
-                    <tr class="h-6"  *ngIf="data.purpose !== 'Visiting'">
+                    <tr class="h-6" *ngIf="data.purpose !== 'Visiting'">
                       <td>Vehicle No</td>
                       <td class="w-[5%]">:</td>
-                      <td class="truncate font-light">{{data.vehicle_number}}</td>
+                      <td class="truncate font-light">
+                        {{data.vehicle_number}}
+                      </td>
                     </tr>
                     <tr class="h-6">
                       <td>Date</td>
                       <td class="w-[5%]">:</td>
-                      <td class="font-light">{{ functionMain.convertToDDMMYYYY(data.visitor_date) }}</td> <!-- Menggunakan metode formatDate -->
+                      <td class="font-light">
+                        {{ functionMain.convertToDDMMYYYY(data.visitor_date) }}
+                      </td>
+                      <!-- Menggunakan metode formatDate -->
                     </tr>
                   </table>
                 </div>
                 <div class="flex flex-row space-x-1 w-full">
-                  <button class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]" (click)="openDetails(data)">
+                  <button
+                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]"
+                    (click)="openDetails(data)"
+                  >
                     View Details
                   </button>
                 </div>

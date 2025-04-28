@@ -250,6 +250,28 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       },
       { headers }
     ).subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        this.toggleShowNewInv()
+      }
+    });
+  }
+
+  shareInvite(invite_id: number, phoneNumber?: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    
+    this.http.post<any>(
+      `${this.baseUrl}/resident/post/share_invite`, 
+      {
+        jsonrpc: '2.0',
+        params: {
+          invite_id: invite_id,
+        }
+      },
+      { headers }
+    ).subscribe((response: any) => {
       // if (response.result.messages) {
       //   // Ambil pesan dari response
       //   const originalMessage = response.result.messages;

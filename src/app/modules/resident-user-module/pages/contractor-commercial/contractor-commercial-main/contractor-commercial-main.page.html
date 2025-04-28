@@ -133,11 +133,18 @@
               </table>
             </div>
           </div>
-          <div class="flex flex-row space-x-2 w-full">
+          <div class="flex flex-col w-full">
             <button
               class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+              (click)="resendInvite(invite.invite_id, invite.contactNo)"
             >
               Resend Invite
+            </button>
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+              (click)="shareInvite(invite.invite_id, invite.contactNo)"
+            >
+              Share Invite
             </button>
             <button
               class="bg-[#E3787E] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"

@@ -6,6 +6,9 @@ import { AlertController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
+import { ApiService } from 'src/app/service/api.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 @Component({
   selector: 'app-contractor-commercial-main',
   templateUrl: './contractor-commercial-main.page.html',
@@ -22,7 +25,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
     ])
   ]
 })
-export class ContractorCommercialMainPage implements OnInit {
+export class ContractorCommercialMainPage extends ApiService implements OnInit {
 
   navButtonsMain: any[] = [
     {
@@ -88,8 +91,9 @@ export class ContractorCommercialMainPage implements OnInit {
     private route: Router,
     private activeRoute: ActivatedRoute,
     private mainApiResidentService: MainApiResidentService,
-    private alertController: AlertController
-  ) { }
+    private alertController: AlertController,
+    http: HttpClient
+  ) { super(http) }
 
   ngOnInit() {
     this.selectedDate = '';
@@ -331,6 +335,100 @@ export class ContractorCommercialMainPage implements OnInit {
 
   testAddMb(status: boolean = false) {
     this.extend_mb = status
+  }
+
+  resendInvite(invite_id: number, phoneNumber?: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    
+    this.http.post<any>(
+      `${this.baseUrl}/resident/post/resend_invite`, 
+      {
+        jsonrpc: '2.0',
+        params: {
+          contractor_id: invite_id,
+        }
+      },
+      { headers }
+    ).subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        this.toggleShowNewInv()
+      }
+    });
+  }
+
+  shareInvite(invite_id: number, phoneNumber?: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    
+    this.http.post<any>(
+      `${this.baseUrl}/resident/post/share_invite`, 
+      {
+        jsonrpc: '2.0',
+        params: {
+          contractor_id: invite_id,
+        }
+      },
+      { headers }
+    ).subscribe((response: any) => {
+      // if (response.result.messages) {
+      //   // Ambil pesan dari response
+      //   const originalMessage = response.result.messages;
+        
+      //   // Encode pesan untuk digunakan dalam URL
+      //   const encodedMessage = encodeURIComponent(originalMessage);
+        
+      //   // Tentukan nomor telepon jika tersedia, hilangkan tanda '+' jika ada
+      //   const phone = phoneNumber ? phoneNumber.replace('+', '') : '';
+        
+      //   // Buat deep link WhatsApp dengan nomor telepon jika tersedia
+      //   const whatsappLink = phone ? 
+      //     `whatsapp://send?phone=${phone}&text=${encodedMessage}` : 
+      //     `whatsapp://send?text=${encodedMessage}`;
+        
+      //   // Jika pengguna menggunakan perangkat mobile, buka WhatsApp
+      //   if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      //     window.location.href = whatsappLink;
+      //   } else {
+      //     // Untuk desktop, buka WhatsApp Web
+      //     const webWhatsappLink = phone ? 
+      //       `https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}` : 
+      //       `https://web.whatsapp.com/send?text=${encodedMessage}`;
+      //     window.open(webWhatsappLink, '_blank');
+      //   }
+      // }
+      if (response.result.messages) {
+        // Ambil pesan dari response
+        const originalMessage = response.result.messages;
+        
+        // Encode pesan untuk digunakan dalam URL
+        const encodedMessage = encodeURIComponent(originalMessage);
+        
+        // Tentukan nomor telepon jika tersedia (tanpa tanda '+' dan karakter non-digit)
+        const phone = phoneNumber ? phoneNumber.replace(/\D/g, '') : '';
+        
+        // Buat link WhatsApp yang kompatibel dengan semua platform
+        let whatsappLink;
+        if (phone) {
+          // Jika ada nomor telepon, gunakan format https://wa.me/[nomor]?text=[pesan]
+          whatsappLink = `https://wa.me/${phone}?text=${encodedMessage}`;
+        } else {
+          // Jika tidak ada nomor telepon, gunakan format untuk sekadar membuka WhatsApp dengan pesan
+          // Catatan: Ini akan membuka WhatsApp tanpa menentukan penerima
+          whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+        }
+        
+        // Buka link dalam tab baru atau redirect langsung
+        window.open(whatsappLink, '_blank');
+        
+        // Alternative: redirect langsung jika diinginkan
+        // window.location.href = whatsappLink;
+      }
+    });
   }
 
 }

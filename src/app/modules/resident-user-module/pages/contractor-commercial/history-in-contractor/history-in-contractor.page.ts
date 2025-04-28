@@ -32,6 +32,7 @@ export class HistoryInContractorPage implements OnInit {
 
   isLoading: boolean = true;
   historyData: Array<{
+    company_name: string
     purpose: string;
     visitor_name: string;
     visitor_date: Date;
@@ -48,6 +49,8 @@ export class HistoryInContractorPage implements OnInit {
   }> = [];
 
   filteredData: any[] = [];
+  selection: any[] = [];
+  selectionNew: any[] = [];
 
   startDateFilter = '';
   endDateFilter = '';
@@ -69,10 +72,14 @@ export class HistoryInContractorPage implements OnInit {
   }
 
   getHistoryList() {
+    this.selection.pop();
+    this.selectionNew.pop()
     this.historyData.pop();
     this.mainApiResidentService.endpointMainProcess({}, 'get/contractor_history').subscribe((response) => {
       var result = response.result['response_result']
       this.historyData = []
+      this.selection = []
+      this.selectionNew = []
       if (response.result.response_status === 400) {
         this.isLoading = false;
         return;
@@ -88,6 +95,7 @@ export class HistoryInContractorPage implements OnInit {
           const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
           this.historyData.push({
+            company_name: item['company_name'],
             purpose: item['purpose'],
             visitor_name: item['contractor_name'],
             visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
@@ -102,9 +110,12 @@ export class HistoryInContractorPage implements OnInit {
             banned: item['is_banned'],
             id: item['contractor_id']
           });
+          this.selectionNew.push(item['purpose'])
+          
           this.isLoading = false;
         });
       }
+      this.selection = [...this.selectionNew]
       this.filteredData = [...this.historyData];
     })
   }
@@ -139,29 +150,33 @@ export class HistoryInContractorPage implements OnInit {
   
   applyFilters() {
     this.filteredData = this.historyData.filter(item => {
-      const visitorDate = new Date(item.visitor_date);
-      visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-      
-      const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
-      const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`
-      const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
-      const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`
-      
-      // Convert the selected start and end dates to Date objects
-      const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
-      const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
-  
-      // Set time to 00:00:00 for comparison
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
-      const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-      const typeMatches = this.typeFilter && this.typeFilter !== 'All' ? item.purpose === this.typeFilter : true;
-  
-      return dateMatches && typeMatches;
+        const visitorDate = new Date(item.visitor_date);
+        visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
+        
+        const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
+        const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`;
+        const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
+        const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
+        
+        // Convert the selected start and end dates to Date objects
+        const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
+        const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
+
+        // Set time to 00:00:00 for comparison
+        if (selectedStartDate) {
+            selectedStartDate.setHours(0, 0, 0, 0);
+        }
+        if (selectedEndDate) {
+            selectedEndDate.setHours(0, 0, 0, 0);
+        }
+        const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+        const typeMatches = this.typeFilter && this.typeFilter !== 'All' ? 
+            (this.typeFilter === 'Other' ? 
+                !(item.purpose === 'Delivery' || item.purpose === 'Collections' || item.purpose === 'Meeting') : 
+                item.purpose === this.typeFilter) : 
+            true;
+
+        return dateMatches && typeMatches;
     });
   }
 

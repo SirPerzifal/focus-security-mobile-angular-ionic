@@ -129,7 +129,7 @@
                 required
               />
             </div>
-            <div class="w-full">
+            <div class="w-full flex flex-col">
               <div class="flex flex-row justify-start mt-2">
                 <p class="text-base font-bold cw-3:text-xs">Host</p>
               </div>
@@ -152,6 +152,20 @@
                   [text]="'Other Host'"
                   (valueEmit)="changeHost($event, i)"
                 ></app-radio-check-input-case>
+              </div>
+              <div
+                *ngIf="entryCheck === 'other_host'"
+                class="w-full mb-2 cw-3:text-xs text-sm"
+              >
+                <app-m2m-selection
+                  [Arrays]="Host"
+                  (outputValue)="hostChange($event, i)"
+                  [divOuterClass]="'min-h-12 text-sm rounded border-black'"
+                  [customTextClass]="'p-0 text-sm'"
+                  [Selected]="selectedHost"
+                  [labelText]="'Host'"
+                >
+                </app-m2m-selection>
               </div>
             </div>
             <div class="w-full">

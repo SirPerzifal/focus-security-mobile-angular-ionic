@@ -105,6 +105,8 @@ export class PlaceFacilityBookingPage implements OnInit {
           const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
   
           if (facility || formattedDate) {
+            console.log(facility);
+            
             if (facility) {
               this.termsAndCOndition = facility.terms_and_conditions;
               // // console.log(this.termsAndCOndition);
@@ -135,7 +137,7 @@ export class PlaceFacilityBookingPage implements OnInit {
               this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
                 next: (response) => {
                   this.roomSchedule = response.result.schedule;
-                  this.isRequirePayment = facility.is_require_payment;
+                  this.isRequirePayment = false;
                   this.isLoading = false;
                 },
                 error: (error) => {
@@ -189,6 +191,8 @@ export class PlaceFacilityBookingPage implements OnInit {
     const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;
     const endTimeString = `${formattedDate} ${this.selectedTimeSlot.end_time}:00`;
 
+    console.log(this.isRequirePayment);
+    
     if (this.isRequirePayment) {
       if (!this.selectedTimeSlot) {
         // Tampilkan pesan error jika tidak ada slot yang dipilih
@@ -252,21 +256,7 @@ export class PlaceFacilityBookingPage implements OnInit {
         end_time: endTimeString,
       }, 'post/facility_book').subscribe(
         (response: any) => {
-          this.router.navigate(['/facility-process-to-payment'], {
-            state: {
-              type: 'FromPlaceBooking',
-              amount_deposit: response.result.booking_detail.amount_deposit,
-              amount_taxed: response.result.booking_detail.amount_taxed,
-              amount_total: response.result.booking_detail.amount_total,
-              amount_untaxed: response.result.booking_detail.amount_untaxed,
-              booked_by: response.result.booking_detail.booked_by,
-              booking_date: response.result.booking_detail.booking_date,
-              bookingId: response.result.booking_detail.booking_id,
-              facility_name: response.result.booking_detail.facility_name,
-              start_datetime: response.result.booking_detail.start_datetime,
-              stop_datettime: response.result.booking_detail.stop_datettime,
-            }
-          })
+          this.router.navigate(['/facility-booking-main'])
         }
       )
     }

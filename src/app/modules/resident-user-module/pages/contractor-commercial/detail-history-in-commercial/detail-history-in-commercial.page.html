@@ -33,20 +33,17 @@
                   <td>{{ historyData.purpose || '-' }}</td>
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Company Name</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.company_name || '-' }}</td>
+                  <!-- Menampilkan '-' jika purpose kosong -->
+                </tr>
                 <tr class="h-6" *ngIf="historyData.purpose === 'Delivery'">
                   <td class="w-[60%] font-bold">Delivery Type</td>
                   <td class="w-[10%]">:</td>
                   <td>{{ historyData.delivery_type || '-' }}</td>
                   <!-- Menampilkan '-' jika delivery_type kosong -->
-                </tr>
-                <tr
-                  class="h-6"
-                  *ngIf="historyData.purpose === 'Drop Off' || historyData.purpose === 'Pick Up'"
-                >
-                  <td class="w-[60%] font-bold">Mode of Vehicle</td>
-                  <td class="w-[10%]">:</td>
-                  <td>{{ historyData.vehicle_type || '-' }}</td>
-                  <!-- Menampilkan '-' jika vehicle_type kosong -->
                 </tr>
                 <tr class="h-6">
                   <td class="w-[60%] font-bold">Date Of Visit</td>
@@ -84,17 +81,11 @@
                   <td>{{ historyData.vehicle_number || '-' }}</td>
                   <!-- Menampilkan '-' jika vehicle_number kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
-                  <td class="w-[60%] font-bold">Point of Entry</td>
-                  <td class="w-[10%]">:</td>
-                  <td>{{ historyData.point_of_entry || '-' }}</td>
-                  <!-- Menampilkan '-' jika point_of_entry kosong -->
-                </tr>
                 <tr
                   class="h-6"
                   *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'"
                 >
-                  <td class="w-[60%] font-bold">Mobile No</td>
+                  <td class="w-[60%] font-bold">Contact No</td>
                   <td class="w-[10%]">:</td>
                   <td>{{ historyData.mobile_number || '-' }}</td>
                   <!-- Menampilkan '-' jika mobile_number kosong -->
