@@ -92,6 +92,8 @@ export class ContractorCommercialMainPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.selectedDate = '';
+    this.entryCheck = '';
     this.getTodayDate();
     this.getActiveInvites();
     const navigation = this.route.getCurrentNavigation();

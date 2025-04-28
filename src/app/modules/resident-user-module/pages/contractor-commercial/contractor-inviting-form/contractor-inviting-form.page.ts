@@ -4,6 +4,8 @@ import { faAddressBook, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AlertController } from '@ionic/angular';
 import { Contacts } from '@capacitor-community/contacts';
 
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FormData, Invitee } from 'src/models/resident/resident.model';
@@ -32,6 +34,8 @@ export class ContractorInvitingFormPage implements OnInit {
     // hiredCar: "",
     // isProvideUnit: false,
   }
+  entryCheck: string = '';
+  showOther: boolean = false;
 
   nameFromContact = '';
   phoneFromContact = '';
@@ -43,7 +47,8 @@ export class ContractorInvitingFormPage implements OnInit {
     private route: ActivatedRoute,
     private alertController: AlertController,
     private mainApiResidentService: MainApiResidentService,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private storage: StorageService
   ) {
     this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
@@ -77,12 +82,25 @@ export class ContractorInvitingFormPage implements OnInit {
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
-      expected_number_of_visit: ''
+      expected_number_of_visit: '',
+      host_ids: []
     };
 
     this.inviteeFormList.push(initialInvitee);
     this.isFormVisible = true; // Show form since we have at least one invitee
     this.addInviteeText = 'Add More Invitees'; // Update button text
+  }
+
+  onchangeTypeOfWork(event: any, type?: string, index?: any) {
+    const value = event.target.value;
+    if (value === 'Others' && type === 'select') {
+      this.showOther = true;
+    } else if (type === 'input') {
+      this.showOther = true;
+      this.inviteeFormList[index].type_of_work = event.target.value;
+    } else {
+      this.showOther = false;
+    }
   }
 
   initializeInviteeForm(params?: any) {
@@ -114,7 +132,8 @@ export class ContractorInvitingFormPage implements OnInit {
         vehicle_number: invitee.vehicle_number || '',
         company_name: invitee.company_name || '',
         type_of_work: invitee.type_of_work || '',
-        expected_number_of_visit: invitee.expected_number_of_visit || ''
+        expected_number_of_visit: invitee.expected_number_of_visit || '',
+        host_ids: invitee.host_ids || []
       }));
       this.addInviteeText = 'Add More Invitees';
     }
@@ -124,6 +143,23 @@ export class ContractorInvitingFormPage implements OnInit {
     }
 
     this.isFormInitialized = true;
+  }
+
+  changeHost(event: any, index: any) {
+    if (event.value === 'myself') {
+      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+        if ( value ) {
+          this.storage.decodeData(value).then((value: any) => {
+            if ( value ) {
+              const estate = JSON.parse(value) as Estate;
+              this.inviteeFormList[index].host_ids = estate.family_id;
+            }
+          })
+        }
+      })
+    } else {
+      this.inviteeFormList[index].host_ids = 0
+    }
   }
 
   backToVisitors() {
@@ -219,7 +255,8 @@ export class ContractorInvitingFormPage implements OnInit {
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
-      expected_number_of_visit: ''
+      expected_number_of_visit: '',
+      host_ids: []
     };
     
     this.inviteeFormList.push(newInvitee);
@@ -242,50 +279,52 @@ export class ContractorInvitingFormPage implements OnInit {
   }
 
   onSubmit() {
-    const isValid = this.inviteeFormList.every((invitee:any) => 
-      invitee.contractor_name.trim() !== '' && 
-      invitee.contact_number.trim() !== ''
-    );
+    console.log(this.inviteeFormList);
+    
+    // const isValid = this.inviteeFormList.every((invitee:any) => 
+    //   invitee.contractor_name.trim() !== '' && 
+    //   invitee.contact_number.trim() !== ''
+    // );
 
-    if (isValid) {
-      try {
-        this.mainApiResidentService.endpointMainProcess({
-          date_of_visit: this.formData.dateOfInvite, 
-          entry_type: this.formData.entryType, 
-          entry_title: this.formData.entryTitle,
-          entry_message: this.formData.entryMessage,
-          // is_provide_unit: this.formData.isProvideUnit,
-          invitees: this.inviteeFormList,
-        }, 'post/create_expected_contractor').subscribe((response: any) => {
-          if (response.result.response_code == 200) {
-            this.functionMain.presentToast('Success Add Invite', 'success');
-            this.inviteeFormList = [];
-            this.inviteeFormList = null;
-            this.formData = {
-              dateOfInvite: new Date(),
-              vehicleNumber: "",
-              entryType: "",
-              entryTitle: "",
-              entryMessage: "",
-              // isProvideUnit: false,
-            }
-            this.router.navigate(['/contractor-commercial-main'], {
-              queryParams: {
-                openActive: true,
-                formData: null
-              }
-            });
-          } else {
-            this.functionMain.presentToast('Failed Add Invite', 'danger');
-          }
-        })
-      } catch (error) {
-        console.error('Unexpected error:', error);
-        this.functionMain.presentToast(String(error), 'danger');
-      }
-    } else {
-      this.functionMain.presentToast('Please fill all needed field.', 'danger');
-    }
+    // if (isValid) {
+    //   try {
+    //     this.mainApiResidentService.endpointMainProcess({
+    //       date_of_visit: this.formData.dateOfInvite, 
+    //       entry_type: this.formData.entryType, 
+    //       entry_title: this.formData.entryTitle,
+    //       entry_message: this.formData.entryMessage,
+    //       // is_provide_unit: this.formData.isProvideUnit,
+    //       invitees: this.inviteeFormList,
+    //     }, 'post/create_expected_contractor').subscribe((response: any) => {
+    //       if (response.result.response_code == 200) {
+    //         this.functionMain.presentToast('Success Add Invite', 'success');
+    //         this.inviteeFormList = [];
+    //         this.inviteeFormList = null;
+    //         this.formData = {
+    //           dateOfInvite: new Date(),
+    //           vehicleNumber: "",
+    //           entryType: "",
+    //           entryTitle: "",
+    //           entryMessage: "",
+    //           // isProvideUnit: false,
+    //         }
+    //         this.router.navigate(['/contractor-commercial-main'], {
+    //           queryParams: {
+    //             openActive: true,
+    //             formData: null
+    //           }
+    //         });
+    //       } else {
+    //         this.functionMain.presentToast('Failed Add Invite', 'danger');
+    //       }
+    //     })
+    //   } catch (error) {
+    //     console.error('Unexpected error:', error);
+    //     this.functionMain.presentToast(String(error), 'danger');
+    //   }
+    // } else {
+    //   this.functionMain.presentToast('Please fill all needed field.', 'danger');
+    // }
   }
 
   shouldShowForm(): boolean {

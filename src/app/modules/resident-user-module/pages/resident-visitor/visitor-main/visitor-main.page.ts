@@ -107,16 +107,22 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   ) { super(http) }
 
   ngOnInit() {
+    this.selectedDate = '';
+    this.entryCheck = '';
     this.getTodayDate();
     this.getActiveInvites();
     const navigation = this.route.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: any };
     if (state) {
       this.formData = state.formData;
+      this.selectedDate = '';
+      this.entryCheck = '';
     }
     this.activeRoute.queryParams.subscribe(params => {
       // console.log(params);
       if (params['openActive']) {
+        this.selectedDate = '';
+        this.entryCheck = '';
         this.toggleShowActInv();
         this.getActiveInvites();
         this.formData = {
@@ -130,6 +136,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           hiredCar: "",
         }
       } else if (params['formData']) {
+        this.selectedDate = '';
+        this.entryCheck = '';
         this.formData = {
           dateOfInvite: "",
           vehicleNumber: "",
@@ -141,6 +149,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           hiredCar: "",
         }
       } else {
+        this.selectedDate = '';
+        this.entryCheck = '';
         this.toggleShowNewInv()
       }
     });

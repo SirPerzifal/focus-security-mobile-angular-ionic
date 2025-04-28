@@ -103,14 +103,56 @@
               <div class="flex flex-row justify-start mt-2">
                 <p class="text-base font-bold cw-3:text-xs">Type Of Work</p>
               </div>
+              <select
+                [id]="'invf_type_of_work_' + i"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+                (change)="onchangeTypeOfWork($event, 'select')"
+                [(ngModel)]="inviteeFormList[i].type_of_work"
+                required
+              >
+                <option selected disabled hidden>Type of Work</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Collection">Collection</option>
+                <option value="Meeting">Meeting</option>
+                <option value="Others">Others</option>
+                <option [value]="inviteeFormList[i].type_of_work">
+                  {{inviteeFormList[i].type_of_work}}
+                </option>
+              </select>
               <input
+                *ngIf="showOther"
                 [id]="'invf_type_of_work_' + i"
                 name="type_of_work_{{i}}"
                 placeholder=""
                 class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-                [(ngModel)]="inviteeFormList[i].type_of_work"
+                (change)="onchangeTypeOfWork($event, 'input', i)"
                 required
               />
+            </div>
+            <div class="w-full">
+              <div class="flex flex-row justify-start mt-2">
+                <p class="text-base font-bold cw-3:text-xs">Host</p>
+              </div>
+              <div class="flex flex-row space-x-2 items-start my-2 w-full">
+                <app-radio-check-input-case
+                  [type]="'radio'"
+                  [id]="'myself' + i"
+                  [name]="'entry' + i"
+                  [value]="'myself'"
+                  [checkedText]="entryCheck === 'myself'"
+                  [text]="'Myself'"
+                  (valueEmit)="changeHost($event, i)"
+                ></app-radio-check-input-case>
+                <app-radio-check-input-case
+                  [type]="'radio'"
+                  [id]="'multiple_host' + i"
+                  [name]="'entry' + i"
+                  [value]="'other_host'"
+                  [checkedText]="entryCheck === 'other_host'"
+                  [text]="'Other Host'"
+                  (valueEmit)="changeHost($event, i)"
+                ></app-radio-check-input-case>
+              </div>
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
