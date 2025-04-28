@@ -48,7 +48,9 @@ export class UnregisteredResidentCarPage implements OnInit {
     block_id: '',
     unit_id: '',
     reason: '',
-    project_id: 0
+    project_id: 0,
+    identification_number: '',
+    identification_type: '',
   }
 
   submitLoading = false
@@ -67,6 +69,12 @@ export class UnregisteredResidentCarPage implements OnInit {
     }
     if (!this.formData.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
+    }
+    if (this.project_config.is_industrial && !this.formData.identification_type) {
+      errMsg += 'Identification type is required! \n'
+    }
+    if (this.project_config.is_industrial && !this.formData.identification_number) {
+      errMsg += 'Identification number is required! \n'
     }
     if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
@@ -93,6 +101,16 @@ export class UnregisteredResidentCarPage implements OnInit {
           console.log(results)
           if (results.result.response_code === 200) {
             this.presentToast('Unregistered car successfully submitted!', 'success');
+            this.router.navigate(['/home-vms'])
+          } else if (results.result.response_code === 205) {
+            if (isOpenBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['/home-vms'])
+          } else if (results.result.response_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['/home-vms'])
           } else {
             this.presentToast('An error occurred while submitting unregistered car!', 'danger');
@@ -218,5 +236,18 @@ export class UnregisteredResidentCarPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
   }
+
+  setFromScan(event: any) {
+    console.log(event)
+    this.formData.identification_number = event.data.identification_number
+    this.formData.identification_type = event.type
+    if (event.data.is_server) {
+      this.formData.name = event.data.contractor_name
+      this.formData.contact_number = event.data.contact_number
+      this.formData.vehicle_number = event.data.vehicle_number
+    } 
+    console.log(this.formData.identification_number, this.formData.identification_type)
+  }
+  selectedNric = ''
 
 }

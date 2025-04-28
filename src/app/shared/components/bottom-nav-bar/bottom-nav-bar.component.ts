@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 
@@ -13,6 +14,7 @@ export class BottomNavBarComponent implements OnInit {
   @Input() clientRoute: boolean = false
 
   constructor(
+    private webRtcService: WebRtcService,
     private router: Router,
     private navigationService: NavigationService,
     public functionMain: FunctionMainService,
@@ -64,6 +66,6 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   callVms() {
-    console.log("CALL VMS")
+    this.webRtcService.createOffer(false, '0812345678-Security', false, true);
   }
 }

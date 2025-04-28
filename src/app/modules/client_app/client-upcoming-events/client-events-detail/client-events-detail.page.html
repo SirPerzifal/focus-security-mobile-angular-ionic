@@ -23,19 +23,19 @@
       <table class="w-full" style="border-collapse: collapse;">
         <tr>
           <td><strong>Facility</strong></td>
-          <td>: {{ functionMain.returnNone(bookingData.facility_name) }}</td>
+          <td>: {{ functionMain.returnNone(bookingData.facility_name) }} | {{ functionMain.returnNone(bookingData.room_name) }}</td>
         </tr>
         <tr>
           <td><strong>Event Date</strong></td>
-          <td>: {{ functionMain.convertToDDMMYYYY(bookingData.eventDate) }}</td>
+          <td>: {{ (functionMain.convertDateExtend(bookingData.start_date)).split(' ')[0] }}</td>
         </tr>
         <tr>
           <td><strong>Booking Time</strong></td>
-          <td>: {{ bookingData.bookingTime }}</td>
+          <td>: {{ getBookingTime(bookingData) }}</td>
         </tr>
       </table>
 
-      <div class="ml-1 mt-4">
+      <div class="ml-1 mt-4" *ngIf="false">
         <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
         <div class="flex justify-between font-bold">
           <p>Booking Fee</p>
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Tombol Proceed to Payment -->
-      <div class="text-center mb-4">
+      <div class="text-center mb-4" *ngIf="false">
         <app-visitor-button
           [text]="'Email Receipt'" 
           [extraClass]="'bg-[#10421d] text-[white] w-full mt-4 mb-2'"

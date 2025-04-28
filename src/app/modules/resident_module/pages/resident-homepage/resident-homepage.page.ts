@@ -15,6 +15,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-resident-homepage',
@@ -39,6 +40,7 @@ export class ResidentHomepagePage implements OnInit {
   isLoading: boolean = false;
 
   constructor(
+    private webRtcService: WebRtcService,
     private notificationService: NotificationService, 
     private route: Router, 
     private houseRulesService: HouseRulesService,

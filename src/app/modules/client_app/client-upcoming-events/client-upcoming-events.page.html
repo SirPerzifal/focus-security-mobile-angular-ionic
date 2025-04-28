@@ -50,10 +50,15 @@
                 <p class="font-bold table-cell text-base text-black">Event Date</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ returnDate(upcomingEvent.start) }}</p>
               </div>
-              <div class="table-row">
+              <div class="table-row" *ngIf="upcomingEvent.registered_coach_name">
                 <p class="font-bold table-cell text-base text-black">Coach Name</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ?
                   upcomingEvent.registered_coach_name : '-' }}</p>
+              </div>
+              <div class="table-row" *ngIf="upcomingEvent.title">
+                <p class="font-bold table-cell text-base text-black">Coach Name</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.title ?
+                  upcomingEvent.title : '-' }}</p>
               </div>
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black">Event Start</p>

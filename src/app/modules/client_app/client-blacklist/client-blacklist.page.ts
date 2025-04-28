@@ -44,7 +44,7 @@ export class ClientBlacklistPage implements OnInit {
   ngOnInit() {
     this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
-      this.project_id = value.project_id != null ? value.project_id : 751;
+      this.project_id = value.project_id;
       this.project_config = value.config
       if (this.project_config.is_industrial) {
         this.loadHost()
@@ -291,7 +291,7 @@ export class ClientBlacklistPage implements OnInit {
     this.blockUnitService.getUnit(this.choosenBlock).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => {return {id: item.id, name: item.unit_name}});
           console.log(response)
         } else {
           console.error('Error:', response.result);
@@ -532,10 +532,8 @@ export class ClientBlacklistPage implements OnInit {
     });
   }
 
-  callResident(){
-    console.log("black listttt -================", this.blacklistData);
-    let copyData = this.blacklistData;
-    // this.webRtcService.createOffer(copyData);
+  callResident(data: any){
+    this.webRtcService.createOffer(false, false, data.unit_id, false);
   }
 
   Host: any = []

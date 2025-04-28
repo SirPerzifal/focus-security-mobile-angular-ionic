@@ -11,6 +11,9 @@ import { AlertController } from '@ionic/angular';
 import { CustomEventTitleFormatter } from 'src/utils/custom-event-title-formatter.providers';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { Estate } from 'src/models/resident/resident.model';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-make-a-new-event',
@@ -45,6 +48,7 @@ export class MakeANewEventPage implements OnInit {
     post_to: 'all',
     block_ids: [],
     unit_ids: [],
+    host_ids: [],
     color: ['#3b82f6', '#1d4ed8'] as string[],
     is_update: false,
   }
@@ -61,7 +65,9 @@ export class MakeANewEventPage implements OnInit {
     private router: Router,
     public functionMain: FunctionMainService,
     private alertController: AlertController,
-    private mainApi: MainApiResidentService
+    private mainApi: MainApiResidentService,
+    private storage: StorageService,
+    private clientMainService: ClientMainService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { day: any };
@@ -84,10 +90,28 @@ export class MakeANewEventPage implements OnInit {
 
   }
 
+  userData: any = {}
+
+  loadStorage() {
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      this.storage.decodeData(value).then((value: any) => {
+        if ( value ) {
+          const estate = JSON.parse(value) as Estate;
+          this.userData = estate
+          console.log(this.userData)
+        }
+        })
+      })
+  }
+
   ngOnInit() {
+    this.loadStorage()
     this.loadRegisteredCoach()
     this.loadUpcomingEvents()
     this.loadFacilityList()
+    // if (this.userType == 'industrial') {
+    //   this.loadHost()
+    // }
   }
 
   toggleTaskCompletion(task: any) {
@@ -148,15 +172,21 @@ export class MakeANewEventPage implements OnInit {
       post_to: event.event.post_to,
       block_ids: event.event.block_ids,
       unit_ids: event.event.unit_ids,
+      host_ids: event.event.host_ids,
       coach_type: event.event.coach_type,
       room_name: event.event.room_name,
       room_id: '',
       is_update: false,
     }
+    this.selectedBook = {}
+    this.selectedBookId = 0
+    this.BookingResult = []
+    this.selectedHost = event.event.host_ids
+    console.log(this.selectedHost)
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
     this.EventsForm.room_id = event.event.room_id
     this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
-    this.event_title = event.event.title
+    this.event_title = event.event.title  ? event.event.title : event.event.facility_name
     this.selectedStartDate = this.selectedDate
     this.selectedEndDate = this.selectedDate
     this.selectedStartTime = `${event.event.start.getHours().toString().padStart(2, '0')}:${event.event.start.getMinutes().toString().padStart(2, '0')}`
@@ -183,6 +213,10 @@ export class MakeANewEventPage implements OnInit {
     this.selectedStartTime = formattedTime;
 
     this.isAddEventClick = true;
+    this.selectedBook = {}
+    this.selectedBookId = 0
+    this.BookingResult = []
+    this.selectedHost = [this.userData.family_id]
     // // console.log(this.EventsForm.start_date); 
   }
 
@@ -292,7 +326,7 @@ export class MakeANewEventPage implements OnInit {
       this.EventsForm.end_date = this.formatDate(endDate, endTime);
     }
     let errMsg = ''
-    if (this.EventsForm.registered_coach_id == 0) {
+    if (this.EventsForm.registered_coach_id == 0 && this.userType != 'industrial') {
       errMsg += 'Coach must be selected! \n'
     }
     if (this.EventsForm.facility_id == '') {
@@ -301,10 +335,10 @@ export class MakeANewEventPage implements OnInit {
     if (this.EventsForm.room_id == '') {
       errMsg += 'Room is required! \n'
     }
-    if (!this.EventsForm.contact_number) {
+    if (!this.EventsForm.contact_number && this.userType != 'industrial') {
       errMsg += 'Contact number is required! \n'
     }
-    if (!this.EventsForm.vehicle_number) {
+    if (!this.EventsForm.vehicle_number && this.userType != 'industrial') {
       errMsg += 'Vehicle number is required! \n'
     }
     if (!this.selectedStartTime) {
@@ -322,12 +356,16 @@ export class MakeANewEventPage implements OnInit {
     // console.log(this.EventsForm);
 
     if (errMsg == '') {
-      if (this.EventsForm.contact_number == this.coachData.contact_number) {
+      if (this.userType == 'industrial'){
         this.createEvent()
-        // console.log("DATA SAME")
       } else {
-        this.openContactNumberModal()
-        // console.log("DATA NOT SAME");
+        if ((this.EventsForm.contact_number == this.coachData.contact_number)) {
+          this.createEvent()
+          // console.log("DATA SAME")
+        } else {
+          this.openContactNumberModal()
+          // console.log("DATA NOT SAME");
+        }
       }
     } else {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -360,13 +398,13 @@ export class MakeANewEventPage implements OnInit {
   async loadUpcomingEvents() {
     const now = new Date();
     this.mainApi.endpointMainProcess({}, 'get/upcoming_event').subscribe((response: any) => {
-      // console.log(results)
+      console.log(response)
       if (response.result.response_code == 200) {
         const newEvents = response.result.result.map((result: any) => ({
           id: result.id,
           start: new Date(result.start_date), // 12:00 PM
           end: new Date(result.end_date), // 1:00 PM
-          title: result.event_title,
+          title: result.event_title ? result.event_title : result.registered_coach_facility_name + ' - ' +  result.room_name,
           description: result.event_description,
           registered_coach_id: result.registered_coach_id,
           facility_name: result.registered_coach_facility_name,
@@ -379,13 +417,14 @@ export class MakeANewEventPage implements OnInit {
           post_to: result.post_to,
           block_ids: result.block_ids,
           unit_ids: result.unit_ids,
+          host_ids: result.host_ids,
           color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
           resizable: {
             beforeStart: true,
             afterEnd: true,
           },
         }));
-
+        console.log(newEvents)
         // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
         this.Events = [...newEvents];
 
@@ -399,7 +438,8 @@ export class MakeANewEventPage implements OnInit {
   selectedCoach = 0
   coachData: any
   loadRegisteredCoach() {
-    this.mainApi.endpointMainProcess({}, 'get/registered_coaches_based_on_unit_id').subscribe((response: any) => {
+    if (this.userType == 'industrial') return
+    this.mainApi.endpointMainProcess({}, 'get/registered_coaches_based_on_unit').subscribe((response: any) => {
       // console.log(results)
       if (response.result.response_code == 200) {
         if (response.result.response_result.length > 0) {
@@ -451,6 +491,7 @@ export class MakeANewEventPage implements OnInit {
   }
 
   openNewModal() {
+    console.log(this.userType)
     this.isAddEventClick = true
     this.isRead = false
     this.Rooms = []
@@ -471,14 +512,19 @@ export class MakeANewEventPage implements OnInit {
       post_to: 'all',
       block_ids: [],
       unit_ids: [],
+      host_ids: [],
       color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
     }
+    this.selectedHost = [this.userData.family_id]
     this.selectedEndTime = ''
     this.selectedStartTime = ''
     this.event_title = ''
     this.selectedStartDate = this.selectedDate
     this.selectedEndDate = this.selectedDate
+    this.selectedBook = {}
+    this.selectedBookId = 0
+    this.BookingResult = []
   }
 
   onClose() {
@@ -500,13 +546,18 @@ export class MakeANewEventPage implements OnInit {
       post_to: 'all',
       block_ids: [],
       unit_ids: [],
+      host_ids: [],
       color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
     }
+    this.selectedHost = []
     this.isRead = false
     this.event_title = ''
     this.selectedEndTime = ''
     this.selectedStartTime = ''
+    this.selectedBook = {}
+    this.selectedBookId = 0
+    this.BookingResult = []
   }
 
   async onCancel() {
@@ -577,5 +628,66 @@ export class MakeANewEventPage implements OnInit {
     this.createEvent()
     this.contactNumberModal = false
     this.loadRegisteredCoach()
+  }
+
+  hostChange(event: any) {
+    console.log(event)
+    this.EventsForm.host_ids = event
+  }
+
+  Host: any = []
+  selectedHost: any = []
+
+  loadHost() {
+    this.mainApi.endpointMainProcess({}, 'get/family').subscribe((value: any) => {
+      console.log(value)
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  userType = ''
+  getTypeUser(event: any) {
+    this.userType = event;
+    console.log(this.userType)
+    if (this.userType == 'industrial') {
+      this.loadHost()
+    }
+  }
+
+  BookingResult: any = []
+  selectedBook: any = {}
+  selectedBookId = 0
+  onRoomChange(event: any) {
+    this.selectedBookId = 0
+    this.selectedBook = {}
+    console.log(event.target.value)
+    this.EventsForm.room_id = event.target.value
+    let params = {
+      room_id: this.EventsForm.room_id,
+      host_id: this.userData.family_id,
+      selected_date: this.selectedStartDate
+    }
+    console.log(params)
+    this.BookingResult = []
+    this.clientMainService.getApi(params, '/residential/get/room_booking_based_on_host_id').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.BookingResult = results.result.result_booking
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('Failed to create new issue!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  onBookChange(event: any) {
+    console.log(event.target.value) 
+    this.selectedBook = this.BookingResult.filter((item: any) => item.id == this.selectedBookId)[0]
+    this.selectedStartTime = (this.selectedBook.start_datetime).split(' ')[1]
+    this.selectedEndTime = (this.selectedBook.stop_datetime).split(' ')[1]
+    console.log(this.selectedBook)
   }
 }

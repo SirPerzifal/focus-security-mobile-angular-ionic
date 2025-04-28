@@ -75,4 +75,12 @@ export class ClientEventsDetailPage implements OnInit {
     }
   }
 
+  getBookingTime(record: any) {
+    console.log(record)
+    let start_date = this.functionMain.convertDateExtend(record.start_date)
+    let stop_date = this.functionMain.convertDateExtend(record.end_date)
+    const startDate = start_date.split(' ')[0]; 
+    return `${startDate} (${start_date.split(' ')[1]} - ${stop_date.split(' ')[1]})` 
+  }
+
 }

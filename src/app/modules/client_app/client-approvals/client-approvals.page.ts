@@ -78,7 +78,7 @@ export class ClientApprovalsPage implements OnInit {
     { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], },
     { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], },
     { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: 'employee', text: 'Employees', permission: [false, true], },
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: 'employee', text: 'Employees', permission: [false, false], },
     { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: 'events', text: 'Events', permission: [false, true], },
   ];
 
@@ -373,10 +373,23 @@ export class ClientApprovalsPage implements OnInit {
     });
   }
 
+  layerBack() {
+    history.pushState(null, '', location.href);
+    
+    const closeModalOnBack = () => {
+      this.closePaymentmodal()
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+  }
+
   isPaymentModal = false
   onSetting() {
     this.paymentChange = this.paymentConfig
     this.isPaymentModal = true
+
+    this.layerBack()
+    
   }
 
   closePaymentmodal() {

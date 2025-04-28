@@ -157,7 +157,7 @@ export class AppReportMainPage implements OnInit {
       type_of_issue: this.reporterDetailsFrom.typeReport,
       requestor_id: this.reporterDetailsFrom.requestorId,
       summary: this.reporterDetailsFrom.summaryReport,
-      ir_attachment_datas: this.reporterDetailsFrom.ticketAttachment,
+      ir_attachments: this.reporterDetailsFrom.ticketAttachment,
     }, 'post/report_issue').subscribe((response: any) => {
       // // console.log(response);
       if (response.result.response_code === 200) {
@@ -266,6 +266,13 @@ export class AppReportMainPage implements OnInit {
       this.functionMain.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
     } else {
       this.functionMain.presentToast('Choose your file first', 'danger');
+    }
+  }
+
+  onUploadImage(file: any): void {
+    if (file){
+      this.reporterDetailsFrom.ticketAttachment = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      console.log(this.reporterDetailsFrom)
     }
   }
 

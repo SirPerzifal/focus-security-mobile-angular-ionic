@@ -87,6 +87,7 @@ export class ClientReportsPage implements OnInit {
   showReports: any = []
 
   onBack() {
+    if (this.submitLoading) return
     if (this.isHome) {
       this.router.navigate(['/client-main-app'])
     } else {
@@ -101,73 +102,17 @@ export class ClientReportsPage implements OnInit {
     }
   }
 
-  onDateChange(event: any) {
-    console.log(event.target.value)
-    this.filter.issue_date = event.target.value;
-    this.applyFilters()
-  }
-
-  onVehicleFilterChange(event: any) {
-    this.filter.vehicle_number = event.target.value
-    this.applyFilters()
-  }
-
-  onNameFilterChange(event: any) {
-    this.filter.name = event.target.value
-    this.applyFilters()
-  }
-
-  onContactFilterChange(event: any) {
-    this.filter.contact = event.target.value
-    console.log(this.filter.contact)
-    this.applyFilters()
-  }
-
-  Block: any[] = []
-  Unit: any[] = []
-
-  filter = {
-    name: '',
-    vehicle_number: '',
-    issue_date: '',
-    contact: '',
-  }
-
-  searchOption = ''
-
-  onSearchOptionChange(event: any) {
-    this.searchOption = event.target.value
-    console.log(event.target.value)
-  }
-
-  startDateFilter = ''
-
-  clearFilters() {
-    this.searchOption = ''
-    this.filter.name = ''
-    this.filter.vehicle_number = ''
-    this.filter.contact = ''
-    this.applyFilters() 
-  }
-
-
-  applyFilters() {
-    this.showReports = this.reportsData.filter((item: any) => {
-      const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
-
-      return contactMatches;
-    });
-  }
-
   reportFields: any = []
   isLoading = false
 
   checkedFields: any = []
+  selectedReport: any = []
 
   onClickMenu(report: any) {
     this.is_check_all = false
     this.reportFields = []
     this.checkedFields = []
+    this.selectedReport = report
     this.isHome = false
     setTimeout(() => {
       this.textSecond = 'Fields Selection'
@@ -194,10 +139,12 @@ export class ClientReportsPage implements OnInit {
     }
   }
 
-  checkInput(field: string) {
-    let index = this.checkedFields.find((item: any) => item == field)
+  checkInput(field: any) {
+    let index = this.checkedFields.find((item: any) => item.field == field.field)
+    console.log(index)
+
     if (index) {
-      this.checkedFields = this.checkedFields.filter((item: any) => item != field)
+      this.checkedFields = this.checkedFields.filter((item: any) => item.field != field.field)
     } else {
       this.checkedFields.push(field)
     }
@@ -208,14 +155,14 @@ export class ClientReportsPage implements OnInit {
   checkAll() {
     this.is_check_all = !this.is_check_all
     if (this.is_check_all) {
-      this.checkedFields = this.reportFields.map((item: any) => item.field)
+      this.checkedFields = this.reportFields
     } else {
       this.checkedFields = []
     }
   }
 
   returnCheckTrue(field: string) {
-    let index = this.checkedFields.find((item: any) => item == field)
+    let index = this.checkedFields.find((item: any) => item.field == field)
     if (index) {
       return true
     } else {
@@ -223,7 +170,58 @@ export class ClientReportsPage implements OnInit {
     }
   }
 
+  submitLoading = false
   onSubmit() {
+    let errMsg = ''
+    if (!this.startDateFilter || !this.endDateFilter) {
+      errMsg += 'Start date and end date filter must be selected! \n'
+    }
+    if (this.checkedFields.length == 0) {
+      errMsg += 'At least one field is selected! \n'
+    }
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger')
+      return
+    }
+    let params = {
+      fields: this.checkedFields.map((item: any) => { return {name: item.field, label: item.name}} ),
+      time_start: this.startDateFilter + ' 00:00:01',
+      time_end: this.endDateFilter + ' 23:59:59',
+      model_name: this.selectedReport.model,
+      timeframe_field: 'create_date'
+    }
+    console.log(params)
+    this.submitLoading = true
+    this.clientMainService.getApi(params, '/get/model/reports').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.functionMain.downloadDocument(results.result.result, this.selectedReport.text)
+        }
+        this.submitLoading = false
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get payment config!', 'danger');
+        console.error(error);
+        this.submitLoading = false
+      }
+    });
     console.log(this.checkedFields)
   }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    console.log(this.startDateFilter)
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    console.log(this.endDateFilter)
+  }
+
 }

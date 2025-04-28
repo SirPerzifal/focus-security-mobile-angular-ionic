@@ -4,6 +4,8 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { Preferences } from '@capacitor/preferences';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-client-settings',
@@ -12,8 +14,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class ClientSettingsPage implements OnInit {
 
-
-  constructor(private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, public functionMain: FunctionMainService) { }
+  constructor(private webRtcService: WebRtcService, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, public functionMain: FunctionMainService, private storage: StorageService) { }
 
   ngOnInit() {
     this.loadProject();
@@ -44,6 +45,8 @@ export class ClientSettingsPage implements OnInit {
   };
 
   logout() {
+    this.storage.clearAllValueFromStorage();
+    this.webRtcService.closeSocket();
     Preferences.clear();
     this.router.navigate(['/']);
   }

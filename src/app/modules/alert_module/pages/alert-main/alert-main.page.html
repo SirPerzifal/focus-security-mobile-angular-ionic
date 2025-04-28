@@ -58,7 +58,7 @@
                 {{alert.vehicle_number ? alert.vehicle_number : '-'}}
               </span>
               <span class="text-xl font-bold text-white">
-                ISSUED DATE & TIME: {{ functionMain.convertDateExtend(alert.issue_time)}} 
+                ISSUED DATE & TIME: {{ functionMain.convertNewDateTZ(alert.issue_time)}} 
               </span>
               <span class="text-xl font-bold text-white"
                 *ngIf="active_type == 'unregistered' || active_type == 'overstay'">

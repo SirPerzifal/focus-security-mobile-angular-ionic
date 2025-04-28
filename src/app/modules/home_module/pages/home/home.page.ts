@@ -8,6 +8,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { IonRouterOutlet, Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ import { App } from '@capacitor/app'
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform) { 
+  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
     console.log(this.router.url.split('?')[0])
     this.checkScreenSize()
     this.platform.backButton.subscribeWithPriority(10, () => {
@@ -92,6 +93,7 @@ export class HomePage implements OnInit {
           console.log(results)
           if (results.result.status_code === 200) {
             this.closeModal()
+            this.storage.clearAllValueFromStorage();
             Preferences.clear();
             setTimeout(() => {
               this.router.navigate(['/login-vms']);

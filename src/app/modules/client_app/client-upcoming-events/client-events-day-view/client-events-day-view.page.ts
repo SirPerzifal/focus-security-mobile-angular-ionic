@@ -120,7 +120,7 @@ export class ClientEventsDayViewPage implements OnInit {
       console.log(value)
       // NOTE THIS SEMI HARD CODE
       this.EventsForm.block_id = value.block != null ? value.block : 1;
-      this.EventsForm.project_id = value.project_id != null ? value.project_id : 751;
+      this.EventsForm.project_id = value.project_id;
       this.EventsForm.unit_id = value.unit != null ? value.unit : 1
       this.project_id = value.project_id != null ? value.project_id : 1;
       this.project_config = value.config
@@ -151,7 +151,6 @@ export class ClientEventsDayViewPage implements OnInit {
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
       next: (response: any) => {
-        console.log(response)
         if (response.result.status_code === 200) {
           this.Block = response.result.result.map((item: any) => {return {id: item.id, name: item.block_name}});
         } else {
@@ -402,6 +401,15 @@ export class ClientEventsDayViewPage implements OnInit {
     if (this.EventsForm.room_id == '') {
       errMsg += 'Room is required! \n'
     }
+    if (this.EventsForm.post_to == 'block' && this.EventsForm.block_ids.length == 0 && !this.project_config.is_industrial) {
+      errMsg += 'At least one block must be selected! \n'
+    }
+    if (this.EventsForm.post_to == 'unit' && this.EventsForm.unit_ids.length == 0 && !this.project_config.is_industrial) {
+      errMsg += 'At least one unit must be selected! \n'
+    }
+    if (this.EventsForm.host_ids.length == 0 && this.project_config.is_industrial) {
+      errMsg += 'At least one host must be selected! \n'
+    }
     if (!this.selectedStartTime) {
       errMsg += 'Start time must be selected! \n'
     }
@@ -425,12 +433,14 @@ export class ClientEventsDayViewPage implements OnInit {
             this.EventsForm.event_title = ''
             this.EventsForm.event_description = ''
             this.EventsForm.color = []
+          } else if (results.result.response_code == 405)  {
+
           } else {
-            this.functionMain.presentToast(`Failed!`, 'danger');
+            this.functionMain.presentToast(`An error occurred while trying to create new event!`, 'danger');
           }
         },
         error: (error) => {
-          this.functionMain.presentToast('Failed!', 'danger');
+          this.functionMain.presentToast('An error occurred while trying to create new event!', 'danger');
           console.error(error);
         }
       });
@@ -447,12 +457,13 @@ export class ClientEventsDayViewPage implements OnInit {
     this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
+        this.Events = []
         if (results.result.response_code == 200) {
           const newEvents = results.result.result.map((result: any) => ({
             id: result.id,
             start: new Date(result.start_date), // 12:00 PM
             end: new Date(result.end_date), // 1:00 PM
-            title: result.event_title,
+            title: result.event_title ? result.event_title : result.registered_coach_facility_name + ' - ' +  result.room_name,
             description: result.event_description,
             facility_id: result.registered_coach_facility_id,
             room_id: result.room_id,
@@ -472,7 +483,9 @@ export class ClientEventsDayViewPage implements OnInit {
           this.Events = [...newEvents];
   
           console.log(this.Events);
+        } else if (results.result.response_code == 405)  {
         } else {
+          this.functionMain.presentToast(`An error occurred while loading events!`, 'danger');
         }
       },
       error: (error) => {

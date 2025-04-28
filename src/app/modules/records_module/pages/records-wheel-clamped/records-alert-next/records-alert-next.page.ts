@@ -24,12 +24,19 @@ export class RecordsAlertNextPage implements OnInit {
     this.formData = this.navParams.get('vehicle')
     console.log(this.formData)
     this.functionMain.vmsPreferences().then(value => {
-      this.project_id
+      this.project_id = value.project_id
       this.project_config = value.config
       if (this.project_config.is_industrial) {
         this.loadHost()
       } else {
         this.loadBlock()
+        if (this.formData.block_id) {
+          this.loadUnit().then(() => {
+            if (this.formData.unit_id) {
+              this.formData.unit_id = this.navParams.get('vehicle').unit_id
+            }
+          })
+        }
       }
     })
 
@@ -118,7 +125,7 @@ export class RecordsAlertNextPage implements OnInit {
 
   submitAlert() {
     console.log(this.alert, this.formData)
-    let url = this.alert ? '/vms/post/alert_next_visit' : '/vms/post/alert_next_visit' 
+    let url = this.alert ? '/vms/post/alert_next_visit' : '/vms/post/alerted_to_offence' 
     let errMsg = ''
     if (this.alert) {
       if (!this.formData.reason) {
@@ -139,7 +146,7 @@ export class RecordsAlertNextPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    this.mainVmsService.getApi({...this.formData, project_id: this.project_id}, '/vms/post/alert_next_visit').subscribe({
+    this.mainVmsService.getApi({...this.formData, project_id: this.project_id}, url).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

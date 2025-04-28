@@ -235,6 +235,16 @@ export class MoveFormPage implements OnInit {
             this.presentToast('Data has been successfully saved to the system!', 'success');
             this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
           }
+        } else if (response.result.status_code === 205) {
+          if (openBarrier) {
+            this.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+          } else {
+            this.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+          }
+          this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
+        } else if (response.result.status_code === 405) {
+          this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
         } else {
           this.presentToast(response.result.status_description, 'danger');
         }

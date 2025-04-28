@@ -343,6 +343,16 @@ export class CollectionModulePage implements OnInit {
           if (res.result.response_code == 200) {
             this.functionMain.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
             this.router.navigate(['home-vms'])
+          } else if (res.result.response_code === 205) {
+            if (openBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.response_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.router.navigate(['home-vms'])
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }

@@ -191,6 +191,13 @@ export class ResidentCarListPage implements OnInit {
   
     });
 
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
     modal.onDidDismiss().then((result) => {
       if (result) {
         console.log(result.data)
@@ -332,8 +339,7 @@ export class ResidentCarListPage implements OnInit {
   }
 
   callResident(vehicle: any) {
-    console.log("vehicle ================", vehicle);
-    this.webRtcService.createOffer(vehicle);
+    this.webRtcService.createOffer(false, false, vehicle.unit_id[0], false);
   }
 
   callVisitor(vehicle: any) {

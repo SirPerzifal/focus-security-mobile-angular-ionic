@@ -142,6 +142,7 @@ export class ClientTicketDetailPage implements OnInit {
         if (results.result.response_code == 200) {
           this.messageDetail = results.result.conversation_result.filter((item: any) => item.body !== '')
           this.ticketDetail = results.result.result[0]
+          this.ticketDetail.attachment = results.result.result[0].attachment.map((item:any) => this.functionMain.getImage(item) )
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');

@@ -35,8 +35,6 @@ export class ClientAppIssuesPage implements OnInit {
 
   ngOnInit() {
     console.log("tes");
-    this.loadType();
-    this.loadTicketFromBackend();
     this.loadUserInfo()
   }
 
@@ -58,7 +56,8 @@ export class ClientAppIssuesPage implements OnInit {
         email: value.email,
         contact: value.contact_number,
       }
-
+      this.loadType();
+      this.loadTicketFromBackend();
       console.log(this.userData);
       
     })
@@ -96,7 +95,7 @@ export class ClientAppIssuesPage implements OnInit {
   }
 
   loadType() {
-    this.reportIssueService.getReportAppTypeOfIssues().subscribe(
+    this.reportIssueService.getReportAppTypeOfIssues(this.userData.project_id).subscribe(
       (response) => {
         // console.log(response);
         this.typeOfReport = response.result.result;
@@ -135,8 +134,9 @@ export class ClientAppIssuesPage implements OnInit {
       unit_id: 0,
       block_id: 0,
       project_id: this.userData.project_id,
-      ir_attachment_datas: this.reporterDetailsFrom.ticketAttachment
+      ir_attachments: this.reporterDetailsFrom.ticketAttachment
     }
+    console.log(params)
     this.clientMainService.getApi(params, '/resident/post/report_issue').subscribe({
       next: (results) => {
         console.log(results)
@@ -146,7 +146,7 @@ export class ClientAppIssuesPage implements OnInit {
           this.toggleShowReport()
           this.resetForm()
         } else {
-          this.functionMain.presentToast(results.result.message, 'danger');
+          this.functionMain.presentToast('An error occurred while trying to submit new ticket!', 'danger');
         }
       },
       error: (error) => {
@@ -255,6 +255,13 @@ export class ClientAppIssuesPage implements OnInit {
       this.functionMain.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
     } else {
       this.functionMain.presentToast('Choose your file first', 'danger');
+    }
+  }
+
+  onUploadImage(file: any): void {
+    if (file){
+      this.reporterDetailsFrom.ticketAttachment = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      console.log(this.reporterDetailsFrom)
     }
   }
 

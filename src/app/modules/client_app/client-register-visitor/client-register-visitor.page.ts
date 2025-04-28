@@ -34,11 +34,9 @@ export class ClientRegisterVisitorPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['project_id',]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
-      this.project_id = value.project_id != null ? value.project_id : 751;
+      this.project_id = value.project_id;
       this.loadClient()
     })
   }
@@ -112,13 +110,15 @@ export class ClientRegisterVisitorPage implements OnInit {
             this.applyDateFilter()
           }
           
+        } else if (results.result.status_code === 401) {
+
         } else {
-          this.functionMain.presentToast(`Failed!`, 'danger');
+          this.functionMain.presentToast(`An error occurred while trying to get the data!`, 'danger');
         }
       },
       error: (error) => {
         this.isLoading = false
-        this.functionMain.presentToast('Failed!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get the data!', 'danger');
         console.error(error);
       }
     });

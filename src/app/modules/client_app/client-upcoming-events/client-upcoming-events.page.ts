@@ -103,6 +103,8 @@ export class ClientUpcomingEventsPage implements OnInit {
     this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
+        this.events = []
+        this.upcomingEvents = []
         if (results.result.response_code == 200) {
           const newEvents = results.result.result.map((result: any) => ({
             id: result.id,
@@ -110,6 +112,10 @@ export class ClientUpcomingEventsPage implements OnInit {
             end: new Date(result.end_date), // 1:00 PM
             title: result.event_title,
             description: result.event_description,
+            facility_name: result.registered_coach_facility_name,
+            start_date: result.start_date, // 12:00 PM
+            end_date: result.end_date, // 1:00 PM
+            room_name: result.room_name,
             registered_coach_id: result.registered_coach_id,
             registered_coach_name: result.registered_coach_name,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
@@ -121,6 +127,8 @@ export class ClientUpcomingEventsPage implements OnInit {
           this.events = [...newEvents];
           this.upcomingEvents = this.events.filter(item => { console.log(new Date(item.start), now) ;return new Date(item.start) >= now})
           console.log(this.upcomingEvents)
+        } else if (results.result.response_code == 405)  {
+
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
         }

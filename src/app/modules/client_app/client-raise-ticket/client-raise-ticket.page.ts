@@ -265,12 +265,9 @@ export class ClientRaiseTicketPage implements OnInit {
     })
   }
 
-  newTicket = {
+  newTicket: any = {
     ticket_type_id: '',
     summary: '',
-    ir_attachment_datas: '',
-    ir_attachment_name: '',
-    ir_attachment_mimetype: '',
     user_id: '',
   }
 
@@ -339,6 +336,13 @@ export class ClientRaiseTicketPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  onUploadImage(file: any): void {
+    if (file){
+      this.newTicket.ir_attachments = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      console.log(this.newTicket)
+    }
   }
 
 }

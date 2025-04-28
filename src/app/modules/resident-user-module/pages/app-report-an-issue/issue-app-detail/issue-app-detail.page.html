@@ -32,7 +32,7 @@
           </tr>
         </tbody>
       </table>
-      <app-image-zoom [imageZoom]="functionMain.getImage(ticketDetail.attachment)" *ngIf="ticketDetail.attachment"
+      <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment"
         [bgColor]="(ticketDetail.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
     </div>
     <div class="flex flex-col mt-4 space-y-2" *ngIf="ticketDetail.ticket_status !== 'Solved'">

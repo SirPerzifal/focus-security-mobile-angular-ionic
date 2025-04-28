@@ -12,6 +12,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
 
 import { Estate } from 'src/models/resident/resident.model';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -130,6 +131,7 @@ export class ResidentHomePagePage implements OnInit {
   selectedProfile: string = '';
 
   constructor(
+    private webRtcService: WebRtcService,
     private modalController: ModalController,
     private mainApiResident: MainApiResidentService,
     private storage: StorageService,
@@ -451,6 +453,7 @@ export class ResidentHomePagePage implements OnInit {
       this.setData(response.result.new_estate, response.result.new_estate.image_profile);
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
         this.isModalUpdateProfile = false;
+        this.webRtcService.initializeSocket();
       })
     })
   }

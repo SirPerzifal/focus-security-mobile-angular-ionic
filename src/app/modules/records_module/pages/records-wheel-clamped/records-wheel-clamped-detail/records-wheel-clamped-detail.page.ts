@@ -110,6 +110,13 @@ export class RecordsWheelClampedDetailPage implements OnInit {
 
     });
 
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
     modal.onDidDismiss().then((result) => {
       if (result) {
         console.log(result.data)
@@ -179,9 +186,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   }
 
   callResident(record:any){
-    // record.requestor_contact_number = record.contact;
-    console.log("record wheel clamped ==========", record);
-    // this.webRtcService.createOffer(record);
+    this.webRtcService.createOffer(false, false, record.unit_id, false);
   }
 
   async presentModalRelease(id: number, type: string, vehicle: any) {
@@ -194,6 +199,13 @@ export class RecordsWheelClampedDetailPage implements OnInit {
       }
   
     });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
 
     modal.onDidDismiss().then((result) => {
       if (result) {

@@ -22,10 +22,7 @@ export class RecordsResidentsDetailPage implements OnInit {
    }
 
   callResident(){
-    // console.log("record here =========", this.record);
-    let recordCopy = this.record;
-    recordCopy.requestor_contact_number = this.record.contact;
-    this.webRtcService.createOffer(recordCopy);
+    this.webRtcService.createOffer(false, this.record.family_id, false, false);
   }
 
   project_config: any = []

@@ -81,10 +81,6 @@ export class ResidentQuickDialsPage implements OnInit {
   }
 
   async startCall(record:any){
-    // await this.webRtcService.startLocalStream();
-    record.isResident = true;
-    record.requestor_contact_number = record.number;
-    await this.webRtcService.createOffer(record);
-    // this.router.navigate(['/outgoing-call']);
+    await this.webRtcService.createOffer(false, record.number, false, true);
   }
 }

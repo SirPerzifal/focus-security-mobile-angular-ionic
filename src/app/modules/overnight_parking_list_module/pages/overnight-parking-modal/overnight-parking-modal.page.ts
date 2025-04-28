@@ -72,6 +72,12 @@ export class OvernightParkingModalPage implements OnInit {
     console.log(this.vehicle)
     console.log(this.alert)
     this.loadOfficer()
+
+    const closeModalOnBack = () => {
+      this.modalController.dismiss(false);
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack)
   }
 
   async loadProjectName() {
@@ -257,6 +263,13 @@ export class OvernightParkingModalPage implements OnInit {
         cssClass: 'nric-confirmation-modal',
   
       });
+
+      history.pushState(null, '', location.href);
+
+      const closeModalOnBack = () => {
+        window.removeEventListener('popstate', closeModalOnBack);
+      };
+      window.addEventListener('popstate', closeModalOnBack);
   
       modal.onDidDismiss().then((result) => {
         if (result) {

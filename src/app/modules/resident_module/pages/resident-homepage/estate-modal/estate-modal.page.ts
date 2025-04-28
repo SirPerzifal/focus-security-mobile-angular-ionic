@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { EstateProfile } from 'src/models/resident/auth.model';
@@ -18,6 +19,7 @@ export class EstateModalPage implements OnInit {
   noData: boolean = false;
 
   constructor(
+    private webrtcservice: WebRtcService,
     private navParams: NavParams, 
     private storage: Storage,
     private modalController: ModalController,
@@ -62,6 +64,7 @@ export class EstateModalPage implements OnInit {
     this.storage.set('USESATE_DATA', encodedEstate).then(() => {
       this.modalController.dismiss(encodedEstate);
     })
+    this.webrtcservice.initializeSocket();
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-m2m-selection',
@@ -57,7 +58,7 @@ export class M2mSelectionComponent implements OnInit {
 
   faPhone = faPhone
 
-  constructor() { }
+  constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit() {
     this.showUnit = this.Arrays
@@ -163,7 +164,9 @@ export class M2mSelectionComponent implements OnInit {
   selectAll = false
 
   onClickCall() {
-    console.log(this.unitArrayProcess)
+    if (this.unitNames){
+      this.webRtcService.createOffer(false, this.unitNames[0].id, false, false);
+    }
   }
 
 }

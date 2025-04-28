@@ -110,7 +110,7 @@ export class ContractorFormPage implements OnInit {
     this.paxData = [];
     for (let i = 0; i < this.paxCount; i++) {
       const name = this.getInputValue(`contractor_name_pax_${i}`);
-      const nric = this.getInputValue(`contractor_nric_fin_pax_${i}`);
+      const nric = this.paxIdentity[i];
       console.log(name, nric)
       this.paxData.push({
         contractor_name: name,
@@ -125,7 +125,7 @@ export class ContractorFormPage implements OnInit {
     for (let i = 0; i < this.paxCount; i++) {
       console.log(i)
       const name = this.getInputValue(`contractor_name_pax_${i}`);
-      const nric = this.getInputValue(`contractor_nric_fin_pax_${i}`);
+      const nric = this.paxIdentity[i];
       console.log(name, nric)
       if (name && nric) {
         
@@ -187,9 +187,6 @@ export class ContractorFormPage implements OnInit {
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
     }
-    if (!companyName) {
-      errMsg += 'Company name is required! \n'
-    }
     if (!contractorContactNo) {
       errMsg += 'Contact number is required! \n'
     }
@@ -206,6 +203,9 @@ export class ContractorFormPage implements OnInit {
     }
     if (!contractorVehicle && this.showDrive) {
       errMsg += 'Vehicle number is required! \n'
+    }
+    if (!companyName) {
+      errMsg += 'Company name is required! \n'
     }
     if ((!this.selectedBlock || !this.selectedUnit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
@@ -235,7 +235,7 @@ export class ContractorFormPage implements OnInit {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
     }
     if (errMsg) {
-      this.presentToast(errMsg, 'danger')
+      this.functionMain.presentToast(errMsg, 'danger')
       return
     }
 
@@ -276,25 +276,35 @@ export class ContractorFormPage implements OnInit {
         next: (response: any) => {
           if (response.result.status_code === 200) {
             if (openBarrier) {
-              this.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
+              this.functionMain.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
               this.router.navigate(['home-vms'])
             } else {
-              this.presentToast('Contractor data has been successfully saved to the system!', 'success');
+              this.functionMain.presentToast('Contractor data has been successfully saved to the system!', 'success');
             } 
             this.router.navigate(['home-vms'])
             this.resetForm();
+          } else if (response.result.status_code === 205) {
+            if (openBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (response.result.status_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('An error occurred while attempting to save contractor data', 'danger');
+            this.functionMain.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
         },
         error: (error) => {
           console.error('Error:', error);
-          this.presentToast('An unexpected error has occurred!', 'danger');
+          this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
         }
       });
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast('An unexpected error has occurred!', 'danger');
+      this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
     }
   }
 
@@ -361,7 +371,7 @@ export class ContractorFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading block data!', 'danger');
+        this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -380,7 +390,7 @@ export class ContractorFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading unit data!', 'danger');
+        this.functionMain.presentToast('An error occurred while loading unit data!', 'danger');
         console.error('Error:', error.result);
       }
     });
@@ -474,7 +484,7 @@ export class ContractorFormPage implements OnInit {
             }
           },
           error: (error) => {
-            this.presentToast('An error occurred while searching for nric!', 'danger');
+            this.functionMain.presentToast('An error occurred while searching for nric!', 'danger');
             console.error(error);
           }
         });

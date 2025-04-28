@@ -2,6 +2,7 @@
   <app-header-inner-page
     [text]="'Upcoming Event'"
     [text_second]="'Calendar View'"
+    (typeOfUser)="getTypeUser($event)"
   ></app-header-inner-page>
 </ion-header>
 
@@ -35,7 +36,7 @@
               : {{ returnDate(upcomingEvent.start) }}
             </p>
           </div>
-          <div class="table-row">
+          <div class="table-row" *ngIf="userType != 'industrial'">
             <p class="font-bold table-cell text-base text-black">Coach Name</p>
             <p class="ml-2 table-cell text-base text-black">
               : {{ upcomingEvent.registered_coach_name ?

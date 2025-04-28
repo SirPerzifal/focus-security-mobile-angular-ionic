@@ -18,11 +18,9 @@ export class ClientHouseRulesPage implements OnInit {
   constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['project_id',]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
-      this.project_id = value.project_id != null ? value.project_id : 751;
+      this.project_id = value.project_id;
       this.loadDocument()
     })
   }
@@ -103,7 +101,8 @@ export class ClientHouseRulesPage implements OnInit {
             this.documentList = results.result.response_result
           } else {
           }
-        } else {
+        } else if (results.result.response_code == 405)  {
+        }  else {
           this.functionMain.presentToast(`An error occurred while loading document!`, 'danger');
         }
       },

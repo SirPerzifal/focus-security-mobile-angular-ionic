@@ -12,6 +12,11 @@ export class SearchNricConfirmationPage implements OnInit {
   constructor(private modalController: ModalController, private functionMain: FunctionMainService) { }
 
   ngOnInit() {
+    const closeModalOnBack = () => {
+      this.modalController.dismiss(false);
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack)
   }
 
   nric_confirmation = ''

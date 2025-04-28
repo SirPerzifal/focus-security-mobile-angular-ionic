@@ -122,9 +122,9 @@ export class ClientEmployeesPage implements OnInit {
     if (this.formData.card_number == ''){
       errMsg += 'Card number is required! \n'
     }
-    if (this.formData.rfid_number == ''){
-      errMsg += 'Rfid number is required! \n'
-    }
+    // if (this.formData.rfid_number == ''){
+    //   errMsg += 'Rfid number is required! \n'
+    // }
     console.log(this.formData)
     if (errMsg != '') {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -133,7 +133,7 @@ export class ClientEmployeesPage implements OnInit {
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {
-            // this.loadEmployees()
+            this.loadEmployees()
             // this.toggleShowActive()
             this.toggleShowActive()
             this.functionMain.presentToast(`Successfully add new employee!`, 'success');

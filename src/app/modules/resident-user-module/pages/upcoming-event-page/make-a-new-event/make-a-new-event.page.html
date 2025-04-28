@@ -2,6 +2,7 @@
   <app-header-inner-page
     [text]="'Upcoming Event'"
     [text_second]="'Make an Event'"
+    (typeOfUser)="getTypeUser($event)"
   ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -75,7 +76,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <div class="px-1">
-          <div class="mb-2" *ngIf="!isCoachData">
+          <div class="mb-2" *ngIf="!isCoachData && event_title">
             <label class="block text-black font-bold mb-1 text-base"
               >Title</label
             >
@@ -90,7 +91,7 @@
             >
             </app-text-input>
           </div>
-          <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
+          <div class="w-full flex flex-col mb-2" *ngIf="isCoachData && userType != 'industrial'" >
             <label class="block text-black font-bold mb-1 text-base"
               >Coach</label
             >
@@ -109,7 +110,7 @@
               </option>
             </select>
           </div>
-          <div class="mb-2" *ngIf="isCoachData">
+          <div class="mb-2" *ngIf="isCoachData && userType != 'industrial'">
             <label class="block text-black font-bold mb-1 text-base"
               >Coach Type</label
             >
@@ -182,6 +183,7 @@
             <select
               id="event_form_coach"
               [disabled]="isRead"
+              (change)="onRoomChange($event)"
               class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
               [(ngModel)]="EventsForm.room_id"
             >
@@ -191,7 +193,24 @@
               </option>
             </select>
           </div>
-          <div class="mb-2" *ngIf="isCoachData">
+          <div class="w-full flex flex-col mb-2" *ngIf="!isRead && EventsForm.room_id">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Booking</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              (change)="onBookChange($event)"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              [(ngModel)]="selectedBookId"
+            >
+              <option value="0" selected disabled hidden>Choose Booking</option>
+              <option *ngFor="let book of BookingResult" [value]="book.id">
+                {{ book.name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-2" *ngIf="isCoachData && userType != 'industrial'">
             <label class="block text-black font-bold mb-1 text-base"
               >Contact Number</label
             >
@@ -206,7 +225,7 @@
             >
             </app-text-input>
           </div>
-          <div class="mb-2" *ngIf="isCoachData">
+          <div class="mb-2" *ngIf="isCoachData && userType != 'industrial'">
             <label class="block text-black font-bold mb-1 text-base"
               >Vehicle Number</label
             >
@@ -221,7 +240,7 @@
             >
             </app-text-input>
           </div>
-          <div class="flex flex-col w-full mb-2" *ngIf="!isCoachData">
+          <div class="flex flex-col w-full mb-2" *ngIf="!isCoachData && userType != 'industrial'">
             <div class="flex flex-row justify-start">
               <p class="text-base font-bold">Post To</p>
             </div>
@@ -241,7 +260,7 @@
           </div>
           <div
             class="w-full mb-2"
-            *ngIf="EventsForm.post_to === 'block' && !isCoachData"
+            *ngIf="EventsForm.post_to === 'block' && !isCoachData && userType != 'industrial'"
           >
             <app-m2m-selection-readonly
               [unitNames]="EventsForm.block_ids"
@@ -252,7 +271,7 @@
           </div>
           <div
             class="w-full mb-2"
-            *ngIf="EventsForm.post_to === 'unit' && !isCoachData"
+            *ngIf="EventsForm.post_to === 'unit' && !isCoachData && userType != 'industrial'"
           >
             <app-m2m-selection-readonly
               [unitNames]="EventsForm.unit_ids"
@@ -261,6 +280,10 @@
               [labelText]="'Unit'"
             ></app-m2m-selection-readonly>
           </div>
+          <div class="w-full mb-2" *ngIf="userType == 'industrial'">
+            <app-m2m-selection [Arrays]="Host" (outputValue)="hostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'" [customTextClass]="'p-0 text-sm'" [Selected]="selectedHost" [isReadonly]="isRead"
+                [labelText]="'Host'"></app-m2m-selection>
+        </div>
           <div class="mb-2">
             <label class="block text-black font-bold mb-1 text-base"
               >Remarks</label
@@ -398,7 +421,7 @@
             <button
               class="bg-[#E3787E] text-black rounded-lg px-4 py-2 font-bold mt-2"
               (click)="onCancel()"
-              *ngIf="isRead && isCoachData"
+              *ngIf="isRead && (isCoachData || userType == 'industrial')"
             >
               Cancel Event
             </button>
