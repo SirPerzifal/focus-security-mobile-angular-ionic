@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { RecordsAlertNextPage } from '../records-alert-next/records-alert-next.page';
 
 @Component({
   selector: 'app-records-warning-history',
@@ -12,9 +14,9 @@ export class RecordsWarningHistoryPage implements OnInit {
 
   vehicle: any = {}
 
-  constructor(private route: ActivatedRoute, private router: Router, private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
-
+  constructor(private route: ActivatedRoute, private router: Router, public functionMain: FunctionMainService,
+    private mainVmsService: MainVmsService,
+    private modalController: ModalController,
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any};
@@ -96,6 +98,16 @@ export class RecordsWarningHistoryPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  openModal(){
+    console.log(this.vehicle)
+    this.functionMain.openAlertModal(
+      {
+        id: this.vehicle.id,
+        vehicle_number: this.vehicle.vehicle_number,
+        contact_number: this.vehicle.contact_number
+      }, true)
   }
 
 }

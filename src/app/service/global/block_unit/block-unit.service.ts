@@ -29,7 +29,6 @@ export class BlockUnitService extends ApiService {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
-      console.log(value)
     })
   }
   

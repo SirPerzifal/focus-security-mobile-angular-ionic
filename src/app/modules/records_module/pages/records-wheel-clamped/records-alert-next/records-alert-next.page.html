@@ -1,0 +1,51 @@
+<ion-content class="vms-body">
+  <div class="flex flex-col p-4 justify-center items-center h-full">
+    <div class="flex flex-row w-[80%] max-h-[80%] overflow-x-auto">
+      <div class="flex flex-col justify-start items-center w-full gap-4">
+        <div class="w-full" *ngIf="!alert">
+          <app-text-input [id]="'alet_visitor_name'" [labelText]="'VISITOR NAME'"  
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.visitor_name"
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'alet_vehicle_number'" [labelText]="'VEHICLE NUMBER'" 
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.vehicle_number" [isReadonly]="true"
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full">
+          <app-text-input [id]="'alert_contact_number'" [labelText]="'CONTACT NUMBER'" 
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.contact_number" [isReadonly]="true"
+            [customInputClasses]="{'text-[#6B7280]': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="w-full" *ngIf="alert">
+          <app-text-input [id]="'alert_reason_issuance'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'ILLEGAL PARKING'"
+            [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="formData.reason" 
+            [customInputClasses]="{'text-black': true, 'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+        </div>
+        <div class="flex flex-col justify-start items-center w-full gap-4"  *ngIf="!project_config.is_industrial && !alert">
+          <div class="w-full flex flex-col">
+            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <select id="visitor_walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block_id" name="visitor_walk_in_block"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+              <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+              <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+              [labelText]="'UNIT'" [Selected]="contactUnit" [showButton]="project_config.is_industrial"></app-m2m-selection>
+          </div>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial  && !alert">
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial"></app-m2m-selection>
+        </div>
+        <div class="w-full flex flex-row justify-center">
+          <button
+            class="h-20 rounded-md text-center align-middle font-bold text-2xl bg-[var(--ion-color-primary)] text-white w-full" (click)="submitAlert()">
+            SUBMIT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

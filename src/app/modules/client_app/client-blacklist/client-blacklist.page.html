@@ -100,7 +100,7 @@
             [contactLabel]="'Contact Number'" [isReadonly]="false"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-row justify-between">
-          <div class="w-[90%]">
+          <div class="w-full">
             <app-text-input #blacklistVehicleNumberInput [id]="'blacklist_vehicle_number'"
               [labelResidentText]="'Vehicle Number'" [placeholder]="'SAA 8298 N'" [customClasses]="{'w-full':true}"
               [type]="'text'"
@@ -108,9 +108,9 @@
               [(ngModel)]="formData.vehicle_no" [labelResidentClass]="'text-base font-bold'"
               [isReadonly]="false"></app-text-input>
           </div>
-          <div class="h-25 flex flex-col justify-end">
+          <!-- <div class="h-25 flex flex-col justify-end">
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-14 w-14" (click)="refreshVehicle()" />
-          </div>
+          </div> -->
         </div>
         <div class="w-full">
           <app-text-input #blacklistNameInput [id]="'blacklist_name'" [labelResidentText]="'Name'"
@@ -119,7 +119,7 @@
             [(ngModel)]="formData.visitor_name" [labelResidentClass]="'text-base font-bold'"
             [isReadonly]="false"></app-text-input>
         </div>
-        <div class="w-full flex flex-col">
+        <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
           <label class="text-base"><b>Block</b></label>
           <select id="blacklist_block"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
@@ -128,7 +128,13 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'Select Units'" [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'" [isOne]="true"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'" [isOne]="true"></app-m2m-selection>
+        </div>
+        <!-- <div class="w-full">
           <label class="text-base"><b>Unit</b></label>
           <select id="blacklist_unit"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
@@ -136,7 +142,7 @@
             <option value="" selected disabled hidden>Choose Unit</option>
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select>
-        </div>
+        </div> -->
         <div class="w-full flex flex-row justify-between mb-2 items-end">
           <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientBlacklistUploadImage accept="image/*"
             class="hidden" />
@@ -222,11 +228,16 @@
               <td class="w-[5%]">:</td>
               <td>{{ '-' }}</td>
             </tr>
-            <tr>
+            <tr *ngIf="!project_config.is_industrial">
               <td class="font-bold w-[45%]">BLOCK & UNIT</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.block_id[1] ? blacklistDetail.block_id[1] : '-' }} | {{ blacklistDetail.unit_id[1] ?
                 blacklistDetail.unit_id[1] : '-' }}</td>
+            </tr>
+            <tr *ngIf="project_config.is_industrial">
+              <td class="font-bold w-[45%]">HOST</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ blacklistDetail.host_name ? blacklistDetail.host_name : '-' }}</td>
             </tr>
             <tr>
               <td class="font-bold w-[45%]">BANNED BY</td>

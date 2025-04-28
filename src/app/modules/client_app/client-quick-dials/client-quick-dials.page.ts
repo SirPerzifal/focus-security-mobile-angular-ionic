@@ -104,6 +104,7 @@ export class ClientQuickDialsPage implements OnInit {
     name: '',
     contact_number: '',
     is_add: false,
+    is_whatsapp: false,
     image: '',
     id: 0
   }
@@ -113,6 +114,7 @@ export class ClientQuickDialsPage implements OnInit {
       name: '',
       contact_number: '',
       is_add: false,
+      is_whatsapp: false,
       image: '',
       id: 0
     }
@@ -162,7 +164,8 @@ export class ClientQuickDialsPage implements OnInit {
       contact_number: contact.contact_number,
       is_add: contact.is_allow_resident_quick_dials,
       image: contact.image_profile,
-      id: contact.id
+      id: contact.id,
+      is_whatsapp: contact.is_whatsapp,
     }
     setTimeout(() => {
       this.isAdd = true

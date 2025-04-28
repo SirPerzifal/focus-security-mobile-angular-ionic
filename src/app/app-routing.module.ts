@@ -625,6 +625,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/payment-form-vehicle/payment-form-vehicle.module').then( m => m.PaymentFormVehiclePageModule)
   },
   {
+    path: 'records-alert-next',
+    loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.module').then( m => m.RecordsAlertNextPageModule)
+  },
+  {
     path: 'raise-request-form-page',
     loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-request-form-page/raise-request-form-page.module').then( m => m.RaiseRequestFormPagePageModule)
   },

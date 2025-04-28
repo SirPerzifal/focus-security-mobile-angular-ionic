@@ -102,17 +102,13 @@ export class ClientRaiseTicketPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
-          if (results.result.result.length > 0){
-            this.ticketList = results.result.result
-            if (this.isActive) {
-              this.openTicket = this.ticketList
-            } else {
-              this.closedTicket = this.ticketList
-            }
-            this.changePage()
-
+          this.ticketList = results.result.result
+          if (this.isActive) {
+            this.openTicket = this.ticketList
           } else {
+            this.closedTicket = this.ticketList
           }
+          this.changePage()
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');

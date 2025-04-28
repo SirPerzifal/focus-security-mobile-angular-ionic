@@ -7,6 +7,8 @@ import { AuthService } from '../resident/authenticate/authenticate.service';
 import { Capacitor } from '@capacitor/core';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { RecordsAlertNextPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.page';
+
 
 @Injectable({
   providedIn: 'root'
@@ -356,6 +358,36 @@ export class FunctionMainService {
       console.error(error);
       return false;
     }
+  }
+
+  async openAlertModal(vehicle: any = {}, alert: boolean = false) {
+    console.log(vehicle)
+    const modal = await this.modalController.create({
+      component: RecordsAlertNextPage,
+      cssClass: 'record-modal' ,
+      componentProps: {
+        vehicle: vehicle,
+        alert: alert
+      }
+
+    });
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', closeModalOnBack)
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if (result.data) {
+        }
+      }
+    });
+
+    return await modal.present();
   }
 
 

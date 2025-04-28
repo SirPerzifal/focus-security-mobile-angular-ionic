@@ -89,7 +89,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     let url = ''
     this.historySchedules = []
     this.daySchedules = []
-    console.log(this.pageType)
+    console.log(this.pageType, type)
     this.isLoading = true;
 
     // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
@@ -170,12 +170,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
         });
       }
     } else if (this.pageType === 'coach') {
-      if (type == 'today' && this.daySchedules.length >= 1) {
-        return
-      }
-      if (type != 'today' && this.filteredHistorySchedules.length >= 1) {
-        return
-      }
       let url = '/vms/get/coaches'
       let params = {}
       if (type == 'today') {
@@ -205,12 +199,6 @@ export class MoveHomePage implements OnInit, OnDestroy {
         }
       });
     } else if (this.pageType === 'ma_visitor') {
-      if (type == 'today' && this.daySchedules.length >= 1) {
-        return
-      }
-      if (type != 'today' && this.filteredHistorySchedules.length >= 1) {
-        return
-      }
       let url = '/client/get/ma_visitor'
       let params = {}
       if (type == 'today') {
