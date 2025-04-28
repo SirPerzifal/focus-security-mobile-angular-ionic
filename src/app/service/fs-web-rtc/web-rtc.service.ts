@@ -11,6 +11,8 @@ import { IncomingCallPage } from 'src/app/modules/call_module/incoming-call/inco
 import { OngoingCallPage } from 'src/app/modules/call_module/ongoing-call/ongoing-call.page';
 import { ApiService } from '../api.service';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../resident/authenticate/authenticate.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +22,33 @@ export class WebRtcService extends ApiService{
   private peerConnection!: RTCPeerConnection;
   private localStream!: MediaStream;
   private remoteStream!: MediaStream;
+  // private iceServers: RTCIceServer[] = [
+  //   { urls: 'stun:stun.l.google.com:19302'},
+  // ];
   private iceServers: RTCIceServer[] = [
-    { urls: 'stun:stun.l.google.com:19302'},
+    {
+      urls: ['stun:fastturn.pro:3478']
+    },
+    {
+      urls: 'turn:fastturn.pro:3478?transport=udp',
+      username: 'Dendy',
+      credential: 'Kepulauan_2504',
+    },
+    {
+      urls: 'turn:fastturn.pro:3478?transport=tcp',
+      username: 'Dendy',
+      credential: 'Kepulauan_2504',
+    },
+    {
+      urls: 'turns:fastturn.pro:5349?transport=tcp',
+      username: 'Dendy',
+      credential: 'Kepulauan_2504',
+    }
+    // { urls: 'stun:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+    // { urls: 'stun:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+    // { urls: 'turn:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+    // { urls: 'turns:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' }
   ];
-  // private iceServers: RTCIceServer[] = [ 
-  //   { urls: 'stun:stun.l.google.com:19302:'} 
-  // ]
   private activeModal: HTMLIonModalElement | null = null;
   private callerName: string = '';
   private receiverName: string = '';
@@ -33,14 +56,17 @@ export class WebRtcService extends ApiService{
   private receiverSocketId: any;
   private nativeOffer: any;
   private targetSocketIds: any;
-  private candidateObj: any;
   private callAction: string = '';
   private callerId: number = 0;
   private receiverId: number = 0;
   private userName: string = '';
   private userId: number = 0;
+  private pendingCandidates: RTCIceCandidate[] = [];
+  private callerpendingCandidates: RTCIceCandidate[] = [];
+  private remoteDescriptionSet = false;
 
-  constructor(http: HttpClient, private platform: Platform, private router: Router, private toastController: ToastController, private modalController: ModalController) {
+
+  constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController) {
     super(http);
     this.initializeSocket();
   }
@@ -63,42 +89,159 @@ export class WebRtcService extends ApiService{
     }
   }
 
-  private resetCallData() {
-    this.callerName = '';
-    this.receiverName = '';
-    this.callerSocketId = null;
-    this.receiverSocketId = null;
-    this.targetSocketIds = null;
-    this.nativeOffer = null;
-    this.callAction = '';
-    this.candidateObj = null;
+  private async resetCallData() {
+    try {
+      if (this.activeModal) {
+        await this.activeModal.dismiss();
+        this.activeModal = null;
+      }
+  
+      if (this.localStream) {
+        this.localStream.getTracks().forEach(track => track.stop());
+        this.localStream = null!;
+      }
+  
+      this.remoteStream = null!;
+  
+      if (this.peerConnection) {
+        this.peerConnection.onicecandidate = null;
+        this.peerConnection.ontrack = null;
+        this.peerConnection.onconnectionstatechange = null;
+        this.peerConnection.close();
+        this.peerConnection = null!;
+      }
+  
+      this.callerName = '';
+      this.receiverName = '';
+      this.callerSocketId = null;
+      this.receiverSocketId = null;
+      this.nativeOffer = null;
+      this.targetSocketIds = null;
+      this.callAction = '';
+      this.pendingCandidates = [];
+      this.callerpendingCandidates = [];
+      this.remoteDescriptionSet = false;
+  
+      localStorage.removeItem('callData');
+    } catch (error) {
+      console.error("Error during clearCallData:", error);
+    }
   }
   
 
-  initializeSocket() {
+  // initializeSocket() {
     
-    Preferences.get({ key: 'USESTATE_DATA' }).then(async (userData) => {
-      if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
-        this.socket.close();
-      }
+  //   this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+  //     this.storage.decodeData(value).then(async (value: any) => {
 
+  //       if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+  //         this.socket.close();
+  //       }
+
+  //       let userInfo = {
+  //         family_mobile_number: '0812345678-Security',
+  //         family_id: '',
+  //         family_name: 'Security',
+  //         email: 'admin@example.com',
+  //       }
+
+  //       let clientInfo;
+        
+  //       if (value) {
+  //         userInfo = JSON.parse(value);
+  //         console.log("userInfo", userInfo)
+  //       }
+
+  //       if (!userInfo.family_id){
+  //         console.log("masukk kesini");
+  //         const clientData = await Preferences.get({ key: 'USER_INFO' });
+  //         if (clientData.value) {
+  //           let parsedClient = jwtDecode(clientData.value) as {name:string, family_id:number};
+  //           userInfo.family_name = parsedClient.name;
+  //           userInfo.family_id = parsedClient.family_id ? parsedClient.family_id.toString() : '';
+  //         }
+  //       }
+        
+  //       // this.presentToast(JSON.stringify(userInfo), 'danger');
+  //       console.log("hereeee -->", userInfo);
+  //       this.userName = userInfo.family_name ? userInfo.family_name : 'Security';
+  //       this.userId = userInfo.family_id ? parseInt(userInfo.family_id, 10) || 0 : 0;
+  //       this.socket = io('wss://ws.sgeede.com', {
+  //         query: { uniqueId: userInfo.family_id ? userInfo.family_id : '0812345678-Security' }
+  //       });
+  //       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
+  //       this.socket.on('answer', (answer: any) => this.handleAnswer(answer));
+  //       this.socket.on('ice-candidate', (candidate: any) => this.handleICECandidate(candidate));
+  //       this.socket.on('end-call', () => this.handleEndCall());
+  //       this.socket.on('reject-call', () => this.handleRejectCall());
+  //       this.socket.on('user-not-found', (data: any) => this.handleUserNotFound(data));
+  //       this.socket.on('receiver-info', (data: any) => this.handleReceiverInfo(data));
+  //       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
+  //       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
+  //       this.listenForNativeEvents();
+  //     }).catch(error => {
+  //       console.error('Error fetching phone info:', error);
+  //     });
+  //   });
+  // }
+
+  async initializeSocket() {
+    try {
       let userInfo = {
         family_mobile_number: '0812345678-Security',
         family_id: '',
         family_name: 'Security',
         email: 'admin@example.com',
+      };
+  
+      // Coba ambil dari USESTATE_DATA
+      const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+      if (storedValue) {
+        const decoded = await this.storage.decodeData(storedValue);
+        if (decoded) {
+          const parsedResident = JSON.parse(decoded);
+          if (parsedResident.family_id) {
+            userInfo = parsedResident;
+            console.log("Got userInfo from USESTATE_DATA", userInfo);
+          }
+        }
       }
-      
-      if (userData.value) {
-        userInfo = JSON.parse(userData.value);
-        
+
+      if (!userInfo.family_id) {
+        const clientData = await Preferences.get({ key: 'USER_INFO' });
+        if (clientData.value) {
+          const parsedClient = jwtDecode(clientData.value) as { name: string; family_id: number };
+          if (parsedClient.family_id) {
+            userInfo.family_name = parsedClient.name;
+            userInfo.family_id = parsedClient.family_id.toString();
+            console.log("Got userInfo from USER_INFO", userInfo);
+          }
+        }
       }
-      // this.presentToast(JSON.stringify(userInfo), 'danger');
-      this.userName = userInfo.family_name ? userInfo.family_name : 'Security';
+  
+      // Set default kalau tetap kosong
+      if (!userInfo.family_id) {
+        userInfo.family_mobile_number = '0812345678-Security';
+        userInfo.family_id = '';
+        userInfo.family_name = 'Security';
+        console.log("Fallback to default userInfo", userInfo);
+      }
+  
+      // Tutup socket lama jika ada
+      if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+        this.socket.close();
+      }
+  
+      // Setup user
+      this.userName = userInfo.family_name || 'Security';
       this.userId = userInfo.family_id ? parseInt(userInfo.family_id, 10) || 0 : 0;
+  
+      // Connect ke WebSocket
       this.socket = io('wss://ws.sgeede.com', {
-        query: { phoneNumber: userInfo.family_mobile_number? userInfo.family_mobile_number : '0812345678-Security' }
+        query: { uniqueId: userInfo.family_id || '0812345678-Security' },
       });
+  
+      // Register event handlers
       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
       this.socket.on('answer', (answer: any) => this.handleAnswer(answer));
       this.socket.on('ice-candidate', (candidate: any) => this.handleICECandidate(candidate));
@@ -108,10 +251,19 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-info', (data: any) => this.handleReceiverInfo(data));
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
+  
+      // Listen for native events
       this.listenForNativeEvents();
-    }).catch(error => {
-      console.error('Error fetching phone info:', error);
-    });
+  
+    } catch (error) {
+      console.error('Error during socket initialization:', error);
+    }
+  }
+
+  closeSocket(){
+    if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+      this.socket.close();
+    }
   }
 
   async startLocalStream(): Promise<boolean> {
@@ -162,17 +314,16 @@ export class WebRtcService extends ApiService{
     }
   }
 
-  async createOffer(recordInfo:any) {
-    if(!recordInfo){
+  async createOffer(receiverPhone:any=false, receiverId:any=false, unit_id: any=false, isResident: any=false) {
+    if(!receiverId && !receiverPhone && !unit_id){
       return;
     }
+    console.log(receiverId);
+    console.log("===============")
 
-    const receiverPhone = recordInfo.requestor_contact_number;
-    const unit_id = recordInfo.unit_id;
-    const isResident = recordInfo.isResident;
     await this.startLocalStream();
 
-    this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+    this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
 
     this.localStream.getTracks().forEach(track => {
       this.peerConnection.addTrack(track, this.localStream);
@@ -181,6 +332,7 @@ export class WebRtcService extends ApiService{
     this.peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         this.socket.emit('ice-candidate', event.candidate);
+        this.callerpendingCandidates.push(event.candidate);
       }
     };
 
@@ -198,12 +350,12 @@ export class WebRtcService extends ApiService{
     this.socket.emit('offer', {
       offerObj: offer,
       receiverPhone: receiverPhone,
+      receiverId: receiverId,
       callerName: this.callerName,
       callerId: this.callerId,
       unitId: unit_id,
       isResident: isResident
     });
-    // this.router.navigate(['/outgoing-call'], {replaceUrl: true});
   }
 
   async receiverConnected(){
@@ -213,22 +365,18 @@ export class WebRtcService extends ApiService{
   async handleOffer(offer: any) {
     await this.startLocalStream();
     if (!this.peerConnection) {
-      // Inisialisasi peerConnection untuk User 2
-      this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+      this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
   
-      // Pastikan remote stream belum ada
       if (!this.remoteStream) {
         this.remoteStream = new MediaStream();
       }
   
-      // Set up ICE candidate handler
       this.peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
           this.socket.emit('ice-candidate', event.candidate);
         }
       };
   
-      // Set up track handler untuk remote video
       this.peerConnection.ontrack = (event) => {
         this.remoteStream = event.streams[0];
         const remoteVideo: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
@@ -255,6 +403,10 @@ export class WebRtcService extends ApiService{
     this.receiverSocketId = answer.receiverSocketId;
     const description = new RTCSessionDescription(answer.answerObj);
     await this.peerConnection.setRemoteDescription(description);
+    this.remoteDescriptionSet = true;
+    for (const candidate of this.pendingCandidates) {
+      await this.peerConnection.addIceCandidate(candidate);
+    }
 
     await this.showOngoingCallModal(false);
     this.peerConnection.ontrack = (event) => {
@@ -266,19 +418,22 @@ export class WebRtcService extends ApiService{
     };
   }
 
-  handleICECandidate(candidate: RTCIceCandidate) {
-    this.candidateObj = candidate;
-    if (this.peerConnection) {
-      this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+  async handleICECandidate(candidate: RTCIceCandidate): Promise<void> {
+    const iceCandidate = new RTCIceCandidate(candidate);
+    if (this.remoteDescriptionSet) {
+      await this.peerConnection.addIceCandidate(iceCandidate);
     } else {
-      this.candidateObj = candidate;
-      // this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+      this.pendingCandidates.push(iceCandidate);
     }
   }
 
   async handleSenderPendingCall(data:any){
     this.receiverSocketId = data.receiverSocketId;
     this.receiverId = data.receiverId;
+
+    for (const candidate of this.callerpendingCandidates) {
+      this.socket.emit('ice-candidate', candidate);
+    }
   }
 
   async handleReceiverPendingCall(data:any){
@@ -288,7 +443,7 @@ export class WebRtcService extends ApiService{
       await this.startLocalStream();
       if (!this.peerConnection) {
         // Inisialisasi peerConnection untuk User 2
-        this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+        this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
     
         // Pastikan remote stream belum ada
         if (!this.remoteStream) {
@@ -314,6 +469,10 @@ export class WebRtcService extends ApiService{
       }
     
       await this.peerConnection.setRemoteDescription(new RTCSessionDescription(this.nativeOffer));
+      this.remoteDescriptionSet = true;
+      for (const candidate of this.pendingCandidates) {
+        await this.peerConnection.addIceCandidate(candidate);
+      }
     
       this.localStream.getTracks().forEach(track => {
         this.peerConnection.addTrack(track, this.localStream);
@@ -331,15 +490,41 @@ export class WebRtcService extends ApiService{
       });
     
       await this.showOngoingCallModal(true);
+    }else if(this.callAction === 'openDialogCall'){
+      await this.startLocalStream();
+      if (!this.peerConnection) {
+        this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
+    
+        if (!this.remoteStream) {
+          this.remoteStream = new MediaStream();
+        }
+    
+        this.peerConnection.onicecandidate = (event) => {
+          if (event.candidate) {
+            this.socket.emit('ice-candidate', event.candidate);
+          }
+        };
+    
+        this.peerConnection.ontrack = (event) => {
+          this.remoteStream = event.streams[0];
+          const remoteVideo: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
+          if (remoteVideo) {
+            remoteVideo.srcObject = this.remoteStream;
+          }
+        };
+      }
+
+      await this.showIncomingCallModal(this.nativeOffer);
     }
   }
   
   
   async acceptCall(offer: any) {
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-    // if(this.candidateObj){
-    //   this.peerConnection.addIceCandidate(new RTCIceCandidate(this.candidateObj));
-    // }
+    this.remoteDescriptionSet = true;
+    for (const candidate of this.pendingCandidates) {
+      await this.peerConnection.addIceCandidate(candidate);
+    }
     
     this.localStream.getTracks().forEach(track => {
       this.peerConnection.addTrack(track, this.localStream);

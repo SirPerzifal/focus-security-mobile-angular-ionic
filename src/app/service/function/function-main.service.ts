@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, Platform, ToastController } from '@ionic/angular';
 import { MainVmsService } from '../vms/main_vms/main-vms.service';
 import { ContractorNricScanPage } from 'src/app/modules/contractor_module/pages/contractor-nric-scan/contractor-nric-scan.page';
 import { Preferences } from '@capacitor/preferences';
@@ -8,7 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { RecordsAlertNextPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.page';
-
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,8 @@ export class FunctionMainService {
     private toastController: ToastController,
     private mainVmsService: MainVmsService,
     private modalController: ModalController,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
@@ -360,35 +361,67 @@ export class FunctionMainService {
     }
   }
 
-  async openAlertModal(vehicle: any = {}, alert: boolean = false) {
+  async openAlertModal(vehicle: any = {}, alert: boolean = false): Promise<boolean> {
     console.log(vehicle)
+    let stop = false
     const modal = await this.modalController.create({
       component: RecordsAlertNextPage,
-      cssClass: 'record-modal' ,
+      cssClass: 'record-modal',
       componentProps: {
         vehicle: vehicle,
         alert: alert
       }
-
     });
+
+    history.pushState(null, '', location.href);
 
     const closeModalOnBack = () => {
       window.removeEventListener('popstate', closeModalOnBack);
     };
+    window.addEventListener('popstate', closeModalOnBack);
 
-    history.pushState(null, '', location.href);
-    window.addEventListener('popstate', closeModalOnBack)
+    await modal.present()
+    const result = await modal.onDidDismiss();
+    
+    if (result.data) {
+      stop = true
+      console.log(result)
+      return true;
+    }
 
-    modal.onDidDismiss().then((result) => {
-      if (result) {
-        console.log(result.data)
-        if (result.data) {
-        }
-      }
-    });
+    return false;
 
-    return await modal.present();
   }
+
+  addOffenceFromAlert(vehicle: any, openBarrier: boolean = false, route: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.mainVmsService.getApi(vehicle, '/vms/post/alerted_to_offence').subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            if (openBarrier) {
+              this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
+            }
+            if (route) {
+              this.router.navigate(['home-vms'])
+            }
+            resolve(true);
+          } else {
+            this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            resolve(false);
+          }
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          console.error(error);
+          resolve(false);
+        }
+      });
+    });
+  }
+  
 
 
 }

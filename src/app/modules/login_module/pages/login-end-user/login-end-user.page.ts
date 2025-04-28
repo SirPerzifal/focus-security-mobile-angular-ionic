@@ -55,25 +55,81 @@ export class LoginEndUserPage implements OnInit {
     this.existUser.password = password;
   }
 
-  async getNotificationPermission() {
-    PushNotifications.requestPermissions().then((result) => {
-      if (result.receive === 'granted') {
-        PushNotifications.register();
+  // async getNotificationPermission() {
+  //   PushNotifications.requestPermissions().then((result) => {
+  //     if (result.receive === 'granted') {
+  //       PushNotifications.register();
+  //     }
+  //   });
+  //   PushNotifications.addListener('registration', async (token: Token) => {
+  //     if (token.value) {
+  //       this.fcmToken = token.value;
+  //       this.notificationService.registerNotification(token.value).subscribe({
+  //         next: (res) => {
+  //         },
+  //         error: (err) => {
+  //           this.functionMain.presentToast('An error occurred while registering token push notification', 'danger');
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+  async getNotificationPermission(): Promise<string> {
+    try {
+      if (typeof PushNotifications === 'undefined') {
+        console.warn('PushNotifications not available.');
+        return '';
       }
-    });
-    PushNotifications.addListener('registration', async (token: Token) => {
-      if (token.value) {
-        this.fcmToken = token.value;
-        this.notificationService.registerNotification(token.value).subscribe({
-          next: (res) => {
-          },
-          error: (err) => {
-            this.functionMain.presentToast('An error occurred while registering token push notification', 'danger');
+  
+      const permission = await PushNotifications.requestPermissions();
+  
+      if (permission.receive !== 'granted') {
+        throw new Error('Notification permission not granted');
+      }
+  
+      PushNotifications.register();
+  
+      return new Promise((resolve, reject) => {
+        const cleanupListeners = () => {
+          PushNotifications.removeAllListeners();
+        };
+  
+        PushNotifications.addListener('registration', (token: Token) => {
+          if (token.value) {
+            this.fcmToken = token.value;
+            this.notificationService.registerNotification(token.value).subscribe({
+              next: () => {
+                cleanupListeners();
+                resolve(token.value);
+              },
+              error: (err) => {
+                this.functionMain.presentToast(
+                  'An error occurred while registering token push notification',
+                  'danger'
+                );
+                cleanupListeners();
+                reject(err);
+              },
+            });
+          } else {
+            cleanupListeners();
+            reject('FCM token is empty');
           }
         });
-      }
-    });
+  
+        PushNotifications.addListener('registrationError', (error) => {
+          cleanupListeners();
+          reject('Push notification registration failed: ' + error);
+        });
+      });
+    } catch (err) {
+      console.error('Push Notification Error:', err);
+      return '';
+    }
   }
+  
+
 
   async loginResident(){
     if (!this.existUser.login && !this.existUser.password) return

@@ -13,7 +13,7 @@ export class FileInputComponent  implements OnInit {
   ngOnInit() {}
 
   @Input() buttonText: string='';
-  @Input() extraButtonClass: string='';
+  @Input() extraButtonClass: string='h-20';
   @Input() customButtonStyle: string='';
   @Input() customPlaceholder: string='';
   @Input() disableUpload:boolean = false;
@@ -22,15 +22,23 @@ export class FileInputComponent  implements OnInit {
   @Input() fileName: string = ''
   @Input() fileAccept: string = ''
   @Input() labelClass: string = ''
+  @Input()  outClass: string = 'min-h-20'
 
   @Input() isCamera: boolean=false
+  @Input() isMany: boolean=false
 
   @Output() fileSelected = new EventEmitter<File>();
   @Output() cameraSelected = new EventEmitter<any>()
+
+  @Input() isNotVMS: boolean = false
+  @Input() divOuterClass: string = 'min-h-14 text-base'
   
   @ViewChild('fileInput') fileInput!: ElementRef;
   selectedFile: File | null = null;
   selectedFileName: string = '';
+
+  cameraArray: any = []
+  cameraId = 0
 
   triggerFileInput() {
     // Programmatically click the hidden file input
@@ -54,8 +62,14 @@ export class FileInputComponent  implements OnInit {
       });
       console.log(image)
       const dateStr = (() => { const n = new Date(), p = (v: any) => v.toString().padStart(2, '0'); return `${p(n.getDate())}_${p(n.getMonth()+1)}_${n.getFullYear()}_${p(n.getHours())}_${p(n.getMinutes())}_${p(n.getSeconds())}` })();
-      this.selectedFileName = dateStr + '.' + image.format
-      this.cameraSelected.emit({image: image.base64String, is_camera: false, name: this.selectedFileName});
+      if (this.isMany) {
+        this.cameraId += 1
+        this.cameraArray.push({id: this.cameraId, image: image.base64String, name: 'Camera_('+ this.cameraId + ').' + image.format, type: image.format})
+        this.cameraSelected.emit(this.cameraArray);
+      } else {
+        this.cameraArray = [{id: this.cameraId, image: image.base64String, name: dateStr + '.' + image.format}]
+        this.cameraSelected.emit({image: image.base64String, name: dateStr + '.' + image.format, type: image.format})
+      }
     } catch (error) {
       if (typeof error === 'object' && error !== null && 'message' in error) {
         const errorMessage = (error as { message: string }).message;
@@ -106,6 +120,11 @@ export class FileInputComponent  implements OnInit {
       //   }
       // );
     }
+  }
+
+  removeImage(i: number) {
+    this.cameraArray =  this.cameraArray.filter((item: any, index: number) => index !== i)
+    this.cameraSelected.emit(this.cameraArray);
   }
 
 }

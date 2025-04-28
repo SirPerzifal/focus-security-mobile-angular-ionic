@@ -38,6 +38,7 @@ export class ResidentReportAnAppIssuePage implements OnInit {
         this.reporterDetailsFrom.blockAndUnit = parseValue.block_name + ','+ parseValue.unit_name;
         // this.reporterDetailsFrom.contactNumber = parseValue.family_mobile_number;
         this.reporterDetailsFrom.placeOfResidence = parseValue.project_name;
+        this.project_id = parseValue.project_id
         this.loadType();
       }
     })
@@ -52,9 +53,11 @@ export class ResidentReportAnAppIssuePage implements OnInit {
       }
     })
   }
+
+  project_id = 0
   
   loadType() {
-    this.reportIssueService.getReportAppTypeOfIssues().subscribe(
+    this.reportIssueService.getReportAppTypeOfIssues(this.project_id).subscribe(
       (response) => {
         // // console.log(response);
         this.typeOfReport = response.result.result;

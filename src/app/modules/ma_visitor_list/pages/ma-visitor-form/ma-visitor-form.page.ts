@@ -74,6 +74,16 @@ export class MaVisitorFormPage implements OnInit {
         if (results.result.status_code === 200) {
           this.functionMain.presentToast('Successfully update this visitor' + (is_open ? ' and open the barrier!' : '!'), 'success');
           this.onBackMove()
+        } else if (results.result.status_code === 205) {
+          if (is_open) {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+          } else {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+          }
+          this.router.navigate(['/home-vms'])
+        } else if (results.result.status_code === 405) {
+          this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.router.navigate(['/home-vms'])
         } else {
           this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
         }

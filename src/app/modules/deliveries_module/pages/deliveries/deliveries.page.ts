@@ -178,7 +178,7 @@ export class DeliveriesPage implements OnInit {
       errMsg += 'Pass number is required! \n'
     }
     if(errMsg != ""){
-      this.presentToast(errMsg, 'danger')
+      this.functionMain.presentToast(errMsg, 'danger')
       return
     }
     try {
@@ -206,23 +206,33 @@ export class DeliveriesPage implements OnInit {
           console.log(res);
           if (res.result.status_code == 200){
             if (openBarrier){
-              this.presentToast('Successfully Insert Food Delivery Record and Opened the Barrier', 'success');
+              this.functionMain.presentToast('Successfully Insert Food Delivery Record and Opened the Barrier', 'success');
             } else {
-              this.presentToast('Successfully Insert Food Delivery Record', 'success');
+              this.functionMain.presentToast('Successfully Insert Food Delivery Record', 'success');
             }
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 205) {
+            if (openBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('Failed To Insert Food Delivery Record', 'danger');
+            this.functionMain.presentToast('Failed To Insert Food Delivery Record', 'danger');
           }
         },
         error => {
-          this.presentToast('An error occurred while submitting delivery data!', 'danger');
+          this.functionMain.presentToast('An error occurred while submitting delivery data!', 'danger');
           console.error('Error:', error);
         }
       );
     } catch (error){
       console.error('Unexpected error:', error);
-      this.presentToast(String(error), 'danger');
+      this.functionMain.presentToast(String(error), 'danger');
     }
     
   }
@@ -311,7 +321,7 @@ export class DeliveriesPage implements OnInit {
       errMsg += 'Please insert number of Pax!\n';
     }
     if(errMsg != ""){
-      this.presentToast(errMsg, 'danger')
+      this.functionMain.presentToast(errMsg, 'danger')
       return
     }
     try{
@@ -325,8 +335,8 @@ export class DeliveriesPage implements OnInit {
           other: this.package_delivery_id == 'other' ? 'Others Checked' : '',
           delivery_option: this.package_delivery_type
         }, 
-        this.package_delivery_type == 'multiple' ? '1' : this.formData.block, 
-        this.package_delivery_type == 'multiple' ? '1' : this.formData.unit,
+        this.package_delivery_type == 'multiple' ? '' : this.formData.block, 
+        this.package_delivery_type == 'multiple' ? '' : this.formData.unit,
         mutiple_unit = {
           pax: this.formData.pax,
           remarks: this.formData.remarks
@@ -343,23 +353,33 @@ export class DeliveriesPage implements OnInit {
           if (res.result.status_code == 200){
             if (openBarrier){
               console.log("Barrier Opened")
-              this.presentToast('Successfully Insert Package Delivery Record and Opened the Barrier', 'success');
+              this.functionMain.presentToast('Successfully Insert Package Delivery Record and Opened the Barrier', 'success');
             }else {
-              this.presentToast('Successfully Insert Package Delivery Record', 'success');
+              this.functionMain.presentToast('Successfully Insert Package Delivery Record', 'success');
             }
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 205) {
+            if (openBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('Failed To Insert Package Delivery Record', 'danger');
+            this.functionMain.presentToast('Failed To Insert Package Delivery Record', 'danger');
           }
         },
         error => {
-          this.presentToast('An error occurred while submitting delivery data!', 'danger');
+          this.functionMain.presentToast('An error occurred while submitting delivery data!', 'danger');
           console.error('Error:', error);
         }
       );
     } catch (error){
       console.error('Unexpected error:', error);
-      this.presentToast(String(error), 'danger');
+      this.functionMain.presentToast(String(error), 'danger');
     }
     
   }
@@ -563,7 +583,7 @@ export class DeliveriesPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error loading block data', 'danger');
+        this.functionMain.presentToast('Error loading block data', 'danger');
         console.error('Error:', error);
       }
     });
@@ -582,7 +602,7 @@ export class DeliveriesPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error loading unit data', 'danger');
+        this.functionMain.presentToast('Error loading unit data', 'danger');
         console.error('Error:', error.result);
       }
     });
@@ -770,19 +790,29 @@ export class DeliveriesPage implements OnInit {
     console.log(params)
     this.mainVmsService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
       next: (results) => {
-        if (results.result.response_code === 200) {
+        if (results.result.status_code === 200) {
           if (openBarrier){
-            this.presentToast('Successfully Insert New Delivery Data and Opened the Barrier!', 'success');
+            this.functionMain.presentToast('Successfully Insert New Delivery Data and Opened the Barrier!', 'success');
           } else {
-            this.presentToast('Successfully Insert New Delivery Data!', 'success');
+            this.functionMain.presentToast('Successfully Insert New Delivery Data!', 'success');
           }
           this.router.navigate(['home-vms'])
+        } else if (results.result.status_code === 205) {
+          if (openBarrier) {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+          } else {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+          }
+          this.router.navigate(['home-vms'])
+        } else if (results.result.status_code === 405) {
+          this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.router.navigate(['home-vms'])
         } else {
-          this.presentToast('An error occurred while creating new delivery data!', 'danger');
+          this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while creating new delivery data!', 'danger');
+        this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         console.error(error);
       }
     });

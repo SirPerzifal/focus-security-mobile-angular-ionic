@@ -14,8 +14,16 @@ export class ImageZoomComponent  implements OnInit {
   @Input() imageClass: string = 'h-32 object-contain'
   @Input() bgColor: string = 'bg-white'
   @Output() isClose = new EventEmitter<any>();
+  @Input() imageArray: any = []
+  
+  openImage: any
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.imageZoom)
+    if (this.imageZoom) {
+      this.imageArray = [this.imageZoom]
+    }
+  }
 
   closeModal() {
     this.isOpenModal = false
@@ -26,8 +34,9 @@ export class ImageZoomComponent  implements OnInit {
   
 
   isOpenModal = false
-  clickImage() {
+  clickImage(i: number) {
     this.isOpenModal = true
+    this.openImage = this.imageArray[i]
 
     const closeModalOnBack = () => {
       this.closeModal()

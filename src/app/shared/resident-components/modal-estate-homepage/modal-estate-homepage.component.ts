@@ -5,6 +5,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 import { Estate } from 'src/models/resident/resident.model';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-modal-estate-homepage',
@@ -19,6 +20,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
   noData: boolean = false;
 
   constructor(
+    private webRtcService: WebRtcService,
     private navParams: NavParams,
     private modalController: ModalController,
     private storage: StorageService,
@@ -66,6 +68,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
     const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
     this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
       this.modalController.dismiss(encodedEstate);
+      this.webRtcService.initializeSocket();
     })
   }
 

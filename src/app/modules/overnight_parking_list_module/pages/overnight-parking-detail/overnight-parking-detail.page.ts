@@ -103,6 +103,13 @@ export class OvernightParkingDetailPage implements OnInit {
   
     });
 
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
     modal.onDidDismiss().then((result) => {
       if (result) {
         console.log(result.data)
@@ -217,7 +224,7 @@ export class OvernightParkingDetailPage implements OnInit {
   callResident(record:any){
     record.requestor_contact_number = record.requestor_phone;
     // console.log("overnigth parking ==========", record);
-    this.webRtcService.createOffer(record);
+    // this.webRtcService.createOffer(record);
   }
 
 

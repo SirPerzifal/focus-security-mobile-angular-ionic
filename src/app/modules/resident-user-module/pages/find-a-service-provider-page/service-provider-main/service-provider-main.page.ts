@@ -81,9 +81,7 @@ export class ServiceProviderMainPage implements OnInit {
   }
 
   async startCall(record:any){
-    record.isResident = true;
-    record.requestor_contact_number = record.number;
-    await this.webRtcService.createOffer(record);
+    await this.webRtcService.createOffer(false, record.number, false, true);
   }
 
   openWhatsApp() {

@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 interface InputForm {
   nameCondominium: string;
@@ -173,6 +174,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   petList: pet[] = [];
 
   constructor(
+    private webRtcService: WebRtcService,
     public functionMain: FunctionMainService,
     private storage: StorageService,
     private router: Router,
@@ -506,6 +508,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             })
           }
         })
+        this.webRtcService.initializeSocket();
       })
       if (estate.unit_id) {
         this.activeUnit = estate.unit_id;

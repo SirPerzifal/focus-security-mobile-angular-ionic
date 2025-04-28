@@ -58,7 +58,11 @@ export class MoveDetailPage implements OnInit {
   }
 
   callResident(){
-    this.webrtc.createOffer(this.record);
+    if (this.project_config.is_industrial){
+      this.webrtc.createOffer(false, this.record.industrial_host_id, false, false);
+    }else{
+      this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
+    }
   }
 
   main = true

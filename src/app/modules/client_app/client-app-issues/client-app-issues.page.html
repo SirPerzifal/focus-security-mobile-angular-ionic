@@ -107,7 +107,14 @@
               [(ngModel)]="reporterDetailsFrom.summaryReport">
             </textarea>
           </div>
-          <div class="w-full flex flex-row justify-between items-end">
+          <div class="w-full flex flex-col items-start">
+            <!-- <label class="text-base"><b>Attachment</b></label> -->
+            <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" [isMany]="true"
+                  [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded-md h-14 text-base font-bold '" [isCamera]="true"
+                  [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [labelClass]="'text-black text-base text-start'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'"
+                  [fileAccept]="'image/*'" (cameraSelected)="onUploadImage($event)"></app-file-input>
+          </div>
+          <!-- <div class="w-full flex flex-row justify-between items-end">
             <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientIssueNewAttachment
               class="hidden" accept="image/*"/>
             <div class="w-4/6 mb-2 flex flex-col items-start">
@@ -120,7 +127,7 @@
               class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold mb-2">
               Upload
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="flex flex-row mt-2 text-[13px] w-full">

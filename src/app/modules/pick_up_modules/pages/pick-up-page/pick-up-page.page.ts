@@ -96,7 +96,7 @@ export class PickUpPagePage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading block data!', 'danger');
+        this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
         console.error('Error:', error);
       }
     });
@@ -217,7 +217,7 @@ export class PickUpPagePage implements OnInit {
       errMsg += 'Pass number is required! \n'
     }
     if (errMsg) {
-      this.presentToast(errMsg, 'danger');
+      this.functionMain.presentToast(errMsg, 'danger');
       return
     }
 
@@ -239,31 +239,40 @@ export class PickUpPagePage implements OnInit {
           console.log(response)
           if (response.result.status_code === 200) {
             if (openBarrier) {
-              this.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
+              this.functionMain.presentToast('Data has been successfully saved, and the barrier is now open!', 'success');
             } else {
-              this.presentToast('Data has been successfully saved to the system!', 'success');
+              this.functionMain.presentToast('Data has been successfully saved to the system!', 'success');
             }
             this.router.navigate(['home-vms'])
             
             // Reset form
             this.vehicleNumberInput.value = '';
-            // this.locationInput.value = '';
             this.selectedVehicleType = '';
             this.resetVehicleSelection();
             
             
+          } else if (response.result.status_code === 205) {
+            if (openBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (response.result.status_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.router.navigate(['home-vms'])
           } else {
-            this.presentToast('An error occurred while attempting to save the data!', 'danger');
+            this.functionMain.presentToast('An error occurred while attempting to save the data!', 'danger');
           }
         },
         error: (error) => {
           console.error('Error:', error);
-          this.presentToast('An unexpected error has occurred!', 'danger');
+          this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
         }
       });
     } catch (error) {
       console.error('Unexpected error:', error);
-      this.presentToast('An unexpected error has occurred!', 'danger');
+      this.functionMain.presentToast('An unexpected error has occurred!', 'danger');
     }
   }
 
@@ -272,20 +281,6 @@ export class PickUpPagePage implements OnInit {
     this.valCar = false;
     this.valTaxi = false;
     this.valBike = false;
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-    
-
-    toast.present().then(() => {
-      
-      
-    });
   }
   
   vehicle_number = ''
@@ -327,4 +322,8 @@ export class PickUpPagePage implements OnInit {
   nric_value = ''
   selectedNric = ''
   pass_number = ''
+
+  checkAlert(alert_data: any, openBarrier: boolean) {
+    this.functionMain.addOffenceFromAlert({...alert_data, block_id: this.project_config.is_industrial ? false : this.blkLocation, host_id: this.project_config.is_industrial ? this.selectedHost : false, project_id: this.project_id }, openBarrier, 'home-vms')
+  }
 }

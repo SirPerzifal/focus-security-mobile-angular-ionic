@@ -146,7 +146,7 @@
           <tr class="h-6">
             <td class="w-2/5  font-bold">Entry Time</td>
             <td class="w-[5%]">:</td>
-            <td>{{ visitorDetail.entry_date ? visitorDetail.entry_date.split(' ')[1] : '-' }}</td>
+            <td>{{ visitorDetail.entry_date ? functionMain.convertNewDateTZ(visitorDetail.entry_date).split(' ')[1] : '-' }}</td>
           </tr>
           <!-- <tr class="h-6">
             <td class="w-2/5  font-bold">Exit Time</td>

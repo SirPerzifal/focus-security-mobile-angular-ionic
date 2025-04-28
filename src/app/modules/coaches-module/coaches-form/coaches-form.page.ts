@@ -199,7 +199,7 @@ export class CoachesFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error loading vehicle data', 'danger');
+        this.functionMain.presentToast('Error loading vehicle data', 'danger');
         console.error('Error:', error);
       }
     });
@@ -219,7 +219,7 @@ export class CoachesFormPage implements OnInit {
         }
       },
       error: (error) => {
-        this.presentToast('Error loading unit data', 'danger');
+        this.functionMain.presentToast('Error loading unit data', 'danger');
         console.error('Error:', error.result);
         this.isLoadingUnit = false
       }
@@ -267,7 +267,7 @@ export class CoachesFormPage implements OnInit {
       errMsg += 'Block and unit must be selected! \n'
     }
     if (errMsg) {
-      this.presentToast(errMsg, 'danger');
+      this.functionMain.presentToast(errMsg, 'danger');
     } else {
       if (isOpenBarrier){
         console.log("OPEN BARRIER")
@@ -280,14 +280,24 @@ export class CoachesFormPage implements OnInit {
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
-            this.presentToast('Coach data successfully submitted!', 'success');
+            this.functionMain.presentToast('Coach data successfully submitted!', 'success');
+            this.onBackMove()
+          } else if (results.result.response_code === 205) {
+            if (isOpenBarrier) {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.onBackMove()
+          } else if (results.result.response_code === 405) {
+            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.onBackMove()
           } else {
-            this.presentToast('An error occurred while submitting coach data!', 'danger');
+            this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');
           }
         },
         error: (error) => {
-          this.presentToast('An error occurred while submitting coach data!', 'danger');
+          this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');
           console.error(error);
         }
       });

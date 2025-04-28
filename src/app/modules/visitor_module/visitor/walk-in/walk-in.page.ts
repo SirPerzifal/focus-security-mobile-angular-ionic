@@ -159,10 +159,20 @@ export class WalkInPage implements OnInit {
             if (openBarrier){
               console.log("Barrier Opened")
               this.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
-            }else {
+            } else {
               this.presentToast('Drive in data has been successfully saved to the system!', 'success');
             }
             
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 205) {
+            if (openBarrier) {
+              this.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 405) {
+            this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else {
             this.presentToast('An error occurred while attempting to save drive in data', 'danger');
@@ -235,6 +245,16 @@ export class WalkInPage implements OnInit {
             }else {
               this.presentToast('Walk in data has been successfully saved to the system!', 'success');
             }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 205) {
+            if (openBarrier) {
+              this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
+            } else {
+              this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
+            }
+            this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 405) {
+            this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else {
             this.presentToast('An error occurred while attempting to save walk in data!', 'danger');

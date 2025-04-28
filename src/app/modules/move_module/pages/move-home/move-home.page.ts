@@ -202,9 +202,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
       let url = '/client/get/ma_visitor'
       let params = {}
       if (type == 'today') {
-        params = { is_today: true}
+        params = { is_today: true, project_id: this.project_id}
       } else {
-        params = { is_today: false}
+        params = { is_today: false, project_id: this.project_id}
       }
       this.mainVmsService.getApi(params, url).subscribe({
         next: (results) => {

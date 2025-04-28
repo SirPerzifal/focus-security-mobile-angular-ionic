@@ -35,11 +35,11 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.last_entry_date_time) }}</td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="font-bold w-[45%]">TYPE OF ENTRY</td>
             <td class="w-[5%]">:</td>
             <td>{{ '-' }}</td>
-          </tr>
+          </tr> -->
           <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-[45%]">BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
@@ -66,11 +66,11 @@
         </div>
         <div class="flex flex-row justify-around w-full">
           <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL MA</button>
+            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callMA()">CALL MA</button>
             <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onLiftBan()">LIFT BAN</button>
           </div>
           <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
+            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
             <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL POLICE</button>
           </div>
         </div>

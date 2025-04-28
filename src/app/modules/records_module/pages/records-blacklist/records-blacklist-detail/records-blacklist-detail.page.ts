@@ -92,6 +92,14 @@ export class RecordsBlacklistDetailPage implements OnInit {
       cssClass: 'nric-confirmation-modal',
 
     });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
     await modal.present();
     modal.onDidDismiss().then((result) => {
       if (result) {
@@ -122,9 +130,15 @@ export class RecordsBlacklistDetailPage implements OnInit {
   }
 
   callResident(){
-    console.log("record blacklist ======", this.record);
-    let copyData = this.record;
-    this.webRtcService.createOffer(copyData);
+    if(this.project_config.is_industrial){
+      this.webRtcService.createOffer(false, this.record.industrial_host_id[0], false, false);
+    }else{
+      this.webRtcService.createOffer(false, false, this.record.unit_id, false);
+    }
+  }
+
+  callMA(){
+    this.webRtcService.createOffer(false, )
   }
 
   srcImg= "assets/img/SCDF.png"

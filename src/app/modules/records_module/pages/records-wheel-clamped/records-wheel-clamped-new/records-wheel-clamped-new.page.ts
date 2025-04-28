@@ -53,6 +53,12 @@ export class RecordsWheelClampedNewPage implements OnInit {
         this.loadBlock()
       }
     })
+
+    const closeModalOnBack = () => {
+      this.modalController.dismiss(false);
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack)
   }
 
   async loadProjectName() {

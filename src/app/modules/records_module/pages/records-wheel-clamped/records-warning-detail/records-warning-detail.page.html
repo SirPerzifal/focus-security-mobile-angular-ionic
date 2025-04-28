@@ -21,8 +21,8 @@
               </tr>
               <tr *ngFor="let offence of offence_detail.offences_details.first_warning">
                 <td>{{ offence.name }}</td>
-                <td>{{ offence.date }}</td>
-                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[1] }}</td>
                 <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>
@@ -41,8 +41,8 @@
               </tr>
               <tr *ngFor="let offence of offence_detail.offences_details.second_warning">
                 <td>{{ offence.name }}</td>
-                <td>{{ offence.date }}</td>
-                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[1] }}</td>
                 <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>
@@ -61,8 +61,8 @@
               </tr>
               <tr *ngFor="let offence of offence_detail.offences_details.wheel_clamp">
                 <td>{{ offence.name }}</td>
-                <td>{{ offence.date }}</td>
-                <td>{{ offence.time.split('.')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[0] }}</td>
+                <td>{{ (functionMain.convertNewDateTZ(offence.date)).split(' ')[1] }}</td>
                 <td>{{ offence.issuing_officer }}</td>
               </tr>
             </table>

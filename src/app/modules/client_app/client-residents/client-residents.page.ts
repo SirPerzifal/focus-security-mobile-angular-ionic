@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { RecordsResidentService } from 'src/app/service/vms/records/records-resident.service';
 
@@ -12,7 +13,7 @@ import { RecordsResidentService } from 'src/app/service/vms/records/records-resi
 })
 export class ClientResidentsPage implements OnInit {
 
-  constructor(public functionMain: FunctionMainService, private clientMain: ClientMainService, private recordsResidentService: RecordsResidentService, private router: Router) { }
+  constructor(private webRtcService: WebRtcService, public functionMain: FunctionMainService, private clientMain: ClientMainService, private recordsResidentService: RecordsResidentService, private router: Router) { }
 
   ngOnInit() {
     this.loadResident()
@@ -46,7 +47,7 @@ export class ClientResidentsPage implements OnInit {
   }
 
   callResident(resident: any) {
-    console.log(resident)
+    this.webRtcService.createOffer(false, resident.family_id, false, false);
   }
 
 }

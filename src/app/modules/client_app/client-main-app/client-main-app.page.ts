@@ -8,6 +8,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { Subscription } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-client-main-app',
@@ -33,6 +34,7 @@ export class ClientMainAppPage implements OnInit {
   };
 
   constructor(
+    private webRtcService: WebRtcService,
     private notificationService: NotificationService, 
     private router: Router, 
     private getUserInfoService: GetUserInfoService, 

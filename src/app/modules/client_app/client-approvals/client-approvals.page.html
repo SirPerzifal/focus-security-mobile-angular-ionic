@@ -196,7 +196,7 @@
               </div>
               <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Booked By</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.partner_id.name) }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.requestor_id.name) }}</p>
               </div>
               <div class="table-row" *ngIf="['family'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Applied By</p>
@@ -382,7 +382,7 @@
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Booked By</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.partner_id.name) }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.requestor_id.name) }}</p>
         </div>
         <div class="table-row" *ngIf="['family'].includes(approval_type) && selectedApproval.end_of_tenancy">
           <p class="font-bold table-cell w-1/2 text-base text-black">End Of Tenancy Agreement</p>

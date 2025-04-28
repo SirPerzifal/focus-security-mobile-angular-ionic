@@ -37,6 +37,11 @@ export class AlertModalPage implements OnInit {
   is_search_barcode = false
 
   ngOnInit() {
+    const closeModalOnBack = () => {
+      this.modalController.dismiss(false);
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack)
   }
 
   fileInput: any

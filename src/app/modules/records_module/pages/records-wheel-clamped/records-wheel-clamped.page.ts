@@ -48,6 +48,13 @@ export class RecordsWheelClampedPage implements OnInit {
       }
     });
 
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
     modal.onDidDismiss().then((result) => {
       if (result) {
         console.log(result.data)
@@ -356,6 +363,9 @@ export class RecordsWheelClampedPage implements OnInit {
     this.offensesService.getOfffenses(this.pageType, this.is_active).subscribe({
       next: (results) => {
         console.log(results.result)
+        this.activeVehicles = []
+        this.vehicleData = [];
+        this.historyVehicles = this.vehicleData
         if (results.result.response_code === 200) {
           if (this.is_active){
             this.activeVehicles = results.result.response_result;

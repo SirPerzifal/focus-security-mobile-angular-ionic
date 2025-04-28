@@ -97,7 +97,7 @@ export class HistoryOfEventPage implements OnInit {
   async loadUpcomingEvents() {
     const now = new Date();
     this.mainApi.endpointMainProcess({}, 'get/upcoming_event').subscribe((response: any) => {
-      // console.log(results)
+      console.log(response)
       if (response.result.response_code == 200) {
         this.upcomingEvents = response.result.result.map((result: any) => ({
           id: result.id,
@@ -116,8 +116,10 @@ export class HistoryOfEventPage implements OnInit {
         // console.log(this.upcomingEvents)
         // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
 
+      } else if (response.result.response_code == 401) {
+        // this.functionMain.presentToast(`Failed!`, 'danger');
       } else {
-        this.functionMain.presentToast(`Failed!`, 'danger');
+        this.functionMain.presentToast(`An error occurred while trying to load upcoming event!`, 'danger');
       }
     })
   }
@@ -151,5 +153,14 @@ export class HistoryOfEventPage implements OnInit {
     this.router.navigate(['/upcoming-event-page-main'], {
       queryParams: {reload: true}
     })
+  }
+
+  userType = ''
+  getTypeUser(event: any) {
+    this.userType = event;
+    console.log(this.userType)
+    // if (this.userType == 'industrial') {
+    //   this.loadHost()
+    // }
   }
 }

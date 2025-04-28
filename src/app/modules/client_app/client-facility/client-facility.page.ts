@@ -220,9 +220,10 @@ export class ClientFacilityPage implements OnInit {
             this.historyBookings = results.result.booking
           } else {
           }
-        } else {
-          this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
-        }
+        } 
+        // else {
+        //   this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
+        // }
         
       },
       error: (error) => {

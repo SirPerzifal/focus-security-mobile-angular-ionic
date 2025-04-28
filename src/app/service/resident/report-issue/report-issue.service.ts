@@ -62,7 +62,7 @@ export class ReportIssueService extends ApiService {
     );
   }
 
-  getReportAppTypeOfIssues(): Observable<any> {
+  getReportAppTypeOfIssues(project_id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -72,6 +72,7 @@ export class ReportIssueService extends ApiService {
     const body = {
       jsonrpc: '2.0',
       params: {
+        project_id: project_id
       }
     };
 

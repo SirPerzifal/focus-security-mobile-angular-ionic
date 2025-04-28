@@ -50,7 +50,7 @@
           </div>
         </div> -->
         <div class="w-full">
-          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="true"/>
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial"/>
         </div>
         <div class="w-full" *ngIf="identificationType == 'passport'">
           <app-text-input #contractorIdPassport [id]="'contractor_checkout_passport'" [labelText]="'PASSPORT NUMBER'"

@@ -297,6 +297,16 @@ export class EmergencyModulePage implements OnInit {
           }
           this.router.navigate(['/home-vms'])
 
+        } else if (results.result.response_code === 205) {
+          if (isOpenBarrier) {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+          } else {
+            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+          }
+          this.router.navigate(['home-vms'])
+        } else if (results.result.response_code === 405) {
+          this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.router.navigate(['home-vms'])
         } else {
           this.functionMain.presentToast('An error occurred while attempting to save emergecny vehicle data!', 'danger');
         }

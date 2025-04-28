@@ -132,7 +132,8 @@ export class RecordsVisitorDetailPage implements OnInit {
   }
 
   async callResident(){
-    this.webrtc.createOffer(this.record);
+    console.log("tirgger olso", this.record);
+    this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
   }
 
 }

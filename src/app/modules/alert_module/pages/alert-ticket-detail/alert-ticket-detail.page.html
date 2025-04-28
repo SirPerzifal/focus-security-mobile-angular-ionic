@@ -20,7 +20,7 @@
               <span class="text-xl text-white" [innerHtml]="alert.summary" *ngIf="alert.summary"></span>
               <span class="text-xl text-white mb-2">
                 <b>REQUESTED BY</b>: {{ functionMain.returnNone(alert.requested_by) }} | {{
-                functionMain.returnNone(alert.created_on) }}
+                functionMain.convertNewDateTZ(alert.created_on) }}
               </span>
               <app-image-zoom [imageZoom]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment" [bgColor]="'bg-[var(--ion-color-primary)]'"></app-image-zoom>
               <!-- <img [src]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment"> -->
@@ -68,7 +68,7 @@
                         Client User' : '# Resident User')) }} </b>
                     </span>
                     <span style="color: #575757;">
-                      {{ functionMain.returnNone(message.message_datetime) }}
+                      {{ functionMain.convertNewDateTZ(message.message_datetime) }}
                     </span>
                   </div>
 

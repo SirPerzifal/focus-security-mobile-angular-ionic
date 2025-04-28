@@ -8,6 +8,7 @@ import { Estate } from 'src/models/resident/resident.model';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-settings-main',
@@ -86,6 +87,7 @@ export class SettingsMainPage implements OnInit {
   activeDriveVisitorAlert = false;
 
   constructor(
+    private webRtcService: WebRtcService,
     private storage: StorageService,
     private route: Router,
     public functionMain: FunctionMainService,
@@ -285,8 +287,9 @@ export class SettingsMainPage implements OnInit {
   }
 
   logout() {
+    this.webRtcService.closeSocket();
     this.storage.clearAllValueFromStorage();
     Preferences.clear();
-    this.route.navigate([''])
+    this.route.navigate(['']);
   }
 }

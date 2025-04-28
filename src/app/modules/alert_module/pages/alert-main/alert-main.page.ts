@@ -346,9 +346,8 @@ export class AlertMainPage implements OnInit {
         next: (results) => {
           if (results.result.response_code === 200) {
             this.presentToast(`Successfully ${type} vehicle!`, 'success');
-            if (this.active_type == 'unregistered') {
+            if (this.active_type == 'unregistered' || this.active_type == 'overstay') {
               this.loadUnregisteredCar()
-            } else if (this.active_type == 'overstay') {
               this.loadOverstay()
             } else {
               this.loadRecordsWheelClamp(this.active_type)
@@ -379,6 +378,13 @@ export class AlertMainPage implements OnInit {
       }
 
     });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
 
     modal.onDidDismiss().then((result) => {
       if (result) {
@@ -417,6 +423,13 @@ export class AlertMainPage implements OnInit {
       }
   
     });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
 
     modal.onDidDismiss().then((result) => {
       if (result) {
@@ -467,6 +480,13 @@ export class AlertMainPage implements OnInit {
         type_of_entry: entry_type,
       }
     });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
 
     modal.onDidDismiss().then((result) => {
       if (result) {

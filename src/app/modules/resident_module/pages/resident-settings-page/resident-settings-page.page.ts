@@ -7,6 +7,7 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { profile } from 'src/models/resident/profileModel.model';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 @Component({
   selector: 'app-resident-settings-page',
   templateUrl: './resident-settings-page.page.html',
@@ -26,7 +27,7 @@ export class ResidentSettingsPagePage implements OnInit {
   userId: number = 0;
   imageProfile: string = '';
 
-  constructor(private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, public functionMain: FunctionMainService, private storage: Storage) {
+  constructor(private webRtcService: WebRtcService, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, public functionMain: FunctionMainService, private storage: Storage) {
     storage.create();
   }
 
@@ -46,6 +47,7 @@ export class ResidentSettingsPagePage implements OnInit {
   }
 
   logout() {
+    this.webRtcService.closeSocket();
     this.storage.clear()
     Preferences.clear();
     this.router.navigate(['/']);

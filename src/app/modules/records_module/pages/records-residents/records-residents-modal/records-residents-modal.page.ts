@@ -29,6 +29,11 @@ export class RecordsResidentsModalPage implements OnInit {
 
   ngOnInit() {
     this.loadOfficer()
+    const closeModalOnBack = () => {
+      this.modalController.dismiss(false);
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack)
   }
 
   url = '/vms/create/offenses'
