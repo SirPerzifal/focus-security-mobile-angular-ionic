@@ -42,18 +42,22 @@ export class ClientBlacklistPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['project_id',]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id != null ? value.project_id : 751;
+      this.project_config = value.config
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
       this.loadBlacklistData()
-      this.loadBlock()
     })
     
   }
 
   project_id = 0
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -259,7 +263,7 @@ export class ClientBlacklistPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.formData.unit_id = event.target.value;
+    this.formData.unit_id = event[0];
     console.log(this.formData.unit_id)
   }
 
@@ -326,8 +330,11 @@ export class ClientBlacklistPage implements OnInit {
     if (!this.formData.reason) {
       errMsg += 'Reason of ban is required! \n'
     }
-    if (!this.formData.block_id || !this.formData.unit_id) {
+    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if (!this.formData.host && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
     }
     if (!this.formData.ban_image) {
       errMsg += 'Ban image is required! \n'
@@ -382,6 +389,7 @@ export class ClientBlacklistPage implements OnInit {
       reason: '',
       block_id: '',
       unit_id: '',
+      host: '',
       contact_no: '',
       vehicle_no: '',
       visitor_name: '',
@@ -395,6 +403,7 @@ export class ClientBlacklistPage implements OnInit {
     reason: '',
     block_id: '',
     unit_id: '',
+    host: '',
     contact_no: '',
     vehicle_no: '',
     visitor_name: '',
@@ -527,5 +536,16 @@ export class ClientBlacklistPage implements OnInit {
     console.log("black listttt -================", this.blacklistData);
     let copyData = this.blacklistData;
     // this.webRtcService.createOffer(copyData);
+  }
+
+  Host: any = []
+  loadHost() {
+    this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  onHostChange(event: any) {
+    this.formData.host = event[0]
   }
 }

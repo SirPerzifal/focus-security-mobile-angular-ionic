@@ -126,7 +126,11 @@
           <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Add to Resident App Quick
             Dials</label>
         </div>
-
+        <div class="flex flex-row justify start items-center">
+          <input id="client_contact_whatsapp" name="client_contact_whatsapp" type="checkbox"
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_whatsapp">
+          <label class="text-base font-bold mt-1 ml-3" for="client_contact_whatsapp">Allow Whatsapp</label>
+        </div>
         <div class="w-full ">
           <button (click)="onSubmit()"
             class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-4 h-14">
