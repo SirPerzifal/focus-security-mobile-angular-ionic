@@ -155,13 +155,19 @@ export class MyVehicleMainPage implements OnInit {
           fees: `S$${vehicle.vehicle_fee}`, // Anda dapat menyesuaikan ini berdasarkan logika Anda
           isPrimary:vehicle.is_primary_vehicle
         }));
-        this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
+        this.MaximumVehicle = response.result.response_result.exceeded_max;
         this.isLoading = false
       } else {
         // this.presentToast('Data fetched failed!', 'danger');
         console.error('Error fetching vehicle details:', response);
         console.error('Error fetching vehicle details result:', response.result);
+        this.isLoading = false
       }
+    }, (error) => {
+      // this.presentToast('Data fetched failed!', 'danger');
+      console.error('Error fetching vehicle details:', error);
+      console.error('Error fetching vehicle details result:', error);
+      this.isLoading = false
     })
   }
 
