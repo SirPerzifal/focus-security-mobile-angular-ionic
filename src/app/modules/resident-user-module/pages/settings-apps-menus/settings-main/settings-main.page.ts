@@ -95,8 +95,7 @@ export class SettingsMainPage implements OnInit {
     const navigation = this.route.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: any, familyId: any };
     if (state) {
-      console.log(state.formData.unit_id);
-      this.familyIdFromFamilyPage = state.formData.unit_id ? state.formData.unit_id : this.familyId ? this.familyId : 0;      
+      this.familyIdFromFamilyPage = state.formData.unit_id ? state.formData.unit_id : state.familyId ? state.familyId : 0;
       this.pageName = 'Change Password';
       this.showMain = false;
       this.showChangePassword = true;
@@ -274,10 +273,14 @@ export class SettingsMainPage implements OnInit {
         this.logout();
       }
     } else if (role === 'back') {
-      this.pageName = '';
-      this.showMain = true;
-      this.showChangePassword = false;
-      this.showNotificationSettings = false;
+      if (this.familyIdFromFamilyPage) {
+        this.route.navigate(['/family-page-main'])
+      } else {
+        this.pageName = '';
+        this.showMain = true;
+        this.showChangePassword = false;
+        this.showNotificationSettings = false;
+      }
     } 
   }
 

@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <div class="w-full">
+    <div class="flex flex-row justify-start mb-1">
+      <p class="text-base font-bold">Upload receipt here</p>
+    </div>
+    <div class="bg-white p-3 rounded">
+      <input
+        class="w-full rounded text-base hidden"
+        type="file"
+        name="image_for_reason"
+        id="image_for_reason"
+        accept="image/*"
+        (change)="uploadReceipt($event)"
+      />
+      <label
+        class="w-full"
+        [ngClass]="selectedFileName ? 'text-black' : 'text-white'"
+        for="image_for_reason"
+      >
+        {{ selectedFileName ? selectedFileName : "Choose file receipt" }}
+        <!-- Update label text -->
+      </label>
+    </div>
+  </div>
+  <app-submit-button
+    [text]="'Send'"
+    [extraClass]="
+      'bg-[var(--ion-color-primary)] text-white p-2 w-24 rounded border border-black font-bold mt-2'
+    "
+    (click)="onSubmitReceipt()"
+  ></app-submit-button>
+</div>

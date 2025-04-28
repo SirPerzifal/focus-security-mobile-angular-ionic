@@ -1,80 +1,145 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Contractors'" [text_second]="'Detail history'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Contractors'"
+    [text_second]="'Detail history'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="backToPrevPage()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="backToPrevPage()"
+    ></ion-icon>
   </div>
   <div class="flex flex-col relative mx-4 mb-24">
     <div class="flex flex-row w-full">
       <div class="flex flex-col w-full">
         <div class="w-full mt-2">
-          <div [class]="historyData.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'">
+          <div
+            [class]="historyData.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded-lg flex flex-col justify-between w-full mb-1'"
+          >
             <div class="text-base">
-              <div class="capitalize text-base font-bold mb-2">{{historyData.purpose === 'Visiting' ? historyData.visitor_name : historyData.vehicle_number}}</div>
+              <div class="capitalize text-base font-bold mb-2">
+                {{historyData.purpose === 'Visiting' ? historyData.visitor_name
+                : historyData.vehicle_number}}
+              </div>
               <table>
                 <tr class="h-6">
-                  <td class="w-[60%]  font-bold">Purpose</td>
+                  <td class="w-[60%] font-bold">Purpose</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.purpose || '-' }}</td> <!-- Menampilkan '-' jika purpose kosong -->
+                  <td>{{ historyData.purpose || '-' }}</td>
+                  <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6" *ngIf="historyData.purpose === 'Delivery'">
-                  <td class="w-[60%]  font-bold">Delivery Type</td>
+                  <td class="w-[60%] font-bold">Delivery Type</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.delivery_type || '-' }}</td> <!-- Menampilkan '-' jika delivery_type kosong -->
+                  <td>{{ historyData.delivery_type || '-' }}</td>
+                  <!-- Menampilkan '-' jika delivery_type kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Drop Off' || historyData.purpose === 'Pick Up'">
-                  <td class="w-[60%]  font-bold">Mode of Vehicle</td>
+                <tr
+                  class="h-6"
+                  *ngIf="historyData.purpose === 'Drop Off' || historyData.purpose === 'Pick Up'"
+                >
+                  <td class="w-[60%] font-bold">Mode of Vehicle</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.vehicle_type || '-' }}</td> <!-- Menampilkan '-' jika vehicle_type kosong -->
-                </tr>
-                <tr class="h-6">
-                  <td class="w-[60%]  font-bold">Date Of Visit</td>
-                  <td class="w-[10%]">:</td>
-                  <td>{{ historyData.visitor_date ? (historyData.visitor_date | date: 'dd/MM/yyyy') : '-' }}</td> <!-- Menampilkan '-' jika visitor_date kosong -->
-                </tr>
-                <tr class="h-6">
-                  <td class="w-[60%]  font-bold">Entry Time</td>
-                  <td class="w-[10%]">:</td>
-                  <td>{{ historyData.visitor_entry_time || '-' }}</td> <!-- Menampilkan '-' jika visitor_entry_time kosong -->
+                  <td>{{ historyData.vehicle_type || '-' }}</td>
+                  <!-- Menampilkan '-' jika vehicle_type kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td class="w-[60%]  font-bold">Exit Time</td>
+                  <td class="w-[60%] font-bold">Date Of Visit</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.visitor_exit_time || '-' }}</td> <!-- Menampilkan '-' jika visitor_exit_time kosong -->
+                  <td>
+                    {{ historyData.visitor_date ? (historyData.visitor_date |
+                    date: 'dd/MM/yyyy') : '-' }}
+                  </td>
+                  <!-- Menampilkan '-' jika visitor_date kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery' ">
-                  <td class="w-[60%]  font-bold">Mode of Entry</td>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Entry Time</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.mode_of_entry || '-' }}</td> <!-- Menampilkan '-' jika mode_of_entry kosong -->
+                  <td>{{ historyData.visitor_entry_time || '-' }}</td>
+                  <!-- Menampilkan '-' jika visitor_entry_time kosong -->
+                </tr>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Exit Time</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.visitor_exit_time || '-' }}</td>
+                  <!-- Menampilkan '-' jika visitor_exit_time kosong -->
+                </tr>
+                <tr
+                  class="h-6"
+                  *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery' "
+                >
+                  <td class="w-[60%] font-bold">Mode of Entry</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.mode_of_entry || '-' }}</td>
+                  <!-- Menampilkan '-' jika mode_of_entry kosong -->
                 </tr>
                 <tr class="h-6" *ngIf="historyData.mode_of_entry !== 'Walk In'">
-                  <td class="w-[60%]  font-bold">Vehicle No</td>
+                  <td class="w-[60%] font-bold">Vehicle No</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.vehicle_number || '-' }}</td> <!-- Menampilkan '-' jika vehicle_number kosong -->
+                  <td>{{ historyData.vehicle_number || '-' }}</td>
+                  <!-- Menampilkan '-' jika vehicle_number kosong -->
                 </tr>
                 <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
-                  <td class="w-[60%]  font-bold">Point of Entry</td>
+                  <td class="w-[60%] font-bold">Point of Entry</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.point_of_entry || '-' }}</td> <!-- Menampilkan '-' jika point_of_entry kosong -->
+                  <td>{{ historyData.point_of_entry || '-' }}</td>
+                  <!-- Menampilkan '-' jika point_of_entry kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'">
-                  <td class="w-[60%]  font-bold">Mobile No</td>
+                <tr
+                  class="h-6"
+                  *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'"
+                >
+                  <td class="w-[60%] font-bold">Mobile No</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.mobile_number || '-' }}</td> <!-- Menampilkan '-' jika mobile_number kosong -->
+                  <td>{{ historyData.mobile_number || '-' }}</td>
+                  <!-- Menampilkan '-' jika mobile_number kosong -->
                 </tr>
               </table>
             </div>
-            <div class="w-full flex flex-row justify-around mt-4 space-x-1" *ngIf="historyData.banned">
-              <app-submit-button [text]="'Reinvite'" [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"></app-submit-button>
-              <app-submit-button [text]="'Reinstate'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'" (click)="showAlertButtons('Reinstate', 'history-alert')"></app-submit-button>
-              <app-submit-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"></app-submit-button>
+            <div
+              class="w-full flex flex-row justify-around mt-4 space-x-1"
+              *ngIf="historyData.banned"
+            >
+              <app-submit-button
+                [text]="'Reinvite'"
+                [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+              ></app-submit-button>
+              <app-submit-button
+                [text]="'Reinstate'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                (click)="showAlertButtons('Reinstate', 'history-alert')"
+              ></app-submit-button>
+              <app-submit-button
+                [text]="'Call'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+              ></app-submit-button>
             </div>
-            <div class="w-full flex flex-row justify-around mt-4 space-x-1" *ngIf="!historyData.banned">
-              <app-submit-button [text]="'Reinvite'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'" *ngIf="historyData.purpose === 'Visiting'" (click)="reinviteModal(historyData)"></app-submit-button>
-              <app-submit-button [text]="'Ban'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'" (click)="showAlertButtons('Ban', 'history-alert alert-banned')" *ngIf="historyData.purpose === 'Visiting'"></app-submit-button>
-              <app-submit-button [text]="'Call'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'" *ngIf="historyData.purpose !== 'Drop Off'"></app-submit-button>
+            <div
+              class="w-full flex flex-row justify-around mt-4 space-x-1"
+              *ngIf="!historyData.banned"
+            >
+              <app-submit-button
+                [text]="'Reinvite'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                *ngIf="historyData.purpose === 'Visiting'"
+                (click)="reinviteModal(historyData)"
+              ></app-submit-button>
+              <app-submit-button
+                [text]="'Ban'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                (click)="showAlertButtons('Ban', 'history-alert alert-banned')"
+                *ngIf="historyData.purpose === 'Visiting'"
+              ></app-submit-button>
+              <app-submit-button
+                [text]="'Call'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                *ngIf="historyData.purpose !== 'Drop Off'"
+              ></app-submit-button>
             </div>
           </div>
         </div>
@@ -82,7 +147,11 @@
     </div>
   </div>
 
-  <ion-modal id="upload-reason-ban-modal" [isOpen]="isModalReasonBanOpen" (didDismiss)="isModalReasonBanOpen = false">
+  <ion-modal
+    id="upload-reason-ban-modal"
+    [isOpen]="isModalReasonBanOpen"
+    (didDismiss)="isModalReasonBanOpen === false"
+  >
     <ng-template>
       <div class="wrapper">
         <div class="w-full">
@@ -90,9 +159,22 @@
             <p class="text-base font-bold">Image for Banning</p>
           </div>
           <div class="bg-white p-3 rounded">
-            <input class="w-full rounded text-base hidden" type="file" name="image_for_reason" id="image_for_reason" (change)="onFileChange($event)" accept="image/*">
-            <label class="w-full" [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'" for="image_for_reason">
-              {{ selectedFileName ? selectedFileName : 'Upload Image for Banning' }} <!-- Update label text -->
+            <input
+              class="w-full rounded text-base hidden"
+              type="file"
+              name="image_for_reason"
+              id="image_for_reason"
+              (change)="onFileChange($event)"
+              accept="image/*"
+            />
+            <label
+              class="w-full"
+              [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'"
+              for="image_for_reason"
+            >
+              {{ selectedFileName ? selectedFileName : 'Upload Image for
+              Banning' }}
+              <!-- Update label text -->
             </label>
           </div>
         </div>
@@ -100,35 +182,82 @@
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Reason for Banning</p>
           </div>
-          <textarea id="reason_ban_entry_message" placeholder="Type Your Reason for Banning"
+          <textarea
+            id="reason_ban_entry_message"
+            placeholder="Type Your Reason for Banning"
             class="!border-none w-full rounded py-2 px-3 h-20 text-base"
-            type="text" name="reasonForbanning" [(ngModel)]="formData.reason">
+            type="text"
+            name="reasonForbanning"
+            [(ngModel)]="formData.reason"
+          >
           </textarea>
         </div>
-        <app-submit-button [text]="'Send'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-24 rounded border border-black font-bold'" (click)="onSubmitReasonBan()"></app-submit-button>
+        <app-submit-button
+          [text]="'Send'"
+          [extraClass]="'bg-gray-300 text-gray-800 p-2 w-24 rounded border border-black font-bold'"
+          (click)="onSubmitReasonBan()"
+        ></app-submit-button>
       </div>
     </ng-template>
   </ion-modal>
-  <ion-modal id="reinvite-visitor-modal" [isOpen]="isModalReinviteOpen" (didDismiss)="isModalReinviteOpen = false">
+  <ion-modal
+    id="reinvite-visitor-modal"
+    [isOpen]="isModalReinviteOpen"
+    (didDismiss)="isModalReinviteOpen === false"
+  >
     <ng-template>
       <div class="wrapper">
         <div id="form" class="flex flex-col w-full mt-4">
-          <app-input-component [id]="'choose_entry_date_field'" [type]="'date'" [typeAction]="'Choose'" [labelParent]="'Entry Details'" [labelChild1]="'Entry Date'" [labelChild2]="'Entry date'" (eventEmitter)="onDateOfInviteChange($event)" [value]="formattedDate" [minDate]="minDate"></app-input-component>
+          <app-input-component
+            [id]="'choose_entry_date_field'"
+            [type]="'date'"
+            [typeAction]="'Choose'"
+            [labelParent]="'Entry Details'"
+            [labelChild1]="'Entry Date'"
+            [labelChild2]="'Entry date'"
+            (eventEmitter)="onDateOfInviteChange($event)"
+            [value]="formattedDate"
+            [minDate]="minDate"
+          ></app-input-component>
           <div class="flex flex-row justify-between my-2 w-full">
-            <app-radio-check-input-case [type]="'radio'" [id]="'one_time_entry'" [name]="'entry'" [value]="'one_time_entry'" [checkedText]="this.dataForReinvite.entry_type === 'one_time_entry'" [text]="'One-Time Entry'" (valueEmit)="onEntryTypeChange($event)"></app-radio-check-input-case>
-            <app-radio-check-input-case [type]="'radio'"  [id]="'multiple_entry'" [name]="'entry'" [value]="'multiple_entry'" [checkedText]="this.dataForReinvite.entry_type === 'multiple_entry'" [text]="'Multiple Entry'" (valueEmit)="onEntryTypeChange($event)"></app-radio-check-input-case>
+            <app-radio-check-input-case
+              [type]="'radio'"
+              [id]="'one_time_entry'"
+              [name]="'entry'"
+              [value]="'one_time_entry'"
+              [checkedText]="this.dataForReinvite.entry_type === 'one_time_entry'"
+              [text]="'One-Time Entry'"
+              (valueEmit)="onEntryTypeChange($event)"
+            ></app-radio-check-input-case>
+            <app-radio-check-input-case
+              [type]="'radio'"
+              [id]="'multiple_entry'"
+              [name]="'entry'"
+              [value]="'multiple_entry'"
+              [checkedText]="this.dataForReinvite.entry_type === 'multiple_entry'"
+              [text]="'Multiple Entry'"
+              (valueEmit)="onEntryTypeChange($event)"
+            ></app-radio-check-input-case>
           </div>
-          <app-input-component [id]="'type_invitation_title'" [type]="'text'" [typeAction]="''" [labelParent]="'Invitation Details'" [labelChild1]="'Title of Invitation'" [labelChild2]="''" (eventEmitter)="entryTitleChange($event)"></app-input-component>
+          <app-input-component
+            [id]="'type_invitation_title'"
+            [type]="'text'"
+            [typeAction]="''"
+            [labelParent]="'Invitation Details'"
+            [labelChild1]="'Title of Invitation'"
+            [labelChild2]="''"
+            (eventEmitter)="entryTitleChange($event)"
+          ></app-input-component>
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Message for Invitation</p>
             </div>
-            <textarea 
-              id="visitor_entry_message" 
+            <textarea
+              id="visitor_entry_message"
               placeholder=""
               class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
-              type="text" 
-              [(ngModel)]="dataForReinvite.entry_message" 
+              type="text"
+              [(ngModel)]="dataForReinvite.entry_message"
               name="entryMessage"
             ></textarea>
           </div>
@@ -138,7 +267,8 @@
               <app-submit-button
                 [text]="'Next'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-                (click)="onSubmitNext()">
+                (click)="onSubmitNext()"
+              >
               </app-submit-button>
             </div>
           </div>

@@ -1,23 +1,43 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Raise A Request'" [text_second]="'Coach Registration'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Raise A Request'"
+    [text_second]="'Coach Registration'"
+  ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-raise-a-request']"
+    ></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
     <div class="w-full mt-1">
       <div class="flex flex-row justify-start mb-1">
-        <p class="text-base font-bold text-start">What purpose you applying this?</p>
+        <p class="text-base font-bold text-start">
+          What purpose you applying this?
+        </p>
       </div>
       <div class="flex flex-row">
-        <input type="radio" id="new_application_coach" name="for_what" (change)="onOptionChange('new_application_coach')"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+        <input
+          type="radio"
+          id="new_application_coach"
+          name="for_what"
+          (change)="onOptionChange('new_application_coach')"
+          class="mr-1 accent-black text-[var(--ion-color-primary)] text-base"
+        />
         <label for="new_application_coach"><b>New Application</b></label>
-        <input type="radio" id="deactive_a_coach" name="for_what" (change)="onOptionChange('deactive_a_coach')"
-          class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base">
-        <label for="deactive_a_coach"><b>Deactive a coach</b></label>
+        <input
+          type="radio"
+          id="deactive_a_coach"
+          name="for_what"
+          (change)="onOptionChange('deactive_a_coach')"
+          class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base"
+        />
+        <label for="deactive_a_coach"><b>Deactive coach</b></label>
       </div>
     </div>
 
@@ -29,9 +49,11 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Name</p>
             </div>
-            <app-text-input [id]="'name'"
+            <app-text-input
+              [id]="'name'"
               [placeholder]="'Type Your Name'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
               [(ngModel)]="formData.coach_name"
             >
@@ -43,9 +65,11 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Contact Number</p>
             </div>
-            <app-text-input [id]="'contact_number'"
+            <app-text-input
+              [id]="'contact_number'"
               [placeholder]="'Type Your Contact Number'"
-              [customClasses]="{'w-full':true}" [type]="'number'"
+              [customClasses]="{'w-full':true}"
+              [type]="'number'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
               [(ngModel)]="formData.contact_number"
             >
@@ -57,11 +81,31 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Sex</p>
             </div>
-            <select id="sex" (change)="onCoachSexChange($event)" placeholder="Sex" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]">
+            <select
+              id="sex"
+              (change)="onCoachSexChange($event)"
+              placeholder="Sex"
+              class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+            >
               <option selected disabled hidden>Choose coach sex</option>
-              <option [selected]="this.formData.coach_sex === 'male'" value="male">Male</option>
-              <option [selected]="this.formData.coach_sex === 'female'" value="female">Female</option>
-              <option [selected]="this.formData.coach_sex === 'not_say'" value="not_say">Rather not say</option>
+              <option
+                [selected]="this.formData.coach_sex === 'male'"
+                value="male"
+              >
+                Male
+              </option>
+              <option
+                [selected]="this.formData.coach_sex === 'female'"
+                value="female"
+              >
+                Female
+              </option>
+              <option
+                [selected]="this.formData.coach_sex === 'not_say'"
+                value="not_say"
+              >
+                Rather not say
+              </option>
             </select>
           </div>
         </div>
@@ -71,14 +115,33 @@
               <p class="text-base font-bold">Nationality</p>
             </div>
             <div class="flex flex-col w-full">
-              <select id="nationality" placeholder="nationality" (change)="onCoachNationalityChange($event)" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1">
-                <option selected disabled hidden>Choose coach nationality</option>
-                <option [selected]="this.formData.nationality === 'Singaporean'" value="Singaporean">Singaporean</option>
-                <option [selected]="this.formData.nationality !== 'Singaporean' && ''" value="others">Others</option>
+              <select
+                id="nationality"
+                placeholder="nationality"
+                (change)="onCoachNationalityChange($event)"
+                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1"
+              >
+                <option selected disabled hidden>
+                  Choose coach nationality
+                </option>
+                <option
+                  [selected]="this.formData.nationality === 'Singaporean'"
+                  value="Singaporean"
+                >
+                  Singaporean
+                </option>
+                <option
+                  [selected]="this.formData.nationality !== 'Singaporean' && ''"
+                  value="others"
+                >
+                  Others
+                </option>
               </select>
-              <app-text-input [id]="'nationality'"
+              <app-text-input
+                [id]="'nationality'"
                 [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}" [type]="'text'"
+                [customClasses]="{'w-full':true}"
+                [type]="'text'"
                 [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
                 *ngIf="otherNationality === 'others'"
                 (keyup)="onKeyup($event)"
@@ -93,11 +156,12 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Organization affiliate with</p>
             </div>
-            <app-text-input [id]="'organization_affiliate_with'"
+            <app-text-input
+              [id]="'organization_affiliate_with'"
               [placeholder]="'Type organization affiliate with'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-
               [(ngModel)]="formData.affliated_organization"
             >
             </app-text-input>
@@ -108,26 +172,29 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Coaching reg number</p>
             </div>
-            <app-text-input [id]="'coaching_reg_number'"
+            <app-text-input
+              [id]="'coaching_reg_number'"
               [placeholder]="'Type your coaching number'"
-              [customClasses]="{'w-full':true}" [type]="'text'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-
               [(ngModel)]="formData.coaching_reg_number"
             >
             </app-text-input>
           </div>
         </div>
-        <button 
+        <button
           (click)="onNextClick('next')"
-          class="bg-[var(--ion-color-primary)] text-white mt-5 w-full text-base rounded h-10 font-bold">
+          class="bg-[var(--ion-color-primary)] text-white mt-5 w-full text-base rounded h-10 font-bold"
+        >
           Next
         </button>
       </div>
       <div id="next-form" *ngIf="showNextForm" @fadeInOut>
-        <button 
+        <button
           (click)="onNextClick('back')"
-          class="bg-[var(--ion-color-primary)] text-white mt-2 w-full text-base rounded h-10 font-bold">
+          class="bg-[var(--ion-color-primary)] text-white mt-2 w-full text-base rounded h-10 font-bold"
+        >
           Back
         </button>
         <div class="flex flex-col justify-between mt-2">
@@ -136,14 +203,23 @@
               <p class="text-base font-bold">Type of coaching</p>
             </div>
             <div class="flex flex-col w-full">
-              <select id="type_of_coaching" (change)="onCoachingTypeChange($event)" placeholder="type_of_coaching" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1">
+              <select
+                id="type_of_coaching"
+                (change)="onCoachingTypeChange($event)"
+                placeholder="type_of_coaching"
+                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1"
+              >
                 <option selected disabled hidden>Choose type coaching</option>
-                <option *ngFor="let toc of coachingType" [value]="toc.name">{{ toc.name }}</option>
+                <option *ngFor="let toc of coachingType" [value]="toc.name">
+                  {{ toc.name }}
+                </option>
                 <option value="others_coaching_type">Others</option>
               </select>
-              <app-text-input [id]="'type_of_coaching'"
+              <app-text-input
+                [id]="'type_of_coaching'"
                 [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}" [type]="'text'"
+                [customClasses]="{'w-full':true}"
+                [type]="'text'"
                 [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
                 *ngIf="otherCoachType === 'others_coaching_type'"
                 [(ngModel)]="formData.type_of_coaching"
@@ -158,14 +234,26 @@
               <p class="text-base font-bold">Facility Required</p>
             </div>
             <div class="flex flex-col w-full">
-              <select id="facility_required" (change)="onCoachingFacilityChange($event)" placeholder="facility_required" class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1">
+              <select
+                id="facility_required"
+                (change)="onCoachingFacilityChange($event)"
+                placeholder="facility_required"
+                class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1"
+              >
                 <option selected disabled hidden>Facility Required</option>
-                <option *ngFor="let fri of facilityRequired" [value]="fri.facility_id">{{ fri.facility_name }}</option>
+                <option
+                  *ngFor="let fri of facilityRequired"
+                  [value]="fri.facility_id"
+                >
+                  {{ fri.facility_name }}
+                </option>
                 <option value="others_facility">Others</option>
               </select>
-              <app-text-input [id]="'facility_required'"
+              <app-text-input
+                [id]="'facility_required'"
                 [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}" [type]="'text'"
+                [customClasses]="{'w-full':true}"
+                [type]="'text'"
                 [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
                 *ngIf="otherFacility === 'others_facility'"
                 [(ngModel)]="formData.facility_required_other"
@@ -179,9 +267,11 @@
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Expected Start Date</p>
             </div>
-            <app-text-input [id]="'start_date'"
+            <app-text-input
+              [id]="'start_date'"
               [placeholder]="'Choose start date'"
-              [customClasses]="{'w-full':true}" [type]="'date'"
+              [customClasses]="{'w-full':true}"
+              [type]="'date'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
               [min]="dateNow"
               [(ngModel)]="formData.expected_start_date"
@@ -192,11 +282,15 @@
         <div class="flex flex-col justify-between mt-2">
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Duration per Session (in Minute)</p>
+              <p class="text-base font-bold">
+                Duration per Session (in Minute)
+              </p>
             </div>
-            <app-text-input [id]="'duration_session'"
+            <app-text-input
+              [id]="'duration_session'"
               [placeholder]="'Duration in minutes'"
-              [customClasses]="{'w-full':true}" [type]="'number'"
+              [customClasses]="{'w-full':true}"
+              [type]="'number'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
               [(ngModel)]="formData.duration_per_session"
             >
@@ -207,31 +301,53 @@
         <div class="w-full mt-2" *ngIf="amountType.isRequirePayment">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Amount</p>
-            <select name="select_show_amount" id="select_show_amount" (change)="onShowAmountChange($event)" class="ml-1">
+            <select
+              name="select_show_amount"
+              id="select_show_amount"
+              (change)="onShowAmountChange($event)"
+              class="ml-1"
+            >
               <option value="total">Total</option>
               <option value="untaxed">Untaxed</option>
               <option value="taxed">Taxed</option>
             </select>
           </div>
-          <app-text-input [id]="'amount_payable'"
+          <app-text-input
+            [id]="'amount_payable'"
             [placeholder]="'S$____'"
             [(ngModel)]="amountPayable"
-            [customClasses]="{'w-full':true}" [type]="'text'"
+            [customClasses]="{'w-full':true}"
+            [type]="'text'"
             [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-            [isReadonly]="true">
+            [isReadonly]="true"
+          >
           </app-text-input>
         </div>
 
         <div class="flex flex-row mt-4 text-base">
           <label class="mr-1 rounded font-bold flex items-center">
-            <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
-            <p class="text-start">I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above</p>
+            <input
+              type="checkbox"
+              [checked]="agreementChecked"
+              [(ngModel)]="agreementChecked"
+              [ngModelOptions]="{standalone: true}"
+              class="text-[var(--ion-color-primary)] rounded mr-1.5"
+            />
+            <p class="text-start">
+              I agree to the&nbsp;<u
+                class="text-blue-400"
+                (click)="presentModalAgreement()"
+                >terms and condition</u
+              >&nbsp;above
+            </p>
           </label>
         </div>
-        <button 
+        <button
           [disabled]="!agreementChecked"
-          [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-          class="mt-2 w-full text-base rounded h-10 font-bold" (click)="processSubmit()">
+          [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
+          class="mt-2 w-full text-base rounded h-10 font-bold"
+          (click)="processSubmit()"
+        >
           Submit for Approval
         </button>
       </div>
@@ -240,27 +356,61 @@
     <!-- deactive a coach -->
     <div class="w-full mt-2" *ngIf="selectedOption === 'deactive_a_coach'">
       <div class="flex flex-row mt-2">
-        <table class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white">
+        <table
+          class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+        >
           <thead>
             <tr class="bg-gray-200 text-gray-700">
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Coach Name</th>
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Purpose</th>
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Deactive</th>
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Coach Name
+              </th>
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Purpose
+              </th>
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Deactive
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let coach of expectedCoach">
-              <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ coach.registered_coach }}</td>
-              <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"> {{ coach.purpose }} </td>
-              <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"><u class="text-red-500" (click)="showAlertButtons('Are you sure to deactive this coach?', 'history-alert alert-banned', coach.id)">Deactive</u></td>
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                {{ coach.registered_coach }}
+              </td>
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                {{ coach.purpose }}
+              </td>
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                <u
+                  class="text-red-500"
+                  (click)="showAlertButtons('Are you sure to deactive this coach?', 'history-alert alert-banned', coach.id)"
+                  >Deactive</u
+                >
+              </td>
             </tr>
           </tbody>
         </table>
+        <ng-container *ngIf="expectedCoach.length === 0">
+          <p class="text-gray-700">
+            You have no registered coach tag yet.
+            <u
+              (click)="onOptionChange('new_application_coach')"
+              class="text-blue-500 underline"
+              >Make one now</u
+            >
+            or wait until approve
+          </p>
+        </ng-container>
       </div>
     </div>
   </div>
   <div class="h-96" *ngIf="extend_mb === true"></div>
-
 </ion-content>
 <ion-footer>
   <app-botton-nav-bar></app-botton-nav-bar>

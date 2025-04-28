@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { RaiseARequestHistoryPage } from './raise-a-request-history.page';
+import { RaiseRequestFormPagePage } from './raise-request-form-page.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: RaiseARequestHistoryPage
+    component: RaiseRequestFormPagePage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class RaiseARequestHistoryPageRoutingModule {}
+export class RaiseRequestFormPagePageRoutingModule {}

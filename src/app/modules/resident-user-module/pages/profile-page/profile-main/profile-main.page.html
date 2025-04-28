@@ -108,7 +108,10 @@
                 <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_type}}</p>
-                <p class="cw-3:text[13px]">
+                <p
+                  *ngIf="estate.block_name && estate.unit_name"
+                  class="cw-3:text[13px]"
+                >
                   {{estate.block_name}}, {{estate.unit_name}}
                 </p>
               </div>

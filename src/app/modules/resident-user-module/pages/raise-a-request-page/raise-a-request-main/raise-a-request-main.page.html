@@ -1,13 +1,166 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>raise-a-request-main</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page
+    [text]="'Raise a Request'"
+    [text_second]="subPageName"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">raise-a-request-main</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-home-page']"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs
+        [buttons]="navButtonsMain"
+        (eventEmitter)="onClickNavTabs($event)"
+      ></app-nav-tabs>
+    </div>
+    <div
+      *ngIf="subPageName === 'New Request'"
+      class="flex items-center justify-center flex-col"
+      @fadeInOut
+    >
+      <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-1">
+        <div *ngFor="let sb of squareButton">
+          <app-square-button
+            [name]="sb.name"
+            [srcImage]="sb.src"
+            [click]="true"
+            (eventEmitter)="onClickSquareBottom($event)"
+          >
+          </app-square-button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="subPageName === 'History Request'" @fadeInOut>
+      <div class="space-y-4 w-full mt-3">
+        <div class="w-full mt-4 mb-3 flex flex-row items-center">
+          <h2 class="w-full max-w-24 font-bold text-lg text-center">
+            Filter by
+          </h2>
+          <select
+            id="walk_in_unit"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]"
+            [(ngModel)]="selectedApplicationType"
+            (change)="onApplicationTypeChange()"
+          >
+            <option disabled hidden value="">Type of Application</option>
+            <option value="Access cards Application.">
+              Access Card Application
+            </option>
+            <option value="Overnight parking records Application.">
+              Overnight Parking
+            </option>
+            <option value="Bicycle tags Application.">Bicycle Tag</option>
+            <option value="Registered coaches Application.">
+              Coach Registration
+            </option>
+            <!-- <option value="Request schedules Application.">Request schedules Application</option> -->
+            <option value="Move In / Move Out">Move In / Move Out</option>
+            <!-- <option value="Move Out">Move Out</option> -->
+            <option value="Renovation">Renovation</option>
+            <option value="Pets Application.">Pet Registration</option>
+            <option value="Offences Application.">Offences Application</option>
+          </select>
+        </div>
+        <div
+          *ngIf="isLoading"
+          class="flex justify-center items-center h-full !mt-56"
+        >
+          <ion-spinner name="circular"></ion-spinner>
+        </div>
+        <div *ngIf="!isLoading" class="space-y-2">
+          <ng-container *ngFor="let allData of filteredDatas; let i = index">
+            <div
+              [ngClass]="{
+              'bg-green-100': allData.states === 'Approved',
+              'bg-[#E3787E]': allData.states === 'Rejected' || allData.states === 'Cancelled',
+              'bg-[#F8F1BA]': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+            }"
+              class="rounded-2xl p-5 mt-4 w-full flex flex-col"
+            >
+              <div class="flex flex-row items-center mt-1 mb-2">
+                <ng-container
+                  *ngIf="allData.states === 'approved' || allData.states === 'Approved'"
+                >
+                  <ion-icon
+                    name="checkmark"
+                    class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p
+                    class="text-[var(--ion-color-primary)] font-bold text-base"
+                  >
+                    Approved
+                  </p>
+                </ng-container>
+                <ng-container
+                  *ngIf="allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued'"
+                >
+                  <ion-icon
+                    name="alert"
+                    class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p class="text-yellow-500 font-bold text-base">
+                    {{ allData.states ? allData.states : allData.appeal_status
+                    }}
+                  </p>
+                </ng-container>
+                <ng-container
+                  *ngIf="allData.states === 'rejected' || allData.states === 'Rejected' || allData.states === 'cancelled' || allData.states === 'Cancelled'"
+                >
+                  <ion-icon
+                    name="close"
+                    class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p class="text-red-700 font-bold text-base">Rejected</p>
+                </ng-container>
+              </div>
+              <h2
+                [ngClass]="{
+                'text-green-500': allData.states === 'Approved',
+                'text-red-700': allData.states === 'Rejected' || allData.states === 'Cancelled',
+                'text-yellow-400': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+              }"
+                class="flex flex-col text-base font-bold mb-2 items-start text-start"
+              >
+                {{ allData.title }}
+              </h2>
+              <div class="w-full">
+                <table class="w-full">
+                  <tr
+                    class="text-base text-black"
+                    *ngFor="let field of fieldMapping[allData.title]"
+                  >
+                    <td
+                      class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                    >
+                      {{ field }}
+                    </td>
+                    <td
+                      class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                    >
+                      :
+                    </td>
+                    <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                      {{ getRequestValue(allData, field) }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

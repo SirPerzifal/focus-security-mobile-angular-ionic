@@ -38,19 +38,6 @@
       </div>
     </div>
 
-    <!-- <div
-      *ngIf="pageForWhat === 'editData'"
-      class="w-full mt-2 flex items-center justify-center"
-    >
-      <img
-        alt="Profile picture of Maria"
-        class="h-24 w-24 rounded-full"
-        height="50"
-        [src]="formData.image_family ? 'data:image/png;base64,'+ formData.image_family : 'https://placehold.co/600x400?text=' + formData.full_name.charAt(0)"
-        width="50"
-      />
-    </div> -->
-
     <app-input-component
       [id]="'type_family_name'"
       [type]="'text'"
@@ -91,24 +78,37 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-sm font-bold">Family Image Profile</p>
       </div>
-      <div
-        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
-      >
-        <input
-          class="w-full rounded text-base hidden"
-          type="file"
-          name="family_image_profile"
-          (change)="onUploadImageProfile($event)"
-          id="family_image_profile"
-        />
-        <label
-          class="w-full text-start"
-          [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-white'"
-          for="family_image_profile"
+      <div class="flex flex-row gap-2">
+        <!-- File selection option -->
+        <div
+          class="bg-white p-3 h-12 rounded border border-gray-500 flex-1 flex flex-row text-start items-center justify-start"
         >
-          {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Upload
-          image profile' }}
-        </label>
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="family_image_profile"
+            (change)="onUploadImageProfile($event)"
+            id="family_image_profile"
+            accept="image/*"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-gray-500'"
+            for="family_image_profile"
+          >
+            {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Choose
+            image' }}
+          </label>
+        </div>
+
+        <!-- Camera capture button -->
+        <button
+          class="bg-[var(--ion-color-primary)] text-white p-3 h-12 rounded border border-gray-500 flex items-center justify-center"
+          (click)="openCamera()"
+        >
+          <ion-icon name="camera" class="mr-1"></ion-icon>
+          Camera
+        </button>
       </div>
     </div>
 
@@ -191,7 +191,7 @@
         />
         <label
           class="w-full text-start"
-          [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-white'"
+          [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
           for="helper_work_permit"
         >
           {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
@@ -219,7 +219,7 @@
           />
           <label
             class="w-full text-start"
-            [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-white'"
+            [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-gray-500'"
             for="tenants"
           >
             {{ selectedNameTenantsWorkPermit ? selectedNameTenantsWorkPermit :
@@ -308,6 +308,8 @@
       </app-submit-button>
     </div>
   </div>
+
+  <!-- Modals remain the same -->
   <ion-modal
     id="choose-inheritence-modal"
     [isOpen]="isModalFamilyEditOpen"
@@ -371,11 +373,15 @@
           >
             Confirm
           </button>
-          <!-- <button class="mt-4 bg-[#D0D0D0] text-black rounded p-3 w-28" (click)="isModalAddFamilyMessageOpen = false">Close</button> -->
         </div>
       </div>
     </ng-template>
   </ion-modal>
+  <!-- <ion-modal [isOpen]="isModalAddFamilyMessageOpen" (didDismiss)="isModalAddFamilyMessageOpen === false" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
+    <ng-template>
+      <div class="block">Block of Content</div>
+    </ng-template>
+  </ion-modal> -->
 </ion-content>
 
 <ion-footer>

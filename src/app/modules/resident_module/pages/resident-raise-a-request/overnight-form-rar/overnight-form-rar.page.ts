@@ -155,7 +155,7 @@ export class OvernightFormRarPage implements OnInit {
   fetchExpectedVisitors() {
     // console.log(this.unitId);
     
-    this.requestService.getExpectedVisitors(Number(this.unitId)).subscribe(
+    this.requestService.getExpectedVisitors(Number(this.unitId), Number(this.projectid)).subscribe(
       (response) => {
         if (response.result.response_code === 200) {
           // console.log(response);

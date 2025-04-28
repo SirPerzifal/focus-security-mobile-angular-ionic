@@ -1,9 +1,17 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Raise a Request'" [text_second]="'Bicycle Tag Application'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Raise a Request'"
+    [text_second]="'Bicycle Tag Application'"
+  ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start ml-4 mt-2">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/resident-raise-a-request']"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/resident-raise-a-request']"
+    ></ion-icon>
   </div>
 
   <div class="px-5 text-center mb-20">
@@ -12,12 +20,14 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Name of Resident Applying</p>
         </div>
-        <app-text-input [id]="'name_of_resident'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
+        <app-text-input
+          [id]="'name_of_resident'"
+          [customClasses]="{'w-full':true}"
+          [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true"
           [(ngModel)]="userName"
-          >
+        >
         </app-text-input>
       </div>
     </div>
@@ -26,12 +36,14 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Block</p>
         </div>
-        <app-text-input [id]="'block'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
+        <app-text-input
+          [id]="'block'"
+          [customClasses]="{'w-full':true}"
+          [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true"
           [(ngModel)]="block"
-          >
+        >
         </app-text-input>
       </div>
 
@@ -39,12 +51,14 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Unit</p>
         </div>
-        <app-text-input [id]="'unit'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
+        <app-text-input
+          [id]="'unit'"
+          [customClasses]="{'w-full':true}"
+          [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true"
           [(ngModel)]="unit"
-          >
+        >
         </app-text-input>
       </div>
     </div>
@@ -53,28 +67,45 @@
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Contact Number of Resident</p>
       </div>
-      <app-text-input [id]="'phone_number'"
+      <app-text-input
+        [id]="'phone_number'"
         [(ngModel)]="userPhoneNumber"
         [ngModelOptions]="{standalone: true}"
-        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customClasses]="{'w-full':true}"
+        [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-        [isReadonly]="true">
+        [isReadonly]="true"
+      >
       </app-text-input>
     </div>
 
     <div class="w-full mt-2">
       <div class="flex flex-row justify-start mb-1">
-        <p class="text-base font-bold text-start">What purpose you applying this?</p>
+        <p class="text-base font-bold text-start">
+          What purpose you applying this?
+        </p>
       </div>
       <div class="flex flex-row cw-2:flex-col cw-2:space-y-2">
         <div class="flex flex-row items-center">
-          <input type="radio" id="replacement" name="for_what" (change)="onOptionChange('replacement')" [checked]="selectedOption === 'replacement'"
-            class="mr-1 accent-black text-[var(--ion-color-primary)] text-base">
+          <input
+            type="radio"
+            id="replacement"
+            name="for_what"
+            (change)="onOptionChange('replacement')"
+            [checked]="selectedOption === 'replacement'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] text-base"
+          />
           <label for="replacement"><b>Replacement</b></label>
         </div>
         <div class="flex flex-row items-center">
-          <input type="radio" id="new_application" name="for_what" (change)="onOptionChange('new_application')" [checked]="selectedOption === 'new_application'"
-            class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base cw-2:ml-0">
+          <input
+            type="radio"
+            id="new_application"
+            name="for_what"
+            (change)="onOptionChange('new_application')"
+            [checked]="selectedOption === 'new_application'"
+            class="mr-1 accent-black text-[var(--ion-color-primary)] ml-4 text-base cw-2:ml-0"
+          />
           <label for="new_application"><b>New Application</b></label>
         </div>
       </div>
@@ -84,27 +115,62 @@
     <div class="w-full mt-2" *ngIf="selectedOption === 'replacement'">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-base font-bold text-start">Which Tag Would you want a replacement for?</p>
+          <p class="text-base font-bold text-start">
+            Which Tag Would you want a replacement for?
+          </p>
         </div>
-        <div class="flex flex-row mt-1">
-          <table class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[100%] text-sm text-left bg-white">
+        <div class="flex flex-col mt-1">
+          <table
+            class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[100%] text-sm text-left bg-white"
+          >
             <thead>
               <tr class="bg-gray-200 text-gray-700">
-                <th class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"> </th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Tag Number</th>
-                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">Bicycle Brand, Colour</th>
+                <th
+                  class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
+                ></th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Tag Number
+                </th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Bicycle Brand, Colour
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let bicycle of expectedBicycle">
                 <td class="border border-gray-300 px-4 py-2 text-center">
-                  <input id="bicycle_data_{{bicycle.id}}" (change)="onBicycleSelect(bicycle)" name="bicycle" type="radio" class="w-4 h-4 cw-3:w-2 cw-3:h-2">
+                  <input
+                    id="bicycle_data_{{bicycle.id}}"
+                    (change)="onBicycleSelect(bicycle)"
+                    name="bicycle"
+                    type="radio"
+                    class="w-4 h-4 cw-3:w-2 cw-3:h-2"
+                  />
                 </td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ bicycle.bicycle_tag }}</td>
-                <td class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]">{{ bicycle.bicycle_brand }}, {{ bicycle.bicycle_colour }}</td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ bicycle.bicycle_tag }}
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ bicycle.bicycle_brand }}, {{ bicycle.bicycle_colour }}
+                </td>
               </tr>
             </tbody>
           </table>
+          <ng-container *ngIf="expectedBicycle.length === 0">
+            <p class="text-gray-700">
+              You have no bicycle tag yet.
+              <u
+                (click)="onOptionChange('new_application')"
+                class="text-blue-500 underline"
+                >Make one now</u
+              >
+              or wait until approve
+            </p>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -115,9 +181,11 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Type Brand</p>
         </div>
-        <app-text-input [id]="'brand'"
+        <app-text-input
+          [id]="'brand'"
           [placeholder]="'Brand'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customClasses]="{'w-full':true}"
+          [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [(ngModel)]="formData.bicycle_brand"
         >
@@ -127,9 +195,11 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Type Colour</p>
         </div>
-        <app-text-input [id]="'colour'"
+        <app-text-input
+          [id]="'colour'"
           [placeholder]="'Colour'"
-          [customClasses]="{'w-full':true}" [type]="'text'"
+          [customClasses]="{'w-full':true}"
+          [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [(ngModel)]="formData.bicycle_colour"
         >
@@ -139,10 +209,25 @@
         <div class="flex flex-row justify-start mb-1">
           <p class="text-base font-bold">Upload Image</p>
         </div>
-        <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
-          <input class="w-full rounded text-base hidden" type="file" name="image" id="image" (change)="onFileChange($event)" accept="image/*">
-          <label class="w-full" [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'" for="image">
-            {{ selectedFileName ? selectedFileName : 'Upload your bicycle Image' }} <!-- Update label text -->
+        <div
+          class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="image"
+            id="image"
+            (change)="onFileChange($event)"
+            accept="image/*"
+          />
+          <label
+            class="w-full"
+            [ngClass]="(selectedFileName) ? 'text-black' : 'text-gray-400'"
+            for="image"
+          >
+            {{ selectedFileName ? selectedFileName : 'Upload your bicycle Image'
+            }}
+            <!-- Update label text -->
           </label>
         </div>
       </div>
@@ -151,30 +236,50 @@
     <div class="w-full mt-2" *ngIf="amountType.isRequirePayment">
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Amount</p>
-        <select name="select_show_amount" id="select_show_amount" (change)="onShowAmountChange($event)" class="ml-1">
+        <select
+          name="select_show_amount"
+          id="select_show_amount"
+          (change)="onShowAmountChange($event)"
+          class="ml-1"
+        >
           <option value="total">Total</option>
           <option value="untaxed">Untaxed</option>
           <option value="taxed">Taxed</option>
         </select>
       </div>
-      <app-text-input [id]="'amount_payable'"
+      <app-text-input
+        [id]="'amount_payable'"
         [placeholder]="'S$____'"
         [(ngModel)]="amountPayable"
-        [customClasses]="{'w-full':true}" [type]="'text'"
+        [customClasses]="{'w-full':true}"
+        [type]="'text'"
         [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-        [isReadonly]="true">
+        [isReadonly]="true"
+      >
       </app-text-input>
     </div>
 
     <div class="flex flex-row mt-4 text-base">
       <label class="mr-1 rounded font-bold flex items-center">
-        <input type="checkbox" [checked]="agreementChecked" [(ngModel)]="agreementChecked" [ngModelOptions]="{standalone: true}" class="text-[var(--ion-color-primary)] rounded mr-1.5"/>
-        <p class="text-start">I agree to the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()">terms and condition</u>&nbsp;above</p>
+        <input
+          type="checkbox"
+          [checked]="agreementChecked"
+          [(ngModel)]="agreementChecked"
+          [ngModelOptions]="{standalone: true}"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-start">
+          I agree to the&nbsp;<u
+            class="text-blue-400"
+            (click)="presentModalAgreement()"
+            >terms and condition</u
+          >&nbsp;above
+        </p>
       </label>
     </div>
-    <button 
+    <button
       [disabled]="!agreementChecked"
-      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
+      [ngClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
       class="mt-2 w-full text-base rounded h-10 font-bold"
       (click)="processSubmit()"
     >
@@ -182,7 +287,6 @@
     </button>
   </div>
   <div class="h-96" *ngIf="extend_mb === true"></div>
-
 </ion-content>
 <ion-footer>
   <app-botton-nav-bar></app-botton-nav-bar>

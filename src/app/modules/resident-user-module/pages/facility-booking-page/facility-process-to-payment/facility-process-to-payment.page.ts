@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
+
+declare var Stripe: any; // Declare Stripe
 
 interface BookingState {
   type: 'BookingState'; // Tambahkan properti unik
@@ -81,6 +84,7 @@ export class FacilityProcessToPaymentPage implements OnInit {
     public functionMainService: FunctionMainService,
     private mainApiResidentService: MainApiResidentService,
     private alertController: AlertController,
+    private modalController: ModalController
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as State; // Menggunakan union type
@@ -199,6 +203,10 @@ export class FacilityProcessToPaymentPage implements OnInit {
 
   selectPaymentMethod(method: 'card' | 'paynow') {
     this.selectedPaymentMethod = method;
+    if (method === 'card') {
+      const stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK'); // Replace with your actual publishable key
+      this.electricPay(stripe);
+    }
   }
 
   convertToBase64(file: File): Promise<string> {
@@ -295,6 +303,36 @@ export class FacilityProcessToPaymentPage implements OnInit {
       return bookingFeeFix;
     }
     return 0; // Atau nilai default lainnya
+  }
+
+  electricPay(stripe: any) {
+    this.mainApiResidentService.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+      const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
+      if (clientSecret) {
+        this.presentModal(clientSecret, stripe)
+      }
+    })
+  }
+
+  async presentModal(clientSecret: string, stripe: any) {
+    const modal = await this.modalController.create({
+      component: ModalPaymentCustomComponent,
+      cssClass: 'payment-modal',
+      componentProps: {
+        stripe: stripe,
+        clientSecret: clientSecret
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        // console.log(result)
+      } else {
+        return
+      }
+    });
+
+    return await modal.present();
   }
 
   private routerSubscription!: Subscription;

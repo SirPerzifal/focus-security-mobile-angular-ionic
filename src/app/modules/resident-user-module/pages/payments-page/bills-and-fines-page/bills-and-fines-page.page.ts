@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { ModalController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
+import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
+import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
 
 interface payment {
   id: number,
@@ -129,11 +133,13 @@ export class BillsAndFinesPagePage implements OnInit {
 
   constructor(
     private mainApiResidentService: MainApiResidentService,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
     this.loadBills();
+    // this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK');
   }
 
   onClick(event: any) {
@@ -217,10 +223,6 @@ export class BillsAndFinesPagePage implements OnInit {
         }
       })
     })
-  }
-
-  payNow(idPayment: number) {
-    console.log(idPayment);
   }
 
   clearFilter() {
@@ -341,4 +343,93 @@ export class BillsAndFinesPagePage implements OnInit {
     }, {});
   }
 
+  async payNow(paymentId: number) {
+    const modal = await this.modalController.create({
+      component: ModalComponent,
+      cssClass: 'choose-pay-modal',
+      componentProps: {
+        paymentId: paymentId
+      }
+    })
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        this.processPayment(result.data)
+      } else {
+        return
+      }
+    });
+
+    return await modal.present();
+  }
+
+  processPayment(result: any) {
+    if (result[1] === 'electronic') {
+      this.electricPay(result[0])
+    } else {
+      this.manualPay(result[2])
+    }
+  }
+
+  electricPay(stripe: any) {
+    this.mainApiResidentService.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+      const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
+      if (clientSecret) {
+        this.presentModal(clientSecret, stripe)
+      }
+    })
+  }
+
+  async presentModal(clientSecret: string, stripe: any) {
+    const modal = await this.modalController.create({
+      component: ModalPaymentCustomComponent,
+      cssClass: 'payment-modal',
+      componentProps: {
+        stripe: stripe,
+        clientSecret: clientSecret
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        // console.log(result)
+      } else {
+        return
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async manualPay(paymentId: number) {
+    const modal = await this.modalController.create({
+      component: UploadReceiptModalComponent,
+      cssClass: 'upload-receipt-manual-pay',
+      componentProps: {}
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        if (this.showBills) {
+          this.mainApiResidentService.endpointProcess({
+            bills_id: paymentId,
+            payment_proof: result.data
+          }, 'post/manual_pay_bills').subscribe((response: any) => {
+            this.loadBills();
+          })
+        } else if (this.showFines) {
+          this.mainApiResidentService.endpointProcess({
+            fines_id: paymentId,
+            payment_proof: result.data
+          }, 'post/manual_pay_fines').subscribe((response: any) => {
+            this.loadFinesData();
+          })
+        }
+      } else {
+        return
+      }
+    });
+
+    return await modal.present();
+  }
 }

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
+
+declare var Stripe: any; // Declare Stripe
 
 interface Vehicle {
   vehicleId: number,
@@ -43,7 +46,7 @@ export class PaymentFormVehiclePage implements OnInit {
   fromWhere: string = '';
 
   constructor(
-    private router: Router, private mainApiResident: MainApiResidentService, public functionMainService: FunctionMainService, private toastController: ToastController
+    private router: Router, private mainApiResident: MainApiResidentService, public functionMainService: FunctionMainService, private modalController: ModalController
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicleId: number, from: string };
@@ -139,6 +142,10 @@ export class PaymentFormVehiclePage implements OnInit {
 
   selectPaymentMethod(method: 'card' | 'paynow') {
     this.selectedPaymentMethod = method;
+    if (method === 'card') {
+      const stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK'); // Replace with your actual publishable key
+      this.electricPay(stripe);
+    }
   }
 
   onUploadPaymentReceipt(event: any) {
@@ -179,4 +186,34 @@ export class PaymentFormVehiclePage implements OnInit {
       this.isPaymentProcessed = true;
     })
   }
+
+    electricPay(stripe: any) {
+      this.mainApiResident.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+        const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
+        if (clientSecret) {
+          this.presentModal(clientSecret, stripe)
+        }
+      })
+    }
+  
+    async presentModal(clientSecret: string, stripe: any) {
+      const modal = await this.modalController.create({
+        component: ModalPaymentCustomComponent,
+        cssClass: 'payment-modal',
+        componentProps: {
+          stripe: stripe,
+          clientSecret: clientSecret
+        }
+      });
+  
+      modal.onDidDismiss().then((result) => {
+        if (result.data) {
+          // console.log(result)
+        } else {
+          return
+        }
+      });
+  
+      return await modal.present();
+    }
 }
