@@ -313,7 +313,7 @@ export class PickUpPagePage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
-      this.vehicleNumber = event.data.vehicle_number
+      this.vehicleNumber = event.data.vehicle_number ? event.data.vehicle_number : ''
     } 
     console.log(this.nric_value, this.identificationType)
   }

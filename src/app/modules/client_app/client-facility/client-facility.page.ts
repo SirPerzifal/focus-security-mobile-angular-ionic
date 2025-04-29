@@ -21,11 +21,10 @@ export class ClientFacilityPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getUserInfoService.getPreferenceStorage(
-      ['unit',]
-    ).then((value) => {
+    this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
-      this.unit_id = value.unit != null ? value.unit : 1;
+      this.project_config = value.config
+      this.project_id = value.id
     })
     this.loadFacilities()
     this.loadBooking()
@@ -46,6 +45,8 @@ export class ClientFacilityPage implements OnInit {
     });
     
   }
+  project_config: any = []
+  project_id = 0
 
   unit_id = 1
 
@@ -187,7 +188,7 @@ export class ClientFacilityPage implements OnInit {
 
   loadBooking() {
     this.isLoading = true
-    this.clientMainService.getApi({unit_id: this.unit_id}, '/client/get/facility_book').subscribe({
+    this.clientMainService.getApi({}, '/client/get/facility_book').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
@@ -211,7 +212,7 @@ export class ClientFacilityPage implements OnInit {
 
   loadHistoryBooking() {
     this.isLoading = true
-    this.clientMainService.getApi({unit_id: this.unit_id}, '/client/get/booking_history').subscribe({
+    this.clientMainService.getApi({}, '/client/get/booking_history').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)

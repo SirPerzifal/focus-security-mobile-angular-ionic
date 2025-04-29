@@ -13,12 +13,17 @@ export class ClientFacilityBookingDetailPage implements OnInit {
   constructor(private router: Router, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
+    this.functionMain.vmsPreferences().then((value) => {
+      this.project_config = value.config
+    })
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { booking: any };
     if (state) {
       this.bookingData = state.booking
     } 
   }
+
+  project_config: any = []
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {

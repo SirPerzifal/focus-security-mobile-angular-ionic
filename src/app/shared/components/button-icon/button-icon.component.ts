@@ -47,6 +47,7 @@ export class ButtonIconComponent implements OnInit {
   @Input() totalWarning: number = 0;
   @Input() disableClick: boolean = false; // Input baru untuk mengontrol event click
   @Input() isActive: boolean = false; // Tambahkan input untuk status aktif
+  @Input() isClient: boolean = false
 
   @Output() buttonClick = new EventEmitter<{ text: string, isActive: boolean }>(); // Emit objek dengan teks dan status aktif
 
@@ -106,6 +107,9 @@ export class ButtonIconComponent implements OnInit {
           this.customImageIcon = 'assets/icon-vms/Homepage/MA_Visitor.png';
           break;
         case 'UNREGISTERED RESIDENT CAR':
+          if (this.isClient) {
+            this.text = 'UNREGISTERED EMPLOYEE CAR'
+          }
           this.customImageIcon = 'assets/icon-vms/Homepage/Unregistered_Resident_Car.png';
           break;
         case 'OVERNIGHT PARKING':

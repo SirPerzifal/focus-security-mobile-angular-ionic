@@ -42,9 +42,8 @@ export class ClientMainAppPage implements OnInit {
     private route: ActivatedRoute,
     private platform: Platform,
     public functionMain: FunctionMainService) {
-      console.log(this.router.url.split('?')[0])
-      
-     }
+    
+    }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
