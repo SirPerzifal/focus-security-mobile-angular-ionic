@@ -154,19 +154,28 @@ export class ContractorInvitingFormPage implements OnInit {
           this.storage.decodeData(value).then((value: any) => {
             if ( value ) {
               const estate = JSON.parse(value) as Estate;
-              this.inviteeFormList[index].host_ids = estate.family_id;
+              this.inviteeFormList[index].host_ids.push(estate.family_id);
             }
           })
         }
       })
     } else {
-      this.inviteeFormList[index].host_ids = 0
+      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+        if ( value ) {
+          this.storage.decodeData(value).then((value: any) => {
+            if ( value ) {
+              const estate = JSON.parse(value) as Estate;
+              this.inviteeFormList[index].host_ids.push(estate.family_id);
+            }
+          })
+        }
+      })
     }
   }
 
   hostChange(event: any, index: any) {
-    console.log(event)
-    this.inviteeFormList[index].host_ids = event;
+    console.log(this.inviteeFormList[index].host_ids, event)
+    this.inviteeFormList[index].host_ids = [...event, ...this.inviteeFormList[index].host_ids];
   }
 
   Host: any = []
@@ -296,12 +305,26 @@ export class ContractorInvitingFormPage implements OnInit {
   }
 
   onSubmit() {
-    const isValid = this.inviteeFormList.every((invitee:any) => 
-      invitee.contractor_name.trim() !== '' && 
-      invitee.contact_number.trim() !== ''
+    console.log(this.inviteeFormList)
+    let errMsg = '';
+    this.inviteeFormList.every((invitee:any) => {
+      if (invitee.contractor_name.trim() === '') {
+        errMsg += 'Please fill contractor Name! \n';
+      } else if (invitee.contact_number.trim() === '') {
+        errMsg += 'Please fill contact number! \n';
+      } else if (invitee.type_of_work.trim() === '') {
+        errMsg += 'Please fill type of work! \n';
+      } else if (invitee.company_name.trim() === '') {
+        errMsg += 'Please fill company name! \n';
+      } else if (invitee.host_ids.length <= 0) {
+        errMsg += 'Please choos whether show just you or include another host! \n';
+      } else if (invitee.expected_number_of_visit.trim() === '') {
+        errMsg += 'Please fill expected number of visit! \n';
+      }
+    }
     );
 
-    if (isValid) {
+    if (!errMsg) {
       try {
         this.mainApiResidentService.endpointMainProcess({
           date_of_visit: this.formData.dateOfInvite, 
@@ -338,7 +361,7 @@ export class ContractorInvitingFormPage implements OnInit {
         this.functionMain.presentToast(String(error), 'danger');
       }
     } else {
-      this.functionMain.presentToast('Please fill all needed field.', 'danger');
+      this.functionMain.presentToast(errMsg, 'danger');
     }
   }
 

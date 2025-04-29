@@ -23,7 +23,7 @@
       >
         Push "Add Invitee" to add a form or choose to add from history
       </div>
-      <div id="form" *ngIf="shouldShowForm()">
+      <div id="form" class="!text-sm" *ngIf="shouldShowForm()">
         <div
           *ngFor="let invitee of inviteeFormList; let i = index"
           class="mb-4"
@@ -31,7 +31,7 @@
           <div class="w-full flex justify-between flex-row mt-2">
             <div class="w-full">
               <div class="flex flex-row justify-start items-center">
-                <p class="text-base font-bold">Name of Contractor</p>
+                <p class="text-sm font-bold">Name of Contractor</p>
                 <a
                   class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2"
                   (click)="presentCustomAlert(i)"
@@ -62,7 +62,7 @@
           <div class="w-full flex flex-col justify-between">
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">Contact Number</p>
+                <p class="text-base font-bold">Contact Number</p>
               </div>
               <input
                 [id]="'invf_phone_' + i"
@@ -75,7 +75,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">Vehicle Number</p>
+                <p class="text-base font-bold">Vehicle Number</p>
               </div>
               <input
                 [id]="'invf_plate_' + i"
@@ -88,7 +88,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">Company Name</p>
+                <p class="text-base font-bold">Company Name</p>
               </div>
               <input
                 [id]="'invf_company_name_' + i"
@@ -101,7 +101,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">Type Of Work</p>
+                <p class="text-base font-bold">Type Of Work</p>
               </div>
               <select
                 [id]="'invf_type_of_work_' + i"
@@ -115,9 +115,6 @@
                 <option value="Collection">Collection</option>
                 <option value="Meeting">Meeting</option>
                 <option value="Others">Others</option>
-                <option [value]="inviteeFormList[i].type_of_work">
-                  {{inviteeFormList[i].type_of_work}}
-                </option>
               </select>
               <input
                 *ngIf="showOther"
@@ -131,9 +128,9 @@
             </div>
             <div class="w-full flex flex-col">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">Host</p>
+                <p class="text-base font-bold">Host</p>
               </div>
-              <div class="flex flex-row space-x-2 items-start my-2 w-full">
+              <div class="flex flex-row space-x-2 items-start my-2 w-full !text-sm">
                 <app-radio-check-input-case
                   [type]="'radio'"
                   [id]="'myself' + i"
@@ -155,7 +152,7 @@
               </div>
               <div
                 *ngIf="entryCheck === 'other_host'"
-                class="w-full mb-2 cw-3:text-xs text-sm"
+                class="w-full mb-2 text-sm"
               >
                 <app-m2m-selection
                   [Arrays]="Host"
@@ -170,7 +167,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold cw-3:text-xs">
+                <p class="text-base font-bold">
                   Expected Number of continuous days of visit
                 </p>
               </div>

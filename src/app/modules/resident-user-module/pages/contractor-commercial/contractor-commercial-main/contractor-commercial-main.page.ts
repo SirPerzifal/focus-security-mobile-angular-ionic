@@ -95,6 +95,11 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
     http: HttpClient
   ) { super(http) }
 
+  ionViewWillEnter() {
+    this.selectedDate = '';
+    this.entryCheck = '';
+  }
+
   ngOnInit() {
     this.selectedDate = '';
     this.entryCheck = '';
@@ -119,6 +124,9 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
           // hiredCar: "",
           // isProvideUnit: false,
         }
+        
+        this.selectedDate = '';
+        this.entryCheck = '';
       } else if (params['formData']) {
         this.formData = {
           dateOfInvite: "",
@@ -129,8 +137,14 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
           // hiredCar: "",
           // isProvideUnit: false,
         }
+        
+        this.selectedDate = '';
+        this.entryCheck = '';
       } else {
         this.toggleShowNewInv()
+        
+        this.selectedDate = '';
+        this.entryCheck = '';
       }
     });
   }

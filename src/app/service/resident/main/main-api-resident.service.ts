@@ -69,11 +69,11 @@ export class MainApiResidentService extends ApiService {
           body = {
             jsonrpc: '2.0',
             params: {
-              host: this.hostId,
-              family_id: this.familyId,
-              unit_id: this.unitId,
-              block_id: this.blockId,
-              project_id: this.projectId,
+              host: this.hostId ? this.hostId : 0,
+              family_id: this.familyId ? this.familyId : 0,
+              unit_id: this.unitId ? this.unitId : 0,
+              block_id: this.blockId ? this.blockId : 0,
+              project_id: this.projectId ? this.projectId : 0,
               ...params
             }
           };

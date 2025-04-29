@@ -110,13 +110,14 @@ export class HistoryInContractorPage implements OnInit {
             banned: item['is_banned'],
             id: item['contractor_id']
           });
-          this.selectionNew.push(item['purpose'])
           
           this.isLoading = false;
         });
       }
       this.selection = [...this.selectionNew]
       this.filteredData = [...this.historyData];
+      console.log(this.filteredData);
+      
     })
   }
 

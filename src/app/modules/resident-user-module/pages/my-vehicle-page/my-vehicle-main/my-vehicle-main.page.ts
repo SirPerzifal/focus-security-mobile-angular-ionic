@@ -140,6 +140,7 @@ export class MyVehicleMainPage implements OnInit {
   ]
 
   loadVehicleFromBackend() {
+    this.vehicles = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/get_all_vehicle').subscribe((response: any) => {
       if (response.result.response_code === 200) {
@@ -230,7 +231,9 @@ export class MyVehicleMainPage implements OnInit {
             // console.log('Confirmed');
             // Logika konfirmasi
             if (vehicleId) {
-              this.mainApi.endpointMainProcess({vehicleId}, 'post/delete_vehicle').subscribe((response: any) => {
+              this.mainApi.endpointMainProcess({
+                vehicle_id: vehicleId
+              }, 'post/delete_vehicle').subscribe((response: any) => {
                 if (response.result.response_code === 200) {
                   // console.log("Vehicle deleted successfully", response);
                   this.directTo();

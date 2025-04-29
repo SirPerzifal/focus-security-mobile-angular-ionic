@@ -14,6 +14,9 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 import { Estate } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
+import { App } from '@capacitor/app';
+import { Platform } from '@ionic/angular';
+
 @Component({
   selector: 'app-resident-home-page',
   templateUrl: './resident-home-page.page.html',
@@ -135,8 +138,11 @@ export class ResidentHomePagePage implements OnInit {
     private modalController: ModalController,
     private mainApiResident: MainApiResidentService,
     private storage: StorageService,
-    public functionMain: FunctionMainService
-  ) {}
+    public functionMain: FunctionMainService,
+    private platform: Platform,
+  ) {
+    this.initializeBackButtonHandling();
+  }
 
   ionViewWillEnter() {
     this.fetchContacts();
@@ -165,6 +171,12 @@ export class ResidentHomePagePage implements OnInit {
         })
       }
     })
+  }
+
+  initializeBackButtonHandling() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      App.exitApp();
+    });
   }
 
   ngOnInit() {

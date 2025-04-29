@@ -7,6 +7,8 @@ import { LoginParams, EstateProfile } from 'src/models/resident/resident.model';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
+import { App } from '@capacitor/app';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-login-end-user',
@@ -30,11 +32,20 @@ export class LoginEndUserPage implements OnInit {
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private functionMain: FunctionMainService
-  ) {}
+    private functionMain: FunctionMainService,
+    private platform: Platform,
+  ) {
+    this.initializeBackButtonHandling();
+  }
 
   ngOnInit() {
     this.waitingResponseLoginApi = false
+  }
+
+  initializeBackButtonHandling() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      App.exitApp();
+    });
   }
 
   handleFocus(event?: any) {

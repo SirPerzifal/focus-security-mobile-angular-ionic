@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { App } from '@capacitor/app';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-login-process',
@@ -7,8 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginProcessPage implements OnInit {
 
-  constructor() { }
+  constructor(    
+    private platform: Platform,
+  ) {
+    this.initializeBackButtonHandling();
+  }
+
 
   ngOnInit() {
+  }
+
+  initializeBackButtonHandling() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      App.exitApp();
+    });
   }
 }

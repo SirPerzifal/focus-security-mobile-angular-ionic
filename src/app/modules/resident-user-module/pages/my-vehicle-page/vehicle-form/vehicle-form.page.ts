@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
@@ -11,13 +13,19 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 })
 export class VehicleFormPage implements OnInit {
 
+  ownedBy = {
+    id: 0,
+    name: ''
+  }
+
+  userRole: string = '';
   selectedNameVehicleLog: string = '';
   selectedDate: string = '';
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   maximumVehicle: boolean = false;
   valueForSelect: any[] = [
     {
-      value: 'primary_vehicle',
+      value: 'owned_vehicle',
       text: 'Permanent Vehicle'
     },
     {
@@ -49,7 +57,8 @@ export class VehicleFormPage implements OnInit {
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private storage: StorageService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { maximumVehicle: boolean };
@@ -59,8 +68,8 @@ export class VehicleFormPage implements OnInit {
       if (this.maximumVehicle) {
         this.valueForSelect = [
           {
-            value: 'primary_vehicle',
-            text: 'Permanent Vehicle'
+            value: 'temporary_vehicle',
+            text: 'Temporary Vehicle'
           },
         ]
       }
@@ -71,6 +80,23 @@ export class VehicleFormPage implements OnInit {
     this.loadFamilyMember();
     this.loadVehicleMakeAndType();
     this.getTodayDate();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.ownedBy = {
+              id: estate.family_id,
+              name: estate.family_name
+            }
+          }
+        })
+      }
+    })
+  }
+
+  onChaneTypeOfUser(event: any) {
+    this.userRole = event;
   }
 
   getTodayDate() {
@@ -117,6 +143,8 @@ export class VehicleFormPage implements OnInit {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
       this.additionalTemporary.endDate = event;
+    } else if (type === 'primary_vehicle') {
+      this.vehicleForm.isFirstVehicle = !this.vehicleForm.isFirstVehicle
     }
   }
 
@@ -173,12 +201,16 @@ export class VehicleFormPage implements OnInit {
         temporary_car_request: this.vehicleForm.typeOfApplication === 'temporary_vehicle' ? this.additionalTemporary.temporaryCarRequest : null
       }, 'post/post_vehicle').subscribe((response: any) => {
         if (response.result.response_code === 200) {
-          this.router.navigate(['/payment-form-vehicle'], {
-            state: {
-              vehicleId: response.result.vehicle_id,
-              from: 'add'
-            }
-          });
+          if (this.userRole === 'industrial') {
+            this.router.navigate(['my-vehicle-page-main']);
+          } else {
+            this.router.navigate(['/payment-form-vehicle'], {
+              state: {
+                vehicleId: response.result.vehicle_id,
+                from: 'add'
+              }
+            });
+          }
           // this.resetForm();
         } else {
           this.functionMain.presentToast('Failed', 'danger');

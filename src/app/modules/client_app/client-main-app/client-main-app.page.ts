@@ -43,11 +43,7 @@ export class ClientMainAppPage implements OnInit {
     private platform: Platform,
     public functionMain: FunctionMainService) {
       console.log(this.router.url.split('?')[0])
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        if ( this.router.url.split('?')[0] === 'home-vms') {
-          App.exitApp()
-        }
-    });
+      
      }
 
   ngOnInit() {

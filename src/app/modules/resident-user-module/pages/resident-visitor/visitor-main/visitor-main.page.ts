@@ -106,6 +106,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     http: HttpClient
   ) { super(http) }
 
+  ionViewWillEnter() {
+    this.selectedDate = '';
+    this.entryCheck = '';
+  }
+
   ngOnInit() {
     this.selectedDate = '';
     this.entryCheck = '';

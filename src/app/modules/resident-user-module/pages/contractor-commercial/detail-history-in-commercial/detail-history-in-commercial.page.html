@@ -117,19 +117,16 @@
               <app-submit-button
                 [text]="'Reinvite'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
-                *ngIf="historyData.purpose === 'Visiting'"
                 (click)="reinviteModal(historyData)"
               ></app-submit-button>
               <app-submit-button
                 [text]="'Ban'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
                 (click)="showAlertButtons('Ban', 'history-alert alert-banned')"
-                *ngIf="historyData.purpose === 'Visiting'"
               ></app-submit-button>
               <app-submit-button
                 [text]="'Call'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
-                *ngIf="historyData.purpose !== 'Drop Off'"
               ></app-submit-button>
             </div>
           </div>

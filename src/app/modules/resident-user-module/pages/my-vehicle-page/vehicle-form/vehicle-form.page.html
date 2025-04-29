@@ -2,6 +2,7 @@
   <app-header-inner-page
     [text]="'My Vehicle'"
     [text_second]="'Add New Vehicle'"
+    (typeOfUser)="onChaneTypeOfUser($event)"
   ></app-header-inner-page>
 </ion-header>
 
@@ -51,7 +52,7 @@
 
     <div class="w-full">
       <label class="text-sm font-bold mb-[-4px]">Owned By</label>
-      <select
+      <select *ngIf="userRole !== 'industrial'"
         id="rv_unit"
         (change)="onValueChange($event, 'owned_vehicle')"
         [(ngModel)]="vehicleForm.ownedBy"
@@ -61,6 +62,14 @@
           {{ fm.full_name }}
         </option>
       </select>
+      <app-input-component
+      *ngIf="userRole === 'industrial'"
+        [id]="'rv_unit'"
+        [type]="'text'"
+        [value]="ownedBy.name"
+        [disabled]="true"
+        (eventEmitter)="onValueChange($event, 'vehicle_number')"
+      ></app-input-component>
     </div>
 
     <app-input-component

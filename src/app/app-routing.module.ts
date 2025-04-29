@@ -405,7 +405,7 @@ const routes: Routes = [
   {
     path: 'settings-main',
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/settings-main/settings-main.module').then( m => m.SettingsMainPageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'info-page-settings',

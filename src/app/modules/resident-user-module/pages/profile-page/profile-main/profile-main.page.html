@@ -107,7 +107,9 @@
               <div class="flex-1 px-2">
                 <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_name}}</p>
-                <p class="cw-3:text[13px]">{{estate.family_type}}</p>
+                <p *ngIf="estate.record_type !== 'industrial'">
+                  {{ estate.family_type }}
+                </p>
                 <p
                   *ngIf="estate.block_name && estate.unit_name"
                   class="cw-3:text[13px]"

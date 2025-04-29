@@ -218,12 +218,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
-                name: 'Condominium Name',
-                disabledInput: true
-              },    {
-                id: 'status_owner',
-                formParams: 'statusOwner',
-                name: 'Status',
+                name: 'Project Name',
                 disabledInput: true
               },    {
                 id: 'email_owner',
