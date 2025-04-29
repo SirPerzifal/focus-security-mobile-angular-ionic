@@ -16,7 +16,9 @@ export class ClientEventsDetailPage implements OnInit {
   constructor(private router: Router, private alertController: AlertController, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
-    
+    this.functionMain.vmsPreferences().then((value) => {
+      this.project_config = value.config
+    })
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
       this.bookingData = navigation.extras.state['bookingData'];
@@ -31,6 +33,7 @@ export class ClientEventsDetailPage implements OnInit {
     }
   }
 
+  project_config: any = []
 
   formatDate(dateString: string): string {
     if (!dateString) return '';

@@ -454,15 +454,15 @@ export class CollectionModulePage implements OnInit {
     this.identificationType = event.type
     if (event.data.is_server) {
       if (this.showDrive) {
-        this.driveInFormData.visitor_name = event.data.contractor_name
-        this.driveInFormData.visitor_contact_no = event.data.contact_number
-        this.driveInFormData.visitor_vehicle = event.data.vehicle_number
+        this.driveInFormData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
+        this.driveInFormData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
+        this.driveInFormData.visitor_vehicle = event.data.vehicle_number ? event.data.vehicle_number : ''
         this.driveInFormData.company_name = event.data.company_name
       }
       if (this.showWalk) {
-        this.walkInFormData.visitor_name = event.data.contractor_name
-        this.walkInFormData.visitor_contact_no = event.data.contact_number
-        this.walkInFormData.visitor_vehicle = event.data.vehicle_number
+        this.walkInFormData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
+        this.walkInFormData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
+        this.walkInFormData.visitor_vehicle = event.data.vehicle_number ? event.data.vehicle_number : ''
         this.walkInFormData.company_name = event.data.company_name
       }
     } 

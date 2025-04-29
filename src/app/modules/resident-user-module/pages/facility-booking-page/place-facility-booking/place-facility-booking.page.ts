@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-place-facility-booking',
@@ -39,7 +40,8 @@ export class PlaceFacilityBookingPage implements OnInit {
     private storage: StorageService,
     private toastController: ToastController,
     private modalController: ModalController,
-    private mainApi: MainApiResidentService
+    private mainApi: MainApiResidentService,
+    public functionMain: FunctionMainService
   ) { }
 
   ngOnInit() {    // Ambil data unit yang sedang aktif
@@ -204,7 +206,6 @@ export class PlaceFacilityBookingPage implements OnInit {
         this.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
         return;
       }  
-  
       // Format tanggal sesuai kebutuhan API
       const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
       const startTimeString = `${formattedDate} ${this.selectedTimeSlot.start_time}:00`;

@@ -242,9 +242,9 @@ export class UnregisteredResidentCarPage implements OnInit {
     this.formData.identification_number = event.data.identification_number
     this.formData.identification_type = event.type
     if (event.data.is_server) {
-      this.formData.name = event.data.contractor_name
-      this.formData.contact_number = event.data.contact_number
-      this.formData.vehicle_number = event.data.vehicle_number
+      this.formData.name = event.data.contractor_name ? event.data.contractor_name : ''
+      this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
+      this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''
     } 
     console.log(this.formData.identification_number, this.formData.identification_type)
   }

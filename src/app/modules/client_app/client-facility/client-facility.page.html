@@ -130,7 +130,7 @@
               <p class="font-bold table-cell text-base text-black">Booked By</p>
               <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(booking.booked_by) }}</p>
             </div>
-            <div class="table-row">
+            <div class="table-row" *ngIf="!project_config.is_industrial">
               <p class="font-bold table-cell text-base text-black">Unit</p>
               <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(booking.unit_name) }}</p>
             </div>

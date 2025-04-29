@@ -335,6 +335,9 @@ export class MakeANewEventPage implements OnInit {
     if (this.EventsForm.room_id == '') {
       errMsg += 'Room is required! \n'
     }
+    if (this.selectedBookId == 0 && this.userType == 'industrial') {
+      errMsg += 'Booking is required! \n'
+    }
     if (!this.EventsForm.contact_number && this.userType != 'industrial') {
       errMsg += 'Contact number is required! \n'
     }

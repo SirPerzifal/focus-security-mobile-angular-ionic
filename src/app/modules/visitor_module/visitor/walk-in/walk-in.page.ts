@@ -563,10 +563,10 @@ export class WalkInPage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
-      this.formData.visitor_name = event.data.contractor_name
-      this.formData.visitor_contact_no = event.data.contact_number
+      this.formData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
+      this.formData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
       if (this.showDrive) {
-        this.formData.visitor_vehicle = event.data.vehicle_number
+        this.formData.visitor_vehicle = event.data.vehicle_number ? event.data.vehicle_number : ''
       }
     } 
     console.log(this.nric_value, this.identificationType)

@@ -18,9 +18,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 export class HomePage implements OnInit {
 
   constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
-    console.log(this.router.url.split('?')[0])
     this.checkScreenSize()
-  
   }
 
   alertColor = 'red'

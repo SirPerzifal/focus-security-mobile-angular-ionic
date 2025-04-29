@@ -269,6 +269,7 @@ export class DeliveriesPage implements OnInit {
     this.contactHost = ''
     this.contactUnit = ''
     this.selectedNric = ''
+    this.pass_number = ''
     this.otherDeliveryForm = {
       visitor_name: '',
       visitor_contact_no: '',
@@ -720,9 +721,9 @@ export class DeliveriesPage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
-      this.formData.contact_number = event.data.contact_number
+      this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
       if (this.food_delivery_type == 'drive_in' || this.packageDeliveries) {
-        this.formData.vehicle_number = event.data.vehicle_number
+        this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''
       }
     } 
     console.log(this.nric_value, this.identificationType)

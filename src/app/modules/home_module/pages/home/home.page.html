@@ -51,7 +51,7 @@
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car"
-        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true"/>
+        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" [isClient]="project_config.is_industrial" />
 
       <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list"
         [routerLink]="['/overnight-parking-list']" [disableClick]="true" />

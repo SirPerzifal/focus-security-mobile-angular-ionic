@@ -180,11 +180,11 @@
               </div>
               <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertNewDateTZ(approval.start_date).split(' ')[1] : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertDateExtend(approval.start_date).split(' ')[1] : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date ? functionMain.convertNewDateTZ(approval.end_date).split(' ')[1] : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.end_date ? functionMain.convertDateExtend(approval.end_date).split(' ')[1] : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['overnight'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Request Date</p>
@@ -350,11 +350,11 @@
         </div>
         <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Start Date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertNewDateTZ(selectedApproval.start_date).split(' ')[1] : '-' }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertDateExtend(selectedApproval.start_date).split(' ')[1] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">End Date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? functionMain.convertNewDateTZ(selectedApproval.end_date).split(' ')[1] : '-' }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.end_date ? functionMain.convertDateExtend(selectedApproval.end_date).split(' ')[1] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['events'].includes(approval_type) && selectedApproval.post_to  && !project_config.is_industrial">
           <p class="font-bold table-cell w-1/2 text-base text-black">Post To</p>

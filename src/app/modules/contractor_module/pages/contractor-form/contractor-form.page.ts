@@ -256,7 +256,7 @@ export class ContractorFormPage implements OnInit {
         companyName,
         this.identificationType,
         identificationNumber,
-        contractorVehicle,
+        this.showDrive ?  contractorVehicle : '',
         this.selectedBlock,
         this.selectedUnit,
         remarks,
