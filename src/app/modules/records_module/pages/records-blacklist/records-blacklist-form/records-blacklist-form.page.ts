@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
@@ -15,6 +16,7 @@ export class RecordsBlacklistFormPage implements OnInit {
   constructor(
     private blockUnitService: BlockUnitService,
     private router: Router, private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { record: any[], is_ban_record: boolean, type: string, is_ban_notice: boolean };
@@ -28,8 +30,31 @@ export class RecordsBlacklistFormPage implements OnInit {
       this.is_ban_visitor = state.is_ban_record
       this.is_ban_notice = state.is_ban_notice
       this.is_readonly = true
+      if (this.record.industrial_host_id) {
+        console.log(this.record.industrial_host_id)
+        this.loadHost().then(() => {
+          setTimeout(() => {
+            this.contactHost = this.record.industrial_host_id
+            console.log(this.contactHost)
+          }, 300)
+          this.formData = {
+            reason: '',
+            block_id: '',
+            unit_id: '',
+            contact_no: this.record.contact_number,
+            vehicle_no: this.record.vehicle_number,
+            visitor_name: this.record.visitor_name ? this.record.visitor_name : this.record.offender_name,
+            last_entry_date_time: this.record.entry_datetime,
+            ban_image: '',
+            banned_by: '',
+            project_id: this.formData.project_id
+          }
+  
+        })
+      }
       this.loadUnit().then(() => {
         console.log("TEEESSS")
+        this.contactUnit = this.record.unit_id
         this.formData = {
           reason: '',
           block_id: this.record.block_id,
@@ -128,20 +153,23 @@ export class RecordsBlacklistFormPage implements OnInit {
 
   async loadUnit() {
     this.formData.unit_id = ''
-    this.blockUnitService.getUnit(this.choosenBlock).subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
-          this.UnitNew = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
-          console.log(response)
-        } else {
-          console.error('Error:', response.result);
+    this.loadProjectName().then(() => {
+      if (this.project_config.is_industrial) return
+      this.blockUnitService.getUnit(this.choosenBlock).subscribe({
+        next: (response: any) => {
+          if (response.result.status_code === 200) {
+            this.Unit = response.result.result; // Simpan data unit
+            this.UnitNew = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
+            console.log(response)
+          } else {
+            console.error('Error:', response.result);
+          }
+        },
+        error: (error) => {
+          console.error('Error:', error.result);
         }
-      },
-      error: (error) => {
-        console.error('Error:', error.result);
-      }
-    });
+      });
+    })
   }
 
   refreshVehicle() {
@@ -313,8 +341,8 @@ export class RecordsBlacklistFormPage implements OnInit {
   Host: any[] = [];
   selectedHost: string = '';
   contactHost = ''
-  loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+  async loadHost() {
+    this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

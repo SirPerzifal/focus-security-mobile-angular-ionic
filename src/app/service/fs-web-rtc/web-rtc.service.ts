@@ -318,8 +318,6 @@ export class WebRtcService extends ApiService{
     if(!receiverId && !receiverPhone && !unit_id){
       return;
     }
-    console.log(receiverId);
-    console.log("===============")
 
     await this.startLocalStream();
 

@@ -22,7 +22,7 @@ export class FileInputComponent  implements OnInit {
   @Input() fileName: string = ''
   @Input() fileAccept: string = ''
   @Input() labelClass: string = ''
-  @Input()  outClass: string = 'min-h-20'
+  @Input()  outClass: string = 'min-h-20 !border'
 
   @Input() isCamera: boolean=false
   @Input() isMany: boolean=false

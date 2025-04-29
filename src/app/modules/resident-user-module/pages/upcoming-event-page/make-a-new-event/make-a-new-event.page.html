@@ -206,7 +206,7 @@
             >
               <option value="0" selected disabled hidden>Choose Booking</option>
               <option *ngFor="let book of BookingResult" [value]="book.id">
-                {{ book.name }}
+                {{ book.name }} ({{ functionMain.convertDateExtend(book.start_datetime) }} - {{ functionMain.convertDateExtend(book.stop_datetime) }})
               </option>
             </select>
           </div>

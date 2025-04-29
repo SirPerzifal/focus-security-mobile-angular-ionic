@@ -512,10 +512,10 @@ export class ResidentHomePagePage implements OnInit {
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
             this.fcmToken = token.value;
-            this.mainApiResident.endpointProcess({
+            this.mainApiResident.endpointCustomProcess({
               family_id: familyId,
               fcm_token: token.value
-            }, 'set/fcm_token').subscribe((response: any) => {
+            }, '/set/fcm_token').subscribe((response: any) => {
               console.log(response);
             })
           } else {

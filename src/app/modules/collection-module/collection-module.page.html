@@ -9,7 +9,7 @@
     <div class="flex flex-row mt-8">
       <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
       <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
         (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
         <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"

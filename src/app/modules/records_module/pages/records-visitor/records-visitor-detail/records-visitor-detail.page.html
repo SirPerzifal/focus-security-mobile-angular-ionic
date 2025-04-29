@@ -44,7 +44,7 @@
           <tr *ngIf="project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING HOST</td>
             <td class="w-[5%]">:</td>
-            <td>{{ returnNone(record.host_name) }}</td>
+            <td>{{ returnNone(record.industrial_host_name) }}</td>
           </tr>
           <tr *ngIf="pageType == 'visitor' && record.vehicle_number">
             <td class="font-bold w-2/5">VEHICLE NUMBER</td>
@@ -61,11 +61,11 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.resident_contact) }}</td>
           </tr>   -->
-          <tr *ngIf="pageType == 'vehicle'">
+          <!-- <tr *ngIf="pageType == 'vehicle'">
             <td class="font-bold w-2/5" >PREVIOUS WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.warning_issued) }}</td>
-          </tr>
+          </tr> -->
           <tr *ngIf="record.requestor">
             <td class="font-bold w-2/5">Requestor</td>
             <td class="w-[5%]">:</td>

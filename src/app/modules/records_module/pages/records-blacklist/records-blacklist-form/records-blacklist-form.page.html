@@ -52,7 +52,7 @@
             <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
           </select>
         </div>
-        <div class="w-full" *ngIf="!unitShow">
+        <div class="w-full" *ngIf="!unitShow && !project_config.is_industrial">
           <label class="text-2xl"><b><u>UNIT</u></b></label>
           <select id="blacklist_unit" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onUnitChange($event)" [(ngModel)]="formData.unit_id" [disabled]="is_readonly">
             <option value="" selected disabled hidden>CHOOSE UNIT</option>
@@ -61,14 +61,14 @@
         </div>
         <div class="w-full" *ngIf="unitShow && !project_config.is_industrial">
           <app-m2m-selection [Arrays]="UnitNew" (outputValue)="onUnitChangeNew($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-            [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+            [labelText]="'UNIT'" [Selected]="contactUnit" ></app-m2m-selection>
         </div>
         <div class="w-full" *ngIf="project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full">
           <app-file-input class="w-full h-25" [labelText]="'BAN IMAGE'" [buttonText]="'UPLOAD'" [isCamera]="true"
-          [extraButtonClass]="'rounded-md text-white'" [customPlaceholder]="'EG. VIOLATION.png'"
+          [extraButtonClass]="'rounded-md text-white h-20'" [customPlaceholder]="'EG. VIOLATION.png'"
           (cameraSelected)="onBanImage($event)"></app-file-input>
         </div>
         <div class="w-full flex flex-col">

@@ -478,6 +478,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
+            this.getNotificationPermission(estate.family_id)
             this.imageProfile = estate.image_profile;
             this.userName = estate.family_name;
             this.inputForm = {
@@ -538,10 +539,10 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
-            this.mainResident.endpointProcess({
+            this.mainResident.endpointCustomProcess({
               family_id: familyId,
               fcm_token: token.value
-            }, 'set/fcm_token').subscribe((response: any) => {
+            }, '/set/fcm_token').subscribe((response: any) => {
               console.log(response);
             })
           } else {
