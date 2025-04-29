@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'rxjs';
@@ -513,6 +514,51 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.showEstate = false;
       this.showMain = true;
     })
+  }
+
+  async getNotificationPermission(familyId: number): Promise<string> {
+    try {
+      if (typeof PushNotifications === 'undefined') {
+        console.warn('PushNotifications not available.');
+        return '';
+      }
+  
+      const permission = await PushNotifications.requestPermissions();
+  
+      if (permission.receive !== 'granted') {
+        throw new Error('Notification permission not granted');
+      }
+  
+      PushNotifications.register();
+  
+      return new Promise((resolve, reject) => {
+        const cleanupListeners = () => {
+          PushNotifications.removeAllListeners();
+        };
+  
+        PushNotifications.addListener('registration', (token: Token) => {
+          if (token.value) {
+            this.mainResident.endpointProcess({
+              family_id: familyId,
+              fcm_token: token.value
+            }, 'set/fcm_token').subscribe((response: any) => {
+              console.log(response);
+            })
+          } else {
+            cleanupListeners();
+            reject('FCM token is empty');
+          }
+        });
+  
+        PushNotifications.addListener('registrationError', (error) => {
+          cleanupListeners();
+          reject('Push notification registration failed: ' + error);
+        });
+      });
+    } catch (err) {
+      console.error('Push Notification Error:', err);
+      return '';
+    }
   }
 
   getHistoryList() {

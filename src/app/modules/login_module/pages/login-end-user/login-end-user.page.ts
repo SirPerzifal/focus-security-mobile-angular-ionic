@@ -66,26 +66,6 @@ export class LoginEndUserPage implements OnInit {
     this.existUser.password = password;
   }
 
-  // async getNotificationPermission() {
-  //   PushNotifications.requestPermissions().then((result) => {
-  //     if (result.receive === 'granted') {
-  //       PushNotifications.register();
-  //     }
-  //   });
-  //   PushNotifications.addListener('registration', async (token: Token) => {
-  //     if (token.value) {
-  //       this.fcmToken = token.value;
-  //       this.notificationService.registerNotification(token.value).subscribe({
-  //         next: (res) => {
-  //         },
-  //         error: (err) => {
-  //           this.functionMain.presentToast('An error occurred while registering token push notification', 'danger');
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
-
   async getNotificationPermission(): Promise<string> {
     try {
       if (typeof PushNotifications === 'undefined') {
@@ -140,8 +120,6 @@ export class LoginEndUserPage implements OnInit {
     }
   }
   
-
-
   async loginResident(){
     if (!this.existUser.login && !this.existUser.password) return
     this.waitingResponseLoginApi = true;

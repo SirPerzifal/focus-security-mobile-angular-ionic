@@ -318,13 +318,15 @@ export class ContractorInvitingFormPage implements OnInit {
         errMsg += 'Please fill company name! \n';
       } else if (invitee.host_ids.length <= 0) {
         errMsg += 'Please choos whether show just you or include another host! \n';
-      } else if (invitee.expected_number_of_visit.trim() === '') {
+      } else if (invitee.expected_number_of_visit < 0) {
         errMsg += 'Please fill expected number of visit! \n';
+      } else {
+        errMsg = '';
       }
     }
     );
 
-    if (!errMsg) {
+    if (errMsg === '') {
       try {
         this.mainApiResidentService.endpointMainProcess({
           date_of_visit: this.formData.dateOfInvite, 

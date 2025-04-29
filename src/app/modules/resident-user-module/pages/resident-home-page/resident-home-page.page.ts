@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 
 import { ModalController } from '@ionic/angular';
 
@@ -31,6 +32,7 @@ export class ResidentHomePagePage implements OnInit {
   
   houseRules: { title: string, base64Doc: string }[] = [];
   
+  fcmToken: string = '';
   searchTerm: string = '';
   condominiumName: string = '';
   condoImage: string = '';
@@ -240,6 +242,7 @@ export class ResidentHomePagePage implements OnInit {
               if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
               }
+              this.getNotificationPermission(estate.family_id);
             }
           })
         } else {
@@ -484,5 +487,51 @@ export class ResidentHomePagePage implements OnInit {
 
       reader.readAsDataURL(file);
     });
+  }
+
+  async getNotificationPermission(familyId: number): Promise<string> {
+    try {
+      if (typeof PushNotifications === 'undefined') {
+        console.warn('PushNotifications not available.');
+        return '';
+      }
+  
+      const permission = await PushNotifications.requestPermissions();
+  
+      if (permission.receive !== 'granted') {
+        throw new Error('Notification permission not granted');
+      }
+  
+      PushNotifications.register();
+  
+      return new Promise((resolve, reject) => {
+        const cleanupListeners = () => {
+          PushNotifications.removeAllListeners();
+        };
+  
+        PushNotifications.addListener('registration', (token: Token) => {
+          if (token.value) {
+            this.fcmToken = token.value;
+            this.mainApiResident.endpointProcess({
+              family_id: familyId,
+              fcm_token: token.value
+            }, 'set/fcm_token').subscribe((response: any) => {
+              console.log(response);
+            })
+          } else {
+            cleanupListeners();
+            reject('FCM token is empty');
+          }
+        });
+  
+        PushNotifications.addListener('registrationError', (error) => {
+          cleanupListeners();
+          reject('Push notification registration failed: ' + error);
+        });
+      });
+    } catch (err) {
+      console.error('Push Notification Error:', err);
+      return '';
+    }
   }
 }
