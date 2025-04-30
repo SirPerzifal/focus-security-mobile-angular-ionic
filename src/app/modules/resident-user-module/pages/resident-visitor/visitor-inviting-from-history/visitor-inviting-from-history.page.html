@@ -1,19 +1,35 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Visitors'" [text_second]="'Invite From History'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Visitors'"
+    [text_second]="'Invite From History'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['/visitor-invitig-form']"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/visitor-invitig-form']"
+    ></ion-icon>
   </div>
   <div class="flex flex-col relative mx-4 mb-14">
     <div class="flex flex-col mt-3">
       <u class="text-ls font-bold">Invitee History List</u>
-      <div id="data" class="h-[35rem] overflow-y-auto">
-        <div *ngFor="let invitee of historyData" class="w-full flex justify-between flex-row mt-2">
-          <div *ngIf="!invitee.is_banned; else bannedVisitor" class="w-full flex justify-between">
+      <div id="data" class="h-[30rem] overflow-y-auto">
+        <div
+          *ngFor="let invitee of historyData"
+          class="w-full flex justify-between flex-row mt-2"
+        >
+          <div
+            *ngIf="!invitee.is_banned; else bannedVisitor"
+            class="w-full flex justify-between"
+          >
             <div class="w-full flex justify-between">
-              <div class="h-12 bg-gray-100 border w-full rounded py-2 px-3 outline-black mt-1 text-base text-black flex flex-row justify-between">
+              <div
+                class="h-12 bg-gray-100 border w-full rounded py-2 px-3 outline-black mt-1 text-base text-black flex flex-row justify-between"
+              >
                 <p>{{ invitee.visitor_name }}</p>
                 <div class="flex items-center ml-5">
                   <input
@@ -30,7 +46,9 @@
           </div>
           <ng-template #bannedVisitor>
             <div class="w-full flex justify-between">
-              <div class="h-12 bg-[#E3787E] border w-full rounded py-2 px-3 outline-red-300 mt-1 text-base text-white flex flex-row justify-between">
+              <div
+                class="h-12 bg-[#E3787E] border w-full rounded py-2 px-3 outline-red-300 mt-1 text-base text-white flex flex-row justify-between"
+              >
                 <p>{{ invitee.visitor_name }}</p>
                 <div class="flex items-center ml-5">
                   <input
@@ -52,12 +70,13 @@
           <app-submit-button
             [text]="'Next'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
-            (click)="confirmSelection()">
+            (click)="confirmSelection()"
+          >
           </app-submit-button>
         </div>
       </div>
     </div>
-	</div>
+  </div>
 </ion-content>
 
 <ion-footer>

@@ -61,6 +61,9 @@ export class AppReportMainPage implements OnInit {
   isReportApp: string = '1';
   allData: any = [];
 
+  pageName: string = '';
+  subPageName: string = '';
+
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
@@ -74,9 +77,11 @@ export class AppReportMainPage implements OnInit {
     if (state) {
       this.fromWhere = state.fromWhere;
       if (this.fromWhere === 'app-report') {
+        this.pageName = 'Report App Issue';
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
       } else {
+        this.pageName = 'Report Condo Issue';
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
       }
@@ -118,6 +123,7 @@ export class AppReportMainPage implements OnInit {
       this.loadTicketFromBackendFor(this.fromWhere);
       this.typeOfReport = [];
       this.loadTypeFor(this.fromWhere);
+      this.subPageName = '';
     } else {
       this.router.navigate(['/resident-home-page'])
     }
@@ -130,6 +136,7 @@ export class AppReportMainPage implements OnInit {
       this.showForm = true;
       this.navButtons[0].active = false;
       this.navButtons[1].active = true;
+      this.subPageName = 'Form Report'
     }
   }
 

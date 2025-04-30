@@ -83,8 +83,9 @@ export class SettingsMainPage implements OnInit {
     confirmPassword: ''
   }
 
-  activeWalkVisitorAlert = false;
-  activeDriveVisitorAlert = false;
+  activeWalkVisitorAlert: boolean = false;
+  activeDriveVisitorAlert: boolean = false;
+  activeDoNotDisturb: boolean = false;
 
   constructor(
     private webRtcService: WebRtcService,
@@ -110,6 +111,7 @@ export class SettingsMainPage implements OnInit {
       this.storage.decodeData(value).then((value: any) => {
         if ( value ) {
           const estate = JSON.parse(value) as Estate;
+          this.familyId = estate.family_id
           this.imageProfile = estate.image_profile;
           this.userName = estate.family_name;
         }
@@ -191,7 +193,8 @@ export class SettingsMainPage implements OnInit {
     this.mainApi.endpointCustomProcess({
       family_id: this.familyId, 
       is_active_walk_visitor_alert: this.activeWalkVisitorAlert, 
-      is_active_drive_visitor_alert: this.activeDriveVisitorAlert
+      is_active_drive_visitor_alert: this.activeDriveVisitorAlert,
+      is_do_not_disturb: this.activeDoNotDisturb
     }, '/post/notification/alert/settings').subscribe({
       next: (response: any) => {
         if (response.result.response_code === 200) {
@@ -258,6 +261,7 @@ export class SettingsMainPage implements OnInit {
                   if (response.result.response_code === 200) {
                     this.activeWalkVisitorAlert = response.result.response_result.is_active_walk_visitor_alert;
                     this.activeDriveVisitorAlert = response.result.response_result.is_active_drive_visitor_alert;
+                    this.activeDoNotDisturb = response.result.response_result.is_do_not_disturb;
                   } else {
                     this.functionMain.presentToast('Failed to notifications settings!', 'danger');
                     console.log(response);

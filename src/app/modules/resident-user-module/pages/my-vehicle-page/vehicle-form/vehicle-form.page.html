@@ -17,8 +17,10 @@
   </div>
 
   <div class="px-4 pb-4 mb-28">
-    <div class="w-full mt-1">
-      <label class="text-sm font-bold mb-[-4px]">Type Of Application</label>
+    <div class="w-full">
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Application</label
+      >
       <select
         id="type-of-application"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -37,7 +39,7 @@
       class="w-full flex flex-row justify-between items-center mt-4 mb-2"
     >
       <div class="flex flex-row justify-start">
-        <p class="text-sm font-bold">Primary Vehicle</p>
+        <p class="text-base cw-3:text-sm font-bold">Primary Vehicle</p>
       </div>
       <div class="flex items-center ml-4">
         <input
@@ -51,8 +53,9 @@
     </div>
 
     <div class="w-full">
-      <label class="text-sm font-bold mb-[-4px]">Owned By</label>
-      <select *ngIf="userRole !== 'industrial'"
+      <label class="text-base cw-3:text-sm font-bold">Owned By</label>
+      <select
+        *ngIf="userRole !== 'industrial'"
         id="rv_unit"
         (change)="onValueChange($event, 'owned_vehicle')"
         [(ngModel)]="vehicleForm.ownedBy"
@@ -63,31 +66,37 @@
         </option>
       </select>
       <app-input-component
-      *ngIf="userRole === 'industrial'"
+        *ngIf="userRole === 'industrial'"
         [id]="'rv_unit'"
         [type]="'text'"
         [value]="ownedBy.name"
         [disabled]="true"
+        (eventEmitter)="onValueChange($event, '')"
+      ></app-input-component>
+    </div>
+
+    <div class="mt-1">
+      <app-input-component
+        [id]="'vehicle_number'"
+        [type]="'text'"
+        [labelChild1]="'Vehicle Number'"
         (eventEmitter)="onValueChange($event, 'vehicle_number')"
       ></app-input-component>
     </div>
 
-    <app-input-component
-      [id]="'vehicle_number'"
-      [type]="'text'"
-      [labelChild1]="'Vehicle Number'"
-      (eventEmitter)="onValueChange($event, 'vehicle_number')"
-    ></app-input-component>
+    <div class="mt-1">
+      <app-input-component
+        [id]="'iu_number'"
+        [type]="'text'"
+        [labelChild1]="'IU Number'"
+        (eventEmitter)="onValueChange($event, 'iu_number')"
+      ></app-input-component>
+    </div>
 
-    <app-input-component
-      [id]="'iu_number'"
-      [type]="'text'"
-      [labelChild1]="'IU Number'"
-      (eventEmitter)="onValueChange($event, 'iu_number')"
-    ></app-input-component>
-
-    <div class="w-full">
-      <label class="text-sm font-bold mb-[-4px]">Type of Vehicle</label>
+    <div class="w-full mt-1">
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type of Vehicle</label
+      >
       <select
         id="type_vehicle"
         (change)="onValueChange($event, 'type_vehicle')"
@@ -100,8 +109,10 @@
       </select>
     </div>
 
-    <div class="w-full">
-      <label class="text-sm font-bold mb-[-4px]">Vehicle Make</label>
+    <div class="w-full mt-1">
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Vehicle Make</label
+      >
       <select
         id="make_vehicle"
         (change)="onValueChange($event, 'make_vehicle')"
@@ -114,15 +125,17 @@
       </select>
     </div>
 
-    <app-input-component
-      [id]="'vehicle_colour'"
-      [type]="'text'"
-      [labelChild1]="'Vehicle Colour'"
-      (eventEmitter)="onValueChange($event, 'vehicle_colour')"
-    ></app-input-component>
+    <div class="mt-1">
+      <app-input-component
+        [id]="'vehicle_colour'"
+        [type]="'text'"
+        [labelChild1]="'Vehicle Colour'"
+        (eventEmitter)="onValueChange($event, 'vehicle_colour')"
+      ></app-input-component>
+    </div>
 
-    <div class="w-full mt-2">
-      <div class="flex flex-row justify-start mb-1">
+    <div class="w-full mt-1">
+      <div class="flex flex-row justify-start">
         <p class="text-sm font-bold">Vehicle Log</p>
       </div>
       <div
@@ -148,7 +161,9 @@
 
     <div *ngIf="vehicleForm.typeOfApplication === 'temporary_vehicle'">
       <div class="w-full mt-1">
-        <label class="text-sm font-bold mb-[-4px]">Temporary Car Reason</label>
+        <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+          >Temporary Car Reason</label
+        >
         <select
           id="temporary_car_reason"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -163,17 +178,19 @@
         </select>
       </div>
 
-      <app-input-component
-        [id]="'temporary_vehicle_end_date'"
-        [type]="'date'"
-        [typeAction]="''"
-        [labelParent]="''"
-        [labelChild1]="'Temporary End Date'"
-        [labelChild2]="''"
-        (eventEmitter)="onValueChange($event, 'temporary_vehicle_end_date')"
-        [value]="selectedDate"
-        [minDate]="minDate"
-      ></app-input-component>
+      <div class="mt-1">
+        <app-input-component
+          [id]="'temporary_vehicle_end_date'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'Temporary End Date'"
+          [labelChild2]="''"
+          (eventEmitter)="onValueChange($event, 'temporary_vehicle_end_date')"
+          [value]="selectedDate"
+          [minDate]="minDate"
+        ></app-input-component>
+      </div>
 
       <!-- <div class="w-full mt-1">
         <div class="flex flex-row justify-start mb-1">

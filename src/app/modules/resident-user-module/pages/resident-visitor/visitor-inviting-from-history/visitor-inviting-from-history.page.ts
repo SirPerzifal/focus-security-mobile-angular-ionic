@@ -37,9 +37,9 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
           )
         );
         this.existingInvitees = existingInvitees; // Tandai invitee yang sudah ada di form sebelumnya
-        // console.log('tes-top', existingInvitees)
+        console.log('tes-top', existingInvitees)
       }
-      // console.log('tes', existingInvitees)
+      console.log('tes', existingInvitees)
       
     }
   }

@@ -237,6 +237,7 @@ export class MyVehicleMainPage implements OnInit {
                 if (response.result.response_code === 200) {
                   // console.log("Vehicle deleted successfully", response);
                   this.directTo();
+                  this.loadVehicleFromBackend();
                 } else {
                   console.error('Error deleting vehicle:', response);
                   // Tampilkan pesan kesalahan kepada pengguna

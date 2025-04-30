@@ -1,25 +1,44 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Settings'" [text_second]="pageName"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Settings'"
+    [text_second]="pageName"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="!showMain" class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="onClickButton('', 'back')"></ion-icon>
+  <div
+    *ngIf="!showMain"
+    class="w-full flex items-start justify-start mt-2 ml-3"
+  >
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onClickButton('', 'back')"
+    ></ion-icon>
   </div>
   <div *ngIf="showMain" @fadeInOut>
     <div class="flex flex-col justify-center w-full items-center">
       <div class="rounded-full overflow-hidden w-32 mb-4 mt-16">
-        <img class="w-full !h-[120px] object-cover" [src]="functionMain.getImage(imageProfile)" width="128"/>
+        <img
+          class="w-full !h-[120px] object-cover"
+          [src]="functionMain.getImage(imageProfile)"
+          width="128"
+        />
       </div>
-      <h2 class="text-xl font-bold">
-        {{ userName }}
-      </h2>
+      <h2 class="text-xl font-bold">{{ userName }}</h2>
     </div>
     <div class="mt-1 space-y-2 w-full px-4">
-      <div *ngFor="let button of listButtons" class="flex flex-row text-[13px] w-full mt-6">
+      <div
+        *ngFor="let button of listButtons"
+        class="flex flex-row text-[13px] w-full mt-6"
+      >
         <div class="w-full">
-          <app-submit-button [text]="button.text"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'" (click)="onClickButton(button)">
+          <app-submit-button
+            [text]="button.text"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'"
+            (click)="onClickButton(button)"
+          >
           </app-submit-button>
         </div>
       </div>
@@ -29,29 +48,60 @@
     <div class="px-4">
       <!-- current-password -->
       <div class="w-full mt-2">
-        <label class="block text-sm mb-2 dark:text-white font-bold">Current Password</label>
+        <label class="block text-sm mb-2 dark:text-white font-bold"
+          >Current Password</label
+        >
         <div class="relative">
-          <input 
-            id="current-password" 
-            [type]="showCurrentPassword" 
-            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-            placeholder="" 
-            [value]="passwordForm.currentPassword" 
-            (change)="onNewPasswordChange($event, 'current')" 
-          >
-          <button (click)="onToggleShowPassword('current')" type="button" data-hs-toggle-password='{
+          <input
+            id="current-password"
+            [type]="showCurrentPassword"
+            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+            placeholder=""
+            [value]="passwordForm.currentPassword"
+            (change)="onNewPasswordChange($event, 'current')"
+          />
+          <button
+            (click)="onToggleShowPassword('current')"
+            type="button"
+            data-hs-toggle-password='{
               "target": "#hs-toggle-password"
-            }' class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]">
-            <svg *ngIf="showCurrentPassword == 'password'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            }'
+            class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]"
+          >
+            <svg
+              *ngIf="showCurrentPassword == 'password'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <svg *ngIf="showCurrentPassword == 'text'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              *ngIf="showCurrentPassword == 'text'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-              <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+              <path
+                d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+              ></path>
+              <path
+                d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+              ></path>
               <line x1="2" x2="22" y1="2" y2="22"></line>
             </svg>
           </button>
@@ -60,29 +110,60 @@
 
       <!-- new-password -->
       <div class="w-full mt-2">
-        <label class="block text-sm mb-2 dark:text-white font-bold">Password</label>
+        <label class="block text-sm mb-2 dark:text-white font-bold"
+          >Password</label
+        >
         <div class="relative">
-          <input 
-            id="new-password" 
-            [type]="showNewPassword" 
-            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-            placeholder="" 
-            [value]="passwordForm.newPassword" 
-            (change)="onNewPasswordChange($event, 'new')" 
-          >
-          <button (click)="onToggleShowPassword('new')" type="button" data-hs-toggle-password='{
+          <input
+            id="new-password"
+            [type]="showNewPassword"
+            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+            placeholder=""
+            [value]="passwordForm.newPassword"
+            (change)="onNewPasswordChange($event, 'new')"
+          />
+          <button
+            (click)="onToggleShowPassword('new')"
+            type="button"
+            data-hs-toggle-password='{
               "target": "#hs-toggle-password"
-            }' class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]">
-            <svg *ngIf="showNewPassword == 'password'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            }'
+            class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]"
+          >
+            <svg
+              *ngIf="showNewPassword == 'password'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <svg *ngIf="showNewPassword == 'text'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              *ngIf="showNewPassword == 'text'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-              <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+              <path
+                d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+              ></path>
+              <path
+                d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+              ></path>
               <line x1="2" x2="22" y1="2" y2="22"></line>
             </svg>
           </button>
@@ -91,29 +172,60 @@
 
       <!-- confirm-new-pssword -->
       <div class="w-full mt-2">
-        <label class="block text-sm mb-2 dark:text-white font-bold">Password</label>
+        <label class="block text-sm mb-2 dark:text-white font-bold"
+          >Password</label
+        >
         <div class="relative">
-          <input 
-            id="new-password" 
-            [type]="showConfirmPassword" 
-            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-            placeholder="" 
-            [value]="passwordForm.confirmPassword" 
-            (change)="onNewPasswordChange($event, 'confirm')" 
-          >
-          <button (click)="onToggleShowPassword('confirm')" type="button" data-hs-toggle-password='{
+          <input
+            id="new-password"
+            [type]="showConfirmPassword"
+            class="py-2.5 sm:py-3 ps-4 pe-10 block w-full !border-gray-200 !outline !outline-gray-200 rounded-lg sm:text-sm focus:border-[var(--ion-color-primary)] focus:ring-[var(--ion-color-primary)] disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+            placeholder=""
+            [value]="passwordForm.confirmPassword"
+            (change)="onNewPasswordChange($event, 'confirm')"
+          />
+          <button
+            (click)="onToggleShowPassword('confirm')"
+            type="button"
+            data-hs-toggle-password='{
               "target": "#hs-toggle-password"
-            }' class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]">
-            <svg *ngIf="showConfirmPassword == 'password'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            }'
+            class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-[var(--ion-color-primary)] dark:text-neutral-600 dark:focus:text-[var(--ion-color-primary)]"
+          >
+            <svg
+              *ngIf="showConfirmPassword == 'password'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <svg *ngIf="showConfirmPassword == 'text'" class="size-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              *ngIf="showConfirmPassword == 'text'"
+              class="size-5"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-              <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+              <path
+                d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+              ></path>
+              <path
+                d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+              ></path>
               <line x1="2" x2="22" y1="2" y2="22"></line>
             </svg>
           </button>
@@ -121,51 +233,69 @@
       </div>
 
       <div class="w-full">
-        <app-submit-button [text]="'Submit Change'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light mt-4'" (click)="onSubmitChangePassword()">
+        <app-submit-button
+          [text]="'Submit Change'"
+          [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light mt-4'"
+          (click)="onSubmitChangePassword()"
+        >
         </app-submit-button>
       </div>
     </div>
   </div>
   <div *ngIf="showNotificationSettings" @fadeInOut>
     <div class="space-y-2 px-4">
-      <div class="flex items-center justify-between border border-gray-300 rounded p-2 mb-2">
-          <span>
-            Walk-In Visitor Alert
-          </span>
-          <div class="flex items-center ml-4">
-            <input 
-              id="checked-checkbox" 
-              type="checkbox"
-              [(ngModel)]="activeWalkVisitorAlert" 
-              class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          </div>
-      </div>
-      <div class="flex items-center justify-between border border-gray-300 rounded p-2">
-        <span>
-          Drive-In Visitor Alert
-        </span>
+      <div
+        class="flex items-center justify-between border border-gray-300 rounded p-2 mb-2"
+      >
+        <span> Walk-In Visitor Alert </span>
         <div class="flex items-center ml-4">
-          <input 
-            id="checked-checkbox" 
+          <input
+            id="checked-checkbox"
             type="checkbox"
-            [(ngModel)]="activeDriveVisitorAlert" 
-            class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            [(ngModel)]="activeWalkVisitorAlert"
+            class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+      </div>
+      <div
+        class="flex items-center justify-between border border-gray-300 rounded p-2"
+      >
+        <span> Drive-In Visitor Alert </span>
+        <div class="flex items-center ml-4">
+          <input
+            id="checked-checkbox"
+            type="checkbox"
+            [(ngModel)]="activeDriveVisitorAlert"
+            class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+      </div>
+      <div
+        class="flex items-center justify-between border border-gray-300 rounded p-2"
+      >
+        <span> Do Not Disturb </span>
+        <div class="flex items-center ml-4">
+          <input
+            id="checked-checkbox"
+            type="checkbox"
+            [(ngModel)]="activeDoNotDisturb"
+            class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
         </div>
       </div>
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">
-          <app-submit-button [text]="'Save Changes'"
+          <app-submit-button
+            [text]="'Save Changes'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
             (click)="onSaveChanges()"
-            >
+          >
           </app-submit-button>
         </div>
       </div>
     </div>
   </div>
   <div class="h-[6.5rem]"></div>
-
 </ion-content>
 
 <ion-footer>

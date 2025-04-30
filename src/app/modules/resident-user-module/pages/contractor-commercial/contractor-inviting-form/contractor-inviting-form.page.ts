@@ -24,6 +24,23 @@ export class ContractorInvitingFormPage implements OnInit {
   isModalOpen: boolean = false; // Status modal
   isFormInitialized: boolean = false;
   isFormVisible: boolean = false; // New variable to control form visibility
+  countryCodes: any[] = [
+    {
+      country: 'SG',
+      code: '65',
+      digit: 8,
+    },
+    {
+      country: 'ID',
+      code: '62',
+      digit: 12,
+    },
+    {
+      country: 'MY',
+      code: '60',
+      digit: 9,
+    },
+  ]
 
   formData = {
     dateOfInvite: new Date(),
@@ -86,8 +103,12 @@ export class ContractorInvitingFormPage implements OnInit {
       expected_number_of_visit: '',
       host_ids: []
     };
+    const selectedCode: any = { 
+      selected_code: '65'
+    };
 
     this.inviteeFormList.push(initialInvitee);
+    this.selectedCountry.push(selectedCode)
     this.isFormVisible = true; // Show form since we have at least one invitee
     this.addInviteeText = 'Add More Invitees'; // Update button text
   }
@@ -125,17 +146,40 @@ export class ContractorInvitingFormPage implements OnInit {
       }
     }
 
-    // Proses data invitee
     if (selectedInvitees && selectedInvitees.length > 0) {
-      this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
-        contractor_name: invitee.contractor_name || '',
-        contact_number: invitee.contact_number || '',
-        vehicle_number: invitee.vehicle_number || '',
-        company_name: invitee.company_name || '',
-        type_of_work: invitee.type_of_work || '',
-        expected_number_of_visit: invitee.expected_number_of_visit || '',
-        host_ids: invitee.host_ids || []
-      }));
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
+        let contact_number = invitee.contact_number || '';
+  
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          this.selectedCountry = selectedInvitees.map((invitee: any) => {
+            let contact_number = invitee.contact_number || '';
+            let selectedCountry = ''
+      
+            // Validasi untuk contact_number
+            if (contact_number.startsWith('6') && contact_number.length > 2) {
+              selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+            }
+      
+            return {
+              selected_code: selectedCountry
+            };
+          });
+          console.log(this.selectedCountry);
+          
+          contact_number = contact_number.substring(2); // Ambil sisa dari contact_number
+        }
+  
+        return {
+          contractor_name: invitee.contractor_name || '',
+          contact_number: invitee.contact_number || '',
+          vehicle_number: invitee.vehicle_number || '',
+          company_name: invitee.company_name || '',
+          type_of_work: invitee.type_of_work || '',
+          expected_number_of_visit: invitee.expected_number_of_visit || '',
+          host_ids: invitee.host_ids || []
+        };
+      });
       this.addInviteeText = 'Add More Invitees';
     }
 
@@ -304,6 +348,30 @@ export class ContractorInvitingFormPage implements OnInit {
     });
   }
 
+  selectedCountry: any[] = [];
+  onChangeCountryCode(event: any, index: any) {
+    this.selectedCountry[index].selected_code = event.target.value;
+    this.inviteeFormList.every((invitee:any) => {
+      if (invitee.contact_number.trim() !== '' && invitee.contact_number.startsWith('6')) {
+        const separatedCode = this.inviteeFormList[index].contact_number.slice(2, 20);
+        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + separatedCode;
+        console.log(this.inviteeFormList[index].contact_number);
+      } else {
+        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + this.inviteeFormList[index].contact_number;
+        // console.log(this.selectedCountry + this.inviteeFormList[index].contact_number);
+      }
+    });
+  }
+
+  onChangePhoneNumber(event: any, index: any) {
+    if (event.target.value.length < 4) {
+      this.functionMain.presentToast('Phone is not minimum character', 'danger')
+      return
+    } else {
+      this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + event.target.value;
+    }
+  }
+
   onSubmit() {
     console.log(this.inviteeFormList)
     let errMsg = '';
@@ -323,8 +391,7 @@ export class ContractorInvitingFormPage implements OnInit {
       } else {
         errMsg = '';
       }
-    }
-    );
+    });
 
     if (errMsg === '') {
       try {

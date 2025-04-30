@@ -186,6 +186,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   toggleShowActInv() {
+    this.getActiveInvites();
     if (!this.showActInv){
       this.showNewInvTrans = true;
       this.showNewInv = false;
@@ -257,6 +258,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     ).subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.toggleShowNewInv()
+        this.functionMain.presentToast('Success resend invite', 'success')
       }
     });
   }

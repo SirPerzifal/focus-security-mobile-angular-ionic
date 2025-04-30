@@ -170,6 +170,7 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
   }
 
   toggleShowActInv() {
+    this.getActiveInvites();
     if (!this.showActInv){
       this.showNewInvTrans = true;
       this.showNewInv = false;
