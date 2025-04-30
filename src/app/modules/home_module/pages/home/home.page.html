@@ -32,7 +32,7 @@
       <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_schedule"
+      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_renovation_schedule"
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery"

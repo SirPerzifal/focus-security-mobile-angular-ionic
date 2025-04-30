@@ -7,6 +7,7 @@ import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-client-employees',
@@ -32,6 +33,7 @@ export class ClientEmployeesPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private getUserInfoService: GetUserInfoService,
+    private webRtcService: WebRtcService
   ) { }
 
   ngOnInit() {
@@ -274,5 +276,10 @@ export class ClientEmployeesPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  callEmployee(data: any){
+    console.log(data)
+    // this.webRtcService.createOffer(false, false, data.unit_id, false);
   }
 }

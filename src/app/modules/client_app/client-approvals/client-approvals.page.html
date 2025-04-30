@@ -108,7 +108,7 @@
               </div>
               <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Event date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertNewDateTZ(approval.start_date).split(' ')[0] : '-' }}</p>
+                <p class="ml-2 table-cell text-base text-black">: {{ approval.start_date ? functionMain.convertDateExtend(approval.start_date).split(' ')[0] : '-' }}</p>
               </div>
               <div class="table-row" *ngIf="['pet'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Type and Breed</p>
@@ -223,7 +223,7 @@
     </div>
   </div>
  
-  <div class="flex flex-row relative mx-7 mt-4 mb-24" *ngIf="isDetail" @fadeInOut>
+  <div class="flex flex-row relative mx-4 mt-4 mb-24" *ngIf="isDetail" @fadeInOut>
     <div class="flex flex-col w-full p-4 rounded" [ngClass]="{
       'bg-green-100': selectedApproval.states === 'approved' || selectedApproval.appeal_status === 'approved',
       'bg-sky-100': selectedApproval.states === 'pending_approval' || selectedApproval.states === 'pending_payment' || selectedApproval.appeal_status === 'issued',
@@ -258,7 +258,7 @@
         </div>
         <div class="table-row" *ngIf="['facility', 'events'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Event date</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertNewDateTZ(selectedApproval.start_date).split(' ')[0] : '-' }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.start_date ? functionMain.convertDateExtend(selectedApproval.start_date).split(' ')[0] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['access_card'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Family Name</p>

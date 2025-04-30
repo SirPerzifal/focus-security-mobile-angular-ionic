@@ -26,7 +26,7 @@ export class RecordsResidentsPage implements OnInit {
   isLoading = false
   initTemp() {
     this.isLoading = true
-    this.recordsResidentService.loadAllResident(this.project_id, this.project_config.is_industrial).subscribe(
+    this.recordsResidentService.loadAllResident(this.project_id, this.project_config.is_windows).subscribe(
       (response: any) => {
         console.log(response)
         if (response.result.status === 'success') {
