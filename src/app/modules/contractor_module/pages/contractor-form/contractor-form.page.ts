@@ -504,7 +504,8 @@ export class ContractorFormPage implements OnInit {
   }
 
   onHostChange(event: any) {
-    this.selectedHost = event[0]
+    this.selectedHost = event
+    console.log(this.selectedHost)
   }
 
   contractor_pass_number = ''
@@ -574,7 +575,9 @@ export class ContractorFormPage implements OnInit {
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
-        this.refreshVehicle()
+        if (!this.isFromScan) {
+          this.refreshVehicle()
+        }
       }, 300)
     }
   }
@@ -673,7 +676,7 @@ export class ContractorFormPage implements OnInit {
             // })
           }
         } else {
-          this.functionMain.presentToast('Expected contractor not found!', 'danger');
+          this.functionMain.presentToast(results.result.error, 'danger');
           this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         }
         this.isProcess = false

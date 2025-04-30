@@ -58,7 +58,7 @@
               <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
             </div>
             <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let log of historyVehicles" (click)="onArrowClick(log)">
-              <span class="text-2xl font-bold text-white">{{ project_config.is_industrial ? log.employee_name : log.resident_name }}</span>
+              <span class="text-2xl font-bold text-white">{{ project_config.is_windows ? log.employee_name : log.resident_name }}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle" ></ion-icon>
             </div>
           </div>

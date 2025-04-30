@@ -329,7 +329,9 @@ export class WalkInPage implements OnInit {
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
-        this.refreshVehicle()
+        if (!this.isFromScan){
+          this.refreshVehicle()
+        }
       }, 300)
     }
   }
@@ -507,7 +509,7 @@ export class WalkInPage implements OnInit {
           this.formData.family_id = this.searchData.family_id
           this.contactUnit = ''
           if (this.project_config.is_industrial) {
-            this.contactHost = this.searchData.host_id
+            this.contactHost = this.searchData.industrial_host_id[0]
           } else {
             this.formData.block = this.searchData.block_id[0]
             this.loadUnit().then(() => {
@@ -520,7 +522,7 @@ export class WalkInPage implements OnInit {
             this.toggleShowDrive()
           }
         } else {
-          this.functionMain.presentToast('Expected visitor not found!', 'danger');
+          this.functionMain.presentToast(results.result.error, 'danger');
           this.errorSound.play().catch((err) => console.error('Error playing sound:', err));
         }
         this.isProcess = false

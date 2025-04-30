@@ -98,7 +98,7 @@
         </div>
         <div class="w-full space-y-5" *ngIf="project_config.is_industrial">
           <div class="w-full">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isOne]="false"></app-m2m-selection>
           </div>
           <div class="w-full">
             <app-text-input #contractorTotalPackage [id]="'contractor_total_package'" [labelText]="'TOTAL PACKAGE'"

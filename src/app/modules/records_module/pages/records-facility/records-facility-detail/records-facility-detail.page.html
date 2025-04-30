@@ -46,9 +46,9 @@
             <td>{{record.block_name ? record.block_name : '-' }} | {{ record.unit_name  ? record.unit_name : '-' }}</td>
           </tr>
           <tr *ngIf="project_config.is_industrial">
-            <td class="font-bold w-[45%]">HOST</td>
+            <td class="font-bold w-[45%]">HOSTS</td>
             <td class="w-[5%]">:</td> 
-            <td>{{record.host_name ? record.host_name : '-' }}</td>
+            <td>{{ getHostName(record.industrial_host_data) }}</td>
           </tr>
           <!-- <tr *ngIf="record.resident_check_in && record.officer_check_in">
             <td class="font-bold w-[45%]">CHECKED IN</td>

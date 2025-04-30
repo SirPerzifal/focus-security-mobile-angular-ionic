@@ -11,7 +11,7 @@ export class RecordsResidentService extends ApiService{
 
   constructor(http: HttpClient) { super(http) }
 
-  loadAllResident(project_id: number, is_industrial: boolean) {
+  loadAllResident(project_id: number, is_windows: boolean) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -25,7 +25,7 @@ export class RecordsResidentService extends ApiService{
     };
 
     // Change to send data in request body
-    return this.http.post(`${this.baseUrl}${is_industrial ? '/commercial/get/all_record_employee' : '/vms/get/all_record_resident'}`, body, { headers }).pipe(
+    return this.http.post(`${this.baseUrl}${is_windows ? '/commercial/get/all_record_employee' : '/vms/get/all_record_resident'}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

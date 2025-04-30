@@ -4,6 +4,7 @@ import { ToastController } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Subscription } from 'rxjs';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-records-wheel-clamped-payment',
@@ -14,12 +15,12 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
 
   vehicle: any = {}
 
-  constructor(private route: ActivatedRoute, private router: Router, private mainVmsService: MainVmsService, private toastController: ToastController) {
+  constructor(private route: ActivatedRoute, private router: Router, private mainVmsService: MainVmsService, private toastController: ToastController, public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any, alert: boolean, search: boolean, overnight: boolean };
     if (state) {
       this.vehicle = state.vehicle
-      this.qr_code = `data:image/png;base64,${state.vehicle.payment_qr_code}`
+      // this.qr_code = `data:image/png;base64,${state.vehicle.payment_qr_code}`
       if (state.alert) {
         this.alert = state.alert
         this.home_url = 'alert-main'

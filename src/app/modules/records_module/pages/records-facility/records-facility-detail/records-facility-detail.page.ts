@@ -79,4 +79,8 @@ export class RecordsFacilityDetailPage implements OnInit {
     return (record.resident_check_in && record.officer_check_in) ? ((record.resident_check_out && record.officer_check_out) ? '(CHECKED OUT)' : '(CHECKED IN)') : ''
   }
 
+  getHostName(hosts: any) {
+    return hosts.map((item: any) => item.name ).join(', ')
+  }
+
 }

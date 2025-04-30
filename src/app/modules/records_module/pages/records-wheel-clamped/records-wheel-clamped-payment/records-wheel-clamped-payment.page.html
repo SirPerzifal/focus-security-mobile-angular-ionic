@@ -37,7 +37,7 @@
           </tr>
         </table>
         <div class="w-full flex flex-col items-center mt-8">
-          <img [src]="qr_code">
+          <img [src]="functionMain.getImage(vehicle.payment_qr_code)">
         </div>
         <div class="w-full flex flex-col items-center mt-8" *ngIf="showImage">
           <img [src]="showImage" class="w-4/5">
