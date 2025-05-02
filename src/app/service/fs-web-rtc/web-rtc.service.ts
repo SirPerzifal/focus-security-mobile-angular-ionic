@@ -68,7 +68,7 @@ export class WebRtcService extends ApiService{
 
   constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController) {
     super(http);
-    // this.initializeSocket();
+    this.initializeSocket();
   }
 
   private listenForNativeEvents() {

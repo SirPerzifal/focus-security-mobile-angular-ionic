@@ -6,8 +6,6 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
   // readonly baseUrl = 'http://localhost:8069'
-  // readonly baseUrl = 'http://localhost:8069'
-  // readonly baseUrl = 'https://backend-ifs360.sgeede.com';
   readonly baseUrl = 'https://backend-ifs360.sgeede.com';
   // protected readonly baseUrl = 'http://192.168.1.144:8069';
   // protected readonly baseUrl = 'https://backend-ifs360.sgeede.com';
