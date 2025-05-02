@@ -9,6 +9,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-login-end-user',
@@ -34,6 +35,7 @@ export class LoginEndUserPage implements OnInit {
     private notificationService: NotificationService,
     private functionMain: FunctionMainService,
     private platform: Platform,
+    private storage: StorageService,
   ) {
     this.initializeBackButtonHandling();
   }
@@ -168,14 +170,19 @@ export class LoginEndUserPage implements OnInit {
               if (res.result.is_client) {
                 Preferences.set({
                   key: 'USER_INFO',
-                  value: JSON.stringify(res.result.access_token),
-                }).then(()=>{0
-                  this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
+                  value: res.result.access_token,
+                }).then(()=>{
+                  this.storage.clearAllValueFromStorage()
+                  let storageData = {
+                    'image_profile': res.result.image_profile
+                  }
+                  this.storage.setValueToStorage('USESATE_DATA', storageData)
                   this.waitingResponseLoginApi = true;
                   this.isAnimating = true;
                   setTimeout(() => {
                     this.isAnimating = false;
                     this.waitingResponseLoginApi = false;
+                    this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
                   }, 300); // Match this duration with the CSS animation duration
                 });
               } else if (res.result.is_resident) {

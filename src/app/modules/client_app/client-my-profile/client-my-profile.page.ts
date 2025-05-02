@@ -9,6 +9,7 @@ import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'rxjs';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-client-my-profile',
@@ -45,6 +46,7 @@ export class ClientMyProfilePage implements OnInit {
     private authService: AuthService,
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
+    private storage: StorageService,
   ) { }
 
   ngOnInit() {
@@ -69,9 +71,12 @@ export class ClientMyProfilePage implements OnInit {
         email: value.email,
         contact: value.contact_number ? value.contact_number : '',
         designation: value.designation ? value.designation : '',
-        image_profile: value.image_profile ? value.image_profile : '',
+        image_profile: '',
         selected_project_id: value.project_id ? value.project_id : '',
       }
+      this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+        this.userData.image_profile = value.image_profile
+      })
     })
   }
 
@@ -93,6 +98,11 @@ export class ClientMyProfilePage implements OnInit {
             key: 'USER_INFO',
             value: results.result.access_token,
           }).then(()=>{
+            this.storage.clearAllValueFromStorage()
+            let storageData = {
+              'image_profile': results.result.image_profile
+            }
+            this.storage.setValueToStorage('USESATE_DATA', storageData)
             this.router.navigate(['/client-main-app'], {
               queryParams: {
                 reload: true

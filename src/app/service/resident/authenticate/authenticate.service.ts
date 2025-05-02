@@ -120,19 +120,19 @@ export class AuthService extends ApiService{
     const residentValue = await Preferences.get({ key: 'USER_CREDENTIAL'})
     let decodedEstateString = ''
     if (residentValue.value) {
-      console.log("RESIDENT")
+      // console.log("RESIDENT")
       decodedEstateString = decodeURIComponent(escape(atob(residentValue.value)));
       const credential = JSON.parse(decodedEstateString);
-      console.log(credential)
+      // console.log(credential)
       return credential.access_token
     }
             // Mengubah string JSON menjadi objek JavaScript
-    console.log(value)
+    // console.log(value)
 
     if (value && value.value) {
-      console.log("VLIENT")
+      // console.log("VLIENT")
       const accessToken = value.value;
-      console.log(accessToken);
+      // console.log(accessToken);
       return accessToken; // actually return the value
     }
 
@@ -146,6 +146,7 @@ export class AuthService extends ApiService{
     console.log('Refreshing Token...')
     return this.http.post<any>(`${this.baseUrl}/focus/post/refresh`, {}).pipe(
       map((response) => {
+        console.log(response)
         if (response.result?.access_token) {
           console.log('Acquired New Token', response.result.access_token)
           this.jwtdecoded = jwtDecode(response.result.access_token)

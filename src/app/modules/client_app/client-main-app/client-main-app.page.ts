@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-client-main-app',
@@ -41,12 +42,14 @@ export class ClientMainAppPage implements OnInit {
     private authService: AuthService, 
     private route: ActivatedRoute,
     private platform: Platform,
+    private storage: StorageService,
     public functionMain: FunctionMainService) {
     
     }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+      console.log(params)
       if (params) {
         if (params['reload']){
           this.loadProject()
@@ -78,8 +81,11 @@ export class ClientMainAppPage implements OnInit {
         unit: value.unit_name,
         email: value.email,
         contact: value.contact_number,
-        image_profile: value.image_profile,
+        image_profile: '',
       }
+      this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+        this.userData.image_profile = value.image_profile
+      })
     })
   }
 

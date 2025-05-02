@@ -4,6 +4,7 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-client-change-password',
@@ -12,7 +13,7 @@ import { AuthService } from 'src/app/service/resident/authenticate/authenticate.
 })
 export class ClientChangePasswordPage implements OnInit {
 
-  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService) { }
+  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService, private storage: StorageService) { }
 
   userData = {
     id: '',
@@ -46,10 +47,13 @@ export class ClientChangePasswordPage implements OnInit {
         email: value.email,
         contact: value.contact_number ? value.contact_number : '',
         designation: value.designation ? value.designation : '',
-        image_profile: value.image_profile ? value.image_profile : '',
+        image_profile: '',
       }
       this.passwordForm.id = value.user_id
       this.passwordForm.login = value.email
+      this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+        this.userData.image_profile = value.image_profile
+      })
     })
   }
 

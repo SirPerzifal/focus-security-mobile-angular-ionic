@@ -6,6 +6,7 @@ import { Platform } from '@ionic/angular';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Preferences } from '@capacitor/preferences';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-login-vms',
@@ -19,6 +20,7 @@ export class LoginVmsPage implements OnInit {
     private platform: Platform, 
     private mainVmsService: MainVmsService, 
     public functionMain: FunctionMainService,
+    private storage: StorageService,
   ) {
     
    }
@@ -148,7 +150,14 @@ export class LoginVmsPage implements OnInit {
               key: 'USER_INFO',
               value: results.result.response_status.access_token,
             }).then(()=>{
-              this.router.navigate(['/home-vms']);
+              this.storage.clearAllValueFromStorage()
+              let storageData = {
+                'background': results.result.response_status.background
+              }
+              this.storage.setValueToStorage('USESATE_DATA', storageData)
+              setTimeout(() => {
+                this.router.navigate(['/home-vms']);
+              }, 300)
             });
           } else {
             this.functionMain.presentToast('Residence codes not found!', 'danger');
