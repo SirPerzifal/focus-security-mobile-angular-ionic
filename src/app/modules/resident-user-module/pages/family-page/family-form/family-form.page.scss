@@ -32,3 +32,16 @@ ion-modal#choose-inheritence-modal .wrapper {
     margin: 0;
     background-color: #E3787E;
 }
+
+.block {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ion-modal#is-modal-choose-upload {
+    --height: auto;
+    --border-radius: 10px 10px 0 0;
+}

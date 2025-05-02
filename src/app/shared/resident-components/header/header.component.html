@@ -1,18 +1,40 @@
-<div class="header fixed top-0">
-  <div class="flex flex-col justify-start">
-    <img alt="Profile picture of a person" height="80" [src]="functionMain.getImage(profileImage)" width="80" class="w-80 h-80"/>
-    <ion-icon class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1" name="pencil" (click)="backToPrev()">
+<div
+  [ngClass]="
+    isIOS && isMobile ? 'h-[183px] header fixed top-0' : 'header fixed top-0'
+  "
+>
+  <div
+    [ngClass]="
+      isIOS && isMobile
+        ? 'flex flex-col justify-start mt-[48px]'
+        : 'flex flex-col justify-start'
+    "
+  >
+    <img
+      alt="Profile picture of a person"
+      height="80"
+      [src]="functionMain.getImage(profileImage)"
+      width="80"
+      class="w-80 h-80"
+    />
+    <ion-icon
+      class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1"
+      name="pencil"
+      (click)="backToPrev()"
+    >
     </ion-icon>
     <div class="flex flex-col items-start mt-4">
-      <h1 class="text-[black]">
-        Welcome {{ userName }}
-      </h1>
+      <h1 class="text-[black]">Welcome {{ userName }}</h1>
       <p class="text-[black] font-bold">
         {{ condoName }}
       </p>
     </div>
   </div>
-  <div class="logo">
-    <img alt="iFS360 logo" height="60" src="https://res.cloudinary.com/dkxor4kjf/image/upload/v1745219293/logoIFS_eeimyp.png"/>
+  <div [ngClass]="isIOS && isMobile ? '!top-[58px] logo' : 'logo'">
+    <img
+      alt="iFS360 logo"
+      height="60"
+      src="https://res.cloudinary.com/dkxor4kjf/image/upload/v1745219293/logoIFS_eeimyp.png"
+    />
   </div>
 </div>
