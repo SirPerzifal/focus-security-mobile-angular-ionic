@@ -184,11 +184,18 @@ export class FamilyFormPage implements OnInit {
     });
   }
 
+  isModalChooseUpload: boolean = false;
+  chooseWhereToChoose() {
+    console.log("tes");
+    this.isModalChooseUpload = !this.isModalChooseUpload;
+  }
+
   onUploadImageProfile(event: any) {
     let data = event.target.files[0];
     if (data) {
       this.selectedNameProfileFamily = data.name;
       this.convertToBase64(data).then((base64: string) => {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
         this.formData.image_family = base64.split(',')[1];
       }).catch(error => {
         console.error('Error converting to base64', error);
@@ -218,6 +225,7 @@ export class FamilyFormPage implements OnInit {
       });
       
       if (image && image.base64String) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
         // Update the form data with the base64 image
         this.formData.image_family = image.base64String;
         
@@ -234,6 +242,10 @@ export class FamilyFormPage implements OnInit {
     }
   }
 
+  deletePhoto() {
+    this.formData.image_family = '';
+    this.selectedNameProfileFamily = '';
+  }
 
   onUploadHelperWorkPermit(event: any) {
     let data = event.target.files[0];
