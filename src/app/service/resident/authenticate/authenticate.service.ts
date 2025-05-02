@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
+import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,7 @@ export class AuthService extends ApiService{
   }
 
   parseJWTParamsVMS(token:string){
-    return jwtDecode(token) as {mobile_number:string, project_id:number, project_name:string, user_id:number, exp:Number}
+    return jwtDecode(token)
   }
 
   isTokenValid(token: string): boolean {
@@ -60,7 +61,7 @@ export class AuthService extends ApiService{
     return this.http.post<any>(`${this.baseUrl}/resident/get/estate`, {jsonrpc: '2.0', params: {email}})
   }
 
-  changePassword(newPassword: string, userId: number): Observable<any> {
+  changePassword(currentPassword: string, newPassword: string, userId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -69,6 +70,7 @@ export class AuthService extends ApiService{
     const body = {
         jsonrpc: '2.0',
         params: {
+          current_password: currentPassword,
           new_password: newPassword,
           family_id: userId,
         },
@@ -111,4 +113,72 @@ export class AuthService extends ApiService{
 
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+
+  async getToken(): Promise<string | null> {
+
+    const value = await Preferences.get({ key: 'USER_INFO' });
+    const residentValue = await Preferences.get({ key: 'USER_CREDENTIAL'})
+    let decodedEstateString = ''
+    if (residentValue.value) {
+      console.log("RESIDENT")
+      decodedEstateString = decodeURIComponent(escape(atob(residentValue.value)));
+      const credential = JSON.parse(decodedEstateString);
+      console.log(credential)
+      return credential.access_token
+    }
+            // Mengubah string JSON menjadi objek JavaScript
+    console.log(value)
+
+    if (value && value.value) {
+      console.log("VLIENT")
+      const accessToken = value.value;
+      console.log(accessToken);
+      return accessToken; // actually return the value
+    }
+
+    return null; // fallback return
+
+  }
+
+  jwtdecoded : any = {}
+
+  refreshToken(): Observable<any> {
+    console.log('Refreshing Token...')
+    return this.http.post<any>(`${this.baseUrl}/focus/post/refresh`, {}).pipe(
+      map((response) => {
+        if (response.result?.access_token) {
+          console.log('Acquired New Token', response.result.access_token)
+          this.jwtdecoded = jwtDecode(response.result.access_token)
+          // console.log(jwtDecode(response.result.access_token), "the decoded")
+          if (this.jwtdecoded?.is_client){
+            console.log("IM ON IS CLIENT")
+            Preferences.set({
+              key: 'USER_INFO',
+              value: response.result?.access_token,
+            });
+          }
+          else{
+            console.log("IM ON IS RESIDENT")
+            let EmailOrPhone = this.jwtdecoded?.email || this.jwtdecoded?.mobile_number
+            const userCredentials = {
+              emailOrPhone: EmailOrPhone,
+              access_token: response.result?.access_token
+            }
+            console.log(userCredentials)
+            Preferences.set({
+              key: 'USER_CREDENTIAL',
+              value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
+            });
+          }
+          // Store the new token
+          
+          console.log("Returning the new Token")
+          return response.result?.access_token;
+        } else {
+          throw new Error('Failed to refresh token');
+        }
+      })
+    );
+  }
+
 }

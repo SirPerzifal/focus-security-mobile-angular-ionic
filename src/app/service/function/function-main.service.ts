@@ -9,6 +9,9 @@ import { FileOpener } from '@capacitor-community/file-opener';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { RecordsAlertNextPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.page';
 import { Router } from '@angular/router';
+import {jwtDecode} from 'jwt-decode';
+import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +23,9 @@ export class FunctionMainService {
     private mainVmsService: MainVmsService,
     private modalController: ModalController,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private webRtcService: WebRtcService,
+    private storage: StorageService,
   ) { }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
@@ -233,11 +238,14 @@ export class FunctionMainService {
     }).replace(',', '');
   }
 
+  preference: any = {}
   vmsPreferences(): Promise<any> {
     return Preferences.get({ key: 'USER_INFO' }).then((result) => {
       if (result.value) {
-        let preference_data = this.authService.parseJWTParamsVMS(result.value);
-        return preference_data;
+        console.log(result.value)
+        this.preference = jwtDecode(result.value);
+        this.preference['access_token'] = result.value
+        return this.preference;
       } else {
         return false;
       }
@@ -437,6 +445,16 @@ export class FunctionMainService {
     const seconds = String(dateObj.getSeconds()).padStart(2, '0');
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  getHostName(hosts: any) {
+    return hosts.length > 0 ? hosts.map((item: any) => item.name ).join(', ') : '-'
+  }
+
+  logout() {
+    Preferences.clear()
+    this.webRtcService.closeSocket();
+    this.storage.clearAllValueFromStorage();
   }
 
 }

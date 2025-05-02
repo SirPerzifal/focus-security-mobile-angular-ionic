@@ -151,35 +151,35 @@ export class SettingsMainPage implements OnInit {
 
   onSubmitChangePassword() {
     console.log(this.currentPassword, this.passwordForm);
-    if (this.passwordForm.currentPassword !== this.currentPassword) {
-      this.functionMain.presentToast("Current password you input not match with actual current password.", 'danger');
+    if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
+      this.functionMain.presentToast("New password and confirm password not match.", 'danger');
       return
     }
 
-    // if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
-    //   this.functionMain.presentToast("New password and confirm password not match.", 'danger');
-    //   return
-    // }
-
     if (this.fromFamily) {
-      this.authService.changePassword(this.passwordForm.newPassword, this.familyIdFromFamilyPage).subscribe((result) => {
+      this.authService.changePassword(this.passwordForm.currentPassword, this.passwordForm.newPassword, this.familyIdFromFamilyPage).subscribe((result) => {
         if (result.result.response_code === 200) {
-          Preferences.clear();
           this.route.navigate(['/family-main']);
+          this.functionMain.presentToast(result.result.response_message, 'success');
+        } else if (result.result.response_code === 400) {
+          this.functionMain.presentToast(result.result.response_message, 'danger');
         } else {
-          console.error('Error:', result.result);
+          this.functionMain.presentToast(result.result.response_message, 'danger');
         }
       })    
       // // console.log("if");
     } else {
-      this.authService.changePassword(this.passwordForm.newPassword, this.familyId).subscribe((result) => {
+      this.authService.changePassword(this.passwordForm.currentPassword, this.passwordForm.newPassword, this.familyId).subscribe((result) => {
         if (result.result.response_code === 200) {
           this.pageName = '';
           this.showMain = true;
           this.showChangePassword = false;
           this.showNotificationSettings = false;
+          this.functionMain.presentToast(result.result.response_message, 'success');
+        } else if (result.result.response_code === 400) {
+          this.functionMain.presentToast(result.result.response_message, 'danger');
         } else {
-          console.error('Error:', result.result);
+          this.functionMain.presentToast(result.result.response_message, 'danger');
         }
       })
       // console.log("else");

@@ -14,7 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -23,6 +23,7 @@ import { CustomDateFormatter } from 'src/utils/custom-date-formatter';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
+import { PublicMainService } from './service/public-main/public-main.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,7 +46,8 @@ import { faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
     }),
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: PublicMainService, multi: true}
   ],
   bootstrap: [AppComponent],
 })

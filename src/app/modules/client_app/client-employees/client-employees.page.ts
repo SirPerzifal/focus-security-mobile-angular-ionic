@@ -279,7 +279,7 @@ export class ClientEmployeesPage implements OnInit {
   }
 
   callEmployee(data: any){
-    console.log(data)
-    // this.webRtcService.createOffer(false, false, data.unit_id, false);
+    // console.log(data)
+    this.webRtcService.createOffer(false, data.id, false, false);
   }
 }

@@ -91,7 +91,7 @@ export class ClientMyProfilePage implements OnInit {
           Preferences.clear()
           Preferences.set({
             key: 'USER_INFO',
-            value: JSON.stringify(results.result.access_token),
+            value: results.result.access_token,
           }).then(()=>{
             this.router.navigate(['/client-main-app'], {
               queryParams: {

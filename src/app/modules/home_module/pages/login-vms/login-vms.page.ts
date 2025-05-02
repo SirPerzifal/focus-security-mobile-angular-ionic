@@ -146,7 +146,7 @@ export class LoginVmsPage implements OnInit {
             this.project_key = ''
             Preferences.set({
               key: 'USER_INFO',
-              value: JSON.stringify(results.result.response_status.access_token),
+              value: results.result.response_status.access_token,
             }).then(()=>{
               this.router.navigate(['/home-vms']);
             });

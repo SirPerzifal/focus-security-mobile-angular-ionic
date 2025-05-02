@@ -531,6 +531,11 @@ export class ContractorFormPage implements OnInit {
 
   toggleShowQr() {
     if (!this.showDriveTrans && !this.showWalkTrans) {
+      if (this.showWalk || this.showDrive) {
+        this.resetForm()
+        this.isFromScan = false
+        this.tempHost = []
+      }
       this.showQrTrans = true
       this.showDrive = false;
       this.showWalk = false;
@@ -554,9 +559,13 @@ export class ContractorFormPage implements OnInit {
       this.showWalkTrans = true
       this.showDrive = false;
       this.showQr = false;
+      this.contactHost = ''
       setTimeout(() => {
         this.showWalk = true;
         this.showWalkTrans = false
+        setTimeout(() => {
+          this.contactHost = this.tempHost
+        }, 300)
       }, 300)
     }
   }
@@ -572,15 +581,21 @@ export class ContractorFormPage implements OnInit {
       this.showDriveTrans = true
       this.showWalk = false;
       this.showQr = false;
+      this.contactHost = ''
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
+        setTimeout(() => {
+          this.contactHost = this.tempHost
+        }, 300)
         if (!this.isFromScan) {
           this.refreshVehicle()
         }
       }, 300)
     }
   }
+
+  tempHost: any = []
 
   searchData: any
 
@@ -666,9 +681,14 @@ export class ContractorFormPage implements OnInit {
           this.formData.company_name = this.searchData.company_name;
           this.formData.contractor_name = this.searchData.contractor_name;
           this.formData.contractor_vehicle = this.searchData.vehicle_number;
+          this.formData.company_name = this.searchData.company_name
+          this.contractor_entry_purpose = this.searchData.type_of_work
 
           if (this.project_config.is_industrial) {
-            this.contactHost = this.searchData.industrial_host_id[0]
+            setTimeout(() => {
+              this.contactHost = this.searchData.industrial_host_ids
+              this.tempHost = this.contactHost
+            }, 300)
           } else {
             // this.formData.block = this.searchData.block_id[0]
             // this.loadUnit().then(() => {

@@ -81,6 +81,9 @@ export class ClientReportsPage implements OnInit {
     { src: 'assets/icon/exc-client/report.png', alt: 'Move In/Out', model: 'fs.residential.schedule', params: {}, text: 'Move In/Out', permission: [true, false]},
     { src: 'assets/icon/exc-client/report.png', alt: 'Coach Registration', model: 'fs.residential.registered.coaches', params: {}, text: 'Coach Registration', permission: [true, false]},
     { src: 'assets/icon/exc-client/report.png', alt: 'Parking Appeal Reports', model: 'fs.vms.offence', params: {}, text: 'Parking Appeal Reports', permission: [true, false]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Delivery Records', model: 'fs.residential.delivery', params: {}, text: 'Visitor Records', permission: [true, true]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Collection Records', model: 'fs.vms.collection', params: {}, text: 'Collection Records', permission: [true, true]},
+    { src: 'assets/icon/exc-client/report.png', alt: 'Emergency Vehicles Records', model: 'fs.vms.emergency.vehicle', params: {}, text: 'Emergency Vehicles Records', permission: [true, true]},
   ];
   
   reportsData: any = []

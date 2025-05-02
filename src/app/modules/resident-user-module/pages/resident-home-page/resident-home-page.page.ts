@@ -164,6 +164,7 @@ export class ResidentHomePagePage implements OnInit {
       } else {
         Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
           if(value?.value){
+            console.log(value.value)
             const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
             this.isLoading = true;
             // Mengubah string JSON menjadi objek JavaScript

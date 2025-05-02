@@ -143,7 +143,7 @@ export class LoginEndUserPage implements OnInit {
               if (res.result.is_client) {
                 Preferences.set({
                   key: 'USER_INFO',
-                  value: JSON.stringify(res.result.access_token),
+                  value: res.result.access_token,
                 }).then(()=>{
                   this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
                   this.waitingResponseLoginApi = true;
@@ -158,8 +158,9 @@ export class LoginEndUserPage implements OnInit {
                 const emailOrPhone = res.result.login;
                 const userCredentials = {
                   emailOrPhone: emailOrPhone,
-                  password: this.existUser.password
+                  access_token: res.result.access_token
                 }
+                console.log(userCredentials)
 
                 Preferences.set({
                   key: 'USER_CREDENTIAL',

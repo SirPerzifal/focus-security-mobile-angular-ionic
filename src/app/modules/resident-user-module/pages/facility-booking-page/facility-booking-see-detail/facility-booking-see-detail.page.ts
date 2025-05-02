@@ -160,4 +160,9 @@ export class FacilityBookingSeeDetailPage implements OnInit {
       this.routerSubscription.unsubscribe();
     }
   }
+
+  userType = 'industrial'
+  onChangeUserType(event: any) {
+    this.userType = event;
+  }
 }
