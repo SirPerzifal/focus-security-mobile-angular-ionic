@@ -68,6 +68,15 @@ export class LoginEndUserPage implements OnInit {
 
   async getNotificationPermission(): Promise<string> {
     try {
+      // Cek jika berjalan di simulator
+      const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
+      
+      // Skip proses notifikasi jika di simulator
+      if (isSimulator) {
+        console.log('Running on iOS simulator, skipping push notification setup');
+        return '';
+      }
+      
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');
         return '';
@@ -76,13 +85,22 @@ export class LoginEndUserPage implements OnInit {
       const permission = await PushNotifications.requestPermissions();
   
       if (permission.receive !== 'granted') {
-        throw new Error('Notification permission not granted');
+        console.log('Notification permission not granted');
+        return '';
       }
   
       PushNotifications.register();
   
       return new Promise((resolve, reject) => {
+        // Set timeout untuk menghindari promise yang tidak pernah resolve
+        const timeout = setTimeout(() => {
+          cleanupListeners();
+          console.log('FCM registration timed out');
+          resolve(''); // Resolve dengan string kosong jika timeout
+        }, 10000); // Timeout setelah 10 detik
+        
         const cleanupListeners = () => {
+          clearTimeout(timeout);
           PushNotifications.removeAllListeners();
         };
   
@@ -100,23 +118,24 @@ export class LoginEndUserPage implements OnInit {
                   'danger'
                 );
                 cleanupListeners();
-                reject(err);
+                resolve(''); // Resolve dengan string kosong untuk tetap melanjutkan proses login
               },
             });
           } else {
             cleanupListeners();
-            reject('FCM token is empty');
+            resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
   
         PushNotifications.addListener('registrationError', (error) => {
           cleanupListeners();
-          reject('Push notification registration failed: ' + error);
+          console.error('Push notification registration error:', error);
+          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
         });
       });
     } catch (err) {
       console.error('Push Notification Error:', err);
-      return '';
+      return ''; // Return string kosong untuk melanjutkan proses login
     }
   }
   
@@ -131,7 +150,13 @@ export class LoginEndUserPage implements OnInit {
       return
     } else {
       try{
-        await this.getNotificationPermission();
+        // Coba dapatkan token notifikasi, tapi jangan biarkan kegagalan menghentikan proses login
+        try {
+          await this.getNotificationPermission();
+        } catch (notificationError) {
+          console.error('Failed to get notification permission:', notificationError);
+          // Lanjutkan proses login meskipun gagal mendapatkan token notifikasi
+      }
         this.authService.postLoginAuthenticate(
           this.existUser.login, 
           this.existUser.password, 
@@ -144,7 +169,7 @@ export class LoginEndUserPage implements OnInit {
                 Preferences.set({
                   key: 'USER_INFO',
                   value: JSON.stringify(res.result.access_token),
-                }).then(()=>{
+                }).then(()=>{0
                   this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
                   this.waitingResponseLoginApi = true;
                   this.isAnimating = true;
