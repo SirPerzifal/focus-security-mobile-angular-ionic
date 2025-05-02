@@ -2,11 +2,7 @@
   <app-header-inner-page
     [text]="'Facility Bookings'"
     [text_second]="'Booking Detail'"
-<<<<<<< HEAD
-    (typeOfUser)="onChangeUserType($event)"
-=======
     (typeOfUser)="onChangeTypeOfUser($event)"
->>>>>>> 7a6cbb9dae3c0f7a7d17df9fdecfc89b98496d2e
   ></app-header-inner-page>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -49,11 +45,7 @@
         </tr>
       </table>
 
-<<<<<<< HEAD
-      <div class="mt-4" *ngIf="userType != 'industrial'">
-=======
       <div class="mt-4" *ngIf="typeOfUser !== 'industrial'">
->>>>>>> 7a6cbb9dae3c0f7a7d17df9fdecfc89b98496d2e
         <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
         <div class="flex justify-between">
           <p>Booking Fee</p>

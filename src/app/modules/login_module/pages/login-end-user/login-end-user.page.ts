@@ -168,13 +168,8 @@ export class LoginEndUserPage implements OnInit {
               if (res.result.is_client) {
                 Preferences.set({
                   key: 'USER_INFO',
-<<<<<<< HEAD
-                  value: res.result.access_token,
-                }).then(()=>{
-=======
                   value: JSON.stringify(res.result.access_token),
                 }).then(()=>{0
->>>>>>> 64e00190e314ed35ecbb44e7654466a7f2b19196
                   this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
                   this.waitingResponseLoginApi = true;
                   this.isAnimating = true;
