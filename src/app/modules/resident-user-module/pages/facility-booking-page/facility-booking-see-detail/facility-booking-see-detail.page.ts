@@ -67,6 +67,13 @@ export class FacilityBookingSeeDetailPage implements OnInit {
     }
   }
 
+  typeOfUser: string = ''
+  onChangeTypeOfUser(event: any) {
+    this.typeOfUser = event;
+    console.log(this.typeOfUser);
+    
+  }
+
   formatTime(datetime: string): string {
     if (!datetime) return '';
     

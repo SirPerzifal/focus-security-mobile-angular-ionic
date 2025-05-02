@@ -31,11 +31,16 @@
           <div class="w-full flex justify-between flex-row mt-2">
             <div class="w-full">
               <div class="flex flex-row justify-start items-center">
-                <p class="text-sm font-bold">Name of Contractor</p>
+                <p class="text-base cw-3:text-sm font-bold">
+                  Name of Contractor
+                </p>
                 <a
                   class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2"
                   (click)="presentCustomAlert(i)"
-                  ><ion-icon class="text-base mt-[2px]" name="trash"></ion-icon
+                  ><ion-icon
+                    class="text-base cw-3:text-sm mt-[2px]"
+                    name="trash"
+                  ></ion-icon
                 ></a>
               </div>
               <input
@@ -62,20 +67,38 @@
           <div class="w-full flex flex-col justify-between">
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">Contact Number</p>
+                <p class="text-base font-bold cw-3:text-sm">
+                  Entry Mobile Number
+                </p>
               </div>
-              <input
-                [id]="'invf_phone_' + i"
-                name="phone_{{i}}"
-                placeholder=""
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-                [(ngModel)]="inviteeFormList[i].contact_number"
-                required
-              />
+              <div class="flex flex-row w-full space-x-2">
+                <select
+                  id="contry_code"
+                  class="border w-[55%] rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base mt-1"
+                  name="contry_code"
+                  style="border: 1px solid #6b7280"
+                  (change)="onChangeCountryCode($event, i)"
+                  [(ngModel)]="selectedCountry[i].selected_code"
+                >
+                  <option hidden selected disabled value="+65">SG +65</option>
+                  <option *ngFor="let code of countryCodes" [value]="code.code">
+                    {{ code.country }} +{{ code.code }}
+                  </option>
+                </select>
+                <input
+                  [id]="'invf_phone_' + i"
+                  name="phone_{{i}}"
+                  placeholder=""
+                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+                  (change)="onChangePhoneNumber($event, i)"
+                  [(ngModel)]="inviteeFormList[i].contact_number"
+                  required
+                />
+              </div>
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">Vehicle Number</p>
+                <p class="text-base cw-3:text-sm font-bold">Vehicle Number</p>
               </div>
               <input
                 [id]="'invf_plate_' + i"
@@ -88,7 +111,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">Company Name</p>
+                <p class="text-base cw-3:text-sm font-bold">Company Name</p>
               </div>
               <input
                 [id]="'invf_company_name_' + i"
@@ -101,11 +124,11 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">Type Of Work</p>
+                <p class="text-base cw-3:text-sm font-bold">Type Of Work</p>
               </div>
               <select
                 [id]="'invf_type_of_work_' + i"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mt-1"
                 (change)="onchangeTypeOfWork($event, 'select')"
                 [(ngModel)]="inviteeFormList[i].type_of_work"
                 required
@@ -128,9 +151,11 @@
             </div>
             <div class="w-full flex flex-col">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">Host</p>
+                <p class="text-base cw-3:text-sm font-bold">Host</p>
               </div>
-              <div class="flex flex-row space-x-2 items-start my-2 w-full !text-sm">
+              <div
+                class="flex flex-row space-x-2 items-start my-2 w-full !text-base !cw-3:text-sm"
+              >
                 <app-radio-check-input-case
                   [type]="'radio'"
                   [id]="'myself' + i"
@@ -152,7 +177,7 @@
               </div>
               <div
                 *ngIf="entryCheck === 'other_host'"
-                class="w-full mb-2 text-sm"
+                class="w-full mb-2 text-base cw-3:text-sm"
               >
                 <app-m2m-selection
                   [Arrays]="Host"
@@ -167,7 +192,7 @@
             </div>
             <div class="w-full">
               <div class="flex flex-row justify-start mt-2">
-                <p class="text-base font-bold">
+                <p class="text-base cw-3:text-sm font-bold">
                   Expected Number of continuous days of visit
                 </p>
               </div>

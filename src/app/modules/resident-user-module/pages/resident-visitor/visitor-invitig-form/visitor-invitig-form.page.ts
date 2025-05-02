@@ -22,6 +22,23 @@ export class VisitorInvitigFormPage implements OnInit {
   isModalOpen: boolean = false; // Status modal
   isFormInitialized: boolean = false;
   isFormVisible: boolean = false; // New variable to control form visibility
+  countryCodes: any[] = [
+    {
+      country: 'SG',
+      code: '65',
+      digit: 8,
+    },
+    {
+      country: 'ID',
+      code: '62',
+      digit: 12,
+    },
+    {
+      country: 'MY',
+      code: '60',
+      digit: 9,
+    },
+  ]
 
   formData = {
     dateOfInvite: new Date(),
@@ -56,8 +73,6 @@ export class VisitorInvitigFormPage implements OnInit {
           dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
         };
         console.log(state.formData.dateOfInvite);
-        
-  
       if (state.selectedInvitees) {
         this.inviteeFormList = state.selectedInvitees; // Update local list
         this.isFormVisible = true; // Show form if there are invitees
@@ -81,7 +96,12 @@ export class VisitorInvitigFormPage implements OnInit {
       vehicle_number: '' 
     };
 
+    const selectedCode: any = { 
+      selected_code: '65'
+    };
+
     this.inviteeFormList.push(initialInvitee);
+    this.selectedCountry.push(selectedCode)
     this.isFormVisible = true; // Show form since we have at least one invitee
     this.addInviteeText = 'Add More Invitees'; // Update button text
   }
@@ -90,13 +110,14 @@ export class VisitorInvitigFormPage implements OnInit {
     // Cek state dari navigasi saat ini
     const navigation = this.router.getCurrentNavigation();
     const navigationState = navigation?.extras.state;
-
+  
     // Cek state dari route
     let selectedInvitees: any[] = [];
-
+  
     // Prioritaskan state dari navigasi
     if (navigationState && navigationState['selectedInvitees']) {
       selectedInvitees = navigationState['selectedInvitees'];
+      console.log(selectedInvitees);
     } 
     // Jika tidak ada, cek params
     else if (params && params['selectedInvitees']) {
@@ -106,21 +127,45 @@ export class VisitorInvitigFormPage implements OnInit {
         console.error('Error parsing selectedInvitees', error);
       }
     }
-
+  
     // Proses data invitee
     if (selectedInvitees && selectedInvitees.length > 0) {
-      this.inviteeFormList = selectedInvitees.map((invitee: any) => ({
-        visitor_name: invitee.visitor_name || '',
-        contact_number: invitee.contact_number || '',
-        vehicle_number: invitee.vehicle_number || ''
-      }));
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
+        let contact_number = invitee.contact_number || '';
+  
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          this.selectedCountry = selectedInvitees.map((invitee: any) => {
+            let contact_number = invitee.contact_number || '';
+            let selectedCountry = ''
+      
+            // Validasi untuk contact_number
+            if (contact_number.startsWith('6') && contact_number.length > 2) {
+              selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+            }
+      
+            return {
+              selected_code: selectedCountry
+            };
+          });
+          console.log(this.selectedCountry);
+          
+          contact_number = contact_number.substring(2); // Ambil sisa dari contact_number
+        }
+  
+        return {
+          visitor_name: invitee.visitor_name || '',
+          contact_number: invitee.contact_number, // contact_number yang sudah dipisahkan
+          vehicle_number: invitee.vehicle_number || '',
+        };
+      });
       this.addInviteeText = 'Add More Invitees';
     }
-
+  
     if (this.inviteeFormList.length > 0) {
       this.isFormVisible = true; // Show form if there are invitees
     }
-
+  
     this.isFormInitialized = true;
   }
 
@@ -220,6 +265,30 @@ export class VisitorInvitigFormPage implements OnInit {
     this.inviteeFormList.push(newInvitee);
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
+  }
+
+  selectedCountry: any[] = [];
+  onChangeCountryCode(event: any, index: any) {
+    this.selectedCountry[index].selected_code = event.target.value;
+    this.inviteeFormList.every((invitee:any) => {
+      if (invitee.contact_number.trim() !== '' && invitee.contact_number.startsWith('6')) {
+        const separatedCode = this.inviteeFormList[index].contact_number.slice(2, 20);
+        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + separatedCode;
+        console.log(this.inviteeFormList[index].contact_number);
+      } else {
+        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + this.inviteeFormList[index].contact_number;
+        // console.log(this.selectedCountry + this.inviteeFormList[index].contact_number);
+      }
+    });
+  }
+
+  onChangePhoneNumber(event: any, index: any) {
+    if (event.target.value.length < 4) {
+      this.functionMain.presentToast('Phone is not minimum character', 'danger')
+      return
+    } else {
+      this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + event.target.value;
+    }
   }
 
   navigateToInviteFormHistory() {

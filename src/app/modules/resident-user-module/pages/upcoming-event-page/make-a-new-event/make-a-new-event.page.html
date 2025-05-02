@@ -91,7 +91,10 @@
             >
             </app-text-input>
           </div>
-          <div class="w-full flex flex-col mb-2" *ngIf="isCoachData && userType != 'industrial'" >
+          <div
+            class="w-full flex flex-col mb-2"
+            *ngIf="isCoachData && userType != 'industrial'"
+          >
             <label class="block text-black font-bold mb-1 text-base"
               >Coach</label
             >
@@ -193,7 +196,10 @@
               </option>
             </select>
           </div>
-          <div class="w-full flex flex-col mb-2" *ngIf="!isRead && EventsForm.room_id">
+          <div
+            class="w-full flex flex-col mb-2"
+            *ngIf="!isRead && EventsForm.room_id"
+          >
             <label class="block text-black font-bold mb-1 text-base"
               >Booking</label
             >
@@ -206,7 +212,9 @@
             >
               <option value="0" selected disabled hidden>Choose Booking</option>
               <option *ngFor="let book of BookingResult" [value]="book.id">
-                {{ book.name }} ({{ functionMain.convertDateExtend(book.start_datetime) }} - {{ functionMain.convertDateExtend(book.stop_datetime) }})
+                {{ book.name }} ({{
+                functionMain.convertDateExtend(book.start_datetime) }} - {{
+                functionMain.convertDateExtend(book.stop_datetime) }})
               </option>
             </select>
           </div>
@@ -240,7 +248,10 @@
             >
             </app-text-input>
           </div>
-          <div class="flex flex-col w-full mb-2" *ngIf="!isCoachData && userType != 'industrial'">
+          <div
+            class="flex flex-col w-full mb-2"
+            *ngIf="!isCoachData && userType != 'industrial'"
+          >
             <div class="flex flex-row justify-start">
               <p class="text-base font-bold">Post To</p>
             </div>
@@ -281,9 +292,17 @@
             ></app-m2m-selection-readonly>
           </div>
           <div class="w-full mb-2" *ngIf="userType == 'industrial'">
-            <app-m2m-selection [Arrays]="Host" (outputValue)="hostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'" [customTextClass]="'p-0 text-sm'" [Selected]="selectedHost" [isReadonly]="isRead"
-                [labelText]="'Host'"></app-m2m-selection>
-        </div>
+            <app-m2m-selection
+              [Arrays]="Host"
+              (outputValue)="hostChange($event)"
+              [placeholder]="'Select Hosts'"
+              [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
+              [customTextClass]="'p-0 text-sm'"
+              [Selected]="selectedHost"
+              [isReadonly]="isRead"
+              [labelText]="'Participants'"
+            ></app-m2m-selection>
+          </div>
           <div class="mb-2">
             <label class="block text-black font-bold mb-1 text-base"
               >Remarks</label

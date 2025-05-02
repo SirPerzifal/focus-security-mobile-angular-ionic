@@ -3,11 +3,11 @@
   <u *ngIf="labelParent" class="font-bold text-black text-base">
     {{ labelParent }}
   </u>
-  <label for="{{ id }}" class="font-bold text-black text-sm">
+  <label for="{{ id }}" class="font-bold text-black text-base cw-3:text-sm">
     {{ labelChild1 }}
   </label>
   <div
-    class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between mt-1 h-12"
+    class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between h-12"
     (click)="openDateTimePicker()"
   >
     <label
@@ -49,7 +49,7 @@
   </u>
   <label
     for="{{ id }}"
-    class="font-bold text-black text-sm"
+    class="font-bold text-black text-base cw-3:text-sm"
     (click)="clickDate(id)"
   >
     {{ labelChild1 }}
@@ -59,7 +59,7 @@
     [type]="type"
     [value]="value"
     [ngClass]="disabled ? 'text-gray-500' : ''"
-    class="bg-white p-3 rounded border h-12 border-gray-500 w-full mt-1"
+    class="bg-white p-3 rounded border h-12 border-gray-500 w-full"
     style="border: 1px solid #6b7280"
     placeholder="{{ typeAction + ' ' + labelChild2 }}"
     [disabled]="disabled"
