@@ -197,13 +197,16 @@ export class WebRtcService extends ApiService{
       // Coba ambil dari USESTATE_DATA
       const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
       if (storedValue) {
-        const decoded = await this.storage.decodeData(storedValue);
-        if (decoded) {
-          const parsedResident = JSON.parse(decoded);
-          if (parsedResident.family_id) {
-            userInfo = parsedResident;
-            console.log("Got userInfo from USESTATE_DATA", userInfo);
+        try {
+          const decoded = await this.storage.decodeData(storedValue);
+          if (decoded) {
+            const parsedResident = JSON.parse(decoded);
+            if (parsedResident.family_id) {
+              userInfo = parsedResident;
+              console.log("Got userInfo from USESTATE_DATA", userInfo);
+            }
           }
+        } catch {
         }
       }
 
@@ -240,6 +243,7 @@ export class WebRtcService extends ApiService{
       this.socket = io('wss://ws.sgeede.com', {
         query: { uniqueId: userInfo.family_id || '0812345678-Security' },
       });
+      console.log('this.socketthis.socketthis.socket',this.socket);
   
       // Register event handlers
       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
