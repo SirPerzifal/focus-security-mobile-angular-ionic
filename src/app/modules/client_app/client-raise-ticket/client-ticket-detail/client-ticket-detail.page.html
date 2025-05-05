@@ -7,12 +7,7 @@
   <div class="flex flex-col mx-4 mb-24">
     <div class="flex flex-col w-full">
       <div [ngClass]="'rounded p-5 my-4 mt-4 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
-        <div class="flex flex-row justify-center" *ngIf="isLoading">
-          <div class="flex justify-center items-center h-32 w-32">
-            <ion-spinner name="circular"></ion-spinner>
-          </div>
-        </div>
-        <div class="w-full flex flex-col" *ngIf="!isLoading">
+        <div class="w-full flex flex-col">
           <p class="font-bold text-base text-black ">{{ ticketDetail.ticket_name }}</p>
           <span [innerHtml]="ticketDetail.summary" *ngIf="ticketDetail.summary"></span>
           <table class="w-full mt-2 mb-2">
@@ -31,7 +26,12 @@
                 }}</td>
             </tr>
           </table>
-          <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
+          <div class="flex flex-row justify-center" *ngIf="isLoadingFirst">
+            <div class="flex justify-center items-center h-32 w-32">
+              <ion-spinner name="circular"></ion-spinner>
+            </div>
+          </div>
+          <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment && !isLoadingFirst" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
         </div>
       </div>
       <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status != 'Solved'">
@@ -42,19 +42,14 @@
           class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
           [(ngModel)]="replyForm.body" name="entryMessage">
           </textarea>
-        <div class="w-full flex flex-row justify-between items-end">
-          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientTicketDetailAttachment
-            class="hidden" accept="image/png, image/jpg, image/jpeg"/>
-          <div class="w-4/6 mb-2">
-            <label class="text-base"><b>Attachment</b></label>
-            <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
-              class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
-              readonly />
-          </div>
-          <button id="client_ticket_detail_upload_attachment" (click)="uploadFile()"
-            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold mb-2">
-            Upload
-          </button>
+        <div class="w-full flex flex-row justify-between items-end mb-2">
+          <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" *ngIf="showFile"
+            [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" [isCamera]="true"
+            [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"
+            [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)"></app-file-input>
+          <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'"  *ngIf="!showFile" [disableUpload]="true"
+            [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" 
+            [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"></app-file-input>
         </div>
         <!-- <div class="flex flex-row justify-start">
           <p class="text-base font-bold">Attachment</p>

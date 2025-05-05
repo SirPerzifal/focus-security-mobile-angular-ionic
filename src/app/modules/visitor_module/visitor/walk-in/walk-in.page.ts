@@ -109,6 +109,8 @@ export class WalkInPage implements OnInit {
     this.selectedHost = ''
     this.contactHost = ''
     this.selectedNric = ''
+    this.pass_number = ''
+    this.purpose = ''
   }
 
   onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '') {
@@ -174,6 +176,8 @@ export class WalkInPage implements OnInit {
           } else if (res.result.status_code === 405) {
             this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 206) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.presentToast('An error occurred while attempting to save drive in data', 'danger');
           }
@@ -256,6 +260,8 @@ export class WalkInPage implements OnInit {
           } else if (res.result.status_code === 405) {
             this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 206) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
           }
@@ -412,6 +418,7 @@ export class WalkInPage implements OnInit {
       this.formData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -576,6 +583,6 @@ export class WalkInPage implements OnInit {
 
   identificationType = ''
   nric_value = ''
-  selectedNric = ''
+  selectedNric: any = ''
   pass_number = ''
 }

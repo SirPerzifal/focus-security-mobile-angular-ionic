@@ -433,8 +433,6 @@ export class ClientEventsDayViewPage implements OnInit {
             this.EventsForm.event_title = ''
             this.EventsForm.event_description = ''
             this.EventsForm.color = []
-          } else if (results.result.response_code == 405)  {
-
           } else {
             this.functionMain.presentToast(`An error occurred while trying to create new event!`, 'danger');
           }
@@ -483,7 +481,7 @@ export class ClientEventsDayViewPage implements OnInit {
           this.Events = [...newEvents];
   
           console.log(this.Events);
-        } else if (results.result.response_code == 405)  {
+        } else if (results.result.response_code == 402)  {
         } else {
           this.functionMain.presentToast(`An error occurred while loading events!`, 'danger');
         }

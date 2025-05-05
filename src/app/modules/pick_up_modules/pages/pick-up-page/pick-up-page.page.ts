@@ -261,6 +261,8 @@ export class PickUpPagePage implements OnInit {
           } else if (response.result.status_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (response.result.status_code === 206) {
+            this.functionMain.presentToast(response.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save the data!', 'danger');
           }

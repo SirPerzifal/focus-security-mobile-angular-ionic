@@ -138,40 +138,12 @@
             [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'"
             [isOne]="true"></app-m2m-selection>
         </div>
-        <!-- <div class="w-full">
-          <label class="text-base"><b>Unit</b></label>
-          <select id="blacklist_unit"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
-            (change)="onUnitChange($event)" [(ngModel)]="formData.unit_id" [disabled]="false">
-            <option value="" selected disabled hidden>Choose Unit</option>
-            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-          </select>
-        </div> -->
-        <div class="w-full flex flex-row justify-between mb-2 items-end">
-          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientBlacklistUploadImage
-            accept="image/*" class="hidden" />
-          <div class="w-4/6">
-            <label class="text-base"><b>Ban Image</b></label>
-            <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
-              class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
-              readonly />
-          </div>
-          <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
-            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold">
-            Upload
-          </button>
+        <div class="w-full">
+          <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'"
+            [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" [isCamera]="true"
+            [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"
+            [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)"></app-file-input>
         </div>
-        <!-- <div class="w-full flex flex-row justify-between items-end">
-          <div class="w-4/6">
-            <label class="text-base"><b>Ban Image</b></label>
-            <input #clientBlacklistUploadImage placeholder="Choose a file" type="file" (change)="onFileSelected($event)"
-              class="!border  w-full rounded py-2 px-3 border-[#6B7280] text-base h-12 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer" />
-          </div>
-          <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
-            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-base rounded font-bold">
-            Upload
-          </button>
-        </div> -->
         <div class="w-full flex flex-col">
           <label class="text-base"><b>Reason</b></label>
           <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
@@ -204,56 +176,56 @@
         <div class="text-base w-ful">
           <table class="w-full">
             <tr>
-              <td class="font-bold w-[45%]">NAME</td>
+              <td class="font-bold w-[45%]">Name</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(blacklistDetail.visitor_name) }}</td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">VEHICLE NO</td>
+              <td class="font-bold w-[45%]">Vehicle Number</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(blacklistDetail.vehicle_no) }}</td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">CONTACT</td>
+              <td class="font-bold w-[45%]">Contact Number</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(blacklistDetail.contact_no) }}</td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">BANNED DATE</td>
+              <td class="font-bold w-[45%]">Banned Date</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.create_date ? functionMain.convertNewDateTZ(blacklistDetail.create_date) : '-' }}
               </td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">LAST ENTRY DATE & TIME</td>
+              <td class="font-bold w-[45%]">Last Entry Date Time</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.last_entry_date_time ?
                 functionMain.convertNewDateTZ(blacklistDetail.last_entry_date_time) : '-' }}</td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td class="font-bold w-[45%]">TYPE OF ENTRY</td>
               <td class="w-[5%]">:</td>
               <td>{{ '-' }}</td>
-            </tr>
+            </tr> -->
             <tr *ngIf="!project_config.is_industrial">
-              <td class="font-bold w-[45%]">BLOCK & UNIT</td>
+              <td class="font-bold w-[45%]">Block & Unit</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.block_id[1] ? blacklistDetail.block_id[1] : '-' }} | {{ blacklistDetail.unit_id[1]
                 ?
                 blacklistDetail.unit_id[1] : '-' }}</td>
             </tr>
             <tr *ngIf="project_config.is_industrial">
-              <td class="font-bold w-[45%]">HOST</td>
+              <td class="font-bold w-[45%]">Host</td>
               <td class="w-[5%]">:</td>
-              <td>{{ blacklistDetail.host_name ? blacklistDetail.host_name : '-' }}</td>
+              <td>{{ blacklistDetail.host_name.length > 0 ? functionMain.getHostName(blacklistDetail.host_name) : '-' }}</td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">BANNED BY</td>
+              <td class="font-bold w-[45%]">Banned By</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(blacklistDetail.ban_by) }}</td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">REASON OF BAN</td>
+              <td class="font-bold w-[45%]">Reason Of Ban</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(blacklistDetail.reason) }}</td>
             </tr>

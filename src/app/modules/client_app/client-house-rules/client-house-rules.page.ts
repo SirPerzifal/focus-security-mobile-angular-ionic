@@ -101,7 +101,7 @@ export class ClientHouseRulesPage implements OnInit {
             this.documentList = results.result.response_result
           } else {
           }
-        } else if (results.result.response_code == 405)  {
+        } else if (results.result.response_code == 402)  {
         }  else {
           this.functionMain.presentToast(`An error occurred while loading document!`, 'danger');
         }

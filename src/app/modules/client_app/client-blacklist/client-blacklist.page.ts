@@ -546,4 +546,13 @@ export class ClientBlacklistPage implements OnInit {
   onHostChange(event: any) {
     this.formData.host = event[0]
   }
+
+  onUploadImage(file: any): void {
+    if (file){
+      let data = file;
+      this.formData.ban_image = file.image
+      console.log(data)
+    }
+  }
+
 }

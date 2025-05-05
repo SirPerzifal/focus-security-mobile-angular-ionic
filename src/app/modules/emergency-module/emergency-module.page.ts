@@ -307,6 +307,8 @@ export class EmergencyModulePage implements OnInit {
         } else if (results.result.response_code === 405) {
           this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['home-vms'])
+        } else if (results.result.response_code === 206) {
+          this.functionMain.presentToast(results.result.status_description, 'danger');
         } else {
           this.functionMain.presentToast('An error occurred while attempting to save emergecny vehicle data!', 'danger');
         }

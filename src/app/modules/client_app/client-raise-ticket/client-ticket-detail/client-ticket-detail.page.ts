@@ -24,7 +24,7 @@ export class ClientTicketDetailPage implements OnInit {
       this.selectedMenu = state.menu
       this.is_issue = state.issue
       console.log(this.ticket)
-      this.loadDetail()
+      this.loadDetail(true)
       if (this.is_issue) {
         this.topTitle = 'Report App Issue'
         this.secondTitle = 'Issue Detail'
@@ -133,16 +133,21 @@ export class ClientTicketDetailPage implements OnInit {
   }
 
   isLoading = false
-  loadDetail(){
+  isLoadingFirst = false
+  loadDetail(loadingFirst: boolean = false){
+    if (loadingFirst) {
+      this.isLoadingFirst = true
+    }
     this.isLoading = true
     this.clientMainService.getApi({ticket_id: this.ticket.id}, '/client/get/report_issue_detail').subscribe({
       next: (results) => {
         this.isLoading = false
+        this.isLoadingFirst = false
         console.log(results)
         if (results.result.response_code == 200) {
           this.messageDetail = results.result.conversation_result.filter((item: any) => item.body !== '')
           this.ticketDetail = results.result.result[0]
-          this.ticketDetail.attachment = results.result.result[0].attachment.map((item:any) => this.functionMain.getImage(item) )
+          // this.ticketDetail.attachment = results.result.result[0].attachment.map((item:any) => this.functionMain.getImage(item) )
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
@@ -150,15 +155,17 @@ export class ClientTicketDetailPage implements OnInit {
       },
       error: (error) => {
         this.isLoading = false
+        this.isLoadingFirst = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
       }
     });
   }
 
+  showFile = true
   submitReply(is_close: boolean = false) {
     if (!this.replyForm.body) {
-      this.functionMain.presentToast('Reply content is required!')
+      this.functionMain.presentToast('Reply content is required!', 'danger')
       return
     }
     this.replyForm.ticket_id = this.ticket.id
@@ -167,15 +174,19 @@ export class ClientTicketDetailPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
+          this.showFile = false
           this.functionMain.presentToast(`Successfully add new reply!`, 'success');
           if (is_close) {
             this.onBack()
           } else {
             this.replyForm.body = ''
             this.replyForm.ir_attachment_datas = ''
+            this.fileName = ''
             this.loadDetail()
           }
-          
+          setTimeout(() => {
+            this.showFile = true
+          }, 300)
         } else {
           this.functionMain.presentToast(`An error occurred while trying to add new reply!`, 'danger');
         }
@@ -185,6 +196,16 @@ export class ClientTicketDetailPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  onUploadImage(file: any): void {
+    if (file){
+      let data = file;
+      this.replyForm.ir_attachment_datas = file.image
+      this.replyForm.ir_attachment_name = file.name
+      this.replyForm.ir_attachment_mimetype = file.type
+      console.log(data)
+    }
   }
   
   

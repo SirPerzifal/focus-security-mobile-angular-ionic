@@ -112,6 +112,8 @@ export class UnregisteredResidentCarPage implements OnInit {
           } else if (results.result.response_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['/home-vms'])
+          } else if (results.result.response_code === 206) {
+            this.functionMain.presentToast(results.result.status_description, 'danger');
           } else {
             this.presentToast('An error occurred while submitting unregistered car!', 'danger');
           }
@@ -211,6 +213,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.formData.block_id = contactData.block_id
@@ -248,6 +251,6 @@ export class UnregisteredResidentCarPage implements OnInit {
     } 
     console.log(this.formData.identification_number, this.formData.identification_type)
   }
-  selectedNric = ''
+  selectedNric: any = ''
 
 }

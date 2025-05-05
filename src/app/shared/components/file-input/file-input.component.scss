@@ -1,0 +1,19 @@
+ion-modal#open-file-camera-selection {
+    --width: 90%;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#open-file-camera-selection .wrapper {
+    padding: 15px;
+    background-color: white;
+}
+
+ion-modal#open-file-camera-selection .wrapper-comic {
+    padding: 15px;
+    background-color: white;
+    font-family: 'Comic Neue', serif;
+    font-weight: 700;
+}

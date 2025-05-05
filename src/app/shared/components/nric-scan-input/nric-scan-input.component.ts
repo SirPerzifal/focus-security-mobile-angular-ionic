@@ -91,9 +91,17 @@ export class NricScanInputComponent  implements OnInit {
 
   @Input()
   set Selected(value: any) {
-    this.nric_value = value || ''
-    this.selectedIdentification = ''
-    this.data = {is_server: false, identification_number: ''}
+    console.log(value)
+    if (value) {
+      this.nric_value = value.number
+      this.selectedIdentification = value.type
+      this.temp_type = value.type
+      this.data = {is_server: false, identification_number: this.nric_value}
+    } else {
+      this.nric_value = ''
+      this.selectedIdentification = ''
+      this.data = {is_server: false, identification_number: ''}
+    }
     this.returnOutput()
   }
 

@@ -353,6 +353,8 @@ export class CollectionModulePage implements OnInit {
           } else if (res.result.response_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.response_code === 206) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }
@@ -402,6 +404,7 @@ export class CollectionModulePage implements OnInit {
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.driveInFormData.block = contactData.block_id
@@ -422,6 +425,7 @@ export class CollectionModulePage implements OnInit {
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.walkInFormData.block = contactData.block_id
@@ -471,7 +475,7 @@ export class CollectionModulePage implements OnInit {
 
   identificationType = ''
   nric_value = ''
-  selectedNric = ''
+  selectedNric: any = ''
   pass_number = ''
 
 }

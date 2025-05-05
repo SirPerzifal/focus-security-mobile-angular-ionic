@@ -29,6 +29,8 @@ export class AlertTicketDetailPage implements OnInit {
       this.loadTicketsDetail()
     } 
   }
+
+  showFile = true
   
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -93,6 +95,7 @@ export class AlertTicketDetailPage implements OnInit {
     this.mainVmsService.getApi({ticket_id: this.params.ticket_id, body: this.reply_message, ir_attachment_datas: this.image_file, ir_attachment_name: this.image_name, user_id: this.user_id}, apiUrl).subscribe({
       next: (results) => {
         console.log('tickets', results)
+        this.showFile = false
         if (results.result.response_code === 200) {
           if (is_close){
             this.router.navigate(['/alert-main'], {queryParams: { ticket: true }})
@@ -104,6 +107,9 @@ export class AlertTicketDetailPage implements OnInit {
           }
           
         } 
+        setTimeout(() => {
+          this.showFile = true
+        }, 300)
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while loading tickets detail!', 'danger');
@@ -114,11 +120,13 @@ export class AlertTicketDetailPage implements OnInit {
 
   image_file = ''
   image_name = ''
+  image_mimetype = ''
   onUploadImage(file: any): void {
     if (file){
       let data = file;
       this.image_file = file.image
       this.image_name = file.name
+      this.image_mimetype = file.type
       console.log(data)
     }
     //   if (['image/png', 'application/pdf', 'application/msword', 'image/jpeg', 'image/jpg'].includes(data.type)) {

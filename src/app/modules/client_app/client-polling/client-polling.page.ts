@@ -210,7 +210,7 @@ export class ClientPollingPage implements OnInit {
             this.showVotedata = this.voteData.filter((polling: any) => polling.states == 'open')
           } else {
           }
-        } else if (results.result.response_code == 405)  {
+        } else if (results.result.response_code == 402)  {
 
         } else {
           this.functionMain.presentToast(`An error occurred while loading polling data!`, 'danger');
