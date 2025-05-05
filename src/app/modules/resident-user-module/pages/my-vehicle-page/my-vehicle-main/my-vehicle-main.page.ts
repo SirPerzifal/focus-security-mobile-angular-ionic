@@ -285,7 +285,6 @@ export class MyVehicleMainPage implements OnInit {
   closeModal() {
     window.location.reload();
     this.isExtensionRequestModal = !this.isExtensionRequestModal;
-    console.log(this.isExtensionRequestModal);
     this.selectedDate = ''
     this.formData = {
       vehicleId: 0,

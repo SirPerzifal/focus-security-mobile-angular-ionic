@@ -196,31 +196,41 @@
     </div>
 
     <div *ngIf="subPageName === 'History Bookings'">
-      <div class="flex flex-row space-x-2 w-full mb-2">
-        <div class="w-1/2">
-          <app-input-component
-            [id]="'start_visitor_history_date'"
-            [type]="'date'"
-            [typeAction]="'Choose'"
-            [labelParent]="''"
-            [labelChild1]="''"
-            [labelChild2]="''"
-            [value]="startDateFilter"
-            (eventEmitter)="onChangeStartDate($event)"
-          ></app-input-component>
+      <div class="flex flex-col space-y-1 w-full mb-2">
+        <div class="flex flex-row space-x-2 mr-4">
+          <p class="text-base font-bold">Filter Date</p>
         </div>
-        <div class="w-1/2">
-          <app-input-component
-            [id]="'end_visitor_history_date'"
-            [type]="'date'"
-            [typeAction]="'Choose'"
-            [labelParent]="''"
-            [labelChild1]="''"
-            [labelChild2]="''"
-            [value]="endDateFilter"
-            (eventEmitter)="onChangeEndDate($event)"
-            [minDate]="startDateFilter"
-          ></app-input-component>
+        <div class="w-full flex flex-row space-x-2">
+          <div class="w-1/2">
+            <app-input-component
+              [id]="'start_visitor_history_date'"
+              [type]="'date'"
+              [typeAction]="'Choose'"
+              [labelParent]="''"
+              [labelChild1]="''"
+              [labelChild2]="''"
+              [value]="startDateFilter"
+              (eventEmitter)="onChangeStartDate($event)"
+            ></app-input-component>
+          </div>
+          <div class="w-1/2">
+            <app-input-component
+              [id]="'end_visitor_history_date'"
+              [type]="'date'"
+              [typeAction]="'Choose'"
+              [labelParent]="''"
+              [labelChild1]="''"
+              [labelChild2]="''"
+              [value]="endDateFilter"
+              (eventEmitter)="onChangeEndDate($event)"
+              [minDate]="startDateFilter"
+            ></app-input-component>
+          </div>
+        </div>
+        <div class="flex flex-row-reverse mt-4 space-x-2 ml-4">
+          <u class="text-base font-bold" (click)="resetFilter()"
+            >Clear Filter</u
+          >
         </div>
       </div>
       <div

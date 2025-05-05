@@ -112,6 +112,12 @@ export class FacilityBookingMainPage implements OnInit {
     }
   }
 
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.filteredBookingList = [...this.originalBookingList];
+  }
+
   ngOnInit() {    
   }
 

@@ -319,7 +319,7 @@ export class VisitorInvitigFormPage implements OnInit {
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
           is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
-          facility: this.formData.facility ? this.formData.facility : '',
+          facility: this.formData.facility ? this.formData.facility : 0,
           invitees: this.inviteeFormList,
           hired_car: this.formData.hiredCar,
         }, 'post/create_expected_visitors').subscribe((response: any) => {

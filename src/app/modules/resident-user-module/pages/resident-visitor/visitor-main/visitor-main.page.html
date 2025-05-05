@@ -77,14 +77,16 @@
         <select
           id="Facility"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+          (change)="onEntryfacilityChange($event)"
         >
-          <option value="booking_1">Booking 1</option>
-          <option value="booking_2">Booking 2s</option>
-          <option value="booking_3">Booking 3</option>
+          <option selected disabled hidden></option>
+          <option *ngFor="let book of facility" [value]="book.id">
+            {{ book.bookName }}
+          </option>
         </select>
       </div>
 
-      <div class="w-full">
+      <div class="w-full mt-1.5">
         <div class="flex flex-row justify-start">
           <p class="text-base cw-3:text-sm font-bold">Message for Invitation</p>
         </div>
@@ -98,16 +100,17 @@
         ></textarea>
       </div>
 
-      <app-radio-check-input-case
-        *ngIf="userType !== 'industrial'"
-        [type]="'checkbox'"
-        [id]="'provide_unit_number'"
-        [name]="'provide_unit_number'"
-        [value]="'1'"
-        (valueEmit)="onProvideUnitChange($event)"
-        [check]="formData.isProvideUnit"
-        [text]="'Provide my unit number to visitor'"
-      ></app-radio-check-input-case>
+      <div *ngIf="userType !== 'industrial'">
+        <app-radio-check-input-case
+          [type]="'checkbox'"
+          [id]="'provide_unit_number'"
+          [name]="'provide_unit_number'"
+          [value]="'1'"
+          (valueEmit)="onProvideUnitChange($event)"
+          [check]="formData.isProvideUnit"
+          [text]="'Provide my unit number to visitor'"
+        ></app-radio-check-input-case>
+      </div>
 
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">

@@ -75,6 +75,12 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     hiredCar: "",
   }
   selectedDate: string = '';
+  facility: any[] = [
+    {
+      id: 0,
+      bookName: ''
+    }
+  ]
   
   showNewInv = true;
   showActInv = false;
@@ -163,6 +169,9 @@ export class VisitorMainPage extends ApiService implements OnInit  {
 
   onChangeTypeUser(event: any) {
     this.userType = event;
+    if (this.userType === 'industrial') {
+      this.getBookingForFacility();
+    }
   }
 
   getTodayDate() {
@@ -235,6 +244,29 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           console.log(error);
         }
       );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  getBookingForFacility() {
+    try {
+      const today = new Date();
+      const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+      this.mainApiResidentService.endpointMainProcess({}, 'get/facility_book').subscribe((response: any) => {
+        this.facility = response.result.active_bookings.filter((booking: any) => {
+          const bookingDate = new Date(booking.start_datetime).toISOString().split('T')[0];
+          return bookingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
+        }).map((booking: any) => ({
+          id: booking.id,
+          bookName: booking.facility_name
+        }));
+        console.log(this.facility);
+        
+      }, (error) => {
+        console.log(error);
+        
+      })
     } catch (err) {
       console.log(err);
     }
@@ -382,8 +414,10 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.formData.isProvideUnit = !this.formData.isProvideUnit;
   }
 
-  onEntryfacilityChange(event: string) {
-    this.formData.facility = event;
+  onEntryfacilityChange(event: any) {
+    this.formData.facility = event.target.value;
+    console.log(event.target.value);
+    
   }
 
   onSubmitNext() {
