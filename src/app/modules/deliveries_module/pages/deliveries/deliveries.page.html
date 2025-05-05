@@ -58,7 +58,7 @@
               </div> -->
               <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
                 <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
-                  (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
               </div>
               <div *ngIf="food_delivery_type == 'drive_in'" class=" w-full flex flex-row justify-between">
                 <div class="w-[90%] flex flex-col">
@@ -144,7 +144,7 @@
               </div> -->
               <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
                 <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
-                  (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
               </div>
               <div class="w-full  flex flex-row justify-between">
                 <div class="flex flex-col w-[90%]">
@@ -249,7 +249,7 @@
           <app-vms-contact-input [(value)]="otherDeliveryForm.visitor_contact_no" [id]="'drive_in_contact_collection'" (contactInfo)="getDriveInContactInfo($event)"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-col">
-          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
         </div>
         <div class="w-full flex flex-row justify-between">
           <div class="w-[90%]">

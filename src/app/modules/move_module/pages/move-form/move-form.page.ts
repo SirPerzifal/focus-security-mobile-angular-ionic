@@ -245,6 +245,8 @@ export class MoveFormPage implements OnInit {
         } else if (response.result.status_code === 405) {
           this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
+        } else if (response.result.status_code === 206) {
+          this.functionMain.presentToast(response.result.status_description, 'danger');
         } else {
           this.presentToast(response.result.status_description, 'danger');
         }

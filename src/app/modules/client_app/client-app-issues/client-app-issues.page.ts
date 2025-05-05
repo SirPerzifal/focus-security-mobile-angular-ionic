@@ -118,10 +118,10 @@ export class ClientAppIssuesPage implements OnInit {
     // Simpan data ke server
     let errMsg = ''
     if (!this.reporterDetailsFrom.typeReport) {
-      errMsg += 'Type of issue is required!'
+      errMsg += 'Type of issue is required! \n'
     }
     if (!this.reporterDetailsFrom.summaryReport) {
-      errMsg += 'Summary is required!'
+      errMsg += 'Summary is required! \n'
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')

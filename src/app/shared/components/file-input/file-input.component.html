@@ -31,4 +31,18 @@
     <b>{{buttonText}}</b>
   </button>
 
+  <ion-modal id="open-file-camera-selection" [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <div [class]="(isNotVMS ? 'wrapper' : 'wrapper-comic') + ' w-full flex flex-row justify-around'">
+        <button id="client_ticket_new_upbload_attachment" (click)="openFile()"
+          [class]="'!bg-[var(--ion-color-primary)] !text-white w-[45%] text-2xl ' + extraButtonClass" [style]="customButtonStyle">
+          Open Folder
+        </button>
+        <button id="client_ticket_new_upbload_attachment" (click)="takePicture()"
+          [class]="'!bg-[var(--ion-color-primary)] !text-white w-[45%] text-2xl ' + extraButtonClass" [style]="customButtonStyle">
+          Open Camera
+        </button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </div>

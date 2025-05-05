@@ -221,6 +221,8 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 206) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('Failed To Insert Food Delivery Record', 'danger');
           }
@@ -369,6 +371,8 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 206) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('Failed To Insert Package Delivery Record', 'danger');
           }
@@ -690,6 +694,7 @@ export class DeliveriesPage implements OnInit {
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -731,7 +736,7 @@ export class DeliveriesPage implements OnInit {
 
   identificationType = ''
   nric_value = ''
-  selectedNric = ''
+  selectedNric: any = ''
   pass_number = ''
 
   otherDeliveryForm = {
@@ -808,6 +813,8 @@ export class DeliveriesPage implements OnInit {
         } else if (results.result.status_code === 405) {
           this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['home-vms'])
+        } else if (results.result.status_code === 206) {
+          this.functionMain.presentToast(results.result.status_description, 'danger');
         } else {
           this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         }
@@ -827,6 +834,7 @@ export class DeliveriesPage implements OnInit {
       this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id

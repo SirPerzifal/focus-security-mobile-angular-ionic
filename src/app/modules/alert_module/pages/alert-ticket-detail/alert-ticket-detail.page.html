@@ -22,16 +22,18 @@
                 <b>REQUESTED BY</b>: {{ functionMain.returnNone(alert.requested_by) }} | {{
                 functionMain.convertNewDateTZ(alert.created_on) }}
               </span>
-              <app-image-zoom [imageZoom]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment" [bgColor]="'bg-[var(--ion-color-primary)]'"></app-image-zoom>
+              <app-image-zoom [imageArray]="alert.attachment" *ngIf="alert.attachment" [bgColor]="'bg-[var(--ion-color-primary)]'"></app-image-zoom>
               <!-- <img [src]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment"> -->
             </div>
 
             <hr class="" style="height: 20px; border-top: 5px solid white;">
-
-            <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'"
+            <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'" *ngIf="showFile"
               [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black h-20'" [isCamera]="true"
               [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"
-              [fileAccept]="'image/*'" (cameraSelected)="onUploadImage($event)"></app-file-input>
+              [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)"></app-file-input>
+              <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'" *ngIf="!showFile"
+              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black h-20'" [disableUpload]="true"
+              [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"></app-file-input>
             <div class="w-full mt-4">
               <app-text-input [id]="'reply_message'" [(ngModel)]="reply_message" [labelText]="'REPLY MESSAGE'"
                 [placeholder]="'EG. NEW STATUS IS . . .'" [customClasses]="{'w-full':true}" [type]="'text'"

@@ -127,7 +127,7 @@ export class ClientUpcomingEventsPage implements OnInit {
           this.events = [...newEvents];
           this.upcomingEvents = this.events.filter(item => { console.log(new Date(item.start), now) ;return new Date(item.start) >= now})
           console.log(this.upcomingEvents)
-        } else if (results.result.response_code == 405)  {
+        } else if (results.result.response_code == 402)  {
 
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');

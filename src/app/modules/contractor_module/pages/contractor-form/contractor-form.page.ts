@@ -293,6 +293,8 @@ export class ContractorFormPage implements OnInit {
           } else if (response.result.status_code === 405) {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
+          } else if (response.result.status_code === 206) {
+            this.functionMain.presentToast(response.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
@@ -418,6 +420,7 @@ export class ContractorFormPage implements OnInit {
   };
 
   contactUnit = ''
+  selectedNric: any = ''
   getContactInfo(contactData: any) {
     this.contactUnit = ''
     this.contactHost = ''
@@ -426,6 +429,7 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
       } else {
         if (contactData.block_id) {
           this.selectedBlock = contactData.block_id

@@ -19,10 +19,6 @@ export class ImageZoomComponent  implements OnInit {
   openImage: any
 
   ngOnInit() {
-    console.log(this.imageZoom)
-    if (this.imageZoom) {
-      this.imageArray = [this.imageZoom]
-    }
   }
 
   closeModal() {
@@ -34,10 +30,12 @@ export class ImageZoomComponent  implements OnInit {
   
 
   isOpenModal = false
-  clickImage(i: number) {
+  clickImage() {
     this.isOpenModal = true
-    this.openImage = this.imageArray[i]
+    this.openImage = this.imageZoom
+  }
 
+  layerBack() {
     const closeModalOnBack = () => {
       this.closeModal()
       window.removeEventListener('popstate', closeModalOnBack);
@@ -46,4 +44,12 @@ export class ImageZoomComponent  implements OnInit {
     window.addEventListener('popstate', closeModalOnBack)
   }
 
+  clickImageArray( image: any) {
+    if (image.mimetype == 'pdf') {
+      this.functionMain.downloadDocument(image.datas, image.name)
+    } else {  
+      this.openImage = image.datas
+      this.isOpenModal = true
+    }
+  }
 }
