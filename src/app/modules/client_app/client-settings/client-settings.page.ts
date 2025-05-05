@@ -29,8 +29,11 @@ export class ClientSettingsPage implements OnInit {
         email: value.email,
         contact: value.contact_number ? value.contact_number : '',
         designation: value.designation ? value.designation : '',
-        image_profile: value.image_profile ? value.image_profile : '',
+        image_profile: '',
       }
+      this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+        this.userData.image_profile = value.image_profile
+      })
     })
   }
 

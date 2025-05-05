@@ -128,13 +128,35 @@
             >
             </app-text-input>
           </div>
+          <div
+            class="w-full flex flex-col mb-2"
+            *ngIf="!isRead && userType == 'industrial'"
+          >
+            <label class="block text-black font-bold mb-1 text-base"
+              >Booking</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              (change)="onBookChange($event)"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              [(ngModel)]="selectedBookId"
+            >
+              <option value="0" selected disabled hidden>Choose Booking</option>
+              <option *ngFor="let book of BookingResult" [value]="book.id">
+                {{ book.name }} ({{
+                functionMain.convertDateExtend(book.start_datetime) }} - {{
+                functionMain.convertDateExtend(book.stop_datetime) }})
+              </option>
+            </select>
+          </div>
           <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
             <label class="block text-black font-bold mb-1 text-base"
               >Facility</label
             >
             <select
               id="event_form_coach"
-              [disabled]="isRead"
+              [disabled]="isRead || userType == 'industrial'"
               (change)="onFacilityChange($event)"
               class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
               [(ngModel)]="EventsForm.facility_id"
@@ -185,7 +207,7 @@
             >
             <select
               id="event_form_coach"
-              [disabled]="isRead"
+              [disabled]="isRead || userType == 'industrial'"
               (change)="onRoomChange($event)"
               class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
               [(ngModel)]="EventsForm.room_id"
@@ -193,28 +215,6 @@
               <option value="" selected disabled hidden>Choose Room</option>
               <option *ngFor="let room of Rooms" [value]="room.room_id">
                 {{ room.room_name }}
-              </option>
-            </select>
-          </div>
-          <div
-            class="w-full flex flex-col mb-2"
-            *ngIf="!isRead && EventsForm.room_id"
-          >
-            <label class="block text-black font-bold mb-1 text-base"
-              >Booking</label
-            >
-            <select
-              id="event_form_coach"
-              [disabled]="isRead"
-              (change)="onBookChange($event)"
-              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
-              [(ngModel)]="selectedBookId"
-            >
-              <option value="0" selected disabled hidden>Choose Booking</option>
-              <option *ngFor="let book of BookingResult" [value]="book.id">
-                {{ book.name }} ({{
-                functionMain.convertDateExtend(book.start_datetime) }} - {{
-                functionMain.convertDateExtend(book.stop_datetime) }})
               </option>
             </select>
           </div>
@@ -295,7 +295,7 @@
             <app-m2m-selection
               [Arrays]="Host"
               (outputValue)="hostChange($event)"
-              [placeholder]="'Select Hosts'"
+              [placeholder]="'Select Participants'"
               [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'"
               [customTextClass]="'p-0 text-sm'"
               [Selected]="selectedHost"
@@ -374,7 +374,7 @@
                     id="endTimeEventInput"
                     type="time"
                     (change)="onEndTimeChange($event)"
-                    class="w-[95%] text-sm"
+                    class="w-full text-sm"
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
                     [readonly]="isRead"

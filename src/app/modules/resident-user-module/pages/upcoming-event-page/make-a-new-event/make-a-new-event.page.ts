@@ -180,7 +180,7 @@ export class MakeANewEventPage implements OnInit {
     }
     this.selectedBook = {}
     this.selectedBookId = 0
-    this.BookingResult = []
+    // this.BookingResult = []
     this.selectedHost = event.event.host_ids
     console.log(this.selectedHost)
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
@@ -215,7 +215,7 @@ export class MakeANewEventPage implements OnInit {
     this.isAddEventClick = true;
     this.selectedBook = {}
     this.selectedBookId = 0
-    this.BookingResult = []
+    // this.BookingResult = []
     this.selectedHost = [this.userData.family_id]
     // // console.log(this.EventsForm.start_date); 
   }
@@ -527,7 +527,7 @@ export class MakeANewEventPage implements OnInit {
     this.selectedEndDate = this.selectedDate
     this.selectedBook = {}
     this.selectedBookId = 0
-    this.BookingResult = []
+    // this.BookingResult = []
   }
 
   onClose() {
@@ -560,7 +560,7 @@ export class MakeANewEventPage implements OnInit {
     this.selectedStartTime = ''
     this.selectedBook = {}
     this.selectedBookId = 0
-    this.BookingResult = []
+    // this.BookingResult = []
   }
 
   async onCancel() {
@@ -654,6 +654,7 @@ export class MakeANewEventPage implements OnInit {
     console.log(this.userType)
     if (this.userType == 'industrial') {
       this.loadHost()
+      this.loadBook()
     }
   }
 
@@ -661,17 +662,22 @@ export class MakeANewEventPage implements OnInit {
   selectedBook: any = {}
   selectedBookId = 0
   onRoomChange(event: any) {
-    this.selectedBookId = 0
-    this.selectedBook = {}
     console.log(event.target.value)
     this.EventsForm.room_id = event.target.value
+    // this.BookingResult = []
+  }
+
+  loadBook() {
+    this.selectedBookId = 0
+    this.selectedBook = {}
+    this.BookingResult = []
+    let dateObj = new Date(this.selectedDate);
+    let localDateOnly = dateObj.toLocaleDateString('en-CA'); 
     let params = {
-      room_id: this.EventsForm.room_id,
       host_id: this.userData.family_id,
-      selected_date: this.selectedStartDate
+      selected_date: localDateOnly
     }
     console.log(params)
-    this.BookingResult = []
     this.clientMainService.getApi(params, '/residential/get/room_booking_based_on_host_id').subscribe({
       next: (results) => {
         console.log(results)
@@ -680,7 +686,7 @@ export class MakeANewEventPage implements OnInit {
         }
       },
       error: (error) => {
-        this.functionMain.presentToast('Failed to create new issue!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get booking data!', 'danger');
         console.error(error);
       }
     });
@@ -691,6 +697,13 @@ export class MakeANewEventPage implements OnInit {
     this.selectedBook = this.BookingResult.filter((item: any) => item.id == this.selectedBookId)[0]
     this.selectedStartTime = (this.selectedBook.start_datetime).split(' ')[1]
     this.selectedEndTime = (this.selectedBook.stop_datetime).split(' ')[1]
+    this.EventsForm.facility_id = this.selectedBook.facility_id
+    this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+    if (this.userType) {
+      this.EventsForm.room_id = this.selectedBook.room_id
+    }
     console.log(this.selectedBook)
   }
+
+
 }

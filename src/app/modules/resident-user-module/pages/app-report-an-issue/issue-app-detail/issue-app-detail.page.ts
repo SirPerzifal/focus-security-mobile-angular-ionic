@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, AfterViewIn
 import { Router } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-issue-app-detail',
@@ -53,7 +54,7 @@ export class IssueAppDetailPage implements OnInit {
 
   messageDetail: any = []
 
-  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService) { 
+  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService, private mainApi: MainApiResidentService,) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { ticketDetail: any, fromWhere: string };
     if (state) {
@@ -149,28 +150,43 @@ export class IssueAppDetailPage implements OnInit {
     }
     this.replyForm.ticket_id = this.ticketDetail.ticket_id
     // console.log(this.replyForm)
-    this.clientMainService.getApi(this.replyForm, is_close ? '/resident/post/reply_ticket_and_close' : '/resident/post/reply_ticket').subscribe({
-      next: (results) => {
-        // console.log(results)
-        if (results.result.response_code == 200) {
-          this.functionMain.presentToast(`Successfully add new reply!`, 'success');
-          if (is_close) {
-            this.onBack()
-          } else {
-            this.replyForm.body = ''
-            this.replyForm.ir_attachment_datas = ''
-            this.loadDetail()
-          }
+    // this.clientMainService.getApi(this.replyForm, is_close ? '/resident/post/reply_ticket_and_close' : '/resident/post/reply_ticket').subscribe({
+    //   next: (results) => {
+    //     // console.log(results)
+    //     if (results.result.response_code == 200) {
+    //       this.functionMain.presentToast(`Successfully add new reply!`, 'success');
+    //       if (is_close) {
+    //         this.onBack()
+    //       } else {
+    //         this.replyForm.body = ''
+    //         this.replyForm.ir_attachment_datas = ''
+    //         this.loadDetail()
+    //       }
           
+    //     } else {
+    //       this.functionMain.presentToast(`An error occurred while trying to add new reply!`, 'danger');
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.functionMain.presentToast('An error occurred while trying to add new reply!', 'danger');
+    //     console.error(error);
+    //   }
+    // });
+    this.mainApi.endpointMainProcess(this.replyForm, is_close ? 'post/reply_ticket_and_close' : 'post/reply_ticket').subscribe((results: any) => {
+      if (results.result.response_code == 200) {
+        this.functionMain.presentToast(`Successfully add new reply!`, 'success');
+        if (is_close) {
+          this.onBack()
         } else {
-          this.functionMain.presentToast(`An error occurred while trying to add new reply!`, 'danger');
+          this.replyForm.body = ''
+          this.replyForm.ir_attachment_datas = ''
+          this.loadDetail()
         }
-      },
-      error: (error) => {
-        this.functionMain.presentToast('An error occurred while trying to add new reply!', 'danger');
-        console.error(error);
+        
+      } else {
+        this.functionMain.presentToast(`An error occurred while trying to add new reply!`, 'danger');
       }
-    });
+    })
   }
 
   onBack() {
