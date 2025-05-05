@@ -46,6 +46,7 @@ export class HeaderComponent  implements OnInit {
   checkPlatform() {
     // Mendapatkan informasi platform
     this.platformInfo = this.platform.platforms().join(', ');
+    const test = this.platform.platforms()
     
     // Memeriksa jenis platform
     this.isAndroid = this.platform.is('android');
@@ -59,6 +60,8 @@ export class HeaderComponent  implements OnInit {
     this.isElectron = this.platform.is('electron');
     
     console.log('Platform Information:', this.platformInfo);
+    console.log('tes', test);
+    
     console.log('Android:', this.isAndroid);
     console.log('iOS:', this.isIOS);
     console.log('Mobile:', this.isMobile);
