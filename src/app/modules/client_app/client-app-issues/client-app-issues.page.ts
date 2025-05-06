@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
@@ -31,7 +31,7 @@ export class ClientAppIssuesPage implements OnInit {
   extend_mb = false
   typeOfReport: any = []
 
-  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, private clientMainService: ClientMainService, public functionMain: FunctionMainService) { }
+  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     console.log("tes");
@@ -208,10 +208,7 @@ export class ClientAppIssuesPage implements OnInit {
     // console.log(ticket);
     this.router.navigate(['/client-ticket-detail'], {
       state: {
-        ticket: {
-          id: ticket.ticket_id,
-          ticket_status: ticket.ticket_status,
-        },
+        ticket: ticket,
         issue: true
       },
     });

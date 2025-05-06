@@ -14,7 +14,7 @@
     <div class="flex flex-row mx-4" *ngIf="isMain" @fadeInOut>
       <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4">
         <div class="w-full">
-          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [isScan]="false"/>
         </div>
         <div class="w-full flex flex-row justify-between items-end space-x-2">
           <div class="w-full">
@@ -22,21 +22,73 @@
             [(value)]="checkoutForm.contact_number" [valueExist]="checkoutForm.contact_number" [showButton]="false"></app-vms-contact-input>
           </div>
         </div>
-        <div class="w-full flex flex-row justify-between items-end space-x-2">
+        <!-- <div class="w-full flex flex-row justify-between items-end space-x-2">
           <div class="w-full">
             <app-text-input #pageCheckOutPassSearch [id]="'page_checkout_pass_search'"
               [labelText]="'PASS NUMBER'" [placeholder]="''" [customClasses]="{'w-full':true}"
               [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [(ngModel)]="checkoutForm.pass" [isReadonly]="false"></app-text-input>
+              [(ngModel)]="checkoutForm.pass_number" [isReadonly]="false"></app-text-input>
           </div>
-        </div>
+        </div> -->
         <div class="w-full flex flex-col">
-          <div class="w-full">
-            <app-visitor-button [text]="'SUBMIT'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-6 w-full text-2xl h-20'"
-              (click)="searchData()"></app-visitor-button>
-          </div>
+          <app-visitor-button [text]="'SUBMIT'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
+            (click)="searchData()"></app-visitor-button>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-row mx-4" *ngIf="isSearch" @fadeInOut>
+      <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+        <table class="text-2xl" >
+          <tr>
+            <td class="font-bold w-2/5">VISITOR NAME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.visitor_name) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">VEHICLE NUMBER</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.vehicle_number) }}</td>
+          </tr>
+           <tr>
+            <td class="font-bold w-2/5">CONTACT NUMBER</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.contact_no) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">HOST</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.industrial_host_name) }}</td>
+          </tr>
+          <tr *ngIf="logData.company_name">
+            <td class="font-bold w-2/5">COMPANY NAME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.company_name) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ID TYPE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.identification_type) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ID NUMBER</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(logData.identification_number) }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ENTRY DATE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ logData.entry_datetime ? functionMain.convertNewDateTZ(logData.entry_datetime).split(' ')[0] : '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ENTRY TIME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ logData.entry_datetime ? functionMain.convertNewDateTZ(logData.entry_datetime).split(' ')[1] : '-' }}</td>
+          </tr>
+        </table>
+        <div class="flex flex-row justify-around w-full">
+          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onCheckout()">CHECKOUT</button>
         </div>
       </div>
     </div>

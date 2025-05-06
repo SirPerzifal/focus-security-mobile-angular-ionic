@@ -32,6 +32,23 @@ export class ClientRaiseTicketPage implements OnInit {
       console.log(this.newTicket);
       
     })
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['close_id']){
+          console.log("enter here")
+          console.log(this.closedTicket)
+          console.log(this.openTicket)
+          if (this.closedTicket.length > 0) {
+            this.closedTicket.push((this.openTicket.filter((item: any) => item.id === parseInt(params['close_id'])))[0])
+          }
+          this.openTicket = this.openTicket.filter((item: any) => item.id != parseInt(params['close_id']))
+          this.changePage()
+          console.log(this.closedTicket)
+          console.log(this.openTicket)
+        }
+      }
+    })
   }
   
 
@@ -254,13 +271,6 @@ export class ClientRaiseTicketPage implements OnInit {
     this.router.navigate(['/client-ticket-detail'], {
       state: {
         ticket: ticket,
-        filter: this.isClosed ? {
-          start: this.startDateFilter,
-          end: this.endDateFilter,
-          group: this.typeFilter,
-        } : {},
-        is_open: this.isActive,
-        menu: this.selectedMenu,
       }
     })
   }

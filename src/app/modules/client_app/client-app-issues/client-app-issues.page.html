@@ -23,34 +23,34 @@
       <div *ngIf="isLoading" class="flex justify-center items-center h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div>
-      <div class="space-y-4 mt-4 mb-6" *ngIf="!isLoading">
+      <div class="space-y-4 mb-6" *ngIf="!isLoading">
         <div class="space-y-4" *ngIf="allData.length > 0; else noTicket">
           <div *ngFor="let report of allData" [ngClass]="{
             'bg-[var(--ion-color-tertiary)]': report.ticket_status === 'Solved',
             'bg-[#F8F1BA]': report.ticket_status === 'New',
             'bg-[#E3787E]': report.ticket_status === 'Canceled',
             'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
-            }" class="bg-[#F8F1BA] p-4 rounded shadow">
-            <h2 class="font-bold text-left">{{ report.ticket_type }}</h2>
+            }" class="rounded p-5 my-4 w-full">
+            <p class="font-bold text-base text-black mb-2 text-left">{{ report.ticket_type }}</p>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
                 <tr>
                   <td class="font-bold">Reported On</td>
-                  <td class="cw-3:text-sm">: {{ report.issued_on }}</td>
+                  <td class="cw-3:text-sm">: {{ functionMain.convertNewDateTZ(report.issued_on) }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Resolved On</td>
-                  <td class="cw-3:text-sm">: {{ report.solved_on || 'N/A' }}</td>
+                  <td class="cw-3:text-sm">: {{ report.solved_on ? functionMain.convertNewDateTZ(report.solved_on) : 'N/A'}}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Ticket Status</td>
-                  <td class="cw-3:text-sm">: {{ report.ticket_status }}</td>
+                  <td class="cw-3:text-sm">: {{ report.ticket_status == 'New' ? 'Open' : 'Closed' }}</td>
                 </tr>
               </tbody>
             </table>
-            <div class="flex mt-[6px] w-full" (click)="seeDetail(report)">
+            <div class="flex mt-4 space-x-2" (click)="seeDetail(report)">
               <button
-                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] w-full text-white px-3 py-2 text-base rounded-md font-bold">
+                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold">
                 View Details
               </button>
             </div>
@@ -58,7 +58,7 @@
         </div>
         <ng-template #noTicket>
           <div class="w-full bg-transparent mt-8 text-center rounded-lg">
-            <p class="text-gray-600">There are no ticket for this type.....</p>
+            <p class="text-gray-600">There are no issues.....</p>
           </div>
         </ng-template>
       </div>
@@ -109,9 +109,9 @@
           </div>
           <div class="w-full flex flex-col items-start">
             <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" [isMany]="true"
-                  [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
-                  [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base text-start'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'"
-                  [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
+              [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
+              [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base text-start'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'"
+              [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
           </div>
         </div>
       </div>

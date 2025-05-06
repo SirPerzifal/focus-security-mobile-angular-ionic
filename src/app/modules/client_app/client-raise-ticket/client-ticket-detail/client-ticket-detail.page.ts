@@ -56,19 +56,12 @@ export class ClientTicketDetailPage implements OnInit {
   topTitle = 'Ticket'
   secondTitle = 'Details'
 
-  onBack() {
+  onBack(is_include_id: boolean = false) {
+    let params = is_include_id ? {queryParams: {close_id: this.ticket.id}} : {}
     if(this.is_issue) {
-      this.router.navigate(['/client-app-issues'], {})
+      this.router.navigate(['/client-app-issues'], params)
     } else {
-      this.router.navigate(['/client-raise-ticket'], {
-        // state: {
-        //   filter: this.filter,
-        //   menu: this.selectedMenu 
-        // },
-        // queryParams: {
-        //   is_open: this.ticketDetail.length > 0 ? this.ticketDetail.ticket_status == 'Solved' : this.is_active
-        // }
-      })
+      this.router.navigate(['/client-raise-ticket'], params)
     }
   }
 
@@ -177,7 +170,9 @@ export class ClientTicketDetailPage implements OnInit {
           this.showFile = false
           this.functionMain.presentToast(`Successfully add new reply!`, 'success');
           if (is_close) {
-            this.onBack()
+            this.ticket.ticket_status = 'Solved'
+            this.ticket.solved_on = results.result.close_date
+            this.onBack(true)
           } else {
             this.replyForm.body = ''
             this.replyForm.ir_attachment_datas = ''

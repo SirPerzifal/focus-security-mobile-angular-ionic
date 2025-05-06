@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
 import { Router } from '@angular/router';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-vms-checkout',
@@ -21,7 +23,9 @@ import { Router } from '@angular/router';
 export class VmsCheckoutPage implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private clientMainService: ClientMainService,
+    public functionMain: FunctionMainService
   ) { }
 
   ngOnInit() {
@@ -32,7 +36,12 @@ export class VmsCheckoutPage implements OnInit {
 
   onBack() {
     if (!this.isMain) {
-      this.isMain = true
+      this.resetForm()
+      this.isSearch = false
+      setTimeout(() => {
+        this.logData = {}
+        this.isMain = true
+      }, 300)
     } else {
       this.router.navigate(['/home-vms'])
     }
@@ -42,7 +51,7 @@ export class VmsCheckoutPage implements OnInit {
     identification_type: '',
     identification_number: '',
     contact_number: '',
-    pass: '',
+    pass_number: '',
   }
 
   resetForm() {
@@ -50,7 +59,7 @@ export class VmsCheckoutPage implements OnInit {
       identification_type: '',
       identification_number: '',
       contact_number: '',
-      pass: '',
+      pass_number: '',
     }
   }
 
@@ -63,7 +72,49 @@ export class VmsCheckoutPage implements OnInit {
 
   selectedNric = ''
 
+  logData: any = {}
   searchData() {
     console.log(this.checkoutForm)
+    if (!this.checkoutForm.contact_number && !this.checkoutForm.identification_number && !this.checkoutForm.pass_number) {
+      this.functionMain.presentToast('At least one field must be filled!', 'danger')
+      return
+    }
+    this.clientMainService.getApi(this.checkoutForm, '/vms/get/log_by_spec').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.logData = results.result.response_result[0]
+          this.isMain = false
+          setTimeout(() => {
+            this.isSearch = true
+          }, 300);
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to searching the data!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to searching the data!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  onCheckout() {
+    console.log(this.logData)
+    this.clientMainService.getApi({id: this.logData.id}, '/vms/post/log_checkout').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.functionMain.presentToast('Successfully checkout the data!', 'success');
+          this.onBack()
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to checkout this data!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to checkout this data!', 'danger');
+        console.error(error);
+      }
+    });
   }
 }
