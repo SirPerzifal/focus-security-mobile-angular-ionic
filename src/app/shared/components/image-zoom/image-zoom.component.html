@@ -7,7 +7,7 @@
 <ion-modal id="text-modal" [isOpen]="isOpenModal" (didDismiss)="closeModal()">
   <ng-template>
     <div [class]="'wrapper flex flex-col justify-center items-center ' + bgColor">
-      <img [src]="openImage" class="w-full object-contain ">
+      <img [src]="functionMain.getImage(openImage)" class="w-full object-contain ">
     </div>
   </ng-template>
 </ion-modal>

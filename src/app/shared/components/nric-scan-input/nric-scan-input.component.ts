@@ -29,6 +29,7 @@ export class NricScanInputComponent  implements OnInit {
 
   @Input() parentClass: string = '';
   @Input() showSelection: boolean = false;
+  @Input() isScan: boolean = true
 
   onSelectionChange(event: any) {
     this.selectedIdentification = event.target.value
@@ -61,7 +62,12 @@ export class NricScanInputComponent  implements OnInit {
       if (value) {
         console.log(value)
         this.selectedIdentification = value.is_fin ? 'fin' : 'nric'
+        this.temp_type = this.selectedIdentification
         this.nric_value = value.data;
+        if (!this.isScan) {
+          this.data = {identification_number: this.nric_value, is_server: false}
+          return
+        }
         this.mainVmsService.getApi({nric: value.data, project_id: this.project_id, is_visitor_logs: true}, '/vms/get/contractor_by_nric').subscribe({
           next: (results) => {
             console.log(results)

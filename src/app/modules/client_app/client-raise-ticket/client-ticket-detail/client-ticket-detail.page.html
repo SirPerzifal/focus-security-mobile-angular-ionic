@@ -34,7 +34,7 @@
           <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment && !isLoadingFirst" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
         </div>
       </div>
-      <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status != 'Solved'">
+      <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status == 'New'">
         <div class="flex flex-row justify-start">
           <p class="text-base font-bold">Reply Message</p>
         </div>

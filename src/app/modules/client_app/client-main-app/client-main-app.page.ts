@@ -53,6 +53,7 @@ export class ClientMainAppPage implements OnInit {
       if (params) {
         if (params['reload']){
           this.loadProject()
+          this.webRtcService.initializeSocket()
         }
       }
     })

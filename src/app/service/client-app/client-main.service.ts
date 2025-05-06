@@ -33,8 +33,6 @@ export class ClientMainService extends ApiService {
         } else {
           params['project_id'] = this.project.project_id
         }
-        console.log(headers)
-        console.log(params)
         return this.http.post(this.baseUrl + apiUrl, { jsonrpc: '2.0', params: params }, { headers }).pipe(
           catchError(this.handleError)
         );

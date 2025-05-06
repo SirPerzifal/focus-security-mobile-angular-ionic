@@ -429,7 +429,9 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.nric_value = contactData.identification_number
+        this.identificationType = contactData.identification_type
+        this.temp_type = this.identificationType
       } else {
         if (contactData.block_id) {
           this.selectedBlock = contactData.block_id
