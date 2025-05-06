@@ -43,14 +43,14 @@ export class AppReportMainPage implements OnInit {
   showForm: boolean = false;
 
   reporterDetailsFrom = {
-    requestorId: 1,
-    blokId: 1,
-    unitId: 1,
-    name: 'John Doe',
-    contactNumber: '1234567890',
-    email: 'johndoe@example.com',
-    blockAndUnit: 'Block 123, Unit 456',
-    placeOfResidence: '123 Main St, City',
+    requestorId: 0,
+    blokId: 0,
+    unitId: 0,
+    name: '',
+    contactNumber: '',
+    email: '',
+    blockAndUnit: '',
+    placeOfResidence: '',
     typeReport: 0,
     summaryReport: '',
     ticketAttachment: '',
@@ -99,12 +99,14 @@ export class AppReportMainPage implements OnInit {
             contactNumber: estate.family_mobile_number,
             email: estate.family_email,
             blockAndUnit: estate.block_name + ', ' + estate.unit_name,
-            placeOfResidence: '123 Main St, City',
+            placeOfResidence: estate.project_name,
             typeReport: 0,
             summaryReport: '',
             ticketAttachment: '',
           };
-          this.record_type = estate.record_type
+          this.record_type = estate.record_type;
+          console.log(estate);
+          
         }
       })
     })

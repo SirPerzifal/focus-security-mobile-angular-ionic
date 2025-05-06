@@ -72,6 +72,20 @@
         (eventEmitter)="onEntryTitleChange($event)"
       ></app-input-component>
 
+      <div class="w-full mt-1.5 flex flex-col">
+        <div class="flex flex-row justify-start">
+          <p class="text-base cw-3:text-sm font-bold">Message for Invitation</p>
+        </div>
+        <textarea
+          id="visitor_entry_message"
+          placeholder=""
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+          type="text"
+          [(ngModel)]="formData.entryMessage"
+          name="entryMessage"
+        ></textarea>
+      </div>
+
       <div class="w-full" *ngIf="userType === 'industrial'">
         <label class="text-base cw-3:text-sm font-bold">Facility</label>
         <select
@@ -84,20 +98,6 @@
             {{ book.bookName }}
           </option>
         </select>
-      </div>
-
-      <div class="w-full mt-1.5">
-        <div class="flex flex-row justify-start">
-          <p class="text-base cw-3:text-sm font-bold">Message for Invitation</p>
-        </div>
-        <textarea
-          id="visitor_entry_message"
-          placeholder=""
-          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
-          type="text"
-          [(ngModel)]="formData.entryMessage"
-          name="entryMessage"
-        ></textarea>
       </div>
 
       <div *ngIf="userType !== 'industrial'">

@@ -18,7 +18,8 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 export class HomePage implements OnInit {
 
   constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
-    this.checkScreenSize()
+    this.checkScreenSize();
+    this.initializeBackButtonHandling();
   }
 
   alertColor = 'red'
@@ -40,6 +41,12 @@ export class HomePage implements OnInit {
       this.onLoadCount()
     })
     // this.onLoadCount()
+  }
+
+  initializeBackButtonHandling() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      App.exitApp();
+    });
   }
 
   async loadProjectName() {

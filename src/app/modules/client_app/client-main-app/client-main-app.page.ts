@@ -44,7 +44,7 @@ export class ClientMainAppPage implements OnInit {
     private platform: Platform,
     private storage: StorageService,
     public functionMain: FunctionMainService) {
-    
+      this.initializeBackButtonHandling();
     }
 
   ngOnInit() {
@@ -57,6 +57,12 @@ export class ClientMainAppPage implements OnInit {
       }
     })
     this.loadProject()
+  }
+
+  initializeBackButtonHandling() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      App.exitApp();
+    });
   }
 
   private routerSubscription!: Subscription;

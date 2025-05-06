@@ -69,7 +69,7 @@
         <div class="flex flex-col">
           <div class="w-full mb-2">
             <div class="flex flex-row justify-start mb-1 mt-1">
-              <p class="text-base font-bold">Type of Issue</p>
+              <p class="text-base cw-3:text-sm font-bold">Type of Issue</p>
             </div>
             <select
               id="type_of_issue"
@@ -83,129 +83,97 @@
               </option>
             </select>
           </div>
-          <u class="text-base font-bold mb-1.5 text-start">Reporter Details</u>
-          <div class="space-y-2">
-            <div class="w-full">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Name</p>
-              </div>
-              <app-text-input
-                [id]="'report_name'"
-                [placeholder]="'Name'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-                [isReadonly]="true"
-                [(ngModel)]="reporterDetailsFrom.name"
-              >
-              </app-text-input>
-            </div>
-            <div class="w-full">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Contact Number</p>
-              </div>
-              <app-text-input
-                [id]="'report_contact_number'"
-                [placeholder]="'Contact Number'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-                [isReadonly]="true"
-                [(ngModel)]="reporterDetailsFrom.contactNumber"
-              >
-              </app-text-input>
-            </div>
-            <div class="w-full">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Contact Email</p>
-              </div>
-              <app-text-input
-                [id]="'report_contact_email'"
-                [placeholder]="'Contact Email'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-                [isReadonly]="true"
-                [(ngModel)]="reporterDetailsFrom.email"
-              >
-              </app-text-input>
-            </div>
-            <div class="w-full" *ngIf="record_type == 'residential'">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Block and Unit</p>
-              </div>
-              <app-text-input
-                [id]="'report_block_and_unit'"
-                [placeholder]="'Block and Unit'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-                [isReadonly]="true"
-                [(ngModel)]="reporterDetailsFrom.blockAndUnit"
-              >
-              </app-text-input>
-            </div>
-            <!-- <div class="w-full">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Place of Residence</p>
-              </div>
-              <app-text-input [id]="'report_place_of_residence'"
-                [placeholder]="'Place of Residence'"
-                [customClasses]="{'w-full':true}" [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
-                [isReadonly]="true"
-                [(ngModel)]="reporterDetailsFrom.placeOfResidence">
-              </app-text-input>
-            </div> -->
-            <div class="w-full">
-              <div class="flex flex-row justify-start mb-1">
-                <p class="text-base font-bold">Summary Report</p>
-              </div>
-              <textarea
-                id="report_summary"
-                placeholder="Summary Report"
-                (focus)="testAddMb(true)"
-                (blur)="testAddMb(false)"
-                class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
-                [(ngModel)]="reporterDetailsFrom.summaryReport"
-              >
-              </textarea>
-            </div>
-            <div class="w-full flex flex-col items-start">
-              <!-- <label class="text-base"><b>Attachment</b></label> -->
-              <app-file-input
-                class="w-full h-25"
-                [labelText]="'Attachment'"
-                [buttonText]="'Upload'"
-                [outClass]="'min-h-14'"
-                [isMany]="true"
-                [isCustomName]="true"
-                [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded-md h-14 text-base font-bold '"
-                [isCamera]="true"
-                [customPlaceholder]="'PNG, JPG, OR JPEG FILES'"
-                [labelClass]="'text-black text-base text-start'"
-                [isNotVMS]="true"
-                [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'"
-                [fileAccept]="'application/pdf'"
-                (cameraSelected)="onUploadImage($event)"
-                [isFileAndCamera]="true"
-              ></app-file-input>
-            </div>
-            <!-- <div class="w-full flex flex-row justify-between items-end">
-              <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientIssueNewAttachment
-                class="hidden" accept="image/*"/>
-              <div class="w-4/6 mb-2 flex flex-col items-start">
-                <label class="text-base"><b>Attachment</b></label>
-                <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
-                  class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] text-left pl-[0.75rem]  file:mr-4 "
-                  readonly />
-              </div>
-              <button id="client_ticket_detail_upload_attachment" (click)="uploadFile()"
-                class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-base rounded font-bold mb-2">
-                Upload
-              </button>
-            </div> -->
+
+          <div class="w-full text-start">
+            <app-input-component
+              [id]="'name_of_resident_app_report'"
+              [type]="'text'"
+              [typeAction]="'Type'"
+              [labelParent]="'Reporter Details'"
+              [labelChild1]="'Name'"
+              [disabled]="true"
+              [value]="reporterDetailsFrom.name"
+            ></app-input-component>
           </div>
+
+          <div class="w-full text-start">
+            <app-input-component
+              [id]="'contact_number_of_resident_app_report'"
+              [type]="'text'"
+              [typeAction]="'Type'"
+              [labelChild1]="'Contact Number'"
+              [disabled]="true"
+              [value]="reporterDetailsFrom.contactNumber"
+            ></app-input-component>
+          </div>
+
+          <div class="w-full text-start">
+            <app-input-component
+              [id]="'email_of_resident_app_report'"
+              [type]="'text'"
+              [typeAction]="'Type'"
+              [labelChild1]="'Contact Email'"
+              [disabled]="true"
+              [value]="reporterDetailsFrom.email"
+            ></app-input-component>
+          </div>
+
+          <div *ngIf="record_type !== 'industrial'">
+            <div class="w-full text-start">
+              <app-input-component
+                [id]="'block_and_unit_of_resident_app_report'"
+                [type]="'text'"
+                [typeAction]="'Type'"
+                [labelChild1]="'Block and Unit'"
+                [disabled]="true"
+                [value]="reporterDetailsFrom.blockAndUnit"
+              ></app-input-component>
+            </div>
+
+            <div class="w-full text-start">
+              <app-input-component
+                [id]="'place_of_residence_of_resident_app_report'"
+                [type]="'text'"
+                [typeAction]="'Type'"
+                [labelChild1]="'Place of Residence'"
+                [disabled]="true"
+                [value]="reporterDetailsFrom.placeOfResidence"
+              ></app-input-component>
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full">
+            <div class="flex flex-row justify-start">
+              <p class="text-base cw-3:text-sm font-bold">Summary Report</p>
+            </div>
+            <textarea
+              id="report_summary"
+              placeholder="Summary Report"
+              (focus)="testAddMb(true)"
+              (blur)="testAddMb(false)"
+              class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+              [(ngModel)]="reporterDetailsFrom.summaryReport"
+            >
+            </textarea>
+          </div>
+
+          <app-file-input
+            class="w-full h-25"
+            [labelText]="'Attachment'"
+            [buttonText]="'Upload'"
+            [outClass]="'min-h-14'"
+            [isMany]="true"
+            [isCustomName]="true"
+            [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded-md h-14 text-base font-bold'"
+            [isCamera]="true"
+            [customPlaceholder]="'PNG, JPG, OR JPEG FILES'"
+            [labelClass]="'text-black text-base text-start cw-3:text-sm'"
+            [isNotVMS]="true"
+            [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'"
+            [fileAccept]="'application/pdf'"
+            (cameraSelected)="onUploadImage($event)"
+            [isFileAndCamera]="true"
+          ></app-file-input>
         </div>
         <div class="flex flex-row mt-2 text-[13px] w-full">
           <div class="w-full">
@@ -218,7 +186,6 @@
           </div>
         </div>
       </div>
-      <div class="h-96" *ngIf="extend_mb"></div>
     </div>
   </div>
   <!-- {{ fromWhere }} -->
