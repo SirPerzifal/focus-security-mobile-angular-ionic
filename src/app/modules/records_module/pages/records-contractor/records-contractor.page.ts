@@ -4,7 +4,7 @@ import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -31,7 +31,7 @@ export class RecordsContractorPage implements OnInit {
     private router: Router, 
     private modalController: ModalController,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService
   ) { }
 
@@ -41,7 +41,7 @@ export class RecordsContractorPage implements OnInit {
   loadLogs(today: boolean = true) {
     this.isLoading = true;
     this.logsData = [];
-    this.mainVmsService.getApi({is_today: today, project_id: this.project_id}, '/vms/get/contractor_logs').subscribe({
+    this.clientMainService.getApi({is_today: today, project_id: this.project_id}, '/vms/get/contractor_logs').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.response_code === 200) {
@@ -386,7 +386,7 @@ export class RecordsContractorPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

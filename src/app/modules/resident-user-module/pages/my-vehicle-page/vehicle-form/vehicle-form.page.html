@@ -79,6 +79,7 @@
       <app-input-component
         [id]="'vehicle_number'"
         [type]="'text'"
+        [value]="vehicleForm.vehicleNumber"
         [labelChild1]="'Vehicle Number'"
         (eventEmitter)="onValueChange($event, 'vehicle_number')"
       ></app-input-component>
@@ -88,6 +89,7 @@
       <app-input-component
         [id]="'iu_number'"
         [type]="'text'"
+        [value]="vehicleForm.iuNumber"
         [labelChild1]="'IU Number'"
         (eventEmitter)="onValueChange($event, 'iu_number')"
       ></app-input-component>
@@ -129,6 +131,7 @@
       <app-input-component
         [id]="'vehicle_colour'"
         [type]="'text'"
+        [value]="vehicleForm.vehicleColour"
         [labelChild1]="'Vehicle Colour'"
         (eventEmitter)="onValueChange($event, 'vehicle_colour')"
       ></app-input-component>

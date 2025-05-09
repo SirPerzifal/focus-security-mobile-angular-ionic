@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,7 +23,12 @@ import { Router } from '@angular/router';
 })
 export class EmergencyModulePage implements OnInit {
 
-  constructor(private functionMain: FunctionMainService, private blockUnitService: BlockUnitService, private mainVmsService: MainVmsService, private router: Router) { }
+  constructor(
+    private functionMain: FunctionMainService, 
+    private blockUnitService: BlockUnitService, 
+    private clientMainService: ClientMainService, 
+    private router: Router,
+  ) { }
 
   showAmbulance = false;
   showPolice = false;
@@ -285,7 +290,7 @@ export class EmergencyModulePage implements OnInit {
     }
     let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost, pass_number: this.pass_number };
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
+    this.clientMainService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -308,7 +313,7 @@ export class EmergencyModulePage implements OnInit {
           this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['home-vms'])
         } else if (results.result.response_code === 206) {
-          this.functionMain.presentToast(results.result.status_description, 'danger');
+          this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost)
         } else {
           this.functionMain.presentToast('An error occurred while attempting to save emergecny vehicle data!', 'danger');
         }
@@ -325,7 +330,7 @@ export class EmergencyModulePage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

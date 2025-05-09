@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Platform } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -18,7 +18,7 @@ export class LoginVmsPage implements OnInit {
   constructor(
     private router: Router, 
     private platform: Platform, 
-    private mainVmsService: MainVmsService, 
+    private clientMainService: ClientMainService, 
     public functionMain: FunctionMainService,
     private storage: StorageService,
   ) {
@@ -141,7 +141,7 @@ export class LoginVmsPage implements OnInit {
     console.log(barcode)
     console.log("HOY OVER HER WORK")
     if (barcode) {
-      this.mainVmsService.getApi({barcode: barcode}, '/vms/post/vms_login').subscribe({
+      this.clientMainService.getApi({barcode: barcode}, '/vms/post/vms_login').subscribe({
         next: (results) => {
           console.log(results.result)
           if (results.result.status_code === 200) {

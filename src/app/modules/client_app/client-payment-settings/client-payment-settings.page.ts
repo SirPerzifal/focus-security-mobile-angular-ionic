@@ -66,7 +66,7 @@ export class ClientPaymentSettingsPage implements OnInit {
 
   saveChanges() {
     console.log(this.paymentChange)
-    this.clientMainService.getApi(this.paymentChange, '/client/update/payment_method').subscribe({
+    this.clientMainService.getApi(this.paymentChange, '/client/post/payment_method').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

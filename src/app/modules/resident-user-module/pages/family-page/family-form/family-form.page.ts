@@ -193,6 +193,7 @@ export class FamilyFormPage implements OnInit {
   onUploadImageProfile(event: any) {
     let data = event.target.files[0];
     if (data) {
+      this.isModalChooseUpload = !this.isModalChooseUpload;
       this.selectedNameProfileFamily = data.name;
       this.convertToBase64(data).then((base64: string) => {
         this.isModalChooseUpload = !this.isModalChooseUpload;

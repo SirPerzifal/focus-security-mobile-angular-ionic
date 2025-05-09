@@ -127,7 +127,7 @@ export class ClientWheelClampPage implements OnInit {
   }
 
   bypassOffence() {
-    this.clientMainService.getApi({ offence_id: this.bypass_id, bypass_remarks: this.bypassRemarks }, '/client/update/bypass_offence').subscribe({
+    this.clientMainService.getApi({ offence_id: this.bypass_id, bypass_remarks: this.bypassRemarks }, '/client/post/bypass_offence').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results)
@@ -189,7 +189,7 @@ export class ClientWheelClampPage implements OnInit {
   };
 
   paymentSubmit() {
-    this.clientMainService.getApi({ offence_id: this.vehicle.id, receipt_image: this.fileInput }, '/vms/update/offence_upload_receipt').subscribe({
+    this.clientMainService.getApi({ offence_id: this.vehicle.id, receipt_image: this.fileInput }, '/vms/post/offence_upload_receipt').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results)

@@ -7,7 +7,7 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { faBarcode, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -56,7 +56,7 @@ export class ContractorCommercialFormPage implements OnInit {
     private router: Router,
     private blockUnitService: BlockUnitService,
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private clientMainService: ClientMainService
   ) { }
 
   // Ambil nilai dari input
@@ -259,7 +259,7 @@ export class ContractorCommercialFormPage implements OnInit {
     }
     console.log(this.collectForm)
     try {
-      this.mainVmsService.getApi(this.collectForm, '/commercial/post/add_contractors').subscribe({
+      this.clientMainService.getApi(this.collectForm, '/commercial/post/add_contractors').subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
             if (openBarrier) {
@@ -334,7 +334,7 @@ export class ContractorCommercialFormPage implements OnInit {
   Host: any[] = [];
   selectedHost: string = '';
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -435,7 +435,7 @@ export class ContractorCommercialFormPage implements OnInit {
             this.identificationType = value.is_fin ? 'fin' : 'nric'
             this.nric_value = value.data;
           }
-          this.mainVmsService.getApi({ nric: value.data, project_id: this.project_id }, '/vms/get/contractor_by_nric').subscribe({
+          this.clientMainService.getApi({ nric: value.data, project_id: this.project_id }, '/vms/get/contractor_by_nric').subscribe({
             next: (results) => {
               console.log(results)
               if (results.result.status_code === 200) {
@@ -535,7 +535,7 @@ export class ContractorCommercialFormPage implements OnInit {
   searchData(type: string) {
     let params = {}
     console.log(this.checkoutForm)
-    this.mainVmsService.getApi({ identification_number: this.checkoutForm.identification_type == 'passport' ? this.checkoutForm.passport : this.checkoutForm.identification_number, contact_number: this.checkoutForm.contact_number, pass_number: this.checkoutForm.pass, project_id: this.project_id }, '/commercial/get/contractor_by_spec').subscribe({
+    this.clientMainService.getApi({ identification_number: this.checkoutForm.identification_type == 'passport' ? this.checkoutForm.passport : this.checkoutForm.identification_number, contact_number: this.checkoutForm.contact_number, pass_number: this.checkoutForm.pass, project_id: this.project_id }, '/commercial/get/contractor_by_spec').subscribe({
       next: (response: any) => {
         console.log(response)
         if (response.result.response_code === 200) {
@@ -591,7 +591,7 @@ export class ContractorCommercialFormPage implements OnInit {
 
   checkoutSelected() {
     console.log(this.formData)
-    this.mainVmsService.getApi({ id: this.contractor_id, remarks: this.remarksValue, total_package: this.contractor_total_package, pass_number: this.contractor_pass_number, project_id: this.project_id }, '/commercial/post/contractor_checkout').subscribe({
+    this.clientMainService.getApi({ id: this.contractor_id, remarks: this.remarksValue, total_package: this.contractor_total_package, pass_number: this.contractor_pass_number, project_id: this.project_id }, '/commercial/post/contractor_checkout').subscribe({
       next: (response: any) => {
         console.log(response)
         if (response.result.status_code === 200) {
@@ -773,7 +773,7 @@ export class ContractorCommercialFormPage implements OnInit {
       }
     }
     if (is_checkout_scan) return
-    this.mainVmsService.getApi({ nric: nric_after, project_id: this.project_id }, '/vms/get/contractor_by_nric').subscribe({
+    this.clientMainService.getApi({ nric: nric_after, project_id: this.project_id }, '/vms/get/contractor_by_nric').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.status_code === 200) {
@@ -860,7 +860,7 @@ export class ContractorCommercialFormPage implements OnInit {
 
   async getMinMaxNric() {
     try {
-      const results = await this.mainVmsService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
+      const results = await this.clientMainService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
       console.log(results.result);
       if (results.result.response_code === 200) {
         this.min_digit = results.result.result.min_nric_number_length

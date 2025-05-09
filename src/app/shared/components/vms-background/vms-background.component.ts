@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-vms-background',
@@ -10,7 +9,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class VmsBackgroundComponent  implements OnInit {
 
-  constructor(private mainVmsService: MainVmsService, public functionMain: FunctionMainService, private storage: StorageService) { }
+  constructor(public functionMain: FunctionMainService, private storage: StorageService) { }
 
   ngOnInit() {
     this.onLoadBackground()

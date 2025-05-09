@@ -29,6 +29,7 @@ import { ImageZoomComponent } from './image-zoom/image-zoom.component';
 import { InputPasswordComponent } from './input-password/input-password.component';
 import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.component';
 import { NricScanInputComponent } from './nric-scan-input/nric-scan-input.component';
+import { ModalLoadingComponent } from './modal-loading/modal-loading.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { NricScanInputComponent } from './nric-scan-input/nric-scan-input.compon
     InputPasswordComponent,
     Base64FileZoomComponent,
     NricScanInputComponent,
+    ModalLoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +87,7 @@ import { NricScanInputComponent } from './nric-scan-input/nric-scan-input.compon
     InputPasswordComponent,
     Base64FileZoomComponent,
     NricScanInputComponent,
+    ModalLoadingComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

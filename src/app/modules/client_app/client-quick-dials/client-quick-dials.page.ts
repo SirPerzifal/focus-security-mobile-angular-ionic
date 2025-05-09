@@ -135,7 +135,7 @@ export class ClientQuickDialsPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    let url = this.contactForm.id != 0 ? '/client/update/edit_contact' : '/client/post/new_contact'
+    let url = this.contactForm.id != 0 ? '/client/post/edit_contact' : '/client/post/new_contact'
     this.clientMainService.getApi(this.contactForm, url).subscribe({
       next: (results) => {
         console.log(results)
@@ -265,7 +265,7 @@ export class ClientQuickDialsPage implements OnInit {
 
   deleteContact(contact: any){
     console.log(contact.id)
-    this.clientMainService.getApi({id: contact.id}, '/client/update/delete_contact').subscribe({
+    this.clientMainService.getApi({id: contact.id}, '/client/post/delete_contact').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

@@ -177,6 +177,19 @@ export class AppReportMainPage implements OnInit {
         this.navButtons[1].active = false;
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
+        this.reporterDetailsFrom = {
+          requestorId: 0,
+          blokId: 0,
+          unitId: 0,
+          name: '',
+          contactNumber: '',
+          email: '',
+          blockAndUnit: '',
+          placeOfResidence: '',
+          typeReport: 0,
+          summaryReport: '',
+          ticketAttachment: '',
+        }
       } else {
         // this.presentToast(response.result.message, 'danger');
       }

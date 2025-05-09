@@ -72,7 +72,7 @@ export class ClientFacilityDetailPage implements OnInit {
         is_need_checked : this.submitForm.is_need_checked,
       }
       console.log(params)
-      this.clientMainService.getApi(params, '/client/update/room').subscribe({
+      this.clientMainService.getApi(params, '/client/post/room').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code == 200) {

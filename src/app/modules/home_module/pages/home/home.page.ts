@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -17,7 +17,8 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private mainVmsService: MainVmsService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
+  constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
+    webrtc.initializeSocket()
     this.checkScreenSize();
     this.initializeBackButtonHandling();
   }
@@ -88,7 +89,7 @@ export class HomePage implements OnInit {
 
   onLogout() {
     if (this.project_key != '') {
-      this.mainVmsService.getApi({project_id: this.project_id, project_key: this.project_key}, '/vms/get/project_key').subscribe({
+      this.clientMainService.getApi({project_id: this.project_id, project_key: this.project_key}, '/vms/get/project_key').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {
@@ -129,7 +130,7 @@ export class HomePage implements OnInit {
 
   onLoadCount() {
     let params = {project_id: this.project_id}
-    this.mainVmsService.getApi(params, '/vms/get/offenses_count').subscribe({
+    this.clientMainService.getApi(params, '/vms/get/offenses_count').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

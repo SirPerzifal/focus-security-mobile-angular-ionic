@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams } from '@ionic/angular';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
-
 @Component({
   selector: 'app-records-wheel-clamped-new',
   templateUrl: './records-wheel-clamped-new.page.html',
@@ -17,7 +16,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
     private modalController: ModalController, 
     private navParams: NavParams, 
     private blockUnitService: BlockUnitService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private functionMain: FunctionMainService,
   ) {
     this.type = this.navParams.get('type')
@@ -182,7 +181,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
       }
       
       console.log(params)
-      this.mainVmsService.getApi(params, '/vms/create/offenses' ).subscribe({
+      this.clientMainService.getApi(params, '/vms/post/offenses' ).subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -297,7 +296,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

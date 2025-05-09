@@ -256,7 +256,7 @@ export class RaiseARequestService extends ApiService  {
   // Pet API methods
   private postApiPet = this.baseUrl + '/resident/post/request_pet_registration';
   private getApiPet = this.baseUrl + '/resident/get/pet_registration';
-  private updateApiPet = this.baseUrl + '/resident/update/pet_registration';
+  private updateApiPet = this.baseUrl + '/resident/post/pet_registration';
   private deleteApiPet = this.baseUrl + '/resident/delete/pet_registration';
   postPetAPI(
     block_id: number,

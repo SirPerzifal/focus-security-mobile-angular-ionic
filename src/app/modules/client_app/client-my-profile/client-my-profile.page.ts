@@ -88,7 +88,7 @@ export class ClientMyProfilePage implements OnInit {
   faFalse = faX
 
   saveRecord() {
-    this.clientMainService.getApi(this.userData, '/client/update/my_profile').subscribe({
+    this.clientMainService.getApi(this.userData, '/client/post/my_profile').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

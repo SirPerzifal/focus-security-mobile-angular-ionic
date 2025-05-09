@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-records-alert-next',
@@ -14,7 +14,7 @@ export class RecordsAlertNextPage implements OnInit {
   constructor(
     private blockUnitService: BlockUnitService,
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private modalController: ModalController,
     private navParams: NavParams, 
   ) { }
@@ -105,7 +105,7 @@ export class RecordsAlertNextPage implements OnInit {
   }
 
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -146,7 +146,7 @@ export class RecordsAlertNextPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    this.mainVmsService.getApi({...this.formData, project_id: this.project_id}, url).subscribe({
+    this.clientMainService.getApi({...this.formData, project_id: this.project_id}, url).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

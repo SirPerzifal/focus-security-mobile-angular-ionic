@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { VisitorService } from 'src/app/service/vms/visitor/visitor.service';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { Subscription } from 'rxjs';
-import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
-import { AlertModalPage } from 'src/app/modules/alert_module/pages/alert-modal/alert-modal.page';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Html5Qrcode } from "html5-qrcode";
 
 @Component({
@@ -31,12 +28,10 @@ export class WalkInPage implements OnInit {
   
   constructor(
     private paramsActiveFromCoaches: ActivatedRoute, 
-    private visitorService: VisitorService, 
     private toastController: ToastController, 
     private router: Router,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
-    private modalController: ModalController,
+    private clientMainService: ClientMainService,
     private blockUnitService: BlockUnitService,
   ) { }
   
@@ -154,7 +149,26 @@ export class WalkInPage implements OnInit {
       return
     }
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'drive_in', this.formData.visitor_vehicle, this.formData.block, this.formData.unit, this.formData.family_id, this.project_id, camera_id,this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value,this.pass_number,).subscribe(
+      let params = {
+        visitor_name: this.formData.visitor_name,
+        visitor_contact_no: this.formData.visitor_contact_no,
+        visitor_type: 'drive_in',
+        visitor_vehicle: this.formData.visitor_vehicle,
+        block: this.formData.block,
+        unit: this.formData.unit,
+        family_id: this.formData.family_id,
+        project_id: this.project_id,
+        camera_id: '',
+        is_pre_entry: this.isFromScan,
+        entry_id: this.isFromScan ? this.searchData.id : '',
+        entry_type: this.isFromScan ? this.searchData.entry_type : '',
+        host: this.selectedHost,
+        purpose: this.formData.purpose,
+        identification_type: this.identificationType,
+        identification_number: this.nric_value,
+        pass_number: this.pass_number,
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -177,7 +191,8 @@ export class WalkInPage implements OnInit {
             this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 206) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
+            // this.functionMain.presentToast(res.result.status_description, 'danger');
+            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {
             this.presentToast('An error occurred while attempting to save drive in data', 'danger');
           }
@@ -239,7 +254,26 @@ export class WalkInPage implements OnInit {
     }
     console.log(this.formData)
     try {
-      this.visitorService.postAddVisitor(this.formData.visitor_name, this.formData.visitor_contact_no, 'walk_in', '', this.formData.block, this.formData.unit, this.formData.family_id,this.project_id,'',this.isFromScan,this.isFromScan ? this.searchData.id : '',this.isFromScan ? this.searchData.entry_type : '',this.selectedHost,this.formData.purpose,this.identificationType,this.nric_value,this.pass_number,).subscribe(
+      let params = {
+        visitor_name: this.formData.visitor_name,
+        visitor_contact_no: this.formData.visitor_contact_no,
+        visitor_type: 'walk_in',
+        visitor_vehicle: '',
+        block: this.formData.block,
+        unit: this.formData.unit,
+        family_id: this.formData.family_id,
+        project_id: this.project_id,
+        camera_id: '',
+        is_pre_entry: this.isFromScan,
+        entry_id: this.isFromScan ? this.searchData.id : '',
+        entry_type: this.isFromScan ? this.searchData.entry_type : '',
+        host: this.selectedHost,
+        purpose: this.formData.purpose,
+        identification_type: this.identificationType,
+        identification_number: this.nric_value,
+        pass_number: this.pass_number,
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200) {
@@ -261,7 +295,7 @@ export class WalkInPage implements OnInit {
             this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 206) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
+            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {
             this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
           }
@@ -418,7 +452,7 @@ export class WalkInPage implements OnInit {
       this.formData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -502,7 +536,7 @@ export class WalkInPage implements OnInit {
   isProcess = false
   checkResult(){
     this.isProcess = true
-    this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
+    this.clientMainService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -558,7 +592,7 @@ export class WalkInPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -572,6 +606,9 @@ export class WalkInPage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+      }
       this.formData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
       this.formData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
       if (this.showDrive) {

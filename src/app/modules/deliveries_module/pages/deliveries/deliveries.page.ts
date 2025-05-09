@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-deliveries',
@@ -42,7 +42,7 @@ export class DeliveriesPage implements OnInit {
     private toastController: ToastController, 
     private blockUnitService: BlockUnitService, 
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private clientMainService: ClientMainService,
   ) { }
 
   package_delivery_type = ""
@@ -182,26 +182,27 @@ export class DeliveriesPage implements OnInit {
       return
     }
     try {
-      this.foodPlatform.pastAddDeliveries(
-        this.formData.contact_number, 
-        this.food_delivery_type == 'drive_in' ? this.formData.vehicle_number : '', 
-        'food' , 
-        this.formData.food_delivery= {
-          id: this.food_delivery_id == 'other' ? 0 : parseInt(this.food_delivery_id),
-          other: this.food_delivery_id == 'other' ? 'Others Checked' : '',
+      let params = {
+        contact_number: this.formData.contact_number,
+        vehicle_number: this.food_delivery_type === 'drive_in' ? this.formData.vehicle_number : '',
+        delivery_type: 'food',
+        food_delivery: {
+          id: this.food_delivery_id === 'other' ? 0 : parseInt(this.food_delivery_id),
+          other: this.food_delivery_id === 'other' ? 'Others Checked' : '',
           delivery_option: this.food_delivery_type
-        }, 
-        {}, 
-        this.formData.block, 
-        this.formData.unit,
-        {},
-        this.project_id,
-        camera_id,
-        this.selectedHost,
-        this.identificationType,
-        this.nric_value,
-        this.pass_number
-      ).subscribe(
+        },
+        package_delivery: {},
+        block: this.formData.block,
+        unit: this.formData.unit,
+        multiple_unit: {},
+        project_id: this.project_id,
+        camera_id: camera_id,
+        host: this.selectedHost,
+        identification_type: this.identificationType,
+        identification_number: this.nric_value,
+        pass_number: this.pass_number
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200){
@@ -222,7 +223,7 @@ export class DeliveriesPage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 206) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
+            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {
             this.functionMain.presentToast('Failed To Insert Food Delivery Record', 'danger');
           }
@@ -328,29 +329,31 @@ export class DeliveriesPage implements OnInit {
       return
     }
     try{
-      this.foodPlatform.pastAddDeliveries(
-        this.formData.contact_number, 
-        this.formData.vehicle_number, 
-        'package' , 
-        {}, 
-        this.formData.package_delivery = {
-          id: this.package_delivery_id == 'other' ? 0 : parseInt(this.package_delivery_id) ,
-          other: this.package_delivery_id == 'other' ? 'Others Checked' : '',
+      let params = {
+        contact_number: this.formData.contact_number,
+        vehicle_number: this.formData.vehicle_number,
+        delivery_type: 'package',
+        food_delivery: {}, // Kosong karena bukan food delivery
+        package_delivery: {
+          id: this.package_delivery_id === 'other' ? 0 : parseInt(this.package_delivery_id),
+          other: this.package_delivery_id === 'other' ? 'Others Checked' : '',
           delivery_option: this.package_delivery_type
-        }, 
-        this.package_delivery_type == 'multiple' ? '' : this.formData.block, 
-        this.package_delivery_type == 'multiple' ? '' : this.formData.unit,
-        mutiple_unit = {
+        },
+        block: this.package_delivery_type === 'multiple' ? '' : this.formData.block,
+        unit: this.package_delivery_type === 'multiple' ? '' : this.formData.unit,
+        multiple_unit: {
           pax: this.formData.pax,
           remarks: this.formData.remarks
         },
-        this.project_id,
-        camera_id,
-        this.selectedHost,
-        this.identificationType,
-        this.nric_value,
-        ''
-      ).subscribe(
+        project_id: this.project_id,
+        camera_id: camera_id,
+        host: this.selectedHost,
+        identification_type: this.identificationType,
+        identification_number: this.nric_value,
+        pass_number: ''
+      }
+      
+      this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
         res => {
           console.log(res);
           if (res.result.status_code == 200){
@@ -372,7 +375,7 @@ export class DeliveriesPage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 206) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
+            this.functionMain.banAlert(res.result.status_description, this.package_delivery_type === 'multiple' ? false : this.formData.unit, this.selectedHost)
           } else {
             this.functionMain.presentToast('Failed To Insert Package Delivery Record', 'danger');
           }
@@ -694,7 +697,7 @@ export class DeliveriesPage implements OnInit {
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -712,7 +715,7 @@ export class DeliveriesPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -726,6 +729,9 @@ export class DeliveriesPage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+      }
       this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
       if (this.food_delivery_type == 'drive_in' || this.packageDeliveries) {
         this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''
@@ -794,7 +800,7 @@ export class DeliveriesPage implements OnInit {
       ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value, pass_number: this.pass_number
     }
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
+    this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
       next: (results) => {
         if (results.result.status_code === 200) {
           if (openBarrier){
@@ -814,7 +820,7 @@ export class DeliveriesPage implements OnInit {
           this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['home-vms'])
         } else if (results.result.status_code === 206) {
-          this.functionMain.presentToast(results.result.status_description, 'danger');
+          this.functionMain.banAlert(results.result.status_description, false, this.selectedHost)
         } else {
           this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         }
@@ -834,7 +840,7 @@ export class DeliveriesPage implements OnInit {
       this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id

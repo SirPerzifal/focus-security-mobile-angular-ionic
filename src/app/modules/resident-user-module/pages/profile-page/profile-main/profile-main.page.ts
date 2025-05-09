@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'rxjs';
 import { AlertController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
@@ -337,16 +338,76 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     this.disabledInput = !this.disabledInput;
   
     // Update the disabledInput for email and phone fields
-    this.inputData.forEach(input => {
-      if (input.formParams === 'email' || input.formParams === 'phone') {
-        input.disabledInput = this.disabledInput;
-      }
-    });
+    // this.inputData.forEach(input => {
+    //   if (input.formParams === 'email' || input.formParams === 'phone') {
+    //     input.disabledInput = this.disabledInput;
+    //   }
+    // });
   
     if (this.disabledInput === true) {
       this.functionMain.presentToast('You can not change your profile data', 'danger');
     } else {
       this.functionMain.presentToast('You can change your profile data now', 'success');
+    }
+  }
+
+  isModalChooseUpload: boolean = false;
+  chooseWhereToChoose() {
+    console.log("tes");
+    this.isModalChooseUpload = !this.isModalChooseUpload;
+  }
+
+  onUploadImageProfile(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isModalChooseUpload = !this.isModalChooseUpload;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imageProfile = e.target.result; // Menyimpan URL gambar untuk preview
+      };
+      reader.readAsDataURL(file); // Membaca file sebagai URL data
+      this.functionMain.convertToBase64(file).then((base64: string) => {
+        // console.log('Base64 successed');
+        this.imageProfile = base64.split(',')[1]; // Update the form control for image file
+      }).catch(error => {
+        console.error('Error converting to base64', error);
+      });
+    }
+  }
+
+  async openCamera() {
+    try {
+      // Request camera permissions
+      const permissionStatus = await Camera.checkPermissions();
+      if (permissionStatus.camera !== 'granted') {
+        await Camera.requestPermissions();
+      }
+      
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+        promptLabelHeader: 'Take a photo',
+        promptLabelCancel: 'Cancel',
+        promptLabelPhoto: 'Take Photo',
+      });
+      
+      if (image && image.base64String) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
+        // Update the form data with the base64 image
+        this.imageProfile = image.base64String;
+        
+        // Update display name to show a camera capture was made
+        const timestamp = new Date().toISOString().split('T')[0];
+        this.imageProfile = image.base64String;
+        
+        // Display success message
+        this.functionMain.presentToast('Photo captured successfully', 'success');
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      this.functionMain.presentToast(String(error), 'danger');
     }
   }
 
@@ -379,8 +440,114 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   }
   
   saveChangeProfile() {
-    console.log(this.inputForm);
-    
+    console.log(this.inputForm, this.imageProfile);
+    this.mainResident.endpointMainProcess({
+      new_image_profile: this.imageProfile
+    }, 'post/change_update_profile_image').subscribe((response: any) => {
+      const estateString = JSON.stringify(response.result.new_estate);
+      console.log(estateString);
+      // Melakukan encoding ke Base64
+      const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
+      console.log(encodedEstate);
+      this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
+        this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+          this.storage.decodeData(value).then((value: any) => {
+            if ( value ) {
+              const estate = JSON.parse(value) as Estate;
+              this.imageProfile = estate.image_profile;
+              this.userName = estate.family_name;
+              this.userType = estate.record_type;
+              if (this.userType === 'industrial') {
+                this.inputData = [
+                  {
+                    id: 'condominium_name',
+                    formParams: 'nameCondominium',
+                    name: 'Project Name',
+                    disabledInput: true
+                  },    {
+                    id: 'email_owner',
+                    formParams: 'email',
+                    name: 'Email',
+                    disabledInput: this.disabledInput
+                  },    {
+                    id: 'phone_number',
+                    formParams: 'phone',
+                    name: 'Contact',
+                    disabledInput: this.disabledInput
+                  }
+                ]
+                this.inputForm = {
+                  nameCondominium: estate.project_name,
+                  statusOwner: estate.family_type,
+                  blockName: estate.block_name,
+                  unitName: estate.unit_name,
+                  email: estate.family_email,
+                  phone: estate.family_mobile_number,
+                }
+              } else {
+                this.inputData = [
+                  {
+                    id: 'condominium_name',
+                    formParams: 'nameCondominium',
+                    name: 'Condominium Name',
+                    disabledInput: true
+                  },    {
+                    id: 'status_owner',
+                    formParams: 'statusOwner',
+                    name: 'Status',
+                    disabledInput: true
+                  },    {
+                    id: 'block_name',
+                    formParams: 'blockName',
+                    name: 'Block',
+                    disabledInput: true
+                  },    {
+                    id: 'unit_name',
+                    formParams: 'unitName',
+                    name: 'Unit',
+                    disabledInput: true
+                  },    {
+                    id: 'email_owner',
+                    formParams: 'email',
+                    name: 'Email',
+                    disabledInput: this.disabledInput
+                  },    {
+                    id: 'phone_number',
+                    formParams: 'phone',
+                    name: 'Contact',
+                    disabledInput: this.disabledInput
+                  }
+                ]
+                this.inputForm = {
+                  nameCondominium: estate.project_name,
+                  statusOwner: estate.family_type,
+                  blockName: estate.block_name,
+                  unitName: estate.unit_name,
+                  email: estate.family_email,
+                  phone: estate.family_mobile_number,
+                }
+              }
+              if (estate.unit_id) {
+                this.activeUnit = estate.unit_id;
+              } else {
+                this.activeUnit = estate.family_id;
+              }
+              Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+                if(value?.value){
+                  const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                  this.isLoading = true;
+                  // Mengubah string JSON menjadi objek JavaScript
+                  const credential = JSON.parse(decodedEstateString);
+                  this.loadEstate(credential.emailOrPhone);
+                }
+              })
+            }
+          })
+        })
+        this.webRtcService.initializeSocket();
+        this.ableChangeInput();
+      })
+    })
   }
 
   onClickSquareBottom(event: any) {

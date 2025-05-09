@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { ToastController } from '@ionic/angular';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 interface Schedule {
   id: number;
@@ -32,7 +32,7 @@ interface Schedule {
 
 export class CoachesModulePage implements OnInit {
 
-  constructor(private router: Router, private blockUnitService: BlockUnitService, private mainVmsService: MainVmsService, private toastController: ToastController) { }
+  constructor(private router: Router, private blockUnitService: BlockUnitService, private clientMainService: ClientMainService, private toastController: ToastController) { }
 
   ngOnInit() {
     this.loadCoaches('today')
@@ -62,7 +62,7 @@ export class CoachesModulePage implements OnInit {
     } else {
       url = 'vms/get/coaches'
     }
-    this.mainVmsService.getApi([], url ).subscribe({
+    this.clientMainService.getApi([], url ).subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results.result.response_result)

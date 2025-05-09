@@ -2,12 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { AlertModalPage } from '../alert-modal/alert-modal.page';
 import { RecordsWheelClampedNewPage } from 'src/app/modules/records_module/pages/records-wheel-clamped/records-wheel-clamped-new/records-wheel-clamped-new.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-alert-main',
@@ -20,7 +20,7 @@ export class AlertMainPage implements OnInit {
     private router: Router,
     private offensesService: OffensesService,
     private toastController: ToastController,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private modalController: ModalController,
     private route: ActivatedRoute,
     private alertController: AlertController,
@@ -149,7 +149,7 @@ export class AlertMainPage implements OnInit {
 
   loadUnregisteredCar(){
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'unregistered');
-    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/unregistered_car_list').subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/unregistered_car_list').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result })
@@ -171,7 +171,7 @@ export class AlertMainPage implements OnInit {
 
   loadOverstay(){
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'overstay');
-    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/overstay_list').subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/overstay_list').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           this.alertsIssues.push({ type: 'overstay', data: results.result.response_result })
@@ -194,7 +194,7 @@ export class AlertMainPage implements OnInit {
 
   loadTickets(){
     this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'tickets');
-    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/report_issue').subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/report_issue').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -342,7 +342,7 @@ export class AlertMainPage implements OnInit {
       is_unregistered: this.active_type == 'unregistered' || this.active_type == 'overstay',
     }
     if (true) {
-      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+      this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           if (results.result.response_code === 200) {
             this.presentToast(`Successfully ${type} vehicle!`, 'success');

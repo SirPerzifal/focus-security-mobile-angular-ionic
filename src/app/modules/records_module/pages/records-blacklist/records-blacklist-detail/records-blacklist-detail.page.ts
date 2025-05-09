@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-records-blacklist-detail',
@@ -21,7 +21,7 @@ export class RecordsBlacklistDetailPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private alertController: AlertController,
     private modalController: ModalController,
     private webRtcService: WebRtcService
@@ -105,7 +105,7 @@ export class RecordsBlacklistDetailPage implements OnInit {
       if (result) {
         console.log(result.data)
         if (result.data) {
-          this.mainVmsService.getApi({ id: this.record.id }, '/vms/post/lift_ban').subscribe({
+          this.clientMainService.getApi({ id: this.record.id }, '/vms/post/lift_ban').subscribe({
             next: (results) => {
               console.log(results)
               if (results.result.response_status === 200) {

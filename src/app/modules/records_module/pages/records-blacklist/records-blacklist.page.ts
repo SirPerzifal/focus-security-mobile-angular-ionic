@@ -4,7 +4,7 @@ import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class RecordsBlacklistPage implements OnInit {
     private offensesService: OffensesService,
     private modalController: ModalController,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     private blockUnitService: BlockUnitService
   ) { }
@@ -252,7 +252,7 @@ export class RecordsBlacklistPage implements OnInit {
   isLoading = false
   async loadBlacklistData() {
     this.isLoading = true
-    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
         console.log(results);
         if (results.result.response_code === 200) {
@@ -292,7 +292,7 @@ export class RecordsBlacklistPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

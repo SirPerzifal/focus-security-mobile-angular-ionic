@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -15,7 +15,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
 
   vehicle: any = {}
 
-  constructor(private route: ActivatedRoute, private router: Router, private mainVmsService: MainVmsService, private toastController: ToastController, public functionMain: FunctionMainService) {
+  constructor(private route: ActivatedRoute, private router: Router, private clientMainService: ClientMainService, private toastController: ToastController, public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { vehicle: any, alert: boolean, search: boolean, overnight: boolean };
     if (state) {
@@ -95,7 +95,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
   }
 
   paymentSubmit() {
-    this.mainVmsService.getApi({ offence_id: this.vehicle.id, receipt_image: this.fileInput }, '/vms/update/offence_upload_receipt').subscribe({
+    this.clientMainService.getApi({ offence_id: this.vehicle.id, receipt_image: this.fileInput }, '/vms/post/offence_upload_receipt').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results)

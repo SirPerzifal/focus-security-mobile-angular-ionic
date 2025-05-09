@@ -5,8 +5,7 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-collection-module',
@@ -32,7 +31,7 @@ export class CollectionModulePage implements OnInit {
     private router: Router,
     private blockUnitService: BlockUnitService,
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private clientMainService: ClientMainService,
   ) { }
 
   walkInFormData = {
@@ -266,12 +265,30 @@ export class CollectionModulePage implements OnInit {
       return
     }
     try {
-      this.collectionService.postAddColllection(this.walkInFormData.visitor_name, this.walkInFormData.visitor_contact_no, 'walk_in', this.walkInFormData.visitor_vehicle, this.walkInFormData.block, this.walkInFormData.unit, this.project_id, '', this.selectedHost, this.walkInFormData.company_name, this.walkInFormData.remarks,this.nric_value,this.identificationType,this.pass_number).subscribe(
+      let params = {
+        name: this.walkInFormData.visitor_name,
+        vehicle_number: this.walkInFormData.visitor_vehicle.length > 0 ? this.walkInFormData.visitor_vehicle : '',
+        contact_number: this.walkInFormData.visitor_contact_no,
+        block_id: this.walkInFormData.block,
+        unit_id: this.walkInFormData.unit,
+        selection_type: 'walk_in',
+        project_id: this.project_id,
+        camera_id: '', // kosong sesuai value yang kamu berikan
+        host: this.selectedHost,
+        company_name: this.walkInFormData.company_name,
+        remarks: this.walkInFormData.remarks,
+        nric: this.nric_value,
+        identification_type: this.identificationType,
+        pass_number: this.pass_number
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
           console.log(res);
           if (res.result.response_code == 200) {
             this.functionMain.presentToast('Walk in data has been successfully saved to the system!', 'success');
             this.router.navigate(['home-vms'])
+          } else if (res.result.response_code === 206) {
+            this.functionMain.banAlert(res.result.status_description, this.walkInFormData.unit, this.selectedHost)
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }
@@ -335,7 +352,23 @@ export class CollectionModulePage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     try {
-      this.collectionService.postAddColllection(this.driveInFormData.visitor_name, this.driveInFormData.visitor_contact_no, 'drive_in', this.driveInFormData.visitor_vehicle, this.driveInFormData.block, this.driveInFormData.unit, this.project_id, camera_id, this.selectedHost, this.driveInFormData.company_name, this.driveInFormData.remarks, this.nric_value, this.identificationType,this.pass_number).subscribe(
+      let params = {
+        name: this.driveInFormData.visitor_name,
+        vehicle_number: this.driveInFormData.visitor_vehicle.length > 0 ? this.driveInFormData.visitor_vehicle : '',
+        contact_number: this.driveInFormData.visitor_contact_no,
+        block_id: this.driveInFormData.block,
+        unit_id: this.driveInFormData.unit,
+        selection_type: 'drive_in',
+        project_id: this.project_id,
+        camera_id: camera_id,
+        host: this.selectedHost,
+        company_name: this.driveInFormData.company_name,
+        remarks: this.driveInFormData.remarks,
+        nric: this.nric_value,
+        identification_type: this.identificationType,
+        pass_number: this.pass_number
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
           console.log(res);
           console.log(res.result.response_code);
@@ -354,7 +387,7 @@ export class CollectionModulePage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 206) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
+            this.functionMain.banAlert(res.result.status_description, this.driveInFormData.unit, this.selectedHost)
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }
@@ -404,7 +437,7 @@ export class CollectionModulePage implements OnInit {
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.driveInFormData.block = contactData.block_id
@@ -425,7 +458,7 @@ export class CollectionModulePage implements OnInit {
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.walkInFormData.block = contactData.block_id
@@ -443,7 +476,7 @@ export class CollectionModulePage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -457,6 +490,9 @@ export class CollectionModulePage implements OnInit {
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+      }
       if (this.showDrive) {
         this.driveInFormData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
         this.driveInFormData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faEraser, faPenFancy } from '@fortawesome/free-solid-svg-icons';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { SignaturePadComponent } from 'src/app/shared/components/signature-pad/signature-pad.component';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -16,7 +16,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMainService: FunctionMainService
     // private canvas: Canvas
   ) {
@@ -159,7 +159,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
       officer_check: this.officerSign ? this.officerSign.split(',')[1] : false, 
       check_in_out_type: this.purpose }
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/check_in_out_booking').subscribe({
+    this.clientMainService.getApi(params, '/vms/post/check_in_out_booking').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -218,7 +218,7 @@ export class RecordsFacilityCheckOutPage implements OnInit {
       form_data: this.formData,
     }
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/check_in_check_out_form').subscribe({
+    this.clientMainService.getApi(params, '/vms/post/check_in_check_out_form').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

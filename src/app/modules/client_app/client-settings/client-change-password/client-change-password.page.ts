@@ -101,7 +101,7 @@ export class ClientChangePasswordPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    this.clientMainService.getApi(this.passwordForm, '/client/update/password').subscribe({
+    this.clientMainService.getApi(this.passwordForm, '/client/post/password').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

@@ -54,6 +54,8 @@ export class VehicleFormPage implements OnInit {
     endDate: '',
   }
 
+  vehicleIdForUpdateAndJustUpdateNothingElse: number = 0;
+
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
@@ -61,7 +63,7 @@ export class VehicleFormPage implements OnInit {
     private storage: StorageService
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { maximumVehicle: boolean };
+    const state = navigation?.extras.state as { maximumVehicle: boolean, vehicleId: number };
     if (state) {
       // // console.log(state.from)
       this.maximumVehicle = state.maximumVehicle;
@@ -72,6 +74,37 @@ export class VehicleFormPage implements OnInit {
             text: 'Temporary Vehicle'
           },
         ]
+      }
+      if (state.vehicleId) {
+        this.vehicleIdForUpdateAndJustUpdateNothingElse = state.vehicleId;
+        this.mainApi.endpointMainProcess({
+          vehicle_id: state.vehicleId
+        }, 'get/get_vehicle_detail').subscribe((response: any) => {
+          const vehicle = response.result.response_result;
+          this.vehicleForm = {
+            vehicleNumber: vehicle.vehicle_number,
+            iuNumber: vehicle.IU_number,
+            typeOfApplication: vehicle.type_of_application === 'Temporary Vehicle' ? 'temporary_vehicle' : 'owned_vehicle',
+            typeOfVehicle: vehicle.vehicle_type,
+            vehicleMake: vehicle.vehicle_make,
+            vehicleColour: vehicle.vehicle_color_text,
+            vehicleLog: '',
+            isFirstVehicle: vehicle.is_first_vehicle,
+            primaryVehicle: 'false',
+            ownedBy: '',
+          }
+          this.selectedDate = String(this.functionMain.convertToDDMMYYYY(vehicle.end_date_for_temporary_pass)); // Update selectedDate with the chosen date in dd/mm/yyyy format
+          this.additionalTemporary = {
+            endDate: vehicle.end_date_for_temporary_pass,
+            temporaryCarRequest: vehicle.temporary_car_request
+          }
+          console.log(this.selectedDate, this.additionalTemporary);
+          
+        }, (error) => {
+          // this.presentToast('Data fetched failed!', 'danger');
+          console.error('Error fetching vehicle details:', error);
+          console.error('Error fetching vehicle details result:', error);
+        })
       }
     } 
   }
@@ -185,9 +218,42 @@ export class VehicleFormPage implements OnInit {
   }
 
   saveRecord() {
-    console.log(this.vehicleForm, this.additionalTemporary);
-    try {
+    let errMsg = [];
+    
+    if (this.vehicleForm.vehicleNumber == "") {
+      errMsg.push('Please fill vehicle number!');
+    }
+    if (this.vehicleForm.iuNumber == "") {
+      errMsg.push("Please choose entry type!");
+    }
+    if (this.vehicleForm.typeOfApplication == "") {
+      errMsg.push("Please fill type of application!");
+    }
+    if (this.vehicleForm.typeOfVehicle == "") {
+      errMsg.push("Please fill type of vehicle!");
+    }
+    if (this.vehicleForm.vehicleMake == "") {
+      errMsg.push("Please fill vehicle make!");
+    }
+    if (this.vehicleForm.vehicleColour == "") {
+      errMsg.push("Please fill vehicle color!");
+    }
+    if (this.vehicleForm.vehicleLog == "") {
+      errMsg.push("Please fill vehicle log!");
+    }
+    
+    if (this.vehicleForm.typeOfApplication == "temporary_vehicle") {
+      if (this.additionalTemporary.endDate == "") {
+        errMsg.push("Please fill end date for temporary vehicle!");
+      }
+      if (this.additionalTemporary.temporaryCarRequest == "") {
+        errMsg.push("Please fill temporary car request!");
+      }
+    }
+  
+    if (errMsg.length === 0) {
       this.mainApi.endpointMainProcess({
+        previous_vehicle_id: this.vehicleIdForUpdateAndJustUpdateNothingElse,
         vehicle_number: this.vehicleForm.vehicleNumber,
         IU_number: this.vehicleForm.iuNumber,
         type_of_application: this.vehicleForm.typeOfApplication,
@@ -203,6 +269,22 @@ export class VehicleFormPage implements OnInit {
         if (response.result.response_code === 200) {
           if (this.userRole === 'industrial') {
             this.router.navigate(['my-vehicle-page-main']);
+            this.vehicleForm = {
+              vehicleNumber: '',
+              iuNumber: '',
+              typeOfApplication: '',
+              typeOfVehicle: '',
+              vehicleMake: '',
+              vehicleColour: '',
+              vehicleLog: '',
+              isFirstVehicle: false,
+              primaryVehicle: 'false',
+              ownedBy: '',
+            }
+            this.additionalTemporary = {
+              temporaryCarRequest: '',
+              endDate: '',
+            }
           } else {
             this.router.navigate(['/payment-form-vehicle'], {
               state: {
@@ -216,11 +298,11 @@ export class VehicleFormPage implements OnInit {
           this.functionMain.presentToast('Failed', 'danger');
           console.error('Error:', response.result.message);
         }
-      })
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      this.functionMain.presentToast('There was an error', 'danger');
+      });
+    } else {
+      this.functionMain.presentToast(errMsg.join('\n'), 'danger');
     }
   }
+  
 
 }

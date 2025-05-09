@@ -262,7 +262,7 @@ export class ClientApprovalsPage implements OnInit {
       this.functionMain.presentToast('RFID Tag must be filled in!', 'warning')
       return
     }
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag}, '/client/approve').subscribe({
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag}, '/client/post/approve').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
@@ -287,7 +287,7 @@ export class ClientApprovalsPage implements OnInit {
       this.functionMain.presentToast('Reason for rejection is required!', 'danger')
       return
     }
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: this.selectedApproval.id, reject_reason: this.reject_reason}, '/client/reject').subscribe({
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: this.selectedApproval.id, reject_reason: this.reject_reason}, '/client/post/reject').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {

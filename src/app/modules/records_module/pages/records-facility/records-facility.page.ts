@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 // import { SignaturePadModule } from 'angular-signaturepad';
@@ -38,7 +38,7 @@ export class RecordsFacilityPage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private blockUnitService: BlockUnitService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     // private signaturePad: SignaturePadModule
   ) { }
@@ -86,7 +86,7 @@ export class RecordsFacilityPage implements OnInit {
 
   Facilities: any[] = []
   getFacilities(){
-    this.mainVmsService.getApi({}, '/vms/get/get_room_facility' ).subscribe({
+    this.clientMainService.getApi({}, '/vms/get/get_room_facility' ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
@@ -105,7 +105,7 @@ export class RecordsFacilityPage implements OnInit {
     if (this.showDay){
       if (this.daySchedules.length == 0){
         this.isLoading = true
-        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/facility_book' ).subscribe({
+        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book' ).subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.response_code == 200) {
@@ -127,7 +127,7 @@ export class RecordsFacilityPage implements OnInit {
     } else if (this.showUpcoming) {
       if (this.upcomingSchedules.length == 0){
         this.isLoading = true
-        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/facility_book_upcoming' ).subscribe({
+        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book_upcoming' ).subscribe({
           next: (results) => {
             if (results.result.response_code == 200) {
               // this.presentToast('Coach data successfully submitted!', 'success');
@@ -149,7 +149,7 @@ export class RecordsFacilityPage implements OnInit {
       console.log(this.historySchedules)
       if (this.historySchedules.length == 0) {
         this.isLoading = true
-        this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/booking_history' ).subscribe({
+        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/booking_history' ).subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.success) {
@@ -440,7 +440,7 @@ export class RecordsFacilityPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

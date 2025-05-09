@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, from, switchMap } from 'rxjs';
+import { Observable, throwError, from, switchMap, mergeMap, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../api.service';
 import { StorageService } from '../../storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { ModalController } from '@ionic/angular';
+import { ModalLoadingComponent } from 'src/app/shared/components/modal-loading/modal-loading.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +19,20 @@ export class MainApiResidentService extends ApiService {
   blockId: number = 0;
   projectId: number = 0;
 
-  constructor(http: HttpClient, private storage: StorageService) { 
+  constructor(http: HttpClient, private storage: StorageService, private modalController: ModalController) { 
     super(http);
   }
 
   endpointMainProcess(params: any, apiUrl: string): Observable<any> {
+    let modalRef: HTMLIonModalElement | null = null;
+    let openLoading = false;
+  
+    // Check if API URL contains 'post' to determine whether to show loading modal
+    const urlSegments = apiUrl.split('/');
+    if (urlSegments.length > 0 && urlSegments.includes('post')) {
+      openLoading = true;
+    }
+    
     // Mengkonversi Promise chain menjadi Observable
     return from(this.storage.getValueFromStorage('USESATE_DATA')).pipe(
       // Flatmap untuk menangani Promise berikutnya
@@ -30,7 +41,7 @@ export class MainApiResidentService extends ApiService {
           // Menangani kasus jika value tidak ada
           return throwError(() => new Error('No estate data found'));
         }
-
+  
         return from(this.storage.decodeData(value));
       }),
       switchMap((decodedValue: any) => {
@@ -84,10 +95,34 @@ export class MainApiResidentService extends ApiService {
           };
         }
         
-        // Mengirim HTTP request
-        return this.http.post(this.baseUrl + '/resident/' + apiUrl, body, { headers });
+        // Create and present loading modal if needed
+        return from((async () => {
+          if (openLoading) {
+            modalRef = await this.modalController.create({
+              component: ModalLoadingComponent,
+              cssClass: 'modal-loading',
+            });
+            await modalRef.present();
+          }
+          
+          // Mengirim HTTP request
+          return this.http.post(this.baseUrl + '/resident/' + apiUrl, body, { headers });
+        })());
       }),
-      catchError(this.handleError)
+      mergeMap(response$ => response$),
+      tap(() => {
+        // Dismiss modal after successful response
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+      }),
+      catchError((error) => {
+        // Dismiss modal on error
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+        return this.handleError(error);
+      })
     );
   }
 

@@ -131,10 +131,6 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
       this.functionMain.presentToast('Please provide reason why you ban this contractor', 'danger');
       return;
     }
-    if (!this.formData.image) {
-      this.functionMain.presentToast('Please provide image to prove why you ban this contractor', 'danger');
-      return;
-    }
     this.isModalReasonBanOpen = false;
     // console.log(this.formData);
     this.mainApiResidentService.endpointMainProcess({

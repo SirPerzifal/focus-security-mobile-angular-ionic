@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -31,7 +31,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 export class ResidentCarListPage implements OnInit {
 
   constructor(
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     private modalController: ModalController,
     private changeDetectorRef: ChangeDetectorRef,
@@ -78,7 +78,7 @@ export class ResidentCarListPage implements OnInit {
     this.vehicle = []
     console.log("PING OVER HERE")
     console.log(vehicle_number)
-    this.mainVmsService.getApi({vehicle_number: vehicle_number, project_id: this.project_id}, '/vms/get/search_vehicle' ).subscribe({
+    this.clientMainService.getApi({vehicle_number: vehicle_number, project_id: this.project_id}, '/vms/get/search_vehicle' ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -287,7 +287,7 @@ export class ResidentCarListPage implements OnInit {
       is_unregistered: false,
     }
     if (true) {
-      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+      this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           if (results.result.response_code === 200) {
             this.toggleShowSearch([this.vehicleNumber])

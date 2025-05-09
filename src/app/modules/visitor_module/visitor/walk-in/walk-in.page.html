@@ -46,7 +46,7 @@
           </div>
           <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
             <div class="w-full">
-              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric'/>
             </div>
             <div class="w-full" *ngIf="project_config.is_industrial">
               <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial"></app-m2m-selection>
@@ -123,7 +123,7 @@
           </div> -->
           <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
             <div class="w-full">
-              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+              <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' />
             </div>
             <div class="w-full">
               <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>

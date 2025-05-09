@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-alert-ticket-detail',
@@ -13,7 +13,7 @@ export class AlertTicketDetailPage implements OnInit {
 
   constructor(
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private router: Router
   ) {
     
@@ -60,7 +60,7 @@ export class AlertTicketDetailPage implements OnInit {
   }
 
   loadTicketsDetail(){
-    this.mainVmsService.getApi({ticket_id: this.params.ticket_id}, '/vms/get/report_issue_detail').subscribe({
+    this.clientMainService.getApi({ticket_id: this.params.ticket_id}, '/vms/get/report_issue_detail').subscribe({
       next: (results) => {
         console.log('tickets', results)
         if (results.result.response_code === 200) {
@@ -92,7 +92,7 @@ export class AlertTicketDetailPage implements OnInit {
     if (is_close){
       apiUrl = '/vms/post/reply_ticket_and_close'
     }
-    this.mainVmsService.getApi({ticket_id: this.params.ticket_id, body: this.reply_message, ir_attachment_datas: this.image_file, ir_attachment_name: this.image_name, user_id: this.user_id}, apiUrl).subscribe({
+    this.clientMainService.getApi({ticket_id: this.params.ticket_id, body: this.reply_message, ir_attachment_datas: this.image_file, ir_attachment_name: this.image_name, user_id: this.user_id}, apiUrl).subscribe({
       next: (results) => {
         console.log('tickets', results)
         this.showFile = false

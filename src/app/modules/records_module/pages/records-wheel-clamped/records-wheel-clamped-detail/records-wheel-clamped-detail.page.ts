@@ -5,7 +5,7 @@ import { AlertModalPage } from 'src/app/modules/alert_module/pages/alert-modal/a
 import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-records-wheel-clamped-detail',
@@ -23,7 +23,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     private modalController: ModalController,
     private alertController: AlertController,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private webRtcService: WebRtcService
   ) {
     const navigation = this.router.getCurrentNavigation();
@@ -167,7 +167,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
       is_unregistered: false,
     }
     if (true) {
-      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+      this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           if (results.result.response_code === 200) {
             this.router.navigate(['/records-wheel-clamped'], {queryParams: this.params}) 

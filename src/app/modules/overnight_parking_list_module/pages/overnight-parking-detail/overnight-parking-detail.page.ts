@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { OvernightParkingModalPage } from '../overnight-parking-modal/overnight-parking-modal.page';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ export class OvernightParkingDetailPage implements OnInit {
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     private alertController: AlertController,
     private offensesService: OffensesService,
@@ -124,7 +124,7 @@ export class OvernightParkingDetailPage implements OnInit {
   }
 
   getOffence(vehicle_number: string, id: any, project_id: number) {
-    this.mainVmsService.getApi({vehicle_number: vehicle_number, id: id, project_id: project_id}, '/vms/get/overnight_parking_list_detail' ).subscribe({
+    this.clientMainService.getApi({vehicle_number: vehicle_number, id: id, project_id: project_id}, '/vms/get/overnight_parking_list_detail' ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -172,7 +172,7 @@ export class OvernightParkingDetailPage implements OnInit {
       is_unregistered: false,
     }
     if (true) {
-      this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+      this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           if (results.result.response_code === 200) {
             this.loadProjectName()

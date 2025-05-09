@@ -117,7 +117,7 @@ export class PetsDetailForProfilePage implements OnInit {
       pet_license: this.formData.pet_license,
       pet_image: this.formData.pet_image,
       notes: this.formData.notes,
-    }, 'update/pet_registration').subscribe((response: any) => {
+    }, 'post/pet_registration').subscribe((response: any) => {
         // Show success toast and log the form data to the console
         // Replace the following with your own logic to handle the success message and log the data
         // For example, you might want to save the data to a database or send it to a server for further processing

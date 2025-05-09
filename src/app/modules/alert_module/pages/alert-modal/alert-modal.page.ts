@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { AlertController, ModalController, NavParams } from '@ionic/angular';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-alert-modal',
@@ -14,7 +14,7 @@ export class AlertModalPage implements OnInit {
   constructor(
     private functionMain: FunctionMainService, 
     private modalController: ModalController, 
-    private mainVmsService: MainVmsService, 
+    private clientMainService: ClientMainService, 
     private navParams: NavParams,
     private alertController: AlertController) 
   {
@@ -108,7 +108,7 @@ export class AlertModalPage implements OnInit {
       after_image: this.afterClampImageFile
     }
     console.log(params)
-    this.mainVmsService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
+    this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -167,7 +167,7 @@ export class AlertModalPage implements OnInit {
   async searchImageId(id: string) {
     console.log(id);
     
-    this.mainVmsService.getApi({id: id}, '/vms/get/search_expected_visitor').subscribe({
+    this.clientMainService.getApi({id: id}, '/vms/get/search_expected_visitor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

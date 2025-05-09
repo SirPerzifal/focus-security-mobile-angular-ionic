@@ -501,6 +501,14 @@ ion-header {
   --width: 90%;
 }
 
+.modal-loading {
+  --height: 100%;
+  --border-radius: 4px;
+  --background: transparent !important;
+  --width: 100%;
+}
+
+
 .payment-modal{
   --overflow-y: auto;
   --max-height: 55%;

@@ -49,10 +49,9 @@
             <div class="flex flex-row justify-start mb-1">
             </div>
             <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
-              <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
-              <label for="profile_image">
+              <div (click)="chooseWhereToChoose()">
                 <img height="50" [src]="showingProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
-              </label>
+              </div>
             </div>
           </div>
           <button 
@@ -64,6 +63,50 @@
           </button>
         </div>
       </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal
+    id="is-modal-choose-upload"
+    [isOpen]="isModalChooseUpload"
+    (didDismiss)="isModalChooseUpload = false"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
+  >
+    <ng-template>
+      <div class="block">
+        <div class="w-full flex flex-row justify-between space-x-2 p-3">
+          <div class="w-1/2">
+            <div class="w-full flex flex-col items-center">
+              <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
+              <label
+                class="flex flex-col items-center"
+                for="profile_image"
+              >
+                <img
+                  class="w-10 h-10 my-2"
+                  src="assets/icon/other-file-icon.png"
+                />
+                <span
+                  class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                  >From File</span
+                >
+              </label>
+            </div>
+          </div>
+          <div class="w-1/2">
+            <div
+              class="w-full flex flex-col items-center"
+              (click)="openCamera()"
+            >
+              <img class="w-10 h-10 my-2" src="assets/icon/image-icon.png" />
+              <span
+                class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                >From Camera</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-template>
   </ion-modal>
 </ion-content>

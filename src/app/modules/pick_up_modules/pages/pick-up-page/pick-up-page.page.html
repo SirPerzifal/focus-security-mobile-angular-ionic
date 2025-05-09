@@ -48,7 +48,7 @@
               <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
             </div>
             <div class="w-full">
-              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'"></app-m2m-selection>
+              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'"  [Selected]="contactHost"></app-m2m-selection>
             </div>
             <div class="w-full">
               <app-text-input #entryPickUpPass [id]="'entry_pick_up_pass_number'" [labelText]="'PASS NUMBER'"

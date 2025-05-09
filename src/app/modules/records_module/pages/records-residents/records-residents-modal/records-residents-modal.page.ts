@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-records-residents-modal',
@@ -15,7 +15,7 @@ export class RecordsResidentsModalPage implements OnInit {
     private router: Router, 
     private modalController: ModalController, 
     private navParams: NavParams, 
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private toastController: ToastController,
     public functionMain: FunctionMainService
   ) {
@@ -36,7 +36,7 @@ export class RecordsResidentsModalPage implements OnInit {
     window.addEventListener('popstate', closeModalOnBack)
   }
 
-  url = '/vms/create/offenses'
+  url = '/vms/post/offenses'
 
   onSubmit() {
     let errMsg = ''
@@ -54,7 +54,7 @@ export class RecordsResidentsModalPage implements OnInit {
       } else {
         this.presentToast('FAILED!', 'danger')
       }
-      // this.mainVmsService.getApi(params, this.url ).subscribe({
+      // this.clientMainService.getApi(params, this.url ).subscribe({
       //   next: (results) => {
       //     console.log(results)
       //     if (results.result.response_code === 200) {
@@ -92,7 +92,7 @@ export class RecordsResidentsModalPage implements OnInit {
   Officer: any[] = []
 
   loadOfficer() {
-    // this.mainVmsService.getApi([], '/vms/get/issuing_officer' ).subscribe({
+    // this.clientMainService.getApi([], '/vms/get/issuing_officer' ).subscribe({
     //   next: (results) => {
     //     if (results.result.response_code === 200) {
     //       console.log(results.result.response_result)

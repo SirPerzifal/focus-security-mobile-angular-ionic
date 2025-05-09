@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { RecordsAlertNextPage } from '../records-alert-next/records-alert-next.page';
 
 @Component({
@@ -15,7 +15,7 @@ export class RecordsWarningHistoryPage implements OnInit {
   vehicle: any = {}
 
   constructor(private route: ActivatedRoute, private router: Router, public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private modalController: ModalController,
   ) {
     const navigation = this.router.getCurrentNavigation();
@@ -85,7 +85,7 @@ export class RecordsWarningHistoryPage implements OnInit {
   offence_detail: any = []
 
   getOffenceCount() {
-    this.mainVmsService.getApi({vehicle_number: this.vehicle_number, project_id: this.project_id}, '/vms/get/offenses_count_based_on_vehicle_number').subscribe({
+    this.clientMainService.getApi({vehicle_number: this.vehicle_number, project_id: this.project_id}, '/vms/get/offenses_count_based_on_vehicle_number').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

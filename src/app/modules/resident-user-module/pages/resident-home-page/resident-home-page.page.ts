@@ -5,6 +5,7 @@ import { ModalController } from '@ionic/angular';
 
 import { Preferences } from '@capacitor/preferences';
 import { Contacts } from '@capacitor-community/contacts';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -17,6 +18,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
+import { BleClient } from '@capacitor-community/bluetooth-le';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -148,6 +150,7 @@ export class ResidentHomePagePage implements OnInit {
 
   ionViewWillEnter() {
     this.fetchContacts();
+    this.initBluetooth();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       if ( value ) {
         this.storage.decodeData(value).then((value: any) => {
@@ -174,6 +177,15 @@ export class ResidentHomePagePage implements OnInit {
         })
       }
     })
+  }
+  
+  async initBluetooth() {
+    try {
+      await BleClient.initialize();
+      console.log('Bluetooth initialized');
+    } catch (error) {
+      console.error('Bluetooth initialization error:', error);
+    }
   }
 
   initializeBackButtonHandling() {
@@ -343,6 +355,11 @@ export class ResidentHomePagePage implements OnInit {
     } else if (this.userType === 'industrial') {
       this.longButtondata = [
         {
+          name: 'Facility Bookings',
+          src: 'assets/icon/resident-icon/icon3.png',
+          routeLinkTo: '/facility-booking-main',
+        },
+        {
           name: 'Visitors',
           src: 'assets/icon/resident-icon/visitors.png',
           routeLinkTo: '/visitor-main',
@@ -351,11 +368,6 @@ export class ResidentHomePagePage implements OnInit {
           name: 'Contractors',
           src: 'assets/icon/resident-icon/find_service/Contractor.png',
           routeLinkTo: '/contractor-commercial-main',
-        },
-        {
-          name: 'Facility Bookings',
-          src: 'assets/icon/resident-icon/icon3.png',
-          routeLinkTo: '/facility-booking-main',
         },
         {
           name: 'My Vehicle',
@@ -440,9 +452,16 @@ export class ResidentHomePagePage implements OnInit {
     })
   }
 
+  isModalChooseUpload: boolean = false;
+  chooseWhereToChoose() {
+    console.log("tes");
+    this.isModalChooseUpload = !this.isModalChooseUpload;
+  }
+
   onProfileFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.isModalChooseUpload = !this.isModalChooseUpload;
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.showingProfile = e.target.result; // Menyimpan URL gambar untuk preview
@@ -454,6 +473,42 @@ export class ResidentHomePagePage implements OnInit {
       }).catch(error => {
         console.error('Error converting to base64', error);
       });
+    }
+  }
+
+  async openCamera() {
+    try {
+      // Request camera permissions
+      const permissionStatus = await Camera.checkPermissions();
+      if (permissionStatus.camera !== 'granted') {
+        await Camera.requestPermissions();
+      }
+      
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+        promptLabelHeader: 'Take a photo',
+        promptLabelCancel: 'Cancel',
+        promptLabelPhoto: 'Take Photo',
+      });
+      
+      if (image && image.base64String) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
+        // Update the form data with the base64 image
+        this.selectedProfile = image.base64String;
+        
+        // Update display name to show a camera capture was made
+        const timestamp = new Date().toISOString().split('T')[0];
+        this.showingProfile = image.base64String;
+        
+        // Display success message
+        this.functionMain.presentToast('Photo captured successfully', 'success');
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      this.functionMain.presentToast(String(error), 'danger');
     }
   }
 

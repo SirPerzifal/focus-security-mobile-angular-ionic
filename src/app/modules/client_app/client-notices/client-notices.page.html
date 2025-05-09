@@ -18,7 +18,7 @@
             (click)="toggleShowNew()"></app-visitor-button>
         </div>
       </div>
-      <div *ngIf="isLoading" class="flex justify-center items-center w-full h-20">
+      <div *ngIf="isLoading && isNotice" class="flex justify-center items-center w-full h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div>
       <div *ngIf="showNotice.length > 0 && isNotice">

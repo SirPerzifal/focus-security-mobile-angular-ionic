@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition} from '@angular/animations';
 import { faBarcode, faL, faMotorcycle, faTaxi } from '@fortawesome/free-solid-svg-icons';
-import { VmsServicePickUp } from 'src/app/service/vms/pick_up/pick-up.service';
 import { TextInputComponent } from 'src/app/shared/components/text-input/text-input.component';
-import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/vms/user/user.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -29,13 +27,11 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 export class PickUpPagePage implements OnInit {
 
   constructor(
-    private vmsService: VmsServicePickUp,
-    private toastController: ToastController,
     private userApi: UserService,
     private router: Router,
     private blockUnitService: BlockUnitService,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
   ) { }
 
   ngOnInit() {
@@ -141,6 +137,7 @@ export class PickUpPagePage implements OnInit {
     this.blkLocation = ''
     this.selectedNric = ''
     this.pass_number = ''
+    this.contactHost = ''
   }
 
   toggleShowDrop() {
@@ -223,18 +220,19 @@ export class PickUpPagePage implements OnInit {
 
     try {
       // Gunakan subscribe alih-alih toPromise()
-      this.vmsService.addEntry(
-        this.entryType, 
-        this.selectedVehicleType, 
-        vehicleNumber, 
-        location,
-        this.project_id,
-        cameraId ? cameraId : '',
-        this.selectedHost,
-        this.identificationType,
-        this.nric_value,
-        this.pass_number,
-      ).subscribe({
+      let params = {
+        entry_type: this.entryType,
+        vehicle_type: this.selectedVehicleType,
+        vehicle_number: vehicleNumber,
+        block: location,
+        project_id: this.project_id,
+        camera_id: cameraId ? cameraId : '',
+        host: this.selectedHost,
+        identification_type: this.identificationType,
+        identification_number: this.nric_value,
+        pass_number: this.pass_number,
+      }
+      this.clientMainService.getApi(params, '/vms/post/add_entry').subscribe({
         next: (response) => {
           console.log(response)
           if (response.result.status_code === 200) {
@@ -262,7 +260,7 @@ export class PickUpPagePage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (response.result.status_code === 206) {
-            this.functionMain.presentToast(response.result.status_description, 'danger');
+            this.functionMain.banAlert(response.result.status_description, false, this.selectedHost)
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save the data!', 'danger');
           }
@@ -300,8 +298,9 @@ export class PickUpPagePage implements OnInit {
 
   Host: any[] = [];
   selectedHost: string = '';
+  contactHost: string = '';
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -312,9 +311,12 @@ export class PickUpPagePage implements OnInit {
 
   setFromScan(event: any) {
     console.log(event)
-    this.nric_value = event.data.identification_number
+    this.nric_value = event.data.identification_number ? event.data.identification_number : ''
     this.identificationType = event.type
     if (event.data.is_server) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+      }
       this.vehicleNumber = event.data.vehicle_number ? event.data.vehicle_number : ''
     } 
     console.log(this.nric_value, this.identificationType)

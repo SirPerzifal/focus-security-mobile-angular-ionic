@@ -6,7 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-coaches-form',
@@ -30,7 +30,7 @@ export class CoachesFormPage implements OnInit {
   maxPax = 10;  // Define the maximum pax allowed
   paxCount = 1; // Initial pax count, you can set this to 1 by default
 
-  constructor(private fb: FormBuilder, private router: Router, private blockUnitService: BlockUnitService, private toastController: ToastController, private mainVmsService: MainVmsService, private functionMain: FunctionMainService) {
+  constructor(private fb: FormBuilder, private router: Router, private blockUnitService: BlockUnitService, private toastController: ToastController, private clientMainService: ClientMainService, private functionMain: FunctionMainService) {
     // Initialize the form with an empty FormArray for pax entries
     this.paxForm = this.fb.group({
       paxEntries: this.fb.array([])
@@ -172,7 +172,7 @@ export class CoachesFormPage implements OnInit {
   }
 
   loadType() {
-    this.mainVmsService.getApi({project_id: this.project_id}, '/vms/get/get_coach_type' ).subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/get_coach_type' ).subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           console.log(results)
@@ -276,7 +276,7 @@ export class CoachesFormPage implements OnInit {
       }
       
       console.log(params)
-      this.mainVmsService.getApi(params, '/vms/post/add_coaches' ).subscribe({
+      this.clientMainService.getApi(params, '/vms/post/add_coaches' ).subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -293,7 +293,7 @@ export class CoachesFormPage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.onBackMove()
           } else if (results.result.response_code === 206) {
-            this.functionMain.presentToast(results.result.status_description, 'danger');
+            this.functionMain.banAlert(results.result.status_description, this.schedule.unit, false)
           } else {
             this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');
           }

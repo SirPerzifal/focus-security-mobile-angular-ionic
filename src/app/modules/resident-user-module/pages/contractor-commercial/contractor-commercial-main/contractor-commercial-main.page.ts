@@ -370,6 +370,7 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
     ).subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.toggleShowNewInv()
+        this.functionMain.presentToast('Success resend invite', 'success')
       }
     });
   }

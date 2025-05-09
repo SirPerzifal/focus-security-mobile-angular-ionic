@@ -16,7 +16,8 @@ interface Vehicle {
   colour: string;
   type: string;
   fees: string;
-  isPrimary: string
+  isPrimary: string;
+  endDateForTemporaryPass: string;
 }
 
 interface VehicleDetail {
@@ -29,6 +30,7 @@ interface VehicleDetail {
   colour: string;
   type: string;
   fees: string;
+  endDateForTemporaryPass: string;
 }
 
 @Component({
@@ -73,7 +75,7 @@ export class MyVehicleMainPage implements OnInit {
     private mainApi: MainApiResidentService,
     private router: Router,
     private alertController: AlertController,
-    private functionMain: FunctionMainService
+    public functionMain: FunctionMainService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: string };
@@ -154,7 +156,8 @@ export class MyVehicleMainPage implements OnInit {
           colour: vehicle.vehicle_color || '-',
           type: vehicle.vehicle_type,
           fees: `S$${vehicle.vehicle_fee}`, // Anda dapat menyesuaikan ini berdasarkan logika Anda
-          isPrimary:vehicle.is_primary_vehicle
+          isPrimary:vehicle.is_primary_vehicle,
+          endDateForTemporaryPass: vehicle.end_date_for_temporary_pass
         }));
         this.MaximumVehicle = response.result.response_result.exceeded_max;
         this.isLoading = false
@@ -271,20 +274,30 @@ export class MyVehicleMainPage implements OnInit {
   } 
 
   submitRequest() {
+    this.isExtensionRequestModal = false;
     const dateInput = this.formData.dateForExtensionRequest; // Ambil nilai dari input tanggal
     this.mainApi.endpointProcess({
       vehicle_id: this.formData.vehicleId,
       extension_date: this.formData.dateForExtensionRequest || dateInput
     }, 'post/vehicle_request_for_extension').subscribe((response: any) => {
       this.closeModal();
-      this.pageName = ''
-      this.vehicleDetail = null
+      this.pageName = '';
+      this.loadVehicleFromBackend();
+      this.vehicleDetail = null;
     })
   }
 
+  reqForupdate(vehicleId: number) {
+    this.pageName = '';
+    this.router.navigate(['/vehicle-form'], {
+      state: {
+        vehicleId: vehicleId,
+      }
+    });
+  }
+
   closeModal() {
-    window.location.reload();
-    this.isExtensionRequestModal = !this.isExtensionRequestModal;
+    this.loadVehicleFromBackend();
     this.selectedDate = ''
     this.formData = {
       vehicleId: 0,

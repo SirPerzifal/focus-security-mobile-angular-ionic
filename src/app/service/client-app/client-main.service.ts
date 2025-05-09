@@ -1,15 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
-import { catchError, Observable, throwError, from, mergeMap } from 'rxjs';
+import { catchError, Observable, throwError, from, mergeMap, tap } from 'rxjs';
 import { FunctionMainService } from '../function/function-main.service';
+import { ModalController } from '@ionic/angular';
+import { ModalLoadingComponent } from 'src/app/shared/components/modal-loading/modal-loading.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientMainService extends ApiService {
 
-  constructor(http: HttpClient, private functionMain: FunctionMainService) { super(http) }
+  constructor(http: HttpClient, private functionMain: FunctionMainService, private modalController: ModalController) { super(http) }
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
@@ -21,21 +23,51 @@ export class ClientMainService extends ApiService {
 
 
   getApi(params: any, apiUrl: string): Observable<any> {
+    let modalRef: HTMLIonModalElement | null = null;
+    let openLoading = false;
+
+
     return from(this.loadProjectName()).pipe(
-      mergeMap(() => {
+      mergeMap(async () => {
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           // 'Authorization': 'Bearer ' + this.project.access_token
         });
-        if ('project_id' in params) {
-          console.log('project_id exists');
-        } else {
-          params['project_id'] = this.project.project_id
+  
+        if (!params.project_id) {
+          params.project_id = this.project.project_id;
         }
-        return this.http.post(this.baseUrl + apiUrl, { jsonrpc: '2.0', params: params }, { headers }).pipe(
-          catchError(this.handleError)
-        );
+  
+        const urlSegments = apiUrl.split('/');
+        if (urlSegments.length > 2 && urlSegments[2] === 'post') {
+          openLoading = true;
+        }
+  
+        if (openLoading) {
+          modalRef = await this.modalController.create({
+            component: ModalLoadingComponent,
+            cssClass: 'modal-loading',
+          });
+          await modalRef.present();
+        }
+  
+        return this.http.post(this.baseUrl + apiUrl, {
+          jsonrpc: '2.0',
+          params: params,
+        }, { headers });
+      }),
+      mergeMap(response$ => response$),
+      tap(() => {
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+      }),
+      catchError(error => {
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+        return this.handleError(error); // Ensure handleError returns `Observable.throwError(...)`
       })
     );
   }

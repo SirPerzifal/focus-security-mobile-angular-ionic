@@ -7,7 +7,7 @@ import { OffensesService } from 'src/app/service/vms/offenses/offenses.service';
 import { RecordsWheelClampedNewPage } from './records-wheel-clamped-new/records-wheel-clamped-new.page'; 
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-records-wheel-clamped',
@@ -36,7 +36,7 @@ export class RecordsWheelClampedPage implements OnInit {
     private modalController: ModalController,
     private route: ActivatedRoute,
     public functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private clientMainService: ClientMainService
   ) { }
 
   async presentModal() {
@@ -391,7 +391,7 @@ export class RecordsWheelClampedPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

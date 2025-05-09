@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-unregistered-resident-car',
@@ -15,7 +15,7 @@ export class UnregisteredResidentCarPage implements OnInit {
   constructor(
     private blockUnitService: BlockUnitService,
     private toastController: ToastController,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private router: Router,
     private functionMain: FunctionMainService
   ) { }
@@ -96,7 +96,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       let params = {...this.formData, camera_id: camera_id, host: this.selectedHost}
       console.log(params)
       this.submitLoading = true
-      this.mainVmsService.getApi(params, '/vms/post/unregistered_resident_car').subscribe({
+      this.clientMainService.getApi(params, '/vms/post/unregistered_resident_car').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -113,7 +113,7 @@ export class UnregisteredResidentCarPage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['/home-vms'])
           } else if (results.result.response_code === 206) {
-            this.functionMain.presentToast(results.result.status_description, 'danger');
+            this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost)
           } else {
             this.presentToast('An error occurred while submitting unregistered car!', 'danger');
           }
@@ -213,7 +213,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.selectedNric = {type: contactData.identification_type, number: contactData.identification_number }
+        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
       } else {
         if (contactData.block_id) {
           this.formData.block_id = contactData.block_id
@@ -231,7 +231,7 @@ export class UnregisteredResidentCarPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.formData.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.formData.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -245,6 +245,9 @@ export class UnregisteredResidentCarPage implements OnInit {
     this.formData.identification_number = event.data.identification_number
     this.formData.identification_type = event.type
     if (event.data.is_server) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+      }
       this.formData.name = event.data.contractor_name ? event.data.contractor_name : ''
       this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
       this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''

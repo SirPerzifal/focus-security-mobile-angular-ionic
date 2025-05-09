@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModalController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { MainVmsService } from '../vms/main_vms/main-vms.service';
 import { ContractorNricScanPage } from 'src/app/modules/contractor_module/pages/contractor-nric-scan/contractor-nric-scan.page';
 import { Preferences } from '@capacitor/preferences';
@@ -26,6 +26,7 @@ export class FunctionMainService {
     private router: Router,
     private webRtcService: WebRtcService,
     private storage: StorageService,
+    private alertController: AlertController
   ) { }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
@@ -471,6 +472,31 @@ export class FunctionMainService {
   
       reader.readAsDataURL(file);
     });
+  }
+
+  async banAlert(message: string, unit_id: any = false, host_id: any = false,) {
+    console.log(unit_id, host_id)
+    const alertButtons = await this.alertController.create({
+      cssClass: 'checkout-alert',
+      header: `${message} Please kindly contact ${unit_id ? 'the unit' : (host_id ? 'the host' : 'the security')}.`,
+      buttons: [
+        {
+          text: 'Call',
+          role: 'confirm',
+          handler: () => {
+            this.webRtcService.createOffer(false, host_id ? host_id : false, unit_id ? unit_id : false, false);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    }
+    )
+    await alertButtons.present();
   }
   
 

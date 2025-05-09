@@ -4,12 +4,12 @@
     <!-- Local video -->
     <video id="remote-video" autoplay class="h-full w-full object-cover hidden"></video>
     <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden" ></video>
-    <div class="h-full w-full bg-[#0C0C0C] pt-4 pb-48">
-      <div class="flex flex-col text-[#d3d3d3] h-full justify-between items-center">
+    <div class="h-full w-full bg-white pt-4 pb-48">
+      <div class="flex flex-col h-full justify-between items-center">
         <div class="flex flex-col justify-center items-center">
-          <span *ngIf="isReceiver" class="font-bold mt-4">{{ getCallerName() }}</span>
-          <span *ngIf="!isReceiver" class="font-bold mt-4">{{ getReceiverName() }}</span>
-          <span>{{ formattedTime }}</span>
+          <span *ngIf="isReceiver" class="font-bold text-white mt-4">{{ getCallerName() }}</span>
+          <span *ngIf="!isReceiver" class="font-bold text-white mt-4">{{ getReceiverName() }}</span>
+          <span class="text-white font-bold">{{ formattedTime }}</span>
         </div>
         <div class="rounded-full w-44 h-44 bg-[#333333] overflow-hidden flex items-center justify-center">
           <img [src]="getSenderProfilePic()" class="w-full h-full" *ngIf="isReceiver">

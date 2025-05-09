@@ -3,7 +3,7 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-ma-visitor-form',
@@ -23,7 +23,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class MaVisitorFormPage implements OnInit {
 
-  constructor(private router: Router, public functionMain: FunctionMainService, private mainVmsService: MainVmsService) {
+  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { schedule: any};
     if (state) {
@@ -68,7 +68,7 @@ export class MaVisitorFormPage implements OnInit {
   onSubmitRecord(is_open: boolean = false, camera_id: string = '') {
     let params = {...this.record, camera_id: camera_id}
     console.log(params)
-    this.mainVmsService.getApi(params, '/client/post/update_ma_visitor').subscribe({
+    this.clientMainService.getApi(params, '/client/post/update_ma_visitor').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.status_code === 200) {

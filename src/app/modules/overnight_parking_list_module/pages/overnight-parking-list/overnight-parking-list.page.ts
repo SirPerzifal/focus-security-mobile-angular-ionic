@@ -4,7 +4,7 @@ import { ToastController } from '@ionic/angular';
 import { forkJoin, interval, Subject, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -43,7 +43,7 @@ export class OvernightParkingListPage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private blockUnitService: BlockUnitService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private functionMain: FunctionMainService
   ) { }
 
@@ -96,7 +96,7 @@ export class OvernightParkingListPage implements OnInit {
     } else {
       url = '/vms/get/overnight_parking_list_history'
     }
-    this.mainVmsService.getApi({project_id: this.project_id}, url ).subscribe({
+    this.clientMainService.getApi({project_id: this.project_id}, url ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -359,7 +359,7 @@ export class OvernightParkingListPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

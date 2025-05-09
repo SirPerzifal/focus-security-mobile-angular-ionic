@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { ModalController } from '@ionic/angular';
 import { Html5Qrcode } from 'html5-qrcode';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 
@@ -13,7 +13,7 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 })
 export class ContractorNricScanPage implements OnInit {
 
-  constructor(private modalController: ModalController, private mainVmsService: MainVmsService, private functionMain: FunctionMainService, private getUserInfoService: GetUserInfoService) { }
+  constructor(private modalController: ModalController, private clientMainService: ClientMainService, private functionMain: FunctionMainService, private getUserInfoService: GetUserInfoService) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -39,7 +39,7 @@ export class ContractorNricScanPage implements OnInit {
 
   async getMinMaxNric() {
     try {
-      const results = await this.mainVmsService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
+      const results = await this.clientMainService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
       console.log(results.result);
       if (results.result.response_code === 200) {
         this.min_digit = results.result.result.min_nric_number_length

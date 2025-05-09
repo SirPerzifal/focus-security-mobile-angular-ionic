@@ -7,7 +7,7 @@ import { forkJoin, interval, Subject, Subscription } from 'rxjs';
 import { switchMap, takeUntil, startWith } from 'rxjs/operators';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -45,7 +45,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     private blockUnitService: BlockUnitService,
     private renovatorsService: RenovatorsService,
     private route: ActivatedRoute,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private functionMain: FunctionMainService,
   ) { }
 
@@ -177,7 +177,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       } else {
         params = { is_today: false, project_id: this.project_id}
       }
-      this.mainVmsService.getApi(params, url).subscribe({
+      this.clientMainService.getApi(params, url).subscribe({
         next: (results) => {
           console.log(results.result)
           if (results.result.response_code === 200) {
@@ -206,7 +206,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       } else {
         params = { is_today: false, project_id: this.project_id}
       }
-      this.mainVmsService.getApi(params, url).subscribe({
+      this.clientMainService.getApi(params, url).subscribe({
         next: (results) => {
           console.log(results.result)
           if (results.result.response_code === 200) {
@@ -492,7 +492,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }

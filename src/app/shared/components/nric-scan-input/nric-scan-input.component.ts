@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
@@ -26,10 +26,12 @@ export class NricScanInputComponent  implements OnInit {
   @Input() isReadonly: boolean = false
   @Input() includePassport: boolean = false
   @Output() outputScan = new EventEmitter<any>();
+  @Output() customOutputClick = new EventEmitter<any>();
 
   @Input() parentClass: string = '';
   @Input() showSelection: boolean = false;
   @Input() isScan: boolean = true
+  @Input() isSearchButton: boolean = false
 
   onSelectionChange(event: any) {
     this.selectedIdentification = event.target.value
@@ -66,6 +68,7 @@ export class NricScanInputComponent  implements OnInit {
         this.nric_value = value.data;
         if (!this.isScan) {
           this.data = {identification_number: this.nric_value, is_server: false}
+          this.returnOutput()
           return
         }
         this.mainVmsService.getApi({nric: value.data, project_id: this.project_id, is_visitor_logs: true}, '/vms/get/contractor_by_nric').subscribe({
@@ -100,8 +103,10 @@ export class NricScanInputComponent  implements OnInit {
     console.log(value)
     if (value) {
       this.nric_value = value.number
-      this.selectedIdentification = value.type
-      this.temp_type = value.type
+      if (value.type) {
+        this.selectedIdentification = value.type
+        this.temp_type = value.type
+      }
       this.data = {is_server: false, identification_number: this.nric_value}
     } else {
       this.nric_value = ''
@@ -109,6 +114,12 @@ export class NricScanInputComponent  implements OnInit {
       this.data = {is_server: false, identification_number: ''}
     }
     this.returnOutput()
+  }
+
+  faSearch = faSearch
+
+  customClick() {
+    this.customOutputClick.emit(true)
   }
 
 }

@@ -12,24 +12,31 @@
       </select>
     </div>
   </div>
-  <div class="w-full flex flex-col" *ngIf="selectedIdentification != 'passport'">
-    <label class="text-2xl"><b><u>NRIC / FIN</u></b></label>
-    <div class="w-full flex flex-row justify-between items-end space-x-2">
-      <div class="w-[90%]">
-        <input #contractorIdentificationNumberInput id="nric_scan_input_field" [placeholder]="''"
-        type="text" [class]="'!border  w-full rounded  py-2  px-3  outline-[#BDBDBD] h-20  text-2xl text-[#7D8390] bg-[#F5F5F5]'"
-        [(ngModel)]="nric_value" readonly>
-      </div>
-      <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded"
-      (click)="openNricScan()">
-        <fa-icon [icon]="icon" class="text-[40px] text-white"></fa-icon>
+  <div class="w-full flex flex-row justify-between space-x-2">
+    <div class="w-full flex flex-col" *ngIf="selectedIdentification != 'passport'">
+      <label class="text-2xl"><b><u>NRIC / FIN</u></b></label>
+      <div class="w-full flex flex-row justify-between items-end space-x-2">
+        <div class="w-[90%]">
+          <input #contractorIdentificationNumberInput id="nric_scan_input_field" [placeholder]="''"
+          type="text" [class]="'!border  w-full rounded  py-2  px-3  outline-[#BDBDBD] h-20  text-2xl text-[#7D8390] bg-[#F5F5F5]'"
+          [(ngModel)]="nric_value" readonly>
+        </div>
+        <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded"
+        (click)="openNricScan()">
+          <fa-icon [icon]="icon" class="text-[40px] text-white"></fa-icon>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="w-full flex flex-col" *ngIf="selectedIdentification == 'passport'">
-    <label class="text-2xl"><b><u>PASSPORT</u></b></label>
-      <input #contractorIdentificationNumberInputPassport id="nric_scan_input_field_passport" [placeholder]="''"
-      type="text" [class]="'!border  w-full rounded  py-2  px-3  outline-[#BDBDBD] h-20  text-2xl bg-white'"
-      [(ngModel)]="nric_value" (change)="onPassportChange($event)">
+    <div class="w-full flex flex-col" *ngIf="selectedIdentification == 'passport'">
+      <label class="text-2xl"><b><u>PASSPORT</u></b></label>
+        <input #contractorIdentificationNumberInputPassport id="nric_scan_input_field_passport" [placeholder]="''"
+        type="text" [class]="'!border  w-full rounded  py-2  px-3  outline-[#BDBDBD] h-20  text-2xl bg-white'"
+        [(ngModel)]="nric_value" (change)="onPassportChange($event)">
+    </div>
+    <div class="flex flex-col justify-end" *ngIf="isSearchButton">
+      <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded">
+        <fa-icon [icon]="faSearch" class="text-[40px] text-white" (click)="customClick()"></fa-icon>
+      </div>
+    </div>
   </div>
 </div>

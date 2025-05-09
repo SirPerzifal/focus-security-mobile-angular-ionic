@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { RecordsBlacklistFormPage } from '../../records-blacklist/records-blacklist-form/records-blacklist-form.page';
 import { AlertController, ModalController } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
@@ -17,7 +17,7 @@ export class RecordsVisitorDetailPage implements OnInit {
   record: any = {};
   issue_time = ''
 
-  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService, private modalController: ModalController, private mainVmsService: MainVmsService, private alertController: AlertController, private webrtc: WebRtcService) {
+  constructor(private router: Router, private route: ActivatedRoute, public functionMain: FunctionMainService, private modalController: ModalController, private clientMainService: ClientMainService, private alertController: AlertController, private webrtc: WebRtcService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { logs: any[]};
     if (state) {
@@ -72,7 +72,7 @@ export class RecordsVisitorDetailPage implements OnInit {
 
   blacklist: any = []
   getBlacklist(){
-    this.mainVmsService.getApi({name: this.record.visitor_name ? this.record.visitor_name : '', vehicle_number: this.record.vehicle_number ? this.record.vehicle_number : '', project_id: this.project_id}, '/vms/get/visitor_ban_by_data').subscribe({
+    this.clientMainService.getApi({name: this.record.visitor_name ? this.record.visitor_name : '', vehicle_number: this.record.vehicle_number ? this.record.vehicle_number : '', project_id: this.project_id}, '/vms/get/visitor_ban_by_data').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.response_code === 200) {
@@ -114,7 +114,7 @@ export class RecordsVisitorDetailPage implements OnInit {
   }
 
   async liftBanProc() {
-    this.mainVmsService.getApi({ id: this.blacklist[0].id }, '/vms/post/lift_ban').subscribe({
+    this.clientMainService.getApi({ id: this.blacklist[0].id }, '/vms/post/lift_ban').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_status === 200) {

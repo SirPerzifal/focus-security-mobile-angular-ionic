@@ -7,7 +7,7 @@ import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.s
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Html5Qrcode } from 'html5-qrcode';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
@@ -34,7 +34,7 @@ export class ContractorFormPage implements OnInit {
     private router: Router,
     private blockUnitService: BlockUnitService,
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
   ) { }
 
   ngOnInit() {
@@ -248,36 +248,36 @@ export class ContractorFormPage implements OnInit {
 
     console.log("subcon", subContractors);
     console.log("paxdata", this.paxData);
-
+    let params = {
+      contractor_name: contractorName,
+      contractor_contact_no: contractorContactNo,
+      company_name: companyName,
+      identification_type: this.identificationType,
+      identification_number: identificationNumber,
+      contractor_vehicle: this.showDrive ? contractorVehicle : '',
+      block: this.selectedBlock,
+      unit: this.selectedUnit,
+      remarks: remarks,
+      sub_contractors: subContractors,
+      project_id: this.project_id,
+      camera_id: camera_id,
+      host: this.selectedHost,
+      total_package: this.contractor_total_package,
+      expired_date: this.contractor_expired_date,
+      purpose: this.contractor_entry_purpose,
+      gate_pass: this.contractor_gate_pass_number,
+      pass_number: this.contractor_pass_number,
+      is_pre_entry: this.isFromScan,
+      entry_id: this.isFromScan ? this.entry_id : false,
+      entry_type: this.isFromScan ? this.entry_type : ''
+    }
+    
     try {
-      this.contractorService.addContractor(
-        contractorName,
-        contractorContactNo,
-        companyName,
-        this.identificationType,
-        identificationNumber,
-        this.showDrive ?  contractorVehicle : '',
-        this.selectedBlock,
-        this.selectedUnit,
-        remarks,
-        subContractors,
-        this.project_id,
-        camera_id,
-        this.selectedHost,
-        this.contractor_total_package,
-        this.contractor_expired_date,
-        this.contractor_entry_purpose,
-        this.contractor_gate_pass_number,
-        this.contractor_pass_number,
-        this.isFromScan,
-        this.isFromScan ? this.entry_id : false,
-        this.isFromScan ? this.entry_type : ''
-      ).subscribe({
+      this.clientMainService.getApi(params, '/vms/post/add_contractors').subscribe({
         next: (response: any) => {
           if (response.result.status_code === 200) {
             if (openBarrier) {
               this.functionMain.presentToast('Contractor data has been successfully saved, and the barrier is now open!', 'success');
-              this.router.navigate(['home-vms'])
             } else {
               this.functionMain.presentToast('Contractor data has been successfully saved to the system!', 'success');
             } 
@@ -294,7 +294,7 @@ export class ContractorFormPage implements OnInit {
             this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
             this.router.navigate(['home-vms'])
           } else if (response.result.status_code === 206) {
-            this.functionMain.presentToast(response.result.status_description, 'danger');
+            this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost)
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
@@ -427,11 +427,13 @@ export class ContractorFormPage implements OnInit {
     if (contactData) {
       this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
-      if (this.project_config.is_industrial) {
-        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
-        this.nric_value = contactData.identification_number
+      this.nric_value = contactData.identification_number
+      if (contactData.identification_type) {
         this.identificationType = contactData.identification_type
         this.temp_type = this.identificationType
+      }
+      if (this.project_config.is_industrial) {
+        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
       } else {
         if (contactData.block_id) {
           this.selectedBlock = contactData.block_id
@@ -460,7 +462,7 @@ export class ContractorFormPage implements OnInit {
           this.identificationType = value.is_fin ? 'fin' : 'nric'
           this.nric_value = value.data;
         } 
-        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+        this.clientMainService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.status_code === 200) {
@@ -504,7 +506,7 @@ export class ContractorFormPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
-    this.mainVmsService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
@@ -669,7 +671,7 @@ export class ContractorFormPage implements OnInit {
   errorSound = new Audio('assets/sound/Error Alert.mp3');
   checkResult(){
     this.isProcess = true
-    this.mainVmsService.getApi({id: this.scanResult}, '/vms/get/search_expected_contractor').subscribe({
+    this.clientMainService.getApi({id: this.scanResult}, '/vms/get/search_expected_contractor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {

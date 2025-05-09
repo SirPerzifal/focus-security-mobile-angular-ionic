@@ -8,7 +8,6 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-client-blacklist',
@@ -36,7 +35,6 @@ export class ClientBlacklistPage implements OnInit {
     public functionMain: FunctionMainService,
     private blockUnitService: BlockUnitService,
     private alertController: AlertController,
-    private mainVmsService: MainVmsService,
     private getUserInfoService: GetUserInfoService,
     private webRtcService: WebRtcService
   ) { }
@@ -514,7 +512,7 @@ export class ClientBlacklistPage implements OnInit {
   }
 
   async liftBanProc(id: number) {
-    this.mainVmsService.getApi({ id: id }, '/vms/post/lift_ban').subscribe({
+    this.clientMainService.getApi({ id: id }, '/vms/post/lift_ban').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_status === 200) {

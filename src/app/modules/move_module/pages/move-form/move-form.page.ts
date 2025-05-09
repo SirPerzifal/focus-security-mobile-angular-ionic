@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-move-form',
@@ -36,7 +36,7 @@ export class MoveFormPage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private functionMain: FunctionMainService,
-    private mainVmsService: MainVmsService
+    private clientMainService: ClientMainService,
   ) {}
 
   ngOnInit() {
@@ -209,22 +209,22 @@ export class MoveFormPage implements OnInit {
 
     console.log("subcon", subContractors);
     console.log("paxdata", this.paxData);
-  
-    this.moveFormService.addSchedule(
-      this.getInputValue('contractor_name'),
-      this.contact_number,
-      this.getInputValue('contractor_company_name'),
-      this.identificationType, // Misalnya 'NRIC', 'Passport', dll
-      this.nric_value,
-      this.scheduleType == 'move_in' ? 'move_in_out' : 'renovation', // 'move_in', 'move_out', dll
-      this.getInputValue('contractor_vc'), // Nomor kendaraan
-      this.block_id,
-      this.unit_id,
-      this.requestor_id,
-      subContractors,
-      this.project_id,
-      camera_id
-    ).subscribe({
+    let params = {
+      contractor_name: this.getInputValue('contractor_name'),
+      contractor_contact_no: this.contact_number,
+      company_name: this.getInputValue('contractor_company_name'),
+      identification_type: this.identificationType,
+      identification_number: this.nric_value,
+      schedule_type: this.scheduleType === 'move_in' ? 'move_in_out' : 'renovation',
+      contractor_vehicle: this.getInputValue('contractor_vc'),
+      block: this.block_id,
+      unit: this.unit_id,
+      requestor_id: this.requestor_id,
+      sub_contractors: subContractors,
+      project_id: this.project_id,
+      camera_id: camera_id
+    }    
+    this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {       
           if (openBarrier) {
@@ -246,7 +246,7 @@ export class MoveFormPage implements OnInit {
           this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
           this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
         } else if (response.result.status_code === 206) {
-          this.functionMain.presentToast(response.result.status_description, 'danger');
+          this.functionMain.banAlert(response.result.status_description, this.unit_id, false)
         } else {
           this.presentToast(response.result.status_description, 'danger');
         }
@@ -328,7 +328,7 @@ export class MoveFormPage implements OnInit {
           this.identificationType = value.is_fin ? 'fin' : 'nric'
           this.nric_value = value.data;
         } 
-        this.mainVmsService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+        this.clientMainService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.status_code === 200) {

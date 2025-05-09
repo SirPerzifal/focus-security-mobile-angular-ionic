@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { OvernightParkingListPage } from '../overnight-parking-list/overnight-parking-list.page';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-
 @Component({
   selector: 'app-overnight-parking-modal',
   templateUrl: './overnight-parking-modal.page.html',
@@ -17,10 +16,10 @@ export class OvernightParkingModalPage implements OnInit {
     private router: Router, 
     private modalController: ModalController, 
     private navParams: NavParams, 
-    private mainVmsService: MainVmsService,
+    private clientMainService: ClientMainService,
     private toastController: ToastController,
     private cdr: ChangeDetectorRef,
-    private functionMain: FunctionMainService
+    private functionMain: FunctionMainService,
   ) {}
 
   alert: boolean = false
@@ -39,7 +38,7 @@ export class OvernightParkingModalPage implements OnInit {
     this.alert = this.navParams.get('alert') ? true : false
     if (this.alert && this.issue == 'none') {
       this.selectedNotice = 'first_warning'
-      this.url = '/vms/create/offenses'
+      this.url = '/vms/post/offenses'
     }
     if (this.alert && this.issue == 'first_warning') {
       this.selectedNotice = 'second_warning'
@@ -89,7 +88,7 @@ export class OvernightParkingModalPage implements OnInit {
   project_id = 0
   vehicle_number = ''
 
-  url = '/vms/create/offenses'
+  url = '/vms/post/offenses'
 
   selectedNotice = ''
   beforeClampImageFile: string = '';
@@ -198,7 +197,7 @@ export class OvernightParkingModalPage implements OnInit {
         }
       }
       console.log(params)
-      this.mainVmsService.getApi(params, this.url ).subscribe({
+      this.clientMainService.getApi(params, this.url ).subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code === 200) {
@@ -236,7 +235,7 @@ export class OvernightParkingModalPage implements OnInit {
   Officer: any[] = []
 
   loadOfficer() {
-    // this.mainVmsService.getApi([], '/vms/get/issuing_officer' ).subscribe({
+    // this.clientMainService.getApi([], '/vms/get/issuing_officer' ).subscribe({
     //   next: (results) => {
     //     if (results.result.response_code === 200) {
     //       console.log(results.result.response_result)

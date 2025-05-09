@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
-import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-records-blacklist-form',
@@ -15,7 +14,7 @@ export class RecordsBlacklistFormPage implements OnInit {
 
   constructor(
     private blockUnitService: BlockUnitService,
-    private router: Router, private mainVmsService: MainVmsService,
+    private router: Router,
     private clientMainService: ClientMainService,
     public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
@@ -225,7 +224,7 @@ export class RecordsBlacklistFormPage implements OnInit {
       this.formData.last_entry_date_time = tempDate[0] + ' ' + tempDate[1].split('.')[0]
       let params = {...this.formData, host: this.selectedHost}
       console.log(params)
-      this.mainVmsService.getApi(params, '/resident/post/ban_visitor').subscribe({
+      this.clientMainService.getApi(params, '/resident/post/ban_visitor').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_status === 200) {
