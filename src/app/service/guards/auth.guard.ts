@@ -39,6 +39,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
   //   }
   // }
 
+  console.log('555555555555555555authGuardauthGuardauthGuard555555555555555555authGuardauthGuardauthGuard');
+  
+
   if(state.url=='/' || state.url=='/login-end-user'){
     await functionMain.vmsPreferences().then((value) => {
       if (value.is_resident) {
