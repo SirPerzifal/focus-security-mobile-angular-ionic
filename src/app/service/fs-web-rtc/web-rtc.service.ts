@@ -66,7 +66,8 @@ export class WebRtcService extends ApiService{
   private remoteDescriptionSet = false;
 
 
-  constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController) {
+  constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController, 
+    private router:Router) {
     super(http);
     this.initializeSocket();
   }
@@ -255,6 +256,7 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-info', (data: any) => this.handleReceiverInfo(data));
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
+      this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
   
       // Listen for native events
       this.listenForNativeEvents();
@@ -436,6 +438,13 @@ export class WebRtcService extends ApiService{
     for (const candidate of this.callerpendingCandidates) {
       this.socket.emit('ice-candidate', candidate);
     }
+  }
+
+  async handleKickUser(data:any){
+    this.closeSocket();
+    this.storage.clearAllValueFromStorage();
+    Preferences.clear();
+    this.router.navigate(['']);
   }
 
   async handleReceiverPendingCall(data:any){
