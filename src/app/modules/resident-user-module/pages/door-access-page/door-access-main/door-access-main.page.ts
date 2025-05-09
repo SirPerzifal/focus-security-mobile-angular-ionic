@@ -5,6 +5,9 @@ import { BleClient, BleDevice } from '@capacitor-community/bluetooth-le';
 
 import { GeolocationService, LocationData } from 'src/app/service/geolocation/geolocation.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-door-access-main',
@@ -20,14 +23,17 @@ export class DoorAccessMainPage implements OnInit {
   isWatching = false;
   hasPermissions = false;
 
-  devices: BleDevice[] = [];
+  devicesFromScan: BleDevice[] = [];
+  devicesFromBackend: any[] = [];
   isScanning = false;
   isBluetoothEnabled = false;
 
   constructor(
     private geolocationService: GeolocationService, 
     private functionMain: FunctionMainService,
-    private platform: Platform
+    private storage: StorageService,
+    private platform: Platform,
+    private mainApi: MainApiResidentService
   ) { }
 
   ngOnInit() {
@@ -36,7 +42,17 @@ export class DoorAccessMainPage implements OnInit {
   ionViewWillEnter() {
     // Check permissions when page loads
     this.checkPermissions();
-    this.checkBluetoothState();
+    this.searchDeviceFromBluetooth();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.searchDeviceFromBackend(estate.project_id);
+          }
+        })
+      }
+    })
   }
 
   ionViewWillLeave() {
@@ -113,7 +129,7 @@ export class DoorAccessMainPage implements OnInit {
       if (bluetoothState === true) {
         console.log('Bluetooth state:', bluetoothState);
         console.log("Bluetooth hidup bang");
-        this.searchDevice();
+        this.searchDeviceFromBluetooth();
         this.isBluetoothEnabled = bluetoothState;
         if (fromWhere === 'search') {
           this.functionMain.presentToast('Your bluetooth is already on, now you can use this features')
@@ -133,12 +149,12 @@ export class DoorAccessMainPage implements OnInit {
     }
   }
 
-  async searchDevice() {
+  async searchDeviceFromBluetooth() {
     this.initBluetooth();
     if (this.isBluetoothEnabled === true) {
       console.log('Bluetooth state:', this.isBluetoothEnabled);
       console.log("Bluetooth hidup bang aman itu");
-      this.devices = [];
+      this.devicesFromScan = [];
       this.isScanning = true;
       
       try {
@@ -149,8 +165,8 @@ export class DoorAccessMainPage implements OnInit {
           },
           (result) => {
             // Add device if it's not already in the list
-            if (!this.devices.some(d => d.deviceId === result.device.deviceId)) {
-              this.devices.push(result.device);
+            if (!this.devicesFromScan.some(d => d.deviceId === result.device.deviceId)) {
+              this.devicesFromScan.push(result.device);
               console.log(result);
               
             }
@@ -168,10 +184,22 @@ export class DoorAccessMainPage implements OnInit {
     } else {
       console.log('Bluetooth state:', this.isBluetoothEnabled);
       console.log("Bluetooth ga hidup bang idupin dulu");
-      this.functionMain.presentToast('Please turn on your bluetooth to use this features', 'warning');
       await BleClient.requestEnable();
       this.checkBluetoothState('search');
     }
+  }
+
+  async searchDeviceFromBackend(projectId: number) {
+    this.mainApi.endpointCustomProcess({
+      project_id: projectId
+    }, '/get/door_access_configuration').subscribe((response: any) => {
+      const result = response.result.response_result;
+      if (response.result.response_code === 200) {
+        this.devicesFromBackend = result;
+        console.log(this.devicesFromBackend);
+        
+      }
+    })
   }
 
   async stopScan() {

@@ -5,6 +5,8 @@ PODS:
     - Capacitor
   - CapacitorCamera (6.1.2):
     - Capacitor
+  - CapacitorCommunityBluetoothLe (6.0.1):
+    - Capacitor
   - CapacitorCommunityContacts (6.1.1):
     - Capacitor
   - CapacitorCommunityFileOpener (6.0.1):
@@ -13,6 +15,8 @@ PODS:
     - Capacitor
   - CapacitorCordova (6.1.2)
   - CapacitorFilesystem (6.0.2):
+    - Capacitor
+  - CapacitorGeolocation (4.1.0):
     - Capacitor
   - CapacitorHaptics (6.0.1):
     - Capacitor
@@ -29,11 +33,13 @@ DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCommunityBluetoothLe (from `../../node_modules/@capacitor-community/bluetooth-le`)"
   - "CapacitorCommunityContacts (from `../../node_modules/@capacitor-community/contacts`)"
   - "CapacitorCommunityFileOpener (from `../../node_modules/@capacitor-community/file-opener`)"
   - "CapacitorCommunityImageToText (from `../../node_modules/@capacitor-community/image-to-text`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
@@ -47,6 +53,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app"
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
+  CapacitorCommunityBluetoothLe:
+    :path: "../../node_modules/@capacitor-community/bluetooth-le"
   CapacitorCommunityContacts:
     :path: "../../node_modules/@capacitor-community/contacts"
   CapacitorCommunityFileOpener:
@@ -57,6 +65,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorGeolocation:
+    :path: "../../node_modules/@capacitor/geolocation"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
@@ -72,17 +82,19 @@ SPEC CHECKSUMS:
   Capacitor: 69c7f687aabb8d85e543497411e40638b5cc08c0
   CapacitorApp: f51c08c64df914fc934239fd1b3fc809d62a02f6
   CapacitorCamera: 9bc7b005d0e6f1d5f525b8137045b60cffffce79
+  CapacitorCommunityBluetoothLe: b554daec38aeffc3441662f890e333381797b162
   CapacitorCommunityContacts: 9cde99c2cd212f6594677aae542436e2174c4ef2
   CapacitorCommunityFileOpener: 6373ac7cf5b48ef7086927608aaba524f1e676e4
   CapacitorCommunityImageToText: 635946faf55ca226e583d454a2cad7b3ec4a32e1
   CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
   CapacitorFilesystem: a6b43788d8f9489fc95fb761f3d0d37d0bceaddf
+  CapacitorGeolocation: b9f502f2ed5ad8edf377fafbd62509e390e817ae
   CapacitorHaptics: 05d33e20e394b1977dfd2a00a2621e04098164c1
   CapacitorKeyboard: 5bf4458dd989b56a60ea15c92cbca5fbfae6e9f9
   CapacitorPreferences: f3eadae2369ac3ab8e21743a2959145b0d1286a3
   CapacitorPushNotifications: 9b178e010634d2f7bfca97b81478503463f86b6c
   CapacitorStatusBar: 9ed7f06318fd436917072a9bf60fda56d12c8bdb
 
-PODFILE CHECKSUM: 2470e2f7f4e7176186c9c0e1f7453c9617521965
+PODFILE CHECKSUM: ab984c4e443353d03f7cbeec8deedfbf67689535
 
 COCOAPODS: 1.16.2

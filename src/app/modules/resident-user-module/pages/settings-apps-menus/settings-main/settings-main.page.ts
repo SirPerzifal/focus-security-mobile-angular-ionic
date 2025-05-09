@@ -291,9 +291,15 @@ export class SettingsMainPage implements OnInit {
   }
 
   logout() {
-    this.webRtcService.closeSocket();
-    this.storage.clearAllValueFromStorage();
-    Preferences.clear();
-    this.route.navigate(['']);
+    this.mainApi.endpointProcess({
+      family_id: this.familyId
+    }, 'post/logout').subscribe((response: any) => {
+      if (response.result.status_code === 200) {
+        this.webRtcService.closeSocket();
+        this.storage.clearAllValueFromStorage();
+        Preferences.clear();
+        this.route.navigate(['']);
+      }
+    })
   }
 }
