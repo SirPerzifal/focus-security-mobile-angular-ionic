@@ -120,7 +120,9 @@ export class ResidentMyVehiclePage implements OnInit {
             fees: `S$${vehicle.vehicle_fee}`, // Anda dapat menyesuaikan ini berdasarkan logika Anda
             isPrimary:vehicle.is_primary_vehicle
           }));
-          this.MaximumVehicle = response.result.response_result.exceeded_max;          ;
+          this.MaximumVehicle = response.result.response_result.exceeded_max;
+          console.log(this.MaximumVehicle);
+          
           this.isLoading = false
         } else {
           // this.presentToast('Data fetched failed!', 'danger');

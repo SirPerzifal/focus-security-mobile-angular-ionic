@@ -500,10 +500,10 @@ const routes: Routes = [
     path: 'quick-dial-page-main',
     loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
   },
-  // {
-  //   path: 'raise-a-request-page-main',
-  //   loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
-  // },
+  {
+    path: 'raise-a-request-page-main',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
+  },
   //  {
   //   path: 'raise-a-request-page-main',
   //   loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule)
@@ -563,7 +563,6 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule),
     canActivate:[authGuard]
   },
-
   {
     path: 'upcoming-event-page-main',
     loadChildren: () => import('./modules/resident-user-module/pages/upcoming-event-page/upcoming-event-main/upcoming-event-main.module').then( m => m.UpcomingEventMainPageModule)
@@ -629,8 +628,36 @@ const routes: Routes = [
     loadChildren: () => import('./modules/records_module/pages/records-wheel-clamped/records-alert-next/records-alert-next.module').then( m => m.RecordsAlertNextPageModule)
   },
   {
-    path: 'raise-request-form-page',
-    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-request-form-page/raise-request-form-page.module').then( m => m.RaiseRequestFormPagePageModule)
+    path: 'form-for-request-access-card',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-access-card/form-for-request-access-card.module').then( m => m.FormForRequestAccessCardPageModule)
+  },
+  {
+    path: 'form-and-history-appeal-parking-fines',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-and-history-appeal-parking-fines/form-and-history-appeal-parking-fines.module').then( m => m.FormAndHistoryAppealParkingFinesPageModule)
+  },
+  {
+    path: 'form-for-request-bibycle-tag-application',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-bibycle-tag-application/form-for-request-bibycle-tag-application.module').then( m => m.FormForRequestBibycleTagApplicationPageModule)
+  },
+  {
+    path: 'form-for-coach-registration',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-coach-registration/form-for-coach-registration.module').then( m => m.FormForCoachRegistrationPageModule)
+  },
+  {
+    path: 'form-for-request-move-in-out-permit',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-move-in-out-permit/form-for-request-move-in-out-permit.module').then( m => m.FormForRequestMoveInOutPermitPageModule)
+  },
+  {
+    path: 'form-for-request-overnight-parking',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-overnight-parking/form-for-request-overnight-parking.module').then( m => m.FormForRequestOvernightParkingPageModule)
+  },
+  {
+    path: 'form-for-registration-pet',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-registration-pet/form-for-registration-pet.module').then( m => m.FormForRegistrationPetPageModule)
+  },
+  {
+    path: 'form-for-request-registration-permit',
+    loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-registration-permit/form-for-request-registration-permit.module').then( m => m.FormForRequestRegistrationPermitPageModule)
   },
 ];
 
