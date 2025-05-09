@@ -75,6 +75,8 @@ export class PetRegistrationPage implements OnInit {
     }
   }
 
+  projectId: number = 0;
+
   ngOnInit() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       if ( value ) {
@@ -83,6 +85,7 @@ export class PetRegistrationPage implements OnInit {
             const estate = JSON.parse(value) as Estate;
             this.formData.unit_id = estate.unit_id;
             this.formData.block_id = estate.block_id;
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -148,6 +151,7 @@ export class PetRegistrationPage implements OnInit {
     this.raiseARequestService.postPetAPI(
       this.formData.block_id,
       this.formData.unit_id,
+      this.projectId,
       this.formData.type_of_pet,
       this.formData.pet_breed,
       this.formData.pet_license,

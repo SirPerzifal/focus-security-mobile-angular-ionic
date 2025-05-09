@@ -261,6 +261,7 @@ export class RaiseARequestService extends ApiService  {
   postPetAPI(
     block_id: number,
     unit_id: number,
+    project_id: number,
     type_of_pet: string,
     pet_breed: string,
     pet_license: string,
@@ -277,6 +278,7 @@ export class RaiseARequestService extends ApiService  {
         params: {
           block_id: block_id,
           unit_id: unit_id,
+          project_id: project_id,
           type_of_pet: type_of_pet,
           pet_breed: pet_breed,
           pet_license: pet_license,
