@@ -89,7 +89,7 @@
             <div class="flex flex-col justify-start w-4/5">
               <div class="flex justify-between w-full" [ngClass]="message.is_vms ? 'flex-row' : 'flex-row-reverse'">
                 <div>
-                  # {{ message.sender_name ? message.sender_name : (message.is_vms ? 'VMS Admin' : ( message.is_client ? 'Client User' : 'Resident User')) }}
+                  # {{ message.sender_name ? message.sender_name : (message.is_vms ? 'Security' : ( message.is_client ? 'Client User' : 'Resident User')) }}
                 </div>
               </div>
               <div class="w-full p-3 rounded"

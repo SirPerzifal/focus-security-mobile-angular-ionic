@@ -147,28 +147,41 @@ export class RecordsFacilityPage implements OnInit {
       }
     } else if (this.showHistory) {
       console.log(this.historySchedules)
-      if (this.historySchedules.length == 0) {
-        this.isLoading = true
-        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/booking_history' ).subscribe({
-          next: (results) => {
-            console.log(results)
-            if (results.result.success) {
-              // this.presentToast('!', 'success');
-              this.facilityRecords = results.result.booking
-              this.historySchedules = this.facilityRecords
-              this.filteredHistorySchedules = this.historySchedules
-              console.log(this.historySchedules)
-            } else {
+      this.isLoading = true
+      this.facilityRecords = [];
+      this.historySchedules = []
+      this.sortVehicle = []
+      this.pagination = {}
+      this.clientMainService.getApi({project_id: this.project_id, limit: this.functionMain.limitHistory, page: this.currentPage, host: this.selectedHost, room: this.choosenFacility, block: this.choosenBlock, unit: this.choosenUnit}, '/vms/get/booking_history' ).subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.success) {
+            // this.presentToast('!', 'success');
+            this.facilityRecords = results.result.booking
+            this.historySchedules = this.facilityRecords
+            this.filteredHistorySchedules = this.historySchedules
+            if (this.selectedRadio == 'sort_date') {
+              this.applyRadio()
             }
-            this.isLoading = false
-          },
-          error: (error) => {
-            this.presentToast('An error occurred while loading booking data!', 'danger');
-            console.error(error);
-            this.isLoading = false
+            console.log(this.historySchedules)
+          } else {
+            this.pagination = {}
+            this.total_pages = 0
+            this.currentPage = 1
+            this.inputPage = 1
           }
-        });
-      }
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.pagination = {}
+          this.total_pages = 0
+          this.currentPage = 1
+          this.inputPage = 1
+          this.presentToast('An error occurred while loading booking data!', 'danger');
+          console.error(error);
+          this.isLoading = false
+        }
+      });
     }
   }
 
@@ -238,30 +251,31 @@ export class RecordsFacilityPage implements OnInit {
   endDateFilter = ''
 
   applyFilters() {
-    this.filteredHistorySchedules = this.historySchedules.filter(item => {
-      const visitorDate = new Date(item.parking_date);
-      visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
+    // this.filteredHistorySchedules = this.historySchedules.filter(item => {
+    //   const visitorDate = new Date(item.parking_date);
+    //   visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
-      // Convert the selected start and end dates to Date objects
-      const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+    //   // Convert the selected start and end dates to Date objects
+    //   const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
-      // Set time to 00:00:00 for comparison
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
+    //   // Set time to 00:00:00 for comparison
+    //   if (selectedStartDate) {
+    //     selectedStartDate.setHours(0, 0, 0, 0);
+    //   }
+    //   if (selectedEndDate) {
+    //     selectedEndDate.setHours(0, 0, 0, 0);
+    //   }
 
-      const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-      const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
-      const unitMatches = this.choosenUnit ? item.unit_id == this.choosenUnit : true;
-      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
-      const facilityMatches = this.choosenFacility ? item.facility_id == this.choosenFacility : true;
+    //   const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+    //   const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
+    //   const unitMatches = this.choosenUnit ? item.unit_id == this.choosenUnit : true;
+    //   const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+    //   const facilityMatches = this.choosenFacility ? item.facility_id == this.choosenFacility : true;
 
-      return hostMatches && typeMatches && unitMatches && facilityMatches && dateMatches;
-    });
+    //   return hostMatches && typeMatches && unitMatches && facilityMatches && dateMatches;
+    // });
+    this.getFacilityData()
     console.log(this.filteredHistorySchedules)
   }
 
@@ -380,6 +394,9 @@ export class RecordsFacilityPage implements OnInit {
     this.choosenFacility = ''
     this.contactHost = ''
     this.selectedHost = ''
+    this.total_pages = 0
+    this.currentPage = 1
+    this.inputPage = 1
     console.log(event.target.value)
   }
 
@@ -402,8 +419,10 @@ export class RecordsFacilityPage implements OnInit {
   isRadioClicked = false
 
   onRadioClick(value: string): void {
+    let currentValue = this.selectedRadio
     if (this.selectedRadio === value) {
       this.selectedRadio = null;
+      this.clearFilters()
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
@@ -414,6 +433,15 @@ export class RecordsFacilityPage implements OnInit {
       this.selectedHost = ''
     }
     console.log(this.selectedRadio)
+    if (currentValue == 'search' && (this.selectedRadio == 'sort_date')) {
+      this.getFacilityData()
+    } else {
+      this.applyRadio()
+    }
+    
+  }
+  
+  applyRadio() {
     this.sortVehicle = this.historySchedules
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
@@ -448,6 +476,22 @@ export class RecordsFacilityPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
     this.applyFilters()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.getFacilityData()
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
 }

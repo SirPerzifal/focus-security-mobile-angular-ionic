@@ -38,16 +38,15 @@ export class RecordsVisitorPage implements OnInit {
 
   todayDate = this.convertToDDMMYYYY(new Date().toISOString().split('T')[0])
   isLoading = false
-  loadLogs(type: string, today: boolean = true) {
+  async loadLogs(type: string, today: boolean = true) {
     this.isLoading = true
     this.logsData = [];
-    if (type === 'visitor') {
-      
-    } else if (type === 'vehicle') {
-      
-    }
-    console.log(this.project_id)
-    this.clientMainService.getApi({is_today: today, log_type: type, project_id: this.project_id}, '/vms/get/visitor_log').subscribe({
+    this.historyVehicles = []
+    this.sortVehicle = []
+    this.pagination = {}
+    let params = today ? {is_today: today,  log_type: type, project_id: this.project_id} : {...this.filter, is_today: today,  log_type: type, project_id: this.project_id, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage} 
+    console.log(params)
+    this.clientMainService.getApi(params, '/vms/get/visitor_log').subscribe({
       next: (results) => {
         console.log(results.result)
         if (results.result.response_code === 200) {
@@ -56,9 +55,18 @@ export class RecordsVisitorPage implements OnInit {
           } else {
             this.logsData = results.result.response_result;
             this.historyVehicles = this.logsData
+            this.pagination = results.result.pagination
+            this.total_pages = this.pagination.total_pages
+            if (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle') {
+              this.applyRadio()
+            }
           }
           
         } else {
+          this.pagination = {}
+          this.total_pages = 0
+          this.currentPage = 1
+          this.inputPage = 1
         }
 
         this.isLoading = false;
@@ -66,6 +74,10 @@ export class RecordsVisitorPage implements OnInit {
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
+        this.pagination = {}
+        this.total_pages = 0
+        this.currentPage = 1
+        this.inputPage = 1
         this.isLoading = false;
       }
     });
@@ -148,6 +160,7 @@ export class RecordsVisitorPage implements OnInit {
   }
 
   logsData: any[] = [];
+  pagination: any = {}
   activeVehicles: any[] = [];
   historyVehicles: any[] = [];
   sortVehicle: any[] = []
@@ -198,6 +211,7 @@ export class RecordsVisitorPage implements OnInit {
     issue_date: '',
     end_issue_date: ''
   }
+  vehicleNumberFilter = ''
 
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
@@ -246,10 +260,13 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.end_issue_date = ''
     this.filter.block = ''
     this.filter.vehicle_number = ''
+    this.vehicleNumberFilter = ''
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
-    this.applyFilters()
+    this.total_pages = 0
+    this.currentPage = 1
+    this.inputPage = 1
     console.log(event.target.value)
   }
 
@@ -262,38 +279,39 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.end_issue_date = ''
     this.filter.block = ''
     this.filter.vehicle_number = ''
+    this.vehicleNumberFilter = ''
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
     this.selectedRadio = null
-    this.applyFilters() 
   }
 
   applyFilters() {
-    this.historyVehicles = this.logsData.filter(item => {  
-      const visitorDate = new Date(item.entry_datetime);
-      visitorDate.setHours(0, 0, 0, 0); 
+    // this.historyVehicles = this.logsData.filter(item => {  
+    //   const visitorDate = new Date(item.entry_datetime);
+    //   visitorDate.setHours(0, 0, 0, 0); 
 
-      const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
-      const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+    //   const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+    //   const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
 
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
+    //   if (selectedStartDate) {
+    //     selectedStartDate.setHours(0, 0, 0, 0);
+    //   }
+    //   if (selectedEndDate) {
+    //     selectedEndDate.setHours(0, 0, 0, 0);
+    //   }
       
-      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
-      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+    //   const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+    //   const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
 
-      const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
-      const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
+    //   const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
+    //   const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
+    //   const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+    //   const vehicleMatches = this.filter.vehicle_number && this.pageType == 'vehicle' ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
-      return hostMatches && blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;
-    });
+    //   return hostMatches && blockMatches && startDateMatches && unitMatches && vehicleMatches && endDateMatches;
+    // });
+    this.loadLogs(this.pageType, false)
     console.log(this.historyVehicles)
   }
 
@@ -312,9 +330,12 @@ export class RecordsVisitorPage implements OnInit {
   
   isRadioClicked = false
 
-  onRadioClick(value: string): void {
+  async onRadioClick(value: string) {
+    let currentValue = this.selectedRadio
+    console.log(this.selectedRadio)
     if (this.selectedRadio === value) {
       this.selectedRadio = null;
+      this.clearFilters()
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
@@ -322,6 +343,21 @@ export class RecordsVisitorPage implements OnInit {
       this.selectedHost = ''
     }
     console.log(this.selectedRadio)
+    if (currentValue == 'search' && (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle')) {
+      this.filter.issue_date = ''
+      this.filter.end_issue_date = ''
+      this.filter.block = ''
+      this.filter.vehicle_number = ''
+      this.vehicleNumberFilter = ''
+      this.filter.unit = ''
+      this.selectedHost = ''
+      this.loadLogs(this.pageType, false)
+    } else {
+      this.applyRadio()
+    }
+  }
+
+  applyRadio() {
     this.sortVehicle = this.historyVehicles
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
@@ -363,6 +399,21 @@ export class RecordsVisitorPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
     this.applyFilters()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.loadLogs(this.pageType, false)
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
 }

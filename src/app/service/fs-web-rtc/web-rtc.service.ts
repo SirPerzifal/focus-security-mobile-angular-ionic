@@ -197,6 +197,7 @@ export class WebRtcService extends ApiService{
   
       // Coba ambil dari USESTATE_DATA
       const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+      console.log(storedValue)
       if (storedValue) {
         try {
           const decoded = await this.storage.decodeData(storedValue);
@@ -441,10 +442,22 @@ export class WebRtcService extends ApiService{
   }
 
   async handleKickUser(data:any){
-    this.closeSocket();
-    this.storage.clearAllValueFromStorage();
-    Preferences.clear();
-    this.router.navigate(['']);
+    const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+    if (storedValue) {
+      try {
+        const decoded = await this.storage.decodeData(storedValue);
+        if (decoded) {
+          const parsedResident = JSON.parse(decoded);
+          if (parsedResident.family_id) {
+            this.closeSocket();
+            this.storage.clearAllValueFromStorage();
+            Preferences.clear();
+            this.router.navigate(['']);
+          }
+        }
+      }
+      catch {}
+    }
   }
 
   async handleReceiverPendingCall(data:any){
