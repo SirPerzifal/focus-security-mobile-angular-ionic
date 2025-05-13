@@ -16,7 +16,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
   isModalReasonBanOpen: boolean = false;
   selectedFileName: string = ''; // New property to hold the selected file name
 
-  minDate: string = this.getTodayDate(); // Set tanggal minimum saat inisialisasi
+  minDate: string = ''; // Set tanggal minimum saat inisialisasi
   formattedDate: string = '';
   isModalReinviteOpen: boolean = false; // New property to hold the
   dataForReinvite = {
@@ -26,6 +26,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
     entry_title: '',
     entry_message: '',
     is_provide_unit: false,
+    facility: '',
   }
 
   historyData!: {
@@ -55,6 +56,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
 
   hideFilter: string = '';
   cardIfJustBan: string = '';
+  userType: string = '';
 
   constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, private functionMain: FunctionMainService) { 
     const navigation = this.router.getCurrentNavigation();
@@ -82,6 +84,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
   }
 
   ngOnInit() {
+    this.getTodayDate();
   }
 
   bacToWhere() {
@@ -96,14 +99,22 @@ export class DetailHistoryInVisitorPage implements OnInit {
     }
   }
 
-  getTodayDate(): string {
+  getTodayDate() {
     const today = new Date();
     const string = today.toString;
     const final = String(today);
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
     const yyyy = today.getFullYear();
-    return `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+    this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+    // Mengambil hari dalam format angka (0-6)
+    const dayIndex = today.getDay();
+
+    // Array nama-nama hari
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    // Menyimpan nama hari ke dalam this.day
+    this.day = days[dayIndex];
   }
 
   toggleShowHistory() {
@@ -222,6 +233,62 @@ export class DetailHistoryInVisitorPage implements OnInit {
     this.dataForReinvite.entry_title = value;
   }
 
+  onEntryfacilityChange(event: any) {
+    this.dataForReinvite.facility = event.target.value;
+    console.log(event.target.value);
+    
+  }
+
+  onChangeTypeUser(event: any) {
+    this.userType = event;
+    if (this.userType === 'industrial') {
+      this.getBookingForFacility();
+    }
+  }
+
+  facility: any[] = [
+    {
+      id: 0,
+      bookName: ''
+    }
+  ]
+  day: string = '';
+
+  formatTime(datetime: string): string {
+    if (!datetime) return '';
+    
+    // Misalkan format datetime adalah 'YYYY-MM-DD HH:mm:ss'
+    const timePart = datetime.split(' ')[1];
+    
+    // Potong detik jika perlu
+    return timePart ? timePart.substring(0, 5) : '';
+  }
+
+  getBookingForFacility() {
+    try {
+      const today = new Date();
+      const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+      this.mainApiResidentService.endpointMainProcess({}, 'get/facility_book').subscribe((response: any) => {
+        this.facility = response.result.active_bookings.filter((booking: any) => {
+          const bookingDate = new Date(booking.start_datetime).toISOString().split('T')[0];
+          return bookingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
+        }).map((booking: any) => ({
+          id: booking.id,
+          facilityName: booking.facility_name,
+          bookName: booking.booking_name,
+          bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
+        }));
+        console.log(this.facility);
+        
+      }, (error) => {
+        console.log(error);
+        
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   onSubmitNext() {
     let errMsg = '';
     if (this.dataForReinvite.date_of_visit == '') {
@@ -243,6 +310,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
         entry_title: this.dataForReinvite.entry_title,
         entry_message: this.dataForReinvite.entry_message,
         is_provide_unit: this.dataForReinvite.is_provide_unit,
+        facility: this.dataForReinvite.facility ? this.dataForReinvite.facility : 0,
       }, 'post/reinvite_visitor').subscribe((response) => {
         this.router.navigate(['/visitor-main'], {
           queryParams: {

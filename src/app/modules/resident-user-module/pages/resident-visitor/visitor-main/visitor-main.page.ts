@@ -191,7 +191,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     
     // Menyimpan nama hari ke dalam this.day
     this.day = days[dayIndex];
-}
+  }
 
   onClick(event: any) {
     if (event) {
