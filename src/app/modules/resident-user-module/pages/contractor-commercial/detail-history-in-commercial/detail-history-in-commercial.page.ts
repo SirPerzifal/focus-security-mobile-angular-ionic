@@ -40,10 +40,10 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     vehicle_number: string;
     point_of_entry: string;
     mobile_number: string;
-    delivery_type: string;
-    vehicle_type: string;
     banned: boolean;
     id: number;
+    identification_number: string;
+    identification_type: string
   };
 
   formData = {

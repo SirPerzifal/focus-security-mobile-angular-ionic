@@ -50,7 +50,9 @@
 
       <div class="mt-4 space-y-2 w-full px-4">
         <div *ngFor="let id of inputData">
-          <div [ngClass]="(!id.disabledInput && (id.id === 'email_owner' || id.id === 'phone_number')) ? 'animate-shake' : ''">
+          <div
+            [ngClass]="(!id.disabledInput && (id.id === 'family_nickname' || id.id === 'phone_number')) ? 'animate-shake' : ''"
+          >
             <app-input-component
               [id]="id.id"
               [type]="'text'"

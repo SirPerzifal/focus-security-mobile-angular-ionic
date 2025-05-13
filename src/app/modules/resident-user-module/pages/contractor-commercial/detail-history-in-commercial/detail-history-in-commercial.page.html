@@ -23,8 +23,7 @@
           >
             <div class="text-base">
               <div class="capitalize text-base font-bold mb-2">
-                {{historyData.purpose === 'Visiting' ? historyData.visitor_name
-                : historyData.vehicle_number}}
+                {{ historyData.visitor_name }}
               </div>
               <table>
                 <tr class="h-6">
@@ -34,16 +33,30 @@
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6">
+                  <td class="w-[60%] font-bold">Vehicle Number</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.vehicle_number || '-' }}</td>
+                  <!-- Menampilkan '-' jika purpose kosong -->
+                </tr>
+                <tr class="h-6">
                   <td class="w-[60%] font-bold">Company Name</td>
                   <td class="w-[10%]">:</td>
                   <td>{{ historyData.company_name || '-' }}</td>
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Delivery'">
-                  <td class="w-[60%] font-bold">Delivery Type</td>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Identification Type</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.delivery_type || '-' }}</td>
-                  <!-- Menampilkan '-' jika delivery_type kosong -->
+                  <td class="capitalize">
+                    {{ historyData.identification_type || '-' }}
+                  </td>
+                  <!-- Menampilkan '-' jika purpose kosong -->
+                </tr>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Identification Number</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.identification_number || '-' }}</td>
+                  <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6">
                   <td class="w-[60%] font-bold">Date of Invite</td>

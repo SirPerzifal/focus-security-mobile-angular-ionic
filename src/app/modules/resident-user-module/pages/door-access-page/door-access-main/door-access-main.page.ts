@@ -25,6 +25,7 @@ export class DoorAccessMainPage implements OnInit {
 
   devicesFromScan: BleDevice[] = [];
   devicesFromBackend: any[] = [];
+  devicesToClick: any[] = [];
   isScanning = false;
   isBluetoothEnabled = false;
 
@@ -196,8 +197,24 @@ export class DoorAccessMainPage implements OnInit {
       const result = response.result.response_result;
       if (response.result.response_code === 200) {
         this.devicesFromBackend = result;
-        console.log(this.devicesFromBackend);
-        
+        if (this.devicesFromScan.length > 0 && this.devicesFromBackend.length > 0) {
+          if (this.devicesFromScan.some(d => d.name === result.bluetooth_name)) {
+            this.devicesToClick === this.devicesFromBackend.filter((device: any) => {
+              const blue_name_from_backend = device.bluetooth_name;
+              const blue_name_from_scan = device.name;
+              return blue_name_from_backend === blue_name_from_scan;
+            }).map((device: any) => {
+              return {
+                id: device.id,
+                name: device.name,
+                bluetoothName: device.bluetooth_name
+              }
+            })
+            console.log(this.devicesFromScan, this.devicesFromBackend, result);
+          }
+          console.log(this.devicesFromScan, this.devicesFromBackend, result);
+        }
+        console.log(this.devicesFromScan, this.devicesFromBackend, result);
       }
     })
   }
@@ -223,6 +240,11 @@ export class DoorAccessMainPage implements OnInit {
     } catch (error) {
       console.error('Connection error:', error);
     }
+  }
+
+  async deviceClick(device: any) {
+    console.log(device);
+    
   }
 
 }

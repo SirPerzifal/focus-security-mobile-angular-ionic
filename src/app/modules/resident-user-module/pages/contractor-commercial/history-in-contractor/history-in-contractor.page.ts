@@ -42,10 +42,10 @@ export class HistoryInContractorPage implements OnInit {
     vehicle_number: string;
     point_of_entry: string;
     mobile_number: string;
-    delivery_type: string;
-    vehicle_type: string;
     banned: boolean;
     id: number;
+    identification_number: string;
+    identification_type: string
   }> = [];
 
   filteredData: any[] = [];
@@ -95,20 +95,20 @@ export class HistoryInContractorPage implements OnInit {
           const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
           this.historyData.push({
-            company_name: item['company_name'],
             purpose: item['purpose'],
+            id: item['contractor_id'],
             visitor_name: item['contractor_name'],
+            vehicle_number: item['vehicle_number'],
+            mobile_number: item['contact_number'],
+            company_name: item['company_name'],
+            identification_number: item['identification_number'],
+            identification_type: item['identification_type'],
+            mode_of_entry: item['contractor_type'],
             visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
             visitor_entry_time: item['entry_time'],
-            visitor_exit_time: exitTime,
-            mode_of_entry: item['mode_of_entry'],
-            vehicle_number: item['vehicle_number'],
+            visitor_exit_time: item['exit_time'],
             point_of_entry: item['point_of_entry'],
-            mobile_number: item['contact_number'],
-            delivery_type: item['delivery_type'],
-            vehicle_type: item['vehicle_type'],
             banned: item['is_banned'],
-            id: item['contractor_id']
           });
           
           this.isLoading = false;
@@ -182,8 +182,6 @@ export class HistoryInContractorPage implements OnInit {
   }
 
   openDetails(historyData: any) {
-    console.log(historyData);
-    
     this.router.navigate(['/detail-history-in-commercial'], {
       state: {
         historyData: historyData

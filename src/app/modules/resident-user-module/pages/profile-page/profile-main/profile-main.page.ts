@@ -14,6 +14,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 interface InputForm {
+  familyNickname: string,
   nameCondominium: string;
   statusOwner: string;
   blockName: string;
@@ -66,6 +67,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   userName: string = '';
   userType: string = '';
   inputForm: InputForm = {
+    familyNickname: '',
     nameCondominium: '',
     statusOwner: '',
     blockName: '',
@@ -218,6 +220,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           if (this.userType === 'industrial') {
             this.inputData = [
               {
+                id: 'family_nickname',
+                formParams: 'familyNickname',
+                name: 'Nickname',
+                disabledInput: true
+              },    {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
                 name: 'Project Name',
@@ -235,6 +242,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               }
             ]
             this.inputForm = {
+              familyNickname: estate.family_nickname,
               nameCondominium: estate.project_name,
               statusOwner: estate.family_type,
               blockName: estate.block_name,
@@ -245,6 +253,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           } else {
             this.inputData = [
               {
+                id: 'family_nickname',
+                formParams: 'familyNickname',
+                name: 'Nickname',
+                disabledInput: true
+              },    {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
                 name: 'Condominium Name',
@@ -277,6 +290,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               }
             ]
             this.inputForm = {
+              familyNickname: estate.family_nickname,
               nameCondominium: estate.project_name,
               statusOwner: estate.family_type,
               blockName: estate.block_name,
@@ -333,21 +347,133 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     }
   }
 
-  ableChangeInput() {
+  ableChangeInput(afterChange?: string) {
+    console.log(afterChange);
+    
     // Toggle the disabledInput state
     this.disabledInput = !this.disabledInput;
   
     // Update the disabledInput for email and phone fields
-    // this.inputData.forEach(input => {
-    //   if (input.formParams === 'email' || input.formParams === 'phone') {
-    //     input.disabledInput = this.disabledInput;
-    //   }
-    // });
+    this.inputData.forEach(input => {
+      if (input.formParams === 'familyNickname') {
+        input.disabledInput = this.disabledInput;
+      }
+    });
   
     if (this.disabledInput === true) {
-      this.functionMain.presentToast('You can not change your profile data', 'danger');
+      if (afterChange === 'afterEdit') {
+        this.functionMain.presentToast('Your data has been change.', 'success');
+      } else {
+        this.functionMain.presentToast('You can not change your profile data.', 'danger');
+      }
+      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.imageProfile = estate.image_profile;
+            this.userName = estate.family_name;
+            this.userType = estate.record_type;
+            if (this.userType === 'industrial') {
+              this.inputData = [
+                {
+                  id: 'family_nickname',
+                  formParams: 'familyNickname',
+                  name: 'Nickname',
+                  disabledInput: true
+                },    {
+                  id: 'condominium_name',
+                  formParams: 'nameCondominium',
+                  name: 'Project Name',
+                  disabledInput: true
+                },    {
+                  id: 'email_owner',
+                  formParams: 'email',
+                  name: 'Email',
+                  disabledInput: this.disabledInput
+                },    {
+                  id: 'phone_number',
+                  formParams: 'phone',
+                  name: 'Contact',
+                  disabledInput: this.disabledInput
+                }
+              ]
+              this.inputForm = {
+                familyNickname: estate.family_nickname,
+                nameCondominium: estate.project_name,
+                statusOwner: estate.family_type,
+                blockName: estate.block_name,
+                unitName: estate.unit_name,
+                email: estate.family_email,
+                phone: estate.family_mobile_number,
+              }
+            } else {
+              this.inputData = [
+                {
+                  id: 'family_nickname',
+                  formParams: 'familyNickname',
+                  name: 'Nickname',
+                  disabledInput: true
+                },    {
+                  id: 'condominium_name',
+                  formParams: 'nameCondominium',
+                  name: 'Condominium Name',
+                  disabledInput: true
+                },    {
+                  id: 'status_owner',
+                  formParams: 'statusOwner',
+                  name: 'Status',
+                  disabledInput: true
+                },    {
+                  id: 'block_name',
+                  formParams: 'blockName',
+                  name: 'Block',
+                  disabledInput: true
+                },    {
+                  id: 'unit_name',
+                  formParams: 'unitName',
+                  name: 'Unit',
+                  disabledInput: true
+                },    {
+                  id: 'email_owner',
+                  formParams: 'email',
+                  name: 'Email',
+                  disabledInput: this.disabledInput
+                },    {
+                  id: 'phone_number',
+                  formParams: 'phone',
+                  name: 'Contact',
+                  disabledInput: this.disabledInput
+                }
+              ]
+              this.inputForm = {
+                familyNickname: estate.family_nickname,
+                nameCondominium: estate.project_name,
+                statusOwner: estate.family_type,
+                blockName: estate.block_name,
+                unitName: estate.unit_name,
+                email: estate.family_email,
+                phone: estate.family_mobile_number,
+              }
+            }
+            if (estate.unit_id) {
+              this.activeUnit = estate.unit_id;
+            } else {
+              this.activeUnit = estate.family_id;
+            }
+            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+              if(value?.value){
+                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                this.isLoading = true;
+                // Mengubah string JSON menjadi objek JavaScript
+                const credential = JSON.parse(decodedEstateString);
+                this.loadEstate(credential.emailOrPhone);
+              }
+            })
+          }
+        })
+      })
     } else {
-      this.functionMain.presentToast('You can change your profile data now', 'success');
+      this.functionMain.presentToast('You can change your profile data now.', 'success');
     }
   }
 
@@ -436,12 +562,15 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.inputForm.email = value;
     } else if (forWhat === 'phone_number') {
       this.inputForm.phone = value;
+    } else if (forWhat === 'family_nickname') {
+      this.inputForm.familyNickname = value;
     }
   }
   
   saveChangeProfile() {
     console.log(this.inputForm, this.imageProfile);
     this.mainResident.endpointMainProcess({
+      family_nickname: this.inputForm.familyNickname,
       new_image_profile: this.imageProfile
     }, 'post/change_update_profile_image').subscribe((response: any) => {
       const estateString = JSON.stringify(response.result.new_estate);
@@ -460,6 +589,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               if (this.userType === 'industrial') {
                 this.inputData = [
                   {
+                    id: 'family_nickname',
+                    formParams: 'familyNickname',
+                    name: 'Nickname',
+                    disabledInput: true
+                  },    {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Project Name',
@@ -477,6 +611,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   }
                 ]
                 this.inputForm = {
+                  familyNickname: estate.family_nickname,
                   nameCondominium: estate.project_name,
                   statusOwner: estate.family_type,
                   blockName: estate.block_name,
@@ -487,6 +622,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               } else {
                 this.inputData = [
                   {
+                    id: 'family_nickname',
+                    formParams: 'familyNickname',
+                    name: 'Nickname',
+                    disabledInput: true
+                  },    {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Condominium Name',
@@ -519,6 +659,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   }
                 ]
                 this.inputForm = {
+                  familyNickname: estate.family_nickname,
                   nameCondominium: estate.project_name,
                   statusOwner: estate.family_type,
                   blockName: estate.block_name,
@@ -545,7 +686,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           })
         })
         this.webRtcService.initializeSocket();
-        this.ableChangeInput();
+        this.ableChangeInput('afterEdit');
       })
     })
   }
@@ -649,6 +790,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             this.imageProfile = estate.image_profile;
             this.userName = estate.family_name;
             this.inputForm = {
+              familyNickname: estate.family_nickname,
               nameCondominium: estate.project_name,
               statusOwner: estate.family_type,
               blockName: estate.block_name,

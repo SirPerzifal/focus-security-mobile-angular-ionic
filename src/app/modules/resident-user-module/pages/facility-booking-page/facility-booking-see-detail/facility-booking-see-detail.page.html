@@ -49,16 +49,16 @@
         <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
         <div class="flex justify-between">
           <p>Booking Fee</p>
-          <p>S${{ bookingData.bookingFee.toFixed(2) }}</p>
+          <p>S${{ bookingData.bookingFee?.toFixed(2) }}</p>
         </div>
         <div class="flex justify-between">
           <p>Deposit</p>
-          <p>S${{ bookingData.amountDeposit.toFixed(2) }}</p>
+          <p>S${{ bookingData.amountDeposit?.toFixed(2) }}</p>
         </div>
         <hr class="my-2" />
         <div class="flex justify-between font-bold">
           <p>Grand Total</p>
-          <p>S${{ calculateTotal().toFixed(2) }}</p>
+          <p>S${{ calculateTotal()?.toFixed(2) }}</p>
         </div>
       </div>
 
