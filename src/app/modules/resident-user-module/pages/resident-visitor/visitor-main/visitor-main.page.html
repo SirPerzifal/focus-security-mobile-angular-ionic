@@ -95,7 +95,8 @@
         >
           <option selected disabled hidden></option>
           <option *ngFor="let book of facility" [value]="book.id">
-            {{ book.bookName }}
+            {{ book.facilityName }}, {{ book.bookName }}, {{ day }}({{
+            book.bookingTime }})
           </option>
         </select>
       </div>

@@ -87,6 +87,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   showNewInvTrans = false;
   showActInvTrans = false;
   extend_mb = false;
+  day: string = '';
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   isLoading: boolean = false;
   entryCheck: string = '';
@@ -182,7 +183,15 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
     const yyyy = today.getFullYear();
     this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
-  }
+    // Mengambil hari dalam format angka (0-6)
+    const dayIndex = today.getDay();
+    
+    // Array nama-nama hari
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    // Menyimpan nama hari ke dalam this.day
+    this.day = days[dayIndex];
+}
 
   onClick(event: any) {
     if (event) {
@@ -249,6 +258,16 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }
   }
 
+  formatTime(datetime: string): string {
+    if (!datetime) return '';
+    
+    // Misalkan format datetime adalah 'YYYY-MM-DD HH:mm:ss'
+    const timePart = datetime.split(' ')[1];
+    
+    // Potong detik jika perlu
+    return timePart ? timePart.substring(0, 5) : '';
+  }
+
   getBookingForFacility() {
     try {
       const today = new Date();
@@ -259,7 +278,9 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           return bookingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
         }).map((booking: any) => ({
           id: booking.id,
-          bookName: booking.facility_name
+          facilityName: booking.facility_name,
+          bookName: booking.booking_name,
+          bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
         }));
         console.log(this.facility);
         

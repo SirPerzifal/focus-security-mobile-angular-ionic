@@ -1,26 +1,43 @@
-
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Report App Issue'" [text_second]="'Form Report'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Report App Issue'"
+    [text_second]="'Form Report'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="onBack()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"
+    ></ion-icon>
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
-    <div [ngClass]="{
+    <div
+      [ngClass]="{
       'bg-[var(--ion-color-tertiary)]': ticketDetail.ticket_status === 'Solved',
       'bg-[#F8F1BA]': ticketDetail.ticket_status === 'New',
       'bg-[#E3787E]': ticketDetail.ticket_status === 'Canceled',
       'bg-sky-200': ticketDetail.ticket_status === 'In Progress' || ticketDetail.ticket_status === 'On Hold'
-      }" class="bg-[#F8F1BA] p-4 rounded shadow">
-      <h2 class="font-bold text-base text-left">{{ ticketDetail.ticket_name }}</h2>
-      <span [innerHtml]="ticketDetail.summary" *ngIf="ticketDetail.summary"></span>
+      }"
+      class="bg-[#F8F1BA] p-4 rounded shadow"
+    >
+      <h2 class="font-bold text-base text-left">
+        {{ ticketDetail.ticket_name }}
+      </h2>
+      <span
+        [innerHtml]="ticketDetail.summary"
+        *ngIf="ticketDetail.summary"
+      ></span>
       <table class="w-full text-left border-collapse mt-2">
         <tbody>
           <tr>
             <td class="font-bold text-sm">Reported On</td>
-            <td class="text-sm">: {{ functionMain.convertDateExtend(ticketDetail.issued_on) }}</td>
+            <td class="text-sm">
+              : {{ functionMain.convertDateExtend(ticketDetail.issued_on) }}
+            </td>
           </tr>
           <tr>
             <td class="font-bold text-sm">Resolved On</td>
@@ -32,83 +49,143 @@
           </tr>
         </tbody>
       </table>
-      <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment"
-        [bgColor]="(ticketDetail.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
+      <app-image-zoom
+        [imageArray]="ticketDetail.attachment"
+        *ngIf="ticketDetail.attachment"
+        [imageClass]="'!h-20'"
+        [bgColor]="(ticketDetail.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"
+      ></app-image-zoom>
     </div>
-    <div class="flex flex-col mt-4 space-y-2" *ngIf="ticketDetail.ticket_status !== 'Solved'">
+    <div
+      class="flex flex-col mt-4 space-y-2"
+      *ngIf="ticketDetail.ticket_status !== 'Solved'"
+    >
       <div class="flex flex-row justify-start">
         <p class="text-base font-bold">Content</p>
       </div>
-      <textarea id="client_ticket_detail_summary" placeholder="Reply Message" (focus)="testAddMb(true)"
-        (blur)="testAddMb(false)" class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
-        [(ngModel)]="replyForm.body" name="entryMessage">
+      <textarea
+        id="client_ticket_detail_summary"
+        placeholder="Reply Message"
+        (focus)="testAddMb(true)"
+        (blur)="testAddMb(false)"
+        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+        type="text"
+        [(ngModel)]="replyForm.body"
+        name="entryMessage"
+      >
       </textarea>
       <div class="w-full flex flex-row justify-between items-end">
-        <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientTicketDetailAttachment
-          class="hidden" />
+        <input
+          placeholder="Choose a file"
+          type="file"
+          (change)="onFileSelected($event)"
+          #clientTicketDetailAttachment
+          class="hidden"
+        />
         <div class="w-4/6 mb-2">
           <label class="text-base"><b>Attachment</b></label>
-          <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+          <input
+            placeholder="Choose a file"
+            type="input"
+            (click)="openFileInput()"
+            [(ngModel)]="fileName"
             class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
-            readonly />
+            readonly
+          />
         </div>
-        <button id="client_ticket_detail_upload_attachment" (click)="uploadFile()"
-          class="bg-[var(--ion-color-secondary)] text-black w-[30%] h-14 text-base rounded font-bold mb-2">
+        <button
+          id="client_ticket_detail_upload_attachment"
+          (click)="uploadFile()"
+          class="bg-[var(--ion-color-secondary)] text-black w-[30%] h-14 text-base rounded font-bold mb-2"
+        >
           Upload
         </button>
       </div>
-      <button (click)="submitReply(false)"
-        class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12">
+      <button
+        (click)="submitReply(false)"
+        class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12"
+      >
         Reply
       </button>
     </div>
     <div class="mt-4">
-      <div class="flex flex-col w-full space-y-3 mt-4" *ngIf="messageDetail.length > 0; else noDetail">
-        <div *ngFor="let message of messageDetail"
-          class="flex flex-row text-[#6B7280] text-base items-start justify-between">
+      <div
+        class="flex flex-col w-full space-y-3 mt-4"
+        *ngIf="messageDetail.length > 0; else noDetail"
+      >
+        <div
+          *ngFor="let message of messageDetail"
+          class="flex flex-row text-[#6B7280] text-base items-start justify-between"
+        >
           <div class="w-1/5 flex flex-row justify-start" *ngIf="message.is_vms">
             <div class="rounded-full overflow-hidden w-12 h-12">
               <img class="w-12 h-12" [src]="" alt="Admin" />
             </div>
           </div>
-          <div class="w-1/5 flex flex-row justify-start" *ngIf="message.is_client">
+          <div
+            class="w-1/5 flex flex-row justify-start"
+            *ngIf="message.is_client"
+          >
             <div class="rounded-full overflow-hidden w-12 h-12">
-              <img class="w-12 h-12"
+              <img
+                class="w-12 h-12"
                 [src]="message.sender_profile ? functionMain.getImage(message.sender_profile) : 'assets/icon/exc-client/user.png'"
-                alt="User" />
+                alt="User"
+              />
             </div>
           </div>
           <div class="flex flex-col justify-start w-4/5">
-            <div class="flex justify-between w-full"
-              [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'">
+            <div
+              class="flex justify-between w-full"
+              [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'"
+            >
               <div>
-                # {{ message.sender_name ? message.sender_name : (message.is_vms ? 'VMS Admin' : ( message.is_client ?
-                'Client User' : 'Resident User')) }}
+                # {{ message.sender_name ? message.sender_name : (message.is_vms
+                ? 'VMS Admin' : ( message.is_client ? 'Client User' : 'Resident
+                User')) }}
               </div>
             </div>
-            <div class="w-full p-3 rounded"
-              [ngClass]="message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]'">
+            <div
+              class="w-full p-3 rounded"
+              [ngClass]="message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]'"
+            >
               <span [innerHtml]="message.body"></span>
-              <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
-                <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
+              <div
+                class="flex flex-row w-full space-x-2"
+                *ngIf="message.attachment_datas.length > 0"
+              >
+                <div
+                  class="flex flex-col mt-2 items-center"
+                  *ngFor="let attachment of message.attachment_datas"
+                >
                   <!-- <img [src]="functionMain.getImage(attachment.datas)" class="w-[13rem] max-w-[13rem] max-h-[13rem]" *ngIf="attachment.mimetype.startsWith('image/')"> -->
-                  <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas"
-                    [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"></app-image-zoom>
+                  <app-image-zoom
+                    [imageZoom]="functionMain.getImage(attachment.datas)"
+                    *ngIf="attachment.datas"
+                    [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"
+                  ></app-image-zoom>
                   <!-- <span>{{ attachment.name}}</span> -->
                 </div>
               </div>
             </div>
-            <div class="text-sm w-full flex justify-end"
-              [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'">
+            <div
+              class="text-sm w-full flex justify-end"
+              [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'"
+            >
               {{ functionMain.convertDateExtend(message.message_datetime) }}
             </div>
           </div>
 
-          <div class="w-1/5 flex flex-row justify-end" *ngIf="message.is_resident">
+          <div
+            class="w-1/5 flex flex-row justify-end"
+            *ngIf="message.is_resident"
+          >
             <div class="rounded-full overflow-hidden w-12 h-12">
-              <img class="w-12 h-12"
+              <img
+                class="w-12 h-12"
                 [src]="message.sender_profile ? functionMain.getImage(message.sender_profile) : 'assets/icon/exc-client/user.png'"
-                alt="User" />
+                alt="User"
+              />
             </div>
           </div>
         </div>
@@ -121,7 +198,7 @@
     </div>
     <div class="h-96" *ngIf="extend_mb"></div>
   </div>
-</ion-content>  
+</ion-content>
 
 <ion-footer>
   <app-botton-nav-bar></app-botton-nav-bar>

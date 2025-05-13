@@ -408,6 +408,8 @@ export class FacilityBookingMainPage implements OnInit {
 
         // Set booking list awal
         this.filteredBookingList = [...this.originalBookingList];
+        console.log(this.originalBookingList);
+        
         this.isLoading = false;
         // console.log(response.result, this.isLoading);
         
