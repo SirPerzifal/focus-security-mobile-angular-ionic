@@ -89,7 +89,7 @@ export class HomePage implements OnInit {
 
   onLogout() {
     if (this.project_key != '') {
-      this.clientMainService.getApi({project_id: this.project_id, project_key: this.project_key}, '/vms/get/project_key').subscribe({
+      this.clientMainService.getApi({project_id: this.project_id, project_key: this.project_key}, '/vms/post/project_key').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {

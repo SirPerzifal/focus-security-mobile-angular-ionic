@@ -374,7 +374,11 @@ export class CollectionModulePage implements OnInit {
           console.log(res.result.response_code);
           
           if (res.result.response_code == 200) {
-            this.functionMain.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
+            if (openBarrier) {
+              this.functionMain.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
+            } else {
+              this.functionMain.presentToast('Drive in data has been successfully saved!', 'success');
+            }
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 205) {
             if (openBarrier) {

@@ -114,7 +114,7 @@
               *ngIf="(searchOption == 'vehicle_no' || searchOption == 'all') && pageType == 'vehicle'">
               <app-text-input #recordVisitorVehicleNumberFilter [id]="'record_visitor_vehicle_number_filter'"
                 [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
-                [type]="'text'" [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
+                [type]="'text'" [(ngModel)]="filter.vehicle_number" (keyup)="onVehicleFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div>

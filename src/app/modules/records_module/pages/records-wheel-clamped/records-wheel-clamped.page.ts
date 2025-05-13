@@ -297,6 +297,7 @@ export class RecordsWheelClampedPage implements OnInit {
     this.contactHost = ''
     this.selectedHost = ''
     console.log(event.target.value)
+    this.applyFilters()
   }
 
   startDateFilter = ''

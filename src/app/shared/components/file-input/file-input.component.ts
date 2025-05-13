@@ -81,6 +81,10 @@ export class FileInputComponent  implements OnInit {
         resultType: CameraResultType.Base64
       });
       console.log(image)
+      if(!['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(image.format)) {
+        this.functionMain.presentToast('Only receive PNG, JPG, and JPEG files!', 'warning')
+        return
+      }
       const dateStr = (() => { const n = new Date(), p = (v: any) => v.toString().padStart(2, '0'); return `${p(n.getDate())}_${p(n.getMonth()+1)}_${n.getFullYear()}_${p(n.getHours())}_${p(n.getMinutes())}_${p(n.getSeconds())}` })();
       if (this.isMany) {
         this.cameraId += 1

@@ -27,6 +27,11 @@
             <td>{{ returnNone(record.contact_number) }}</td>
           </tr>
           <tr>
+            <td class="font-bold w-2/5">ENTRY TYPE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ returnNone(record.entry_type) }}</td>
+          </tr>
+          <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
             <td>{{ record.entry_datetime ? functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[0] : '-' }}</td>

@@ -116,7 +116,7 @@ export class AlertModalPage implements OnInit {
         } else {
           this.functionMain.presentToast(`Failed to ${this.type} vehicle!`, 'danger');
         }
-        this.modalController.dismiss(true);
+        setTimeout(() => {this.modalController.dismiss(true)}, 300);
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');

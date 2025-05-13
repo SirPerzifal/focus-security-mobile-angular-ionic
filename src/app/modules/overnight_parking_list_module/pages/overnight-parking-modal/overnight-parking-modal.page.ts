@@ -185,10 +185,12 @@ export class OvernightParkingModalPage implements OnInit {
           visitor_name: this.vehicle.visitor_name, 
           block_id: this.search || this.no_nric ? this.vehicle.block_id[0] : this.vehicle.block_id, 
           unit_id: this.search || this.no_nric ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
+          host: this.search || this.no_nric ? this.vehicle.industrial_host_id[0] : this.vehicle.industrial_host_id, 
           contact_number: this.vehicle.contact_number,
           type_notice: this.selectedNotice, 
           issuing_officer_name: this.issueOfficer,
-          type: 'Drive In',
+          type: this.vehicle.entry_type ? this.vehicle.entry_type : 'Drive In',
+          entry_datetime: this.vehicle.create_date ? this.vehicle.create_date : false,
           reason: this.reason,
           notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
           before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
@@ -202,7 +204,7 @@ export class OvernightParkingModalPage implements OnInit {
           console.log(results)
           if (results.result.response_code === 200) {
             this.presentToast('Issue notice successfully submitted!', 'success');
-            this.modalController.dismiss(true);
+            setTimeout(() => {this.modalController.dismiss(true)}, 300);
           } else {
             this.presentToast('An error occurred while submitting issue notice!', 'danger');
           }
