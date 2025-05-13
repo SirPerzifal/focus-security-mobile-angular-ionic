@@ -61,7 +61,7 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
   alert = false
   search = false
   overnight = false
-  home_url = 'records-wheel-clamped'
+  home_url = 'records-wheel-clamped-detail'
   back_url = '/records-wheel-clamped-detail'
   qr_code = ''
 
@@ -100,7 +100,12 @@ export class RecordsWheelClampedPaymentPage implements OnInit {
         if (results.result.response_code === 200) {
           console.log(results)
           this.presentToast('Successfully upload receipt!', 'success');
-          this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : ( this.search ? { queryParams: { vehicle_number: this.vehicle.vehicle_number} } :( this.overnight ? { queryParams: { reload: 'true'} } : { queryParams: { type: 'wheel_clamp'} })) );
+          if (this.home_url == 'records-wheel-clamped-detail') {
+            this.vehicle.is_pay = true
+            this.router.navigate([this.home_url], { state: {vehicle: this.vehicle}, queryParams: { type: 'wheel_clamp'} });
+          } else {
+            this.router.navigate([this.home_url], this.alert ? { queryParams: { alert: true} } : ( this.search ? { queryParams: { vehicle_number: this.vehicle.vehicle_number} } :( this.overnight ? { queryParams: { reload: 'true'} } : { queryParams: { type: 'wheel_clamp'} })) );
+          }
         } else {
         }
       },

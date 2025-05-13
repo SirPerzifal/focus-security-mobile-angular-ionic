@@ -187,16 +187,16 @@ export class RecordsBlacklistFormPage implements OnInit {
 
   saveRecord() {
     let errMsg = ''
-    if (!this.formData.visitor_name) {
+    if (!this.formData.visitor_name && !this.is_ban_visitor) {
       errMsg += 'Visitor name is required! \n'
     }
     // if (!this.formData.vehicle_no) {
     //   errMsg += 'Visitor vehicle number is required! \n'
     // }
-    if (!this.formData.contact_no) {
+    if (!this.formData.contact_no && !this.is_ban_visitor) {
       errMsg += 'Visitor contact number is required! \n'
     }
-    if (this.formData.contact_no) {
+    if (this.formData.contact_no  && !this.is_ban_visitor) {
       if (this.formData.contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
@@ -210,9 +210,9 @@ export class RecordsBlacklistFormPage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
-    if (!this.formData.ban_image) {
-      errMsg += 'Ban image is required! \n'
-    }
+    // if (!this.formData.ban_image) {
+    //   errMsg += 'Ban image is required! \n'
+    // }
     if (!this.formData.banned_by) {
       errMsg += 'Issue officer is required! \n'
     }

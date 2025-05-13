@@ -330,6 +330,10 @@ export class ClientRaiseTicketPage implements OnInit {
 
   createNewTicket() {
     console.log(this.newTicket)
+    if (!this.newTicket.summary) {
+      this.functionMain.presentToast('Report summary is required!', 'danger')
+      return
+    }
     this.clientMainService.getApi(this.newTicket, '/client/post/create_ticket').subscribe({
       next: (results) => {
         console.log(results)

@@ -247,6 +247,9 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.block = ''
     this.filter.vehicle_number = ''
     this.filter.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
+    this.applyFilters()
     console.log(event.target.value)
   }
 

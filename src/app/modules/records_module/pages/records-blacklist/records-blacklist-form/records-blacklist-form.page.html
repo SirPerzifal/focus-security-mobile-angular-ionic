@@ -74,7 +74,7 @@
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
-            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
             placeholder=""></textarea>
         </div>        
         <div class="w-full">
@@ -83,7 +83,7 @@
         
         <div class="w-full flex flex-col">
           <div class="w-full">
-            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-5 text-2xl h-20'" (click)="saveRecord()"></app-visitor-button>
+            <app-visitor-button [text]="'SUBMIT'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full mt-1 text-2xl h-20'" (click)="saveRecord()"></app-visitor-button>
           </div>
         </div>
         

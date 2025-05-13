@@ -48,7 +48,7 @@ export class ImageZoomComponent  implements OnInit {
     if (image.mimetype == 'pdf') {
       this.functionMain.downloadDocument(image.datas, image.name)
     } else { 
-      this.openImage = image.datas
+      this.openImage = this.functionMain.getImage(image.datas)
       this.isOpenModal = true
     }
   }

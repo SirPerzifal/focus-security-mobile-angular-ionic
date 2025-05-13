@@ -334,9 +334,9 @@ export class ClientBlacklistPage implements OnInit {
     if (!this.formData.host && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
-    if (!this.formData.ban_image) {
-      errMsg += 'Ban image is required! \n'
-    }
+    // if (!this.formData.ban_image) {
+    //   errMsg += 'Ban image is required! \n'
+    // }
     if (!this.formData.banned_by) {
       errMsg += 'Issue officer is required! \n'
     }

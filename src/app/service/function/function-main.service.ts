@@ -160,15 +160,15 @@ export class FunctionMainService {
   }
 
   uppercaseFirst(word: string) {
-    return word.charAt(0).toUpperCase() + word.slice(1)
+    return word ? (word.charAt(0).toUpperCase() + word.slice(1)) : '-'
   }
 
   uppercaseFirstWithUnderscore(text: string) {
-    return text
+    return text ? (text
       .replace('_', ' ')
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .join(' ')) : '-';
   }
 
   convertDateExtend(dateString: string): string {
@@ -357,6 +357,7 @@ export class FunctionMainService {
 
       if (results.result.response_code === 200) {
         if (results.result.response_result[0].vehicle_number) {
+          // this.presentToast('No vehicle found!', 'danger');
         }
         return results.result.response_result[0];
       } else {

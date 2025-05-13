@@ -206,6 +206,7 @@ export class RecordsBlacklistPage implements OnInit {
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
+    this.applyFilters()
     console.log(event.target.value)
   }
 
@@ -233,7 +234,7 @@ export class RecordsBlacklistPage implements OnInit {
 
       const blockMatches = this.filter.block ? item.block_id[0] == this.filter.block : true;
       const unitMatches =  this.filter.unit ? item.unit_id[0] == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+      const hostMatches =  this.selectedHost ? item.industrial_host_ids.includes(parseInt(this.selectedHost)) : true;
 
       return hostMatches && blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
     });

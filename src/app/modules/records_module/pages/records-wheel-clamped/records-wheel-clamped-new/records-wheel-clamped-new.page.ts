@@ -184,13 +184,15 @@ export class RecordsWheelClampedNewPage implements OnInit {
       this.clientMainService.getApi(params, '/vms/post/offenses' ).subscribe({
         next: (results) => {
           console.log(results)
+          console.log(results.result.response_code)
           if (results.result.response_code === 200) {
             this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
-            this.modalController.dismiss(true);
+            console.log("HEY CLOSED ON WHEEL CLAMP")
+            setTimeout(() => {this.modalController.dismiss(true)}, 300);            
           } else {
             if (results.result.error_message.includes('Record does not exist or has been deleted')) {
-              this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
-              this.modalController.dismiss(true);
+              this.functionMain.presentToast('Record does not exist or has been deleted!', 'danger');
+              setTimeout(() => {this.modalController.dismiss(true)}, 300);
             } else {
               this.functionMain.presentToast('An error occurred while submitting issue notice!', 'danger');
             }

@@ -234,11 +234,11 @@ export class RecordsContractorPage implements OnInit {
       issue_date: '',
       end_issue_date: ''
     }
+    this.contactHost = ''
+    this.selectedHost = ''
     this.searchOption = event.target.value
     console.log(event.target.value)
-    if (this.searchOption == 'not_checkout' || (this.project_config.is_industrial && this.searchOption == 'all')) {
-      this.applyFilters()
-    }
+    this.applyFilters()
   }
 
   startDateFilter = ''
@@ -271,17 +271,15 @@ export class RecordsContractorPage implements OnInit {
         if (selectedEndDate) {
           selectedEndDate.setHours(0, 0, 0, 0);
         }
-        
+
         const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
         const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
         const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-        const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+        const hostMatches =  this.selectedHost ? item.industrial_host_ids.includes(parseInt(this.selectedHost)) : true;
         const unitMatches =  this.filter.unit ? item.unit_id == this.filter.unit : true;
-        const isCheckout = ['not_checkout', 'all'].includes(this.searchOption) ? (item.check_in && !item.check_out) : true;
-        
-        return blockMatches && hostMatches && startDateMatches && unitMatches && endDateMatches && isCheckout;
+        console.log(blockMatches, hostMatches, startDateMatches, unitMatches, endDateMatches)
+        return blockMatches && hostMatches && startDateMatches && unitMatches && endDateMatches;
       });
-      console.log(this.historyVehicles)
     } else {
       this.historyVehicles = this.logsData.filter(item => {  
         const visitorDate = new Date(item.create_date);
@@ -305,8 +303,6 @@ export class RecordsContractorPage implements OnInit {
         return blockMatches && startDateMatches && unitMatches && endDateMatches;
       });
     }
-    
-    console.log(this.historyVehicles)
   }
 
   onArrowClick(logs: any[]){
