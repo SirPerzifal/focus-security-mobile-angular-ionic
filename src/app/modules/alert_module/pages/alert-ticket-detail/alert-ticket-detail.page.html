@@ -13,7 +13,7 @@
       <div class="w-full mx-4">
         <div class="w-full">
           <div class="w-full bg-[var(--ion-color-primary)] p-4 rounded flex flex-col mb-5">
-            <div class="flex flex-col mb-5">
+            <div class="flex flex-col mb-5" *ngIf="!isLoading">
               <span class="text-2xl font-bold text-white">
                 {{ functionMain.returnNone(alert.ticket_name) }} ( {{ functionMain.returnNone(alert.type_os_issue) }} )
               </span>
@@ -24,6 +24,11 @@
               </span>
               <app-image-zoom [imageArray]="alert.attachment" *ngIf="alert.attachment" [bgColor]="'bg-[var(--ion-color-primary)]'"></app-image-zoom>
               <!-- <img [src]="functionMain.getImage(alert.attachment)" *ngIf="alert.attachment"> -->
+            </div>
+            <div class="flex flex-col mb-5 justify-center" *ngIf="isLoading">
+              <div class="flex justify-center items-center h-32 w-32">
+                <ion-spinner name="circular" color="light"></ion-spinner>
+              </div>
             </div>
 
             <hr class="" style="height: 20px; border-top: 5px solid white;">
@@ -56,38 +61,45 @@
             </div>
 
             <hr class="mt-5" style="height: 20px; border-top: 5px solid white;">
-
-            <div class="w-full flex flex-col space-y-5 mb-5" *ngIf="messages.length > 0; else noMessages">
-              <div *ngFor="let message of messages"
-                class="w-full bg-white p-4 rounded flex justify-between items-center">
-                <div class="flex flex-col items-center mr-3">
-                  <ion-icon size="large" class="text-black size-7" name="chevron-forward-outline"></ion-icon>
-                </div>
-                <div class="flex flex-col w-full">
-                  <div class="flex flex-row w-full justify-between text-xl text-black">
-                    <span>
-                      <b>{{ message.sender_name ? '# ' + message.sender_name : (message.is_vms ? '# Security' : ( message.is_client ? '#
-                        Client User' : '# Resident User')) }} </b>
-                    </span>
-                    <span style="color: #575757;">
-                      {{ functionMain.convertNewDateTZ(message.message_datetime) }}
-                    </span>
+            
+            <div class="w-full" *ngIf="!isLoading">
+              <div class="w-full flex flex-col space-y-5 mb-5" *ngIf="messages.length > 0; else noMessages">
+                <div *ngFor="let message of messages"
+                  class="w-full bg-white p-4 rounded flex justify-between items-center">
+                  <div class="flex flex-col items-center mr-3">
+                    <ion-icon size="large" class="text-black size-7" name="chevron-forward-outline"></ion-icon>
                   </div>
-
-                  <span class="text-xl text-black" [innerHtml]="message.body">
-                    <!-- {{ functionMain.returnNone(message.body) }} -->
-                  </span>
-                  <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
-                    <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
-                      <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="'bg-white'"></app-image-zoom>
-                      <!-- <img [src]="functionMain.getImage(attachment.datas)" *ngIf="attachment.mimetype.startsWith('image/')"> -->
-                      <!-- <span>{{ attachment.name}}</span> -->
+                  <div class="flex flex-col w-full">
+                    <div class="flex flex-row w-full justify-between text-xl text-black">
+                      <span>
+                        <b>{{ message.sender_name ? '# ' + message.sender_name : (message.is_vms ? '# Security' : ( message.is_client ? '#
+                          Client User' : '# Resident User')) }} </b>
+                      </span>
+                      <span style="color: #575757;">
+                        {{ functionMain.convertNewDateTZ(message.message_datetime) }}
+                      </span>
+                    </div>
+  
+                    <span class="text-xl text-black" [innerHtml]="message.body">
+                      <!-- {{ functionMain.returnNone(message.body) }} -->
+                    </span>
+                    <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
+                      <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
+                        <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="'bg-white'"></app-image-zoom>
+                        <!-- <img [src]="functionMain.getImage(attachment.datas)" *ngIf="attachment.mimetype.startsWith('image/')"> -->
+                        <!-- <span>{{ attachment.name}}</span> -->
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
+            <div class="flex flex-col justify-center" *ngIf="isLoading">
+              <div class="flex justify-center items-center h-20">
+                <ion-spinner name="dots" color="light"></ion-spinner>
+              </div>
+            </div>
+
             <ng-template #noMessages>
               <div class="w-full flex flex-col space-y-5 mb-5">
                 <div class="w-full bg-white p-4 rounded flex justify-between items-center h-14">

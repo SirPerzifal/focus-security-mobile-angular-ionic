@@ -67,7 +67,7 @@ export class AppReportMainPage implements OnInit {
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
-    private functionMain: FunctionMainService,
+    public functionMain: FunctionMainService,
     private storage: StorageService
   ) {  }
 

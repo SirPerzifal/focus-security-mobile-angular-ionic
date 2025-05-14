@@ -166,7 +166,7 @@ export class ClientUpcomingEventsPage implements OnInit {
   }
 
   cancelupcomingEvent(upcomingEvent: any) {
-    this.clientMainService.getApi({ event_id: upcomingEvent.id }, '/resident/post/delete_upcoming_event').subscribe({
+    this.clientMainService.getApi({ event_id: upcomingEvent.id, is_client: true }, '/resident/post/delete_upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

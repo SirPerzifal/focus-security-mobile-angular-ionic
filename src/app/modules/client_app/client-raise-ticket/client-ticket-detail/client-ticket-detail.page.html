@@ -31,7 +31,7 @@
               <ion-spinner name="circular"></ion-spinner>
             </div>
           </div>
-          <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment && !isLoadingFirst" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"></app-image-zoom>
+          <app-image-zoom [imageArray]="ticketDetail.attachment" *ngIf="ticketDetail.attachment && !isLoadingFirst" [bgColor]="(ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')" [imageClass]="'h-20 object-contain'"></app-image-zoom>
         </div>
       </div>
       <div class="flex flex-col mb-4 space-y-2" *ngIf="ticketDetail.ticket_status == 'New'">
@@ -97,7 +97,7 @@
                 <span [innerHtml]="message.body"></span>
                 <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
                   <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
-                    <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"></app-image-zoom>
+                    <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')" [imageClass]="'h-20 object-contain'"></app-image-zoom>
                     <!-- <img [src]="functionMain.getImage(attachment.datas)" (click)="clickImage(functionMain.getImage(attachment.datas))" class="h-32 object-contain"  *ngIf="attachment.mimetype.startsWith('image/')"> -->
                     <!-- <span>{{ attachment.name}}</span> -->
                   </div>

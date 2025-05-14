@@ -581,7 +581,7 @@ export class ClientEventsDayViewPage implements OnInit {
 
   cancelupcomingEvent() {
     if (this.EventsForm.id != 0) {
-      this.clientMainService.getApi({ event_id: this.EventsForm.id }, '/resident/post/delete_upcoming_event').subscribe({
+      this.clientMainService.getApi({ event_id: this.EventsForm.id, is_client: true }, '/resident/post/delete_upcoming_event').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code == 200) {

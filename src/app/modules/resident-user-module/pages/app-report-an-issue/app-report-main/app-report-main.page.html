@@ -41,11 +41,11 @@
             <tbody>
               <tr>
                 <td class="font-bold">Reported On</td>
-                <td class="cw-3:text-sm">: {{ report.issued_on }}</td>
+                <td class="cw-3:text-sm">: {{ report.issued_on ? functionMain.convertNewDateTZ(report.issued_on) : 'N/A' }}</td>
               </tr>
               <tr>
                 <td class="font-bold">Resolved On</td>
-                <td class="cw-3:text-sm">: {{ report.solved_on || 'N/A' }}</td>
+                <td class="cw-3:text-sm">: {{ report.solved_on ? functionMain.convertNewDateTZ(report.solved_on) : 'N/A' }}</td>
               </tr>
               <tr>
                 <td class="font-bold">Ticket Status</td>

@@ -59,9 +59,12 @@ export class AlertTicketDetailPage implements OnInit {
     ticket_id: ''
   }
 
+  isLoading = false
   loadTicketsDetail(){
+    this.isLoading = true
     this.clientMainService.getApi({ticket_id: this.params.ticket_id}, '/vms/get/report_issue_detail').subscribe({
       next: (results) => {
+        this.isLoading = false
         console.log('tickets', results)
         if (results.result.response_code === 200) {
           this.alert = results.result.result[0]
@@ -71,6 +74,7 @@ export class AlertTicketDetailPage implements OnInit {
         } 
       },
       error: (error) => {
+        this.isLoading = false
         this.functionMain.presentToast('An error occurred while loading tickets detail!', 'danger');
         console.error(error);
       }
