@@ -135,6 +135,16 @@ export class IssueAppDetailPage implements OnInit {
     }
   }
 
+  onUploadImage(file: any): void {
+    if (file){
+      // this.replyForm.ir_attachment_datas = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      this.replyForm.ir_attachment_datas = file.image
+      this.replyForm.ir_attachment_name = file.name
+      this.replyForm.ir_attachment_mimetype = file.type
+      console.log(this.replyForm)
+    }
+  }
+
   uploadFile() {
     if (this.selectedFile) {
       this.functionMain.presentToast(`File ${this.selectedFile.name} ready to upload`, 'success');
@@ -189,6 +199,7 @@ export class IssueAppDetailPage implements OnInit {
     })
   }
 
+  showFile = true
   onBack() {
     if ( this.fromWhere === 'fromCondo') {
       this.router.navigate(['/condo-report-main'])

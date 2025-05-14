@@ -35,13 +35,11 @@
         <tbody>
           <tr>
             <td class="font-bold text-sm">Reported On</td>
-            <td class="text-sm">
-              : {{ functionMain.convertDateExtend(ticketDetail.issued_on) }}
-            </td>
+            <td class="text-sm">: {{ ticketDetail.issued_on ? functionMain.convertNewDateTZ(ticketDetail.issued_on) : 'N/A' }}</td>
           </tr>
           <tr>
             <td class="font-bold text-sm">Resolved On</td>
-            <td class="text-sm">: {{ ticketDetail.solved_on || 'N/A' }}</td>
+            <td class="text-sm">: {{ ticketDetail.solved_on ? functionMain.convertNewDateTZ(ticketDetail.solved_on) : 'N/A' }}</td>
           </tr>
           <tr>
             <td class="font-bold text-sm">Ticket Status</td>
@@ -52,7 +50,7 @@
       <app-image-zoom
         [imageArray]="ticketDetail.attachment"
         *ngIf="ticketDetail.attachment"
-        [imageClass]="'!h-20'"
+        [imageClass]="'!h-20 object-contain'"
         [bgColor]="(ticketDetail.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')"
       ></app-image-zoom>
     </div>
@@ -89,18 +87,27 @@
             type="input"
             (click)="openFileInput()"
             [(ngModel)]="fileName"
-            class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
+            class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
             readonly
           />
         </div>
         <button
           id="client_ticket_detail_upload_attachment"
           (click)="uploadFile()"
-          class="bg-[var(--ion-color-secondary)] text-black w-[30%] h-14 text-base rounded font-bold mb-2"
+          class="bg-[var(--ion-color-primary)] text-black w-[30%] h-12 text-base rounded font-bold mb-2"
         >
           Upload
         </button>
       </div>
+      <!-- <div class="w-full flex flex-row justify-between items-end">
+        <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" *ngIf="showFile"
+          [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" [isCamera]="true"
+          [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"
+          [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)"></app-file-input>
+        <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'"  *ngIf="!showFile" [disableUpload]="true"
+          [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" 
+          [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"></app-file-input>
+      </div> -->
       <button
         (click)="submitReply(false)"
         class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12"
@@ -159,11 +166,8 @@
                   *ngFor="let attachment of message.attachment_datas"
                 >
                   <!-- <img [src]="functionMain.getImage(attachment.datas)" class="w-[13rem] max-w-[13rem] max-h-[13rem]" *ngIf="attachment.mimetype.startsWith('image/')"> -->
-                  <app-image-zoom
-                    [imageZoom]="functionMain.getImage(attachment.datas)"
-                    *ngIf="attachment.datas"
-                    [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"
-                  ></app-image-zoom>
+                  <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [imageClass]="'!h-20 object-contain'"
+                    [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"></app-image-zoom>
                   <!-- <span>{{ attachment.name}}</span> -->
                 </div>
               </div>

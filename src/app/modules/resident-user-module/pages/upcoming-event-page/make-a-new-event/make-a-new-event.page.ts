@@ -182,13 +182,15 @@ export class MakeANewEventPage implements OnInit {
     this.selectedBookId = 0
     // this.BookingResult = []
     this.selectedHost = event.event.host_ids
-    console.log(this.selectedHost)
+    console.log(this.Facilities)
+    console.log(this.Facilities.filter((item: any) => {console.log(item.facility_id, event.event.facility_id) ; return item.facility_id === event.event.facility_id}))
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
     this.EventsForm.room_id = event.event.room_id
     this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
     this.event_title = event.event.title  ? event.event.title : event.event.facility_name
     this.selectedStartDate = this.selectedDate
     this.selectedEndDate = this.selectedDate
+    console.log(this.event_title, event.event.title)
     this.selectedStartTime = `${event.event.start.getHours().toString().padStart(2, '0')}:${event.event.start.getMinutes().toString().padStart(2, '0')}`
     this.selectedEndTime = `${event.event.end.getHours().toString().padStart(2, '0')}:${event.event.end.getMinutes().toString().padStart(2, '0')}`
   }
@@ -326,6 +328,9 @@ export class MakeANewEventPage implements OnInit {
       this.EventsForm.end_date = this.formatDate(endDate, endTime);
     }
     let errMsg = ''
+    if (this.event_title == '' && this.userType != 'industrial') {
+      errMsg += 'Event title is required! \n'
+    }
     if (this.EventsForm.registered_coach_id == 0 && this.userType != 'industrial') {
       errMsg += 'Coach must be selected! \n'
     }
@@ -380,7 +385,7 @@ export class MakeANewEventPage implements OnInit {
   createEvent() {
     console.log(this.EventsForm)
     this.mainApi.endpointMainProcess(
-      this.EventsForm
+      {...this.EventsForm, event_title: this.event_title}
     , 'post/upcoming_event').subscribe((response: any) => {
       console.log(response)
       if (response.result.response_code == 200) {

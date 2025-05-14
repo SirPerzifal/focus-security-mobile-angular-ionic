@@ -54,7 +54,7 @@
                 <label class="text-2xl"><u><b>SEARCH OPTION</b></u></label>
                 <label class="text-2xl" (click)="clearFilters()"><u><b>CLEAR SEARCH</b></u></label>
               </div>
-              <select id="search_option" (change)="onSearchOptionChange($event)"
+              <select id="search_option" (change)="onSearchOptionChange($event)" [(ngModel)]="searchOption"
                 class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
                 style="border: 1px solid #6B7280;">
                 <option selected disabled hidden>CHOOSE SEARCH BY</option>
@@ -116,9 +116,20 @@
             <div class="w-full" *ngIf="searchOption == 'vehicle_no' || searchOption == 'all'">
               <app-text-input #wheelClamperVehicleNumberFilter [id]="'wheel_clamped_vehicle_number_filter'"
                 [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
-                [type]="'text'" [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
+                [type]="'text'" [(ngModel)]="vehicleNumberFilter" (change)="onVehicleFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
+            </div>
+
+            
+          </div>
+
+          <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) || selectedRadio == 'sort_date' || selectedRadio == 'sort_vehicle' )">
+            <div class="flex flex-row space-x-5 items-center">
+              <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
+              <input type="number" class="w-20 bg-white rounded text-2xl" style="border: 1px solid #6B7280;" [(ngModel)]="inputPage" (change)="changePage(inputPage)">
+              <span class="text-2xl text-black">/ {{ total_pages || 0  }} </span>
+              <ion-icon name="chevron-forward-outline" size="large"  (click)="changePage(currentPage + 1)"></ion-icon>
             </div>
           </div>
 
@@ -131,7 +142,7 @@
               class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let vehicle of historyVehicles" (click)="onArrowClick(vehicle)">
               <span class="text-2xl font-bold text-white">{{vehicle.vehicle_number}}, {{
-                functionMain.convertNewDateTZ(vehicle.issue_date) }} {{ vehicle.issue_time.split(' ')[1] }}</span>
+                functionMain.convertNewDateTZ(vehicle.issue_time) }}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
             </div>
           </div>

@@ -168,13 +168,32 @@ export class RecordsWheelClampedPage implements OnInit {
   is_active: boolean = true
 
   onRadioClick(value: string): void {
+    let currentValue = this.selectedRadio
     if (this.selectedRadio === value) {
       this.selectedRadio = null;
+      this.clearFilters()
     } else {
       this.selectedRadio = value;
-      this.clearFilters()
+      this.searchOption = ''
+      this.contactHost = ''
+      this.selectedHost = ''
     }
     console.log(this.selectedRadio)
+    if (currentValue == 'search' && (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle')) {
+      this.filter.issue_date = ''
+      this.filter.end_issue_date = ''
+      this.filter.block = ''
+      this.filter.vehicle_number = ''
+      this.vehicleNumberFilter = ''
+      this.filter.unit = ''
+      this.selectedHost = ''
+      this.loadRecordsWheelClamp()
+    } else {
+      this.applyRadio()
+    }
+  }
+
+  applyRadio() {
     if (this.selectedRadio == 'sort_date') {
       this.sortVehicle = Array.from(
         new Set(this.vehicleData.map((record) => new Date(record.issue_date).toISOString()))
@@ -310,37 +329,38 @@ export class RecordsWheelClampedPage implements OnInit {
     this.filter.block = ''
     this.filter.vehicle_number = ''
     this.filter.unit = ''
+    this.vehicleNumberFilter = ''
     this.contactHost = ''
     this.selectedHost = ''
-    this.applyFilters() 
   }
 
   applyFilters() {
-    this.historyVehicles = this.vehicleData.filter(item => {
-      const visitorDate = new Date(item.issue_date);
-      visitorDate.setHours(0, 0, 0, 0); 
+    // this.historyVehicles = this.vehicleData.filter(item => {
+    //   const visitorDate = new Date(item.issue_date);
+    //   visitorDate.setHours(0, 0, 0, 0); 
 
-      const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
-      const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
+    //   const selectedStartDate = this.filter.issue_date ? new Date(this.filter.issue_date) : null;
+    //   const selectedEndDate = this.filter.end_issue_date ? new Date(this.filter.end_issue_date) : null;
 
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
+    //   if (selectedStartDate) {
+    //     selectedStartDate.setHours(0, 0, 0, 0);
+    //   }
+    //   if (selectedEndDate) {
+    //     selectedEndDate.setHours(0, 0, 0, 0);
+    //   }
       
-      const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
-      const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
+    //   const startDateMatches = selectedStartDate ? visitorDate >= selectedStartDate : true
+    //   const endDateMatches = selectedEndDate ? visitorDate <= selectedEndDate : true
 
-      const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
-      const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
+    //   const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
+    //   const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
+    //   const hostMatches =  this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+    //   const vehicleNumberMatches = this.filter.vehicle_number ? item.vehicle_number.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true;
       
-      console.log(item.vehicle_number, this.filter.vehicle_number)
-      return endDateMatches && hostMatches && blockMatches && startDateMatches && unitMatches && vehicleNumberMatches;
-    });
+    //   console.log(item.vehicle_number, this.filter.vehicle_number)
+    //   return endDateMatches && hostMatches && blockMatches && startDateMatches && unitMatches && vehicleNumberMatches;
+    // });
+    this.loadRecordsWheelClamp()
     console.log(this.historyVehicles)
   }
 
@@ -360,12 +380,14 @@ export class RecordsWheelClampedPage implements OnInit {
   isLoading = false
   loadRecordsWheelClamp() {
     this.isLoading = true;
-
-    this.offensesService.getOfffenses(this.pageType, this.is_active).subscribe({
+    let params = this.is_active ? {is_active: this.is_active,  alert_type: this.pageType, project_id: this.project_id} : {...this.filter, is_active: this.is_active,  alert_type: this.pageType, project_id: this.project_id, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage} 
+    this.activeVehicles = []
+    this.historyVehicles = []
+    this.vehicleData = [];
+    this.pagination = []
+    this.clientMainService.getApi(params, '/vms/get/offenses').subscribe({
       next: (results) => {
         console.log(results.result)
-        this.activeVehicles = []
-        this.vehicleData = [];
         this.historyVehicles = this.vehicleData
         if (results.result.response_code === 200) {
           if (this.is_active){
@@ -373,9 +395,18 @@ export class RecordsWheelClampedPage implements OnInit {
           } else {
             this.vehicleData = results.result.response_result;
             this.historyVehicles = this.vehicleData
+            this.pagination = results.result.pagination
+            this.total_pages = this.pagination.total_pages
+            if (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle') {
+              this.applyRadio()
+            }
           }
           
         } else {
+          this.pagination = {}
+          this.total_pages = 0
+          this.currentPage = 1
+          this.inputPage = 1
         }
 
         this.isLoading = false;
@@ -383,6 +414,10 @@ export class RecordsWheelClampedPage implements OnInit {
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
+        this.pagination = {}
+        this.total_pages = 0
+        this.currentPage = 1
+        this.inputPage = 1
         this.isLoading = false;
       }
     });
@@ -400,6 +435,23 @@ export class RecordsWheelClampedPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
     this.applyFilters()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+  vehicleNumberFilter = ''
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.loadRecordsWheelClamp()
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
 }
