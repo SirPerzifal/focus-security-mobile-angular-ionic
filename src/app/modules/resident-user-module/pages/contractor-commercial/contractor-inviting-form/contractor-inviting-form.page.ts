@@ -354,10 +354,10 @@ export class ContractorInvitingFormPage implements OnInit {
     this.inviteeFormList.every((invitee:any) => {
       if (invitee.contact_number.trim() !== '' && invitee.contact_number.startsWith('6')) {
         const separatedCode = this.inviteeFormList[index].contact_number.slice(2, 20);
-        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + separatedCode;
+        // this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + separatedCode;
         console.log(this.inviteeFormList[index].contact_number);
       } else {
-        this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + this.inviteeFormList[index].contact_number;
+        // this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + this.inviteeFormList[index].contact_number;
         // console.log(this.selectedCountry + this.inviteeFormList[index].contact_number);
       }
     });

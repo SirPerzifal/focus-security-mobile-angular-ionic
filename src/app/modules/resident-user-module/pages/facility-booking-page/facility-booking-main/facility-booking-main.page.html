@@ -116,12 +116,6 @@
                 Add to Calendar
               </button>
               <button
-                class="bg-[#E3787E] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full"
-                (click)="cancelBooking(booking.id)"
-              >
-                Cancel Booking
-              </button>
-              <button
                 class="bg-[var(--ion-color-primary)] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full"
                 (click)="navigateToHistoryDetail(booking, 'Active')"
               >
@@ -133,6 +127,12 @@
                 *ngIf="booking.statusBooked === 'Pending Payment'"
               >
                 Process Payment
+              </button>
+              <button
+                class="bg-[#E3787E] text-white px-3 py-1 text-base cw-3:text-[13px] rounded-md font-bold w-full"
+                (click)="cancelBooking(booking.id)"
+              >
+                Cancel Booking
               </button>
             </div>
           </div>

@@ -183,14 +183,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
     const yyyy = today.getFullYear();
     this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
-    // Mengambil hari dalam format angka (0-6)
-    const dayIndex = today.getDay();
-    
-    // Array nama-nama hari
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    
     // Menyimpan nama hari ke dalam this.day
-    this.day = days[dayIndex];
+    this.day = `${dd}-${mm}-${yyyy}`;
   }
 
   onClick(event: any) {
@@ -268,21 +262,38 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     return timePart ? timePart.substring(0, 5) : '';
   }
 
-  getBookingForFacility() {
+  getBookingForFacility(selectedDate?: string) {
     try {
       const today = new Date();
       const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
       this.mainApiResidentService.endpointMainProcess({}, 'get/facility_book').subscribe((response: any) => {
-        this.facility = response.result.active_bookings.filter((booking: any) => {
-          const bookingDate = new Date(booking.start_datetime).toISOString().split('T')[0];
-          return bookingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
-        }).map((booking: any) => ({
-          id: booking.id,
-          facilityName: booking.facility_name,
-          bookName: booking.booking_name,
-          bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
-        }));
-        console.log(this.facility);
+        if (selectedDate) {
+          const dateForFilter = new Date(selectedDate).toISOString().split('T')[0]; // Format YYYY-MM-DD
+          console.log(selectedDate, dateForFilter, response.result.active_bookings);
+          this.facility = response.result.active_bookings.filter((booking: any) => {
+            const bookingDate = new Date(booking.start_datetime).toISOString().split('T')[0];
+            return bookingDate == dateForFilter; // Memfilter polling yang dimulai setelah hari ini
+          }).map((booking: any) => ({
+            id: booking.id,
+            facilityName: booking.facility_name,
+            bookName: booking.booking_name,
+            bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
+          }));
+          const [yyyy, mm, dd] = dateForFilter.split('-');
+          this.day = `${dd}-${mm}-${yyyy}`;
+          console.log(this.facility);
+        } else {
+          this.facility = response.result.active_bookings.filter((booking: any) => {
+            const bookingDate = new Date(booking.start_datetime).toISOString().split('T')[0];
+            return bookingDate == todayString; // Memfilter polling yang dimulai setelah hari ini
+          }).map((booking: any) => ({
+            id: booking.id,
+            facilityName: booking.facility_name,
+            bookName: booking.booking_name,
+            bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
+          }));
+          console.log(this.facility, response.result.active_bookings);
+        }
         
       }, (error) => {
         console.log(error);
@@ -405,6 +416,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
       this.formData.dateOfInvite = event;
+      this.getBookingForFacility(event);
       console.log(event, this.formData.dateOfInvite);
       
     } else {
