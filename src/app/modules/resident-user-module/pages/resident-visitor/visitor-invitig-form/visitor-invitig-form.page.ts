@@ -170,12 +170,16 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   backToVisitors() {
-    this.router.navigate(['resident-visitors'], {
+    this.router.navigate(['visitor-main'], {
       state: {
         formData: this.formData,
+      }, 
+      queryParams: {
+        reload: true
       }
     });
   }
+
 
   async fetchContacts() {
     const result = await Contacts.pickContact({

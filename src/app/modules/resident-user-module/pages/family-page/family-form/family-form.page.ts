@@ -289,7 +289,7 @@ export class FamilyFormPage implements OnInit {
     this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 
-  processAddNewFamily() {
+  processAddNewFamily(edit?: string) {
     let errMsg = ''
     if (this.formData.full_name == '') {
       errMsg += "Please fill member's full name! \n"
@@ -332,7 +332,11 @@ export class FamilyFormPage implements OnInit {
             helper_work_permit: this.formData.helper_work_permit // Tambahkan parameter ini
           }, 'post/update_family').subscribe((response: any) => {
             console.log(response);
-            this.functionMain.presentToast('Success Add Record', 'success');
+            if (edit) {
+              this.functionMain.presentToast('Success edit data', 'success');
+            } else {
+              this.functionMain.presentToast('Success Add Record', 'success');
+            }
             this.router.navigate(['family-page-main']);
             // if (response.result.response_code == 200) {
             // } else {
@@ -479,7 +483,8 @@ export class FamilyFormPage implements OnInit {
       helper_work_permit: '',
       resubmit_id: this.familyId
     }, 'post/post_family_detail').subscribe((response: any) => {
-      this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
+      this.router.navigate(['family-page-main']);
+      this.functionMain.presentToast('Successfully to resubmit data.', 'success');
     })
   }
 
@@ -500,11 +505,18 @@ export class FamilyFormPage implements OnInit {
     });
   }
 
-  processEdit() {
+  processEdit(resubmit?: string) {
     this.disableForm = !this.disableForm;
     if (this.disableForm === true) {
-      this.functionMain.presentToast('You can not change your profile data', 'danger');
-      this.processAddNewFamily();
+      if (resubmit) {
+        this.resubmitForApproval();
+        return;
+      } else {
+        this.processAddNewFamily('edit');
+        return;
+      }
+    } else if (resubmit && this.disableForm) {
+      this.resubmitForApproval();
       return;
     }
     this.buttonNameEdit = 'Save Edit Change';

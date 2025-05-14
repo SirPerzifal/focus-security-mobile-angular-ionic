@@ -35,72 +35,56 @@
           (click)="ableChangeInput()"
         >
         </ion-icon>
+        <ion-icon
+          *ngIf="!disableForm"
+          class="absolute top-[5.5rem] right-20 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
+          name="documents"
+          (click)="chooseWhereToChoose()"
+        >
+        </ion-icon>
       </div>
     </div>
 
-    <app-input-component
-      [id]="'type_family_name'"
-      [type]="'text'"
-      [typeAction]="''"
-      [labelParent]="''"
-      [labelChild1]="'Family Name'"
-      [labelChild2]="''"
-      [disabled]="disableForm"
-      [value]="formData.full_name"
-      (eventEmitter)="onValueChange($event, 'name')"
-    ></app-input-component>
+    <div class="mt-2">
+      <app-input-component
+        [id]="'type_family_name'"
+        [type]="'text'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'Resident Name'"
+        [labelChild2]="''"
+        [disabled]="disableForm"
+        [value]="formData.full_name"
+        (eventEmitter)="onValueChange($event, 'name')"
+      ></app-input-component>
+    </div>
 
-    <app-input-component
-      [id]="'type_family_nickname'"
-      [type]="'text'"
-      [typeAction]="''"
-      [labelParent]="''"
-      [labelChild1]="'Family Nickname'"
-      [labelChild2]="''"
-      [disabled]="disableForm"
-      [value]="formData.nickname"
-      (eventEmitter)="onValueChange($event, 'nickname')"
-    ></app-input-component>
+    <div class="mt-2">
+      <app-input-component
+        [id]="'type_family_nickname'"
+        [type]="'text'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'Resident Nickname'"
+        [labelChild2]="''"
+        [disabled]="disableForm"
+        [value]="formData.nickname"
+        (eventEmitter)="onValueChange($event, 'nickname')"
+      ></app-input-component>
+    </div>
 
-    <app-input-component
-      [id]="'type_family_email'"
-      [type]="'text'"
-      [typeAction]="''"
-      [labelParent]="''"
-      [labelChild1]="'Family Email'"
-      [labelChild2]="''"
-      [disabled]="disableForm"
-      [value]="formData.email_address"
-      (eventEmitter)="onValueChange($event, 'email')"
-    ></app-input-component>
-
-    <div class="w-full mt-2">
-      <div class="flex flex-row justify-start">
-        <p class="text-sm font-bold">Family Image Profile</p>
-      </div>
-      <div class="flex flex-row">
-        <div
-          class="bg-white p-3 h-12 rounded border border-gray-500 flex-1 flex flex-row text-start items-center justify-start"
-        >
-          <label
-            class="w-full text-start"
-            [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-white'"
-            (click)="chooseWhereToChoose()"
-          >
-            {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Choose
-            image' }}
-          </label>
-          <a
-            *ngIf="selectedNameProfileFamily"
-            class="text-white text-xs rounded-full bg-[#E3787E] w-7 p-1 text-center ml-2"
-            ><ion-icon
-              class="text-base cw-3:text-sm mt-[2px]"
-              name="trash"
-              (click)="deletePhoto()"
-            ></ion-icon
-          ></a>
-        </div>
-      </div>
+    <div class="mt-2">
+      <app-input-component
+        [id]="'type_family_email'"
+        [type]="'text'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'Resident Email'"
+        [labelChild2]="''"
+        [disabled]="pageForWhat === 'editData'"
+        [value]="formData.email_address"
+        (eventEmitter)="onValueChange($event, 'email')"
+      ></app-input-component>
     </div>
 
     <div class="w-full flex flex-row justify-between">
@@ -154,20 +138,22 @@
       </select>
     </div>
 
-    <app-input-component
-      *ngIf="formData.reject_reason"
-      [id]="'reject_reason'"
-      [type]="'text'"
-      [typeAction]="''"
-      [labelParent]="''"
-      [labelChild1]="'Reject Reason'"
-      [labelChild2]="''"
-      [disabled]="true"
-      [value]="formData.reject_reason"
-    ></app-input-component>
+    <div class="mt-1.5">
+      <app-input-component
+        *ngIf="formData.reject_reason"
+        [id]="'reject_reason'"
+        [type]="'text'"
+        [typeAction]="''"
+        [labelParent]="''"
+        [labelChild1]="'Reject Reason'"
+        [labelChild2]="''"
+        [disabled]="true"
+        [value]="formData.reject_reason"
+      ></app-input-component>
+    </div>
 
     <div *ngIf="formData.type_of_residence === 'helper'" class="w-full mt-2">
-      <div class="flex flex-row justify-start mb-1">
+      <div class="flex flex-row justify-start">
         <p class="text-sm font-bold">Helper Work Permit File</p>
       </div>
       <div
@@ -195,7 +181,7 @@
       *ngIf="pageForWhat !== 'editData' && formData.type_of_residence === 'tenants'"
     >
       <div class="w-full mt-2">
-        <div class="flex flex-row justify-start mb-1">
+        <div class="flex flex-row justify-start">
           <p class="text-sm font-bold">Tenants Agreement File</p>
         </div>
         <div
@@ -219,17 +205,19 @@
         </div>
       </div>
 
-      <app-input-component
-        [id]="'end_tenants_agreement'"
-        [type]="'date'"
-        [typeAction]="''"
-        [labelParent]="''"
-        [labelChild1]="'End Tenants Agreement'"
-        [labelChild2]="''"
-        (eventEmitter)="onValueChange($event, 'end_tenants_agreement')"
-        [value]="selectedDate"
-        [minDate]="minDate"
-      ></app-input-component>
+      <div class="mt-1.5">
+        <app-input-component
+          [id]="'end_tenants_agreement'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'Tenants Agreement End Date'"
+          [labelChild2]="''"
+          (eventEmitter)="onValueChange($event, 'end_tenants_agreement')"
+          [value]="selectedDate"
+          [minDate]="minDate"
+        ></app-input-component>
+      </div>
     </div>
 
     <div *ngIf="pageForWhat !== 'editData'" class="w-full">
@@ -248,13 +236,13 @@
       <app-submit-button
         [text]="'Resubmit For Approval'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
-        (click)="resubmitForApproval()"
+        (click)="processEdit('resubmit')"
       >
       </app-submit-button>
     </div>
 
     <div
-      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants'"
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants' && !formData.reject_reason"
     >
       <app-submit-button
         [text]="buttonNameEdit"

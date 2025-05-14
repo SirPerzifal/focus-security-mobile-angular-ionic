@@ -209,7 +209,9 @@ export class CoachRegistrationPage implements OnInit {
   }
 
   loadFacilityRequired() {
-    this.raiseARequestService.getFacilities().subscribe(
+    this.raiseARequestService.getFacilities(
+      this.project_id
+    ).subscribe(
       (response: any) => {
         if (response) {
           this.facilityRequired = response.result;
@@ -332,7 +334,7 @@ export class CoachRegistrationPage implements OnInit {
       (response: any) => {
         if (response) {
           // console.log(response);
-          this.expectedCoach = response.result.registered_coaches;
+          this.expectedCoach = response.result.response_result;
         } else {
           this.presentToast('An error occurred while loading expected coach data!', 'danger');
         }

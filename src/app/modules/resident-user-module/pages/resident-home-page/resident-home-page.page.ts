@@ -514,7 +514,8 @@ export class ResidentHomePagePage implements OnInit {
 
   uploadNewProfile() {
     this.mainApiResident.endpointMainProcess({
-      new_image_profile: this.selectedProfile
+      new_image_profile: this.selectedProfile,
+      family_nickname: this.useName
     }, 'post/change_update_profile_image').subscribe((response: any) => {
       const estateString = JSON.stringify(response.result.new_estate);
       console.log(estateString);

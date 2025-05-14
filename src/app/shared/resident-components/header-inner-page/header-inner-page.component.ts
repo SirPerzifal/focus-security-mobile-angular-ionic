@@ -79,4 +79,9 @@ export class HeaderInnerPageComponent  implements OnInit {
     console.log('Tablet:', this.isTablet);
   }
 
+  handleRefresh(event: any) {
+    console.log(event);
+    
+  }
+
 }

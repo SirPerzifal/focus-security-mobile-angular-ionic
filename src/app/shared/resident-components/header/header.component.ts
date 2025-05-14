@@ -68,4 +68,9 @@ export class HeaderComponent  implements OnInit {
     console.log('Desktop:', this.isDesktop);
     console.log('Tablet:', this.isTablet);
   }
+
+  handleRefresh(event: any) {
+    console.log(event);
+    
+  }
 }

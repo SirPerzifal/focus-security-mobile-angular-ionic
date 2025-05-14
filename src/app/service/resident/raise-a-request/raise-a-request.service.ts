@@ -368,7 +368,9 @@ export class RaiseARequestService extends ApiService  {
   private getTypeApiCoach = this.baseUrl + '/vms/get/get_coach_type';
   private postApiCoach = this.baseUrl + '/resident/post/request_register_coach';
   private getExpectedCoachByUnitApi = this.baseUrl + '/resident/get/registered_coaches_based_on_unit';
-  getFacilities(): Observable<any> {
+  getFacilities(
+    project_id: number
+  ): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -376,7 +378,9 @@ export class RaiseARequestService extends ApiService  {
 
     const body = {
         jsonrpc: '2.0',
-        params: {},
+        params: {
+          project_id: project_id
+        },
     };
 
     return this.http.post(`${this.getFacilityApi}`, body, { headers }).pipe(

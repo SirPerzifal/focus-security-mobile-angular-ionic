@@ -23,6 +23,7 @@
       </div>
       <div class="flex flex-row">
         <input
+          [checked]="selectedOption === 'new_application_coach'"
           type="radio"
           id="new_application_coach"
           name="for_what"
@@ -31,6 +32,7 @@
         />
         <label for="new_application_coach"><b>New Application</b></label>
         <input
+          [checked]="selectedOption === 'deactive_a_coach'"
           type="radio"
           id="deactive_a_coach"
           name="for_what"
@@ -63,7 +65,7 @@
         <div class="flex flex-col justify-between mt-2">
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
-              <p class="text-base font-bold">Contact Number</p>
+              <p class="text-base font-bold">Contact number</p>
             </div>
             <app-text-input
               [id]="'contact_number'"
@@ -137,17 +139,26 @@
                   Others
                 </option>
               </select>
-              <app-text-input
-                [id]="'nationality'"
-                [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              <div
+                class="flex flex-col justify-between mt-2"
                 *ngIf="otherNationality === 'others'"
-                (keyup)="onKeyup($event)"
-                [(ngModel)]="formData.nationality"
               >
-              </app-text-input>
+                <div class="w-full">
+                  <div class="flex flex-row justify-start mb-1">
+                    <p class="text-base font-bold">Others's nationality</p>
+                  </div>
+                  <app-text-input
+                    [id]="'nationality'"
+                    [placeholder]="'Others________'"
+                    [customClasses]="{'w-full':true}"
+                    [type]="'text'"
+                    [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+                    (keyup)="onKeyup($event)"
+                    [(ngModel)]="formData.nationality"
+                  >
+                  </app-text-input>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -215,16 +226,25 @@
                 </option>
                 <option value="others_coaching_type">Others</option>
               </select>
-              <app-text-input
-                [id]="'type_of_coaching'"
-                [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              <div
+                class="flex flex-col justify-between mt-2"
                 *ngIf="otherCoachType === 'others_coaching_type'"
-                [(ngModel)]="formData.type_of_coaching"
               >
-              </app-text-input>
+                <div class="w-full">
+                  <div class="flex flex-row justify-start mb-1">
+                    <p class="text-base font-bold">Others's type coaching</p>
+                  </div>
+                  <app-text-input
+                    [id]="'type_of_coaching'"
+                    [placeholder]="'Others________'"
+                    [customClasses]="{'w-full':true}"
+                    [type]="'text'"
+                    [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+                    [(ngModel)]="formData.type_of_coaching"
+                  >
+                  </app-text-input>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -240,7 +260,7 @@
                 placeholder="facility_required"
                 class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mb-1"
               >
-                <option selected disabled hidden>Facility Required</option>
+                <option selected disabled hidden>Facility required</option>
                 <option
                   *ngFor="let fri of facilityRequired"
                   [value]="fri.facility_id"
@@ -249,16 +269,27 @@
                 </option>
                 <option value="others_facility">Others</option>
               </select>
-              <app-text-input
-                [id]="'facility_required'"
-                [placeholder]="'Others________'"
-                [customClasses]="{'w-full':true}"
-                [type]="'text'"
-                [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+              <div
+                class="flex flex-col justify-between mt-2"
                 *ngIf="otherFacility === 'others_facility'"
-                [(ngModel)]="formData.facility_required_other"
               >
-              </app-text-input>
+                <div class="w-full">
+                  <div class="flex flex-row justify-start mb-1">
+                    <p class="text-base font-bold">
+                      Others's facility required
+                    </p>
+                  </div>
+                  <app-text-input
+                    [id]="'facility_required'"
+                    [placeholder]="'Others________'"
+                    [customClasses]="{'w-full':true}"
+                    [type]="'text'"
+                    [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
+                    [(ngModel)]="formData.facility_required_other"
+                  >
+                  </app-text-input>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -355,7 +386,7 @@
 
     <!-- deactive a coach -->
     <div class="w-full mt-2" *ngIf="selectedOption === 'deactive_a_coach'">
-      <div class="flex flex-row mt-2">
+      <div class="flex flex-col mt-2">
         <table
           class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
         >
@@ -365,7 +396,7 @@
                 Coach Name
               </th>
               <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
-                Purpose
+                Coach Type
               </th>
               <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
                 Deactive
@@ -377,12 +408,12 @@
               <td
                 class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
               >
-                {{ coach.registered_coach }}
+                {{ coach.name }}
               </td>
               <td
                 class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
               >
-                {{ coach.purpose }}
+                {{ coach.coach_type }}
               </td>
               <td
                 class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
@@ -396,7 +427,7 @@
             </tr>
           </tbody>
         </table>
-        <ng-container *ngIf="expectedCoach.length === 0">
+        <ng-container *ngIf="!expectedCoach">
           <p class="text-gray-700">
             You have no registered coach tag yet.
             <u

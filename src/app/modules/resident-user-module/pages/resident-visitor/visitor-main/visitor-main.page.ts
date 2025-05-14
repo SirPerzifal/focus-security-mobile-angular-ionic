@@ -114,22 +114,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   ) { super(http) }
 
   ionViewWillEnter() {
-    this.selectedDate = '';
-    this.entryCheck = '';
   }
 
   ngOnInit() {
-    this.selectedDate = '';
-    this.entryCheck = '';
     this.getTodayDate();
     this.getActiveInvites();
-    const navigation = this.route.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: any };
-    if (state) {
-      this.formData = state.formData;
-      this.selectedDate = '';
-      this.entryCheck = '';
-    }
     this.activeRoute.queryParams.subscribe(params => {
       // console.log(params);
       if (params['openActive']) {
@@ -147,18 +136,16 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           facility: '',
           hiredCar: "",
         }
-      } else if (params['formData']) {
-        this.selectedDate = '';
-        this.entryCheck = '';
-        this.formData = {
-          dateOfInvite: "",
-          vehicleNumber: "",
-          entryType: "",
-          entryTitle: "",
-          entryMessage: "",
-          isProvideUnit: false,
-          facility: '',
-          hiredCar: "",
+      } else if (params['reload']) {
+        const navigation = this.route.getCurrentNavigation();
+        const state = navigation?.extras.state as { formData: any };
+        if (state) {
+          this.formData = state.formData
+          if (this.formData.dateOfInvite) {
+            const date = new Date(this.formData.dateOfInvite);
+            this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+            this.formData.dateOfInvite = this.formData.dateOfInvite;
+          }
         }
       } else {
         this.selectedDate = '';

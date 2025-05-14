@@ -286,12 +286,32 @@ export class VehicleFormPage implements OnInit {
               endDate: '',
             }
           } else {
-            this.router.navigate(['/payment-form-vehicle'], {
-              state: {
-                vehicleId: response.result.vehicle_id,
-                from: 'add'
+            if (response.result.payment_mode) {
+              this.router.navigate(['/payment-form-vehicle'], {
+                state: {
+                  vehicleId: response.result.vehicle_id,
+                  from: 'add'
+                }
+              });
+            } else {
+              this.router.navigate(['my-vehicle-page-main']);
+              this.vehicleForm = {
+                vehicleNumber: '',
+                iuNumber: '',
+                typeOfApplication: '',
+                typeOfVehicle: '',
+                vehicleMake: '',
+                vehicleColour: '',
+                vehicleLog: '',
+                isFirstVehicle: false,
+                primaryVehicle: 'false',
+                ownedBy: '',
               }
-            });
+              this.additionalTemporary = {
+                temporaryCarRequest: '',
+                endDate: '',
+              }
+            }
           }
           // this.resetForm();
         } else {
