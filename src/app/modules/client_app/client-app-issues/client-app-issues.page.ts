@@ -192,13 +192,13 @@ export class ClientAppIssuesPage implements OnInit {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
-          this.functionMain.presentToast(`Failed!`, 'danger');
+          this.functionMain.presentToast(`An error occurred while trying to get report issue!`, 'danger');
         }
         this.isLoading = false
       },
       error: (error) => {
         this.isLoading = false
-        this.functionMain.presentToast('Failed!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get report issue!', 'danger');
         console.error(error);
       }
     });

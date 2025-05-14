@@ -71,7 +71,7 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.create_date) : '-' }}</td>
+            <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.visit_date) : '-' }}</td>
           </tr>
           <tr *ngIf="record.check_out">
             <td class="font-bold w-2/5">EXIT DATE</td>

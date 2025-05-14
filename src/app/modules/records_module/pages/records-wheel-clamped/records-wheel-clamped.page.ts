@@ -315,6 +315,7 @@ export class RecordsWheelClampedPage implements OnInit {
     }
     this.contactHost = ''
     this.selectedHost = ''
+    this.vehicleNumberFilter = ''
     console.log(event.target.value)
     this.applyFilters()
   }
@@ -385,6 +386,7 @@ export class RecordsWheelClampedPage implements OnInit {
     this.historyVehicles = []
     this.vehicleData = [];
     this.pagination = []
+    this.sortVehicle = []
     this.clientMainService.getApi(params, '/vms/get/offenses').subscribe({
       next: (results) => {
         console.log(results.result)

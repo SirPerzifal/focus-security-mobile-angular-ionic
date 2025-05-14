@@ -86,13 +86,13 @@ export class ClientRaiseTicketPage implements OnInit {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
-          this.functionMain.presentToast(`Failed!`, 'danger');
+          this.functionMain.presentToast(`An error occurred while trying to get ticket type!`, 'danger');
         }
         this.isMainLoading = false
       },
       error: (error) => {
         this.isMainLoading = false
-        this.functionMain.presentToast('Failed!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get ticket type!', 'danger');
         console.error(error);
       }
     });
@@ -128,13 +128,13 @@ export class ClientRaiseTicketPage implements OnInit {
           this.changePage()
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
-          this.functionMain.presentToast(`Failed!`, 'danger');
+          this.functionMain.presentToast(`An error occurred while trying to get ticket!`, 'danger');
         }
         this.isLoading = false
       },
       error: (error) => {
         this.isLoading = false
-        this.functionMain.presentToast('Failed!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get ticket!', 'danger');
         console.error(error);
       }
     });

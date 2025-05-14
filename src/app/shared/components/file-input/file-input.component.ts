@@ -17,8 +17,11 @@ export class FileInputComponent  implements OnInit {
   @Input() extraButtonClass: string='h-20';
   @Input() customButtonStyle: string='';
   @Input() customPlaceholder: string='';
+  @Input() showPlaceholder: boolean=false;
   @Input() disableUpload:boolean = false;
   @Input() labelText: string='';
+  @Input() labelNonUnderline: string='';
+
   @Input() isCustomName: boolean=false
   @Input() fileName: string = ''
   @Input() fileAccept: string = ''

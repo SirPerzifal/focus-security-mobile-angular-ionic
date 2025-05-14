@@ -40,7 +40,7 @@
                 <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
               </select> -->
               <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-                [labelText]="'UNIT'"></app-m2m-selection>
+                [labelText]="'UNIT'" [customTopDiv]="'mt-0'"></app-m2m-selection>
               <!-- <app-text-input #recordResidentUnitFilter [id]="'record_resident_unit_filter'"
                   [labelText]="'UNIT'" [placeholder]="'UNIT 0101'" [customClasses]="{'w-full ':true}"
                   [type]="'text'" [(ngModel)]="filter.unit" (change)="onUnitChange($event)" [isReadonly]="!filter.block"

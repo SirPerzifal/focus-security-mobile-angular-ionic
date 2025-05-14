@@ -5,7 +5,7 @@
       <u>{{ labelText }}</u>
     </p>
   </div>
-  <div class="flex flex-row w-full justify-between space-x-2 mt-1">
+  <div [class]="'flex flex-row w-full justify-between space-x-2 ' + customTopDiv">
     <div [class]="'flex flex-col ' + (showButton ? 'w-[90%]' : 'w-full')">
       <div
         [class]="

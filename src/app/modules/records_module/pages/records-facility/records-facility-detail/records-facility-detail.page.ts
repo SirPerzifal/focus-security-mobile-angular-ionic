@@ -63,8 +63,8 @@ export class RecordsFacilityDetailPage implements OnInit {
   }
 
   getBookingTime(record: any) {
-    let start_date = this.functionMain.convertNewDateTZ(record.start_datetime)
-    let stop_date = this.functionMain.convertNewDateTZ(record.stop_datettime)
+    let start_date = this.functionMain.convertDateExtend(record.start_datetime)
+    let stop_date = this.functionMain.convertDateExtend(record.stop_datettime)
     const startDate = start_date.split(' ')[0]; 
     return `${startDate} (${start_date.split(' ')[1]} - ${stop_date.split(' ')[1]})` 
   }

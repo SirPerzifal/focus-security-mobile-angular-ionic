@@ -247,7 +247,7 @@ export class RecordsContractorPage implements OnInit {
   }
 
   onSearchOptionChange(event: any) {
-    if (this.searchOption == event.target.value) return
+    // if (this.searchOption == event.target.value) return
     this.filter = {
       block: '',
       unit: '',

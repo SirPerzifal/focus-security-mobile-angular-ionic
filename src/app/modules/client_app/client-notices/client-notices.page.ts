@@ -30,6 +30,7 @@ export class ClientNoticesPage implements OnInit {
       (value) => {
         console.log(value)
         this.project_config = value.config
+        this.newNoticeForm.project_id 
         this.loadNotice();
         if (this.project_config.is_industrial) {
           this.loadHost()
@@ -71,7 +72,6 @@ export class ClientNoticesPage implements OnInit {
       block_ids: [],
       start_time: new Date(),
       end_time: new Date,
-      project_id: 191
     }
     this.startDate = '';
     this.endDate = '';
@@ -81,6 +81,7 @@ export class ClientNoticesPage implements OnInit {
     this.isNotice = false
     this.isNew = true
     this.textSecond = 'New Notices'
+    this.fileName = ''
   }
 
   showNotice: any = []
@@ -469,13 +470,13 @@ export class ClientNoticesPage implements OnInit {
             block_ids: [],
             start_time: new Date(),
             end_time: new Date(),
-            project_id: 191
           }
           this.blockArrayProcess = []
           this.blockNames = []
           this.unitArrayProcess= []
           this.unitNames = []
           this.screenExtend = false
+          this.fileName = ''
         } else {
           console.log(results);
           this.functionMain.presentToast('Failed to post notice', 'danger');

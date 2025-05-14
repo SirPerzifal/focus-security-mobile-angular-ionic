@@ -227,14 +227,18 @@ export class ClientQuickDialsPage implements OnInit {
   onFileChange(event: any) {
     console.log(event.target.files)
     const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const base64 = e.target.result.split(',')[1] || e.target.result;
-        this.contactForm.image = base64;
-      };
-      reader.readAsDataURL(file);
+    try {
+      if (file) {
+        this.selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const base64 = e.target.result.split(',')[1] || e.target.result;
+          this.contactForm.image = base64;
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error) {
+      this.functionMain.presentToast('An error occurred while trying to update the contact image, please try uploading a different image!')
     }
   }
 

@@ -26,7 +26,7 @@
               {{clamp.vehicle_number ? clamp.vehicle_number : '-'}}
             </span>
             <span class="text-base font-bold text-black">
-              Issue Date: {{ functionMain.convertDateExtend(clamp.issue_time)}}
+              Issue Date: {{ functionMain.convertNewDateTZ(clamp.issue_time)}}
             </span>
             <div class="flex mt-4 space-x-2" *ngIf="!clamp.is_pay">
               <button (click)="onPaymentClick(clamp)"
@@ -53,17 +53,17 @@
     <div class="flex flex-col mt-4 w-full bg-green-100 text-black p-4 rounded" *ngIf="isPayment" @fadeInOut>
       <table class="text-base">
         <tr>
-          <td class="font-bold w-1/2">VEHICLE NUMBER</td>
+          <td class="font-bold w-1/2">Vehicle Number</td>
           <td class="w-[5%]">:</td>
           <td>{{ vehicle.vehicle_number }}</td>
         </tr>
         <tr>
-          <td class="font-bold w-2/5">OFFENCE NO</td>
+          <td class="font-bold w-2/5">Offence No</td>
           <td class="w-[5%]">:</td>
           <td>{{ vehicle.name }}</td>
         </tr>
         <tr>
-          <td class="font-bold w-2/5">CHARGES</td>
+          <td class="font-bold w-2/5">Charges</td>
           <td class="w-[5%]">:</td>
           <td>S${{ vehicle.wheel_clamp_charges.toFixed(2) }}</td>
         </tr>
@@ -73,7 +73,7 @@
           <td>S${{ vehicle.wheel_clamp_tax_total.toFixed(2) }}</td>
         </tr>
         <tr>
-          <td class="font-bold w-2/5">TOTAL PAYABLE</td>
+          <td class="font-bold w-2/5">Totay Payable</td>
           <td class="w-[5%]">:</td>
           <td>S${{ vehicle.wheel_clamp_subtotal.toFixed(2) }}</td>
         </tr>
@@ -90,11 +90,11 @@
      
       <div class="flex flex-col w-full mt-5 justify-between items-center space-y-2">
         <button class="w-4/5 bg-[var(--ion-color-primary)] text-white text-base font-bold rounded-md px-3 py-2" (click)="takePicture()">
-          {{ showImage ? 'CHANGE IMAGE' :'UPLOAD RECEIPT'}}
+          {{ showImage ? 'Change Image' :'Upload Receipt'}}
         </button>
         <button class="w-4/5 bg-[var(--ion-color-primary)] text-white text-base font-bold rounded-md px-3 py-2" (click)="paymentSubmit()" 
           *ngIf="showImage">
-          SUBMIT RECEIPT
+          Submit Receipt
         </button>
        
         

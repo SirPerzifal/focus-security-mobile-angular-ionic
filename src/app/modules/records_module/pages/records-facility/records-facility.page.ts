@@ -150,6 +150,7 @@ export class RecordsFacilityPage implements OnInit {
       this.isLoading = true
       this.facilityRecords = [];
       this.historySchedules = []
+      this.filteredHistorySchedules = []
       this.sortVehicle = []
       this.pagination = {}
       this.clientMainService.getApi({project_id: this.project_id, limit: this.functionMain.limitHistory, page: this.currentPage, host: this.selectedHost, room: this.choosenFacility, block: this.choosenBlock, unit: this.choosenUnit}, '/vms/get/booking_history' ).subscribe({
@@ -160,6 +161,8 @@ export class RecordsFacilityPage implements OnInit {
             this.facilityRecords = results.result.booking
             this.historySchedules = this.facilityRecords
             this.filteredHistorySchedules = this.historySchedules
+            this.pagination = results.result.pagination
+            this.total_pages = this.pagination.total_pages
             if (this.selectedRadio == 'sort_date') {
               this.applyRadio()
             }
@@ -304,7 +307,7 @@ export class RecordsFacilityPage implements OnInit {
     this.blockUnitService.getUnit(this.choosenBlock).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
-          this.Unit = response.result.result; // Simpan data unit
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
           // this.isLoadingUnit = false
         } else {
           console.error('Error:', response.result);

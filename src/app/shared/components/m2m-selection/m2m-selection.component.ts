@@ -53,6 +53,7 @@ export class M2mSelectionComponent implements OnInit {
   @Input() customTextClass: string = 'p-0'
   @Input() showButton: boolean = false
   @Input() isReadonly: boolean = false
+  @Input() customTopDiv: string = 'mt-1'
 
   @Output() outputValue = new EventEmitter<any>();
 

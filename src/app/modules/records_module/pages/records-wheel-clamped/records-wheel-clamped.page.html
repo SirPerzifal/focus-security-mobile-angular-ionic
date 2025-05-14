@@ -55,7 +55,7 @@
                 <label class="text-2xl" (click)="clearFilters()"><u><b>CLEAR SEARCH</b></u></label>
               </div>
               <select id="search_option" (change)="onSearchOptionChange($event)" [(ngModel)]="searchOption"
-                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] my-1"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] mb-1"
                 style="border: 1px solid #6B7280;">
                 <option selected disabled hidden>CHOOSE SEARCH BY</option>
                 <option [value]="'date'">DATE</option>
@@ -95,7 +95,7 @@
               </div>
               <div class="w-1/2 flex-col">
                 <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'UNIT'"></app-m2m-selection>
+                  [labelText]="'UNIT'" [customTopDiv]="'mt-0'"></app-m2m-selection>
                 <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
                 <select id="rv_unit" (change)="onUnitChange($event)" [(ngModel)]="filter.unit"
                   class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"

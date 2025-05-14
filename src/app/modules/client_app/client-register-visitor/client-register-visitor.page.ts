@@ -218,10 +218,13 @@ export class ClientRegisterVisitorPage implements OnInit {
 
       const startDate = this.startDateFilter ? new Date(this.startDateFilter).setHours(0,0,0,0) : null;
       const endDate = this.endDateFilter ? new Date(this.endDateFilter).setHours(0,0,0,0) : null;
-
+      
       const isAfterStartDate = !startDate || visitorDate >= startDate;
       const isBeforeEndDate = !endDate || visitorDate <= endDate;
-      return isAfterStartDate && isBeforeEndDate;
+
+      const fixedEndDate = visitorDate < new Date().setHours(0,0,0,0)
+
+      return isAfterStartDate && isBeforeEndDate && fixedEndDate;
     });
   }
 

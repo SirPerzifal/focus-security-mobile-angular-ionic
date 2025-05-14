@@ -56,7 +56,7 @@
   </div>
 
   <div class="flex flex-col relative mx-4 mt-2" *ngIf="isSetting" @fadeInOut>
-    <div class="flex flex-row justify-center space-x-3 w-full" *ngIf="isEdit" @fadeInOut>
+    <div class="flex flex-row justify-center space-x-3 w-full">
       <div class="w-full">
         <app-visitor-button [text]="'Edit My Contacts'"
           [extraClass]="'w-full leading-none cw-4:text-sm ' + (isEdit ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
@@ -96,7 +96,7 @@
     </div>
 
     <div class="flex flex-col relative mx-4" *ngIf="isAdd" @fadeInOut>
-      <div class="flex flex-col justify-between mt-4 space-y-2 w-full">
+      <div class="flex flex-col justify-between mt-8 space-y-2 w-full">
         <div class="w-full flex flex-col justify-center items-center">
           <input #fileInput type="file" class="hidden" (change)="onFileChange($event)" accept="image/*">
           <div class="w-24 h-24 rounded-full flex flex-col justify-center items-center bg-[var(--ion-color-secondary)]"

@@ -156,7 +156,7 @@
                             <option value="unit">To Certain Units</option>
                         </select>
                     </div>
-                    <div class="w-full mb-2" *ngIf="project_config.is_industrial">
+                    <div class="w-full mb-2" *ngIf="project_config.is_industrial && isAddEventClick">
                         <app-m2m-selection [Arrays]="Host" (outputValue)="hostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'" [customTextClass]="'p-0 text-sm'" [Selected]="selectedHost" [isReadonly]="isRead"
                             [labelText]="'Host'"></app-m2m-selection>
                     </div>
