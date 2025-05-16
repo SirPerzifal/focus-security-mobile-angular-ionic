@@ -37,8 +37,20 @@ export class MoveFormPage implements OnInit {
     private router: Router,
     private functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
-  ) {}
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { record: any};
+    if (state) {
+      this.record = state.record
+      this.contractor_name = this.record.contact_person
+      this.contact_number = this.record.contact_number
+      this.company_name = this.record.company_name
+      console.log(this.record)
+      // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
+    } 
+  }
 
+  record: any
   ngOnInit() {
     // Ambil parameter dari route
     this.loadProjectName().then(() => {
@@ -169,6 +181,9 @@ export class MoveFormPage implements OnInit {
   // Fungsi submit umum
   submitForm(openBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
     if (!this.getInputValue('contractor_name')) {
       errMsg += 'Contractor name is required! \n'
     }
@@ -222,7 +237,8 @@ export class MoveFormPage implements OnInit {
       requestor_id: this.requestor_id,
       sub_contractors: subContractors,
       project_id: this.project_id,
-      camera_id: camera_id
+      camera_id: camera_id,
+      visitor_image: this.selectedImage,
     }    
     this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {
@@ -296,6 +312,7 @@ export class MoveFormPage implements OnInit {
     if (contactData) {
       this.requestor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.requestor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
     }
   }
 
@@ -367,4 +384,5 @@ export class MoveFormPage implements OnInit {
   }
 
   faBarcode = faBarcode
+  selectedImage: any = ''
 }

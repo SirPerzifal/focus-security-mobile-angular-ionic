@@ -58,10 +58,14 @@ export class ClientFacilityDetailPage implements OnInit {
       if (!this.submitForm.room_name) {
         errMsg += "Room name is required! \n"
       }
+      if (this.functionMain.timeToInt(this.submitForm.end_time) <= this.functionMain.timeToInt(this.submitForm.start_time)) {
+        errMsg += "Close Hour can't be the same as or less than open hour! \n"
+      }
       if (errMsg != '') {
         this.functionMain.presentToast(errMsg, 'danger')
         return
       }
+      console.log(this.submitForm.start_time, this.submitForm.end_time, this.functionMain.timeToInt(this.submitForm.start_time), this.functionMain.timeToInt(this.submitForm.end_time))
       let params = {
         room_id : this.selectedRoomId,
         name : this.roomName,

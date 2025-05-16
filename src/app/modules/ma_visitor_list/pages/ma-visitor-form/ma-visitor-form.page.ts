@@ -66,6 +66,21 @@ export class MaVisitorFormPage implements OnInit {
 
   selection_type = ''
   onSubmitRecord(is_open: boolean = false, camera_id: string = '') {
+    let errMsg = ''
+    if (!this.record.name) {
+      errMsg += 'Visitor name is required!\n';
+    }
+    if (!this.record.contact_no) {
+      errMsg += 'Contact number is required!\n';
+    }
+    if (this.record.contact_no) {
+      if (this.record.contact_no.length <= 2 ) {
+        errMsg += 'Contact number is required! \n'
+      }
+    }
+    if (!this.record.vehicle_number && this.record.selection_type == 'drive_in') {
+      errMsg += 'Vehicle number is required!\n';
+    }
     let params = {...this.record, camera_id: camera_id}
     console.log(params)
     this.clientMainService.getApi(params, '/client/post/update_ma_visitor').subscribe({
@@ -109,5 +124,5 @@ export class MaVisitorFormPage implements OnInit {
       this.record.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
     })
   }
-
+  
 }

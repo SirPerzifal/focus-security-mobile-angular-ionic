@@ -184,8 +184,10 @@ export class MakeANewEventPage implements OnInit {
     this.selectedHost = event.event.host_ids
     console.log(this.Facilities)
     console.log(this.Facilities.filter((item: any) => {console.log(item.facility_id, event.event.facility_id) ; return item.facility_id === event.event.facility_id}))
-    this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
-    this.EventsForm.room_id = event.event.room_id
+    if (event.event.facility_id) {
+      this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
+      this.EventsForm.room_id = event.event.room_id
+    }
     this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
     this.event_title = event.event.title  ? event.event.title : event.event.facility_name
     this.selectedStartDate = this.selectedDate
@@ -328,7 +330,7 @@ export class MakeANewEventPage implements OnInit {
       this.EventsForm.end_date = this.formatDate(endDate, endTime);
     }
     let errMsg = ''
-    if (this.event_title == '' && this.userType != 'industrial') {
+    if (this.event_title == '' && this.userType == 'industrial') {
       errMsg += 'Event title is required! \n'
     }
     if (this.EventsForm.registered_coach_id == 0 && this.userType != 'industrial') {
@@ -491,7 +493,11 @@ export class MakeANewEventPage implements OnInit {
     this.EventsForm.facility_id = this.coachData.facility_id
     this.EventsForm.contact_number = this.coachData.contact_number
     this.EventsForm.vehicle_number = this.coachData.vehicle_number
-    this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+    console.log(this.Facilities)
+    console.log(this.EventsForm.facility_id)
+    if (this.EventsForm.facility_id){
+      this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+    }
     // console.log(this.coachData)
     if (this.selectedStartTime) {
       this.formatEnd(this.selectedStartTime)

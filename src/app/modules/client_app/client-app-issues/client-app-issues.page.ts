@@ -43,7 +43,9 @@ export class ClientAppIssuesPage implements OnInit {
     name_condo: '',
     email: '',
     project_id: 1,
-    contact: ''
+    contact: '',
+    family_id: 0,
+    user_id: 0,
   };
 
   loadUserInfo() {
@@ -55,6 +57,8 @@ export class ClientAppIssuesPage implements OnInit {
         project_id: value.project_id,
         email: value.email,
         contact: value.contact_number,
+        family_id: value.family_id,
+        user_id: value.user_id
       }
       this.loadType();
       this.loadTicketFromBackend();
@@ -134,7 +138,9 @@ export class ClientAppIssuesPage implements OnInit {
       unit_id: 0,
       block_id: 0,
       project_id: this.userData.project_id,
-      ir_attachments: this.reporterDetailsFrom.ticketAttachment
+      ir_attachments: this.reporterDetailsFrom.ticketAttachment,
+      family_id: this.userData.family_id,
+      user_id: this.userData.user_id,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/resident/post/report_issue').subscribe({

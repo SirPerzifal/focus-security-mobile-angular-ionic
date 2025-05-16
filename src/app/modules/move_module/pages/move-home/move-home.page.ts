@@ -283,7 +283,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     console.log(this.filteredHistorySchedules)
   }
 
-  form(block: string, unit: string, block_id: string = '1', unit_id: string = '1', requestor_id: string) {
+  form(block: string, unit: string, block_id: string = '1', unit_id: string = '1', requestor_id: string, record: any = {}) {
     if (this.pageType == 'ma_visitor') {
       this.router.navigate(['/ma-visitor-form'], {})
     } else if (this.pageType == 'coach') {
@@ -299,6 +299,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
           unit: unit,
           schedule_type: this.pageType,
           requestor_id: requestor_id
+        },
+        state: {
+          record: record
         }
       });
     }
@@ -423,9 +426,9 @@ export class MoveHomePage implements OnInit, OnDestroy {
     // }
   }
 
-  onClickDay(record: any) {
+  onClickDay(record: any) { 
     if (this.pageType != 'coach' && this.pageType != 'ma_visitor'){
-      this.form(record.block_name, record.unit_name, record.block_id, record.unit_id, record.requestor_id)
+      this.form(record.block_name, record.unit_name, record.block_id, record.unit_id, record.requestor_id, record)
     } else if (this.pageType == 'coach' || this.pageType == 'ma_visitor') {
       this.coachForm(record)
     }

@@ -151,6 +151,7 @@ export class MoveInOutPermitPage implements OnInit {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
+            console.log(estate)
             this.unitId = Number(estate.unit_id);
             this.moveInOutForm.get('block')!.setValue(Number(estate.block_id))
             this.moveInOutForm.get('contact_person_id')!.setValue(Number(estate.family_id))
@@ -160,6 +161,7 @@ export class MoveInOutPermitPage implements OnInit {
             this.moveInOutForm.get('unit')!.setValue(Number(estate.unit_id));
             this.condoName = estate.project_name;
             this.userName = estate.family_name;
+            this.family_id = estate.family_id
             this.userPhoneNumber = estate.family_mobile_number;
             this.loadExpectedFamily();
             this.loadAmount();
@@ -168,6 +170,7 @@ export class MoveInOutPermitPage implements OnInit {
       }
     })
   }
+  family_id = 0
 
   onShowAmountChange(event: any) {
     const type = event.target.value;
@@ -296,7 +299,8 @@ export class MoveInOutPermitPage implements OnInit {
         this.moveInOutForm.value.contractor_contact_person,
         this.moveInOutForm.value.contractor_contact_number,
         this.moveInOutForm.value.contractor_company_name,
-        this.moveInOutForm.value.contractor_vehicle_number
+        this.moveInOutForm.value.contractor_vehicle_number,
+        this.family_id
       ).subscribe({
         next: (response) => {
           // console.log('Response:', response);

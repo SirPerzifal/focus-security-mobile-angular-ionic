@@ -151,6 +151,15 @@ export class DeliveriesPage implements OnInit {
     if (!this.food_delivery_type){
       errMsg += 'Please select a delivery type!\n';
     }
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.formData.contact_number){
       errMsg += 'Please insert a contact number!\n';
     }
@@ -158,12 +167,6 @@ export class DeliveriesPage implements OnInit {
       if (this.formData.contact_number.length <= 2 ) {
         errMsg += 'Please insert a contact number! \n'
       }
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number){
       errMsg += 'Please insert a vehicle number!\n';
@@ -200,7 +203,8 @@ export class DeliveriesPage implements OnInit {
         host: this.selectedHost,
         identification_type: this.identificationType,
         identification_number: this.nric_value,
-        pass_number: this.pass_number
+        pass_number: this.pass_number,
+        visitor_image: this.selectedImage,
       }
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
         res => {
@@ -281,6 +285,7 @@ export class DeliveriesPage implements OnInit {
       remarks: '',
     };
     this.pass_number = ''
+    this.selectedImage = ''
     this.refreshVehicle()
   }
 
@@ -297,6 +302,9 @@ export class DeliveriesPage implements OnInit {
     }
     if (!this.package_delivery_type){
       errMsg += 'Please select a delivery type!\n';
+    }
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
     }
     if (!this.formData.contact_number){
       errMsg += 'Please insert visitor contact number!\n';
@@ -350,7 +358,8 @@ export class DeliveriesPage implements OnInit {
         host: this.selectedHost,
         identification_type: this.identificationType,
         identification_number: this.nric_value,
-        pass_number: ''
+        pass_number: '',
+        visitor_image: this.selectedImage,
       }
       
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
@@ -486,6 +495,10 @@ export class DeliveriesPage implements OnInit {
 
       this.buttonStates.foodDeliveries = false;
       this.buttonStates.OthersDeliveries = true;
+
+      this.showDrive = false
+      this.showWalk = false
+      this.showForm = false
 
       setTimeout(() => {
         this.otherDeliveries = true;
@@ -689,6 +702,7 @@ export class DeliveriesPage implements OnInit {
     this.contactHost = ''
     if (contactData) {
       console.log(contactData)
+      this.selectedImage = contactData.visitor_image
       if (this.otherDeliveries) {
         this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
         this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
@@ -755,6 +769,15 @@ export class DeliveriesPage implements OnInit {
 
   onSubmitOther(openBarrier: boolean = true, camera_id: string = ''){
     let errMsg = ""
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.otherDeliveryForm.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -765,12 +788,6 @@ export class DeliveriesPage implements OnInit {
       if (this.otherDeliveryForm.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if (!this.otherDeliveryForm.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
@@ -797,7 +814,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value, pass_number: this.pass_number, host: this.selectedHost,
+      ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value, pass_number: this.pass_number, host: this.selectedHost, visitor_image: this.selectedImage,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
@@ -853,4 +870,47 @@ export class DeliveriesPage implements OnInit {
       }
     }
   }
+
+  showWalk = false;
+  showDrive = false;
+  showWalkTrans = false;
+  showDriveTrans = false;
+  showForm = false
+
+  toggleShowWalk() {
+    if (!this.showDriveTrans) {
+      if (this.showDrive) {
+        this.resetForm() 
+      }
+      this.showWalkTrans = true
+      this.showDrive = false;
+      this.contactHost = ''
+      this.showForm = false
+      setTimeout(() => {
+        this.showForm = true
+        this.showWalk = true;
+        this.showWalkTrans = false
+      }, 300)
+    }
+  }
+
+  toggleShowDrive() {
+    if (!this.showWalkTrans) {
+      if (this.showWalk) {
+        this.resetForm() 
+      }
+      this.showDriveTrans = true
+      this.showWalk = false;
+      this.contactHost = ''
+      this.showForm = false
+      setTimeout(() => {
+        this.showForm = true
+        this.showDrive = true;
+        this.showDriveTrans = false
+        this.refreshVehicle()
+      }, 300)
+    }
+  }
+
+  selectedImage: any = ''
 }

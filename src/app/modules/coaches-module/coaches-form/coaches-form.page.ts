@@ -236,19 +236,10 @@ export class CoachesFormPage implements OnInit {
   }
 
   onSubmitRecord(isOpenBarrier: boolean = false, camera_id: string = '') {
-    let params = {
-      coach_id: this.schedule.coach_id,
-      name: this.schedule.coach_name,
-      contact_number: this.contactNumber,
-      block_id: this.schedule.block_id,
-      unit_id: this.schedule.unit_id,
-      selection_type: this.schedule.coach_type_id,
-      vehicle_number: this.schedule.vehicle_number,
-      project_id: this.project_id,
-      camera_id: camera_id
-    }
-    console.log(params)
     let errMsg = ''
+    if (!this.selectedImage) {
+      errMsg += 'Coach image is required!\n';
+    }
     if (!this.schedule.coach_name){
       errMsg += 'Coach name is missing! \n'
     }
@@ -275,6 +266,18 @@ export class CoachesFormPage implements OnInit {
         console.log("BARRIER NOT OPENED");
       }
       
+      let params = {
+        coach_id: this.schedule.coach_id,
+        name: this.schedule.coach_name,
+        contact_number: this.contactNumber,
+        block_id: this.schedule.block_id,
+        unit_id: this.schedule.unit_id,
+        selection_type: this.schedule.coach_type_id,
+        vehicle_number: this.showDrive ? this.schedule.vehicle_number : '' ,
+        project_id: this.project_id,
+        camera_id: camera_id,
+        visitor_image: this.selectedImage,
+      }
       console.log(params)
       this.clientMainService.getApi(params, '/vms/post/add_coaches' ).subscribe({
         next: (results) => {
@@ -310,6 +313,7 @@ export class CoachesFormPage implements OnInit {
     if (contactData) {
       this.schedule.coach_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.schedule.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
       if (this.schedule.vehicle_number != ''){
         this.toggleShowDrive()
       }
@@ -321,4 +325,6 @@ export class CoachesFormPage implements OnInit {
       }
     }
   }
+
+  selectedImage: any = ''
 }

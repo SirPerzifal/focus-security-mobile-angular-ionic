@@ -20,7 +20,7 @@
       [placeholder]="''" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
       style="border: 1px solid #6B7280;" />
       <div class="h-25 flex flex-col justify-end w-2/5" *ngIf="showButton">
-        <button id="middle_button" class="bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 rounded font-bold" (click)="getContactInformation()">SEARCH</button>
+        <button id="middle_button" [class]="(isReadonly ? 'bg-[#D0D0D0] text-[#757575]' : 'bg-[var(--ion-color-primary)] text-white') + ' w-full text-2xl h-20 rounded font-bold'" (click)="getContactInformation()">SEARCH</button>
       </div>
     </div>
   </div>

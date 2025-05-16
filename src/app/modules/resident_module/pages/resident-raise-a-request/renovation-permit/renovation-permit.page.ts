@@ -132,6 +132,7 @@ export class RenovationPermitPage implements OnInit {
             this.condoName = estate.project_name;
             this.userName = estate.family_name;
             this.userPhoneNumber = estate.family_mobile_number;
+            this.family_id = estate.family_id
             this.unitIdForGetFamily = estate.unit_id
             this.loadExpectedFamily();
             this.loadAmount();
@@ -140,6 +141,7 @@ export class RenovationPermitPage implements OnInit {
       }
     })
   }
+  family_id = 0
 
   onShowAmountChange(event: any) {
     const type = event.target.value;
@@ -324,7 +326,8 @@ export class RenovationPermitPage implements OnInit {
         this.renovationForm.value.contractor_contact_person,
         this.renovationForm.value.contractor_contact_number,
         this.renovationForm.value.contractor_company_name,
-        this.renovationForm.value.contractor_vehicle_number
+        this.renovationForm.value.contractor_vehicle_number,
+        this.family_id
       ).subscribe({
         next: (response) => {
           if (response.result.response_code === 400) {

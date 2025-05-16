@@ -156,4 +156,11 @@ export class HomePage implements OnInit {
     this.isSmallScreen = window.innerWidth < 720;
   }
 
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      this.onLoadCount()
+      event.target.complete()
+    }, 1000)
+  }
+
 }

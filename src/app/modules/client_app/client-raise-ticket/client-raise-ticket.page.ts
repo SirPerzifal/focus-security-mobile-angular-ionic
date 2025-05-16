@@ -29,6 +29,7 @@ export class ClientRaiseTicketPage implements OnInit {
     this.loadMenuItems()
     this.functionMain.vmsPreferences().then((value) => {
       this.newTicket.user_id = value.user_id
+      this.newTicket.family_id = value.family_id
       console.log(this.newTicket);
       
     })
@@ -279,6 +280,7 @@ export class ClientRaiseTicketPage implements OnInit {
     ticket_type_id: '',
     summary: '',
     user_id: '',
+    family_id: 0,
   }
 
   @ViewChild('clientTicketNewAttachment') fileInput!: ElementRef;

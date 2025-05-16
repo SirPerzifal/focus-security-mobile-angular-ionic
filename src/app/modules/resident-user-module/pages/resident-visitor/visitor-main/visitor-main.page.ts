@@ -111,7 +111,16 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     private mainApiResidentService: MainApiResidentService,
     private alertController: AlertController,
     http: HttpClient
-  ) { super(http) }
+  ) { super(http)
+    const navigation = this.route.getCurrentNavigation();
+    const state = navigation?.extras.state as { formData: any };
+    console.log(state)
+    if (state) {
+      this.formData = state.formData;
+      this.selectedDate = '';
+      this.entryCheck = '';
+    }
+   }
 
   ionViewWillEnter() {
   }
@@ -120,7 +129,17 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.getTodayDate();
     this.getActiveInvites();
     this.activeRoute.queryParams.subscribe(params => {
-      // console.log(params);
+      console.log(params);
+      if (params['reload']) {
+        const navigation = this.route.getCurrentNavigation();
+        const state = navigation?.extras.state as { formData: any };
+        console.log(state)
+        if (state) {
+          this.formData = state.formData;
+          this.selectedDate = '';
+          this.entryCheck = '';
+        }
+      }
       if (params['openActive']) {
         this.selectedDate = '';
         this.entryCheck = '';

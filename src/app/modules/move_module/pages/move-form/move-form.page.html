@@ -43,8 +43,13 @@
           </div>
         </div> 
         <div class="w-full">
+          <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
+            [extraButtonClass]="'rounded-md text-white h-20'" 
+            [(cameraSelected)]="selectedImage">
+          </app-input-image-preview>
+        </div>
+        <div class="w-full">
           <app-text-input 
-            [(ngModel)]="requestor_name"
             #textInput
             [id]="'contractor_name'" 
             [labelText]="'NAME'" [placeholder]="'EG. KEVIN MARCH'" 

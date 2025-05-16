@@ -115,7 +115,8 @@ export class RaiseARequestService extends ApiService  {
     contractor_contact_person?: string, 
     contractor_contact_number?: string,
     contractor_company_name?: string,
-    contractor_vehicle_number?: string
+    contractor_vehicle_number?: string,
+    family_id?: number,
   ): Observable<any> {
     const headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -137,7 +138,8 @@ export class RaiseARequestService extends ApiService  {
             contractor_contact_person: contractor_contact_person,
             contractor_contact_number: contractor_contact_number,
             contractor_company_name: contractor_company_name,
-            contractor_vehicle_number: contractor_vehicle_number
+            contractor_vehicle_number: contractor_vehicle_number,
+            family_id: family_id
         },
     };
 

@@ -192,20 +192,18 @@ export class PickUpPagePage implements OnInit {
     if (!this.selectedVehicleType) {
       errMsg += 'Vehicle type must be selected! \n'
     }
-
-    if (!vehicleNumber) {
-      errMsg += 'Vehicle number is required! \n'
-      console.log(this.vehicleNumberInput.value)
-    }
-
-    if (!location && !this.project_config.is_industrial) {
-      errMsg += 'Location is required! \n'
-    }
     if (this.project_config.is_industrial && !this.identificationType) {
       errMsg += 'Identification type is required! \n'
     }
     if (this.project_config.is_industrial && !this.nric_value) {
       errMsg += 'Identification number is required! \n'
+    }
+    if (!vehicleNumber) {
+      errMsg += 'Vehicle number is required! \n'
+      console.log(this.vehicleNumberInput.value)
+    }
+    if (!location && !this.project_config.is_industrial) {
+      errMsg += 'Location is required! \n'
     }
     if (!this.selectedHost && this.project_config.is_industrial) {
       errMsg += 'Host is required! \n'

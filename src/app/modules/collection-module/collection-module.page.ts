@@ -121,6 +121,8 @@ export class CollectionModulePage implements OnInit {
     this.identificationType = ''
     this.selectedNric = ''
     this.pass_number = ''
+
+    this.selectedImage = ''
   }
 
   toggleShowDrive() {
@@ -228,6 +230,15 @@ export class CollectionModulePage implements OnInit {
 
   onSubmitWalkIn(){
     let errMsg = ""
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.walkInFormData.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -238,12 +249,6 @@ export class CollectionModulePage implements OnInit {
       if (this.walkInFormData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if ((!this.walkInFormData.block || !this.walkInFormData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
@@ -279,7 +284,8 @@ export class CollectionModulePage implements OnInit {
         remarks: this.walkInFormData.remarks,
         nric: this.nric_value,
         identification_type: this.identificationType,
-        pass_number: this.pass_number
+        pass_number: this.pass_number,
+        visitor_image: this.selectedImage,
       }
       this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
@@ -307,6 +313,15 @@ export class CollectionModulePage implements OnInit {
 
   onSubmitDriveIn(openBarrier: boolean = true, camera_id: string = ''){
     let errMsg = ""
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.driveInFormData.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -317,12 +332,6 @@ export class CollectionModulePage implements OnInit {
       if (this.driveInFormData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if (!this.driveInFormData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
@@ -366,7 +375,8 @@ export class CollectionModulePage implements OnInit {
         remarks: this.driveInFormData.remarks,
         nric: this.nric_value,
         identification_type: this.identificationType,
-        pass_number: this.pass_number
+        pass_number: this.pass_number,
+        visitor_image: this.selectedImage,
       }
       this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
@@ -439,6 +449,7 @@ export class CollectionModulePage implements OnInit {
     if (contactData) {
       this.driveInFormData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
@@ -460,6 +471,7 @@ export class CollectionModulePage implements OnInit {
     if (contactData) {
       this.walkInFormData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
@@ -518,4 +530,5 @@ export class CollectionModulePage implements OnInit {
   selectedNric: any = ''
   pass_number = ''
 
+  selectedImage: any = ''
 }

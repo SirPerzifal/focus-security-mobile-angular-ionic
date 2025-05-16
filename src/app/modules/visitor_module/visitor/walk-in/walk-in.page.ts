@@ -106,14 +106,24 @@ export class WalkInPage implements OnInit {
     this.selectedNric = ''
     this.pass_number = ''
     this.purpose = ''
+    this.selectedImage = ''
   }
 
   onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '') {
     console.log(this.formData)
     console.log(this.selectedHost)
     let errMsg = ""
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.formData.visitor_name) {
-      errMsg += 'Visitor is required!\n';
+      errMsg += 'Visitor name is required!\n';
     }
     if (!this.formData.visitor_contact_no) {
       errMsg += 'Contact number is required!\n';
@@ -125,12 +135,6 @@ export class WalkInPage implements OnInit {
     }
     if (!this.formData.visitor_vehicle) {
       errMsg += 'Vehicle number is required!\n';
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
@@ -167,6 +171,7 @@ export class WalkInPage implements OnInit {
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
+        visitor_image: this.selectedImage
       }
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
@@ -219,6 +224,15 @@ export class WalkInPage implements OnInit {
     console.log(this.formData)
     console.log(this.pass_number)
     let errMsg = ""
+    if (!this.selectedImage) {
+      errMsg += 'Visitor image is required!\n';
+    }
+    if ((!this.identificationType) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.formData.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -229,12 +243,6 @@ export class WalkInPage implements OnInit {
       if (this.formData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
     }
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
@@ -272,6 +280,7 @@ export class WalkInPage implements OnInit {
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
+        visitor_image: this.selectedImage
       }
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
@@ -450,6 +459,7 @@ export class WalkInPage implements OnInit {
     if (contactData) {
       this.formData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.formData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
@@ -622,4 +632,6 @@ export class WalkInPage implements OnInit {
   nric_value = ''
   selectedNric: any = ''
   pass_number = ''
+
+  selectedImage: any = ''
 }

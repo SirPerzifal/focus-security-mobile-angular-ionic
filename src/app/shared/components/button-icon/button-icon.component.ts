@@ -112,6 +112,9 @@ export class ButtonIconComponent implements OnInit {
           }
           this.customImageIcon = 'assets/icon-vms/Homepage/Unregistered_Resident_Car.png';
           break;
+        case 'UNREGISTERED EMPLOYEE CAR':
+          this.customImageIcon = 'assets/icon-vms/Homepage/Unregistered_Resident_Car.png';
+          break;
         case 'OVERNIGHT PARKING':
           this.customImageIcon = 'assets/icon-vms/Homepage/Overnight_Parking.png';
           break;

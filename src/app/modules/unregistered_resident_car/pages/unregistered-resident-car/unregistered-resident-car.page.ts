@@ -35,6 +35,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.formData.project_id = value.project_id
       this.project_config = value.config
+      console.log(this.project_config)
       this.Camera = value.config.lpr
     })
   }

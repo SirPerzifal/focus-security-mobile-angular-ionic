@@ -1,0 +1,40 @@
+<div class="flex flex-row w-full items-end justify-between h-25">
+  <div [ngClass]="'w-full rounded-md outline-[#BDBDBD] h-fit text-2xl flex flex-col'">
+    <label class="text-2xl " [ngClass]="labelClass" *ngIf="labelText"><b><u>{{labelText}}</u></b></label>
+    <label class="text-2xl " [ngClass]="labelClass" *ngIf="labelNonUnderline">{{labelNonUnderline}}</label>
+    <div [ngClass]="'rounded-md outline-[#BDBDBD] h-fit text-2xl flex flex-row justify-between'"  *ngIf="!cameraSelected">
+      <div
+        [class]="'w-[67%] overflow-x-auto rounded py-2 px-3 outline-[#BDBDBD] text-2xl text-[#7D8390] bg-[#F5F5F5] flex flex-row items-center ' + outClass"
+        tabindex="0" [ngClass]="!isNotVMS ? 'text-2xl border-black' : divOuterClass">
+      </div>
+      <button (click)="takePicture()" [class]="'bg-[var(--ion-color-primary)] w-[31%] text-2xl ' + extraButtonClass"
+        [style]="customButtonStyle">
+        <b>{{buttonText}}</b>
+      </button>
+    </div>
+    <div [class]="'flex flex-row justify-start items-start'" *ngIf="cameraSelected">
+      <img [src]="functionMain.getImage(cameraSelected)" [class]="'h-32'" (click)="openModal()">
+    </div>
+  </div>
+
+
+  <ion-modal id="preview-image-component-modal" [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <div [class]="(isNotVMS ? 'wrapper' : 'wrapper-comic') + ' w-full flex flex-col justify-center space-y-2 h-full'">
+        <div [class]="'flex flex-row justify-start items-start overflow-y-auto rounded'">
+          <img [src]="functionMain.getImage(cameraSelected)" [class]="'w-full object-contain'">
+        </div>
+        <div class="flex flex-row justify-between">
+          <button id="client_ticket_new_upbload_attachment" (click)="takePicture()"
+            [class]="'!bg-[var(--ion-color-primary)] !text-white w-[45%] text-2xl ' + extraButtonClass" [style]="customButtonStyle">
+            CHANGE IMAGE
+          </button>
+          <button id="client_ticket_new_upbload_attachment" (click)="removeImage()"
+            [class]="'!bg-[var(--ion-color-primary)] !text-white w-[45%] text-2xl ' + extraButtonClass" [style]="customButtonStyle">
+            DELETE IMAGE
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</div>

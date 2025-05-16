@@ -184,6 +184,9 @@ export class ContractorFormPage implements OnInit {
     const companyName = this.formData.company_name;
     const remarks = this.remarksValue;
 
+    if (!this.selectedImage) {
+      errMsg += 'Contractor image is required! \n'
+    }
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
     }
@@ -269,7 +272,8 @@ export class ContractorFormPage implements OnInit {
       pass_number: this.contractor_pass_number,
       is_pre_entry: this.isFromScan,
       entry_id: this.isFromScan ? this.entry_id : false,
-      entry_type: this.isFromScan ? this.entry_type : ''
+      entry_type: this.isFromScan ? this.entry_type : '',
+      visitor_image: this.selectedImage
     }
     
     try {
@@ -346,6 +350,7 @@ export class ContractorFormPage implements OnInit {
     this.contractor_entry_purpose = ''
     this.contractor_entry_date = ''
 
+    this.selectedImage = ''
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -427,6 +432,7 @@ export class ContractorFormPage implements OnInit {
     if (contactData) {
       this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.selectedImage = contactData.visitor_image
       this.nric_value = contactData.identification_number
       if (contactData.identification_type) {
         this.identificationType = contactData.identification_type
@@ -737,5 +743,7 @@ export class ContractorFormPage implements OnInit {
       this.typeIdentity[i] = 'nric'
     }
   }
+
+  selectedImage = ''
   
 }

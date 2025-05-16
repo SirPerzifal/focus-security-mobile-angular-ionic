@@ -500,5 +500,5 @@ export class FunctionMainService {
     await alertButtons.present();
   }
   
-  public readonly limitHistory = 50
+  public readonly limitHistory = 15
 }
