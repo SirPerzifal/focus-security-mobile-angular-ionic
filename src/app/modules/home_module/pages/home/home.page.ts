@@ -117,8 +117,11 @@ export class HomePage implements OnInit {
 
   onClickMoveCustom(type: string) {
     if (type == 'contractor') {
-      console.log(this.project_config)
-      this.router.navigate([this.project_config.is_windows ? 'contractor-commercial-form' : 'contractor-form']);
+      if (this.project_config.office_closing_hours) {
+        this.functionMain.presentToast("Can't open this menu because office hours have ended!", 'danger')
+      } else {
+        this.router.navigate([this.project_config.is_windows ? 'contractor-commercial-form' : 'contractor-form']);
+      }
     } else {
       this.router.navigate(['move-home'], {
         queryParams: { type: type }

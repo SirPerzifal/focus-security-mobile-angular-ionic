@@ -480,6 +480,7 @@ export class ContractorFormPage implements OnInit {
                 this.formData.contractor_name = data.contractor_name
                 this.formData.company_name = data.company_name
                 this.formData.contact_number = data.contact_number
+                this.selectedImage = data.visitor_image
                 if (this.showDrive) {
                   this.formData.contractor_vehicle =  data.vehicle_number
                 }

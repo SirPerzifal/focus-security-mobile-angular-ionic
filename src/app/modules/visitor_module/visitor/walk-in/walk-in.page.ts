@@ -619,6 +619,7 @@ export class WalkInPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
+      this.selectedImage = event.data.visitor_image
       this.formData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
       this.formData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
       if (this.showDrive) {

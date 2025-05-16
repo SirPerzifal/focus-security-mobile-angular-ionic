@@ -60,10 +60,13 @@
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full flex flex-col">
-          <label class="text-2xl"><u><b>REASON</b></u></label>
+          <!-- <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="remarks" rows="4"
-            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-            placeholder="" [(ngModel)]="formData.reason"></textarea>
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+            placeholder="" [(ngModel)]="formData.reason"></textarea> -->
+          <app-text-input [id]="'unregistered_reason'" [name]="'unregistered_reason'" [labelText]="'REASON'" [rows]="4"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [(ngModel)]="formData.reason"></app-text-input>
         </div>
         <!-- <div class="w-full">          
           <app-visitor-button (click)="onSubmit(true)" [text]="'SAVE RECORD & OPEN BARRIER'" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl mt-6 h-20'"></app-visitor-button>

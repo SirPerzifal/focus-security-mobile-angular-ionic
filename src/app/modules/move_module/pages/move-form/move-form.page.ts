@@ -354,6 +354,7 @@ export class MoveFormPage implements OnInit {
                 this.paxData[order].contractor_name = data.contractor_name
               } else {
                 console.log(value)
+                this.selectedImage = data.visitor_image
                 this.contractor_name = data.contractor_name
                 this.company_name = data.company_name
                 this.contact_number = data.contact_number

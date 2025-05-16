@@ -60,10 +60,13 @@
           </div>
         </div>
         <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-          <label class="text-2xl"><u><b>REMARKS</b></u></label>
+          <app-text-input [id]="'collection_walk_in_remarks'" [name]="'collection_walk_in_remarks'" [labelText]="'REMARKS'" [rows]="4"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+              [(ngModel)]="walkInFormData.remarks"></app-text-input>
+          <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
           <textarea id="collection_walk_in_remarks" rows="4" name="collection_walk_in_remarks"
-            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-            placeholder="" [(ngModel)]="walkInFormData.remarks"></textarea>
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+            placeholder="" [(ngModel)]="walkInFormData.remarks"></textarea> -->
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'SAVE RECORD'" [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'" (click)="onSubmitWalkIn()"></app-visitor-button>
@@ -120,10 +123,13 @@
           </div>
         </div>
         <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-          <label class="text-2xl"><u><b>REMARKS</b></u></label>
+          <app-text-input [id]="'collection_drive_in_remarks'" [name]="'collection_drive_in_remarks'" [labelText]="'REMARKS'" [rows]="4"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+              [(ngModel)]="driveInFormData.remarks"></app-text-input>
+          <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
           <textarea id="collection_drive_in_remarks" rows="4" name="collection_drive_in_remarks"
-            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-            placeholder="" [(ngModel)]="driveInFormData.remarks"></textarea>
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+            placeholder="" [(ngModel)]="driveInFormData.remarks"></textarea> -->
         </div>
         <div class="w-full" *ngFor="let camera of Camera; let i = index">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="onSubmitDriveIn(true, camera.CamSentId)"></app-visitor-button>

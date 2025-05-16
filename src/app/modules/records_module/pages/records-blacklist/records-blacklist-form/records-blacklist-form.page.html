@@ -72,10 +72,13 @@
           (cameraSelected)="onBanImage($event)"></app-file-input>
         </div>
         <div class="w-full flex flex-col">
-          <label class="text-2xl"><u><b>REASON</b></u></label>
+          <!-- <label class="text-2xl"><u><b>REASON</b></u></label>
           <textarea id="reason" rows="4" [(ngModel)]="formData.reason"
-            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-            placeholder=""></textarea>
+            class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+            placeholder=""></textarea> -->
+          <app-text-input [id]="'blacklist_form_reason'" [name]="'blacklist_form_reason'" [labelText]="'REASON'" [rows]="4"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [(ngModel)]="formData.reason"></app-text-input>
         </div>        
         <div class="w-full">
           <app-text-input #submitNameInput [id]="'submit_name'" [labelText]="'SUBMITTED BY'" [placeholder]="'ERIC'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.banned_by"></app-text-input>
