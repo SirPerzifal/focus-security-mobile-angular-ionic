@@ -219,8 +219,8 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
       this._value = inputValue;
       this._displayValue = inputValue;
       this.keyupEvent.emit(event);
-      this.valueChange.emit(this._value.toUpperCase());
-      this.onChange(this._value.toUpperCase());
+      this.valueChange.emit(this._value);
+      this.onChange(this._value);
     } else {
       this._value = (event.target as HTMLInputElement).value;
       this.keyupEvent.emit(event);
