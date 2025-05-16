@@ -131,13 +131,15 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.activeRoute.queryParams.subscribe(params => {
       console.log(params);
       if (params['reload']) {
+        console.log("go to hell");
         const navigation = this.route.getCurrentNavigation();
         const state = navigation?.extras.state as { formData: any };
         console.log(state)
         if (state) {
           this.formData = state.formData;
-          this.selectedDate = '';
-          this.entryCheck = '';
+          const date = new Date(state.formData.dateOfInvite);
+          this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+          this.entryCheck = state.formData.entryType;
         }
       }
       if (params['openActive']) {
@@ -156,6 +158,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           hiredCar: "",
         }
       } else if (params['reload']) {
+        console.log("fuck");
+        
         const navigation = this.route.getCurrentNavigation();
         const state = navigation?.extras.state as { formData: any };
         if (state) {
@@ -167,6 +171,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           }
         }
       } else {
+        console.log("fuck");
+        
         this.selectedDate = '';
         this.entryCheck = '';
         this.toggleShowNewInv()
@@ -197,6 +203,18 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     if (event) {
       if (!this.showActInv) {
         this.toggleShowActInv();
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          isProvideUnit: false,
+          facility: '',
+          hiredCar: "",
+        }
+        this.selectedDate = '';
+        this.entryCheck = '';
       } else if (!this.showNewInv) {
         this.toggleShowNewInv();
       }
@@ -243,7 +261,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
                 contactNo: item['contact_number'],
                 entryType: item['entry_type'],
                 invite_id: item['invite_id'],
-                is_entry: item['is_entry']
+                is_entry: item['is_entry'],
+                facility: item['facility']
               });
               this.isLoading = false
             });

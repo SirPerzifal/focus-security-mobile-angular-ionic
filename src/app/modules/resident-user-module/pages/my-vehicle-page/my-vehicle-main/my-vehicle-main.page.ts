@@ -59,6 +59,7 @@ export class MyVehicleMainPage implements OnInit {
   pageName: string = '';
 
   MaximumVehicle: boolean = false;
+  MaximumPrimary: boolean = false;
   vehicles: Vehicle[] = [];
 
   vehicleDetail: VehicleDetail | null = null;
@@ -160,6 +161,7 @@ export class MyVehicleMainPage implements OnInit {
           endDateForTemporaryPass: vehicle.end_date_for_temporary_pass
         }));
         this.MaximumVehicle = response.result.response_result.exceeded_max;
+        this.MaximumPrimary = response.result.response_result.is_any_primary_vehicle;
         this.isLoading = false
       } else {
         // this.presentToast('Data fetched failed!', 'danger');
@@ -179,7 +181,8 @@ export class MyVehicleMainPage implements OnInit {
     // Gunakan NavigationExtras untuk membawa data
     this.router.navigate(['/vehicle-form'], {
       state: {
-       maximumVehicle: this.MaximumVehicle
+       maximumVehicle: this.MaximumVehicle,
+       maximumPrimary: this.MaximumPrimary
       }
     });
   }

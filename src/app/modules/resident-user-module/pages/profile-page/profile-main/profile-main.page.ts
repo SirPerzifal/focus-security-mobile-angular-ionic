@@ -786,17 +786,90 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
-            this.getNotificationPermission(estate.family_id)
             this.imageProfile = estate.image_profile;
             this.userName = estate.family_name;
-            this.inputForm = {
-              familyNickname: estate.family_nickname,
-              nameCondominium: estate.project_name,
-              statusOwner: estate.family_type,
-              blockName: estate.block_name,
-              unitName: estate.unit_name,
-              email: estate.family_email,
-              phone: estate.family_mobile_number,
+            this.userType = estate.record_type;
+            if (this.userType === 'industrial') {
+              this.inputData = [
+                {
+                  id: 'family_nickname',
+                  formParams: 'familyNickname',
+                  name: 'Nickname',
+                  disabledInput: true
+                },    {
+                  id: 'condominium_name',
+                  formParams: 'nameCondominium',
+                  name: 'Project Name',
+                  disabledInput: true
+                },    {
+                  id: 'email_owner',
+                  formParams: 'email',
+                  name: 'Email',
+                  disabledInput: this.disabledInput
+                },    {
+                  id: 'phone_number',
+                  formParams: 'phone',
+                  name: 'Contact',
+                  disabledInput: this.disabledInput
+                }
+              ]
+              this.inputForm = {
+                familyNickname: estate.family_nickname,
+                nameCondominium: estate.project_name,
+                statusOwner: estate.family_type,
+                blockName: estate.block_name,
+                unitName: estate.unit_name,
+                email: estate.family_email,
+                phone: estate.family_mobile_number,
+              }
+            } else {
+              this.inputData = [
+                {
+                  id: 'family_nickname',
+                  formParams: 'familyNickname',
+                  name: 'Nickname',
+                  disabledInput: true
+                },    {
+                  id: 'condominium_name',
+                  formParams: 'nameCondominium',
+                  name: 'Condominium Name',
+                  disabledInput: true
+                },    {
+                  id: 'status_owner',
+                  formParams: 'statusOwner',
+                  name: 'Status',
+                  disabledInput: true
+                },    {
+                  id: 'block_name',
+                  formParams: 'blockName',
+                  name: 'Block',
+                  disabledInput: true
+                },    {
+                  id: 'unit_name',
+                  formParams: 'unitName',
+                  name: 'Unit',
+                  disabledInput: true
+                },    {
+                  id: 'email_owner',
+                  formParams: 'email',
+                  name: 'Email',
+                  disabledInput: this.disabledInput
+                },    {
+                  id: 'phone_number',
+                  formParams: 'phone',
+                  name: 'Contact',
+                  disabledInput: this.disabledInput
+                }
+              ]
+              this.inputForm = {
+                familyNickname: estate.family_nickname,
+                nameCondominium: estate.project_name,
+                statusOwner: estate.family_type,
+                blockName: estate.block_name,
+                unitName: estate.unit_name,
+                email: estate.family_email,
+                phone: estate.family_mobile_number,
+              }
             }
             if (estate.unit_id) {
               this.activeUnit = estate.unit_id;

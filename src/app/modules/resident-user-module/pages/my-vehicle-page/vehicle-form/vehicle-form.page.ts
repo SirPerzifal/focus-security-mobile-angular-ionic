@@ -23,6 +23,7 @@ export class VehicleFormPage implements OnInit {
   selectedDate: string = '';
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   maximumVehicle: boolean = false;
+  MaximumPrimary: boolean = false;
   valueForSelect: any[] = [
     {
       value: 'owned_vehicle',
@@ -63,10 +64,11 @@ export class VehicleFormPage implements OnInit {
     private storage: StorageService
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { maximumVehicle: boolean, vehicleId: number };
+    const state = navigation?.extras.state as { maximumVehicle: boolean, maximumPrimary: boolean, vehicleId: number };
     if (state) {
       // // console.log(state.from)
       this.maximumVehicle = state.maximumVehicle;
+      this.MaximumPrimary = state.maximumPrimary
       if (this.maximumVehicle) {
         this.valueForSelect = [
           {

@@ -61,6 +61,7 @@
                 class="h-12 w-12 flex flex-row justify-center items-center bg-[var(--ion-color-primary)] rounded"
               >
                 <fa-icon
+                  [id]="'invitee_icon_' + i"
                   class="text-[24px] mt-1 text-white"
                   [icon]="faAddressBook"
                   (click)="currentInviteeIndex = i; fetchContacts()"

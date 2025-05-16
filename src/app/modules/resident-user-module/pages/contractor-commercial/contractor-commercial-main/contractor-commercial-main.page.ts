@@ -96,13 +96,9 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
   ) { super(http) }
 
   ionViewWillEnter() {
-    this.selectedDate = '';
-    this.entryCheck = '';
   }
 
   ngOnInit() {
-    this.selectedDate = '';
-    this.entryCheck = '';
     this.getTodayDate();
     this.getActiveInvites();
     const navigation = this.route.getCurrentNavigation();
@@ -124,22 +120,19 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
           // hiredCar: "",
           // isProvideUnit: false,
         }
-        
         this.selectedDate = '';
         this.entryCheck = '';
-      } else if (params['formData']) {
-        this.formData = {
-          dateOfInvite: "",
-          vehicleNumber: "",
-          entryType: "",
-          entryTitle: "",
-          entryMessage: "",
-          // hiredCar: "",
-          // isProvideUnit: false,
+      } else if (params['reload']) {
+        console.log("go to hell");
+        const navigation = this.route.getCurrentNavigation();
+        const state = navigation?.extras.state as { formData: any };
+        console.log(state)
+        if (state) {
+          this.formData = state.formData;
+          const date = new Date(state.formData.dateOfInvite);
+          this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+          this.entryCheck = state.formData.entryType;
         }
-        
-        this.selectedDate = '';
-        this.entryCheck = '';
       } else {
         this.toggleShowNewInv()
         
@@ -162,6 +155,17 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
   onClick(event: any) {
     if (event) {
       if (!this.showActInv) {
+        this.formData = {
+          dateOfInvite: "",
+          vehicleNumber: "",
+          entryType: "",
+          entryTitle: "",
+          entryMessage: "",
+          // hiredCar: "",
+          // isProvideUnit: false,
+        }
+        this.selectedDate = '';
+        this.entryCheck = '';
         this.toggleShowActInv();
       } else if (!this.showNewInv) {
         this.toggleShowNewInv();
@@ -208,7 +212,8 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
                 vehicleNo: item['vehicle_number'],
                 entryType: item['entry_type'],
                 invite_id: item['invite_id'],
-                is_entry: item['is_entry']
+                is_entry: item['is_entry'],
+                expectedDays: item['expected_days_of_visit']
               });
               this.isLoading = false
             });

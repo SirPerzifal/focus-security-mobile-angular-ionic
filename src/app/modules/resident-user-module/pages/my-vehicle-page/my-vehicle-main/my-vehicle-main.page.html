@@ -95,7 +95,7 @@
             </ng-container>
           </div>
           <p *ngIf="vehicle.isPrimary" class="font-bold text-base text-black">
-            {{ vehicle.type_application | titlecase }}
+            {{ vehicle.type_application | titlecase }} (Primary Vehicle)
           </p>
           <p *ngIf="!vehicle.isPrimary" class="font-bold text-base text-black">
             {{ vehicle.type_application | titlecase }}
@@ -220,9 +220,18 @@
               <p class="text-base font-bold">{{ vehicleDetail.fees }}</p>
             </div>
           </div>
-          <div *ngIf="vehicleDetail.endDateForTemporaryPass" class="flex flex-col">
-            <p class="text-base font-semibold text-gray-600">End Date for Temporary Pass</p>
-            <p class="text-base font-bold">{{ functionMain.convertToDDMMYYYY(vehicleDetail.endDateForTemporaryPass) }}</p>
+          <div
+            *ngIf="vehicleDetail.endDateForTemporaryPass"
+            class="flex flex-col"
+          >
+            <p class="text-base font-semibold text-gray-600">
+              End Date for Temporary Pass
+            </p>
+            <p class="text-base font-bold">
+              {{
+              functionMain.convertToDDMMYYYY(vehicleDetail.endDateForTemporaryPass)
+              }}
+            </p>
           </div>
         </div>
         <button

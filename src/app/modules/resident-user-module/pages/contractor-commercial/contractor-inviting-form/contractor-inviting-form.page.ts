@@ -87,6 +87,10 @@ export class ContractorInvitingFormPage implements OnInit {
   ngOnInit() {
     this.loadHost();
     this.isFormInitialized = false;
+    // Jika selectedCountry belum diinisialisasi
+    if (!this.selectedCountry || this.selectedCountry.length === 0) {
+      this.selectedCountry = [];
+    }
     // Gunakan setTimeout untuk memastikan rendering
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
@@ -182,7 +186,11 @@ export class ContractorInvitingFormPage implements OnInit {
       });
       this.addInviteeText = 'Add More Invitees';
     }
-
+    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
+    while (this.selectedCountry.length < this.inviteeFormList.length) {
+      this.selectedCountry.push({ selected_code: '65' });
+    }
+    
     if (this.inviteeFormList.length > 0) {
       this.isFormVisible = true; // Show form if there are invitees
     }
@@ -269,6 +277,8 @@ export class ContractorInvitingFormPage implements OnInit {
           vehicle_number: '' // Set this as needed
         };
         this.inviteeFormList.push(newInvitee);
+                // Tambahkan entry baru ke selectedCountry
+        this.selectedCountry.push({ selected_code: '65' });
       }
   
       this.isFormVisible = true; // Show form if there are invitees
@@ -282,6 +292,8 @@ export class ContractorInvitingFormPage implements OnInit {
 
   removeInvitee(index: number) {
     this.inviteeFormList.splice(index, 1); // Menghapus invitee dari list
+    this.selectedCountry.splice(index, 1); // Menghapus selectedCountry yang sesuai
+    
     if (this.inviteeFormList.length === 0) {
       this.isFormVisible = false; // Sembunyikan form jika tidak ada invitee
     }
@@ -330,6 +342,8 @@ export class ContractorInvitingFormPage implements OnInit {
     };
     
     this.inviteeFormList.push(newInvitee);
+        // Pastikan juga menambahkan item baru ke selectedCountry
+    this.selectedCountry.push({ selected_code: '65' });
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
   }
@@ -343,7 +357,10 @@ export class ContractorInvitingFormPage implements OnInit {
   backWithState() {
     this.router.navigate(['/contractor-commercial-main'], {
       state: {
-        openActive: true,
+        formData: this.formData,
+      }, 
+      queryParams: {
+        reload: true
       }
     });
   }
@@ -388,13 +405,17 @@ export class ContractorInvitingFormPage implements OnInit {
         errMsg += 'Please choos whether show just you or include another host! \n';
       } else if (invitee.expected_number_of_visit < 0) {
         errMsg += 'Please fill expected number of visit! \n';
-      } else {
+      } else if (invitee.expected_number_of_visit > 0) {
+          this.formData.entryType = 'multiple_entry';
+        } else {
         errMsg = '';
       }
     });
 
     if (errMsg === '') {
       try {
+        console.log(this.formData);
+        
         this.mainApiResidentService.endpointMainProcess({
           date_of_visit: this.formData.dateOfInvite, 
           entry_type: this.formData.entryType, 

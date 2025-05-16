@@ -81,8 +81,14 @@ export class VisitorInvitigFormPage implements OnInit {
     }
   }
 
+  // Pastikan selectedCountry diinisialisasi dengan benar
   ngOnInit() {
     this.isFormInitialized = false;
+    // Jika selectedCountry belum diinisialisasi
+    if (!this.selectedCountry || this.selectedCountry.length === 0) {
+      this.selectedCountry = [];
+    }
+    
     // Gunakan setTimeout untuk memastikan rendering
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
@@ -161,6 +167,10 @@ export class VisitorInvitigFormPage implements OnInit {
       });
       this.addInviteeText = 'Add More Invitees';
     }
+    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
+    while (this.selectedCountry.length < this.inviteeFormList.length) {
+      this.selectedCountry.push({ selected_code: '65' });
+    }
   
     if (this.inviteeFormList.length > 0) {
       this.isFormVisible = true; // Show form if there are invitees
@@ -180,7 +190,7 @@ export class VisitorInvitigFormPage implements OnInit {
     });
   }
 
-
+  // Perbaikan pada method fetchContacts()
   async fetchContacts() {
     const result = await Contacts.pickContact({
       projection: {
@@ -188,16 +198,16 @@ export class VisitorInvitigFormPage implements OnInit {
         phones: true
       }
     });
-  
+
     if (result && result.contact) {
       const contactName = result.contact.name;
       const displayName = contactName?.display || '';
       const givenName = contactName?.given || '';
-  
+
       // Format the name as display_name(given_name)
       const nameFromContact = `${displayName}(${givenName})`.trim();
       const phoneFromContact = result.contact.phones?.[0].number || '';
-  
+
       if (this.currentInviteeIndex !== null) {
         // Populate the fields of the currently selected invitee
         this.inviteeFormList[this.currentInviteeIndex].visitor_name = nameFromContact;
@@ -210,8 +220,11 @@ export class VisitorInvitigFormPage implements OnInit {
           vehicle_number: '' // Set this as needed
         };
         this.inviteeFormList.push(newInvitee);
+        
+        // Tambahkan entry baru ke selectedCountry
+        this.selectedCountry.push({ selected_code: '65' });
       }
-  
+
       this.isFormVisible = true; // Show form if there are invitees
       this.addInviteeText = 'Add More Invitees'; // Update button text
     }
@@ -221,8 +234,11 @@ export class VisitorInvitigFormPage implements OnInit {
     this.isModalOpen = true; // Membuka modal
   }
 
+  // Perbaikan pada method removeInvitee()
   removeInvitee(index: number) {
     this.inviteeFormList.splice(index, 1); // Menghapus invitee dari list
+    this.selectedCountry.splice(index, 1); // Menghapus selectedCountry yang sesuai
+    
     if (this.inviteeFormList.length === 0) {
       this.isFormVisible = false; // Sembunyikan form jika tidak ada invitee
     }
@@ -266,7 +282,12 @@ export class VisitorInvitigFormPage implements OnInit {
       vehicle_number: '' 
     };
     
+    // Tambahkan invitee baru ke list
     this.inviteeFormList.push(newInvitee);
+    
+    // Pastikan juga menambahkan item baru ke selectedCountry
+    this.selectedCountry.push({ selected_code: '65' });
+    
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
   }
