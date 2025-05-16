@@ -4,6 +4,9 @@ import { Platform } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { NavigationStart, Router } from '@angular/router';
+
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-header-inner-page',
@@ -15,7 +18,8 @@ export class HeaderInnerPageComponent  implements OnInit {
   constructor(
     private storage: StorageService,
     public functionMain: FunctionMainService,
-    private platform: Platform
+    private platform: Platform,
+    private router: Router
   ) {}
 
   @Input() text: string = "";
@@ -38,6 +42,7 @@ export class HeaderInnerPageComponent  implements OnInit {
   userType: string = '';
 
   ngOnInit() {
+    this.initializeBackButtonHandling();
     this.platform.ready().then(() => {
       this.checkPlatform();
     });
@@ -54,6 +59,13 @@ export class HeaderInnerPageComponent  implements OnInit {
         })
       } 
     })
+  }
+
+  initializeBackButtonHandling() {
+    console.log("tes");
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      history.back();
+    });
   }
 
   checkPlatform() {

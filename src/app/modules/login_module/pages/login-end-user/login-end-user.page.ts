@@ -36,17 +36,18 @@ export class LoginEndUserPage implements OnInit {
     private functionMain: FunctionMainService,
     private platform: Platform,
     private storage: StorageService,
-  ) {
-    this.initializeBackButtonHandling();
-  }
+  ) {}
 
   ngOnInit() {
     this.waitingResponseLoginApi = false
+    this.initializeBackButtonHandling();
   }
 
   initializeBackButtonHandling() {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      App.exitApp();
+      console.log("tres");
+      
+      this.router.navigate([''])
     });
   }
 

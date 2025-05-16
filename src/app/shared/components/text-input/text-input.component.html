@@ -47,7 +47,7 @@
       style="border: 1px solid #6B7280;"
     />
     <input 
-      *ngIf="type !== 'date' && type !== 'time' && type !== 'month'"
+      *ngIf="type !== 'date' && type !== 'time' && type !== 'month' && type !== 'textarea'"
       [id]="id" 
       [class]="getFilteredCustomClasses(customInputClasses)" 
       [type]="type" 
@@ -58,8 +58,11 @@
       [readonly]="isReadonly" 
       [autocomplete]="autoComplete"
       [min]="type === 'date' ? min : null"
-      style="border: 1px solid #6B7280;"
+      style="border: 1px solid #6B7280; text-transform: uppercase;"
     />
+    <textarea [id]="id" rows="4" [name]="name" *ngIf="type === 'textarea'" [rows]="rows"
+        [class]="textAreaClass" [placeholder]="showPlaceholder ? placeholder : ''"  
+        (keyup)="onKeyUp($event)"></textarea>
     <input 
       *ngIf="type === 'date'"
       [id]="id"

@@ -11,10 +11,11 @@ export class LoginProcessPage implements OnInit {
 
   constructor(    
     private platform: Platform,
-  ) {
+  ) {}
+
+  ionViewWillEnter() {
     this.initializeBackButtonHandling();
   }
-
 
   ngOnInit() {
   }
@@ -22,6 +23,8 @@ export class LoginProcessPage implements OnInit {
   initializeBackButtonHandling() {
     this.platform.backButton.subscribeWithPriority(10, () => {
       App.exitApp();
+      console.log("tres");
+      
     });
   }
 }

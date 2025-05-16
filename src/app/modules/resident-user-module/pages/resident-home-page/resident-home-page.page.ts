@@ -16,9 +16,10 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 import { Estate } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
-import { App } from '@capacitor/app';
+
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -144,11 +145,10 @@ export class ResidentHomePagePage implements OnInit {
     private storage: StorageService,
     public functionMain: FunctionMainService,
     private platform: Platform,
-  ) {
-    this.initializeBackButtonHandling();
-  }
+  ) {}
 
   ionViewWillEnter() {
+    this.initializeBackButtonHandling()
     this.fetchContacts();
     this.initBluetooth();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
@@ -178,6 +178,14 @@ export class ResidentHomePagePage implements OnInit {
       }
     })
   }
+
+  initializeBackButtonHandling() {
+    console.log("tes");
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      console.log("tes");
+      App.exitApp();
+    });
+  }
   
   async initBluetooth() {
     try {
@@ -186,12 +194,6 @@ export class ResidentHomePagePage implements OnInit {
     } catch (error) {
       console.error('Bluetooth initialization error:', error);
     }
-  }
-
-  initializeBackButtonHandling() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      App.exitApp();
-    });
   }
 
   ngOnInit() {

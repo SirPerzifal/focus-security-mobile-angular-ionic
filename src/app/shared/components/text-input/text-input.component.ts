@@ -23,6 +23,8 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Input() type: string = 'text';
   @Input() customClasses: {[key: string]: boolean} = {};
   @Input() customInputClasses: {[key: string]: boolean} = {};
+  @Input() textAreaClass: string = ''
+  @Input() rows: number = 1
   @Input() id: string = '';
   @Input() name: string = '';
   @Input() isReadonly: boolean = false;
@@ -217,8 +219,8 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
       this._value = inputValue;
       this._displayValue = inputValue;
       this.keyupEvent.emit(event);
-      this.valueChange.emit(this._value);
-      this.onChange(this._value);
+      this.valueChange.emit(this._value.toUpperCase());
+      this.onChange(this._value.toUpperCase());
     } else {
       this._value = (event.target as HTMLInputElement).value;
       this.keyupEvent.emit(event);
