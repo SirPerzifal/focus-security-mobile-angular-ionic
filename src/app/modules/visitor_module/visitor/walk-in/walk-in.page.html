@@ -37,10 +37,13 @@
             <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric'/>
           </div>
           <div class="w-full flex flex-col">
-            <label class="text-2xl"><b><u>NAME</u></b></label>
+            <app-text-input #visitorWalkInName [id]="'walk_in_name'" [labelText]="'NAME'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_name"></app-text-input>
+            <!-- <label class="text-2xl"><b><u>NAME</u></b></label>
             <input id="walk_in_name" placeholder="" type="text"
               class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
-              [(ngModel)]="formData.visitor_name" name="visitor_name">
+              [(ngModel)]="formData.visitor_name" name="visitor_name"> -->
           </div>
           <div class="w-full">
             <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
@@ -63,10 +66,13 @@
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
             </div>
             <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-              <label class="text-2xl"><u><b>PURPOSE</b></u></label>
+              <!-- <label class="text-2xl"><u><b>PURPOSE</b></u></label>
               <textarea id="walk_in_purpose" rows="4" (change)="purposeInput($event)"
-                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-                placeholder=""></textarea>
+                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+                placeholder=""></textarea> -->
+              <app-text-input [id]="'walk_in_purpose'" [name]="'walk_in_purpose'" [labelText]="'PURPOSE'" [rows]="4"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+                [(ngModel)]="formData.purpose"></app-text-input>
             </div>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">
@@ -101,20 +107,26 @@
             <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' />
           </div>
           <div class="w-full flex flex-col">
-            <label class="text-2xl"><b><u>NAME</u></b></label>
+            <app-text-input #visitorDriveInName [id]="'drive_in_name'" [labelText]="'NAME'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_name"></app-text-input>
+            <!-- <label class="text-2xl"><b><u>NAME</u></b></label>
             <input id="drive_in_name" placeholder="" type="text"
               class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
-              [(ngModel)]="formData.visitor_name" name="visitor_name">
+              [(ngModel)]="formData.visitor_name" name="visitor_name"> -->
           </div>
           <div class="w-full">
             <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'drive_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
           </div>
           <div class="w-full flex flex-row justify-between">
             <div class="w-[90%] flex flex-col">
-              <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
+              <app-text-input #visitorDriveInVehcile [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_vehicle"></app-text-input>
+              <!-- <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
               <input id="drive_in_vehicle" placeholder="" type="text"
                 class="border-[1px] py-2 px-3 outline-[#DBDBD] text-2xl rounded h-20" style="border: 1px solid #6B7280;"
-                [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle">
+                [(ngModel)]="formData.visitor_vehicle" name="visitor_vehicle"> -->
             </div>
             <div class="h-25 flex flex-col justify-end">
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
@@ -146,10 +158,13 @@
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
             </div>
             <div class="w-full flex flex-col">
-              <label class="text-2xl"><u><b>PURPOSE</b></u></label>
+              <!-- <label class="text-2xl"><u><b>PURPOSE</b></u></label>
               <textarea id="purpose" rows="4" (change)="purposeInput($event)"
-                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-                placeholder=""></textarea>
+                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+                placeholder=""></textarea> -->
+              <app-text-input [id]="'drive_in_purpose'" [name]="'drive_in_purpose'" [labelText]="'PURPOSE'" [rows]="4"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+                [(ngModel)]="formData.purpose"></app-text-input>
             </div>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">

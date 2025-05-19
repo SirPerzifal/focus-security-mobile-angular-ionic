@@ -19,7 +19,7 @@
       <app-button-icon [customNameIcon]="'faCouch'" [text]="'BULKY ITEM DELIVERIES'"
         *ngIf="!project_config.is_industrial" (click)="toggleBulkyItemDeliveries()"
         [isActive]="buttonStates.bulkyItemDeliveries" [disableClick]="true" />
-      <app-button-icon [customNameIcon]="'faCouch'" [text]="'OTHERS'" *ngIf="project_config.is_industrial"
+      <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Box.png'" [text]="'OTHERS'" *ngIf="project_config.is_industrial"
         (click)="toggleOtherDeliveries()" [isActive]="buttonStates.OthersDeliveries" [disableClick]="true" />
     </div>
 
@@ -68,10 +68,13 @@
               </div> -->
               <div *ngIf="food_delivery_type == 'drive_in'" class=" w-full flex flex-row justify-between">
                 <div class="w-[90%] flex flex-col">
-                  <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
+                  <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
                   <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
                     class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                    [(ngModel)]="formData.vehicle_number" name="vehicle_number">
+                    [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
+                  <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
+                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
                 </div>
                 <div class="flex flex-col justify-end">
                   <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -160,10 +163,13 @@
               </div>
               <div class="w-full  flex flex-row justify-between">
                 <div class="flex flex-col w-[90%]">
-                  <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
-                  <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
+                  <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label> -->
+                  <!-- <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
                     class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                    [(ngModel)]="formData.vehicle_number" name="vehicle_number">
+                    [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
+                    <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'NAME'"
+                      [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                      [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
                 </div>
                 <div class="flex flex-col justify-end">
                   <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()" />
@@ -202,10 +208,13 @@
                 </form>
               </div>
               <div class="w-full flex flex-col" *ngIf="showRemarks" @fadeInOut>
-                <label class="text-2xl"><u><b>REMARKS</b></u></label>
+                <app-text-input [id]="'delivery_package_remarks'" [name]="'delivery_package_remarks'" [labelText]="'REMARKS'" [rows]="4"
+                  [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+                  [(ngModel)]="formData.remarks"></app-text-input>
+                <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
                 <textarea id="remarks" rows="4" name="remarks_delivery"
-                  class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-                  placeholder="" [(ngModel)]="formData.remarks"></textarea>
+                  class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+                  placeholder="" [(ngModel)]="formData.remarks"></textarea> -->
               </div>
 
               <div class="w-full flex flex-col" *ngIf="showBlock && !project_config.is_industrial" @fadeInOut>
@@ -296,10 +305,13 @@
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
           </div>
           <div class="w-full flex flex-col">
-            <label class="text-2xl"><u><b>REMARKS</b></u></label>
+            <app-text-input [id]="'delivery_other_remarks'" [name]="'delivery_other_remarks'" [labelText]="'REMARKS'" [rows]="4"
+                  [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+                  [(ngModel)]="otherDeliveryForm.remarks"></app-text-input>
+            <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
             <textarea id="collection_drive_in_remarks" rows="4" name="collection_drive_in_remarks"
-              class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded"
-              placeholder="" [(ngModel)]="otherDeliveryForm.remarks"></textarea>
+              class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+              placeholder="" [(ngModel)]="otherDeliveryForm.remarks"></textarea> -->
           </div>
           <div class="w-full" *ngFor="let camera of Camera; let i = index">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="onSubmitOther(true, camera.CamSentId)"></app-visitor-button>
