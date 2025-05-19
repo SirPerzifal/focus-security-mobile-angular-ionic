@@ -11,6 +11,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
   styleUrls: ['./history-of-event.page.scss'],
 })
 export class HistoryOfEventPage implements OnInit {
+  isLoading: boolean = false;
   upcomingEvents: any[] = [];
   navButtonsMain: any[] = [
     {
@@ -33,6 +34,14 @@ export class HistoryOfEventPage implements OnInit {
     private alertController: AlertController,
     private mainApi: MainApiResidentService
   ) { }
+
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadUpcomingEvents()
+      event.target.complete();
+    }, 1000)
+  }
 
   ngOnInit() {
     this.loadUpcomingEvents()
@@ -113,10 +122,12 @@ export class HistoryOfEventPage implements OnInit {
             afterEnd: true,
           },
         }));
+        this.isLoading = false
         // console.log(this.upcomingEvents)
         // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
 
       } else if (response.result.response_code == 401) {
+        this.isLoading = false
         // this.functionMain.presentToast(`Failed!`, 'danger');
       } else {
         this.functionMain.presentToast(`An error occurred while trying to load upcoming event!`, 'danger');

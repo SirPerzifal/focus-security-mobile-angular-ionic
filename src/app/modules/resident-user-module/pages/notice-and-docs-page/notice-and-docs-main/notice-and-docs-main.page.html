@@ -3,6 +3,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -35,7 +48,7 @@
         *ngIf="isLoading"
         class="flex justify-center items-center h-[50%] !mt-[100px]"
       >
-        <ion-spinner name="circular"></ion-spinner>
+        <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
       <div *ngFor="let notice of notices">
         <div
@@ -122,7 +135,7 @@
         *ngIf="isLoading"
         class="flex justify-center items-center h-[50%] mt-10"
       >
-        <ion-spinner name="circular"></ion-spinner>
+        <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
       <div class="w-full space-y-3 mt-2 text-left" *ngIf="!isLoading">
         <div

@@ -80,6 +80,29 @@ export class PollingMainPage implements OnInit {
     this.loadPolling();
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true
+    if (this.showOpen) {
+      this.isLoading = true;
+      setTimeout(() => {
+        this.loadPolling();
+        event.target.complete();
+      }, 1000)
+    } else if (this.showUpcoming) {
+      this.isLoading = true;
+      setTimeout(() => {
+        this.loadUpcomingPolling();
+        event.target.complete();
+      }, 1000)
+    } else if (this.showClosed) {
+      this.isLoading = true;
+      setTimeout(() => {
+        this.loadClosedPolling();
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   onBack() {
     if (this.pageName === 'Open Polling' && this.voteNow === true) {
       this.closeVote = true; // Set closing animation

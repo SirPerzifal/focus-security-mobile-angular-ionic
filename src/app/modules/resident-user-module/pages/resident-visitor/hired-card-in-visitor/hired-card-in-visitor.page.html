@@ -85,7 +85,7 @@
           *ngIf="isLoading"
           class="flex justify-center items-center h-full mt-4"
         >
-          <ion-spinner name="circular"></ion-spinner>
+          <app-loading-animation *ngIf="isLoading"></app-loading-animation>
         </div>
         <div *ngIf="!isLoading" class="flex flex-col mt-4 text-[14px]">
           <p class="underline underline-offset-1 font-bold text-[#757575] mb-2">

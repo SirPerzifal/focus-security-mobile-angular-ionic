@@ -25,6 +25,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
   encapsulation: ViewEncapsulation.None // Disable encapsulation
 })
 export class UpcomingEventMainPage implements OnInit {
+  isLoading: boolean = false;
   navButtonsMain: any[] = [
     {
       text: 'Calendar View',
@@ -56,6 +57,14 @@ export class UpcomingEventMainPage implements OnInit {
     private route: ActivatedRoute,
   ) {}
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadUpcomingEvents();
+      event.target.complete();
+    }, 1000)
+  }
+
   ngOnInit() {
     this.loadUpcomingEvents();
     this.route.queryParams.subscribe(params => {
@@ -86,12 +95,13 @@ export class UpcomingEventMainPage implements OnInit {
             afterEnd: true,
           },
         }));
-
+        this.isLoading = false;
         // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
         this.events = [...newEvents];
 
         // console.log(this.events);
       } else {
+        this.isLoading = false;
       }
     })
     // const now = new Date();

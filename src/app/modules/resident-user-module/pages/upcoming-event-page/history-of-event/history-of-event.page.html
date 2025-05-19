@@ -7,6 +7,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -20,49 +33,64 @@
       <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
     </div>
 
+    <div
+      *ngIf="isLoading"
+      class="flex justify-center items-center h-full mt-[50px]"
+    >
+      <app-loading-animation></app-loading-animation>
+    </div>
+
     <!-- Display upcoming events -->
-    <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
-      <div
-        *ngFor="let upcomingEvent of upcomingEvents; let i = index"
-        class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100"
-      >
-        <p class="font-bold text-xl text-black text-left mt-2">
-          {{ upcomingEvent.title }}
-        </p>
-        <div class="table text-left">
-          <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Event Date</p>
-            <p class="ml-2 table-cell text-base text-black">
-              : {{ returnDate(upcomingEvent.start) }}
-            </p>
+    <div *ngIf="!isLoading">
+      <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
+        <div
+          *ngFor="let upcomingEvent of upcomingEvents; let i = index"
+          class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100"
+        >
+          <p class="font-bold text-xl text-black text-left mt-2">
+            {{ upcomingEvent.title }}
+          </p>
+          <div class="table text-left">
+            <div class="table-row">
+              <p class="font-bold table-cell text-base text-black">
+                Event Date
+              </p>
+              <p class="ml-2 table-cell text-base text-black">
+                : {{ returnDate(upcomingEvent.start) }}
+              </p>
+            </div>
+            <div class="table-row" *ngIf="userType != 'industrial'">
+              <p class="font-bold table-cell text-base text-black">
+                Coach Name
+              </p>
+              <p class="ml-2 table-cell text-base text-black">
+                : {{ upcomingEvent.registered_coach_name ?
+                upcomingEvent.registered_coach_name : '-' }}
+              </p>
+            </div>
+            <div class="table-row">
+              <p class="font-bold table-cell text-base text-black">
+                Event Start
+              </p>
+              <p class="ml-2 table-cell text-base text-black">
+                : {{ returnReadDate(upcomingEvent.start) }}
+              </p>
+            </div>
+            <div class="table-row">
+              <p class="font-bold table-cell text-base text-black">Event End</p>
+              <p class="ml-2 table-cell text-base text-black">
+                : {{ returnReadDate(upcomingEvent.end) }}
+              </p>
+            </div>
           </div>
-          <div class="table-row" *ngIf="userType != 'industrial'">
-            <p class="font-bold table-cell text-base text-black">Coach Name</p>
-            <p class="ml-2 table-cell text-base text-black">
-              : {{ upcomingEvent.registered_coach_name ?
-              upcomingEvent.registered_coach_name : '-' }}
-            </p>
+          <div class="flex mt-2 space-x-2 mb-2">
+            <button
+              class="bg-[#E3787E] text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
+              (click)="onLiftBan(upcomingEvent)"
+            >
+              Cancel Events
+            </button>
           </div>
-          <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Event Start</p>
-            <p class="ml-2 table-cell text-base text-black">
-              : {{ returnReadDate(upcomingEvent.start) }}
-            </p>
-          </div>
-          <div class="table-row">
-            <p class="font-bold table-cell text-base text-black">Event End</p>
-            <p class="ml-2 table-cell text-base text-black">
-              : {{ returnReadDate(upcomingEvent.end) }}
-            </p>
-          </div>
-        </div>
-        <div class="flex mt-2 space-x-2 mb-2">
-          <button
-            class="bg-[#E3787E] text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
-            (click)="onLiftBan(upcomingEvent)"
-          >
-            Cancel Events
-          </button>
         </div>
       </div>
     </div>

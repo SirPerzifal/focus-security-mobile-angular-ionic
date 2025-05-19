@@ -1,11 +1,27 @@
 <ion-header [translucent]="true">
-  <app-header [userName]="useName" [condoName]="condominiumName" [profileImage]="imageProfile" [condoImage]="condoImage"></app-header>
+  <app-header
+    [userName]="useName"
+    [condoName]="condominiumName"
+    [profileImage]="imageProfile"
+    [condoImage]="condoImage"
+  ></app-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
-    <ion-spinner name="dots"></ion-spinner>
-  </div>
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
+  <app-loading-animation *ngIf="isLoading"></app-loading-animation>
   <div *ngIf="!isLoading" class="p-5 text-center mb-24">
     <!-- <div class="w-full flex flex-row mb-4">
       <div class="w-full">
@@ -20,25 +36,33 @@
     </div> -->
     <div class="flex flex-col gap-3">
       <div *ngFor="let lb of longButtondata">
-        <app-long-button [name]="lb.name" [srcImage]="lb.src" [routeLinkTo]="lb.routeLinkTo"></app-long-button>
+        <app-long-button
+          [name]="lb.name"
+          [srcImage]="lb.src"
+          [routeLinkTo]="lb.routeLinkTo"
+        ></app-long-button>
       </div>
     </div>
     <div class="flex items-center justify-center flex-col">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div *ngFor="let sb of squareButton">
-          <app-square-button 
-            [name]="sb.name" 
-            [srcImage]="sb.src" 
-            [routeLinkTo]="sb.routeLinkTo" 
-            [paramForBadgeNotification]="sb.paramForBadgeNotification" 
-            [document]="sb.document" 
-            [documentName]="sb.documentName">
+          <app-square-button
+            [name]="sb.name"
+            [srcImage]="sb.src"
+            [routeLinkTo]="sb.routeLinkTo"
+            [paramForBadgeNotification]="sb.paramForBadgeNotification"
+            [document]="sb.document"
+            [documentName]="sb.documentName"
+          >
           </app-square-button>
         </div>
       </div>
     </div>
   </div>
-  <ion-modal [isOpen]="isModalUpdateProfile" (didDismiss)="isModalUpdateProfile === false">
+  <ion-modal
+    [isOpen]="isModalUpdateProfile"
+    (didDismiss)="isModalUpdateProfile === false"
+  >
     <ng-template>
       <ion-content>
         <ion-toolbar>
@@ -46,19 +70,27 @@
         </ion-toolbar>
         <div class="px-5 pb-3 mt-[70px]">
           <div class="w-full mt-2">
-            <div class="flex flex-row justify-start mb-1">
-            </div>
-            <div class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start">
+            <div class="flex flex-row justify-start mb-1"></div>
+            <div
+              class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+            >
               <div (click)="chooseWhereToChoose()">
-                <img height="50" [src]="showingProfile || functionMain.getImage(imageProfile)" width="80" class="w-80 h-50" accept="image/*"/>
+                <img
+                  height="50"
+                  [src]="showingProfile || functionMain.getImage(imageProfile)"
+                  width="80"
+                  class="w-80 h-50"
+                  accept="image/*"
+                />
               </div>
             </div>
           </div>
-          <button 
+          <button
             [disabled]="!selectedProfile"
             (click)="uploadNewProfile()"
-            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'" 
-            class="mt-2 w-full text-base rounded h-10 font-bold">
+            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
+            class="mt-2 w-full text-base rounded h-10 font-bold"
+          >
             Upload
           </button>
         </div>
@@ -77,11 +109,14 @@
         <div class="w-full flex flex-row justify-between space-x-2 p-3">
           <div class="w-1/2">
             <div class="w-full flex flex-col items-center">
-              <input class="w-full rounded text-base hidden" type="file" name="profile_image" (change)="onProfileFileChange($event)" id="profile_image">
-              <label
-                class="flex flex-col items-center"
-                for="profile_image"
-              >
+              <input
+                class="w-full rounded text-base hidden"
+                type="file"
+                name="profile_image"
+                (change)="onProfileFileChange($event)"
+                id="profile_image"
+              />
+              <label class="flex flex-col items-center" for="profile_image">
                 <img
                   class="w-10 h-10 my-2"
                   src="assets/icon/other-file-icon.png"

@@ -125,11 +125,24 @@
       </div>
     </div>
     <div class="w-full mb-20" *ngIf="showActInv" @fadeInOut>
+      <ion-refresher
+        slot="fixed"
+        (ionRefresh)="handleRefresh($event)"
+        style="z-index: 999"
+        pullFactor="0.3"
+        pullMin="40"
+        pullMax="80"
+      >
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          refreshingSpinner="none"
+        ></ion-refresher-content>
+      </ion-refresher>
       <div
         *ngIf="isLoading"
         class="flex justify-center items-center h-full mt-[50px]"
       >
-        <ion-spinner name="circular"></ion-spinner>
+        <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
       <div
         *ngIf="activeInvites.length > 0 || isLoading === true; else noInvites"

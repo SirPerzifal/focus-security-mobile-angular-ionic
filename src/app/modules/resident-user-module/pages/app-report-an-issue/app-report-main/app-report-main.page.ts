@@ -24,6 +24,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 })
 export class AppReportMainPage implements OnInit {
 
+  isLoading: boolean = false;
   fromWhere: string = '';
   navButtons: any[] = [
     {
@@ -71,6 +72,25 @@ export class AppReportMainPage implements OnInit {
     private storage: StorageService
   ) {  }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    if (this.fromWhere === 'app-report') {
+      setTimeout(() => {
+        this.pageName = 'Report App Issue';
+        this.loadTicketFromBackendFor(this.fromWhere);
+        this.loadTypeFor(this.fromWhere);
+        event.target.complete();
+      }, 1000)
+    } else {
+      setTimeout(() => {
+        this.pageName = 'Report Condo Issue';
+        this.loadTicketFromBackendFor(this.fromWhere);
+        this.loadTypeFor(this.fromWhere);
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { fromWhere: string };
@@ -90,7 +110,6 @@ export class AppReportMainPage implements OnInit {
       this.storage.decodeData(value).then((value: any) => {
         if ( value ) {
           const estate = JSON.parse(value);
-          console.log(estate)
           this.reporterDetailsFrom = {
             requestorId: estate.family_id,
             blokId: estate.block_id,
@@ -105,8 +124,6 @@ export class AppReportMainPage implements OnInit {
             ticketAttachment: '',
           };
           this.record_type = estate.record_type;
-          console.log(estate);
-          
         }
       })
     })
@@ -201,8 +218,9 @@ export class AppReportMainPage implements OnInit {
   }
 
   loadTicketFromBackendFor(whoIsThis: string) {
-    console.log('tes');
-    
+    this.allData = []
+    this.allData.pop()
+    this.isLoading = true
     if (whoIsThis === 'app-report') {
       this.mainApi.endpointMainProcess({
         is_report_app: this.isReportApp,
@@ -211,6 +229,7 @@ export class AppReportMainPage implements OnInit {
         // console.log(response);
         if (response.result.response_code === 200) {
           this.allData = response.result.result;
+          this.isLoading = false
           // this.presentToast(response.result.message, 'success');
         } else {
           // this.presentToast(response.result.error_message, 'danger');
@@ -224,6 +243,7 @@ export class AppReportMainPage implements OnInit {
         // console.log(response);
         if (response.result.response_code === 200) {
           this.allData = response.result.result;
+          this.isLoading = false
           // this.presentToast(response.result.message, 'success');
         } else {
           // this.presentToast(response.result.error_message, 'danger');

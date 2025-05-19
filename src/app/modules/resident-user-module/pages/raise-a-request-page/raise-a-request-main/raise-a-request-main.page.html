@@ -73,7 +73,7 @@
           *ngIf="isLoading"
           class="flex justify-center items-center h-full !mt-56"
         >
-          <ion-spinner name="circular"></ion-spinner>
+          <app-loading-animation *ngIf="isLoading"></app-loading-animation>
         </div>
         <div *ngIf="!isLoading" class="space-y-2">
           <ng-container *ngFor="let allData of filteredDatas; let i = index">

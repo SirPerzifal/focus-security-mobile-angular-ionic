@@ -11,6 +11,7 @@ import { Capacitor } from '@capacitor/core';
 })
 export class SquareButtonComponent  implements OnInit {
 
+  @Input() active: boolean = true;
   @Input() name: string = '';
   @Input() srcImage: string = '';
   @Input() routeLinkTo: string = '';
@@ -22,7 +23,8 @@ export class SquareButtonComponent  implements OnInit {
 
   constructor(private router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   routeBasic(name?: any) {
     if (this.click === true) {

@@ -84,6 +84,32 @@ export class FacilityBookingMainPage implements OnInit {
     private router: Router
   ) {}
 
+  handleRefresh(event: any) {
+    if (this.subPageName === 'Active Bookings') {
+      this.isLoading = true;
+      this.activeBookings = []
+      setTimeout(() => {
+        this.loadActiveBookings();
+        event.target.complete();
+      }, 1000)
+    } else if (this.subPageName === 'New Bookings') {
+      this.isLoading = true;
+      this.facilities = []
+      setTimeout(() => {
+        this.loadFacilities();
+        event.target.complete();
+      }, 1000)
+    } else if (this.subPageName === 'History Bookings') {
+      this.isLoading = true;
+      this.originalBookingList = []
+      this.filteredBookingList = []
+      setTimeout(() => {
+        this.loadHistoryBookings();
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   ionViewWillEnter() {
     this.navButtonsMain = [
       {
@@ -149,6 +175,7 @@ export class FacilityBookingMainPage implements OnInit {
   }
 
   loadActiveBookings() {
+    this.activeBookings = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/facility_book').subscribe((response: any) => {
       if (response.result.response_code === 200) {
@@ -358,6 +385,7 @@ export class FacilityBookingMainPage implements OnInit {
   }
 
   loadFacilities() {
+    this.facilities = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/facilities').subscribe((response: any) => {
       this.facilities = response.result || [];
@@ -390,6 +418,9 @@ export class FacilityBookingMainPage implements OnInit {
   }
 
   loadHistoryBookings() {
+    this.isLoading = true;
+    this.originalBookingList = []
+    this.filteredBookingList = []
     this.mainApi.endpointMainProcess({}, 'get/booking_history').subscribe((response: any) => {
       if (response.result && response.result.booking && Array.isArray(response.result.booking)) {
         // Simpan daftar booking asli
@@ -410,7 +441,7 @@ export class FacilityBookingMainPage implements OnInit {
         this.filteredBookingList = [...this.originalBookingList];
         console.log(this.originalBookingList);
         
-        this.isLoading = false;
+        // this.isLoading = false;
         // console.log(response.result, this.isLoading);
         
       } else {

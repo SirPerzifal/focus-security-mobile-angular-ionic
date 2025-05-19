@@ -1,22 +1,52 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Polling'" [text_second]="pageName"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Polling'"
+    [text_second]="pageName"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" (click)="onBack()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"
+    ></ion-icon>
   </div>
   <div class="pb-4 pt-1.5 space-y-2 mb-28">
     <div id="nav_tabs_main" class="px-4" *ngIf="!voteNow">
-      <app-nav-tabs [buttons]="navButtonsMain" (eventEmitter)="onClick($event)"></app-nav-tabs>
+      <app-nav-tabs
+        [buttons]="navButtonsMain"
+        (eventEmitter)="onClick($event)"
+      ></app-nav-tabs>
     </div>
     <div *ngIf="showOpen" @fadeInOut>
       <div class="px-4 mt-2 text-center mb-20" *ngIf="!voteNow">
-        <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-14">
-          <ion-spinner name="circular"></ion-spinner>
+        <ion-refresher
+          slot="fixed"
+          (ionRefresh)="handleRefresh($event)"
+          style="z-index: 999"
+          pullFactor="0.3"
+          pullMin="40"
+          pullMax="80"
+        >
+          <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            refreshingSpinner="none"
+          ></ion-refresher-content>
+        </ion-refresher>
+        <div
+          *ngIf="isLoading"
+          class="flex justify-center items-center h-full mt-14"
+        >
+          <app-loading-animation *ngIf="isLoading"></app-loading-animation>
         </div>
         <div *ngIf="!isLoading" class="w-full mt-4 space-y-2">
-          <div class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center" *ngFor="let vd of voteData">
+          <div
+            class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center"
+            *ngFor="let vd of voteData"
+          >
             <div class="flex justify-start flex-col items-start w-full">
               <div class="flex flex-col items-start w-fit">
                 <h2 class="font-bold mb-2 text-start">{{ vd.polling_name }}</h2>
@@ -24,7 +54,10 @@
                   <tbody>
                     <tr>
                       <td class="font-bold w-[80px]">Close On</td>
-                      <td class="truncate">: {{ functionMain.convertToDDMMYYYY(vd.polling_end_date) || '-' }}</td>
+                      <td class="truncate">
+                        : {{ functionMain.convertToDDMMYYYY(vd.polling_end_date)
+                        || '-' }}
+                      </td>
                     </tr>
                     <!-- <tr>
                       <td class="font-bold">Vote In</td>
@@ -32,65 +65,84 @@
                     </tr> -->
                     <tr>
                       <td class="font-bold">You Vote</td>
-                      <td>
-                        : {{ isArrayAndJoin(vd.voted_option) }}
-                      </td>
-                    </tr>           
+                      <td>: {{ isArrayAndJoin(vd.voted_option) }}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
-              <button class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded" (click)="voteNowOn(vd)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded"
+                (click)="voteNowOn(vd)"
+              >
                 Vote Now
               </button>
             </div>
           </div>
-    
-          <div *ngIf="!voteData">
-            There's no polling yet
-          </div>
+
+          <div *ngIf="!voteData">There's no polling yet</div>
         </div>
       </div>
 
-      <div *ngIf="voteNow" class="text-center mb-20" [ngClass]="{'slide-up-animation': openVote, 'slide-down-animation': closeVote}">
+      <div
+        *ngIf="voteNow"
+        class="text-center mb-20"
+        [ngClass]="{'slide-up-animation': openVote, 'slide-down-animation': closeVote}"
+      >
         <div class="bg-[var(--ion-color-tertiary)] w-full py-3 my-[6px]">
           <h2 class="font-bold text-center">{{ dataForVote.polling_name }}</h2>
         </div>
         <div class="px-4">
           <div class="flex flex-col text-start">
             <div class="flex flex-col justify-start w-full">
-              <p class="text-[var(--ion-color-primary)]"><strong>Status:</strong> {{ dataForVote.states }} </p>
+              <p class="text-[var(--ion-color-primary)]">
+                <strong>Status:</strong> {{ dataForVote.states }}
+              </p>
               <p>
-                <strong>Your Option:</strong> 
+                <strong>Your Option:</strong>
                 {{ isArrayAndJoin(dataForVote.voted_option) }}
               </p>
             </div>
             <div class="space-y-2">
-              <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700" *ngFor="let option of dataForVote.options">
-                <ng-container *ngIf="dataForVote.is_multiple_answer; else notMulti">
-                  <input 
-                  [checked]="isOptionSelected(option.id)" 
-                  (click)="postChoosingOptions(option.id, false)"
-                  type="checkbox" 
-                  value="{{ option.id }}" 
-                  name="option_poll" 
-                  id="{{ option.id }}" 
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+              <div
+                class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700"
+                *ngFor="let option of dataForVote.options"
+              >
+                <ng-container
+                  *ngIf="dataForVote.is_multiple_answer; else notMulti"
+                >
+                  <input
+                    [checked]="isOptionSelected(option.id)"
+                    (click)="postChoosingOptions(option.id, false)"
+                    type="checkbox"
+                    value="{{ option.id }}"
+                    name="option_poll"
+                    id="{{ option.id }}"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
                 </ng-container>
-                
+
                 <ng-template #notMulti>
-                  <input 
-                  [checked]="isOptionSelected(option.id)"
-                  (click)="postChoosingOptions(option.id, true)"
-                  type="radio" 
-                  value="{{ option.id }}" 
-                  name="option_poll" 
-                  id="{{ option.id }}" 
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                  <input
+                    [checked]="isOptionSelected(option.id)"
+                    (click)="postChoosingOptions(option.id, true)"
+                    type="radio"
+                    value="{{ option.id }}"
+                    name="option_poll"
+                    id="{{ option.id }}"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
                 </ng-template>
-                
-                <label for="{{ option.id }}" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ option.options }}</label>
+
+                <label
+                  for="{{ option.id }}"
+                  class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >{{ option.options }}</label
+                >
               </div>
-              <button class="bg-[var(--ion-color-primary)] text-white w-full mt-2 font-bold px-4 py-2 rounded" (click)="postVote()">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white w-full mt-2 font-bold px-4 py-2 rounded"
+                (click)="postVote()"
+              >
                 Submit Vote
               </button>
             </div>
@@ -100,69 +152,129 @@
     </div>
 
     <div *ngIf="showUpcoming" @fadeInOut>
-      <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-14">
-        <ion-spinner name="circular"></ion-spinner>
+      <ion-refresher
+        slot="fixed"
+        (ionRefresh)="handleRefresh($event)"
+        style="z-index: 999"
+        pullFactor="0.3"
+        pullMin="40"
+        pullMax="80"
+      >
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          refreshingSpinner="none"
+        ></ion-refresher-content>
+      </ion-refresher>
+      <div
+        *ngIf="isLoading"
+        class="flex justify-center items-center h-full mt-14"
+      >
+        <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
       <div *ngIf="!isLoading" class="w-full mt-4 space-y-2 px-4">
-        <div class="bg-[var(--ion-color-tertiary)] rounded p-4 flex justify-between items-center" *ngFor="let vd of upcomingVoteData">
+        <div
+          class="bg-[var(--ion-color-tertiary)] rounded p-4 flex justify-between items-center"
+          *ngFor="let vd of upcomingVoteData"
+        >
           <div class="flex flex-col items-start">
-            <p class="text-black font-bold">
-              {{ vd.polling_name }}
-            </p>
+            <p class="text-black font-bold">{{ vd.polling_name }}</p>
             <p class="text-black">
-              Vote Open: {{ functionMain.convertToDDMMYYYY(vd.polling_start_date) }}
+              Vote Open: {{
+              functionMain.convertToDDMMYYYY(vd.polling_start_date) }}
             </p>
           </div>
-         </div>
+        </div>
       </div>
     </div>
 
     <div *ngIf="showClosed" @fadeInOut>
+      <ion-refresher
+        slot="fixed"
+        (ionRefresh)="handleRefresh($event)"
+        style="z-index: 999"
+        pullFactor="0.3"
+        pullMin="40"
+        pullMax="80"
+      >
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          refreshingSpinner="none"
+        ></ion-refresher-content>
+      </ion-refresher>
       <div class="px-5 mt-2 text-center mb-20" *ngIf="!showGraph">
-        <div *ngIf="isLoading" class="flex justify-center items-center h-full mt-14">
-          <ion-spinner name="circular"></ion-spinner>
+        <div
+          *ngIf="isLoading"
+          class="flex justify-center items-center h-full mt-14"
+        >
+          <app-loading-animation *ngIf="isLoading"></app-loading-animation>
         </div>
         <div *ngIf="!isLoading" class="w-full mt-4 space-y-2">
-          <div class="bg-[var(--ion-color-tertiary)] rounded p-3 py-5 flex justify-between items-center" *ngFor="let vd of closedVoteData">
+          <div
+            class="bg-[var(--ion-color-tertiary)] rounded p-3 py-5 flex justify-between items-center"
+            *ngFor="let vd of closedVoteData"
+          >
             <div class="flex justify-start flex-col items-start w-full">
               <div class="flex flex-col items-start">
-                <h2 class="font-bold mb-2 ml-2.5 text-left">{{ vd.polling_name }}</h2>
+                <h2 class="font-bold mb-2 text-left">{{ vd.polling_name }}</h2>
                 <table class="w-full text-left">
                   <tbody>
                     <tr>
                       <td class="font-bold">Closed</td>
-                      <td class="truncate">: {{ functionMain.convertToDDMMYYYY(vd.polling_end_date) }}</td>
+                      <td class="truncate">
+                        : {{ functionMain.convertToDDMMYYYY(vd.polling_end_date)
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td class="font-bold">Voted</td>
-                      <td class="truncate">: {{ isArrayAndJoin(vd.voted_option) }}</td>
+                      <td class="truncate">
+                        : {{ isArrayAndJoin(vd.voted_option) }}
+                      </td>
                     </tr>
                     <tr>
                       <td class="font-bold">Results</td>
-                      <td class="truncate">: Option <strong>{{ vd.winning_response }}</strong> win</td>
+                      <td class="truncate">
+                        : Option <strong>{{ vd.winning_response }}</strong> win
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <button class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded" (click)="toggleGraph(vd)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white w-full mt-3 font-bold px-4 py-2 rounded"
+                (click)="toggleGraph(vd)"
+              >
                 View Detail
               </button>
             </div>
           </div>
         </div>
       </div>
-    
-      <div *ngIf="showGraph" class="px-5 text-center mb-20" [ngClass]="{'slide-up-animation': openingGraph, 'slide-down-animation': closingGraph}">
+
+      <div
+        *ngIf="showGraph"
+        class="px-5 text-center mb-20"
+        [ngClass]="{'slide-up-animation': openingGraph, 'slide-down-animation': closingGraph}"
+      >
         <div>
           <h2 class="font-bold mb-2 ml-2.5">{{ dataForGraph.polling_name }}</h2>
         </div>
-        <app-voting-graph [chartData]="dataForGraph"></app-voting-graph> <!-- Pass data to the graph component -->
+        <app-voting-graph [chartData]="dataForGraph"></app-voting-graph>
+        <!-- Pass data to the graph component -->
         <div>
           <div class="flex flex-col text-start">
             <div class="flex flex-col justify-start space-y-1 w-full">
-              <p class="text-[var(--ion-color-danger)]"><strong>Polling Status:</strong> {{ dataForGraph.states }}</p>
-              <p><strong>Winning Response:</strong> {{ dataForGraph.winning_response }}</p>
-              <p><strong>You option:</strong> {{ isArrayAndJoin(dataForGraph.voted_option) }}</p>
+              <p class="text-[var(--ion-color-danger)]">
+                <strong>Polling Status:</strong> {{ dataForGraph.states }}
+              </p>
+              <p>
+                <strong>Winning Response:</strong> {{
+                dataForGraph.winning_response }}
+              </p>
+              <p>
+                <strong>You option:</strong> {{
+                isArrayAndJoin(dataForGraph.voted_option) }}
+              </p>
             </div>
           </div>
         </div>

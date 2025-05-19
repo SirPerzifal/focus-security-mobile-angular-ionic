@@ -15,7 +15,7 @@
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
     <div *ngIf="isLoading" class="flex justify-center items-center h-24">
-      <ion-spinner name="circular"></ion-spinner>
+      <app-loading-animation *ngIf="isLoading"></app-loading-animation>
     </div>
     <div *ngIf="!isLoading">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">

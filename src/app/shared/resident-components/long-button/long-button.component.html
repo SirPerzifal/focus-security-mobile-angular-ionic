@@ -1,5 +1,16 @@
-<ion-button fill="clear" expand="full" class="flex justify-between items-center bg-[#D8ECCF] rounded-full shadow-lg" (click)="routeLink()">
-  <img class="w-8 h-8" [src]="srcImage" alt="Icon for {{ name }}"/>
-  <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">{{ name }}</span>
+<ion-button
+  fill="clear"
+  expand="full"
+  [ngClass]="
+    active
+      ? 'flex justify-between items-center bg-[#D8ECCF] rounded-full shadow-lg'
+      : 'hidden justify-between items-center bg-[#D8ECCF] rounded-full shadow-lg'
+  "
+  (click)="routeLink()"
+>
+  <img class="w-8 h-8" [src]="srcImage" alt="Icon for {{ name }}" />
+  <span class="flex-grow font-bold text-start ml-2 text-base cw-4:text-sm">{{
+    name
+  }}</span>
   <ion-icon class="icon" name="arrow-forward-circle"></ion-icon>
 </ion-button>

@@ -31,6 +31,8 @@ import { CardWithButtonComponent } from './resident-components/card-with-button/
 import { CardWithImageComponent } from './resident-components/card-with-image/card-with-image.component';
 import { ModalComponent } from './resident-components/choose-payment-methode/modal/modal.component';
 import { UploadReceiptModalComponent } from './resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { LoadingAnimationComponent } from './resident-components/loading-animation/loading-animation.component';
+import { RefresherPageComponent } from './resident-components/refresher-page/refresher-page.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { UploadReceiptModalComponent } from './resident-components/upload-receip
     CardWithButtonComponent,
     CardWithImageComponent,
     ModalComponent,
-    UploadReceiptModalComponent
+    UploadReceiptModalComponent,
+    LoadingAnimationComponent,
+    RefresherPageComponent
   ],
   imports: [
     CommonModule,
@@ -93,7 +97,9 @@ import { UploadReceiptModalComponent } from './resident-components/upload-receip
     CardWithButtonComponent,
     CardWithImageComponent,
     ModalComponent,
-    UploadReceiptModalComponent
+    UploadReceiptModalComponent,
+    LoadingAnimationComponent,
+    RefresherPageComponent
   ]
 })
 export class SharedModule { }

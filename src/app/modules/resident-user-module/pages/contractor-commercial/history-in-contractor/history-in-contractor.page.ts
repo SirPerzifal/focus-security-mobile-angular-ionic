@@ -67,6 +67,16 @@ export class HistoryInContractorPage implements OnInit {
     this.getHistoryList();
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    this.historyData = []
+    this.historyData.pop();
+    setTimeout(() => {
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 1000)
+  }
+
   backToPrevPage() {
     this.router.navigate(['/resident-home-page'])
   }

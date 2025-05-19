@@ -84,6 +84,15 @@ export class MyVehicleMainPage implements OnInit {
       // // console.log(state.from);
       this.fromWhere = state.from
     } 
+  }  
+  
+  handleRefresh(event: any) {
+    this.vehicles = []
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadVehicleFromBackend();
+      event.target.complete();
+    }, 1000)
   }
 
   ngOnInit() {

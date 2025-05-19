@@ -8,13 +8,15 @@ import { Router } from '@angular/router';
 })
 export class LongButtonComponent  implements OnInit {
 
+  @Input() active: boolean = true;
   @Input() name: string = '';
   @Input() srcImage: string = '';
   @Input() routeLinkTo: string = '';
 
   constructor(private router: Router) { } 
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   routeLink() {
     this.router.navigate([this.routeLinkTo])

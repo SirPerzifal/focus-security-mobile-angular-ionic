@@ -60,6 +60,33 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     private mainApi: MainApiResidentService,
   ) { }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    if (this.pageName === 'Notice') {
+      setTimeout(() => {
+        this.navButtons[1].active = false;
+        this.navButtons[0].active = true;
+        this.pageName = 'Notice';
+        this.loadNotice();
+        this.showDocs = false;
+        this.showNotice = true;
+        event.target.complete();
+      }, 1000)
+    } else {
+      setTimeout(() => {
+        this.notices = [];
+        this.originalNotices = [];
+        this.navButtons[0].active = false;
+        this.navButtons[1].active = true;
+        this.pageName = 'Docs';
+        this.loadFile();
+        this.showNotice = false;
+        this.showDocs = true;
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   ngOnInit() {
     this.pageName = 'Notice'
     this.loadNotice();

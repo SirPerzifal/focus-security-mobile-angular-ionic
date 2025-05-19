@@ -12,7 +12,7 @@
     ></ion-icon>
   </div>
   <div *ngIf="isLoading" class="flex h-[50%] justify-center items-center">
-    <ion-spinner name="circular"></ion-spinner>
+    <app-loading-animation *ngIf="isLoading"></app-loading-animation>
   </div>
   <div *ngIf="!isLoading" class="px-5 text-center mb-24">
     <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">

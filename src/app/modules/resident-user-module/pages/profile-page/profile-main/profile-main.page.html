@@ -97,7 +97,7 @@
             *ngIf="isLoading"
             class="flex justify-center items-center h-full"
           >
-            <ion-spinner name="circular"></ion-spinner>
+            <app-loading-animation *ngIf="isLoading"></app-loading-animation>
           </div>
           <div
             *ngIf="!isLoading"
@@ -164,7 +164,7 @@
                   *ngIf="isLoading"
                   class="flex justify-center items-center h-full mt-[50px]"
                 >
-                  <ion-spinner name="circular"></ion-spinner>
+                  <app-loading-animation *ngIf="isLoading"></app-loading-animation>
                 </div>
                 <div *ngFor="let data of historyData">
                   <div

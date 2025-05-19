@@ -406,6 +406,18 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
               }
+              this.squareButton = [
+                {
+                  name: 'Estate',
+                  src: 'assets/icon/resident-icon/profile/Home.png',
+                },    {
+                  name: 'Ban',
+                  src: 'assets/icon/resident-icon/profile/No User.webp',
+                },{
+                  name: 'Vehicles',
+                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                }
+              ];
             } else {
               this.inputData = [
                 {
@@ -454,6 +466,27 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
               }
+              this.squareButton = [
+                {
+                  name: 'Family',
+                  src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
+                },    {
+                  name: 'Employee',
+                  src: 'assets/icon/resident-icon/profile/Furniture.webp',
+                },    {
+                  name: 'Estate',
+                  src: 'assets/icon/resident-icon/profile/Home.png',
+                },    {
+                  name: 'Ban',
+                  src: 'assets/icon/resident-icon/profile/No User.webp',
+                },    {
+                  name: 'Pets',
+                  src: 'assets/icon/resident-icon/profile/Pets.webp',
+                },    {
+                  name: 'Vehicles',
+                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                }
+              ];
             }
             if (estate.unit_id) {
               this.activeUnit = estate.unit_id;
@@ -822,6 +855,18 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
               }
+              this.squareButton = [
+                {
+                  name: 'Estate',
+                  src: 'assets/icon/resident-icon/profile/Home.png',
+                },    {
+                  name: 'Ban',
+                  src: 'assets/icon/resident-icon/profile/No User.webp',
+                },{
+                  name: 'Vehicles',
+                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                }
+              ];
             } else {
               this.inputData = [
                 {
@@ -870,6 +915,27 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
               }
+              this.squareButton = [
+                {
+                  name: 'Family',
+                  src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
+                },    {
+                  name: 'Employee',
+                  src: 'assets/icon/resident-icon/profile/Furniture.webp',
+                },    {
+                  name: 'Estate',
+                  src: 'assets/icon/resident-icon/profile/Home.png',
+                },    {
+                  name: 'Ban',
+                  src: 'assets/icon/resident-icon/profile/No User.webp',
+                },    {
+                  name: 'Pets',
+                  src: 'assets/icon/resident-icon/profile/Pets.webp',
+                },    {
+                  name: 'Vehicles',
+                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                }
+              ];
             }
             if (estate.unit_id) {
               this.activeUnit = estate.unit_id;

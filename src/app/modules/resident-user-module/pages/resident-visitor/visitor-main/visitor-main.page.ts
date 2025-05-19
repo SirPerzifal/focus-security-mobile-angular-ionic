@@ -125,6 +125,14 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   ionViewWillEnter() {
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.getActiveInvites();
+      event.target.complete();
+    }, 1000)
+  }
+
   ngOnInit() {
     this.getTodayDate();
     this.getActiveInvites();

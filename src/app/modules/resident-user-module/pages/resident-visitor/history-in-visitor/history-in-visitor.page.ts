@@ -65,6 +65,16 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    this.historyData = []
+    this.historyData.pop();
+    setTimeout(() => {
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 1000)
+  }
+
   ionViewWillEnter(){
     this.getHistoryList();
   }
@@ -74,6 +84,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   }
 
   getHistoryList() {
+    this.isLoading = true;
     this.historyData.pop();
     this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_history').subscribe((response) => {
       var result = response.result['response_result']

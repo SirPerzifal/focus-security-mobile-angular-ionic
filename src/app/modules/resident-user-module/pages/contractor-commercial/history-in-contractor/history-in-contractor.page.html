@@ -6,6 +6,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -88,53 +101,60 @@
               *ngIf="isLoading"
               class="flex justify-center items-center h-full mt-[50px]"
             >
-              <ion-spinner name="circular"></ion-spinner>
+              <app-loading-animation></app-loading-animation>
             </div>
-            <div *ngFor="let data of filteredData">
-              <div
-                [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'"
-              >
-                <div class="text-base cw-3:text-sm font-bold w-[100%]">
-                  <table class="w-full table-fixed">
-                    <tr class="h-6">
-                      <td class="w-[50%]">Type of Work</td>
-                      <td class="w-[5%]">:</td>
-                      <td class="truncate font-light">{{data.purpose}}</td>
-                    </tr>
-                    <tr class="h-6">
-                      <td>Name</td>
-                      <td class="w-[5%]">:</td>
-                      <td class="truncate font-light">{{data.visitor_name}}</td>
-                    </tr>
-                    <tr class="h-6">
-                      <td>Contact Number</td>
-                      <td class="w-[5%]">:</td>
-                      <td class="truncate font-light">
-                        {{data.mobile_number}}
-                      </td>
-                    </tr>
-                    <tr class="h-6">
-                      <td class="w-[50%]">Company name</td>
-                      <td class="w-[5%]">:</td>
-                      <td class="truncate font-light">{{data.company_name}}</td>
-                    </tr>
-                    <tr class="h-6">
-                      <td>Date</td>
-                      <td class="w-[5%]">:</td>
-                      <td class="font-light">
-                        {{ functionMain.convertToDDMMYYYY(data.visitor_date) }}
-                      </td>
-                      <!-- Menggunakan metode formatDate -->
-                    </tr>
-                  </table>
-                </div>
-                <div class="flex flex-row space-x-1 w-full">
-                  <button
-                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]"
-                    (click)="openDetails(data)"
-                  >
-                    View Details
-                  </button>
+            <div *ngIf="!isLoading">
+              <div *ngFor="let data of filteredData">
+                <div
+                  [class]="data.banned ? 'bg-[#E3787E] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1' : 'bg-[#D8ECCF] p-4 rounded-lg flex flex-col justify-start items-start w-full mb-1'"
+                >
+                  <div class="text-base cw-3:text-sm font-bold w-[100%]">
+                    <table class="w-full table-fixed">
+                      <tr class="h-6">
+                        <td class="w-[50%]">Type of Work</td>
+                        <td class="w-[5%]">:</td>
+                        <td class="truncate font-light">{{data.purpose}}</td>
+                      </tr>
+                      <tr class="h-6">
+                        <td>Name</td>
+                        <td class="w-[5%]">:</td>
+                        <td class="truncate font-light">
+                          {{data.visitor_name}}
+                        </td>
+                      </tr>
+                      <tr class="h-6">
+                        <td>Contact Number</td>
+                        <td class="w-[5%]">:</td>
+                        <td class="truncate font-light">
+                          {{data.mobile_number}}
+                        </td>
+                      </tr>
+                      <tr class="h-6">
+                        <td class="w-[50%]">Company name</td>
+                        <td class="w-[5%]">:</td>
+                        <td class="truncate font-light">
+                          {{data.company_name}}
+                        </td>
+                      </tr>
+                      <tr class="h-6">
+                        <td>Date</td>
+                        <td class="w-[5%]">:</td>
+                        <td class="font-light">
+                          {{ functionMain.convertToDDMMYYYY(data.visitor_date)
+                          }}
+                        </td>
+                        <!-- Menggunakan metode formatDate -->
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="flex flex-row space-x-1 w-full">
+                    <button
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-4:text-sm w-[50%]"
+                      (click)="openDetails(data)"
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

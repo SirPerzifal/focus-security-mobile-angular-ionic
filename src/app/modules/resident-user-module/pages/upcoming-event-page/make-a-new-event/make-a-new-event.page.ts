@@ -27,6 +27,7 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
   ],
 })
 export class MakeANewEventPage implements OnInit {
+  isLoading: boolean = false;
 
   faPlus = faPlus;
 
@@ -91,6 +92,16 @@ export class MakeANewEventPage implements OnInit {
   }
 
   userData: any = {}
+
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadRegisteredCoach()
+      this.loadUpcomingEvents()
+      this.loadFacilityList()
+      event.target.complete();
+    }, 1000)
+  }
 
   loadStorage() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
@@ -437,9 +448,11 @@ export class MakeANewEventPage implements OnInit {
         console.log(newEvents)
         // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
         this.Events = [...newEvents];
+        this.isLoading = false
 
         // console.log(this.Events);
       } else {
+        this.isLoading = false
       }
     })
   }

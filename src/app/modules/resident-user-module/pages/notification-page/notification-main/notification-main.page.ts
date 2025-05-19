@@ -26,6 +26,15 @@ export class NotificationMainPage implements OnInit {
     private mainApi: MainApiResidentService
   ) { }
 
+  handleRefresh(event: any) {
+    this.notifications = []
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadNotification();
+      event.target.complete();
+    }, 1000)
+  }
+
   ngOnInit() {
     this.loadNotification();
   }

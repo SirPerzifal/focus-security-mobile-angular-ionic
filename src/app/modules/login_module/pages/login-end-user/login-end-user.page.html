@@ -1,60 +1,104 @@
 <ion-content class="ion-padding h-dvh flex flex-col">
   <!-- Video Background -->
-  <div  id="video-background" class="video-bg">
-    <video 
-      autoplay 
-      loop 
-      muted 
-      playsinline 
+  <div id="video-background" class="video-bg">
+    <video
+      autoplay
+      loop
+      muted
+      playsinline
       class="top-0 right-0 w-full min-h-[100dvh] object-cover opacity-20"
     >
-      <source src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1745402465/WhatsApp_Video_2025-04-23_at_16.39.32_online-video-cutter.com_b2hab7.mp4" type="video/mp4">
+      <source
+        src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1745402465/WhatsApp_Video_2025-04-23_at_16.39.32_online-video-cutter.com_b2hab7.mp4"
+        type="video/mp4"
+      />
       Your browser does not support the video tag.
     </video>
   </div>
   <!-- <div class="absolute z-50"> -->
-    <div class="w-1/6 flex items-start">
-      <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12" [routerLink]="['']"></ion-icon>
-    </div>
-    <div class="fslp-container">
-      <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png"/>
-      <h2 class="fslp-title font-bold text-[var(--ion-color-primary)] text-center text-2xl">
-        Welcome To <br /> <p class="text-3xl">IFS360 APP</p>
-      </h2>
-      <div class="w-full">
-        <input id="email" type="text" placeholder="Email or Phone" 
-        class="border w-full rounded py-2 px-3 outline-none border-none focus:outline-none focus:border-none h-12 text-sm" 
-        [value]="existUser.login" 
-        (change)="onLoginChange($event)" 
+  <div class="w-1/6 flex items-start">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['']"
+    ></ion-icon>
+  </div>
+  <div class="fslp-container">
+    <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png" />
+    <h2
+      class="fslp-title font-bold text-[var(--ion-color-primary)] text-center text-2xl"
+    >
+      Welcome To <br />
+      <p class="text-3xl">IFS360 APP</p>
+    </h2>
+    <div class="w-full">
+      <input
+        id="email"
+        type="text"
+        placeholder="Email or Phone"
+        class="border w-full rounded py-2 px-3 outline-none border-none focus:outline-none focus:border-none h-12 text-sm"
+        [value]="existUser.login"
+        (change)="onLoginChange($event)"
         (blur)="addMarginBottomExtend = false"
-        (focus)="handleFocus()">
-      </div>
-      <div class="mt-2 w-full ">
-        <app-input-password
-          [passwordPlaceholder]="'*************'"
-          (addMarginBottomExtend)="handleFocus($event)"
-          (password)="onPasswordChange($event)"
-        ></app-input-password>
-      </div>
-      <div class="fsles-button-container mt-5">
-        <ion-button fill="clear" [ngClass]="(existUser.login && existUser.password) ? 'fslp-button h-12 w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 h-12 fslp-button-disabled w-full'" (click)="loginResident()">
-        Log In
-        </ion-button>
-      </div>
-      <div class="flex items-center mt-5">
-        <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        <label for="checked-checkbox" class="ms-2 fsles-bottom text-xs font-medium text-gray-900 dark:text-gray-300">Stay Logged In</label>
-      </div>
-      <p class="mt-6 text-xs text-center text-black fsles-bottom">New User? <a [routerLink]="['/register']" class="text-xs text-blue-500 fsles-bottom hover:underline">Register Now</a></p>
+        (focus)="handleFocus()"
+      />
     </div>
+    <div class="mt-2 w-full">
+      <app-input-password
+        [passwordPlaceholder]="'*************'"
+        (addMarginBottomExtend)="handleFocus($event)"
+        (password)="onPasswordChange($event)"
+      ></app-input-password>
+    </div>
+    <div class="fsles-button-container mt-5">
+      <ion-button
+        fill="clear"
+        [ngClass]="(existUser.login && existUser.password) ? 'fslp-button h-12 w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 h-12 fslp-button-disabled w-full'"
+        (click)="loginResident()"
+      >
+        Log In
+      </ion-button>
+    </div>
+    <div class="flex items-center mt-5">
+      <input
+        checked
+        id="checked-checkbox"
+        type="checkbox"
+        value=""
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        for="checked-checkbox"
+        class="ms-2 fsles-bottom text-xs font-medium text-gray-900 dark:text-gray-300"
+        >Stay Logged In</label
+      >
+    </div>
+    <p class="mt-6 text-xs text-center text-black fsles-bottom">
+      New User?
+      <a
+        [routerLink]="['/register']"
+        class="text-xs text-blue-500 fsles-bottom hover:underline"
+        >Register Now</a
+      >
+    </p>
+  </div>
   <!-- </div> -->
   <!-- <div *ngIf="addMarginBottomExtend" class="h-96"></div> -->
 
   <div class="modal-overlay" *ngIf="waitingResponseLoginApi"></div>
   <div class="modal" *ngIf="waitingResponseLoginApi">
-    <div class="p-4 rounded-lg w-full max-w-xs text-center" [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}">
-      <div class="flex justify-center items-center h-[50%]">
-        <ion-spinner name="circular"></ion-spinner>
+    <div
+      class="p-4 rounded-lg w-full max-w-xs text-center"
+      [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
+    >
+      <div class="flex justify-center items-center h-full animate-pulse">
+        <img
+          alt="iFS360 logo"
+          height="60"
+          src="https://res.cloudinary.com/dkxor4kjf/image/upload/v1745219293/logoIFS_eeimyp.png"
+          class="w-16 h-10"
+        />
       </div>
     </div>
   </div>
