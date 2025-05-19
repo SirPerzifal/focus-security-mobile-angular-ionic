@@ -142,6 +142,26 @@ export class BillsAndFinesPagePage implements OnInit {
     // this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK');
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    if (this.showBills) {
+      setTimeout(() => {
+        this.loadBills();
+        event.target.complete();
+      }, 1000)
+    } else if (this.showFines) {
+      setTimeout(() => {
+        this.loadFinesData();
+        event.target.complete();
+      }, 1000)
+    } else if (this.showHistory) {
+      setTimeout(() => {
+        this.loadHistoryPayment();
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   onClick(event: any) {
     // Reset semua tombol menjadi tidak aktif
     this.navButtonsMain.forEach(button => {
@@ -176,6 +196,7 @@ export class BillsAndFinesPagePage implements OnInit {
 
   loadBills() {
     this.billsLoaded = []
+    this.billsLoaded.pop()
     this.mainApiResidentService.endpointMainProcess({}, 'get/active_bills').subscribe((result: any) => {
       this.isLoading = false;
       // console.log(result);
@@ -198,6 +219,8 @@ export class BillsAndFinesPagePage implements OnInit {
   }
 
   loadFinesData() {
+    this.fines = []
+    this.fines.pop()
     this.mainApiResidentService.endpointMainProcess({}, 'get/active_fines').subscribe((response: any) => {
       this.isLoading = false
       // console.log(response.result)
@@ -250,6 +273,7 @@ export class BillsAndFinesPagePage implements OnInit {
 
   loadHistoryPayment() {
     this.mergeData = [];
+    this.mergeData.pop();
     // // console.log(this.unitId, this.projectId, this.blockId);
     this.mainApiResidentService.endpointMainProcess({}, 'get/payment_history').subscribe((response: any) => {
       const fines = response.result.response_result.fines;

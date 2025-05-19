@@ -30,6 +30,14 @@ export class FamilyMainPage implements OnInit {
   ngOnInit() {
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 1000)
+  }
+
   ionViewWillEnter() {
     this.familyData = [
       { 
