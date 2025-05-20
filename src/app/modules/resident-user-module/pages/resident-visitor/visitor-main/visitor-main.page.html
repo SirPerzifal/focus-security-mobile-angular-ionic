@@ -142,68 +142,138 @@
         *ngIf="isLoading"
         class="flex justify-center items-center h-full mt-[50px]"
       >
-        <app-loading-animation *ngIf="isLoading"></app-loading-animation>
+        <app-loading-animation></app-loading-animation>
       </div>
-      <div
-        *ngIf="activeInvites.length > 0 || isLoading === true; else noInvites"
-      >
+      <div *ngIf="!isLoading">
         <div
-          *ngFor="let invite of activeInvites"
-          class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex flex-col items-start"
+          class="flex justify-end items-end mb-2"
+          *ngIf="activeInvites.length > 0"
         >
-          <div class="flex flex-col items-start">
-            <h2 class="text-lg font-bold text-gray-800">
-              <u class="capitalize">{{ invite.name }}</u>
-            </h2>
-            <div>
-              <table>
-                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
-                  <td class="font-bold w-24">Date of Invite</td>
-                  <td class="w-4">:</td>
-                  <td>{{invite.dateOfInvite}}</td>
-                </tr>
-                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
-                  <td class="font-bold">Vehicle No</td>
-                  <td>:</td>
-                  <td>{{invite.vehicleNo ? invite.vehicleNo : '-'}}</td>
-                </tr>
-                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
-                  <td class="font-bold">Type of Entry</td>
-                  <td>:</td>
-                  <td>{{invite.entryType}}</td>
-                </tr>
-                <tr
-                  *ngIf="invite.facility"
-                  class="text-base cw-2:text-sm text-gray-800 h-1"
-                >
-                  <td class="font-bold">Facility</td>
-                  <td>:</td>
-                  <td>{{invite.facility}}</td>
-                </tr>
-              </table>
+          <nav class="flex items-center gap-x-1" aria-label="Pagination">
+            <button
+              type="button"
+              class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+              aria-label="Previous"
+              (click)="getActiveInvites('previous', pagination.current_page - 1)"
+              [disabled]="pagination.current_page <= 1"
+            >
+              <svg
+                class="shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+            </button>
+            <div class="flex items-center gap-x-1">
+              <input
+                type="number"
+                [value]="pagination.current_page"
+                (blur)="goToPage($event)"
+                (keyup.enter)="goToPage($event)"
+                class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-white dark:focus:ring-black"
+                [min]="1"
+                [max]="pagination.total_page"
+              />
+              <span
+                class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+                >of</span
+              >
+              <span
+                class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+                >{{ pagination.total_page }}</span
+              >
             </div>
-          </div>
-          <div class="flex flex-col w-full">
             <button
-              *ngIf="!invite.is_entry"
-              class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
-              (click)="resendInvite(invite.invite_id, invite.contactNo)"
+              type="button"
+              class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+              aria-label="Next"
+              (click)="getActiveInvites('next', pagination.current_page + 1)"
+              [disabled]="pagination.current_page >= pagination.total_page"
             >
-              Resend Invite
+              <svg
+                class="shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
             </button>
-            <button
-              *ngIf="!invite.is_entry"
-              class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
-              (click)="shareInvite(invite.invite_id, invite.contactNo)"
-            >
-              Share Invite
-            </button>
-            <button
-              class="bg-[#E3787E] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
-              (click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)"
-            >
-              Cancel Invite
-            </button>
+          </nav>
+        </div>
+        <div *ngIf="activeInvites.length > 0; else noInvites">
+          <div
+            *ngFor="let invite of activeInvites"
+            class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex flex-col items-start"
+          >
+            <div class="flex flex-col items-start">
+              <h2 class="text-lg font-bold text-gray-800">
+                <u class="capitalize">{{ invite.name }}</u>
+              </h2>
+              <div>
+                <table>
+                  <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                    <td class="font-bold w-24">Date of Invite</td>
+                    <td class="w-4">:</td>
+                    <td>{{invite.dateOfInvite}}</td>
+                  </tr>
+                  <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                    <td class="font-bold">Vehicle No</td>
+                    <td>:</td>
+                    <td>{{invite.vehicleNo ? invite.vehicleNo : '-'}}</td>
+                  </tr>
+                  <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                    <td class="font-bold">Type of Entry</td>
+                    <td>:</td>
+                    <td>{{invite.entryType}}</td>
+                  </tr>
+                  <tr
+                    *ngIf="invite.facility"
+                    class="text-base cw-2:text-sm text-gray-800 h-1"
+                  >
+                    <td class="font-bold">Facility</td>
+                    <td>:</td>
+                    <td>{{invite.facility}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <button
+                *ngIf="!invite.is_entry"
+                class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+                (click)="resendInvite(invite.invite_id, invite.contactNo)"
+              >
+                Resend Invite
+              </button>
+              <button
+                *ngIf="!invite.is_entry"
+                class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+                (click)="shareInvite(invite.invite_id, invite.contactNo)"
+              >
+                Share Invite
+              </button>
+              <button
+                class="bg-[#E3787E] text-white px-3 py-2 text-base rounded-md font-bold mt-2 cw-2:text-sm w-full"
+                (click)="presentCustomAlert('Cancel Invite', 'Confirm', 'Cancel', invite)"
+              >
+                Cancel Invite
+              </button>
+            </div>
           </div>
         </div>
       </div>

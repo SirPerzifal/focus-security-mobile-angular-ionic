@@ -68,7 +68,13 @@ export class FacilityBookingMainPage implements OnInit {
   ];
 
   activeBookings: ActiveBooking[] = [];
-
+  pagination = {
+    current_page: 1,    // Changed to number with default value
+    per_page: 10,       // Changed to number with default value
+    total_page: 1,      // Changed to number with default value
+    total_records: 0    // Changed to number with default value
+  }
+  
   facilities: Facility[] = [];
   placeholderImage = 'https://placehold.co/300x150';
 
@@ -174,10 +180,37 @@ export class FacilityBookingMainPage implements OnInit {
     }
   }
 
-  loadActiveBookings() {
+  goToPage(event: any, want?: string) {
+    const inputValue = parseInt(event.target.value, 10);
+    
+    // Validate input: ensure it's a number within valid range
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
+      if (want) {
+        this.loadHistoryBookings('goto', inputValue)
+      } else {
+        this.loadActiveBookings('goto', inputValue);
+      }
+    } else {
+      // Reset to current page if invalid input
+      event.target.value = this.pagination.current_page;
+      
+      // Optional: Show a toast message for invalid page
+      this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
+    }
+  }
+
+  loadActiveBookings(type?: string, page?: number) {
     this.activeBookings = []
     this.isLoading = true;
-    this.mainApi.endpointMainProcess({}, 'get/facility_book').subscribe((response: any) => {
+
+    // Ensure page is valid and within range
+    if (page !== undefined) {
+      page = Math.max(1, Math.min(page, this.pagination.total_page || 1));
+    }
+
+    this.mainApi.endpointMainProcess({
+      page: page
+    }, 'get/facility_book').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.isLoading = false;
         // Map data dengan tipe yang jelas
@@ -194,7 +227,20 @@ export class FacilityBookingMainPage implements OnInit {
           amount_total: booking.amount_total,
           amount_deposit: booking.amount_deposit,
         }));
+        // Update pagination with proper number types
+        this.pagination = {
+          current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
+          per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
+          total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
+          total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
+        }
+      } else {
+        this.isLoading = false;
+        this.functionMain.presentToast('Failed to load booking data', 'danger');
       }
+    }, error => {
+      this.isLoading = false;
+      this.functionMain.presentToast('Error loading booking data', 'danger');
     })
   }
 
@@ -417,11 +463,18 @@ export class FacilityBookingMainPage implements OnInit {
     return timePart ? timePart.substring(0, 5) : '';
   }
 
-  loadHistoryBookings() {
+  loadHistoryBookings(type?: string, page?: number) {
     this.isLoading = true;
     this.originalBookingList = []
     this.filteredBookingList = []
-    this.mainApi.endpointMainProcess({}, 'get/booking_history').subscribe((response: any) => {
+
+    if (page !== undefined) {
+      page = Math.max(1, Math.min(page, this.pagination.total_page || 1));
+    }
+
+    this.mainApi.endpointMainProcess({
+      page: page
+    }, 'get/booking_history').subscribe((response: any) => {
       if (response.result && response.result.booking && Array.isArray(response.result.booking)) {
         // Simpan daftar booking asli
         this.originalBookingList = response.result.booking.map((booking: any) => ({
@@ -440,14 +493,24 @@ export class FacilityBookingMainPage implements OnInit {
         // Set booking list awal
         this.filteredBookingList = [...this.originalBookingList];
         console.log(this.originalBookingList);
+        this.isLoading = false;
         
-        // this.isLoading = false;
-        // console.log(response.result, this.isLoading);
-        
+        // Update pagination with proper number types
+        this.pagination = {
+          current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
+          per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
+          total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
+          total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
+        }
       } else {
-        this.originalBookingList = [];
-        this.filteredBookingList = [];
+        this.originalBookingList = []
+        this.filteredBookingList = []
+        this.isLoading = false;
+        this.functionMain.presentToast('Failed to load booking data', 'danger');
       }
+    }, error => {
+      this.isLoading = false;
+      this.functionMain.presentToast('Error loading booking data', 'danger');
     })
   }
 

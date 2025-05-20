@@ -60,6 +60,13 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   dateFilter = ''
   typeFilter = 'All'
 
+  pagination = {
+    current_page: 1,    // Changed to number with default value
+    per_page: 10,       // Changed to number with default value
+    total_page: 1,      // Changed to number with default value
+    total_records: 0    // Changed to number with default value
+  }
+
   constructor(private router: Router, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService, private alertController: AlertController) { 
   }
   ngOnInit() {
@@ -83,10 +90,32 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     this.router.navigate(['/resident-home-page'])
   }
 
-  getHistoryList() {
+  goToPage(event: any) {
+    const inputValue = parseInt(event.target.value, 10);
+    
+    // Validate input: ensure it's a number within valid range
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
+      this.getHistoryList('goto', inputValue);
+    } else {
+      // Reset to current page if invalid input
+      event.target.value = this.pagination.current_page;
+      
+      // Optional: Show a toast message for invalid page
+      this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
+    }
+  }
+
+  getHistoryList(type?: string, page?: number) {
     this.isLoading = true;
     this.historyData.pop();
-    this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_history').subscribe((response) => {
+
+    if (page !== undefined) {
+      page = Math.max(1, Math.min(page, this.pagination.total_page || 1));
+    }
+
+    this.mainApiResidentService.endpointMainProcess({
+      page: page
+    }, 'get/visitor_history').subscribe((response) => {
       var result = response.result['response_result']
       this.historyData = []
       if (response.result.response_status === 400) {
@@ -118,8 +147,14 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
             banned: item['is_banned'],
             id: item['visitor_id']
           });
-          this.isLoading = false;
         });
+        this.pagination = {
+          current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
+          per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
+          total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
+          total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
+        }
+        this.isLoading = false;
       }
       this.filteredData = [...this.historyData];
     })

@@ -36,6 +36,76 @@
     </div>
 
     <div *ngIf="subPageName === 'Active Bookings'">
+      <div
+        class="flex justify-end items-end"
+        *ngIf="activeBookings.length > 0 && isLoading === false"
+      >
+        <nav class="flex items-center gap-x-1" aria-label="Pagination">
+          <button
+            type="button"
+            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+            aria-label="Previous"
+            (click)="loadActiveBookings('previous', pagination.current_page - 1)"
+            [disabled]="pagination.current_page <= 1"
+          >
+            <svg
+              class="shrink-0 size-3.5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          <div class="flex items-center gap-x-1">
+            <input
+              type="number"
+              [value]="pagination.current_page"
+              (blur)="goToPage($event)"
+              (keyup.enter)="goToPage($event)"
+              class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-white dark:focus:ring-black"
+              [min]="1"
+              [max]="pagination.total_page"
+            />
+            <span
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+              >of</span
+            >
+            <span
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+              >{{ pagination.total_page }}</span
+            >
+          </div>
+          <button
+            type="button"
+            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+            aria-label="Next"
+            (click)="loadActiveBookings('next', pagination.current_page + 1)"
+            [disabled]="pagination.current_page >= pagination.total_page"
+          >
+            <svg
+              class="shrink-0 size-3.5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </button>
+        </nav>
+      </div>
       <div class="flex flex-col relative">
         <div
           *ngIf="activeBookings.length > 0 && isLoading === false; else noActiveBookings"
@@ -47,7 +117,7 @@
           'bg-[#E3787E]': booking.statusBooked === 'Rejected' || booking.statusBooked === 'Cancelled',
           'bg-[#F8F1BA]': booking.statusBooked === 'Requested' || booking.statusBooked === 'Pending Approval' || booking.statusBooked === 'Pending Payment',
           }"
-            class="bg-green-100 rounded-2xl p-5 my-4 mt-4 w-full"
+            class="bg-green-100 rounded-2xl p-5 my-4 mt-2 w-full"
           >
             <h2
               [ngClass]="{
@@ -209,7 +279,7 @@
     </div>
 
     <div *ngIf="subPageName === 'History Bookings'">
-      <div class="flex flex-col space-y-1 w-full mb-2">
+      <div class="flex flex-col space-y-1 w-full mb-1">
         <div class="flex flex-row space-x-2 mr-4">
           <p class="text-base font-bold">Filter Date</p>
         </div>
@@ -245,6 +315,76 @@
             >Clear Filter</u
           >
         </div>
+      </div>
+      <div
+        class="flex justify-end items-end mb-2"
+        *ngIf="filteredBookingList.length > 0 && isLoading === false"
+      >
+        <nav class="flex items-center gap-x-1" aria-label="Pagination">
+          <button
+            type="button"
+            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+            aria-label="Previous"
+            (click)="loadHistoryBookings('previous', pagination.current_page - 1)"
+            [disabled]="pagination.current_page <= 1"
+          >
+            <svg
+              class="shrink-0 size-3.5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          <div class="flex items-center gap-x-1">
+            <input
+              type="number"
+              [value]="pagination.current_page"
+              (blur)="goToPage($event, 'history')"
+              (keyup.enter)="goToPage($event, 'history')"
+              class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-white dark:focus:ring-black"
+              [min]="1"
+              [max]="pagination.total_page"
+            />
+            <span
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+              >of</span
+            >
+            <span
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+              >{{ pagination.total_page }}</span
+            >
+          </div>
+          <button
+            type="button"
+            class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+            aria-label="Next"
+            (click)="loadHistoryBookings('next', pagination.current_page + 1)"
+            [disabled]="pagination.current_page >= pagination.total_page"
+          >
+            <svg
+              class="shrink-0 size-3.5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </button>
+        </nav>
       </div>
       <div
         *ngFor="let booking of filteredBookingList"

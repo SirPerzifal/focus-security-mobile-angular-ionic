@@ -86,6 +86,13 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
     }
   ]
 
+  pagination = {
+    current_page: 1,    // Changed to number with default value
+    per_page: 10,       // Changed to number with default value
+    total_page: 1,      // Changed to number with default value
+    total_records: 0    // Changed to number with default value
+  }
+
   constructor(
     public functionMain: FunctionMainService,
     private route: Router,
@@ -194,9 +201,33 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
     }
   }
 
-  getActiveInvites() {
+  goToPage(event: any, want?: string) {
+    const inputValue = parseInt(event.target.value, 10);
+    
+    // Validate input: ensure it's a number within valid range
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
+      this.getActiveInvites('goto', inputValue);
+    } else {
+      // Reset to current page if invalid input
+      event.target.value = this.pagination.current_page;
+      
+      // Optional: Show a toast message for invalid page
+      this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
+    }
+  }
+
+  getActiveInvites(type?: string, page?: number) {
+    this.activeInvites = [];
+
+    // Ensure page is valid and within range
+    if (page !== undefined) {
+      page = Math.max(1, Math.min(page, this.pagination.total_page || 1));
+    }
+
     try {
-      this.mainApiResidentService.endpointMainProcess({}, 'get/contractor_active_invites').subscribe(
+      this.mainApiResidentService.endpointMainProcess({
+        page: page
+      }, 'get/contractor_active_invites').subscribe(
         res => {
           var result = res.result['response_status'];
           // console.log(result)
@@ -225,6 +256,12 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
               });
               this.isLoading = false
             });
+            this.pagination = {
+              current_page: res.result.pagination.current_page ? Number(res.result.pagination.current_page) : 1,
+              per_page: res.result.pagination.per_page ? Number(res.result.pagination.per_page) : 10,
+              total_page: res.result.pagination.total_pages ? Number(res.result.pagination.total_pages) : 1,
+              total_records: res.result.pagination.total_records ? Number(res.result.pagination.total_records) : 0
+            }
           }
         },
         error => {

@@ -74,7 +74,7 @@ export class MainApiResidentService extends ApiService {
         
         // Body request berdasarkan ada/tidaknya data estate
         let body;
-        console.log(estate.record_type);
+        console.log(estate.record_type, params);
         
         if (estate.record_type === 'industrial' || estate.record_type === 'resident') {
           body = {
