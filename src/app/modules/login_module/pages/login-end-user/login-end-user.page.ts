@@ -208,7 +208,7 @@ export class LoginEndUserPage implements OnInit {
                       estate: estates,
                     }
                   });
-                  this.waitingResponseLoginApi = true;
+                  this.waitingResponseLoginApi = false;
                   this.isAnimating = true;
                   setTimeout(() => {
                     this.isAnimating = false;

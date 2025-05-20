@@ -11,6 +11,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
 import { ModalChoosePaymentMethodComponent } from 'src/app/shared/resident-components/modal-choose-payment-method/modal-choose-payment-method.component';
 import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 interface Visitor {
   id: number;
@@ -26,6 +27,7 @@ interface Visitor {
 })
 export class OvernightFormRarPage implements OnInit {
   projectid: number = 0;
+  familyId: number = 0;
   unitId: number = 1; // Replace with actual unit ID logic
   userName: string = '';
   condoName: string = '';
@@ -63,7 +65,7 @@ export class OvernightFormRarPage implements OnInit {
     isRequirePayment: false,
   }
 
-  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private modalController: ModalController, private storage: StorageService) {
+  constructor(private requestService: RaiseARequestService, private fb: FormBuilder, private toastController: ToastController, private router: Router, private mainApiResidentService: MainApiResidentService, private modalController: ModalController, private storage: StorageService, public functionMain: FunctionMainService) {
     this.form = this.fb.group({
       residentName: this.nameOfResident,
       block: this.blokId,
@@ -111,6 +113,7 @@ export class OvernightFormRarPage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.projectid = Number(estate.project_id);
+            this.familyId = estate.family_id;
             this.unitId = Number(estate.unit_id);
             this.unit = estate.unit_id;
             this.block = estate.block_id;
@@ -306,7 +309,7 @@ export class OvernightFormRarPage implements OnInit {
         const visitorId = applicantType === 'visitor' ? formData.visitorId : null; // Only if applying for a visitor
         const purpose = applicantType === 'myself' ? formData.purposeOfParking : null; // Only if applying for myself
         const rentalAgreement = formData.agreement; // Convert boolean to string
-        const familyId = 15; // Replace with actual family ID logic if needed
+        const familyId = this.familyId; // Replace with actual family ID logic if needed
 
         // console.log(blockId,
         //   unitId,
@@ -333,7 +336,7 @@ export class OvernightFormRarPage implements OnInit {
           purpose,
           rentalAgreement,
           familyId,
-          this.requestDate,
+          applicantType =='visitor' ? this.functionMain.getTodayYYYYMMDD() : this.requestDate,
         ).subscribe(
           (response) => {
             // console.log('Response from server:', response);

@@ -20,6 +20,7 @@ import { Estate } from 'src/models/resident/resident.model';
 export class BicycleTagApplicationPage implements OnInit {
 
   projectId: number =1;
+  familyId: number = 0
   selectedOption: string = '';
   expectedBicycle: any = [];
   agreementChecked: boolean = false;
@@ -85,6 +86,7 @@ export class BicycleTagApplicationPage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.projectId = Number(estate.project_id)
+            this.familyId = Number(estate.family_id)
             this.unitId = Number(estate.unit_id);
             this.formData.unit_id = estate.unit_id;
             this.unit = estate.unit_id;
@@ -256,6 +258,7 @@ export class BicycleTagApplicationPage implements OnInit {
           paymentReceipt,
           this.formData.bicycle_brand,
           this.formData.bicycle_colour,
+          this.familyId,
           this.formData.id // Mengirim bicycle_id untuk replacement
         ).subscribe(
           (response) => {
@@ -295,6 +298,7 @@ export class BicycleTagApplicationPage implements OnInit {
           paymentReceipt,
           this.formData.bicycle_brand,
           this.formData.bicycle_colour,
+          this.familyId,
           0,
           this.formData.bicycle_image // Mengirim bicycle_image untuk new application
         ).subscribe(

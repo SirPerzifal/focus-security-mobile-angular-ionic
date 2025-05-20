@@ -40,6 +40,7 @@ export class RenovationPermitPage implements OnInit {
   isModalOpen: boolean = false; // Status modal
   dateNow = new Date().toISOString().slice(0, 10);
   contactPerson: string = '';
+  contact_person_id: any = 0
   expectedFamilyMember = [
     { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
   ];
@@ -58,7 +59,7 @@ export class RenovationPermitPage implements OnInit {
 
   constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private renovationService: RaiseARequestService, private toastController: ToastController, private alertController: AlertController,private route: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) {
     this.renovationForm = this.fb.group({
-      requestorId: [36],
+      requestorId: [this.family_id],
       name_of_resident: ['KingsMan Condominium'],
       phone_number: ['085830122464'],
       renovation_date: ['', Validators.required],
@@ -67,7 +68,7 @@ export class RenovationPermitPage implements OnInit {
       renovation_type: ['renovation'],
       block: [1],
       unit: [1],
-      contact_person_id: [0],
+      contact_person_id: [this.family_id],
       contractor_contact_person: [''], 
       contractor_contact_number: [''],
       contractor_company_name: [''],
@@ -114,6 +115,7 @@ export class RenovationPermitPage implements OnInit {
   onContactPersonChange(option: string) {
     this.contactPerson = option;
     this.renovationForm.value.contact_person_id = 1;
+    this.contact_person_id = this.family_id
   }
 
   ngOnInit() {
@@ -123,10 +125,13 @@ export class RenovationPermitPage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.unitId = Number(estate.unit_id);
+            this.unit_name = estate.unit_name
+            this.block_name = estate.block_name
             this.renovationForm.get('block')!.setValue(Number(estate.block_id))        
             this.renovationForm.get('contact_person_id')!.setValue(Number(estate.family_id))
             this.unit = estate.unit_id;
             this.block = estate.block_id;
+            this.contact_person_id = estate.family_id
             this.projectId = estate.project_id;
             this.renovationForm.get('unit')!.setValue(Number(estate.unit_id));
             this.condoName = estate.project_name;
@@ -142,6 +147,8 @@ export class RenovationPermitPage implements OnInit {
     })
   }
   family_id = 0
+  block_name = ''
+  unit_name = ''
 
   onShowAmountChange(event: any) {
     const type = event.target.value;
@@ -221,6 +228,7 @@ export class RenovationPermitPage implements OnInit {
   onSelect(select: any) {
     // console.log('Selected:', select);
     this.renovationForm.value.contact_person_id = select['id'];
+    this.contact_person_id = select['id']
   }
 
   public async presentCustomAlert(
@@ -315,13 +323,13 @@ export class RenovationPermitPage implements OnInit {
       // Panggil service untuk mengirim data
       this.renovationService.postSchedule(
         formattedDateTime.toISOString(),
-        this.renovationForm.value.requestorId,
+        (this.family_id).toString(),
         this.renovationForm.value.renovation_type,
-        this.renovationForm.value.block,
-        this.renovationForm.value.unit,
+        this.block,
+        this.unit,
         this.projectId,
         paymentReceipt,
-        this.renovationForm.value.contact_person_id,
+        this.contact_person_id,
         this.renovationForm.value.renovation_signature,
         this.renovationForm.value.contractor_contact_person,
         this.renovationForm.value.contractor_contact_number,

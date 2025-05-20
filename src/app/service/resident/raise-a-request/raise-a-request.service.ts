@@ -143,6 +143,8 @@ export class RaiseARequestService extends ApiService  {
         },
     };
 
+    console.log(body)
+
     return this.http.post(`${this.postApiReqSchedule}`, body, { headers }).pipe(
         catchError(this.handleError)
     );
@@ -158,6 +160,7 @@ export class RaiseARequestService extends ApiService  {
     paymentReceipt: string,
     bicycle_brand: string,
     bicycle_colour: string,
+    family_id: number,
     bicycle_id?: number, // Optional untuk replacement
     bicycle_image?: string, // Optional untuk new application
   ): Observable<any> {
@@ -177,6 +180,7 @@ export class RaiseARequestService extends ApiService  {
           bicycle_colour: bicycle_colour,
           bicycle_image: bicycle_image, // Hanya akan ada untuk new application
           bicycle_tag_id: bicycle_id, // Hanya akan ada untuk replacement
+          family_id: family_id,
         },
     };
     return this.http.post(`${this.postApiBicycle}`, body, { headers }).pipe(
@@ -439,7 +443,7 @@ export class RaiseARequestService extends ApiService  {
           contact_number: contact_number,
           coach_sex: coach_sex,
           nationality: nationality,
-          affliated_organization: affliated_organization,
+          affiliated_organization: affliated_organization,
           coaching_reg_number: coaching_reg_number,
           type_of_coaching: type_of_coaching,
           facility_required: facility_required,

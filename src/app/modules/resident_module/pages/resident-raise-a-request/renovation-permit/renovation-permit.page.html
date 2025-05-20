@@ -43,7 +43,7 @@
           [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true"
-          [(ngModel)]="block"
+          [(ngModel)]="block_name"
           [ngModelOptions]="{standalone: true}"
         >
         </app-text-input>
@@ -59,7 +59,7 @@
           [type]="'text'"
           [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-12':true, 'text-base': true}"
           [isReadonly]="true"
-          [(ngModel)]="unit"
+          [(ngModel)]="unit_name"
           [ngModelOptions]="{standalone: true}"
         >
         </app-text-input>
@@ -169,6 +169,63 @@
         >
       </div>
     </div>
+
+    <div
+      class="flex flex-row mt-2 w-full"
+      *ngIf="contactPerson === 'appoint_another'"
+    >
+      <table
+        class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+      >
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th
+              class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
+            ></th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              Name
+            </th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              Phone
+            </th>
+            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              Edit
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ef of expectedFamilyMember">
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <input
+                id="ef_data_{{ef.id}}"
+                (change)="onSelect(ef)"
+                name="ef"
+                type="radio"
+                class="w-4 h-4 cw-3:w-2 cw-3:h-2"
+              />
+            </td>
+            <td
+              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+            >
+              {{ ef.name }}
+            </td>
+            <td
+              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+            >
+              {{ ef.mobile }}
+            </td>
+            <td
+              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+            >
+              <u (click)="navigateToEditFamily(ef)" class="text-blue-400"
+                >edit</u
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
     <div class="w-full mt-2">
       <div class="w-full">
         <div class="flex flex-row justify-start mb-1">
@@ -226,61 +283,6 @@
         >
         </app-text-input>
       </div>
-    </div>
-    <div
-      class="flex flex-row mt-2 w-full"
-      *ngIf="contactPerson === 'appoint_another'"
-    >
-      <table
-        class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
-      >
-        <thead>
-          <tr class="bg-gray-200 text-gray-700">
-            <th
-              class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
-            ></th>
-            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
-              Name
-            </th>
-            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
-              Phone
-            </th>
-            <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
-              Edit
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ef of expectedFamilyMember">
-            <td class="border border-gray-300 px-4 py-2 text-center">
-              <input
-                id="ef_data_{{ef.id}}"
-                (change)="onSelect(ef)"
-                name="ef"
-                type="radio"
-                class="w-4 h-4 cw-3:w-2 cw-3:h-2"
-              />
-            </td>
-            <td
-              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
-            >
-              {{ ef.name }}
-            </td>
-            <td
-              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
-            >
-              {{ ef.mobile }}
-            </td>
-            <td
-              class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
-            >
-              <u (click)="navigateToEditFamily(ef)" class="text-blue-400"
-                >edit</u
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
     <div class="w-full mt-2">

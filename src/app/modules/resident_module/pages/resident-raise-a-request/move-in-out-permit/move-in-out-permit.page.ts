@@ -36,6 +36,7 @@ export class MoveInOutPermitPage implements OnInit {
   contactPerson: string = '';
   expectedFamilyMember: any = [];
   moveType: string = '';
+  contact_person_id: any = 0
 
   amountPayable: string = '';
   amountType = {
@@ -48,7 +49,7 @@ export class MoveInOutPermitPage implements OnInit {
 
   constructor(private modalController: ModalController, private familyService: FamilyService, private fb: FormBuilder, private moveInOutService: RaiseARequestService, private toastController: ToastController, private route: Router, private mainApiResidentService: MainApiResidentService, private storage: StorageService) {
     this.moveInOutForm = this.fb.group({
-      requestorId: [15],
+      requestorId: [this.family_id],
       name_of_resident: ['KingsMan Condominium'],
       phone_number: ['085830122464'],
       move_date: ['', Validators.required],
@@ -57,7 +58,7 @@ export class MoveInOutPermitPage implements OnInit {
       move_type: ['', Validators.required],
       block: [0],
       unit: [0],
-      contact_person_id: [1],
+      contact_person_id: [this.family_id],
       contractor_contact_person: [''], 
       contractor_contact_number: [''],
       contractor_company_name: [''],
@@ -94,7 +95,8 @@ export class MoveInOutPermitPage implements OnInit {
     this.extend_mb = true
     if (type !== 'bulky_item') {
       this.moveInOutForm.get('move_type')!.setValue(type); // Then set the new move type
-      this.moveInOutForm.value.contact_person_id = [1];
+      this.moveInOutForm.value.contact_person_id = [this.family_id];
+      this.contact_person_id = [this.family_id]
       this.agreementChecked = false;
       this.moveType = type;
     } else {
@@ -141,7 +143,8 @@ export class MoveInOutPermitPage implements OnInit {
   onContactPersonChange(option: string) {
     this.contactPerson = option;
     if (option === 'same_as_above') {
-      this.moveInOutForm.value.contact_person_id = 1;
+      this.moveInOutForm.value.contact_person_id = this.family_id;
+      this.contact_person_id = this.family_id
     }
   }
 
@@ -153,8 +156,12 @@ export class MoveInOutPermitPage implements OnInit {
             const estate = JSON.parse(value) as Estate;
             console.log(estate)
             this.unitId = Number(estate.unit_id);
+            this.unit_name = estate.unit_name
+            this.block_name = estate.block_name
             this.moveInOutForm.get('block')!.setValue(Number(estate.block_id))
-            this.moveInOutForm.get('contact_person_id')!.setValue(Number(estate.family_id))
+            this.moveInOutForm.value.contact_person_id = estate.family_id
+            this.contact_person_id = estate.family_id
+            // this.moveInOutForm.get('contact_person_id')!.setValue(Number(estate.family_id))
             this.unit = estate.unit_id;
             this.block = estate.block_id;
             this.projectId = estate.project_id;
@@ -171,6 +178,8 @@ export class MoveInOutPermitPage implements OnInit {
     })
   }
   family_id = 0
+  block_name = ''
+  unit_name = ''
 
   onShowAmountChange(event: any) {
     const type = event.target.value;
@@ -215,8 +224,9 @@ export class MoveInOutPermitPage implements OnInit {
   }
 
   onSelect(select: any) {
-    // console.log('Selected:', select);
+    console.log('Selected:', select);
     this.moveInOutForm.value.contact_person_id = select['id'];
+    this.contact_person_id = select['id']
   }
 
   async presentChoosePaymentMethodeModal() {
@@ -288,13 +298,13 @@ export class MoveInOutPermitPage implements OnInit {
       // Panggil service untuk mengirim data
       this.moveInOutService.postSchedule(
         formattedDateTime.toISOString(),
-        this.moveInOutForm.value.requestorId,
+        (this.family_id).toString(),
         this.moveInOutForm.value.move_type,
-        this.moveInOutForm.value.block,
-        this.moveInOutForm.value.unit,
+        this.block,
+        this.unit,
         this.projectId,
         paymentReceipt,
-        this.moveInOutForm.value.contact_person_id,
+        this.contact_person_id,
         '',
         this.moveInOutForm.value.contractor_contact_person,
         this.moveInOutForm.value.contractor_contact_number,
