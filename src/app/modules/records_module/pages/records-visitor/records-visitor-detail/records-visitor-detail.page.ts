@@ -136,4 +136,11 @@ export class RecordsVisitorDetailPage implements OnInit {
     this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
   }
 
+  handleRefresh(event: any) {
+    this.getBlacklist()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
+
 }

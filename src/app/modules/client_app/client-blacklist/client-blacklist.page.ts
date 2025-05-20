@@ -553,4 +553,16 @@ export class ClientBlacklistPage implements OnInit {
     }
   }
 
+  handleRefresh(event: any) {
+    this.loadBlacklistData().then(() => {
+      if (this.pageType == 'visitor') {
+        this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+      } else {
+        this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
+      }
+      this.applyFilters() 
+      event.target.complete()
+    })
+  }
+
 }

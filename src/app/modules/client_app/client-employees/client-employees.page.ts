@@ -198,7 +198,7 @@ export class ClientEmployeesPage implements OnInit {
     });
   }
 
-  loadEmployees() {
+  async loadEmployees() {
     this.isLoading = true
     this.clientMainService.getApi({record_list: 'employee', project_id: this.project_id, is_approved: true}, '/client/get/approval_list').subscribe({
       next: (results) => {
@@ -281,5 +281,9 @@ export class ClientEmployeesPage implements OnInit {
   callEmployee(data: any){
     // console.log(data)
     this.webRtcService.createOffer(false, data.id, false, false);
+  }
+
+  handleRefresh(event: any) {
+    this.loadEmployees().then(() => event.target.complete())
   }
 }

@@ -183,7 +183,7 @@ export class ClientQuickDialsPage implements OnInit {
 
   sortContact: any = []
   isLoading = false
-  loadContact() {
+  async loadContact() {
     this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/contact_list').subscribe({
       next: (results) => {
@@ -288,5 +288,9 @@ export class ClientQuickDialsPage implements OnInit {
 
   onCall(contact: any) {
     console.log(contact)
+  }
+
+  handleRefresh(event: any) {
+    this.loadContact().then(() => event.target.complete())
   }
 }

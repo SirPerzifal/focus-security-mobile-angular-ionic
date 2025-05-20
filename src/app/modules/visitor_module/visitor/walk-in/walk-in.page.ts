@@ -635,4 +635,15 @@ export class WalkInPage implements OnInit {
   pass_number = ''
 
   selectedImage: any = ''
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <app-vms-background />
   </div>
@@ -107,7 +110,7 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
           </div>
-          <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in'">
+          <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in' && Camera.length > 0">
             <div class="w-full" *ngFor="let camera of Camera; let i = index">
               <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"  (click)="onSubmitRecord(true)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (i == 0 ? 'mt-6' : 'mt-1' )"></app-visitor-button>
@@ -115,7 +118,7 @@
           </div>
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD' + (record.selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (record.selection_type == 'walk_in'? 'mt-6' : 'mt-1' )"></app-visitor-button>
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl mt-1'"></app-visitor-button>
           </div>
         </div>
       </div>

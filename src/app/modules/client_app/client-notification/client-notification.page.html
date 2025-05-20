@@ -1,13 +1,31 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [is_client]="true"  [text]="'Notifications'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
   </div>
   <!-- CONTENT -->
   
-  <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
-    <ion-spinner name="circular"></ion-spinner>
+  <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
+    <ion-spinner name="dots"></ion-spinner>
+  </div> -->
+  <div class="w-full" *ngIf="isLoading">
+    <app-modal-loading class="mt-4"/>
   </div>
   <div *ngIf="!isLoading">
     <div class="px-5 text-center mb-20" *ngIf="Notifications.length > 0; else noNotification">
@@ -29,5 +47,8 @@
     </ng-template>
   </div>
 
+  </ion-content>
+
+<ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
-</ion-content>
+</ion-footer>

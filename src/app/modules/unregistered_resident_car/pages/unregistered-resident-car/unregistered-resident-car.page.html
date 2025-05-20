@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <app-vms-background />
   </div>
@@ -65,7 +68,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
             placeholder="" [(ngModel)]="formData.reason"></textarea> -->
           <app-text-input [id]="'unregistered_reason'" [name]="'unregistered_reason'" [labelText]="'REASON'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
             [(ngModel)]="formData.reason"></app-text-input>
         </div>
         <!-- <div class="w-full">          

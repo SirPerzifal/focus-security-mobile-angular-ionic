@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <app-vms-background />
@@ -131,9 +134,10 @@
 
           <div class="flex flex-col w-full space-y-5"
             *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) && !isRadioClicked">
-            <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+            <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
               <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
-            </div>
+            </div> -->
+            <app-modal-loading *ngIf="isLoading" class="mt-4"/>
             <div
               class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let log of historyVehicles" (click)="onArrowClick(log)">
@@ -145,9 +149,10 @@
           </div>
 
           <div class="flex flex-col w-full space-y-5" *ngIf="isRadioClicked">
-            <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+            <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
               <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
-            </div>
+            </div> -->
+            <app-modal-loading *ngIf="isLoading" class="mt-4"/>
             <div class="flex flex-col" *ngFor="let logs of sortVehicle">
               <span class="text-2xl font-bold">{{ selectedRadio == 'sort_date'? logs.schedule_date :
                 logs.vehicle_number }}</span>
@@ -169,9 +174,10 @@
         </div>
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
-          <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+          <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
             <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
-          </div>
+          </div> -->
+          <app-modal-loading *ngIf="isLoading" class="mt-4"/>
           <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
             *ngFor="let log of activeVehicles" (click)="onArrowClick(log)">
             <span class="text-2xl font-bold text-white">{{ pageType == 'vehicle' ? log.vehicle_number :

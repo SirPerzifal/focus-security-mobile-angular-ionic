@@ -1,5 +1,20 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [is_client]="true"  [text]="'Payment Method'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -9,9 +24,10 @@
     <div>
 
     </div>
-    <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+    <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
       <ion-spinner name="dots"></ion-spinner>
-    </div>
+    </div> -->
+    <app-modal-loading *ngIf="isLoading" />
     <div class="flex flex-col w-full space-y-3" *ngIf="!isLoading">
       <div class="w-full flex flex-col items-start">
         <label class="text-base"><b>Allowed Payment</b></label>
@@ -47,5 +63,8 @@
   </div>
 
   <!-- ############################### -->
+  </ion-content>
+
+<ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
-</ion-content>
+</ion-footer>

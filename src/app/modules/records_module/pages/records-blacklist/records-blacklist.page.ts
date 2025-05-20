@@ -253,6 +253,8 @@ export class RecordsBlacklistPage implements OnInit {
   isLoading = false
   async loadBlacklistData() {
     this.isLoading = true
+    this.existData = []
+    this.blacklistData = []
     this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
         console.log(results);
@@ -301,5 +303,17 @@ export class RecordsBlacklistPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
     this.applyFilters()
+  }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    this.loadBlacklistData()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
   }
 }

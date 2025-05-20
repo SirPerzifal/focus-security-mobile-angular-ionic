@@ -127,7 +127,7 @@ export class ClientTicketDetailPage implements OnInit {
 
   isLoading = false
   isLoadingFirst = false
-  loadDetail(loadingFirst: boolean = false){
+  async loadDetail(loadingFirst: boolean = false){
     if (loadingFirst) {
       this.isLoadingFirst = true
     }
@@ -201,6 +201,10 @@ export class ClientTicketDetailPage implements OnInit {
       this.replyForm.ir_attachment_mimetype = file.type
       console.log(data)
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadDetail(false).then(() => event.target.complete())
   }
   
   

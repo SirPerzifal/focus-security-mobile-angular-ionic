@@ -297,7 +297,7 @@ export class PickUpPagePage implements OnInit {
   Host: any[] = [];
   selectedHost: string = '';
   contactHost: string = '';
-  loadHost() {
+  async loadHost() {
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
@@ -328,4 +328,16 @@ export class PickUpPagePage implements OnInit {
   checkAlert(alert_data: any, openBarrier: boolean) {
     this.functionMain.addOffenceFromAlert({...alert_data, block_id: this.project_config.is_industrial ? false : this.blkLocation, host_id: this.project_config.is_industrial ? this.selectedHost : false, project_id: this.project_id }, openBarrier, 'home-vms')
   }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
+
 }

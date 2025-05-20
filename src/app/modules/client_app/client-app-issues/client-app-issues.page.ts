@@ -185,7 +185,7 @@ export class ClientAppIssuesPage implements OnInit {
   allData: any = [];
   isLoading = false
 
-  loadTicketFromBackend() {
+  async loadTicketFromBackend() {
     this.isLoading = true
     this.clientMainService.getApi({is_report_app: this.isReportApp}, '/client/get/report_issue').subscribe({
       next: (results) => {
@@ -196,6 +196,8 @@ export class ClientAppIssuesPage implements OnInit {
 
           } else {
           }
+          // this.functionMain.presentToast(`Success!`, 'success');
+        } else if (results.result.response_code == 401) {
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
           this.functionMain.presentToast(`An error occurred while trying to get report issue!`, 'danger');
@@ -266,6 +268,10 @@ export class ClientAppIssuesPage implements OnInit {
       this.reporterDetailsFrom.ticketAttachment = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
       console.log(this.reporterDetailsFrom)
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadTicketFromBackend().then(() => event.target.complete())
   }
 
 }

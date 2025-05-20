@@ -416,4 +416,16 @@ export class RecordsVisitorPage implements OnInit {
     this.inputPage = this.currentPage
   }
 
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    this.loadLogs(this.pageType, false)
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
+
 }

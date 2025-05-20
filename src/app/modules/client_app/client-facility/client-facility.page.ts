@@ -166,7 +166,7 @@ export class ClientFacilityPage implements OnInit {
   }
 
   isLoading = false
-  loadFacilities() {
+  async loadFacilities() {
     this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/facilities').subscribe({
       next: (results) => {
@@ -186,7 +186,7 @@ export class ClientFacilityPage implements OnInit {
     });
   }
 
-  loadBooking() {
+  async loadBooking() {
     this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/facility_book').subscribe({
       next: (results) => {
@@ -210,7 +210,7 @@ export class ClientFacilityPage implements OnInit {
     });
   }
 
-  loadHistoryBooking() {
+  async loadHistoryBooking() {
     this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/booking_history').subscribe({
       next: (results) => {
@@ -233,6 +233,16 @@ export class ClientFacilityPage implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  handleRefresh(event: any) {
+    if (this.isHistory) {
+      this.loadHistoryBooking().then(() => event.target.complete())
+    } else if (this.isBooking) {
+      this.loadBooking().then(() => event.target.complete())
+    } else {
+      this.loadFacilities().then(() => event.target.complete())
+    }
   }
 
 }

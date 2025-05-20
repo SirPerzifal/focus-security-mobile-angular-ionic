@@ -69,7 +69,7 @@ export class ClientRaiseTicketPage implements OnInit {
   selectedMenu : any = []
 
   isMainLoading = false
-  loadMenuItems() {
+  async loadMenuItems() {
     this.isMainLoading = true
     this.clientMainService.getApi({}, '/client/get/report_app_type_of_issues').subscribe({
       next: (results) => {
@@ -100,16 +100,16 @@ export class ClientRaiseTicketPage implements OnInit {
   }
 
   isLoading = false
-  loadTicketList(menu: any) {
+  async loadTicketList(menu: any, reload: any = false) {
     let url = ''
     if (this.isActive) {
-      if (this.openTicket.length > 0) {
+      if (this.openTicket.length > 0 && !reload) {
         this.changePage()
         return
       }
       url = '/client/get/open_ticket_by_type_of_issue'
     } else {
-      if (this.closedTicket.length > 0) {
+      if (this.closedTicket.length > 0 && !reload) {
         this.changePage()
         return
       }
@@ -358,6 +358,14 @@ export class ClientRaiseTicketPage implements OnInit {
     if (file){
       this.newTicket.ir_attachments = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
       console.log(this.newTicket)
+    }
+  }
+
+  handleRefresh(event: any) {
+    if (this.isNotMain) {
+      this.loadTicketList(this.selectedMenu, true).then(() => event.target.complete())
+    } else {
+      this.loadMenuItems().then(() => event.target.complete())
     }
   }
 

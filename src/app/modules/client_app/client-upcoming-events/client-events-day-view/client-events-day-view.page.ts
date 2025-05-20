@@ -199,7 +199,7 @@ export class ClientEventsDayViewPage implements OnInit {
         }
       },
       error: (error) => {
-        this.functionMain.presentToast('An error occurred while loading coach data!', 'danger');
+        this.functionMain.presentToast('An error occurred while loading events!', 'danger');
         console.error(error);
       }
     });
@@ -208,6 +208,7 @@ export class ClientEventsDayViewPage implements OnInit {
   onFacilityChange(event: any) {
     this.EventsForm.facility_id = event.target.value
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.target.value)[0].room_ids
+    this.EventsForm.room_id = ''
     console.log(this.Rooms)
   }
 
@@ -416,6 +417,9 @@ export class ClientEventsDayViewPage implements OnInit {
     if (!this.selectedEndTime) {
       errMsg += 'End time must be selected! \n'
     }
+    if (this.functionMain.timeToInt(this.selectedEndTime) <= this.functionMain.timeToInt(this.selectedStartTime)) {
+      errMsg += "Close Hour can't be the same as or less than open hour! \n"
+    }
     if (this.EventsForm.color.length == 0) {
       errMsg += 'Label color must be selected! \n'
     }
@@ -450,10 +454,13 @@ export class ClientEventsDayViewPage implements OnInit {
 
   selectedBlock: any = []
   selectedUnit: any = []
+  isLoading = false
   async loadUpcomingEvents() {
+    this.isLoading = true
     const now = new Date();
     this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
+        this.isLoading = false
         console.log(results)
         this.Events = []
         if (results.result.response_code == 200) {
@@ -487,6 +494,7 @@ export class ClientEventsDayViewPage implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
       }
@@ -607,6 +615,10 @@ export class ClientEventsDayViewPage implements OnInit {
     this.router.navigate(['/client-upcoming-events'], {
       queryParams: {reload: true}
     })
+  }
+
+  handleRefresh(event: any) {
+    this.loadUpcomingEvents().then(() => event.target.complete())
   }
 
 }

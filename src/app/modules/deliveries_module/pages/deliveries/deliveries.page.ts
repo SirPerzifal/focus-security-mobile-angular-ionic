@@ -87,7 +87,7 @@ export class DeliveriesPage implements OnInit {
   project_config: any = []
 
   getFoodPlatform() {
-    this.foodDeliveryButtons.pop()
+    this.foodDeliveryButtons = []
     this.foodPlatform.getFoodPlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
@@ -109,7 +109,7 @@ export class DeliveriesPage implements OnInit {
   }
 
   getPackagePlatform() {
-    this.packageDeliveryButtons.pop()
+    this.packageDeliveryButtons = []
     this.foodPlatform.getPackagePlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
@@ -914,4 +914,21 @@ export class DeliveriesPage implements OnInit {
   }
 
   selectedImage: any = ''
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    if (this.foodDeliveries) {
+      this.getFoodPlatform()
+    } 
+    if (this.packageDeliveries) {
+      this.getPackagePlatform()
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

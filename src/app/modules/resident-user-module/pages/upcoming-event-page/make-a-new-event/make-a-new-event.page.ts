@@ -368,6 +368,9 @@ export class MakeANewEventPage implements OnInit {
     if (!this.selectedEndTime) {
       errMsg += 'End time must be selected! \n'
     }
+    if (this.functionMain.timeToInt(this.selectedEndTime) <= this.functionMain.timeToInt(this.selectedStartTime)) {
+      errMsg += "End time can't be the same as or less than start time! \n"
+    }
     if (this.EventsForm.color.length == 0) {
       errMsg += 'Label color must be selected! \n'
     }
@@ -493,6 +496,7 @@ export class MakeANewEventPage implements OnInit {
   onFacilityChange(event: any) {
     this.EventsForm.facility_id = event.target.value
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+    this.EventsForm.room_id = ''
     // console.log(this.EventsForm.facility_id)
     // console.log(this.Rooms)
   }

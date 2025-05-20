@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   <!-- Gambar sebagai latar belakang -->
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <app-vms-background />

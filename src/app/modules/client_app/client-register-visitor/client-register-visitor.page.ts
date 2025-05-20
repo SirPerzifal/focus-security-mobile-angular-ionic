@@ -96,7 +96,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   today = new Date().setHours(0,0,0,0)
   
   isLoading = false
-  loadClient() {
+  async loadClient() {
     this.isLoading = true
     this.clientMainService.getApi({project_id: this.project_id}, '/client/get/previsitor').subscribe({
       next: (results) => {
@@ -278,5 +278,9 @@ export class ClientRegisterVisitorPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadClient().then(() => event.target.complete())
   }
 }

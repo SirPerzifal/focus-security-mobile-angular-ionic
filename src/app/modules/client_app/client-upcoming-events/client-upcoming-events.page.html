@@ -1,5 +1,20 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [is_client]="true"  [text]="'Upcoming Events'" [text_second]="secondText" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="w-full mt-2 flex items-start ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -20,65 +35,75 @@
     </div>
     <div class="flex flex-row">
       <div class="h-full w-full mt-2" *ngIf="isMain">
-        <div class="flex flex-row justify-between items-center w-full">
-          <div class="w-full flex items-start mb-2 mt-2">
-            <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-              (click)="prev()"></ion-icon>
-          </div>
-          <div class="w-[550px] flex items-center justify-center mb-2 mt-2 font-bold text-lg"
-            (click)="openDatePicker()">
-            {{ viewDate | date:'MMMM y' }} <!-- Menampilkan bulan dan tahun -->
-          </div>
-          <div class="w-full flex items-end mb-2 mt-2 justify-end">
-            <ion-icon name="arrow-forward-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-              (click)="next()"></ion-icon>
-          </div>
+        <div class="w-full mt-4" *ngIf="isLoading">
+            <app-modal-loading />
         </div>
-        <div class="cal-month-view" *ngIf="view === CalendarView.Month">
-          <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [cellTemplate]="customCellTemplate"
-            [locale]="'en-US'" (dayClicked)="handleClickDay($event.day)" (eventClicked)="handleEvent($event.event)">
-          </mwl-calendar-month-view>
+        <div class="w-full h-full" *ngIf="!isLoading">
+          <div class="flex flex-row justify-between items-center w-full">
+            <div class="w-full flex items-start mb-2 mt-2">
+              <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+                (click)="prev()"></ion-icon>
+            </div>
+            <div class="w-[550px] flex items-center justify-center mb-2 mt-2 font-bold text-lg"
+              (click)="openDatePicker()">
+              {{ viewDate | date:'MMMM y' }} <!-- Menampilkan bulan dan tahun -->
+            </div>
+            <div class="w-full flex items-end mb-2 mt-2 justify-end">
+              <ion-icon name="arrow-forward-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+                (click)="next()"></ion-icon>
+            </div>
+          </div>
+          <div class="cal-month-view" *ngIf="view === CalendarView.Month">
+            <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [cellTemplate]="customCellTemplate"
+              [locale]="'en-US'" (dayClicked)="handleClickDay($event.day)" (eventClicked)="handleEvent($event.event)">
+            </mwl-calendar-month-view>
+          </div>
         </div>
       </div>
       <div class="w-full" *ngIf="isActive">
-        <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
-          <div *ngFor="let upcomingEvent of upcomingEvents; let i = index"
-            class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100">
-            <p class="font-bold text-xl text-black text-left mt-2">{{ upcomingEvent.title }}</p>
-            <div class="table text-left">
-              <div class="table-row">
-                <p class="font-bold table-cell text-base text-black">Event Date</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ returnDate(upcomingEvent.start) }}</p>
+        <div class="w-full mt-4" *ngIf="isLoading">
+          <app-modal-loading />
+        </div>
+        <div *ngIf="!isLoading" >
+          <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
+            <div *ngFor="let upcomingEvent of upcomingEvents; let i = index"
+              class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100">
+              <p class="font-bold text-xl text-black text-left mt-2">{{ upcomingEvent.title }}</p>
+              <div class="table text-left">
+                <div class="table-row">
+                  <p class="font-bold table-cell text-base text-black">Event Date</p>
+                  <p class="ml-2 table-cell text-base text-black">: {{ returnDate(upcomingEvent.start) }}</p>
+                </div>
+                <div class="table-row" *ngIf="upcomingEvent.registered_coach_name">
+                  <p class="font-bold table-cell text-base text-black">Coach Name</p>
+                  <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ?
+                    upcomingEvent.registered_coach_name : '-' }}</p>
+                </div>
+                <div class="table-row" *ngIf="upcomingEvent.title">
+                  <p class="font-bold table-cell text-base text-black">Coach Name</p>
+                  <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.title ?
+                    upcomingEvent.title : '-' }}</p>
+                </div>
+                <div class="table-row">
+                  <p class="font-bold table-cell text-base text-black">Event Start</p>
+                  <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.start) }}</p>
+                </div>
+                <div class="table-row">
+                  <p class="font-bold table-cell text-base text-black">Event End</p>
+                  <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.end) }}</p>
+                </div>
               </div>
-              <div class="table-row" *ngIf="upcomingEvent.registered_coach_name">
-                <p class="font-bold table-cell text-base text-black">Coach Name</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ?
-                  upcomingEvent.registered_coach_name : '-' }}</p>
+              <div class="flex mt-2 space-x-2 mb-2">
+                <button
+                  class="bg-[var(--ion-color-primary)] w-48 text-white px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
+                  (click)="viewDetail(upcomingEvent)">
+                  View Detail
+                </button>
+                <button class="bg-[#E3787E] w-48 text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
+                  (click)="onLiftBan(upcomingEvent)">
+                  Cancel Events
+                </button>
               </div>
-              <div class="table-row" *ngIf="upcomingEvent.title">
-                <p class="font-bold table-cell text-base text-black">Coach Name</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.title ?
-                  upcomingEvent.title : '-' }}</p>
-              </div>
-              <div class="table-row">
-                <p class="font-bold table-cell text-base text-black">Event Start</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.start) }}</p>
-              </div>
-              <div class="table-row">
-                <p class="font-bold table-cell text-base text-black">Event End</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ returnReadDate(upcomingEvent.end) }}</p>
-              </div>
-            </div>
-            <div class="flex mt-2 space-x-2 mb-2">
-              <button
-                class="bg-[var(--ion-color-primary)] w-48 text-white px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
-                (click)="viewDetail(upcomingEvent)">
-                View Detail
-              </button>
-              <button class="bg-[#E3787E] w-48 text-black px-3 py-2 text-base cw-1:text-[13px] rounded-md font-bold"
-                (click)="onLiftBan(upcomingEvent)">
-                Cancel Events
-              </button>
             </div>
           </div>
         </div>
@@ -103,8 +128,6 @@
       <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
     </div>
   </ng-template>
-
-  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
 
   <!-- Modal untuk pemilih tanggal -->
   <ion-modal id="choose-date-modal" keep-contents-mounted="true" [isOpen]="isDatePickerOpen"
@@ -289,3 +312,6 @@
   </ion-modal>
   <div class="h-[4.5rem]"></div>
 </ion-content>
+<ion-footer>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-footer>

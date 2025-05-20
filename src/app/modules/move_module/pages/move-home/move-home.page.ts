@@ -119,6 +119,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
             if (results.result.status_code === 200) {
               this.historySchedules = results.result.result;
               this.filteredHistorySchedules = this.historySchedules
+              this.applyFilters()
               console.log(results)
             } else {
             }
@@ -157,6 +158,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
             if (results.result.status_code === 200) {
               this.historySchedules = results.result.result;
               this.filteredHistorySchedules = this.historySchedules
+              this.applyFilters()
             } else {
             }
 
@@ -186,6 +188,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
             } else {
               this.historySchedules = results.result.response_result
               this.filteredHistorySchedules = this.historySchedules
+              this.applyFilters()
             }
           } else {
           }
@@ -215,6 +218,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
             } else {
               this.historySchedules = results.result.response_result
               this.filteredHistorySchedules = this.historySchedules
+              this.applyFilters()
             }
           } else {
           }
@@ -502,5 +506,16 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   onHostChange(event: any) {
     this.selectedHost = event[0]
+  }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+    } else {
+      this.loadBlock()
+    }
+    this.loadSchedulesHistory(this.showHistory ? 'history' : 'today')
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
   }
 }

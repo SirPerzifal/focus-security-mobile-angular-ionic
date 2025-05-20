@@ -59,7 +59,7 @@ export class ClientFacilityDetailPage implements OnInit {
         errMsg += "Room name is required! \n"
       }
       if (this.functionMain.timeToInt(this.submitForm.end_time) <= this.functionMain.timeToInt(this.submitForm.start_time)) {
-        errMsg += "Close Hour can't be the same as or less than open hour! \n"
+        errMsg += "Close hour can't be the same as or less than open hour! \n"
       }
       if (errMsg != '') {
         this.functionMain.presentToast(errMsg, 'danger')

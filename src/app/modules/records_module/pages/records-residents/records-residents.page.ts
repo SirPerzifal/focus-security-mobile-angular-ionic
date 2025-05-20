@@ -26,12 +26,15 @@ export class RecordsResidentsPage implements OnInit {
   isLoading = false
   initTemp() {
     this.isLoading = true
+    this.logsData = [];
+    this.historyVehicles = this.logsData
     this.recordsResidentService.loadAllResident(this.project_id, this.project_config.is_windows).subscribe(
       (response: any) => {
         console.log(response)
         if (response.result.status === 'success') {
           this.logsData = response.result.data;
           this.historyVehicles = this.logsData
+          this.applyFilters()
         } else {
           // this.presentToast('Failed to load resident data', 'danger');
         }
@@ -187,6 +190,17 @@ export class RecordsResidentsPage implements OnInit {
     this.filter.block = ''
     this.filter.unit = ''
     this.applyFilters()
+  }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+    } else {
+      this.loadBlock()
+    }
+    this.initTemp()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
   }
 
 }

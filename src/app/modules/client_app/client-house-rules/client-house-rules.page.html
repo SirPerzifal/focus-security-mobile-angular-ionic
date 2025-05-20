@@ -1,5 +1,20 @@
-<ion-content [fullscreen]="true">
+<ion-header>
   <app-resident-header [is_client]="true"  [text]="'House Rules'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -18,21 +33,27 @@
         Submit
       </button>
     </div>
-    <div *ngIf="documentList.length > 0; else noDocument" class="flex flex-col space-y-3">
-      <div class="flex flex-col" *ngFor="let document of documentList">
-        <span class="text-xl text-[#4653A9] font-bold"
-          (click)="downloadDocument(document.documents, document.name)"><u>{{ document.name }}</u></span>
-        <span class="text-base font-bold">Last uploaded: {{ functionMain.convertToDDMMYYYY(document.upload_date) }}</span>
+    <div *ngIf="!isLoading" class="flex flex-col space-y-3">
+      <div *ngIf="documentList.length > 0; else noDocument" class="flex flex-col space-y-3">
+        <div class="flex flex-col" *ngFor="let document of documentList">
+          <span class="text-xl text-[#4653A9] font-bold"
+            (click)="downloadDocument(document.documents, document.name)"><u>{{ document.name }}</u></span>
+          <span class="text-base font-bold">Last uploaded: {{ functionMain.convertToDDMMYYYY(document.upload_date) }}</span>
+        </div>
       </div>
+      <ng-template #noDocument>
+        <div class="w-full bg-transparent text-center rounded-lg">
+          <p class="text-gray-600">There are no documents.....</p>
+        </div>
+      </ng-template>
     </div>
-    <ng-template #noDocument>
-      <div class="w-full bg-transparent text-center rounded-lg">
-        <p class="text-gray-600">There are no documents.....</p>
-      </div>
-    </ng-template>
+    <app-modal-loading *ngIf="isLoading"/>
 
   </div>
 
   <!-- ############################### -->
+  </ion-content>
+
+<ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
-</ion-content>
+</ion-footer>

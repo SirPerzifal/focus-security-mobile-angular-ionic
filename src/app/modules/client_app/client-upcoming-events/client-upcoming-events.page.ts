@@ -98,7 +98,9 @@ export class ClientUpcomingEventsPage implements OnInit {
     }
   }
 
+  isLoading = false
   async loadUpcomingEvents() {
+    this.isLoading = true
     const now = new Date();
     this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
       next: (results) => {
@@ -132,8 +134,10 @@ export class ClientUpcomingEventsPage implements OnInit {
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
         }
+        this.isLoading = false
       },
       error: (error) => {
+        this.isLoading = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
       }
@@ -304,5 +308,9 @@ export class ClientUpcomingEventsPage implements OnInit {
   viewDetail(record: any) {
     console.log(record)
     this.router.navigate(['/client-events-detail'], {state: {bookingData: record}})
+  }
+
+  handleRefresh(event: any) {
+    this.loadUpcomingEvents().then(() => event.target.complete())
   }
 }

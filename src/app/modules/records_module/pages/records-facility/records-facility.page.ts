@@ -103,48 +103,48 @@ export class RecordsFacilityPage implements OnInit {
 
   getFacilityData(){
     if (this.showDay){
-      if (this.daySchedules.length == 0){
-        this.isLoading = true
-        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book' ).subscribe({
-          next: (results) => {
-            console.log(results)
-            if (results.result.response_code == 200) {
-              // this.presentToast('Coach data successfully submitted!', 'success');
-              this.facilityRecords = results.result.active_bookings
-              this.daySchedules = this.facilityRecords
-              console.log(this.daySchedules)
-            } else {
-            }
-            this.isLoading = false
-          },
-          error: (error) => {
-            this.presentToast('An error occurred while loading booking data!', 'danger');
-            console.error(error);
-            this.isLoading = false
+      this.facilityRecords = []
+      this.daySchedules = this.facilityRecords
+      this.isLoading = true
+      this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book' ).subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code == 200) {
+            // this.presentToast('Coach data successfully submitted!', 'success');
+            this.facilityRecords = results.result.active_bookings
+            this.daySchedules = this.facilityRecords
+            console.log(this.daySchedules)
+          } else {
           }
-        });
-      }
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while loading booking data!', 'danger');
+          console.error(error);
+          this.isLoading = false
+        }
+      });
     } else if (this.showUpcoming) {
-      if (this.upcomingSchedules.length == 0){
-        this.isLoading = true
-        this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book_upcoming' ).subscribe({
-          next: (results) => {
-            if (results.result.response_code == 200) {
-              // this.presentToast('Coach data successfully submitted!', 'success');
-              this.facilityRecords = results.result.active_bookings
-              this.upcomingSchedules = this.facilityRecords
-              console.log(this.upcomingSchedules)
-            } else {
-            }
-            this.isLoading = false
-          },
-          error: (error) => {
-            this.presentToast('An error occurred while loading booking data!', 'danger');
-            console.error(error);
-            this.isLoading = false
+      this.facilityRecords = []
+      this.upcomingSchedules = this.facilityRecords
+      this.isLoading = true
+      this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/facility_book_upcoming' ).subscribe({
+        next: (results) => {
+          if (results.result.response_code == 200) {
+            // this.presentToast('Coach data successfully submitted!', 'success');
+            this.facilityRecords = results.result.active_bookings
+            this.upcomingSchedules = this.facilityRecords
+            console.log(this.upcomingSchedules)
+          } else {
           }
-        });
-      }
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.presentToast('An error occurred while loading booking data!', 'danger');
+          console.error(error);
+          this.isLoading = false
+        }
+      });
     } else if (this.showHistory) {
       console.log(this.historySchedules)
       this.isLoading = true
@@ -203,7 +203,6 @@ export class RecordsFacilityPage implements OnInit {
     if (!this.showHistoryTrans && !this.showDayTrans && !this.showUpcomingTrans) {
       if (type == 'day') {
         if (!this.showDay){
-          this.clearFilters()
           this.showHistory = false;
           this.showHistoryTrans = false;
           this.showUpcoming = false;
@@ -211,14 +210,15 @@ export class RecordsFacilityPage implements OnInit {
           this.showDayTrans = true
           setTimeout(() => {
             this.showDay = true;
-            this.getFacilityData()
+            if (this.daySchedules.length == 0) {
+              this.getFacilityData()
+            }
             this.showDayTrans = false
           }, 300)
         }
       }
       if (type == 'upcoming') {
         if(!this.showUpcoming){
-          this.clearFilters()
           this.showDay = false;
           this.showDayTrans = false;
           this.showHistory = false;
@@ -226,7 +226,9 @@ export class RecordsFacilityPage implements OnInit {
           this.showUpcomingTrans = true
           setTimeout(() => {
             this.showUpcoming = true;
-            this.getFacilityData()
+            if (this.upcomingSchedules.length == 0) {
+              this.getFacilityData()
+            }
             this.showUpcomingTrans = false
           }, 300)
         }
@@ -495,6 +497,19 @@ export class RecordsFacilityPage implements OnInit {
     } else {
     }
     this.inputPage = this.currentPage
+  }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    this.getFacilities()
+    this.getFacilityData()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
   }
 
 }

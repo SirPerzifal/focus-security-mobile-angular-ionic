@@ -124,24 +124,28 @@ export class ClientReportsPage implements OnInit {
       this.isData = true
     }, 300)
     if (report.model) {
-      this.isLoading = true
-      this.clientMainService.getApi({model_name: report.model}, '/get/model/fields').subscribe({
-        next: (results) => {
-          console.log(results)
-          if (results.result.response_code === 200) {
-            this.reportFields = results.result.result
-          } else {
-            this.functionMain.presentToast(`An error occurred while trying to get the fields!`, 'danger');
-          }
-          this.isLoading = false
-        },
-        error: (error) => {
-          this.functionMain.presentToast('An error occurred while trying to get the fields!', 'danger');
-          console.error(error);
-          this.isLoading = false
-        }
-      });
+      this.loadConfig()
     }
+  }
+
+  async loadConfig(){
+    this.isLoading = true
+    this.clientMainService.getApi({model_name: this.selectedReport.model}, '/get/model/fields').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.reportFields = results.result.result
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to get the fields!`, 'danger');
+        }
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get the fields!', 'danger');
+        console.error(error);
+        this.isLoading = false
+      }
+    });
   }
 
   checkInput(field: any) {
@@ -227,6 +231,10 @@ export class ClientReportsPage implements OnInit {
     const input = value.target as HTMLInputElement;
     this.endDateFilter = input.value;
     console.log(this.endDateFilter)
+  }
+
+  handleRefresh(event: any) {
+    this.loadConfig().then(() => event.target.complete())
   }
 
 }

@@ -1,5 +1,20 @@
-<ion-content [fullscreen]="true">
+<ion-header>
     <app-resident-header [is_client]="true"  [text]="'Upcoming Events'" [text_second]="'Calendar Event'" />
+  </ion-header>
+  <ion-content [fullscreen]="true">
+    <ion-refresher
+      slot="fixed"
+      (ionRefresh)="handleRefresh($event)"
+      style="z-index: 999"
+      pullFactor="0.3"
+      pullMin="40"
+      pullMax="80"
+    >
+      <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        refreshingSpinner="none"
+      ></ion-refresher-content>
+    </ion-refresher>
     <div class="w-full flex flex-row items-center justify-between">
         <div class="w-1/6 flex items-start ml-4 mt-2">
             <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
@@ -20,7 +35,10 @@
           }"></ion-datetime>
         </ng-template>
     </ion-modal>
-    <div class="pb-2.5 pt-2 mb-16">
+    <div class="w-full mt-4" *ngIf="isLoading">
+        <app-modal-loading />
+    </div>
+    <div class="pb-2.5 pt-2 mb-16" *ngIf="!isLoading">
         <!-- <div class="shadow-md rounded-2xl px-3.5 py-1 mb-3 overflow-auto max-h-28 style-overflow">
           <div *ngIf="hasTasks">
               <button (click)="showCompletedTasks = !showCompletedTasks" class="text-blue-500 text-sm">
@@ -288,8 +306,11 @@
             </ion-content>
         </ng-template>
     </ion-modal>
-    <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
-</ion-content>
+    </ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-footer>
 <!-- <div class="absolute bottom-[12rem] right-[18px] z-50 flex flex-row justify-between items-center space-x-2">
   <span class="font-bold">Add Task</span>
   <button class="bg-[var(--ion-color-primary)] flex items-center justify-center focus:justify-between focus:space-x-1 focus:text-white rounded-full font-bold p-2.5" (click)="isTaskClick = true">

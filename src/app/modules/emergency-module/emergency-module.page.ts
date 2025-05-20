@@ -340,5 +340,16 @@ export class EmergencyModulePage implements OnInit {
   }
 
   pass_number = ''
+  
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 
 }

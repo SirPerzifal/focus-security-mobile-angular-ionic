@@ -86,7 +86,7 @@ export class ClientNoticesPage implements OnInit {
 
   showNotice: any = []
   isLoading = false
-  loadNotice() {
+  async loadNotice() {
     const params = {
       unit_id: [this.dataUser .unit_id], // Pastikan ini adalah array
       block_id: [this.dataUser .block_id] // Pastikan ini adalah array
@@ -495,4 +495,9 @@ export class ClientNoticesPage implements OnInit {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
   }
+
+  handleRefresh(event: any) {
+    this.loadNotice().then(() => event.target.complete())
+  }
+
 }

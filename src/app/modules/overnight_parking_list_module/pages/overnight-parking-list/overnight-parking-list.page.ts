@@ -90,10 +90,14 @@ export class OvernightParkingListPage implements OnInit {
     this.isLoading = true
     let url = ''
     if (type === 'today') { 
+      this.daySchedules = []
       url = '/vms/get/overnight_parking_list'
     } else if (type === 'upcoming') {
+      this.upcomingSchedules = []
       url = '/vms/get/overnight_parking_list_upcoming'
     } else {
+      this.historySchedules = []
+      this.filteredHistorySchedules = this.historySchedules
       url = '/vms/get/overnight_parking_list_history'
     }
     this.clientMainService.getApi({project_id: this.project_id}, url ).subscribe({
@@ -108,6 +112,7 @@ export class OvernightParkingListPage implements OnInit {
           } else {
             this.historySchedules = results.result.response_result
             this.filteredHistorySchedules = this.historySchedules
+            this.applyFilters()
           }   
         } else {
           
@@ -366,6 +371,19 @@ export class OvernightParkingListPage implements OnInit {
 
   onHostChange(event: any) {
     this.selectedHost = event[0]
+  }
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    let type = this.showHistory ? 'history' : (this.showUpcoming ? 'upcoming' : 'today')
+    this.loadOvernight(type)
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
   }
 
 }
