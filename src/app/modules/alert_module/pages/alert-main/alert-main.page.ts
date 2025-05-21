@@ -523,21 +523,20 @@ export class AlertMainPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    setTimeout(() => {
-      console.log(this.active_type)
-      if (this.main) {
-        this.loadAll()
+    if (this.main) {
+      this.loadAll()
+    } else {
+      if (this.active_type == 'unregistered') {
+        this.loadUnregisteredCar()
+      } else if (this.active_type == 'overstay') {
+        this.loadOverstay()
+      } else if (this.active_type == 'tickets') {
+        this.loadTickets()
       } else {
-        if (this.active_type == 'unregistered') {
-          this.loadUnregisteredCar()
-        } else if (this.active_type == 'overstay') {
-          this.loadOverstay()
-        } else if (this.active_type == 'tickets') {
-          this.loadTickets()
-        } else {
-          this.loadRecordsWheelClamp(this.active_type)
-        }
+        this.loadRecordsWheelClamp(this.active_type)
       }
+    }
+    setTimeout(() => {
       event.target.complete()
     }, 1000)
   }

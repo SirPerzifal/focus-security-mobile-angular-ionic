@@ -26,7 +26,7 @@ export class AlertTicketDetailPage implements OnInit {
     if (state) {
       console.log(state)
       this.params.ticket_id = state.ticket_id
-      this.loadTicketsDetail()
+      this.loadTicketsDetail(true)
     } 
   }
 
@@ -60,10 +60,15 @@ export class AlertTicketDetailPage implements OnInit {
   }
 
   isLoading = false
-  loadTicketsDetail(){
+  isLoadingFirst = false
+  loadTicketsDetail(is_first: boolean = false){
+    if (is_first) {
+      this.isLoadingFirst = true
+    }
     this.isLoading = true
     this.clientMainService.getApi({ticket_id: this.params.ticket_id}, '/vms/get/report_issue_detail').subscribe({
       next: (results) => {
+        this.isLoadingFirst = false
         this.isLoading = false
         console.log('tickets', results)
         if (results.result.response_code === 200) {
@@ -74,6 +79,7 @@ export class AlertTicketDetailPage implements OnInit {
         } 
       },
       error: (error) => {
+        this.isLoadingFirst = false
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while loading tickets detail!', 'danger');
         console.error(error);
@@ -164,5 +170,10 @@ export class AlertTicketDetailPage implements OnInit {
     });
   }
 
-
+  handleRefresh(event: any) {
+    this.loadTicketsDetail()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

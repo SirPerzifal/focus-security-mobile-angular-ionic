@@ -66,4 +66,10 @@ export class MoveDetailPage implements OnInit {
   }
 
   main = true
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

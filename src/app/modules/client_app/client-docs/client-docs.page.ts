@@ -36,7 +36,7 @@ export class ClientDocsPage implements OnInit {
 
   Files: any = []
   isLoading = false
-  loadNotices(id: number = 0){
+  async loadNotices(id: number = 0){
     this.isLoading = true
     let params = {}
     if (id) {
@@ -61,6 +61,7 @@ export class ClientDocsPage implements OnInit {
             path : file.path,
           }));
           this.isLoading = false;
+          console.log(this.Files)
         }
       },
       (error) => {
@@ -208,4 +209,10 @@ export class ClientDocsPage implements OnInit {
       }
     );
   }
+
+  handleRefresh(event: any) {
+    let parent_id = this.previousParentNames.length > 0 ? this.previousParentNames[this.previousParentNames.length - 1].id : 0
+    this.loadNotices(parent_id).then(() => event.target.complete())
+  }
+
 }

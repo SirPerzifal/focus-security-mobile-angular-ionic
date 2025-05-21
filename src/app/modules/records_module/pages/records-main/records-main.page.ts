@@ -179,4 +179,10 @@ export class RecordsMainPage implements OnInit {
   checkScreenSize() {
     this.isSmallScreen = window.innerWidth < 720;
   }
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

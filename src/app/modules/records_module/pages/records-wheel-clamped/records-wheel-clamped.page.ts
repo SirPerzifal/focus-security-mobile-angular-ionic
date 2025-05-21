@@ -456,4 +456,17 @@ export class RecordsWheelClampedPage implements OnInit {
     this.inputPage = this.currentPage
   }
 
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+      this.loadHost()
+    } else {
+      this.loadBlock()
+    }
+    this.loadRecordsWheelClamp()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
+
+
 }

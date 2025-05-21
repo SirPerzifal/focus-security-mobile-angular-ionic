@@ -37,6 +37,7 @@ export class VmsCheckoutPage implements OnInit {
 
   onBack() {
     if (!this.isMain) {
+      this.selectedInclude = ''
       this.resetForm()
       this.isSearch = false
       setTimeout(() => {
@@ -44,6 +45,7 @@ export class VmsCheckoutPage implements OnInit {
         this.isMain = true
       }, 300)
     } else {
+      this.selectedInclude = ''
       this.router.navigate(['/home-vms'])
     }
   }
@@ -72,11 +74,14 @@ export class VmsCheckoutPage implements OnInit {
   }
 
   selectedNric = ''
+  selectedInclude = ''
 
   logData: any = {}
+  isLoading = false
   searchData(data_include: string = '') {
     console.log(this.checkoutForm)
     let params = {...this.checkoutForm}
+    this.selectedInclude = data_include
     if (data_include == 'is_id') {
       params.contact_number = ''
       params.pass_number = ''
@@ -98,6 +103,7 @@ export class VmsCheckoutPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
+          this.isLoading = false
           this.logData = results.result.response_result[0]
           this.isMain = false
           setTimeout(() => {
@@ -111,6 +117,7 @@ export class VmsCheckoutPage implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false
         this.functionMain.presentToast('An error occurred while trying to searching the data!', 'danger');
         console.error(error);
       }
@@ -137,4 +144,18 @@ export class VmsCheckoutPage implements OnInit {
   }
 
   faSearch = faSearch
+
+
+  handleRefresh(event: any) {
+    if (!this.isMain) {
+      this.isSearch = false
+      setTimeout(() => {
+        this.isLoading = true
+        this.searchData(this.selectedInclude)
+      }, 300)
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

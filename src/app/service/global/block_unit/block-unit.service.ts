@@ -48,7 +48,6 @@ export class BlockUnitService extends ApiService {
             project_id: this.project_id,
           }
         };
-        console.log(body)
         // Change to send data in request body
         return this.http.post(`${this.apiBlock}`, body, { headers }).pipe(
           catchError(this.handleError)

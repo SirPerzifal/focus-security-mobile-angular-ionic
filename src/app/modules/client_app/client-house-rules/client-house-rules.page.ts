@@ -92,7 +92,9 @@ export class ClientHouseRulesPage implements OnInit {
     }
   }
 
-  loadDocument() {
+  isLoading = false
+  async loadDocument() {
+    this.isLoading = true
     this.clientMainService.getApi({}, '/project/get/house_rules').subscribe({
       next: (results) => {
         console.log(results.result.response_result)
@@ -105,10 +107,12 @@ export class ClientHouseRulesPage implements OnInit {
         }  else {
           this.functionMain.presentToast(`An error occurred while loading document!`, 'danger');
         }
+        this.isLoading = false
       },
       error: (error) => {
         this.functionMain.presentToast('An error occurred while loading document!', 'danger');
         console.error(error);
+        this.isLoading = false
       }
     });
   }
@@ -171,6 +175,10 @@ export class ClientHouseRulesPage implements OnInit {
             link.parentNode.removeChild(link);
         }
     }, 0);
+  }
+
+  handleRefresh(event: any) {
+    this.loadDocument().then(() => event.target.complete())
   }
 
 }

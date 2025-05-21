@@ -124,5 +124,11 @@ export class MaVisitorFormPage implements OnInit {
       this.record.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
     })
   }
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
   
 }

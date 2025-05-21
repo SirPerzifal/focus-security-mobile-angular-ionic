@@ -386,4 +386,11 @@ export class MoveFormPage implements OnInit {
 
   faBarcode = faBarcode
   selectedImage: any = ''
+
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

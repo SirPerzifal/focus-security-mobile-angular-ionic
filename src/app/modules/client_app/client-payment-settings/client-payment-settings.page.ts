@@ -44,7 +44,7 @@ export class ClientPaymentSettingsPage implements OnInit {
   paymentConfig: any = []
   paymentChange: any = []
   config: any = []
-  loadPaymentMethod(){
+  async loadPaymentMethod(){
     this.isLoading = true
     this.clientMainService.getApi({project_id: this.project_id}, '/client/get/payment_method').subscribe({
       next: (results) => {
@@ -107,6 +107,10 @@ export class ClientPaymentSettingsPage implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadPaymentMethod().then(() => event.target.complete())
   }
 
 }

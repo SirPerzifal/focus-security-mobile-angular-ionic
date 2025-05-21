@@ -227,5 +227,11 @@ export class OvernightParkingDetailPage implements OnInit {
     // this.webRtcService.createOffer(record);
   }
 
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
+
 
 }

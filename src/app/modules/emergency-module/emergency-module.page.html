@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <app-vms-background />
   </div>
@@ -80,7 +83,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
             placeholder=""></textarea> -->
           <app-text-input [id]="'emergency_vehicle_purpose'" [name]="'emergency_vehicle_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
             [(ngModel)]="formData.purpose"></app-text-input>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
@@ -157,7 +160,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
             placeholder=""></textarea> -->
           <app-text-input [id]="'emergency_vehicle_purpose'" [name]="'emergency_vehicle_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
             [(ngModel)]="formData.purpose"></app-text-input>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
@@ -229,7 +232,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
             placeholder=""></textarea> -->
           <app-text-input [id]="'emergency_vehicle_purpose'" [name]="'emergency_vehicle_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
             [(ngModel)]="formData.purpose"></app-text-input>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>
@@ -287,7 +290,7 @@
             class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
             placeholder=""></textarea> -->
           <app-text-input [id]="'emergency_vehicle_purpose'" [name]="'emergency_vehicle_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded uppercase'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
             [(ngModel)]="formData.purpose"></app-text-input>
         </div>
         <div class="w-full" *ngIf="false; else submitButton"></div>

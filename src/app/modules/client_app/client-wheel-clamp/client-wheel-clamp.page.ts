@@ -50,7 +50,7 @@ export class ClientWheelClampPage implements OnInit {
   wheelClampList: any[] = []
 
   isLoading = false
-  loadRecordsWheelClamp() {
+  async loadRecordsWheelClamp() {
     this.isLoading = true
     this.offensesService.getOfffenses('wheel_clamp', true).subscribe({
       next: (results) => {
@@ -210,5 +210,9 @@ export class ClientWheelClampPage implements OnInit {
   onDeleteImage(){
     this.showImage = ''
     this.fileInput = ''
+  }
+
+  handleRefresh(event: any) {
+    this.loadRecordsWheelClamp().then(() => event.target.complete())
   }
 }

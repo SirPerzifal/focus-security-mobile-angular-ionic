@@ -15,7 +15,7 @@ export class ClientNotificationPage implements OnInit {
   constructor(public functionMain: FunctionMainService, private clientMainService: ClientMainService, private recordsResidentService: RecordsResidentService, private router: Router) { }
 
   ngOnInit() {
-    this.loadResident()
+    this.loadNotification()
   }
 
   Notifications: any = []
@@ -23,7 +23,7 @@ export class ClientNotificationPage implements OnInit {
   faPhone = faPhone
 
   isLoading = false
-  loadResident(){
+  async loadNotification(){
     this.isLoading = true
     this.functionMain.vmsPreferences().then((value: any) => {
       this.clientMainService.getApi({}, '/client/get/notifications').subscribe({
@@ -49,6 +49,10 @@ export class ClientNotificationPage implements OnInit {
   onBack() {
     this.router.navigate(['/client-main-app'])
     
+  }
+
+  handleRefresh(event: any) {
+    this.loadNotification().then(() => event.target.complete())
   }
 
 }

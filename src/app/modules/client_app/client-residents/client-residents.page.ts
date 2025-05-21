@@ -23,7 +23,7 @@ export class ClientResidentsPage implements OnInit {
   faPhone = faPhone
 
   isLoading = false
-  loadResident(){
+  async loadResident(){
     this.isLoading = true
     this.functionMain.vmsPreferences().then((value: any) => {
       this.recordsResidentService.loadAllResident(value.project_id, false).subscribe(
@@ -48,6 +48,10 @@ export class ClientResidentsPage implements OnInit {
 
   callResident(resident: any) {
     this.webRtcService.createOffer(false, resident.family_id, false, false);
+  }
+
+  handleRefresh(event: any) {
+    this.loadResident().then(() => event.target.complete())
   }
 
 }

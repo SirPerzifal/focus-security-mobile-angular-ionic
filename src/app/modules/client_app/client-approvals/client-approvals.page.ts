@@ -108,7 +108,7 @@ export class ClientApprovalsPage implements OnInit {
 
   isLoading = false
 
-  loadApproval(){
+  async loadApproval(){
     this.isLoading = true
     console.log(this.approval_type)
     this.clientMainService.getApi({record_list: this.approval_type, project_id: this.project_id}, '/client/get/approval_list').subscribe({
@@ -117,7 +117,12 @@ export class ClientApprovalsPage implements OnInit {
         if (results.result.success) {
           if (results.result.booking.length > 0){
             this.activeApprovals = results.result.booking
-            this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
+            if (this.isActive) {
+              this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
+            } else {
+              this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) || ['approved', 'rejected'].includes(approval.appeal_status) )
+              this.applyDateFilter()
+            }
           } else {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
@@ -422,5 +427,11 @@ export class ClientApprovalsPage implements OnInit {
   
   returnArray(array: any) {
     return (array.map((arr: any) => arr.name)).join(', ')
+  }
+
+  handleRefresh(event: any) {
+    this.loadApproval().then(() => {
+      event.target.complete()
+    })
   }
 }

@@ -327,4 +327,15 @@ export class CoachesFormPage implements OnInit {
   }
 
   selectedImage: any = ''
+
+  handleRefresh(event: any) {
+    if (this.project_config.is_industrial) {
+    } else {
+      this.loadBlock()
+    }
+    this.loadType()
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
 }

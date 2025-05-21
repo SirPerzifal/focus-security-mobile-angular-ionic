@@ -160,8 +160,8 @@ export class HomePage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.onLoadCount()
     setTimeout(() => {
-      this.onLoadCount()
       event.target.complete()
     }, 1000)
   }

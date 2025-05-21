@@ -345,5 +345,14 @@ export class ResidentCarListPage implements OnInit {
   callVisitor(vehicle: any) {
     console.log(vehicle)
   }
+
+  handleRefresh(event: any) {
+    if (this.vehicleNumber) {
+      this.toggleShowSearch([this.vehicleNumber])
+    }
+    setTimeout(() => {
+      event.target.complete()
+    }, 1000)
+  }
   
 }

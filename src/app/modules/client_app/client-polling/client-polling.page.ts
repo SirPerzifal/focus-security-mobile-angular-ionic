@@ -198,7 +198,7 @@ export class ClientPollingPage implements OnInit {
   }
 
   isLoading = false
-  loadPolling(){
+  async loadPolling(){
     this.isLoading = true
     this.clientMainService.getApi({}, '/client/get/polling').subscribe({
       next: (results) => {
@@ -240,6 +240,9 @@ export class ClientPollingPage implements OnInit {
 
     return optionsName[0].options
   }
-  
+
+  handleRefresh(event: any) {
+    this.loadPolling().then(() => event.target.complete())
+  }
 
 }
