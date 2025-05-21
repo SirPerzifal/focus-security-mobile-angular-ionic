@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormForRequestAccessCardPageRoutingModule } from './form-for-request-access-card-routing.module';
 
 import { FormForRequestAccessCardPage } from './form-for-request-access-card.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormForRequestAccessCardPageRoutingModule
+    FormForRequestAccessCardPageRoutingModule,
+    SharedModule,
   ],
   declarations: [FormForRequestAccessCardPage]
 })

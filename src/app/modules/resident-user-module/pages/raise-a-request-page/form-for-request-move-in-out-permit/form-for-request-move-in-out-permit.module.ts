@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormForRequestMoveInOutPermitPageRoutingModule } from './form-for-request-move-in-out-permit-routing.module';
 
 import { FormForRequestMoveInOutPermitPage } from './form-for-request-move-in-out-permit.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormForRequestMoveInOutPermitPageRoutingModule
+    FormForRequestMoveInOutPermitPageRoutingModule,
+    SharedModule
   ],
   declarations: [FormForRequestMoveInOutPermitPage]
 })

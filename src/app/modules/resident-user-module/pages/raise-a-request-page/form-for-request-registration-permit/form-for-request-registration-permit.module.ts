@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormForRequestRegistrationPermitPageRoutingModule } from './form-for-request-registration-permit-routing.module';
 
 import { FormForRequestRegistrationPermitPage } from './form-for-request-registration-permit.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormForRequestRegistrationPermitPageRoutingModule
+    FormForRequestRegistrationPermitPageRoutingModule,
+    SharedModule
   ],
   declarations: [FormForRequestRegistrationPermitPage]
 })

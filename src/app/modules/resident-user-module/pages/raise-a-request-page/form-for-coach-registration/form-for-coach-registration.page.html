@@ -1,13 +1,35 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>form-for-coach-registration</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page
+    [text]="'Raise a Request'"
+    [text_second]="pageName"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">form-for-coach-registration</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/raise-a-request-page']"
+    ></ion-icon>
+  </div>
+  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main">
+      <app-nav-tabs
+        [buttons]="navButtonsSub"
+        (eventEmitter)="onClickNavButton($event)"
+      ></app-nav-tabs>
+    </div>
+    <div id="form_new_coach" *ngIf="pageName === 'Form New Coach'" @fadeInOut>
+      Form New Coach
+    </div>
+    <div id="deactive_coach" *ngIf="pageName === 'Deactive Coach'" @fadeInOut>
+      Deactive Coach
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

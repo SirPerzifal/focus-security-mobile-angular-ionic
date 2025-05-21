@@ -168,12 +168,12 @@ export class RaiseARequestMainPage implements OnInit {
   ngOnInit() {
   }
 
-  onClickSquareBottom(event: any) {
-    this.router.navigate(['raise-request-form-page'], {
-      state: {
-        pageName: event[1]
-      }
-    })
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadHistoryRequests();
+      event.target.complete();
+    }, 1000)
   }
 
   onClickNavTabs(event: any) {

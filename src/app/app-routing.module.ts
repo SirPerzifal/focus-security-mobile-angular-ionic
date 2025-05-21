@@ -501,7 +501,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/quick-dial-page/quick-dials-main/quick-dials-main.module').then( m => m.QuickDialsMainPageModule)
   },
   {
-    path: 'raise-a-request-page-main',
+    path: 'raise-a-request-page',
     loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/raise-a-request-main/raise-a-request-main.module').then( m => m.RaiseARequestMainPageModule)
   },
   //  {

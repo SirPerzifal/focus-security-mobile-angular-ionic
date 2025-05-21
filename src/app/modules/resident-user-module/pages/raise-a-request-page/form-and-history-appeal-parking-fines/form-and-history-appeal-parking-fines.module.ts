@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormAndHistoryAppealParkingFinesPageRoutingModule } from './form-and-history-appeal-parking-fines-routing.module';
 
 import { FormAndHistoryAppealParkingFinesPage } from './form-and-history-appeal-parking-fines.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormAndHistoryAppealParkingFinesPageRoutingModule
+    FormAndHistoryAppealParkingFinesPageRoutingModule,
+    SharedModule
   ],
   declarations: [FormAndHistoryAppealParkingFinesPage]
 })

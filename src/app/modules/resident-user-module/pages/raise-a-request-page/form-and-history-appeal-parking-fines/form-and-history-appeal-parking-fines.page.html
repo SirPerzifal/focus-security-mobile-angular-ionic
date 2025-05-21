@@ -1,13 +1,21 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>form-and-history-appeal-parking-fines</ion-title>
-  </ion-toolbar>
+  <app-header-inner-page
+    [text]="'Raise a Request'"
+    [text_second]="'Appeal Parking Fines'"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">form-and-history-appeal-parking-fines</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/raise-a-request-page']"
+    ></ion-icon>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <app-botton-nav-bar></app-botton-nav-bar>
+</ion-footer>

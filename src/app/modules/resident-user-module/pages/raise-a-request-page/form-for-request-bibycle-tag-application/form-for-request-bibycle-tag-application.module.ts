@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormForRequestBibycleTagApplicationPageRoutingModule } from './form-for-request-bibycle-tag-application-routing.module';
 
 import { FormForRequestBibycleTagApplicationPage } from './form-for-request-bibycle-tag-application.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormForRequestBibycleTagApplicationPageRoutingModule
+    FormForRequestBibycleTagApplicationPageRoutingModule,
+    SharedModule
   ],
   declarations: [FormForRequestBibycleTagApplicationPage]
 })

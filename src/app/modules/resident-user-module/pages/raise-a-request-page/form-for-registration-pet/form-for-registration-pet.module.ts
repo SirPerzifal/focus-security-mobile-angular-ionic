@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FormForRegistrationPetPageRoutingModule } from './form-for-registration-pet-routing.module';
 
 import { FormForRegistrationPetPage } from './form-for-registration-pet.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FormForRegistrationPetPageRoutingModule
+    FormForRegistrationPetPageRoutingModule,
+    SharedModule
   ],
   declarations: [FormForRegistrationPetPage]
 })
