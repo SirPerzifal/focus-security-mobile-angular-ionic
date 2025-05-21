@@ -65,6 +65,13 @@ export class AppReportMainPage implements OnInit {
   pageName: string = '';
   subPageName: string = '';
 
+  pagination = {
+    current_page: 1,    // Changed to number with default value
+    per_page: 10,       // Changed to number with default value
+    total_page: 1,      // Changed to number with default value
+    total_records: 0    // Changed to number with default value
+  }
+
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
@@ -217,7 +224,22 @@ export class AppReportMainPage implements OnInit {
     this.extend_mb = status
   }
 
-  loadTicketFromBackendFor(whoIsThis: string) {
+  goToPage(event: any, want?: string) {
+    const inputValue = parseInt(event.target.value, 10);
+    
+    // Validate input: ensure it's a number within valid range
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
+      this.loadTicketFromBackendFor(this.fromWhere, 'goto', inputValue);
+    } else {
+      // Reset to current page if invalid input
+      event.target.value = this.pagination.current_page;
+      
+      // Optional: Show a toast message for invalid page
+      this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
+    }
+  }
+
+  loadTicketFromBackendFor(whoIsThis: string, type?: string, page?: number) {
     this.allData = []
     this.allData.pop()
     this.isLoading = true
@@ -225,11 +247,19 @@ export class AppReportMainPage implements OnInit {
       this.mainApi.endpointMainProcess({
         is_report_app: this.isReportApp,
         is_report_condo: '',
+        page: page
       }, 'get/report_issue').subscribe((response: any) => {
         // console.log(response);
         if (response.result.response_code === 200) {
           this.allData = response.result.result;
           this.isLoading = false
+
+          this.pagination = {
+            current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
+            per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
+            total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
+            total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
+          }
           // this.presentToast(response.result.message, 'success');
         } else {
           // this.presentToast(response.result.error_message, 'danger');
@@ -244,6 +274,13 @@ export class AppReportMainPage implements OnInit {
         if (response.result.response_code === 200) {
           this.allData = response.result.result;
           this.isLoading = false
+
+          this.pagination = {
+            current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
+            per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
+            total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
+            total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
+          }
           // this.presentToast(response.result.message, 'success');
         } else {
           // this.presentToast(response.result.error_message, 'danger');

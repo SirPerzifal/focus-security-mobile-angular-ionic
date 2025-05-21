@@ -459,6 +459,7 @@ export class WebRtcService extends ApiService{
                       if (isDesktop) {
                         console.log("Your in desktop device", isDesktop);
                       } else {
+                        this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
                         console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
                         setTimeout(()=>{
                           this.closeSocket();
@@ -720,7 +721,7 @@ export class WebRtcService extends ApiService{
     this.presentToast(data.message, 'danger');
   }
 
-  async presentToast(message: string, color: 'success' | 'danger' = 'success') {
+  async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
     const toast = await this.toastController.create({
       message: message,
       duration: 4000,
