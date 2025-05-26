@@ -363,12 +363,12 @@ export class FamilyFormPage implements OnInit {
             helper_work_permit: this.formData.helper_work_permit // Tambahkan parameter ini
           }, 'post/post_family_detail').subscribe((response: any) => {
             console.log(response);
-            this.functionMain.presentToast('Success Add Record', 'success');
-            this.router.navigate(['family-page-main']);
-            // if (response.result.response_code == 200) {
-            // } else {
-            //   this.functionMain.presentToast('Failed Add Record', 'danger');
-            // }
+            if (response.result.response_code == 200) {
+              this.functionMain.presentToast('Success Add Record', 'success');
+              this.router.navigate(['family-page-main']);
+            } else {
+              this.functionMain.presentToast('Failed Add Record Because Type You Choos Are Primary or Something else.', 'danger');
+            }
           })
         }
       } catch (error) {

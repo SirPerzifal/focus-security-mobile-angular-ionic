@@ -265,7 +265,10 @@ export class AppReportMainPage implements OnInit {
           this.isLoading = false
           // this.presentToast(response.result.error_message, 'danger');
         }
-      })
+      }, ((error: any) => {
+        this.isLoading = false;
+        this.functionMain.presentToast('Failed to load data. Please try again later.', 'danger');
+      }))
     } else {
       this.mainApi.endpointMainProcess({
         is_report_app: '',

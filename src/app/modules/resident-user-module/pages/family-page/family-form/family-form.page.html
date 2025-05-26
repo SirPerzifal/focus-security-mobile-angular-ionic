@@ -14,7 +14,7 @@
       (click)="directTo()"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+  <div class="px-4 pb-4 pt-1.5 space-y-2">
     <div
       *ngIf="pageForWhat === 'editData'"
       class="w-full mt-2 flex items-center justify-center"
@@ -87,7 +87,7 @@
       ></app-input-component>
     </div>
 
-    <div *ngIf="!formData.image_family" class="w-full mt-1">
+    <div *ngIf="pageForWhat !== 'editData'" class="w-full mt-1">
       <div class="flex flex-row justify-start">
         <p class="text-sm font-bold">Resident Profile</p>
       </div>

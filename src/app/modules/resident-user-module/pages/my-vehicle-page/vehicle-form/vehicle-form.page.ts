@@ -90,7 +90,7 @@ export class VehicleFormPage implements OnInit {
             typeOfApplication: vehicle.type_of_application === 'Temporary Vehicle' ? 'temporary_vehicle' : 'owned_vehicle',
             typeOfVehicle: vehicle.vehicle_type,
             vehicleMake: vehicle.vehicle_make,
-            vehicleColour: vehicle.vehicle_color_text,
+            vehicleColour: vehicle.vehicle_color,
             vehicleLog: '',
             isFirstVehicle: vehicle.is_first_vehicle,
             primaryVehicle: 'false',
@@ -257,6 +257,7 @@ export class VehicleFormPage implements OnInit {
   
     if (errMsg.length === 0) {
       this.mainApi.endpointMainProcess({
+        owned_by: this.vehicleForm.ownedBy ? this.vehicleForm.ownedBy : this.ownedBy.id,
         previous_vehicle_id: this.vehicleIdForUpdateAndJustUpdateNothingElse,
         vehicle_number: this.vehicleForm.vehicleNumber,
         IU_number: this.vehicleForm.iuNumber,

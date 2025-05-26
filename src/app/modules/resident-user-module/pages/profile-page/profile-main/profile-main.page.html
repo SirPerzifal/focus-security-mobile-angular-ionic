@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="mb-24">
+  <div>
     <div
       *ngIf="!showMain"
       class="w-full flex items-start justify-start mt-2 ml-3"
@@ -164,7 +164,9 @@
                   *ngIf="isLoading"
                   class="flex justify-center items-center h-full mt-[50px]"
                 >
-                  <app-loading-animation *ngIf="isLoading"></app-loading-animation>
+                  <app-loading-animation
+                    *ngIf="isLoading"
+                  ></app-loading-animation>
                 </div>
                 <div *ngFor="let data of historyData">
                   <div
