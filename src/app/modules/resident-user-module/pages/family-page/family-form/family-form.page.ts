@@ -58,6 +58,7 @@ export class FamilyFormPage implements OnInit {
     },
     helper_work_permit: '' // Tambahkan ini
   }
+  fromWhere: string = '';
   familyId: number = 0;
   end_date: string=new Date().toISOString().split('T')[0];
 
@@ -76,7 +77,7 @@ export class FamilyFormPage implements OnInit {
     private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { for: any, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
+    const state = navigation?.extras.state as { for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
     if (state) {
       this.familyId = state.id;
       this.pageName = 'Edit Member';
@@ -94,6 +95,9 @@ export class FamilyFormPage implements OnInit {
       let str = state.mobile;
       let newStr = str.substring(2);
       this.contactValue = newStr;
+      if (state.from) {
+        this.fromWhere = state.from;
+      }
     }
   }
 
@@ -102,7 +106,11 @@ export class FamilyFormPage implements OnInit {
   }
 
   directTo() {
-    this.router.navigate(['/family-page-main']);
+    if (this.fromWhere === 'raise-a-request') {
+      this.router.navigate(['/form-for-request-move-in-out-permit']);
+    } else {
+      this.router.navigate(['/family-page-main']);
+    }
   }
 
   getTodayDate() {

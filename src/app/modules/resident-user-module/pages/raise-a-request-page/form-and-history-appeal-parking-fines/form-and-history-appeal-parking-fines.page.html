@@ -1,18 +1,180 @@
 <ion-header [translucent]="true">
   <app-header-inner-page
     [text]="'Raise a Request'"
-    [text_second]="'Appeal Parking Fines'"
+    [text_second]="subPageName"
   ></app-header-inner-page>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
+  <div
+    *ngIf="isLoading"
+    class="flex justify-center items-center h-full mt-[50px]"
+  >
+    <app-loading-animation></app-loading-animation>
+  </div>
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
       size="large"
       class="text-[var(--ion-color-primary)] size-12"
-      [routerLink]="['/raise-a-request-page']"
+      (click)="backButtonClickFunc()"
     ></ion-icon>
+  </div>
+  <div
+    *ngIf="subPageName === 'Appeal Parking Fines'"
+    id="appeal_list_from_backend"
+    class="px-4"
+    @fadeInOut
+  >
+    <div id="visitor" class="w-full mt-2 overflow-x-auto pb-1">
+      <div
+        *ngFor="let ad of appealData"
+        [ngClass]="{
+          'bg-[var(--ion-color-tertiary)]': ad.appeal_status === 'Approved',
+          'bg-[#F8F1BA]': ad.appeal_status === 'Issued',
+          'bg-[#E3787E]': ad.appeal_status === 'Rejected' || ad.appeal_status === 'Cancelled',
+        }"
+        class="px-4 pb-4 pt-2.5 rounded-xl w-full mb-3 relative"
+      >
+        <div class="flex flex-col justify-center items-start mb-1">
+          <div class="flex flex-row items-center justify-end mt-2">
+            <ng-container
+              *ngIf="ad.appeal_status === 'approved' || ad.appeal_status === 'Approved'"
+            >
+              <ion-icon
+                name="checkmark"
+                class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
+              ></ion-icon>
+              <p
+                class="text-[var(--ion-color-primary)] font-bold text-base mt-[4px]"
+              >
+                Approved
+              </p>
+            </ng-container>
+            <ng-container
+              *ngIf="ad.appeal_status === 'pending_approval' || ad.appeal_status === 'Issued'"
+            >
+              <ion-icon
+                name="alert-circle-outline"
+                class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
+              ></ion-icon>
+              <p class="text-yellow-500 font-bold text-base mt-[4px]">Issued</p>
+            </ng-container>
+            <ng-container
+              *ngIf="ad.appeal_status === 'rejected' || ad.appeal_status === 'Rejected'"
+            >
+              <ion-icon
+                name="close"
+                class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+              ></ion-icon>
+              <p class="text-red-700 font-bold text-base mt-[4px]">Rejected</p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex flex-row justify-between font-bold items-center">
+          <div class="flex flex-col w-[100%]">
+            <div class="text-base font-extrabold">{{ ad.appeal_status }}</div>
+            <div class="text-base flex flex-col">
+              <table class="w-full table-fixed">
+                <tr>
+                  <td>Vehicle No</td>
+                  <td class="w-[5%]">:</td>
+                  <td class="font-thin">{{ ad.vehicle_number }}</td>
+                </tr>
+                <tr>
+                  <td>Offence Date</td>
+                  <td class="w-[5%]">:</td>
+                  <td class="font-thin">
+                    {{ functionMain.convertToDDMMYYYY(ad.issue_time) }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="button-card-facility flex items-center font-bold w-1/2 mt-2 mb-2"
+        >
+          <button
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold"
+            (click)="appealNow(ad)"
+          >
+            Appeal Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="subPageName === 'Appeal Form'"
+    id="appeal_form"
+    class="px-4"
+    @fadeInOut
+  >
+    <div class="w-full">
+      <app-input-component
+        [id]="'resport_no'"
+        [type]="'text'"
+        [labelChild1]="'Report Number'"
+        [disabled]="true"
+        [value]="appealNowFromData.id"
+      ></app-input-component>
+    </div>
+    <div class="w-full">
+      <app-input-component
+        [id]="'veihcle_number'"
+        [type]="'text'"
+        [labelChild1]="'Vehicle Number'"
+        [disabled]="true"
+        [value]="appealNowFromData.vehicle_number"
+      ></app-input-component>
+    </div>
+    <div class="w-full">
+      <app-input-component
+        [id]="'offence_date'"
+        [type]="'text'"
+        [labelChild1]="'Offence Date'"
+        [disabled]="true"
+        [value]="appealNowFromData.issue_time"
+      ></app-input-component>
+    </div>
+    <div class="w-full mt-1 flex flex-col">
+      <div class="flex flex-row justify-start">
+        <p class="text-base cw-3:text-sm font-bold">Reason for Appeal</p>
+      </div>
+      <textarea
+        id="reason_for_appeal"
+        placeholder=""
+        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+        type="text"
+        [(ngModel)]="appealNowFromData.reason_for_appeal"
+        name="reason_for_appeal"
+      ></textarea>
+    </div>
+    <div class="flex flex-row mt-2 text-[13px] w-full">
+      <div class="w-full">
+        <app-submit-button
+          [text]="'Submit'"
+          [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+          (click)="onSubmitNext()"
+        >
+        </app-submit-button>
+      </div>
+    </div>
   </div>
 </ion-content>
 

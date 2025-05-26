@@ -190,6 +190,9 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         
         this.selectedDate = '';
         this.entryCheck = '';
+        this.formData.entryTitle = '';
+        this.formData.entryMessage = '';
+        this.formData.facility = '';
         this.toggleShowNewInv()
       }
     });

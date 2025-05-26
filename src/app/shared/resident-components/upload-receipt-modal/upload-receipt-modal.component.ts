@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-upload-receipt-modal',
@@ -11,12 +13,40 @@ export class UploadReceiptModalComponent  implements OnInit {
   isModalUploadReceiptOpen: boolean = false;
   selectedFileName: string = '';
   receiptBase64: string = '';
+  qrCodeImage: string = '';
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    private mainApiResidentService: MainApiResidentService,
+    public functionMainService: FunctionMainService
   ) { }
 
   ngOnInit() {}
+
+  loadQRCode() {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/payment_qr_code').subscribe((result: any) => {
+      this.qrCodeImage = result.result.qr_code;
+    })
+  }
+
+  donwloadQris() {
+    if (!this.qrCodeImage) {
+      this.functionMainService.presentToast('QR Code image is not available', 'danger');
+      return;
+    }
+  
+    // Membuat elemen <a> untuk mendownload gambar
+    const link = document.createElement('a');
+    link.href = this.qrCodeImage; // Mengatur href ke base64 image
+    link.download = 'qr_code.png'; // Menentukan nama file yang akan diunduh
+  
+    // Menambahkan elemen ke body dan memicu klik
+    document.body.appendChild(link);
+    link.click();
+  
+    // Menghapus elemen setelah klik
+    document.body.removeChild(link);
+  }
 
   uploadReceipt(event: any) {
     let data = event.target.files[0];

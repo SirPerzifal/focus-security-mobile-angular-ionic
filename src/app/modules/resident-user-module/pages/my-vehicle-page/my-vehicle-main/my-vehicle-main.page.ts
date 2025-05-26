@@ -18,6 +18,7 @@ interface Vehicle {
   fees: string;
   isPrimary: string;
   endDateForTemporaryPass: string;
+  reasonForReejction: string;
 }
 
 interface VehicleDetail {
@@ -31,6 +32,7 @@ interface VehicleDetail {
   type: string;
   fees: string;
   endDateForTemporaryPass: string;
+  reasonForReejction: string;
 }
 
 @Component({
@@ -167,7 +169,8 @@ export class MyVehicleMainPage implements OnInit {
           type: vehicle.vehicle_type,
           fees: `S$${vehicle.vehicle_fee}`, // Anda dapat menyesuaikan ini berdasarkan logika Anda
           isPrimary:vehicle.is_primary_vehicle,
-          endDateForTemporaryPass: vehicle.end_date_for_temporary_pass
+          endDateForTemporaryPass: vehicle.end_date_for_temporary_pass,
+          reasonForReejction: vehicle.rejected_reason
         }));
         this.MaximumVehicle = response.result.response_result.exceeded_max;
         this.MaximumPrimary = response.result.response_result.is_any_primary_vehicle;

@@ -14,6 +14,237 @@
       [routerLink]="['/raise-a-request-page']"
     ></ion-icon>
   </div>
+  <div class="px-4 w-full min-h-[900px]">
+    <div class="w-full">
+      <app-input-component
+        [id]="'name_resident'"
+        [type]="'text'"
+        [labelChild1]="'Name Resident'"
+        [disabled]="true"
+        [value]="fromDisplay.family_name"
+      ></app-input-component>
+    </div>
+
+    <div class="w-full flex flex-row space-x-2 mt-1">
+      <div class="w-1/2">
+        <app-input-component
+          [id]="'block_name'"
+          [type]="'text'"
+          [labelChild1]="'Block Name'"
+          [disabled]="true"
+          [value]="fromDisplay.block_name"
+        ></app-input-component>
+      </div>
+      <div class="w-1/2">
+        <app-input-component
+          [id]="'unit_name'"
+          [type]="'text'"
+          [labelChild1]="'Unit Name'"
+          [disabled]="true"
+          [value]="fromDisplay.unit_name"
+        ></app-input-component>
+      </div>
+    </div>
+
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'phone_number'"
+        [type]="'text'"
+        [labelChild1]="'Phone Number Resident'"
+        [disabled]="true"
+        [value]="fromDisplay.mobile_number"
+      ></app-input-component>
+    </div>
+
+    <div class="w-full mt-1">
+      <h2 class="font-bold mb-1 text-base cw-3:text-sm">
+        In what purpose you applying this tag?
+      </h2>
+      <div class="flex flex-row space-x-2 items-start w-full">
+        <app-radio-check-input-case
+          [type]="'radio'"
+          [id]="'replacement'"
+          [name]="'replacement'"
+          [value]="'replacement'"
+          [checkedText]="formSent.typeSubmit === 'replacement'"
+          [text]="'Replacement'"
+          (valueEmit)="onChangeRadio($event)"
+        ></app-radio-check-input-case>
+        <app-radio-check-input-case
+          [type]="'radio'"
+          [id]="'new_application'"
+          [name]="'new_application'"
+          [value]="'new_application'"
+          [checkedText]="formSent.typeSubmit === 'new_application'"
+          [text]="'New Application'"
+          (valueEmit)="onChangeRadio($event)"
+        ></app-radio-check-input-case>
+      </div>
+    </div>
+
+    <div *ngIf="formSent.typeSubmit === 'replacement'">
+      <div class="w-full mt-1">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base cw-3:text-sm font-bold text-start">
+            Which Tag Would you want a replacement for?
+          </p>
+        </div>
+        <div class="flex flex-col mt-1">
+          <table
+            *ngIf="expectedBicycle.length > 0"
+            class="table-auto border-collapse border border-gray-300 w-full cw-3:w-[100%] text-sm text-left bg-white"
+          >
+            <thead>
+              <tr class="bg-gray-200 text-gray-700">
+                <th
+                  class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
+                ></th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Tag Number
+                </th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Bicycle Brand, Colour
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bicycle of expectedBicycle">
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                  <input
+                    id="bicycle_data_{{bicycle.id}}"
+                    (change)="onBicycleSelect(bicycle)"
+                    name="bicycle"
+                    type="radio"
+                    class="w-4 h-4 cw-3:w-2 cw-3:h-2"
+                  />
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ bicycle.bicycle_tag }}
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ bicycle.bicycle_brand }}, {{ bicycle.bicycle_colour }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-container *ngIf="expectedBicycle.length === 0">
+            <p class="text-gray-700">
+              You have no bicycle tag yet.
+              <u
+                (click)="onChangeRadio({click: true, value: 'new_application'})"
+                class="text-blue-500 underline"
+                >Make one now</u
+              >
+              or wait until approve
+            </p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="formSent.typeSubmit === 'new_application'">
+      <div class="w-full mt-1">
+        <app-input-component
+          [id]="'bicycle_brand'"
+          [type]="'text'"
+          [labelChild1]="'Type Bicycle Brand'"
+          (eventEmitter)="onChangeValue($event, 'Brand')"
+        ></app-input-component>
+      </div>
+
+      <div class="w-full mt-1">
+        <app-input-component
+          [id]="'bicycle_colour'"
+          [type]="'text'"
+          [labelChild1]="'Type Bicycle Colour'"
+          (eventEmitter)="onChangeValue($event, 'Colour')"
+        ></app-input-component>
+      </div>
+
+      <div class="w-full mt-1">
+        <div class="flex flex-row justify-start">
+          <p class="text-base cw-3:text-sm font-bold">Upload Bicycle Image</p>
+        </div>
+        <div
+          class="bg-white p-3 rounded border border-black w-full flex flex-row text-start items-center justify-start h-12"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="bicycle_image"
+            (change)="onFileSelected($event)"
+            id="bicycle_image"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedBicycleImage) ? 'text-black' : 'text-white'"
+            for="bicycle_image"
+          >
+            {{ selectedBicycleImage ? selectedBicycleImage : 'Upload your
+            vehicle log' }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-row mt-1.5 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          disabled
+          [checked]="amountType.isIncludeGST"
+          [(ngModel)]="amountType.isIncludeGST"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-base cw-3:text-sm text-start">Is Include GST</p>
+      </label>
+    </div>
+
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'amount_total'"
+        [type]="'text'"
+        [labelChild1]="'Amount Total Require'"
+        [disabled]="true"
+        [value]="amountPayable"
+      ></app-input-component>
+    </div>
+
+    <div class="flex flex-row mt-2 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          [checked]="agreementChecked"
+          [(ngModel)]="agreementChecked"
+          [ngModelOptions]="{standalone: true}"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-start">
+          I agree to the&nbsp;<u
+            class="text-blue-400"
+            (click)="presentModalAgreement()"
+            >terms and condition</u
+          >&nbsp;above
+        </p>
+      </label>
+    </div>
+
+    <div class="flex flex-row mt-2 text-[13px] w-full">
+      <div class="w-full">
+        <app-submit-button
+          [text]="'Submit'"
+          [disabled]="!agreementChecked"
+          [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base' : 'bg-gray-200 text-black mt-1 w-full text-base'"
+          (click)="onSubmitNext()"
+        >
+        </app-submit-button>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

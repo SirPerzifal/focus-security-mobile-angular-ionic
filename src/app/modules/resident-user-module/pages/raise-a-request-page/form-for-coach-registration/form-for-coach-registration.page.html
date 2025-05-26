@@ -14,18 +14,333 @@
       [routerLink]="['/raise-a-request-page']"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
-    <div id="nav_tabs_main">
+
+  <div class="pb-4 pt-1.5 space-y-2 mb-28">
+    <div id="nav_tabs_main" class="px-4">
       <app-nav-tabs
         [buttons]="navButtonsSub"
         (eventEmitter)="onClickNavButton($event)"
       ></app-nav-tabs>
     </div>
     <div id="form_new_coach" *ngIf="pageName === 'Form New Coach'" @fadeInOut>
-      Form New Coach
+      <div *ngIf="formStatus.first" class="px-4" @fadeInOut>
+        <div class="w-full">
+          <app-input-component
+            [id]="'name_of_coach'"
+            [type]="'text'"
+            [labelChild1]="'Name of Coach'"
+            [value]="formSent.nameCoach"
+            (eventEmitter)="onValueChange($event, 'name')"
+          ></app-input-component>
+        </div>
+
+        <div class="w-full flex flex-col">
+          <label class="text-sm"><b>Contact Number of Coach</b></label>
+          <div class="w-full flex flex-row justify-start space-x-2">
+            <div class="w-[35%]">
+              <select
+                id="contry_code"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-xs"
+                name="contry_code"
+                style="border: 1px solid #6b7280"
+                [(ngModel)]="countryCode"
+                (change)="onValueChange($event, 'country_codes')"
+              >
+                <option hidden selected disabled value="+65">SG +65</option>
+                <option *ngFor="let code of countryCodes" [value]="code.code">
+                  {{ code.country }} +{{ code.code }}
+                </option>
+              </select>
+            </div>
+            <div class="flex flex-col justify-start">
+              <input
+                id="contact_number_of_coach"
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
+                type="number"
+                name="contact_number_of_coach"
+                style="border: 1px solid #6b7280"
+                [(ngModel)]="contactNumberDefault"
+                (change)="onValueChange($event, 'contact_number')"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full mt-[-3px]">
+          <label class="text-base cw-3:text-sm font-bold">Sex of Coach</label>
+          <select
+            id="sex_of_coach"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+            name="sex_of_coach"
+            (change)="onValueChange($event, 'sex_of_coach')"
+            [(ngModel)]="formSent.sex"
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="rather_not_say">Rather not Say</option>
+          </select>
+        </div>
+
+        <div class="w-full mt-[-3px]">
+          <label class="text-base cw-3:text-sm font-bold">Nationality</label>
+          <select
+            id="nationality"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+            name="nationality"
+            (change)="onValueChange($event, 'nationality')"
+            [(ngModel)]="formSent.nationality"
+          >
+            <option value="singaporean">Singaporean</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div *ngIf="nationality.other" class="w-full">
+          <app-input-component
+            [id]="'nationality_other'"
+            [type]="'text'"
+            [labelChild1]="'Other'"
+            (eventEmitter)="onValueChange($event, 'nationality_other')"
+          ></app-input-component>
+        </div>
+
+        <div class="w-full">
+          <app-input-component
+            [id]="'organization_affiliate_with'"
+            [type]="'text'"
+            [labelChild1]="'Organization Affiliate With'"
+            [value]="formSent.organizationAffiliateWith"
+            (eventEmitter)="onValueChange($event, 'organization_affiliate_with')"
+          ></app-input-component>
+        </div>
+
+        <div class="w-full">
+          <app-input-component
+            [id]="'coaching_reg_number'"
+            [type]="'text'"
+            [labelChild1]="'Coaching Reg Number'"
+            [value]="formSent.coachingRegNumber"
+            (eventEmitter)="onValueChange($event, 'coaching_reg_number')"
+          ></app-input-component>
+        </div>
+
+        <div class="flex flex-row mt-2 text-[13px] w-full">
+          <div class="w-full">
+            <app-submit-button
+              [text]="'Next'"
+              [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+              (click)="onClick('next')"
+            >
+            </app-submit-button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="formStatus.second" @fadeInOut>
+        <div class="w-full flex items-start justify-start ml-3">
+          <ion-icon
+            name="arrow-back-circle"
+            size="large"
+            class="text-[var(--ion-color-primary)] size-12"
+            (click)="onClick('back')"
+          ></ion-icon>
+        </div>
+
+        <div class="px-4">
+          <div class="w-full mt-[-3px]">
+            <label class="text-base cw-3:text-sm font-bold"
+              >Type of Coaching</label
+            >
+            <select
+              id="type_of_coaching"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+              name="type_of_coaching"
+              (change)="onValueChange($event, 'type_of_coaching')"
+              [(ngModel)]="formSent.typeOfCoaching"
+            >
+              <option *ngFor="let toc of coachingType" [value]="toc.name">
+                {{ toc.name }}
+              </option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div *ngIf="typeOfCoaching.other" class="w-full">
+            <app-input-component
+              [id]="'type_of_coaching_other'"
+              [type]="'text'"
+              [labelChild1]="'Other'"
+              (eventEmitter)="onValueChange($event, 'type_of_coaching_other')"
+            ></app-input-component>
+          </div>
+
+          <div class="w-full mt-[-3px]">
+            <label class="text-base cw-3:text-sm font-bold"
+              >Facility Required</label
+            >
+            <select
+              id="facility_require"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+              name="facility_require"
+              (change)="onValueChange($event, 'facility_require')"
+              [(ngModel)]="formSent.facilityRequired"
+            >
+              <option
+                *ngFor="let fri of facilityRequired"
+                [value]="fri.facility_id"
+              >
+                {{ fri.facility_name }}
+              </option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div *ngIf="facility.other" class="w-full">
+            <app-input-component
+              [id]="'facility_other'"
+              [type]="'text'"
+              [labelChild1]="'Other'"
+              (eventEmitter)="onValueChange($event, 'facility_other')"
+            ></app-input-component>
+          </div>
+
+          <div class="w-full">
+            <app-input-component
+              [id]="'expected_start_date'"
+              [type]="'date'"
+              [labelChild1]="'Expected Start Date'"
+              (eventEmitter)="onValueChange($event, 'expected_start_date')"
+              [value]="selectedDate"
+              [minDate]="minDate"
+            ></app-input-component>
+          </div>
+
+          <div class="w-full">
+            <app-input-component
+              [id]="'duration_per_session'"
+              [type]="'number'"
+              [labelChild1]="'Duration per Session (in minute)'"
+              [value]="formSent.durationPerSession"
+              (eventEmitter)="onValueChange($event, 'duration_per_session')"
+            ></app-input-component>
+          </div>
+
+          <div class="flex flex-row mt-1.5 text-base cw-3:text-[13px]">
+            <label class="mr-1 rounded font-bold flex items-center">
+              <input
+                type="checkbox"
+                disabled
+                [checked]="amountType.isIncludeGST"
+                [(ngModel)]="amountType.isIncludeGST"
+                class="text-[var(--ion-color-primary)] rounded mr-1.5"
+              />
+              <p class="text-base cw-3:text-sm text-start">Is Include GST</p>
+            </label>
+          </div>
+
+          <div class="w-full mt-1">
+            <app-input-component
+              [id]="'amount_total'"
+              [type]="'text'"
+              [labelChild1]="'Amount Total Require'"
+              [disabled]="true"
+              [value]="amountPayable"
+            ></app-input-component>
+          </div>
+
+          <div class="flex flex-row mt-2 text-base cw-3:text-[13px]">
+            <label class="mr-1 rounded font-bold flex items-center">
+              <input
+                type="checkbox"
+                [checked]="agreementChecked"
+                [(ngModel)]="agreementChecked"
+                class="text-[var(--ion-color-primary)] rounded mr-1.5"
+              />
+              <p class="text-start">
+                I agree to the&nbsp;<u
+                  class="text-blue-400"
+                  (click)="presentModalAgreement()"
+                  >terms and condition</u
+                >&nbsp;above
+              </p>
+            </label>
+          </div>
+
+          <div class="flex flex-row mt-2 text-[13px] w-full">
+            <div class="w-full">
+              <app-submit-button
+                [text]="'Submit Request'"
+                [disabled]="!agreementChecked"
+                [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base' : 'bg-gray-200 text-black mt-1 w-full text-base'"
+                (click)="onClick('submit')"
+              >
+              </app-submit-button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="deactive_coach" *ngIf="pageName === 'Deactive Coach'" @fadeInOut>
-      Deactive Coach
+
+    <div
+      id="deactive_coach"
+      *ngIf="pageName === 'Deactive Coach'"
+      @fadeInOut
+      class="px-4"
+    >
+      <div class="flex flex-col mt-2">
+        <table
+          *ngIf="expectedCoach.length > 0"
+          class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+        >
+          <thead>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Coach Name
+              </th>
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Coach Type
+              </th>
+              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                Deactive
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let coach of expectedCoach">
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                {{ coach.name }}
+              </td>
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                {{ coach.coach_type }}
+              </td>
+              <td
+                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                <u
+                  class="text-red-500"
+                  (click)="showAlertButtons('Are you sure to deactive this coach?', 'history-alert alert-banned', coach.id)"
+                  >Deactive</u
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-container *ngIf="expectedCoach.length === 0">
+          <p class="text-gray-700">
+            You have no registered coach tag yet.
+            <u
+              (click)="onClickNavButton([true, 'Form New Coach'])"
+              class="text-blue-500 underline"
+              >Make one now</u
+            >
+            or wait until approve
+          </p>
+        </ng-container>
+      </div>
     </div>
   </div>
 </ion-content>

@@ -87,6 +87,24 @@
       ></app-input-component>
     </div>
 
+    <div *ngIf="!formData.image_family" class="w-full mt-1">
+      <div class="flex flex-row justify-start">
+        <p class="text-sm font-bold">Resident Profile</p>
+      </div>
+      <div
+        (click)="chooseWhereToChoose()"
+        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-white'"
+        >
+          {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Upload
+          Helper Work Permit' }}
+        </label>
+      </div>
+    </div>
+
     <div class="w-full flex flex-row justify-between">
       <div class="w-[30%] flex flex-col justify-start">
         <label class="text-sm"><b>Code</b></label>

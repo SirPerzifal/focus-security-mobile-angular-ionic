@@ -1,7 +1,13 @@
-<div class="wrapper">
+<div class="wrapper flex flex-col items-center justify-center">
+  <img
+    [src]="functionMainService.getImage(qrCodeImage)"
+    alt="QR code for Paynow"
+    class="h-24 w-24 cursor-pointer mb-2"
+    (click)="donwloadQris()"
+  />
   <div class="w-full">
     <div class="flex flex-row justify-start mb-1">
-      <p class="text-base font-bold">Upload receipt here</p>
+      <p class="text-base cw-3:text-sm font-bold">Upload receipt here</p>
     </div>
     <div class="bg-white p-3 rounded">
       <input
@@ -25,7 +31,7 @@
   <app-submit-button
     [text]="'Send'"
     [extraClass]="
-      'bg-[var(--ion-color-primary)] text-white p-2 w-24 rounded border border-black font-bold mt-2'
+      'bg-[var(--ion-color-primary)] w-full min-w-[259px] text-white p-2 rounded border border-black font-bold mt-2'
     "
     (click)="onSubmitReceipt()"
   ></app-submit-button>

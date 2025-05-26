@@ -59,10 +59,19 @@
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td class="w-[60%] font-bold">Date of Invite</td>
+                  <td class="w-[60%] font-bold">Date of Visit</td>
                   <td class="w-[10%]">:</td>
                   <td>
                     {{ historyData.visitor_date ? (historyData.visitor_date |
+                    date: 'dd/MM/yyyy') : '-' }}
+                  </td>
+                  <!-- Menampilkan '-' jika visitor_date kosong -->
+                </tr>
+                <tr class="h-6">
+                  <td class="w-[60%] font-bold">Date of Invite</td>
+                  <td class="w-[10%]">:</td>
+                  <td>
+                    {{ historyData.inviting_date ? (historyData.inviting_date |
                     date: 'dd/MM/yyyy') : '-' }}
                   </td>
                   <!-- Menampilkan '-' jika visitor_date kosong -->

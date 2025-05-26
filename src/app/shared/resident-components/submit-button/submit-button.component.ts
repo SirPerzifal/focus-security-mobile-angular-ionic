@@ -10,6 +10,7 @@ export class SubmitButtonComponent  implements OnInit {
   @Input() text: string='';
   @Input() extraClass: string='';
   @Input() customStyle: string='';
+  @Input() disabled: boolean= false;
 
   constructor() { }
 

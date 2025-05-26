@@ -63,7 +63,7 @@ import { RefresherPageComponent } from './resident-components/refresher-page/ref
     ModalComponent,
     UploadReceiptModalComponent,
     LoadingAnimationComponent,
-    RefresherPageComponent
+    RefresherPageComponent,
   ],
   imports: [
     CommonModule,

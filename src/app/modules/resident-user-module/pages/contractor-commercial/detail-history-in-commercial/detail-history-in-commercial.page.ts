@@ -34,6 +34,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     purpose: string;
     visitor_name: string;
     visitor_date: Date;
+    inviting_date: Date;
     visitor_entry_time: string;
     visitor_exit_time: string;
     mode_of_entry: string;

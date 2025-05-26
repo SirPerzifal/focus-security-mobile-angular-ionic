@@ -142,25 +142,66 @@
         <p class="text-sm font-bold">Vehicle Log</p>
       </div>
       <div
+        (click)="chooseWhereToChoose()"
         class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
       >
-        <input
-          class="w-full rounded text-base hidden"
-          type="file"
-          name="vehicle_log"
-          (change)="onValueChange($event, 'vehicle_log')"
-          id="vehicle_log"
-        />
         <label
           class="w-full text-start"
           [ngClass]="(selectedNameVehicleLog) ? 'text-black' : 'text-white'"
-          for="vehicle_log"
         >
           {{ selectedNameVehicleLog ? selectedNameVehicleLog : 'Upload Helper
           Work Permit' }}
         </label>
       </div>
     </div>
+
+    <ion-modal
+      id="is-modal-choose-upload"
+      [isOpen]="isModalChooseUpload"
+      (didDismiss)="isModalChooseUpload = false"
+      [initialBreakpoint]="1"
+      [breakpoints]="[0, 1]"
+    >
+      <ng-template>
+        <div class="block">
+          <div class="w-full flex flex-row justify-between space-x-2 p-3">
+            <div class="w-1/2">
+              <div class="w-full flex flex-col items-center">
+                <input
+                  class="w-full rounded text-base hidden"
+                  type="file"
+                  name="vehicle_log"
+                  (change)="onValueChange($event, 'vehicle_log')"
+                  id="vehicle_log"
+                />
+                <label class="flex flex-col items-center" for="vehicle_log">
+                  <img
+                    class="w-10 h-10 my-2"
+                    src="assets/icon/other-file-icon.png"
+                  />
+                  <span
+                    class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                    >From File</span
+                  >
+                </label>
+              </div>
+            </div>
+            <div class="w-1/2">
+              <div
+                class="w-full flex flex-col items-center"
+                (click)="openCamera()"
+              >
+                <img class="w-10 h-10 my-2" src="assets/icon/image-icon.png" />
+                <span
+                  class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                  >From Camera</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ion-modal>
 
     <div *ngIf="vehicleForm.typeOfApplication === 'temporary_vehicle'">
       <div class="w-full mt-1">

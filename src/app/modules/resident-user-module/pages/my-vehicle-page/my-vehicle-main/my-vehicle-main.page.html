@@ -232,6 +232,14 @@
               <p class="text-base font-semibold text-gray-600">Fees</p>
               <p class="text-base font-bold">{{ vehicleDetail.fees }}</p>
             </div>
+            <div *ngIf="vehicleDetail.reasonForReejction" class="flex flex-col">
+              <p class="text-base font-semibold text-gray-600">
+                Reason for Rejection
+              </p>
+              <p class="text-base font-bold">
+                {{ vehicleDetail.reasonForReejction }}
+              </p>
+            </div>
           </div>
           <div
             *ngIf="vehicleDetail.endDateForTemporaryPass"

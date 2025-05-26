@@ -91,6 +91,12 @@ export class InputComponentComponent  implements OnInit {
     if (event.target.type === 'text') {
       const value = event.target.value;
       this.eventEmitter.emit(value)
+    } else if (event.target.type === 'number') {
+      const value = event.target.value;
+      this.eventEmitter.emit(value)
+    } else if (event.target.type === 'time') {
+      const value = event.target.value;
+      this.eventEmitter.emit(value)
     } else if (event.target.type === 'file') {
       this.onUploadPaymentReceipt(event)
     } else {

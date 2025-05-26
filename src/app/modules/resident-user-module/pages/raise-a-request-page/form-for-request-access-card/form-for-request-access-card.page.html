@@ -14,6 +14,274 @@
       [routerLink]="['/raise-a-request-page']"
     ></ion-icon>
   </div>
+  <div class="px-4 h-full min-h-[900px]">
+    <div class="w-full">
+      <app-input-component
+        [id]="'name_resident'"
+        [type]="'text'"
+        [labelChild1]="'Name Resident'"
+        [disabled]="true"
+        [value]="fromDisplay.family_name"
+      ></app-input-component>
+    </div>
+    <div class="w-full flex flex-row space-x-2 mt-1">
+      <div class="w-1/2">
+        <app-input-component
+          [id]="'block_name'"
+          [type]="'text'"
+          [labelChild1]="'Block Name'"
+          [disabled]="true"
+          [value]="fromDisplay.block_name"
+        ></app-input-component>
+      </div>
+      <div class="w-1/2">
+        <app-input-component
+          [id]="'unit_name'"
+          [type]="'text'"
+          [labelChild1]="'Unit Name'"
+          [disabled]="true"
+          [value]="fromDisplay.unit_name"
+        ></app-input-component>
+      </div>
+    </div>
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'phone_number'"
+        [type]="'text'"
+        [labelChild1]="'Phone Number Resident'"
+        [disabled]="true"
+        [value]="fromDisplay.mobile_number"
+      ></app-input-component>
+    </div>
+
+    <div class="w-full mt-1">
+      <h2 class="font-bold mb-1 text-base cw-3:text-sm">
+        In what purpose you applying this card?
+      </h2>
+      <div class="flex flex-row space-x-2 items-start w-full">
+        <app-radio-check-input-case
+          [type]="'radio'"
+          [id]="'replacement'"
+          [name]="'replacement'"
+          [value]="'replacement'"
+          [checkedText]="formSent.typeSubmit === 'replacement'"
+          [text]="'Replacement'"
+          (valueEmit)="onChangeRadio($event)"
+        ></app-radio-check-input-case>
+        <app-radio-check-input-case
+          [type]="'radio'"
+          [id]="'new_application'"
+          [name]="'new_application'"
+          [value]="'new_application'"
+          [checkedText]="formSent.typeSubmit === 'new_application'"
+          [text]="'New Application'"
+          (valueEmit)="onChangeRadio($event)"
+        ></app-radio-check-input-case>
+      </div>
+    </div>
+
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'family_status'"
+        [type]="'text'"
+        [labelChild1]="'Applicant State'"
+        [disabled]="true"
+        [value]="fromDisplay.applicant_state"
+      ></app-input-component>
+    </div>
+
+    <!-- Replacement -->
+    <div class="w-full mt-1" *ngIf="formSent.typeSubmit === 'replacement'">
+      <div class="w-full">
+        <div
+          *ngIf="expectedCards.length > 0"
+          class="flex flex-row justify-start mb-1"
+        >
+          <p class="text-base cw-3:text-sm font-bold text-start">
+            Which Card you want a replacement for?
+          </p>
+        </div>
+        <div class="flex flex-row mt-1 w-full">
+          <table
+            *ngIf="expectedCards.length > 0"
+            class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+          >
+            <thead>
+              <tr class="bg-gray-200 text-gray-700">
+                <th
+                  class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
+                ></th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Card Number
+                </th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Assigned Resident Name
+                </th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let card of expectedCards">
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                  <input
+                    id="card_data_{{card.access_card_id}}"
+                    (change)="onCardSelect(card)"
+                    name="card"
+                    type="checkbox"
+                    class="w-4 h-4 cw-3:w-2 cw-3:h-2"
+                    [checked]="formSent.previousCardId === card.access_card_id"
+                  />
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ card.access_card_number }}
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ card.assigned_resident_name }}
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  {{ card.access_card_status }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-container *ngIf="expectedCards.length === 0">
+            <p class="text-gray-700">
+              Now there are still no cards or no one has been approved yet.
+              <u
+                (click)="onChangeRadio({click: true, value: 'new_application'})"
+                class="text-blue-500 underline"
+                >Make one now</u
+              >
+              or wait until approve
+            </p>
+          </ng-container>
+        </div>
+      </div>
+      <div class="w-full mt-1 flex flex-col">
+        <div class="flex flex-row justify-start">
+          <p class="text-base cw-3:text-sm font-bold">Reason for Replacement</p>
+        </div>
+        <textarea
+          id="reasonForReplacement"
+          placeholder=""
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+          type="text"
+          [(ngModel)]="formSent.reasonForReplacement"
+          name="reasonForReplacement"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- New Application -->
+    <div class="w-full mt-1" *ngIf="formSent.typeSubmit === 'new_application'">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base cw-3:text-sm font-bold text-start">
+            Who are you applying for?
+          </p>
+        </div>
+        <div class="flex flex-row mt-1">
+          <table
+            class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+          >
+            <thead>
+              <tr class="bg-gray-200 text-gray-700">
+                <th
+                  class="border border-gray-300 px-4 py-2 w-16 cw-3:text-[11px]"
+                ></th>
+                <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+                  Assigned resident name
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fam of expectedFamily">
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                  <input
+                    id="card_data_member_or_family_{{fam.family_id}}"
+                    (change)="onNewCardSelect(fam.family_id)"
+                    name="new_card"
+                    type="checkbox"
+                    class="w-4 h-4 cw-3:w-2 cw-3:h-2"
+                    [checked]="formSent.familyToAsign === fam.family_id"
+                  />
+                </td>
+                <td
+                  class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                >
+                  <label for="card_data_member_or_family_{{fam.family_id}}"
+                    >{{ fam.family_name }} , {{ fam.member_type }}</label
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-row mt-1.5 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          disabled
+          [checked]="amountType.isIncludeGST"
+          [(ngModel)]="amountType.isIncludeGST"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-base cw-3:text-sm text-start">Is Include GST</p>
+      </label>
+    </div>
+
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'amount_total'"
+        [type]="'text'"
+        [labelChild1]="'Amount Total Require'"
+        [disabled]="true"
+        [value]="amountPayable"
+      ></app-input-component>
+    </div>
+
+    <div class="flex flex-row mt-2 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          [checked]="agreementChecked"
+          [(ngModel)]="agreementChecked"
+          [ngModelOptions]="{standalone: true}"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-start">
+          I agree to the&nbsp;<u
+            class="text-blue-400"
+            (click)="presentModalAgreement()"
+            >terms and condition</u
+          >&nbsp;above
+        </p>
+      </label>
+    </div>
+
+    <div class="flex flex-row mt-2 text-[13px] w-full">
+      <div class="w-full">
+        <app-submit-button
+          [text]="'Submit'"
+          [disabled]="!agreementChecked"
+          [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base' : 'bg-gray-200 text-black mt-1 w-full text-base'"
+          (click)="onSubmitNext()"
+        >
+        </app-submit-button>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

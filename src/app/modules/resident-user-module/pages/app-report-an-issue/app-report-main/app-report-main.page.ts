@@ -262,6 +262,7 @@ export class AppReportMainPage implements OnInit {
           }
           // this.presentToast(response.result.message, 'success');
         } else {
+          this.isLoading = false
           // this.presentToast(response.result.error_message, 'danger');
         }
       })
@@ -283,6 +284,7 @@ export class AppReportMainPage implements OnInit {
           }
           // this.presentToast(response.result.message, 'success');
         } else {
+          this.isLoading = false
           // this.presentToast(response.result.error_message, 'danger');
         }
       })

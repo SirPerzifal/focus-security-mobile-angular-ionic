@@ -69,6 +69,7 @@
         [labelParent]="'Invitation Details'"
         [labelChild1]="'Title of Invitation'"
         [labelChild2]="''"
+        [value]="formData.entryTitle"
         (eventEmitter)="onEntryTitleChange($event)"
       ></app-input-component>
 
@@ -92,6 +93,7 @@
           id="Facility"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
           (change)="onEntryfacilityChange($event)"
+          [(ngModel)]="formData.facility"
         >
           <option selected disabled hidden></option>
           <option *ngFor="let book of facility" [value]="book.id">

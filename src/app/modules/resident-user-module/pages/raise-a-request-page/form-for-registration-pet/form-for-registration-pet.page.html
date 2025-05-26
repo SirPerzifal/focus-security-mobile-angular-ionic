@@ -14,6 +14,142 @@
       [routerLink]="['/raise-a-request-page']"
     ></ion-icon>
   </div>
+  <div class="px-4 w-full">
+    <div class="w-full">
+      <app-input-component
+        [id]="'type_of_pet'"
+        [type]="'text'"
+        [labelChild1]="'Type of Pet'"
+        (eventEmitter)="onValueChange($event, 'type_of_pet')"
+      ></app-input-component>
+    </div>
+
+    <div class="w-full">
+      <app-input-component
+        [id]="'breed_of_pet'"
+        [type]="'text'"
+        [labelChild1]="'Breed of Pet'"
+        (eventEmitter)="onValueChange($event, 'breed_of_pet')"
+      ></app-input-component>
+    </div>
+
+    <div class="w-full mt-1">
+      <div class="flex flex-row justify-start">
+        <p class="text-base cw-3:text-sm font-bold">Pet Image</p>
+      </div>
+      <div
+        class="bg-white p-3 rounded border border-black w-full flex flex-row text-start items-center justify-start h-12"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="pet_image"
+          (change)="onFilePetImage($event)"
+          id="pet_image"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedPetImage) ? 'text-black' : 'text-white'"
+          for="pet_image"
+        >
+          {{ selectedPetImage ? selectedPetImage : 'Upload your vehicle log' }}
+        </label>
+      </div>
+    </div>
+
+    <div class="w-full mt-1">
+      <div class="flex flex-row justify-start">
+        <p class="text-base cw-3:text-sm font-bold">Pet Licence</p>
+      </div>
+      <div
+        class="bg-white p-3 rounded border border-black w-full flex flex-row text-start items-center justify-start h-12"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="pet_licence"
+          (change)="onFilePetLicence($event)"
+          id="pet_licence"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedPetLicence) ? 'text-black' : 'text-white'"
+          for="pet_licence"
+        >
+          {{ selectedPetLicence ? selectedPetLicence : 'Upload your vehicle log'
+          }}
+        </label>
+      </div>
+    </div>
+
+    <div class="w-full mt-1 flex flex-col">
+      <div class="flex flex-row justify-start">
+        <p class="text-base cw-3:text-sm font-bold">Notes for Management</p>
+      </div>
+      <textarea
+        id="notes_for_management"
+        placeholder=""
+        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+        type="text"
+        name="notes_for_management"
+        (change)="onValueChange($event, 'notes_for_management')"
+      ></textarea>
+    </div>
+
+    <div class="flex flex-row mt-1.5 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          disabled
+          [checked]="amountType.isIncludeGST"
+          [(ngModel)]="amountType.isIncludeGST"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-base cw-3:text-sm text-start">Is Include GST</p>
+      </label>
+    </div>
+
+    <div class="w-full mt-1">
+      <app-input-component
+        [id]="'amount_total'"
+        [type]="'text'"
+        [labelChild1]="'Amount Total Require'"
+        [disabled]="true"
+        [value]="amountPayable"
+      ></app-input-component>
+    </div>
+
+    <div class="flex flex-row mt-2 text-base cw-3:text-[13px]">
+      <label class="mr-1 rounded font-bold flex items-center">
+        <input
+          type="checkbox"
+          [checked]="agreementChecked"
+          [(ngModel)]="agreementChecked"
+          [ngModelOptions]="{standalone: true}"
+          class="text-[var(--ion-color-primary)] rounded mr-1.5"
+        />
+        <p class="text-start">
+          I agree to the&nbsp;<u
+            class="text-blue-400"
+            (click)="presentModalAgreement()"
+            >terms and condition</u
+          >&nbsp;above
+        </p>
+      </label>
+    </div>
+
+    <div class="flex flex-row mt-2 text-[13px] w-full">
+      <div class="w-full">
+        <app-submit-button
+          [text]="'Submit'"
+          [disabled]="!agreementChecked"
+          [extraClass]="agreementChecked ? 'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base' : 'bg-gray-200 text-black mt-1 w-full text-base'"
+          (click)="onSubmitNext()"
+        >
+        </app-submit-button>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

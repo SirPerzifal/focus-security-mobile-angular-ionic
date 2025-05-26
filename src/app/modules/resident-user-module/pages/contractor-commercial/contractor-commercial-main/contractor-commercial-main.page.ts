@@ -150,6 +150,8 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
         }
       } else {
         this.toggleShowNewInv()
+        this.formData.entryTitle = '';
+        this.formData.entryMessage = '';
         
         this.selectedDate = '';
         this.entryCheck = '';

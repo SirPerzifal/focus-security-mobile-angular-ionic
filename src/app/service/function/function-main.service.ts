@@ -511,4 +511,10 @@ export class FunctionMainService {
     return `${yyyy}-${mm}-${dd}`;
 
   }
+
+  convertDateToYYYYMMDDHMS(date: any) {
+    console.log(date);
+    
+    return date
+  }
 }

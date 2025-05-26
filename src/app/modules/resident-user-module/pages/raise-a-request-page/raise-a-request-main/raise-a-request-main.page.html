@@ -87,13 +87,85 @@
         >
           <app-loading-animation *ngIf="isLoading"></app-loading-animation>
         </div>
+        <div
+          class="flex justify-end items-end mb-2"
+          *ngIf="filteredDatas.length > 0"
+        >
+          <nav class="flex items-center gap-x-1" aria-label="Pagination">
+            <button
+              type="button"
+              class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+              aria-label="Previous"
+              (click)="loadHistoryRequests('previous', pagination.current_page - 1)"
+              [disabled]="pagination.current_page <= 1"
+            >
+              <svg
+                class="shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+            </button>
+            <div class="flex items-center gap-x-1">
+              <input
+                type="number"
+                [value]="pagination.current_page"
+                (blur)="goToPage($event)"
+                (keyup.enter)="goToPage($event)"
+                class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-white dark:focus:ring-black"
+                [min]="1"
+                [max]="pagination.total_page"
+              />
+              <span
+                class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+                >of</span
+              >
+              <span
+                class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm dark:text-neutral-500"
+                >{{ pagination.total_page }}</span
+              >
+            </div>
+            <button
+              type="button"
+              class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+              aria-label="Next"
+              (click)="loadHistoryRequests('next', pagination.current_page + 1)"
+              [disabled]="pagination.current_page >= pagination.total_page"
+            >
+              <svg
+                class="shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </button>
+          </nav>
+        </div>
         <div *ngIf="!isLoading" class="space-y-2">
           <ng-container *ngFor="let allData of filteredDatas; let i = index">
             <div
               [ngClass]="{
               'bg-green-100': allData.states === 'Approved',
               'bg-[#E3787E]': allData.states === 'Rejected' || allData.states === 'Cancelled',
-              'bg-[#F8F1BA]': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+              'bg-[#F8F1BA]': allData.states === 'requested' || allData.states === 'Requested' || 
+                              allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || 
+                              allData.appeal_status === 'Issued',
             }"
               class="rounded-2xl p-5 mt-4 w-full flex flex-col"
             >
@@ -112,7 +184,9 @@
                   </p>
                 </ng-container>
                 <ng-container
-                  *ngIf="allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued'"
+                  *ngIf="allData.states === 'requested' || allData.states === 'Requested' || 
+                        allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || 
+                        allData.appeal_status === 'Issued'"
                 >
                   <ion-icon
                     name="alert"
@@ -124,7 +198,8 @@
                   </p>
                 </ng-container>
                 <ng-container
-                  *ngIf="allData.states === 'rejected' || allData.states === 'Rejected' || allData.states === 'cancelled' || allData.states === 'Cancelled'"
+                  *ngIf="allData.states === 'rejected' || allData.states === 'Rejected' || 
+                        allData.states === 'cancelled' || allData.states === 'Cancelled'"
                 >
                   <ion-icon
                     name="close"
@@ -137,32 +212,141 @@
                 [ngClass]="{
                 'text-green-500': allData.states === 'Approved',
                 'text-red-700': allData.states === 'Rejected' || allData.states === 'Cancelled',
-                'text-yellow-400': allData.states === 'requested' || allData.states === 'Requested' || allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || allData.appeal_status === 'Issued',
+                'text-yellow-400': allData.states === 'requested' || allData.states === 'Requested' || 
+                                  allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || 
+                                  allData.appeal_status === 'Issued',
               }"
                 class="flex flex-col text-base font-bold mb-2 items-start text-start"
               >
-                {{ allData.title }}
+                {{ allData.application_title }}
               </h2>
               <div class="w-full">
                 <table class="w-full">
-                  <tr
-                    class="text-base text-black"
-                    *ngFor="let field of fieldMapping[allData.title]"
+                  <!-- For Pet Registration -->
+                  <ng-container
+                    *ngIf="allData.application_title === 'Pets Application.'"
                   >
-                    <td
-                      class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                    <tr class="text-base text-black">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        Create Date
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.create_date }}
+                      </td>
+                    </tr>
+                    <tr class="text-base text-black">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        States
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.states }}
+                      </td>
+                    </tr>
+                    <tr class="text-base text-black">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        Type Of Pet
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.type_of_pet }}
+                      </td>
+                    </tr>
+                    <tr class="text-base text-black">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        Pet Breed
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.pet_breed }}
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                  <!-- For Offences Application -->
+                  <ng-container
+                    *ngIf="allData.application_title === 'Offences Application.'"
+                  >
+                    <tr class="text-base text-black">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        Appeal Status
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.appeal_status }}
+                      </td>
+                    </tr>
+                    <tr class="text-base text-black" *ngIf="allData.is_appeal">
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        Reason For Appeal
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ allData.reason_for_appeal }}
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                  <!-- For other application types, use flexible fields -->
+                  <ng-container
+                    *ngIf="allData.application_title !== 'Pets Application.' && allData.application_title !== 'Offences Application.'"
+                  >
+                    <tr
+                      class="text-base text-black"
+                      *ngFor="let field of fieldMapping[allData.application_title]"
                     >
-                      {{ field }}
-                    </td>
-                    <td
-                      class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
-                    >
-                      :
-                    </td>
-                    <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
-                      {{ getRequestValue(allData, field) }}
-                    </td>
-                  </tr>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[40%] cw-3:w-[50%]"
+                      >
+                        {{ field }}
+                      </td>
+                      <td
+                        class="font-bold text-start cw-5:text-[12px] cw-3:text-[11px] w-[11px]"
+                      >
+                        :
+                      </td>
+                      <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
+                        {{ getRequestValue(allData, field) }}
+                      </td>
+                    </tr>
+                  </ng-container>
                 </table>
               </div>
             </div>

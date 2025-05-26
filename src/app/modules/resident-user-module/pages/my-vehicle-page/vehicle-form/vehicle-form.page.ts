@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
@@ -162,6 +163,7 @@ export class VehicleFormPage implements OnInit {
     } else if (type === 'vehicle_log') {
       let data = event.target.files[0];
       if (data) {
+      this.isModalChooseUpload = !this.isModalChooseUpload;
         this.selectedNameVehicleLog = data.name; // Store the selected file name
         this.convertToBase64(data).then((base64: string) => {
           // console.log('Base64 successed');
@@ -326,5 +328,49 @@ export class VehicleFormPage implements OnInit {
     }
   }
   
+  isModalChooseUpload: boolean = false;
+  chooseWhereToChoose() {
+    console.log("tes");
+    this.isModalChooseUpload = !this.isModalChooseUpload;
+  }
+
+  // New function to handle camera capture
+  async openCamera() {
+    try {
+      // Request camera permissions
+      const permissionStatus = await Camera.checkPermissions();
+      if (permissionStatus.camera !== 'granted') {
+        await Camera.requestPermissions();
+      }
+      
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+        promptLabelHeader: 'Take a photo',
+        promptLabelCancel: 'Cancel',
+        promptLabelPhoto: 'Take Photo',
+      });
+      
+      if (image && image.base64String) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
+        // Update the form data with the base64 image
+        this.vehicleForm.vehicleLog = image.base64String;
+        
+        // Update display name to show a camera capture was made
+        const timestamp = new Date().toISOString().split('T')[0];
+        this.selectedNameVehicleLog = `Camera_Photo_${timestamp}`;
+        
+        // Display success message
+        this.functionMain.presentToast('Photo captured successfully', 'success');
+      } else {
+        this.selectedNameVehicleLog = ''; // Reset if no file is selected
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      this.functionMain.presentToast(String(error), 'danger');
+    }
+  }
 
 }

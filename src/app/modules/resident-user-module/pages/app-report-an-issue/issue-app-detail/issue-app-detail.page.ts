@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -116,6 +118,7 @@ export class IssueAppDetailPage implements OnInit {
     const file = event.target.files[0];
     if (file) {
       if (['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
         this.selectedFile = file;
         this.fileName = file.name
         this.replyForm.ir_attachment_name = file.name;
@@ -132,6 +135,51 @@ export class IssueAppDetailPage implements OnInit {
       } else {
         this.functionMain.presentToast("Can only receive png, jpg, and jpg files!", 'danger')
       }     
+    }
+  }
+  
+  isModalChooseUpload: boolean = false;
+  chooseWhereToChoose() {
+    console.log("tes");
+    this.isModalChooseUpload = !this.isModalChooseUpload;
+  }
+
+  // New function to handle camera capture
+  async openCamera() {
+    try {
+      // Request camera permissions
+      const permissionStatus = await Camera.checkPermissions();
+      if (permissionStatus.camera !== 'granted') {
+        await Camera.requestPermissions();
+      }
+      
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+        promptLabelHeader: 'Take a photo',
+        promptLabelCancel: 'Cancel',
+        promptLabelPhoto: 'Take Photo',
+      });
+      
+      if (image && image.base64String) {
+        this.isModalChooseUpload = !this.isModalChooseUpload;
+        // Update the form data with the base64 image
+        this.replyForm.ir_attachment_name = image.base64String;
+        
+        // Update display name to show a camera capture was made
+        const timestamp = new Date().toISOString().split('T')[0];
+        this.fileName = `Camera_Photo_${timestamp}`;
+        
+        // Display success message
+        this.functionMain.presentToast('Photo captured successfully', 'success');
+      } else {
+        this.fileName = ''; // Reset if no file is selected
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      this.functionMain.presentToast(String(error), 'danger');
     }
   }
 
@@ -158,30 +206,8 @@ export class IssueAppDetailPage implements OnInit {
       this.functionMain.presentToast('Reply content is required!')
       return
     }
+    this.fileName = '';
     this.replyForm.ticket_id = this.ticketDetail.ticket_id
-    // console.log(this.replyForm)
-    // this.clientMainService.getApi(this.replyForm, is_close ? '/resident/post/reply_ticket_and_close' : '/resident/post/reply_ticket').subscribe({
-    //   next: (results) => {
-    //     // console.log(results)
-    //     if (results.result.response_code == 200) {
-    //       this.functionMain.presentToast(`Successfully add new reply!`, 'success');
-    //       if (is_close) {
-    //         this.onBack()
-    //       } else {
-    //         this.replyForm.body = ''
-    //         this.replyForm.ir_attachment_datas = ''
-    //         this.loadDetail()
-    //       }
-          
-    //     } else {
-    //       this.functionMain.presentToast(`An error occurred while trying to add new reply!`, 'danger');
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.functionMain.presentToast('An error occurred while trying to add new reply!', 'danger');
-    //     console.error(error);
-    //   }
-    // });
     this.mainApi.endpointMainProcess(this.replyForm, is_close ? 'post/reply_ticket_and_close' : 'post/reply_ticket').subscribe((results: any) => {
       if (results.result.response_code == 200) {
         this.functionMain.presentToast(`Successfully add new reply!`, 'success');

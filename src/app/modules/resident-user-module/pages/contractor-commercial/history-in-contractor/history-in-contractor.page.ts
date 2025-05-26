@@ -36,6 +36,7 @@ export class HistoryInContractorPage implements OnInit {
     purpose: string;
     visitor_name: string;
     visitor_date: Date;
+    inviting_date: Date;
     visitor_entry_time: string;
     visitor_exit_time: string;
     mode_of_entry: string;
@@ -145,6 +146,7 @@ export class HistoryInContractorPage implements OnInit {
             identification_type: item['identification_type'],
             mode_of_entry: item['contractor_type'],
             visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
+            inviting_date: item['inviting_date'] ? item['inviting_date'] : new Date(),
             visitor_entry_time: item['entry_time'],
             visitor_exit_time: item['exit_time'],
             point_of_entry: item['point_of_entry'],
