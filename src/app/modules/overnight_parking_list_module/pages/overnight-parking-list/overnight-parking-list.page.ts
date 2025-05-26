@@ -89,18 +89,33 @@ export class OvernightParkingListPage implements OnInit {
   async loadOvernight(type: string = 'today') {
     this.isLoading = true
     let url = ''
+    let params = {}
     if (type === 'today') { 
       this.daySchedules = []
       url = '/vms/get/overnight_parking_list'
+      params = {project_id: this.project_id}
     } else if (type === 'upcoming') {
       this.upcomingSchedules = []
       url = '/vms/get/overnight_parking_list_upcoming'
+      params = {project_id: this.project_id}
     } else {
       this.historySchedules = []
       this.filteredHistorySchedules = this.historySchedules
+      this.sortVehicle = []
       url = '/vms/get/overnight_parking_list_history'
+      params = {
+        limit: this.functionMain.limitHistory, 
+        page: this.currentPage, 
+        project_id: this.project_id,
+        block: this.choosenBlock,
+        vehicle_number: this.vehicleNumberFilter,
+        unit: this.choosenUnit,
+        host: this.selectedHost,
+        issue_date: this.startDateFilter,
+        end_issue_date: this.endDateFilter
+      }
     }
-    this.clientMainService.getApi({project_id: this.project_id}, url ).subscribe({
+    this.clientMainService.getApi(params, url ).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -112,10 +127,14 @@ export class OvernightParkingListPage implements OnInit {
           } else {
             this.historySchedules = results.result.response_result
             this.filteredHistorySchedules = this.historySchedules
-            this.applyFilters()
+            this.pagination = results.result.pagination
+            this.total_pages = this.pagination.total_pages
+            if (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle') {
+              this.applyRadio()
+            }
           }   
         } else {
-          
+          this.resetPagination()
         }
         if (type === 'today') { 
           this.todayTime = this.functionMain.convertDateExtend(results.result.start_time)
@@ -126,6 +145,7 @@ export class OvernightParkingListPage implements OnInit {
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overnight parking data!', 'danger');
+        this.resetPagination()
         console.error(error);
         this.isLoading = false;
       }
@@ -140,6 +160,9 @@ export class OvernightParkingListPage implements OnInit {
   showUpcoming = false;
   showUpcomingTrans = false;
   choosenBlock = ''
+  choosenUnit = ''
+  contactUnit = ''
+  vehicleNumberFilter = ''
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showDayTrans && !this.showUpcomingTrans) {
@@ -148,11 +171,7 @@ export class OvernightParkingListPage implements OnInit {
         this.showHistoryTrans = false;
         this.showUpcoming = false;
         this.showUpcomingTrans = false;
-        this.searchOption = ''
-        this.contactHost = ''
-        this.startDateFilter = ''
-        this.endDateFilter = ''
-        this.choosenBlock = ''
+        this.clearFilters()
         this.showDayTrans = true
         this.selectedRadio = ''
         this.isRadioClicked = false
@@ -169,11 +188,8 @@ export class OvernightParkingListPage implements OnInit {
         this.showDayTrans = false;
         this.showHistory = false;
         this.showHistoryTrans = false;
-        this.searchOption = ''
-        this.contactHost = ''
-        this.startDateFilter = ''
-        this.endDateFilter = ''
-        this.choosenBlock = ''
+        this.clearFilters()
+        this.vehicleNumberFilter = ''
         this.showUpcomingTrans = true
         this.selectedRadio = ''
         this.isRadioClicked = false
@@ -208,40 +224,39 @@ export class OvernightParkingListPage implements OnInit {
 
   clearFilters() {
     this.searchOption = ''
-    this.startDateFilter = ''
-    this.endDateFilter = ''
-    this.choosenBlock = ''
-    this.contactHost = ''
-    this.applyFilters() 
+    this.resetFilter()
+    // this.applyFilters() 
   }
 
   applyFilters() {
-    this.filteredHistorySchedules = this.historySchedules.filter(item => {
-      const visitorDate = new Date(item.approved_date.split(' ')[0]);
-      visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
+    // this.filteredHistorySchedules = this.historySchedules.filter(item => {
+    //   const visitorDate = new Date(item.approved_date.split(' ')[0]);
+    //   visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
 
-      // Convert the selected start and end dates to Date objects
-      const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+    //   // Convert the selected start and end dates to Date objects
+    //   const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
-      // Set time to 00:00:00 for comparison
-      if (selectedStartDate) {
-        selectedStartDate.setHours(0, 0, 0, 0);
-      }
-      if (selectedEndDate) {
-        selectedEndDate.setHours(0, 0, 0, 0);
-      }
+    //   // Set time to 00:00:00 for comparison
+    //   if (selectedStartDate) {
+    //     selectedStartDate.setHours(0, 0, 0, 0);
+    //   }
+    //   if (selectedEndDate) {
+    //     selectedEndDate.setHours(0, 0, 0, 0);
+    //   }
 
-      const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-      const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
-      const hostMatches = this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
+    //   const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+    //   const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
+    //   const hostMatches = this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
 
-      return typeMatches && dateMatches && hostMatches;
-    });
-    console.log(this.filteredHistorySchedules)
+    //   return typeMatches && dateMatches && hostMatches;
+    // });
+    // console.log(this.filteredHistorySchedules)
+    this.loadOvernight('history')
   }
 
   Block: any[] = [];
+  Unit: any[] = [];
 
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
@@ -257,14 +272,32 @@ export class OvernightParkingListPage implements OnInit {
     });
   }
 
-  onBlockChange(event: any) {
-    console.log(event.target.value)
-    this.choosenBlock = event.target.value;
-    console.log(this.choosenBlock)
-    console.log(new Date('2024-12-24'))
-    this.applyFilters()
+  async loadUnit() {
+    this.blockUnitService.getUnit(this.choosenBlock).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
+        } else {
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        this.presentToast('Error loading unit data', 'danger');
+        console.error('Error:', error.result);
+      }
+    });
   }
 
+  onBlockChange(event: any) {
+    this.choosenBlock = event.target.value;
+    this.applyFilters()
+    this.loadUnit()
+  }
+
+  onUnitChange(event: any) {
+    this.choosenUnit = event[0];
+    this.applyFilters()
+  }
   onChangeDate(event: any) {
     console.log(event.target.value)
     this.startDateFilter = event.target.value
@@ -311,6 +344,9 @@ export class OvernightParkingListPage implements OnInit {
     this.startDateFilter = ''
     this.endDateFilter = ''
     this.choosenBlock = ''
+    this.vehicleNumberFilter = ''
+    this.contactUnit = ''
+    this.choosenUnit = ''
     this.applyFilters()
     console.log(event.target.value)
   }
@@ -320,17 +356,43 @@ export class OvernightParkingListPage implements OnInit {
   isRadioClicked = false
 
   onRadioClick(value: string): void {
+    let currentValue = this.selectedRadio
     if (this.selectedRadio === value) {
       this.selectedRadio = null;
     } else {
       this.selectedRadio = value;
       this.searchOption = ''
-      this.selectedHost = ''
-      this.choosenBlock = ''
-      this.startDateFilter = ''
-      this.endDateFilter = ''
     }
     console.log(this.selectedRadio)
+    if (currentValue == 'search' && (this.selectedRadio == 'sort_date' || this.selectedRadio == 'sort_vehicle')) {
+      this.resetFilter()
+      this.loadOvernight('history')
+    } else {
+      this.applyRadio()
+    }
+    console.log(this.selectedRadio)
+  }
+
+  resetFilter() {
+    this.choosenBlock = ''
+    this.vehicleNumberFilter = ''
+    this.choosenUnit = ''
+    this.contactUnit = ''
+    this.selectedHost = ''
+    this.contactHost = ''
+    this.startDateFilter = ''
+    this.endDateFilter = ''
+  }
+
+  resetPagination() {
+    this.pagination = {}
+    this.total_pages = 0
+    this.currentPage = 1
+    this.inputPage = 1
+  }
+
+
+  applyRadio() {
     this.sortVehicle = this.historySchedules
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
@@ -364,8 +426,12 @@ export class OvernightParkingListPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 
@@ -384,6 +450,27 @@ export class OvernightParkingListPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.loadOvernight('history')
+    } else {
+    }
+    this.inputPage = this.currentPage
+  }
+
+  onVehicleFilterChange(event: any) {
+    this.vehicleNumberFilter = event.target.value
+    this.applyFilters()
   }
 
 }

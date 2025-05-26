@@ -221,7 +221,6 @@ export class RecordsContractorPage implements OnInit {
   }
 
   async loadUnit() {
-    this.filter.unit
     this.blockUnitService.getUnit(this.filter.block).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -422,8 +421,12 @@ export class RecordsContractorPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 

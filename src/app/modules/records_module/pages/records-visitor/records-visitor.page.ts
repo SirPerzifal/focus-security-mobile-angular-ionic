@@ -147,6 +147,7 @@ export class RecordsVisitorPage implements OnInit {
         this.showActive = false;
         this.showActiveTrans = false;
         this.isRadioClicked = false
+        this.selectedRadio = ''
         this.showHistoryTrans = true
         if (this.logsData.length == 0){
           this.loadLogs(this.pageType, false)
@@ -175,13 +176,17 @@ export class RecordsVisitorPage implements OnInit {
   onBlockChange(event: any) {
     this.filter.block = event.target.value;
     this.filter.unit = ''
-    this.loadUnit(); // Panggil method load unit
-    this.applyFilters()
+    if (this.filter.block){
+      this.loadUnit(); // Panggil method load unit
+      this.applyFilters()
+    }
   }
 
   onUnitChange(event: any) {
     this.filter.unit = event[0];
-    this.applyFilters()
+    if (this.filter.unit) {
+      this.applyFilters()
+    }
   }
 
   onDateChange(event: any) {
@@ -283,7 +288,6 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
-    this.selectedRadio = null
   }
 
   applyFilters() {
@@ -391,14 +395,20 @@ export class RecordsVisitorPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 
   onHostChange(event: any) {
     this.selectedHost = event[0]
-    this.applyFilters()
+    if (this.selectedHost) {
+      this.applyFilters()
+    }
   }
 
   currentPage = 1

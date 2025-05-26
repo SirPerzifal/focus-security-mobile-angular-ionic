@@ -52,7 +52,7 @@
           <tr *ngIf="project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING HOST</td>
             <td class="w-[5%]">:</td>
-            <td>{{ returnNone(record.industrial_host_name) }}</td>
+            <td>{{ record.industrial_host_names ? record.industrial_host_names : returnNone(record.industrial_host_name) }}</td>
           </tr>
           <tr *ngIf="pageType == 'visitor' && record.vehicle_number">
             <td class="font-bold w-2/5">VEHICLE NUMBER</td>
@@ -70,14 +70,14 @@
             <td>{{ returnNone(record.warning_issued) }}</td>
           </tr> -->
           <tr *ngIf="record.requestor">
-            <td class="font-bold w-2/5">Requestor</td>
+            <td class="font-bold w-2/5">REQUESTOR</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.requestor) }}</td>
           </tr>
         </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 ">CALL VISITOR</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="functionMain.callFromPhone(record.contact_number)">CALL VISITOR</button>
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4" >

@@ -87,42 +87,42 @@ export class RecordsBlacklistDetailPage implements OnInit {
 
   async liftBanProc() {
     console.log("TRY OPEN MODAL")
-    const modal = await this.modalController.create({
-      component: SearchNricConfirmationPage,
-      cssClass: 'nric-confirmation-modal',
+    // const modal = await this.modalController.create({
+    //   component: SearchNricConfirmationPage,
+    //   cssClass: 'nric-confirmation-modal',
 
-    });
+    // });
 
-    history.pushState(null, '', location.href);
+    // history.pushState(null, '', location.href);
 
-    const closeModalOnBack = () => {
-      window.removeEventListener('popstate', closeModalOnBack);
-    };
-    window.addEventListener('popstate', closeModalOnBack);
+    // const closeModalOnBack = () => {
+    //   window.removeEventListener('popstate', closeModalOnBack);
+    // };
+    // window.addEventListener('popstate', closeModalOnBack);
 
-    await modal.present();
-    modal.onDidDismiss().then((result) => {
-      if (result) {
-        console.log(result.data)
-        if (result.data) {
-          this.clientMainService.getApi({ id: this.record.id }, '/vms/post/lift_ban').subscribe({
-            next: (results) => {
-              console.log(results)
-              if (results.result.response_status === 200) {
-                this.functionMain.presentToast('Successfully lifted the ban!', 'success');
-                this.onBackMove()
-              } else {
-                this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
-              }
-            },
-            error: (error) => {
-              this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
-              console.error(error);
-            }
-          });
+    // await modal.present();
+    // modal.onDidDismiss().then((result) => {
+      // if (result) {
+    // console.log(result.data)
+    // if (result.data) {
+    this.clientMainService.getApi({ id: this.record.id }, '/vms/post/lift_ban').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_status === 200) {
+          this.functionMain.presentToast('Successfully lifted the ban!', 'success');
+          this.onBackMove()
+        } else {
+          this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
         }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while attempting to lift the ban!', 'danger');
+        console.error(error);
       }
     });
+    // }
+      // }
+    // });
   }
 
   onBackMove() {

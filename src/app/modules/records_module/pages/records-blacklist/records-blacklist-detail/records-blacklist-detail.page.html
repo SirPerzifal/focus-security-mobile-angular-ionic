@@ -71,7 +71,7 @@
           </div>
           <div class="flex flex-col w-1/2 items-center">
             <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL POLICE</button>
+            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="functionMain.callPolice()">CALL POLICE</button>
           </div>
         </div>
       </div>

@@ -186,6 +186,7 @@ export class OvernightParkingModalPage implements OnInit {
           block_id: this.search || this.no_nric ? this.vehicle.block_id[0] : this.vehicle.block_id, 
           unit_id: this.search || this.no_nric ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
           host: this.search || this.no_nric ? this.vehicle.industrial_host_id[0] : this.vehicle.industrial_host_id, 
+          host_ids: this.vehicle.industrial_host_ids, 
           contact_number: this.vehicle.contact_number,
           type_notice: this.selectedNotice, 
           issuing_officer_name: this.issueOfficer,
@@ -257,34 +258,34 @@ export class OvernightParkingModalPage implements OnInit {
   }
 
   async presentModalNric() {
-    if (this.search){
-      console.log("TRY OPEN MODAL")
-      const modal = await this.modalController.create({
-        component: SearchNricConfirmationPage,
-        cssClass: 'nric-confirmation-modal',
+    // if (this.search){
+    //   console.log("TRY OPEN MODAL")
+    //   const modal = await this.modalController.create({
+    //     component: SearchNricConfirmationPage,
+    //     cssClass: 'nric-confirmation-modal',
   
-      });
+    //   });
 
-      history.pushState(null, '', location.href);
+    //   history.pushState(null, '', location.href);
 
-      const closeModalOnBack = () => {
-        window.removeEventListener('popstate', closeModalOnBack);
-      };
-      window.addEventListener('popstate', closeModalOnBack);
+    //   const closeModalOnBack = () => {
+    //     window.removeEventListener('popstate', closeModalOnBack);
+    //   };
+    //   window.addEventListener('popstate', closeModalOnBack);
   
-      modal.onDidDismiss().then((result) => {
-        if (result) {
-          console.log(result.data)
-          if (result.data) {
-            this.onSubmit()
-          }
-        }
-      });
+    //   modal.onDidDismiss().then((result) => {
+    //     if (result) {
+    //       console.log(result.data)
+    //       if (result.data) {
+    //         this.onSubmit()
+    //       }
+    //     }
+    //   });
   
-      return await modal.present();
-    } else {
-      this.onSubmit()
-    }
+    //   return await modal.present();
+    // } else {
+    this.onSubmit()
+    // }
     
   }
 

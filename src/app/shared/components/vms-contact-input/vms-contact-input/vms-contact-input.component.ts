@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { ToastController } from '@ionic/angular';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
@@ -28,6 +28,7 @@ export class VmsContactInputComponent  implements OnInit {
   @Input() valueExist: string = '';
   @Input() disableButton: boolean = false
   @Input() showButton: boolean = true
+  @Input() isModal: boolean = false
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
@@ -82,6 +83,7 @@ export class VmsContactInputComponent  implements OnInit {
   
 
   ngOnInit() {
+    this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 570);
     this.getCode()
     setTimeout(() => {
       if (this.valueExist) {
@@ -154,6 +156,16 @@ export class VmsContactInputComponent  implements OnInit {
 
   showMessage() {
     this.functionMain.presentToast("Press field below code to choose country extension code!", 'dark');
+  }
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  isSmallScreen = false
+  checkScreenSize() {
+    this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 570);
   }
 
 }

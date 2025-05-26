@@ -222,9 +222,10 @@ export class OvernightParkingDetailPage implements OnInit {
   }
 
   callResident(record:any){
-    record.requestor_contact_number = record.requestor_phone;
+    // record.requestor_contact_number = record.requestor_phone;
     // console.log("overnigth parking ==========", record);
     // this.webRtcService.createOffer(record);
+    this.webRtcService.createOffer(false, record.industrial_host_id, record.unit_id, false)
   }
 
   handleRefresh(event: any) {

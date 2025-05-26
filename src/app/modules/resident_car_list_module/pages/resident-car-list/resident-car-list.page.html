@@ -75,7 +75,7 @@
               <tr class="h-9" *ngIf="project_config.is_industrial">
                 <td class="w-2/5 font-bold">HOST</td>
                 <td class="w-[2%]">:</td>
-                <td>{{functionMain.returnNone(vehicle.industrial_host_name)}}</td>
+                <td>{{vehicle.industrial_host_data ? vehicle.industrial_host_data : functionMain.returnNone(vehicle.industrial_host_name)}}</td>
               </tr>
               <tr class="h-9">
                 <td class="w-2/5 font-bold">WARNING ISSUE</td>

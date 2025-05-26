@@ -513,8 +513,12 @@ export class ContractorFormPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 
@@ -698,7 +702,9 @@ export class ContractorFormPage implements OnInit {
           this.formData.contractor_vehicle = this.searchData.vehicle_number;
           this.formData.company_name = this.searchData.company_name
           this.contractor_entry_purpose = this.searchData.type_of_work
-
+          this.identificationType = this.searchData.identification_type
+          this.nric_value= this.searchData.identification_number
+            
           if (this.project_config.is_industrial) {
             setTimeout(() => {
               this.contactHost = this.searchData.industrial_host_ids

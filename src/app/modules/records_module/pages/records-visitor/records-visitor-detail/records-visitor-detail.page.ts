@@ -133,7 +133,11 @@ export class RecordsVisitorDetailPage implements OnInit {
 
   async callResident(){
     console.log("tirgger olso", this.record);
-    this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
+    if (this.project_config.is_industrial){
+      this.webrtc.createOffer(false, this.record.industrial_host_id, false, false);
+    }else{
+      this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
+    }
   }
 
   handleRefresh(event: any) {

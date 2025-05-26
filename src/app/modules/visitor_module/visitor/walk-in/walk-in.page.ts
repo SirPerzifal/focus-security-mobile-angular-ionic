@@ -558,6 +558,7 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_type = this.searchData.visitor_type
           this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : '' 
           this.formData.family_id = this.searchData.family_id
+          this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
           this.contactUnit = ''
           if (this.project_config.is_industrial) {
             this.contactHost = this.searchData.industrial_host_id[0]
@@ -602,8 +603,12 @@ export class WalkInPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 

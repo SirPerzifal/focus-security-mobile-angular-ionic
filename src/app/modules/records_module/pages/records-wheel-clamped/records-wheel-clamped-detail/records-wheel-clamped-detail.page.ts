@@ -186,7 +186,11 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   }
 
   callResident(record:any){
-    this.webRtcService.createOffer(false, false, record.unit_id, false);
+    if (this.project_config.is_industrial) {
+      this.webRtcService.createOffer(false, record.industrial_host_id, false, false);
+    } else {
+      this.webRtcService.createOffer(false, false, record.unit_id, false);
+    }
   }
 
   async presentModalRelease(id: number, type: string, vehicle: any) {

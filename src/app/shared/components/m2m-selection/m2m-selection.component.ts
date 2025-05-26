@@ -165,7 +165,9 @@ export class M2mSelectionComponent implements OnInit {
   selectAll = false
 
   onClickCall() {
+    console.log(this.unitNames)
     if (this.unitNames){
+      console.log("CALL")
       this.webRtcService.createOffer(false, this.unitNames[0].id, false, false);
     }
   }

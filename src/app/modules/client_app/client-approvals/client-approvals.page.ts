@@ -76,7 +76,7 @@ export class ClientApprovalsPage implements OnInit {
     { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], },
     { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], },
     { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], },
-    { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], },
+    // { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], },
     { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], },
     { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: 'employee', text: 'Employees', permission: [false, false], },
     { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: 'events', text: 'Events', permission: [false, true], },
@@ -264,7 +264,11 @@ export class ClientApprovalsPage implements OnInit {
 
   approveDetail(approval: any) {
     if (this.project_config.is_industrial && this.approval_type == 'vehicle' && this.rfid_tag == '') {
-      this.functionMain.presentToast('RFID Tag must be filled in!', 'warning')
+      this.functionMain.presentToast('RFID tag must be filled in!', 'warning')
+      return
+    }
+    if (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5)) {
+      this.functionMain.presentToast("RFID tags can only be 5 digits!", 'warning')
       return
     }
     this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag}, '/client/post/approve').subscribe({
@@ -345,6 +349,17 @@ export class ClientApprovalsPage implements OnInit {
   openApprovalModal() {
     this.isApproveVehicleModal = true
     this.rfid_tag = ''
+  }
+
+  limitRfid(event: any) {
+    // if (this.rfid_tag.length > 5) {
+    //   this.rfid_tag = this.rfid_tag
+    //   this.functionMain.presentToast("RFID tags can only be 5 digits!", 'warning')
+    // } else if ( this.rfid_tag.length < 5) {
+
+    // } else {
+    //   this.rfid_tag = event.target.value
+    // }
   }
 
   getPdf(file: any) {

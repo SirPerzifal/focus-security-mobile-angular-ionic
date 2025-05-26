@@ -71,6 +71,7 @@ export class RecordsFacilityDetailPage implements OnInit {
 
   callResident(record:any){
     console.log("record facility details ================", record);
+    this.webrtcservice.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
     // this.webrtcservice.createOffer(record);
 
   }

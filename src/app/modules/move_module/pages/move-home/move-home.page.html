@@ -68,9 +68,10 @@
             style="border: 1px solid #6B7280;">
             <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
             <option [value]="'date'">DATE</option>
-            <option [value]="'block'" *ngIf="pageType != 'ma_visitor' && !project_config.is_industrial">BLOCK</option>
+            <option [value]="'vehicle_no'">VEHICLE NUMBER</option>
+            <option [value]="'block'" *ngIf="pageType != 'ma_visitor' && !project_config.is_industrial">BLOCK & UNIT</option>
             <option [value]="'host'" *ngIf="pageType != 'ma_visitor' && project_config.is_industrial">HOST</option>
-            <option [value]="'both'" *ngIf="pageType != 'ma_visitor'">BOTH</option>
+            <option [value]="'both'" *ngIf="pageType != 'ma_visitor'">ALL</option>
           </select>
         </div>
         <div class="flex flex-row space-x-1 w-full" *ngIf="searchOption == 'date' || searchOption == 'both'">
@@ -89,22 +90,42 @@
             </app-text-input>
           </div>
         </div>
-        <div class="w-full" *ngIf="(searchOption == 'block' || searchOption == 'both') && !project_config.is_industrial">
-          <label class="text-2xl"><b><u>BLOCK</u></b></label>
-          <select id="pick_up_location"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
-            (change)="onBlockChange($event)">
-            <option selected disabled hidden>CHOOSE BLOCK</option>
-            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-          </select>
+        <div class="w-full" *ngIf="searchOption == 'vehicle_no' || searchOption == 'both'">
+          <app-text-input #moveHomeVehicleNumberFilter [id]="'move_home_vehicle_number_filter'"
+            [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
+            [type]="'text'" [(ngModel)]="vehicleNumberFilter" (change)="onVehicleFilterChange($event)"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+          </app-text-input>
+        </div>
+        <div class="w-full flex flex-row justi space-x-1" *ngIf="(searchOption == 'block' || searchOption == 'both') && !project_config.is_industrial">
+          <div class="w-full">
+            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <select id="pick_up_location"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+              (change)="onBlockChange($event)">
+              <option selected disabled hidden>CHOOSE BLOCK</option>
+              <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+            </select>
+          </div>
+          <div class="w-full">
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit" [customTopDiv]="'mt-0'"></app-m2m-selection>
+          </div>
         </div>
         <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'both') && project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
+        </div>
+        <div class="flex flex-row w-full justify-end mt-5" *ngIf="((choosenBlock || selectedHost || startDateFilter || endDateFilter || vehicleNumberFilter || selectedHost) || isRadioClicked)">
+          <div class="flex flex-row space-x-5 items-center">
+            <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
+            <input type="number" class="w-20 bg-white rounded text-2xl" style="border: 1px solid #6B7280;" [(ngModel)]="inputPage" (change)="changePage(inputPage)">
+            <span class="text-2xl text-black">/ {{ total_pages || 0  }} </span>
+            <ion-icon name="chevron-forward-outline" size="large"  (click)="changePage(currentPage + 1)"></ion-icon>
+          </div>
         </div>
       </div>
 
       <div class="flex flex-col w-full space-y-5"
-        *ngIf="showHistory && (choosenBlock || selectedHost || startDateFilter || endDateFilter) && !isRadioClicked">
+        *ngIf="showHistory && (choosenBlock || selectedHost || startDateFilter || endDateFilter || vehicleNumberFilter) && !isRadioClicked">
         <div *ngIf="isLoading" class="flex justify-center items-center h-20">
           <!-- <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner> -->
           <app-modal-loading />

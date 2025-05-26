@@ -240,6 +240,8 @@ export class RecordsFacilityPage implements OnInit {
           this.showUpcoming = false;
           this.showUpcomingTrans = false;
           this.showHistoryTrans = true
+          this.clearFilters()
+          this.selectedRadio = null
           setTimeout(() => {
             this.showHistory = true;
             this.getFacilityData()
@@ -362,9 +364,11 @@ export class RecordsFacilityPage implements OnInit {
     this.endDateFilter = ''
     this.choosenBlock = ''
     this.choosenFacility = ''
-    this.selectedRadio = ''
+    this.contactHost = ''
+    this.selectedHost = ''
+    // this.selectedRadio = ''
     this.isRadioClicked = false
-    this.applyFilters() 
+    // this.applyFilters() 
   }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
@@ -473,8 +477,12 @@ export class RecordsFacilityPage implements OnInit {
   selectedHost: string = '';
   contactHost = ''
   loadHost() {
+    this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
     })
   }
 

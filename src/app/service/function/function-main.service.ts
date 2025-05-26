@@ -517,4 +517,16 @@ export class FunctionMainService {
     
     return date
   }
+
+  callFromPhone(contact: any) {
+    if (contact) {
+      window.open(`tel:${contact}`, '_system');
+    } else {
+      this.presentToast("Contact number is empty!")
+    }
+  }
+
+  callPolice() {
+    this.callFromPhone(999)
+  }
 }

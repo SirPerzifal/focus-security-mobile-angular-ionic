@@ -131,15 +131,15 @@ export class RecordsMainPage implements OnInit {
   }
 
   toggleRecordsButton(records: any, params: any = false) {
-    if (records.text == 'RESIDENTS' || records.text == 'EMPLOYEES'){
-      this.presentModal()
-    } else {
+    // if (records.text == 'RESIDENTS' || records.text == 'EMPLOYEES'){
+    //   this.presentModal()
+    // } else {
       if (!params) {
         this.router.navigate([records.route])
       } else {
         this.router.navigate([records.route], {queryParams: params})
       }
-    }
+    // }
   }
   
   async presentModal() {

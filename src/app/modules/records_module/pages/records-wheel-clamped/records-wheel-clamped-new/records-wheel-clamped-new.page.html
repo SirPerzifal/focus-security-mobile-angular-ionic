@@ -35,7 +35,7 @@
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
         <div class="w-full">
-          <app-vms-contact-input [(value)]="issueContact" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input [(value)]="issueContact" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isModal]="true"></app-vms-contact-input>
         </div>
         <div class="w-full">
           <app-text-input [id]="'record_issue_type'" [labelText]="'TYPE OF ENTRY'" [placeholder]="'EG. DRIVE IN'"

@@ -256,6 +256,9 @@
         <img [src]="functionMain.getImage(selectedApproval.image_profile)" class="h-40" >
         <p class="text-base text-black font-bold">{{ functionMain.returnNone(selectedApproval.family_full_name) }}</p>
       </div>
+      <div class="w-full flex flex-col justify-center items-center my-2" *ngIf="['pet'].includes(approval_type) && selectedApproval.pet_image">
+        <img [src]="functionMain.getImage(selectedApproval.pet_image)" class="h-40" >
+      </div>
       <div class="table w-full">
         <div class="table-row" *ngIf="['access_card', 'move_permit', 'renovation', 'bicycle', 'coach', 'pet', 'vehicle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black" >Application Date</p>
@@ -482,6 +485,11 @@
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
         </div>
       </div>
+      <div class="w-full flex flex-col justify-start mt-2" *ngIf="['pet'].includes(approval_type) && selectedApproval.pet_license">
+        <p class="text-base text-black"><b>Pet License</b></p>
+        <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
+            (click)="functionMain.downloadDocument(selectedApproval.pet_license, selectedApproval.type_of_pet + '_' + selectedApproval.pet_breed + '_Vehicle Log')" />
+      </div>
       <div class="w-full flex flex-col justify-start mt-2" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.vehicle_log">
         <p class="text-base text-black"><b>Vehicle Log</b></p>
         <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
@@ -537,8 +545,8 @@
             <p class="text-base font-bold">RFID Tag Number</p>
           </div>
           <textarea id="reason_ban_entry_message" placeholder=""
-            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
-            type="text" name="reasonForbanning" [(ngModel)]="rfid_tag">
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base" [(ngModel)]="rfid_tag"
+            type="text" name="reasonForbanning">
           </textarea>
         </div>
         <app-visitor-button [text]="'Confirm Approval'" [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'" (click)="approveDetail(selectedApproval)"></app-visitor-button>

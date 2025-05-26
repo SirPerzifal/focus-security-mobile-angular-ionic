@@ -58,9 +58,9 @@
                 style="border: 1px solid #6B7280;" [(ngModel)]="searchOption">
                 <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
                 <option [value]="'date'">ENTRY DATE</option>
+                <option [value]="'vehicle_no'" *ngIf="pageType == 'vehicle'">VEHICLE NUMBER</option>
                 <option [value]="'block'" *ngIf="!project_config.is_industrial">BLOCK & UNIT</option>
                 <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
-                <option [value]="'vehicle_no'" *ngIf="pageType == 'vehicle'">VEHICLE NUMBER</option>
                 <option [value]="'all'">ALL</option>
               </select>
             </div>
@@ -81,6 +81,16 @@
                 </app-text-input>
               </div>
             </div>
+
+            <div class="w-full"
+              *ngIf="(searchOption == 'vehicle_no' || searchOption == 'all') && pageType == 'vehicle'">
+              <app-text-input #recordVisitorVehicleNumberFilter [id]="'record_visitor_vehicle_number_filter'"
+                [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
+                [type]="'text'" [(ngModel)]="vehicleNumberFilter" (change)="onVehicleFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+
             <div class="w-full flex flex-row justify-between space-x-1"
               *ngIf="(searchOption == 'block' || searchOption == 'all') && !project_config.is_industrial">
               <div class="w-1/2">
@@ -111,15 +121,6 @@
             </div>
             <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'all') && project_config.is_industrial">
               <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
-            </div>
-
-            <div class="w-full"
-              *ngIf="(searchOption == 'vehicle_no' || searchOption == 'all') && pageType == 'vehicle'">
-              <app-text-input #recordVisitorVehicleNumberFilter [id]="'record_visitor_vehicle_number_filter'"
-                [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
-                [type]="'text'" [(ngModel)]="vehicleNumberFilter" (change)="onVehicleFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-              </app-text-input>
             </div>
 
             <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) || isRadioClicked)">

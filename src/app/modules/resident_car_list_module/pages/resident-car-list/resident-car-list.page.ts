@@ -339,11 +339,16 @@ export class ResidentCarListPage implements OnInit {
   }
 
   callResident(vehicle: any) {
-    this.webRtcService.createOffer(false, false, vehicle.unit_id[0], false);
+    if (this.project_config.is_industrial){
+      this.webRtcService.createOffer(false, vehicle.industrial_host_id[0], false, false);
+    }else{
+      this.webRtcService.createOffer(false, false, vehicle.unit_id[0], false);
+    }
   }
 
   callVisitor(vehicle: any) {
     console.log(vehicle)
+    this.functionMain.callFromPhone(vehicle.contact_number)
   }
 
   handleRefresh(event: any) {

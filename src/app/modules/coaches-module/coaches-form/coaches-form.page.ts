@@ -331,7 +331,7 @@ export class CoachesFormPage implements OnInit {
   handleRefresh(event: any) {
     if (this.project_config.is_industrial) {
     } else {
-      this.loadBlock()
+      // this.loadBlock()
     }
     this.loadType()
     setTimeout(() => {

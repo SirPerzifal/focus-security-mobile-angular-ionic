@@ -492,6 +492,11 @@ export class AlertMainPage implements OnInit {
       if (result) {
         if(result.data){
           this.loadRecordsWheelClamp('first_warning')
+          if (this.active_type == 'unregistered') {
+            this.loadUnregisteredCar()
+          } else if (this.active_type == 'overstay') {
+            this.loadOverstay()
+          }
         }
       }
     });
@@ -539,6 +544,21 @@ export class AlertMainPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  total_pages = 0
+  inputPage = 1
+  currentPage = 1
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage)
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
 }
