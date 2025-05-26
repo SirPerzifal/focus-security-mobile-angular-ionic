@@ -440,9 +440,17 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">Owned By</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_id.family_full_name ) }}</p>
         </div>
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Application Type</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.type_of_application ) }}</p>
+        </div>
         <div class="table-row" *ngIf="['overnight', 'bicycle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Requestor</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.requestor.name ) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Type</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.vehicle_type.name) }}</p>
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Brand</p>
@@ -472,9 +480,9 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">Notes</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.notes) }}</p>
         </div>
-        <div class="table-row">
-          <p class="font-bold table-cell w-1/2 text-base text-black">Status</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.states ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.states) : ( selectedApproval.appeal_status ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.appeal_status) :'-') }}</p>
+        <div class="table-row" *ngIf="['access_card'].includes(approval_type) && selectedApproval.reason_for_replacement">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Replacement Reason</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_replacement) }}</p>
         </div>
         <div class="table-row" *ngIf="['parking'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Reason For Appeal</p>
@@ -483,6 +491,18 @@
         <div class="table-row" *ngIf="selectedApproval.appeal_status === 'rejected' || selectedApproval.states === 'rejected' || selectedApproval.states === 'cancel'">
           <p class="font-bold table-cell w-1/2 text-base text-black">Reason For Rejetion</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
+        </div>
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'temporary_vehicle'">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Temporary Car Request</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.temporary_car_request) }}</p>
+        </div>
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'temporary_vehicle'">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Temporary Car End Date</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertToDDMMYYYY(selectedApproval.temporary_end_date) }}</p>
+        </div>
+        <div class="table-row">
+          <p class="font-bold table-cell w-1/2 text-base text-black">Status</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.states ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.states) : ( selectedApproval.appeal_status ? functionMain.uppercaseFirstWithUnderscore(selectedApproval.appeal_status) :'-') }}</p>
         </div>
       </div>
       <div class="w-full flex flex-col justify-start mt-2" *ngIf="['pet'].includes(approval_type) && selectedApproval.pet_license">
