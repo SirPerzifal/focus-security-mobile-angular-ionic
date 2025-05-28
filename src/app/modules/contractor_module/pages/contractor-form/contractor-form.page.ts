@@ -703,6 +703,7 @@ export class ContractorFormPage implements OnInit {
           this.formData.company_name = this.searchData.company_name
           this.contractor_entry_purpose = this.searchData.type_of_work
           this.identificationType = this.searchData.identification_type
+          this.selectedImage = this.searchData.visitor_image
           this.nric_value= this.searchData.identification_number
             
           if (this.project_config.is_industrial) {

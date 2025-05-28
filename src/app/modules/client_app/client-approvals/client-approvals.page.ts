@@ -39,13 +39,17 @@ export class ClientApprovalsPage implements OnInit {
       this.project_id = value.project_id
       this.project_config = value.config
       this.loadProjectTax()
-      if (this.project_config.is_industrial) {
-        this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
-      } else {
-        this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
-      }
+      this.loadMenu()
     })
     console.log("ahoy")
+  }
+
+  loadMenu() {
+    if (this.project_config.is_industrial) {
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
+    } else {
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
+    }
   }
   
   private routerSubscription!: Subscription;
@@ -445,8 +449,12 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.loadApproval().then(() => {
-      event.target.complete()
-    })
+    if (this.isHome) {
+      this.loadMenu()
+    } else {
+      this.loadApproval().then(() => {
+        event.target.complete()
+      })
+    }
   }
 }

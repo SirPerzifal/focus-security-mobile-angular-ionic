@@ -558,6 +558,7 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_type = this.searchData.visitor_type
           this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : '' 
           this.formData.family_id = this.searchData.family_id
+          this.selectedImage = this.searchData.visitor_image
           this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
           this.contactUnit = ''
           if (this.project_config.is_industrial) {

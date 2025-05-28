@@ -61,8 +61,8 @@
       <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
-      <app-modal-loading *ngIf="!isLoading" class="flex flex-col justify-start mt-4"/>
-      <div class="w-full h-full" *ngIf="isLoading">
+      <app-modal-loading *ngIf="isLoading" class="flex flex-col justify-start mt-4"/>
+      <div class="w-full h-full" *ngIf="!isLoading">
         <div class="w-full h-full" *ngIf="reportFields.length > 0; else noReports">
           <div class="w-full flex flex-row justify-between items-center !border p-3 rounded mt-3">
             <label class="text-base mt-1 w-full" for="report_page_check_all">Check All Fields</label>

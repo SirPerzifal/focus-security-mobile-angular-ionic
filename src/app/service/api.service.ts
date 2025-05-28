@@ -5,12 +5,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiService {
-  // readonly baseUrl = 'http://localhost:8069'
+  readonly baseUrl = 'http://localhost:8069'
   // readonly baseUrl = 'https://backend-ifs360.sgeede.com';
   // protected readonly baseUrl = 'http://192.168.1.144:8069';
   // readonly baseUrl = 'http://0.0.0.0:8017';
   // protected readonly baseUrl = 'http://127.17.0.1:8073';
-  readonly baseUrl = 'http://192.168.1.136:8017';
+  // readonly baseUrl = 'http://192.168.1.136:8017';
   // readonly baseUrl = 'http://192.168.54.230:8017';
   // readonly baseUrl = 'http://192.168.1.182:8069'
   // readonly urlItercom = 'http://172.20.10.3:8069';

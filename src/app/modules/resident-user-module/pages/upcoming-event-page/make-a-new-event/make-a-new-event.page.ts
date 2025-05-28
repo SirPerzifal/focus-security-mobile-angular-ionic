@@ -260,18 +260,20 @@ export class MakeANewEventPage implements OnInit {
   }
 
   formatEnd(time: string) {
-    const [hours, minutes] = time.split(':');
-    const totalMinutes = parseInt(hours) * 60 + parseInt(minutes) + parseInt(this.coachData.duration_per_session);
-    const endHours = Math.floor(totalMinutes / 60) % 24;
-    const endMinutes = totalMinutes % 60;
-
-    // Simpan dalam format "HH:mm" untuk kompatibilitas dengan input[type="time"]
-    this.selectedEndTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
-
-    // console.log(this.selectedStartTime)
-    // console.log(hours, minutes)
-    // console.log(this.coachData.duration_per_session)
-    // console.log(totalMinutes, endHours, endMinutes, this.selectedEndTime)
+    if (this.coachData) {
+      const [hours, minutes] = time.split(':');
+      const totalMinutes = parseInt(hours) * 60 + parseInt(minutes) + parseInt(this.coachData.duration_per_session);
+      const endHours = Math.floor(totalMinutes / 60) % 24;
+      const endMinutes = totalMinutes % 60;
+  
+      // Simpan dalam format "HH:mm" untuk kompatibilitas dengan input[type="time"]
+      this.selectedEndTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+  
+      // console.log(this.selectedStartTime)
+      // console.log(hours, minutes)
+      // console.log(this.coachData.duration_per_session)
+      // console.log(totalMinutes, endHours, endMinutes, this.selectedEndTime)
+    }
   }
 
   onEndTimeChange(event: any): void {

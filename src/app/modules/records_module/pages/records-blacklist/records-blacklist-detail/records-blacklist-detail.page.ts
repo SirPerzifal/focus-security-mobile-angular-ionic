@@ -77,11 +77,13 @@ export class RecordsBlacklistDetailPage implements OnInit {
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
+      this.project_id = value.project_id
       this.project_name = value.project_name.toUpperCase()
       this.project_config = value.config
     })
   }
 
+  project_id = ''
   project_name = ''
   project_config: any = []
 
@@ -138,7 +140,19 @@ export class RecordsBlacklistDetailPage implements OnInit {
   }
 
   callMA(){
-    this.webRtcService.createOffer(false, )
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/family_with_active_project').subscribe({
+      next: (results) => {
+        console.log(results);
+        if (results.result.response_code === 200) {
+          // this.webRtcService.createOffer(false, results.result.result.family_id, false, false)
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to call the management!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to call the management!', 'danger');
+      }
+    });
   }
 
   srcImg= "assets/img/SCDF.png"

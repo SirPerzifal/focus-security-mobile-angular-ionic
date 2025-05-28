@@ -9,7 +9,6 @@
     pullFactor="0.3"
     pullMin="40"
     pullMax="80"
-    *ngIf="approval_type"
   >
     <ion-refresher-content
       pullingIcon="chevron-down-circle-outline"
@@ -444,7 +443,7 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">Application Type</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.type_of_application ) }}</p>
         </div>
-        <div class="table-row" *ngIf="['overnight', 'bicycle'].includes(approval_type)">
+        <div class="table-row" *ngIf="['overnight', 'bicycle', 'events'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Requestor</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.requestor.name ) }}</p>
         </div>
