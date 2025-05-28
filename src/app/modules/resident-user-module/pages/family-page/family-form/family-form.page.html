@@ -5,7 +5,7 @@
   ></app-header-inner-page>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -35,13 +35,13 @@
           (click)="ableChangeInput()"
         >
         </ion-icon>
-        <ion-icon
+        <!-- <ion-icon
           *ngIf="!disableForm"
           class="absolute top-[5.5rem] right-20 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
           name="documents"
           (click)="chooseWhereToChoose()"
         >
-        </ion-icon>
+        </ion-icon> -->
       </div>
     </div>
 
@@ -129,7 +129,7 @@
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
           type="number"
           placeholder=""
-          [disabled]="disableForm"
+          disabled
           [(ngModel)]="contactValue"
           (keyup)="onKeyUp($event)"
           name="contry_code"

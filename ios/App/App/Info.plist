@@ -2,18 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>We need Bluetooth access to discover and connect to devices</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>We need Bluetooth access to discover and connect to devices</string>
-	<!-- Location permissions for iOS -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide accurate location information.</string>
-	<!-- Only add this if you need background location tracking -->
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location in the background to provide continuous location updates.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location in the background to provide continuous location updates.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -34,10 +22,20 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need Bluetooth access to discover and connect to devices</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We need Bluetooth access to discover and connect to devices</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to camera to take pictur when you add and edit image</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires access to contacts to invite visitor from your contact</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location in the background to provide continuous location updates.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location in the background to provide continuous location updates.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to provide accurate location information.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app requires access to camera to take pictur when you add and edit image</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -276,31 +276,82 @@ export class WebRtcService extends ApiService{
 
   async startLocalStream(): Promise<boolean> {
     try {
-      if (!navigator.mediaDevices) {
-        throw new Error('MediaDevices API not available');
-
+      // 1. Cek apakah MediaDevices API tersedia
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('MediaDevices API or getUserMedia not available');
+        return false;
       }
+
+      // 2. iOS-specific constraints - lebih konservatif
       const constraints = {
         video: false,
         audio: {
-          echoCancellation: true, 
-          noiseSuppression: true, 
-          autoGainControl: true 
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          // iOS Safari kadang bermasalah dengan constraint tambahan
+          // Hapus atau simplify jika masih bermasalah
+          sampleRate: 44100, // iOS prefer standard sample rate
+          channelCount: 1     // Mono audio untuk iOS
         }
       };
 
+      console.log('Requesting media permissions...');
+      
+      // 3. Request stream dengan error handling yang lebih detail
       this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (!navigator.mediaDevices) {
-        console.error("MediaDevices API tidak tersedia!");
+      
+      if (!this.localStream) {
+        console.error('Failed to get media stream');
+        return false;
       }
+
+      console.log('Media stream obtained successfully');
+
+      // 4. Handle video element dengan iOS-specific considerations
       const videoElement: HTMLVideoElement = document.getElementById('local-video') as HTMLVideoElement;
       if (videoElement) {
+        // iOS Safari memerlukan properti tambahan
         videoElement.srcObject = this.localStream;
-        await videoElement.play();
+        videoElement.muted = true; // Penting untuk iOS - hindari feedback
+        videoElement.playsInline = true; // Crucial untuk iOS - hindari fullscreen
+        videoElement.autoplay = true; // iOS Safari memerlukan autoplay
+        
+        // iOS Safari kadang memerlukan user interaction untuk play
+        try {
+          await videoElement.play();
+          console.log('Video element playing successfully');
+        } catch (playError) {
+          console.warn('Auto-play failed, might need user interaction:', playError);
+          // Untuk iOS, kadang perlu user click untuk trigger play
+          // Anda bisa show button "Tap to start" jika auto-play gagal
+        }
+      } else {
+        console.warn('Video element not found');
       }
 
       return true;
     } catch (error) {
+      console.error('Error starting local stream:', error);
+      
+    // Type guard untuk error handling
+    if (error instanceof Error) {
+      // Detail error handling untuk debugging
+      if (error.name === 'NotAllowedError') {
+        console.error('Permission denied by user');
+      } else if (error.name === 'NotFoundError') {
+        console.error('No audio input device found');
+      } else if (error.name === 'NotReadableError') {
+        console.error('Audio device is already in use');
+      } else if (error.name === 'OverconstrainedError') {
+        console.error('Constraints cannot be satisfied');
+      } else if (error.name === 'SecurityError') {
+        console.error('Security error - HTTPS required');
+      }
+    } else {
+      console.error('Unknown error type:', error);
+    }
+      
       return false;
     }
   }

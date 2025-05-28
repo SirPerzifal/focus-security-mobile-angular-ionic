@@ -6,7 +6,7 @@
   ></app-header-inner-page>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <div>
     <div
       *ngIf="!showMain"
@@ -36,13 +36,13 @@
               (click)="ableChangeInput()"
             >
             </ion-icon>
-            <ion-icon
+            <!-- <ion-icon
               *ngIf="!disabledInput"
               class="absolute top-24 right-20 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
               name="documents"
               (click)="chooseWhereToChoose()"
             >
-            </ion-icon>
+            </ion-icon> -->
           </div>
         </div>
         <h2 class="text-xl font-bold">{{ userName }}</h2>

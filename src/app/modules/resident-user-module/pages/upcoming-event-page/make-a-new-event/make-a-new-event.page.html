@@ -5,7 +5,7 @@
     (typeOfUser)="getTypeUser($event)"
   ></app-header-inner-page>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <ion-refresher
     slot="fixed"
     (ionRefresh)="handleRefresh($event)"
@@ -53,7 +53,7 @@
   <div *ngIf="isLoading" class="flex justify-center items-center h-full">
     <app-loading-animation></app-loading-animation>
   </div>
-  <div *ngIf="!isLoading" class="pb-2.5 pt-2 mb-16">
+  <div *ngIf="!isLoading" class="pb-2.5 pt-2">
     <div class="cal-day-view">
       <mwl-calendar-day-view
         [viewDate]="ViewDate"
@@ -90,7 +90,7 @@
           </h2>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
+      <ion-content id="resident-content" class="ion-padding">
         <div class="px-1">
           <div class="mb-2" *ngIf="userType == 'industrial'">
             <label class="block text-black font-bold mb-1 text-base"

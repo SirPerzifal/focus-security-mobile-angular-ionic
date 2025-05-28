@@ -5,7 +5,7 @@
   ></app-header-inner-page>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -14,7 +14,7 @@
       (click)="onBack()"
     ></ion-icon>
   </div>
-  <div class="pb-4 pt-1.5 space-y-2 mb-28">
+  <div class="pb-4 pt-1.5 space-y-2">
     <div id="nav_tabs_main" class="px-4" *ngIf="!voteNow">
       <app-nav-tabs
         [buttons]="navButtonsMain"

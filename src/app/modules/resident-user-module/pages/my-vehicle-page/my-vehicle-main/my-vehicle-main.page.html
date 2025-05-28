@@ -7,7 +7,7 @@
   ></app-header-inner-page>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <ion-refresher
     slot="fixed"
     (ionRefresh)="handleRefresh($event)"
@@ -29,7 +29,7 @@
       (click)="directTo()"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 space-y-2 mb-28">
+  <div class="px-4 pb-4 space-y-2">
     <div *ngIf="pageName !== 'Vehicle Detail'" @fadeInOut>
       <div class="flex flex-col space-y-2">
         <button
@@ -281,7 +281,7 @@
           Request for Extension
         </button>
         <button
-          *ngIf="vehicleDetail.status === 'Approved' && userType === 'industrial'"
+          *ngIf="vehicleDetail.status === 'Rejected' && userType === 'industrial'"
           class="mt-2 bg-[var(--ion-color-primary)] text-white w-full text-base rounded h-10 font-bold"
           (click)="reqForupdate(vehicleDetail.id)"
         >

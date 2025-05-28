@@ -6,7 +6,7 @@ import { ApiService } from '../../api.service';
 import { StorageService } from '../../storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
 import { ModalController } from '@ionic/angular';
-import { ModalLoadingComponent } from 'src/app/shared/components/modal-loading/modal-loading.component';
+import { LoadingAnimationComponent } from 'src/app/shared/resident-components/loading-animation/loading-animation.component';
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +99,7 @@ export class MainApiResidentService extends ApiService {
         return from((async () => {
           if (openLoading) {
             modalRef = await this.modalController.create({
-              component: ModalLoadingComponent,
+              component: LoadingAnimationComponent,
               cssClass: 'modal-loading',
             });
             await modalRef.present();

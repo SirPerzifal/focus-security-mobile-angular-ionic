@@ -5,7 +5,7 @@
   ></app-header-inner-page>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <ion-refresher
     slot="fixed"
     (ionRefresh)="handleRefresh($event)"
@@ -27,7 +27,7 @@
       [routerLink]="['/payment-page-main']"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+  <div class="px-4 pb-4 pt-1.5 space-y-2">
     <div id="nav_tabs_main">
       <app-nav-tabs
         [buttons]="navButtonsMain"

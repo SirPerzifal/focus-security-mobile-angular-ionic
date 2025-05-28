@@ -7,7 +7,7 @@
   ></app-header>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content id="resident-content" [fullscreen]="true">
   <ion-refresher
     slot="fixed"
     (ionRefresh)="handleRefresh($event)"
@@ -64,7 +64,7 @@
     (didDismiss)="isModalUpdateProfile === false"
   >
     <ng-template>
-      <ion-content>
+      <ion-content id="resident-content">
         <ion-toolbar>
           <ion-title>Upload Profile</ion-title>
         </ion-toolbar>
