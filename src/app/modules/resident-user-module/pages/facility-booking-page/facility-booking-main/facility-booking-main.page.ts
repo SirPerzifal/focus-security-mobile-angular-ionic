@@ -506,7 +506,7 @@ export class FacilityBookingMainPage implements OnInit {
         this.originalBookingList = []
         this.filteredBookingList = []
         this.isLoading = false;
-        this.functionMain.presentToast('Failed to load booking data', 'danger');
+        this.functionMain.presentToast('No booking found.', 'danger');
       }
     }, error => {
       this.isLoading = false;

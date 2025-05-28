@@ -487,8 +487,8 @@ ion-header {
   border-bottom-right-radius: 25px;
 }
 
-ion-content {
-  --offset-bottom: -80px !important;
+ion-content#resident-content {
+  --offset-bottom: -78px !important;
 }
 
 /* Rounded sliders */

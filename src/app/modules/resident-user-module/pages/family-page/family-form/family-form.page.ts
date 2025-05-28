@@ -367,7 +367,8 @@ export class FamilyFormPage implements OnInit {
               this.functionMain.presentToast('Success Add Record', 'success');
               this.router.navigate(['family-page-main']);
             } else {
-              this.functionMain.presentToast('Failed Add Record Because Type You Choos Are Primary or Something else.', 'danger');
+              const message = response.result.response_description ? response.result.response_description : 'Failed Add Record';
+              this.functionMain.presentToast(message, 'danger');
             }
           })
         }
