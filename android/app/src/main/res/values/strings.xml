@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">focus_security</string>
-    <string name="title_activity_main">focus_security</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">iFS360</string>
+    <string name="title_activity_main">iFS360</string>
+    <string name="package_name">com.sgeede.focus.security</string>
+    <string name="custom_url_scheme">com.sgeede.focus.security</string>
+    <string name="default_notification_channel_id">default_channel</string>
+    <string name="fcm_message">New Message</string>
 </resources>

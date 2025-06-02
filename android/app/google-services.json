@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "761495842392",
+    "project_id": "ifs360-c5f9c",
+    "storage_bucket": "ifs360-c5f9c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761495842392:android:04cd433f2ea0107f5a642d",
+        "android_client_info": {
+          "package_name": "com.sgeede.focus.security"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbEM27o2dLKxSwqdyEP-HvgwrVb08IXR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
