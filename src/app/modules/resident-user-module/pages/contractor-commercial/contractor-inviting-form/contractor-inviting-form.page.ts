@@ -264,40 +264,45 @@ export class ContractorInvitingFormPage implements OnInit {
         phones: true
       }
     });
-  
+
     if (result && result.contact) {
       const contactName = result.contact.name;
       const displayName = contactName?.display || '';
       const givenName = contactName?.given || '';
-  
+
       // Format the name as display_name(given_name)
       const nameFromContact = `${displayName}(${givenName})`.trim();
-      let phoneFromContact = result.contact.phones?.[0].number || '';
-      
-      // Bersihkan nomor telepon dari karakter non-digit
-      phoneFromContact = phoneFromContact.replace(/\D/g, '');
-  
+      const phoneFromContact = result.contact.phones?.[0].number || '';
+
+      const newPhoneNumber = phoneFromContact.replace(/\D/g, '')
+
       if (this.currentInviteeIndex !== null) {
-        // Populate the fields of the currently selected invitee
-        this.inviteeFormList[this.currentInviteeIndex].contractor_name = nameFromContact;
-        this.inviteeFormList[this.currentInviteeIndex].phone_display = phoneFromContact;
-        // Update contact_number dengan country code
-        this.updateContactNumber(this.currentInviteeIndex);
-      } else {
-        // If no invitee is selected, create a new one
-        const newInvitee: any = {
-          contractor_name: nameFromContact,
-          contact_number: '',
-          phone_display: phoneFromContact,
-          vehicle_number: ''
-        };
-        this.inviteeFormList.push(newInvitee);
-        // Tambahkan entry baru ke selectedCountry
-        this.selectedCountry.push({ selected_code: '65' });
-        // Update contact_number untuk invitee baru
-        this.updateContactNumber(this.inviteeFormList.length - 1);
+        console.log(this.selectedCountry[0]?.selected_code, newPhoneNumber.substring(0, 2), newPhoneNumber, newPhoneNumber.slice(2), newPhoneNumber.startsWith('0'));
+        if (newPhoneNumber.startsWith('0')) {
+          const readyToInputPhoneNumber = newPhoneNumber.slice(1)
+          this.selectedCountry[this.currentInviteeIndex].selected_code = '65'
+          this.inviteeFormList[this.currentInviteeIndex].contractor_name = nameFromContact;
+          this.inviteeFormList[this.currentInviteeIndex].phone_display = readyToInputPhoneNumber;
+          this.updateContactNumber(this.currentInviteeIndex);
+          console.log(readyToInputPhoneNumber, "dari 0");
+        } else if (newPhoneNumber.startsWith('6')) {
+          const readyToInputPhoneNumber = newPhoneNumber.slice(2)
+          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+          if (isValidCountryCode) {
+           this.selectedCountry[this.currentInviteeIndex].selected_code = countryCodeFromContact
+           console.log(this.selectedCountry[this.currentInviteeIndex].selected_code);
+          } else {
+           this.selectedCountry[this.currentInviteeIndex].selected_code = '65'
+           console.log(this.selectedCountry[this.currentInviteeIndex].selected_code);
+          }
+          this.inviteeFormList[this.currentInviteeIndex].contractor_name = nameFromContact;
+          this.inviteeFormList[this.currentInviteeIndex].phone_display = readyToInputPhoneNumber;
+          this.updateContactNumber(this.currentInviteeIndex);
+          console.log(readyToInputPhoneNumber, "dari 6");
+        }
       }
-  
+
       this.isFormVisible = true; // Show form if there are invitees
       this.addInviteeText = 'Add More Invitees'; // Update button text
     }

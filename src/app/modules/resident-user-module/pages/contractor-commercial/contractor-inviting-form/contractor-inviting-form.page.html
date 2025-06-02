@@ -80,7 +80,6 @@
                   (change)="onChangeCountryCode($event, i)"
                   [(ngModel)]="selectedCountry[i].selected_code"
                 >
-                  <option hidden selected disabled value="+65">SG +65</option>
                   <option *ngFor="let code of countryCodes" [value]="code.code">
                     {{ code.country }} +{{ code.code }}
                   </option>

@@ -218,24 +218,33 @@ export class VisitorInvitigFormPage implements OnInit {
       const nameFromContact = `${displayName}(${givenName})`.trim();
       const phoneFromContact = result.contact.phones?.[0].number || '';
 
+      const newPhoneNumber = phoneFromContact.replace(/\D/g, '')
+
       if (this.currentInviteeIndex !== null) {
-        // Populate the fields of the currently selected invitee
-        this.inviteeFormList[this.currentInviteeIndex].visitor_name = nameFromContact;
-        this.inviteeFormList[this.currentInviteeIndex].contact_number_display = phoneFromContact;
-        // Update full contact number
-        this.updateContactNumber(this.currentInviteeIndex);
-      } else {
-        // If no invitee is selected, create a new one
-        const newInvitee: any = {
-          visitor_name: nameFromContact,
-          contact_number: this.selectedCountry[0]?.selected_code + phoneFromContact,
-          contact_number_display: phoneFromContact,
-          vehicle_number: '' // Set this as needed
-        };
-        this.inviteeFormList.push(newInvitee);
-        
-        // Tambahkan entry baru ke selectedCountry
-        this.selectedCountry.push({ selected_code: '65' });
+        console.log(this.selectedCountry[0]?.selected_code, newPhoneNumber.substring(0, 2), newPhoneNumber, newPhoneNumber.slice(2), newPhoneNumber.startsWith('0'));
+        if (newPhoneNumber.startsWith('0')) {
+          const readyToInputPhoneNumber = newPhoneNumber.slice(1)
+          this.selectedCountry[this.currentInviteeIndex].selected_code = '65'
+          this.inviteeFormList[this.currentInviteeIndex].visitor_name = nameFromContact;
+          this.inviteeFormList[this.currentInviteeIndex].contact_number_display = readyToInputPhoneNumber;
+          this.updateContactNumber(this.currentInviteeIndex);
+          console.log(readyToInputPhoneNumber, "dari 0");
+        } else if (newPhoneNumber.startsWith('6')) {
+          const readyToInputPhoneNumber = newPhoneNumber.slice(2)
+          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+          if (isValidCountryCode) {
+           this.selectedCountry[this.currentInviteeIndex].selected_code = countryCodeFromContact
+           console.log(this.selectedCountry[this.currentInviteeIndex].selected_code);
+          } else {
+           this.selectedCountry[this.currentInviteeIndex].selected_code = '65'
+           console.log(this.selectedCountry[this.currentInviteeIndex].selected_code);
+          }
+          this.inviteeFormList[this.currentInviteeIndex].visitor_name = nameFromContact;
+          this.inviteeFormList[this.currentInviteeIndex].contact_number_display = readyToInputPhoneNumber;
+          this.updateContactNumber(this.currentInviteeIndex);
+          console.log(readyToInputPhoneNumber, "dari 6");
+        }
       }
 
       this.isFormVisible = true; // Show form if there are invitees
