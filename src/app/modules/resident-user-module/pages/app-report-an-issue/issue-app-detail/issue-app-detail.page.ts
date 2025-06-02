@@ -166,11 +166,12 @@ export class IssueAppDetailPage implements OnInit {
       if (image && image.base64String) {
         this.isModalChooseUpload = !this.isModalChooseUpload;
         // Update the form data with the base64 image
-        this.replyForm.ir_attachment_name = image.base64String;
-        
-        // Update display name to show a camera capture was made
+        this.replyForm.ir_attachment_datas = image.base64String;
+
         const timestamp = new Date().toISOString().split('T')[0];
-        this.fileName = `Camera_Photo_${timestamp}`;
+        // Update display name to show a camera capture was made
+        this.fileName = `Camera_Photo_${timestamp}`+ '.' + image.format;
+        this.replyForm.ir_attachment_name = this.fileName
         
         // Display success message
         this.functionMain.presentToast('Photo captured successfully', 'success');
@@ -203,7 +204,7 @@ export class IssueAppDetailPage implements OnInit {
 
   submitReply(is_close: boolean = false) {
     if (!this.replyForm.body) {
-      this.functionMain.presentToast('Reply content is required!')
+      this.functionMain.presentToast('Reply content is required!', 'danger')
       return
     }
     this.fileName = '';

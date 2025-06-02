@@ -1,0 +1,58 @@
+<ion-header>
+  <app-resident-header [is_client]="true"  [text]="'RFID User List'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()">
+    </ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4 mt-4">
+    <div>
+      <ion-list>
+        <ion-item *ngFor="let user of userList">
+          <ion-select aria-label="user_list" interface="popover" placeholder="{{ user.user_id }}, {{ user.user_name }}" (ionChange)="handleChangeValue($event)">
+            <ng-container *ngIf="user.access_mode && user.access_mode.length; else noAccessCardOption">
+              <ion-select-option *ngFor="let card of user.access_mode" [value]="card.card_code">
+                {{ card.card_code }}
+              </ion-select-option>
+            </ng-container>
+            <ng-template #noAccessCardOption>
+              <ion-select-option value="" disabled>No access card found</ion-select-option>
+            </ng-template>
+          </ion-select>
+          
+          <ng-container *ngIf="user.access_mode && user.access_mode.length && cardCodeSelect">
+            <ng-container *ngFor="let card of user.access_mode">
+              <ion-button *ngIf="card.card_code === cardCodeSelect" slot="end" size="default" (click)="onClickButton(user, 'give_access')"> 
+                Give Access 
+              </ion-button>
+              <ion-button *ngIf="card.card_code === cardCodeSelect" slot="end" size="default" (click)="onClickButton(user, 'revoke_access')"> 
+                Revoke Access 
+              </ion-button>
+            </ng-container>
+          </ng-container>
+        </ion-item>
+      </ion-list>
+    </div>
+    <app-modal-loading *ngIf="isLoading" />
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-footer>

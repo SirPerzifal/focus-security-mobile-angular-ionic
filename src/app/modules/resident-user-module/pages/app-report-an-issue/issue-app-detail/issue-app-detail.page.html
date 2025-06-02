@@ -61,10 +61,9 @@
       class="flex flex-col mt-4 space-y-2"
       *ngIf="ticketDetail.ticket_status !== 'Solved'"
     >
-      <div class="flex flex-row justify-start">
+      <div class="flex flex-col items-start">
         <p class="text-base font-bold">Content</p>
-      </div>
-      <textarea
+        <textarea
         id="client_ticket_detail_summary"
         placeholder=""
         (focus)="testAddMb(true)"
@@ -75,10 +74,12 @@
         name="entryMessage"
       >
       </textarea>
+      </div>
+      
 
       <div class="w-full mt-1">
         <div class="flex flex-row justify-start">
-          <p class="text-sm font-bold">Attachment</p>
+          <p class="text-base font-bold">Attachment</p>
         </div>
         <div
           (click)="chooseWhereToChoose()"
@@ -163,7 +164,7 @@
         >
           <div class="w-1/5 flex flex-row justify-start" *ngIf="message.is_vms">
             <div class="rounded-full overflow-hidden w-12 h-12">
-              <img class="w-12 h-12" [src]="" alt="Admin" />
+              <img class="w-12 h-12" [src]="'assets/icon/exc-client/admin.png'" alt="Admin" />
             </div>
           </div>
           <div
@@ -217,7 +218,7 @@
               class="text-sm w-full flex justify-end"
               [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'"
             >
-              {{ functionMain.convertDateExtend(message.message_datetime) }}
+              {{ functionMain.convertNewDateTZ(message.message_datetime) }}
             </div>
           </div>
 

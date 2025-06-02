@@ -259,7 +259,7 @@ export class MoveFormPage implements OnInit {
           }
           this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
         } else if (response.result.status_code === 405) {
-          this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.presentToast(response.result.status_description, 'danger');
           this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
         } else if (response.result.status_code === 206) {
           this.functionMain.banAlert(response.result.status_description, this.unit_id, false)

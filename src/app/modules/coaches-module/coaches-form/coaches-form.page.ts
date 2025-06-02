@@ -293,7 +293,7 @@ export class CoachesFormPage implements OnInit {
             }
             this.onBackMove()
           } else if (results.result.response_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(results.result.status_description, 'danger');
             this.onBackMove()
           } else if (results.result.response_code === 206) {
             this.functionMain.banAlert(results.result.status_description, this.schedule.unit, false)

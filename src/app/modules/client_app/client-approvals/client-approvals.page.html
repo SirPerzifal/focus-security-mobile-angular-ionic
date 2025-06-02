@@ -9,6 +9,7 @@
     pullFactor="0.3"
     pullMin="40"
     pullMax="80"
+    *ngIf="!isHome"
   >
     <ion-refresher-content
       pullingIcon="chevron-down-circle-outline"
@@ -18,11 +19,11 @@
   <div class="flex flex-row justify-between items-center mt-2 ml-3 mr-4">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
-    <div class="rounded-full w-10 h-10 bg-[var(--ion-color-primary)] flex flex-row justify-center items-center" (click)="onSetting()">
+    <div class="rounded-full w-10 h-10 bg-[var(--ion-color-primary)] flex flex-row justify-center items-center" (click)="onSetting()" *ngIf="!project_config.is_industrial">
       <ion-icon name="settings-outline" size="small" class="text-white size-7"></ion-icon>
     </div>
   </div>
-  <div class="flex flex-row relative mx-4 mb-24" *ngIf="isApprovalHome" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-24" *ngIf="isApprovalHome" @fadeInOut>
     <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems">
@@ -437,7 +438,7 @@
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Owned By</p>
-          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_id.family_full_name ) }}</p>
+          <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.family_id.name ) }}</p>
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Application Type</p>

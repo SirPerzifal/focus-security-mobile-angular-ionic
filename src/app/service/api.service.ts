@@ -12,7 +12,7 @@ export class ApiService {
   // protected readonly baseUrl = 'http://127.17.0.1:8073';
   // readonly baseUrl = 'http://192.168.1.136:8017';
   // readonly baseUrl = 'http://192.168.54.230:8017';
-  // readonly baseUrl = 'http://192.168.1.182:8069'
+  // readonly baseUrl = 'http://192.168.1.185:8069'
   // readonly urlItercom = 'http://172.20.10.3:8069';
 
   constructor(protected http: HttpClient) {}

@@ -115,6 +115,25 @@
               [isReadonly]="true" [(ngModel)]="userData.contact">
             </app-text-input>
           </div>
+          <div class="w-full flex flex-col items-start" *ngIf="!project_config.is_industrial">
+            <label class="text-base"><b>Block</b></label>
+            <select id="blacklist_block"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+              (change)="onBlockChange($event)" [(ngModel)]="reporterDetailsFrom.block_id" [disabled]="false">
+              <option value="" selected disabled hidden>Choose Block</option>
+              <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+            </select>
+          </div>
+          <div class="w-full" *ngIf="!project_config.is_industrial">
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'Select Units'"
+              [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'"
+              [isOne]="true"></app-m2m-selection>
+          </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'Select Hosts'"
+              [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'"
+              [isOne]="true"></app-m2m-selection>
+          </div>
           <div class="w-full">
             <div class="flex flex-row justify-start mb-1">
               <p class="text-base font-bold">Summary Report</p>

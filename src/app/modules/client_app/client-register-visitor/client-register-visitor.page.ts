@@ -180,6 +180,17 @@ export class ClientRegisterVisitorPage implements OnInit {
     this.isHistory = false
     this.isNew = true
     this.textSecond = 'New Visitor'
+    this.resetForm()
+  }
+
+  resetForm() {
+    this.formData = {
+      name: '',
+      company_name: '',
+      contact_number: '',
+      selection_type: '',
+      vehicle_number: '', 
+    }
   }
 
   onBack() {

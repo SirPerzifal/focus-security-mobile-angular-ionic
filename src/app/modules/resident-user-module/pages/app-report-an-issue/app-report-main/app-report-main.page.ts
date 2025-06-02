@@ -186,6 +186,17 @@ export class AppReportMainPage implements OnInit {
   }
 
   onSubmit() {
+    let errMsg = ''
+    if (!this.reporterDetailsFrom.typeReport) {
+      errMsg += 'Type of issue is required! \n'
+    }
+    if (!this.reporterDetailsFrom.summaryReport) {
+      errMsg += 'Summary is required! \n'
+    }
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger')
+      return
+    }
     this.mainApi.endpointMainProcess({
       type_of_issue: this.reporterDetailsFrom.typeReport,
       requestor_id: this.reporterDetailsFrom.requestorId,

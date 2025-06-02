@@ -35,6 +35,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     visitor_name: string;
     visitor_date: Date;
     inviting_date: Date;
+    entry_full_date: string;
     visitor_entry_time: string;
     visitor_exit_time: string;
     mode_of_entry: string;
@@ -56,7 +57,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     image: '',
   }
 
-  constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, private functionMain: FunctionMainService) { 
+  constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { historyData: any };
     if (state) {

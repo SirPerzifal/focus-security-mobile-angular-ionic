@@ -295,6 +295,8 @@ export class CollectionModulePage implements OnInit {
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.walkInFormData.unit, this.selectedHost)
+          } else if (res.result.response_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }
@@ -398,10 +400,12 @@ export class CollectionModulePage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.driveInFormData.unit, this.selectedHost)
+          } else if (res.result.response_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save walk in data', 'danger');
           }

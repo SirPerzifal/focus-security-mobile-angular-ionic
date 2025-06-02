@@ -659,6 +659,10 @@ const routes: Routes = [
     path: 'form-for-request-registration-permit',
     loadChildren: () => import('./modules/resident-user-module/pages/raise-a-request-page/form-for-request-registration-permit/form-for-request-registration-permit.module').then( m => m.FormForRequestRegistrationPermitPageModule)
   },
+  {
+    path: 'client-rfid-user-list',
+    loadChildren: () => import('./modules/client_app/client-rfid-user-list/client-rfid-user-list.module').then( m => m.ClientRfidUserListPageModule)
+  },
 ];
 
 @NgModule({

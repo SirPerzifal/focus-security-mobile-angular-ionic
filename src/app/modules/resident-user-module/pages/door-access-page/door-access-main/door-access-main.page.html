@@ -55,7 +55,7 @@
       <ion-item *ngFor="let device of devicesToClick" button>
         <ion-label id="device.id" (click)="deviceClick(device)">
           <h2>{{ device.name || 'Unknown Device' }}</h2>
-          <p>Bluetooth Name: {{ device.bluetooth_name }}</p>
+          <p>Bluetooth Name: {{ device.bluetoothName }}</p>
         </ion-label>
       </ion-item>
 

@@ -172,7 +172,9 @@ export class ClientMainAppPage implements OnInit {
       { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for Employees", text: "Employees", route: "/client-employees", permission: [false, true], menu_show: this.project_config.is_allow_client_employees },
       { src: "assets/icon/exc-client/payment_setting.png", alt: "Icon for Payment Setting", text: "Payment Setting", route: "/client-payment-settings", permission: [true, false], menu_show: this.project_config.is_allow_client_payment_setting },
       { src: "assets/icon/resident-icon/notification.png", alt: "Icon for Notifications", text: "Notifications", route: "/client-notification", permission: [true, true], menu_show: this.project_config.is_allow_client_notifications },
+      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for User RFID List", text: "RFID User List", route: "/client-rfid-user-list", permission: [true, true], menu_show: this.project_config.is_allow_rfid_user_list },
     ];
+    console.log(this.project_config);
     if (this.project_config.is_industrial) {
       this.menuItems = this.menuItems.filter((item: any) => item.permission[1] && item.menu_show )
     } else {

@@ -2,19 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { BleClient, BleDevice } from '@capacitor-community/bluetooth-le';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError, from, switchMap, mergeMap, tap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { GeolocationService, LocationData } from 'src/app/service/geolocation/geolocation.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { ApiService } from 'src/app/service/api.service';
 
 @Component({
   selector: 'app-door-access-main',
   templateUrl: './door-access-main.page.html',
   styleUrls: ['./door-access-main.page.scss'],
 })
-export class DoorAccessMainPage implements OnInit {
+export class DoorAccessMainPage extends ApiService implements OnInit {
 
   locationData: LocationData | null = null;
   isLoading = true;
@@ -28,14 +32,16 @@ export class DoorAccessMainPage implements OnInit {
   devicesToClick: any[] = [];
   isScanning = false;
   isBluetoothEnabled = false;
+  projectId: number = 0;
 
   constructor(
     private geolocationService: GeolocationService, 
     private functionMain: FunctionMainService,
     private storage: StorageService,
     private platform: Platform,
-    private mainApi: MainApiResidentService
-  ) { }
+    private mainApi: MainApiResidentService,
+    http: HttpClient
+  ) {super(http)}
 
   ngOnInit() {
   }
@@ -43,13 +49,13 @@ export class DoorAccessMainPage implements OnInit {
   ionViewWillEnter() {
     // Check permissions when page loads
     this.checkPermissions();
-    this.searchDeviceFromBluetooth();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       if ( value ) {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
-            this.searchDeviceFromBackend(estate.project_id);
+            this.projectId = estate.project_id;
+            this.searchDeviceFromBluetooth();
           }
         })
       }
@@ -91,7 +97,7 @@ export class DoorAccessMainPage implements OnInit {
       next: (data) => {
         this.isLoading = false;
         this.locationData = data;
-        console.log('location', this.locationData)
+        // console.log('location', this.locationData)
         this.functionMain.presentToast('Your location successfully to fetch', 'success');
         this.stopWatchingLocation();
       },
@@ -100,7 +106,7 @@ export class DoorAccessMainPage implements OnInit {
         this.functionMain.presentToast(this.error, 'danger');
         this.isLoading = false;
         this.isWatching = false;
-        console.error('Watch location error:', err);
+        // console.error('Watch location error:', err);
       }
     });
   }
@@ -117,9 +123,9 @@ export class DoorAccessMainPage implements OnInit {
   async initBluetooth() {
     try {
       await BleClient.initialize();
-      console.log('Bluetooth initialized');
+      // console.log('Bluetooth initialized');
     } catch (error) {
-      console.error('Bluetooth initialization error:', error);
+      // console.error('Bluetooth initialization error:', error);
     }
   }
 
@@ -128,7 +134,7 @@ export class DoorAccessMainPage implements OnInit {
       // This checks if Bluetooth adapter is enabled
       const bluetoothState = await BleClient.isEnabled();
       if (bluetoothState === true) {
-        console.log('Bluetooth state:', bluetoothState);
+        // console.log('Bluetooth state:', bluetoothState);
         console.log("Bluetooth hidup bang");
         this.searchDeviceFromBluetooth();
         this.isBluetoothEnabled = bluetoothState;
@@ -136,7 +142,7 @@ export class DoorAccessMainPage implements OnInit {
           this.functionMain.presentToast('Your bluetooth is already on, now you can use this features')
         }
       } else {
-        console.log('Bluetooth state:', bluetoothState);
+        // console.log('Bluetooth state:', bluetoothState);
         console.log("Bluetooth ga hidup bang");
         this.functionMain.presentToast('Please turn on your bluetooth to use this features', 'warning');
         this.isBluetoothEnabled = bluetoothState;
@@ -153,7 +159,7 @@ export class DoorAccessMainPage implements OnInit {
   async searchDeviceFromBluetooth() {
     this.initBluetooth();
     if (this.isBluetoothEnabled === true) {
-      console.log('Bluetooth state:', this.isBluetoothEnabled);
+      // console.log('Bluetooth state:', this.isBluetoothEnabled);
       console.log("Bluetooth hidup bang aman itu");
       this.devicesFromScan = [];
       this.isScanning = true;
@@ -168,8 +174,7 @@ export class DoorAccessMainPage implements OnInit {
             // Add device if it's not already in the list
             if (!this.devicesFromScan.some(d => d.deviceId === result.device.deviceId)) {
               this.devicesFromScan.push(result.device);
-              console.log(result);
-              
+              this.searchDeviceFromBackend(this.projectId);
             }
           }
         );
@@ -183,7 +188,7 @@ export class DoorAccessMainPage implements OnInit {
         this.isScanning = false;
       }
     } else {
-      console.log('Bluetooth state:', this.isBluetoothEnabled);
+      // console.log('Bluetooth state:', this.isBluetoothEnabled);
       console.log("Bluetooth ga hidup bang idupin dulu");
       await BleClient.requestEnable();
       this.checkBluetoothState('search');
@@ -194,30 +199,35 @@ export class DoorAccessMainPage implements OnInit {
     this.mainApi.endpointCustomProcess({
       project_id: projectId
     }, '/get/door_access_configuration').subscribe((response: any) => {
+      this.devicesFromBackend = [];
       const result = response.result.response_result;
       if (response.result.response_code === 200) {
         this.devicesFromBackend = result;
         if (this.devicesFromScan.length > 0 && this.devicesFromBackend.length > 0) {
+          // Memeriksa apakah ada perangkat yang dipindai dengan nama Bluetooth yang sama
           if (this.devicesFromScan.some(d => d.name === result.bluetooth_name)) {
-            this.devicesToClick === this.devicesFromBackend.filter((device: any) => {
+            console.log(this.devicesFromScan.some(d => d.name), result.bluetooth_name);
+            
+            this.devicesToClick = this.devicesFromBackend.filter((device: any) => {
               const blue_name_from_backend = device.bluetooth_name;
-              const blue_name_from_scan = device.name;
-              return blue_name_from_backend === blue_name_from_scan;
+              // Memeriksa apakah ada perangkat yang dipindai dengan nama Bluetooth yang sama
+              const blue_name_from_scan = this.devicesFromScan.some(d => d.name === blue_name_from_backend);
+              return blue_name_from_scan; // Mengembalikan true jika ada yang cocok
             }).map((device: any) => {
               return {
                 id: device.id,
                 name: device.name,
                 bluetoothName: device.bluetooth_name
               }
-            })
-            console.log(this.devicesFromScan, this.devicesFromBackend, result);
+            });
+            console.log("paling atas", this.devicesFromScan, this.devicesFromBackend, result, this.devicesToClick);
           }
-          console.log(this.devicesFromScan, this.devicesFromBackend, result);
+          console.log("tengah ni", this.devicesFromScan, this.devicesFromBackend, result);
         }
-        console.log(this.devicesFromScan, this.devicesFromBackend, result);
+        console.log("paling bawah", this.devicesFromScan, this.devicesFromBackend, result);
       }
-    })
-  }
+    });
+  }  
 
   async stopScan() {
     try {
@@ -243,8 +253,41 @@ export class DoorAccessMainPage implements OnInit {
   }
 
   async deviceClick(device: any) {
-    console.log(device);
+    console.log(device, this.projectId);
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    this.http.post(this.baseUrl + '/intercom/get_project_location', {
+      project_id: this.projectId, 
+      door_access_id: device.id
+    }, { headers }).pipe(
+      catchError(this.handleError)
+    ).subscribe(
+      (response: any) => {
+      console.log('Response:', response);
+      }, (error: any) => {
+        console.log('Respponse', error);
+      }
+    );
     
   }
+
+  private handleError(error: any) {
+      console.error('An error occurred:', error);
+      
+      if (error.error instanceof ErrorEvent) {
+        console.error('Client-side error:', error.error.message);
+      } else {
+        console.error(
+          `Backend returned code ${error.status}, ` +
+          `body was: ${error.error}`
+        );
+      }
+  
+      return throwError(() => new Error('Something went wrong; please try again later.'));
+    }
 
 }

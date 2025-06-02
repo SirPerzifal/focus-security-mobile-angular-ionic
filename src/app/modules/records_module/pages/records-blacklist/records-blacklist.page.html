@@ -111,7 +111,7 @@
             <!-- <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner> -->
             <app-modal-loading />
           </div>
-          <div class="flex flex-col w-full space-y-5">
+          <div class="flex flex-col w-full space-y-5" *ngIf="!isLoading">
             <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let data of blacklistData" (click)="onClickDetail(data)"> 
               <span class="text-2xl font-bold text-white">{{data.vehicle_no != '' ? data.vehicle_no :

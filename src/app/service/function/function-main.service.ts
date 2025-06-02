@@ -246,6 +246,8 @@ export class FunctionMainService {
         // console.log(result.value)
         this.preference = jwtDecode(result.value);
         this.preference['access_token'] = result.value
+        console.log(this.preference);
+        
         return this.preference;
       } else {
         return false;

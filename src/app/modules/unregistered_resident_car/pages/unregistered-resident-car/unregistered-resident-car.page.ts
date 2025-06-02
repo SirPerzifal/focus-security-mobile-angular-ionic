@@ -111,8 +111,10 @@ export class UnregisteredResidentCarPage implements OnInit {
             }
             this.router.navigate(['/home-vms'])
           } else if (results.result.response_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(results.result.status_description, 'danger');
             this.router.navigate(['/home-vms'])
+          } else if (results.result.response_code === 407) {
+            this.functionMain.presentToast(results.result.status_description, 'danger');
           } else if (results.result.response_code === 206) {
             this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost)
           } else {

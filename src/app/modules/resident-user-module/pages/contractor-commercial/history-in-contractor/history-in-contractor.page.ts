@@ -39,6 +39,7 @@ export class HistoryInContractorPage implements OnInit {
     inviting_date: Date;
     visitor_entry_time: string;
     visitor_exit_time: string;
+    entry_full_date: string;
     mode_of_entry: string;
     vehicle_number: string;
     point_of_entry: string;
@@ -142,6 +143,7 @@ export class HistoryInContractorPage implements OnInit {
             vehicle_number: item['vehicle_number'],
             mobile_number: item['contact_number'],
             company_name: item['company_name'],
+            entry_full_date: item['entry_full_date'],
             identification_number: item['identification_number'],
             identification_type: item['identification_type'],
             mode_of_entry: item['contractor_type'],

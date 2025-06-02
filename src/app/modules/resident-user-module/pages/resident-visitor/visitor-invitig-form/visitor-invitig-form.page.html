@@ -7,12 +7,6 @@
 
 <ion-content id="resident-content" [fullscreen]="true">
   <div class="w-full flex items-start justify-start mt-2 ml-3">
-    <!-- <ion-icon
-      name="arrow-back-circle"
-      size="large"
-      class="text-[var(--ion-color-primary)] size-12"
-      [routerLink]="['/visitor-main']"
-    ></ion-icon> -->
     <ion-icon
       name="arrow-back-circle"
       size="large"
@@ -95,8 +89,8 @@
                   name="phone_{{i}}"
                   placeholder=""
                   class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-                  (change)="onChangePhoneNumber($event, i)"
-                  [(ngModel)]="inviteeFormList[i].contact_number"
+                  (input)="onChangePhoneNumber($event, i)"
+                  [(ngModel)]="inviteeFormList[i].contact_number_display"
                   required
                 />
               </div>
@@ -138,7 +132,7 @@
             [text]="'Send Invitation'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
             (click)="onSubmit()"
-            (disabled)="!isFormVisible"
+            [disabled]="!isFormVisible"
           >
           </app-submit-button>
         </div>

@@ -38,7 +38,9 @@ export class ClientApprovalsPage implements OnInit {
       console.log(value)
       this.project_id = value.project_id
       this.project_config = value.config
-      this.loadProjectTax()
+      if (!this.project_config.is_industrial) {
+        this.loadProjectTax()
+      }
       this.loadMenu()
     })
     console.log("ahoy")
@@ -453,8 +455,8 @@ export class ClientApprovalsPage implements OnInit {
       this.loadMenu()
     } else {
       this.loadApproval().then(() => {
-        event.target.complete()
       })
     }
+    event.target.complete()
   }
 }

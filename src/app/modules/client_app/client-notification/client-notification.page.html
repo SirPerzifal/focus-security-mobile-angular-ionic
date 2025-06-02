@@ -28,7 +28,7 @@
     <app-modal-loading class="mt-4"/>
   </div>
   <div *ngIf="!isLoading">
-    <div class="px-5 text-center mb-20" *ngIf="Notifications.length > 0; else noNotification">
+    <div class="px-5 text-center mb-24" *ngIf="Notifications.length > 0; else noNotification">
       <div class="mt-4 space-y-4">
         <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
           <div class="flex justify-between mb-1 text-sm">

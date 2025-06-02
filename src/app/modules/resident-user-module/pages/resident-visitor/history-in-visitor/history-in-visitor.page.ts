@@ -137,7 +137,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
             visitor_name: item['visitor_name'],
             visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
             visitor_entry_time: item['entry_time'],
-            visitor_exit_time: exitTime,
+            visitor_exit_time: item['exit_time'],
             mode_of_entry: item['mode_of_entry'],
             vehicle_number: item['vehicle_number'],
             point_of_entry: item['point_of_entry'],

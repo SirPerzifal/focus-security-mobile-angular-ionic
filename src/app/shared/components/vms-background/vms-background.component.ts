@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 
@@ -9,10 +10,11 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 })
 export class VmsBackgroundComponent  implements OnInit {
 
-  constructor(public functionMain: FunctionMainService, private storage: StorageService) { }
+  constructor(public functionMain: FunctionMainService, private storage: StorageService, private platform: Platform) { }
 
   ngOnInit() {
     this.onLoadBackground()
+    this.initializeBackButtonHandling();
   }
 
   showImage = `assets/img/focus_logo-removebg.png`
@@ -28,6 +30,13 @@ export class VmsBackgroundComponent  implements OnInit {
         }
       } 
     })
+  }
+
+  initializeBackButtonHandling() {
+    console.log("tes");
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      history.back();
+    });
   }
 
 }

@@ -101,6 +101,7 @@ export class ContractorInvitingFormPage implements OnInit {
     const initialInvitee: any = { 
       contractor_name: '', 
       contact_number: '', 
+      phone_display: '', // Tambahkan field untuk display
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
@@ -153,30 +154,21 @@ export class ContractorInvitingFormPage implements OnInit {
     if (selectedInvitees && selectedInvitees.length > 0) {
       this.inviteeFormList = selectedInvitees.map((invitee: any) => {
         let contact_number = invitee.contact_number || '';
+        let phone_display = '';
+        let selected_code = '65';
   
         // Validasi untuk contact_number
         if (contact_number.startsWith('6') && contact_number.length > 2) {
-          this.selectedCountry = selectedInvitees.map((invitee: any) => {
-            let contact_number = invitee.contact_number || '';
-            let selectedCountry = ''
-      
-            // Validasi untuk contact_number
-            if (contact_number.startsWith('6') && contact_number.length > 2) {
-              selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
-            }
-      
-            return {
-              selected_code: selectedCountry
-            };
-          });
-          console.log(this.selectedCountry);
-          
-          contact_number = contact_number.substring(2); // Ambil sisa dari contact_number
+          selected_code = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+          phone_display = contact_number.substring(2); // Sisa nomor untuk display
+        } else {
+          phone_display = contact_number;
         }
   
         return {
           contractor_name: invitee.contractor_name || '',
-          contact_number: invitee.contact_number || '',
+          contact_number: contact_number,
+          phone_display: phone_display, // Field terpisah untuk display
           vehicle_number: invitee.vehicle_number || '',
           company_name: invitee.company_name || '',
           type_of_work: invitee.type_of_work || '',
@@ -184,8 +176,25 @@ export class ContractorInvitingFormPage implements OnInit {
           host_ids: invitee.host_ids || []
         };
       });
+
+      // Update selectedCountry berdasarkan contact_number
+      this.selectedCountry = selectedInvitees.map((invitee: any) => {
+        let contact_number = invitee.contact_number || '';
+        let selectedCountry = '65'; // default
+    
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+        }
+    
+        return {
+          selected_code: selectedCountry
+        };
+      });
+
       this.addInviteeText = 'Add More Invitees';
     }
+    
     // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
     while (this.selectedCountry.length < this.inviteeFormList.length) {
       this.selectedCountry.push({ selected_code: '65' });
@@ -263,22 +272,30 @@ export class ContractorInvitingFormPage implements OnInit {
   
       // Format the name as display_name(given_name)
       const nameFromContact = `${displayName}(${givenName})`.trim();
-      const phoneFromContact = result.contact.phones?.[0].number || '';
+      let phoneFromContact = result.contact.phones?.[0].number || '';
+      
+      // Bersihkan nomor telepon dari karakter non-digit
+      phoneFromContact = phoneFromContact.replace(/\D/g, '');
   
       if (this.currentInviteeIndex !== null) {
         // Populate the fields of the currently selected invitee
         this.inviteeFormList[this.currentInviteeIndex].contractor_name = nameFromContact;
-        this.inviteeFormList[this.currentInviteeIndex].contact_number = phoneFromContact;
+        this.inviteeFormList[this.currentInviteeIndex].phone_display = phoneFromContact;
+        // Update contact_number dengan country code
+        this.updateContactNumber(this.currentInviteeIndex);
       } else {
         // If no invitee is selected, create a new one
         const newInvitee: any = {
           contractor_name: nameFromContact,
-          contact_number: phoneFromContact,
-          vehicle_number: '' // Set this as needed
+          contact_number: '',
+          phone_display: phoneFromContact,
+          vehicle_number: ''
         };
         this.inviteeFormList.push(newInvitee);
-                // Tambahkan entry baru ke selectedCountry
+        // Tambahkan entry baru ke selectedCountry
         this.selectedCountry.push({ selected_code: '65' });
+        // Update contact_number untuk invitee baru
+        this.updateContactNumber(this.inviteeFormList.length - 1);
       }
   
       this.isFormVisible = true; // Show form if there are invitees
@@ -334,6 +351,7 @@ export class ContractorInvitingFormPage implements OnInit {
     const newInvitee: any = { 
       contractor_name: '', 
       contact_number: '', 
+      phone_display: '', // Tambahkan field untuk display
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
@@ -342,7 +360,7 @@ export class ContractorInvitingFormPage implements OnInit {
     };
     
     this.inviteeFormList.push(newInvitee);
-        // Pastikan juga menambahkan item baru ke selectedCountry
+    // Pastikan juga menambahkan item baru ke selectedCountry
     this.selectedCountry.push({ selected_code: '65' });
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
@@ -366,26 +384,36 @@ export class ContractorInvitingFormPage implements OnInit {
   }
 
   selectedCountry: any[] = [];
+  
   onChangeCountryCode(event: any, index: any) {
     this.selectedCountry[index].selected_code = event.target.value;
-    this.inviteeFormList.every((invitee:any) => {
-      if (invitee.contact_number.trim() !== '' && invitee.contact_number.startsWith('6')) {
-        const separatedCode = this.inviteeFormList[index].contact_number.slice(2, 20);
-        // this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + separatedCode;
-        console.log(this.inviteeFormList[index].contact_number);
-      } else {
-        // this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + this.inviteeFormList[index].contact_number;
-        // console.log(this.selectedCountry + this.inviteeFormList[index].contact_number);
-      }
-    });
+    // Update contact_number ketika country code berubah
+    this.updateContactNumber(index);
   }
 
   onChangePhoneNumber(event: any, index: any) {
-    if (event.target.value.length < 4) {
-      this.functionMain.presentToast('Phone is not minimum character', 'danger')
-      return
+    const phoneValue = event.target.value;
+    
+    if (phoneValue.length < 4) {
+      this.functionMain.presentToast('Phone is not minimum character', 'danger');
+      return;
+    }
+    
+    // Update phone_display
+    this.inviteeFormList[index].phone_display = phoneValue;
+    // Update contact_number dengan country code
+    this.updateContactNumber(index);
+  }
+
+  // Method baru untuk update contact_number
+  updateContactNumber(index: any) {
+    const countryCode = this.selectedCountry[index]?.selected_code || '65';
+    const phoneDisplay = this.inviteeFormList[index]?.phone_display || '';
+    
+    if (phoneDisplay.trim() !== '') {
+      this.inviteeFormList[index].contact_number = countryCode + phoneDisplay;
     } else {
-      this.inviteeFormList[index].contact_number = this.selectedCountry[index].selected_code + event.target.value;
+      this.inviteeFormList[index].contact_number = '';
     }
   }
 

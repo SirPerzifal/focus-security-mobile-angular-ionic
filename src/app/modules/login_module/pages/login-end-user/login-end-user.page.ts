@@ -3,11 +3,10 @@ import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 
-import { LoginParams, EstateProfile } from 'src/models/resident/resident.model';
+import { LoginParams } from 'src/models/resident/resident.model';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NotificationService } from 'src/app/service/resident/notification/notification.service';
-import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage/storage.service';
 

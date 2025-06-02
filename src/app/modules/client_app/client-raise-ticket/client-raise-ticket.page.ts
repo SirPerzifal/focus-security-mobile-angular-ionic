@@ -4,6 +4,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 
 @Component({
   selector: 'app-client-raise-ticket',
@@ -23,15 +24,19 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 })
 export class ClientRaiseTicketPage implements OnInit {
 
-  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService, private route: ActivatedRoute) { }
+  constructor(private router: Router, public functionMain: FunctionMainService, private clientMainService: ClientMainService, private route: ActivatedRoute, private blockUnitService: BlockUnitService) { }
 
   ngOnInit() {
     this.loadMenuItems()
     this.functionMain.vmsPreferences().then((value) => {
       this.newTicket.user_id = value.user_id
       this.newTicket.family_id = value.family_id
-      console.log(this.newTicket);
-      
+      this.project_config = value.config
+      if (this.project_config.is_industrial)       {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
     this.route.queryParams.subscribe(params => {
       console.log(params)
@@ -60,6 +65,7 @@ export class ClientRaiseTicketPage implements OnInit {
     }
   }
 
+  project_config: any = {}
   isHome = true
   isData = false
   isNotMain = false
@@ -222,6 +228,10 @@ export class ClientRaiseTicketPage implements OnInit {
       this.newTicket.ir_attachment_mimetype = ''
       this.newTicket.ir_attachment_name = ''
       this.newTicket.summary = ''
+      this.newTicket.block_id = ''
+      this.newTicket.unit_id = ''
+      this.newTicket.host = ''
+      this.Unit = []
       this.fileName = ''
     }
   }
@@ -331,9 +341,19 @@ export class ClientRaiseTicketPage implements OnInit {
   }
 
   createNewTicket() {
+    let errMsg = ''
     console.log(this.newTicket)
+    if (!this.project_config.is_industrial && (!this.newTicket.block_id || !this.newTicket.unit_id)) {
+      errMsg += 'Block and unit are required! \n'
+    }
+    if (this.project_config.is_industrial && (!this.newTicket.host)) {
+      errMsg += 'Host is required! \n'
+    }
     if (!this.newTicket.summary) {
-      this.functionMain.presentToast('Report summary is required!', 'danger')
+      errMsg += 'Report summary is required! \n'
+    }
+    if(errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger')
       return
     }
     this.clientMainService.getApi(this.newTicket, '/client/post/create_ticket').subscribe({
@@ -367,6 +387,68 @@ export class ClientRaiseTicketPage implements OnInit {
     } else {
       this.loadMenuItems().then(() => event.target.complete())
     }
+  }
+
+  choosenBlock = ''
+  Host: any = []
+  Block: any = []
+  Unit: any = []
+
+  onBlockChange(event: any) {
+    this.newTicket.block_id = event.target.value;
+    this.choosenBlock = event.target.value
+    this.Unit = []
+    this.loadUnit()
+    console.log(this.newTicket.block_id)
+  }
+
+  onUnitChange(event: any) {
+    this.newTicket.unit_id = event[0];
+    console.log(this.newTicket.unit_id)
+  }
+
+  onHostChange(event: any) {
+    this.newTicket.host = event[0]
+  }
+
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  async loadUnit() {
+    this.newTicket.unit_id = ''
+    this.blockUnitService.getUnit(this.choosenBlock).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result.map((item: any) => {return {id: item.id, name: item.unit_name}});
+          console.log(response)
+        } else {
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error.result);
+      }
+    });
+  }
+
+  loadHost() {
+    this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
   }
 
 }

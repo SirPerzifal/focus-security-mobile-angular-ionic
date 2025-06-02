@@ -105,7 +105,7 @@
       <div *ngIf="!isLoading && !isNew">
         <div *ngIf="showTicketList.length > 0; else noTicket">
           <div *ngFor="let ticket of showTicketList; let i = index" [ngClass]="'rounded p-5 my-4 mt-4 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
-            <p class="font-bold text-base text-black mb-2">{{ ticket.ticket_name }}</p>
+            <p class="font-bold text-base text-black mb-2">{{ ticket.ticket_name }} - {{ ticket.ticket_type }}</p>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
                 <tr>
@@ -161,6 +161,25 @@
         <option value="" selected disabled hidden>Choose Issue Type</option>
         <option *ngFor="let item of menuItems" [value]="item.id">{{ item.text }}</option>
       </select>
+      <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
+        <label class="text-base"><b>Block</b></label>
+        <select id="blacklist_block"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+          (change)="onBlockChange($event)" [(ngModel)]="newTicket.block_id" [disabled]="false">
+          <option value="" selected disabled hidden>Choose Block</option>
+          <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+        </select>
+      </div>
+      <div class="w-full" *ngIf="!project_config.is_industrial">
+        <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'Select Units'"
+          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'"
+          [isOne]="true"></app-m2m-selection>
+      </div>
+      <div class="w-full" *ngIf="project_config.is_industrial">
+        <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'Select Hosts'"
+          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'"
+          [isOne]="true"></app-m2m-selection>
+      </div>
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base font-bold">Report Summary</p>
       </div>

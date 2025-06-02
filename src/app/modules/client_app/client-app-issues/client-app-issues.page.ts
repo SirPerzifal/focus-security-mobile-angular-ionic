@@ -4,6 +4,7 @@ import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { ReportIssueService } from 'src/app/service/resident/report-issue/report-issue.service';
@@ -15,10 +16,11 @@ import { ReportIssueService } from 'src/app/service/resident/report-issue/report
 })
 export class ClientAppIssuesPage implements OnInit {
 
-  reporterDetailsFrom = {
+  reporterDetailsFrom: any = {
     requestorId: 1,
-    blokId: 1,
-    unitId: 1,
+    block_d: '',
+    unit_id: '',
+    host: '',
     name: '',
     contactNumber: '',
     email: '',
@@ -31,7 +33,7 @@ export class ClientAppIssuesPage implements OnInit {
   extend_mb = false
   typeOfReport: any = []
 
-  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private route: ActivatedRoute) { }
+  constructor(private reportIssueService: ReportIssueService, private toastController: ToastController, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private route: ActivatedRoute, private blockUnitService: BlockUnitService) { }
 
   ngOnInit() {
     console.log("tes");
@@ -60,12 +62,18 @@ export class ClientAppIssuesPage implements OnInit {
         family_id: value.family_id,
         user_id: value.user_id
       }
+      this.project_config = value.config
       this.loadType();
       this.loadTicketFromBackend();
       console.log(this.userData);
-      
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     })
   }
+  project_config: any = {}
 
   onBack() {
     // if (this.isMain) {
@@ -121,6 +129,12 @@ export class ClientAppIssuesPage implements OnInit {
   onSubmit() {
     // Simpan data ke server
     let errMsg = ''
+    if (!this.project_config.is_industrial && (!this.reporterDetailsFrom.block_id || !this.reporterDetailsFrom.unit_id)) {
+      errMsg += 'Block and unit are required! \n'
+    }
+    if (this.project_config.is_industrial && (!this.reporterDetailsFrom.host)) {
+      errMsg += 'Host is required! \n'
+    }
     if (!this.reporterDetailsFrom.typeReport) {
       errMsg += 'Type of issue is required! \n'
     }
@@ -132,18 +146,19 @@ export class ClientAppIssuesPage implements OnInit {
       return
     }
     let params = {
-      type_of_issue: this.reporterDetailsFrom.typeReport,
+      ticket_type_id: this.reporterDetailsFrom.typeReport,
       requestor_id: this.reporterDetailsFrom.requestorId,
       summary: this.reporterDetailsFrom.summaryReport,
-      unit_id: 0,
-      block_id: 0,
+      unit_id: this.reporterDetailsFrom.unit_id,
+      block_id: this.reporterDetailsFrom.block_id,
+      host: this.reporterDetailsFrom.host,
       project_id: this.userData.project_id,
       ir_attachments: this.reporterDetailsFrom.ticketAttachment,
       family_id: this.userData.family_id,
       user_id: this.userData.user_id,
     }
     console.log(params)
-    this.clientMainService.getApi(params, '/resident/post/report_issue').subscribe({
+    this.clientMainService.getApi(params, '/client/post/create_ticket').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -167,6 +182,10 @@ export class ClientAppIssuesPage implements OnInit {
     this.reporterDetailsFrom.ticketAttachment = ''
     this.fileName = ''
     this.reporterDetailsFrom.typeReport = 0
+    this.reporterDetailsFrom.block_id = ''
+    this.reporterDetailsFrom.unit_id = ''
+    this.reporterDetailsFrom.host = ''
+    this.Unit = []
   }
 
   testAddMb(status: boolean = false) {
@@ -272,6 +291,68 @@ export class ClientAppIssuesPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadTicketFromBackend().then(() => event.target.complete())
+  }
+
+  choosenBlock = ''
+  Host: any = []
+  Block: any = []
+  Unit: any = []
+
+  onBlockChange(event: any) {
+    this.reporterDetailsFrom.block_id = event.target.value;
+    this.choosenBlock = event.target.value
+    this.Unit = []
+    this.loadUnit()
+    console.log(this.reporterDetailsFrom.block_id)
+  }
+
+  onUnitChange(event: any) {
+    this.reporterDetailsFrom.unit_id = event[0];
+    console.log(this.reporterDetailsFrom.unit_id)
+  }
+
+  onHostChange(event: any) {
+    this.reporterDetailsFrom.host = event[0]
+  }
+
+  loadBlock() {
+    console.log('hey this is block')
+    this.blockUnitService.getBlock().subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Block = response.result.result;
+          console.log(response)
+        } else {
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
+    console.log(this.Block)
+  }
+
+  async loadUnit() {
+    this.reporterDetailsFrom.unit_id = ''
+    this.blockUnitService.getUnit(this.choosenBlock).subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          this.Unit = response.result.result.map((item: any) => {return {id: item.id, name: item.unit_name}});
+          console.log(response)
+        } else {
+          console.error('Error:', response.result);
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error.result);
+      }
+    });
+  }
+
+  loadHost() {
+    this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
   }
 
 }

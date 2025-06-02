@@ -97,7 +97,7 @@ export class MaVisitorFormPage implements OnInit {
           }
           this.router.navigate(['/home-vms'])
         } else if (results.result.status_code === 405) {
-          this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+          this.functionMain.presentToast(results.result.status_description, 'danger');
           this.router.navigate(['/home-vms'])
         } else {
           this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');

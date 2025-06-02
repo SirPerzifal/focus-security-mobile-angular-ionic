@@ -59,15 +59,6 @@
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6">
-                  <td class="w-[60%] font-bold">Date of Visit</td>
-                  <td class="w-[10%]">:</td>
-                  <td>
-                    {{ historyData.visitor_date ? (historyData.visitor_date |
-                    date: 'dd/MM/yyyy') : '-' }}
-                  </td>
-                  <!-- Menampilkan '-' jika visitor_date kosong -->
-                </tr>
-                <tr class="h-6">
                   <td class="w-[60%] font-bold">Date of Invite</td>
                   <td class="w-[10%]">:</td>
                   <td>
@@ -77,9 +68,22 @@
                   <!-- Menampilkan '-' jika visitor_date kosong -->
                 </tr>
                 <tr class="h-6">
+                  <td class="w-[60%] font-bold">Date of Visit</td>
+                  <td class="w-[10%]">:</td>
+                  <td>
+                    <!-- {{ historyData.visitor_date ? (historyData.visitor_date |
+                    date: 'dd/MM/yyyy') : '-' }} -->
+                    {{ historyData.entry_full_date ? functionMain.convertNewDateTZ(historyData.entry_full_date).split(' ')[0] : '-' }}
+                  </td>
+                  <!-- Menampilkan '-' jika visitor_date kosong -->
+                </tr>
+                <tr class="h-6">
                   <td class="w-[60%] font-bold">Entry Time</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.visitor_entry_time || '-' }}</td>
+                  <td>
+                    <!-- {{ historyData.visitor_entry_time || '-' }} -->
+                    {{ historyData.entry_full_date ? functionMain.convertNewDateTZ(historyData.entry_full_date).split(' ')[1] : '-' }}
+                  </td>
                   <!-- Menampilkan '-' jika visitor_entry_time kosong -->
                 </tr>
                 <tr class="h-6">

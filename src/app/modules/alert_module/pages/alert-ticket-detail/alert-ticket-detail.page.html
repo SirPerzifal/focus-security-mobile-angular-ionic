@@ -18,7 +18,7 @@
           <div class="w-full bg-[var(--ion-color-primary)] p-4 rounded flex flex-col mb-5">
             <div class="flex flex-col mb-5" *ngIf="!isLoadingFirst">
               <span class="text-2xl font-bold text-white">
-                {{ functionMain.returnNone(alert.ticket_name) }} ( {{ functionMain.returnNone(alert.type_os_issue) }} )
+                {{ functionMain.returnNone(alert.ticket_name) }} ({{ functionMain.returnNone(alert.type_os_issue) }})
               </span>
               <span class="text-xl text-white" [innerHtml]="alert.summary" *ngIf="alert.summary"></span>
               <span class="text-xl text-white mb-2">

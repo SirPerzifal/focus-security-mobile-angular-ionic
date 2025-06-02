@@ -140,11 +140,11 @@ export class ClientEmployeesPage implements OnInit {
             this.toggleShowActive()
             this.functionMain.presentToast(`Successfully add new employee!`, 'success');
           } else {
-            this.functionMain.presentToast(`An error occurred while trying to create a new employee!`, 'danger');
+            this.functionMain.presentToast(results.result.status_description, 'danger');
           }
         },
         error: (error) => {
-          this.functionMain.presentToast('An error occurred while trying to create a new employee!', 'danger');
+          this.functionMain.presentToast(error.result.status_description, 'danger');
           console.error(error);
         }
       });

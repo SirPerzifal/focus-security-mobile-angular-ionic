@@ -27,6 +27,7 @@ export class HomePage implements OnInit {
 
   private routerSubscription!: Subscription;
   ngOnInit() {
+    this.initializeBackButtonHandling();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         console.log(event['url'])

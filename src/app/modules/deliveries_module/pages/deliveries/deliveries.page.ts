@@ -224,8 +224,10 @@ export class DeliveriesPage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {
@@ -381,8 +383,10 @@ export class DeliveriesPage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.package_delivery_type === 'multiple' ? false : this.formData.unit, this.selectedHost)
           } else {
@@ -823,26 +827,28 @@ export class DeliveriesPage implements OnInit {
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
-      next: (results) => {
-        if (results.result.status_code === 200) {
+      next: (res) => {
+        if (res.result.status_code === 200) {
           if (openBarrier){
             this.functionMain.presentToast('Successfully Insert New Delivery Data and Opened the Barrier!', 'success');
           } else {
             this.functionMain.presentToast('Successfully Insert New Delivery Data!', 'success');
           }
           this.router.navigate(['home-vms'])
-        } else if (results.result.status_code === 205) {
+        } else if (res.result.status_code === 205) {
           if (openBarrier) {
             this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
           } else {
             this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
           }
           this.router.navigate(['home-vms'])
-        } else if (results.result.status_code === 405) {
-          this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+        } else if (res.result.status_code === 405) {
+          this.functionMain.presentToast(res.result.status_description, 'danger');
           this.router.navigate(['home-vms'])
-        } else if (results.result.status_code === 206) {
-          this.functionMain.banAlert(results.result.status_description, false, this.selectedHost)
+        } else if (res.result.status_code === 407) {
+          this.functionMain.presentToast(res.result.status_description, 'danger');
+        } else if (res.result.status_code === 206) {
+          this.functionMain.banAlert(res.result.status_description, false, this.selectedHost)
         } else {
           this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         }
@@ -858,6 +864,7 @@ export class DeliveriesPage implements OnInit {
   getDriveInContactInfo(contactData: any){
     this.contactUnit = ''
     if (contactData) {
+      this.selectedImage = contactData.visitor_image
       this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {

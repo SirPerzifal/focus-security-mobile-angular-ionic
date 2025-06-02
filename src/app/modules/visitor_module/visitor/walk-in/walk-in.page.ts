@@ -193,8 +193,10 @@ export class WalkInPage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
-            this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
             // this.functionMain.presentToast(res.result.status_description, 'danger');
             this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
@@ -301,8 +303,10 @@ export class WalkInPage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
-            this.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
+          } else if (res.result.status_code === 407) {
+            this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {

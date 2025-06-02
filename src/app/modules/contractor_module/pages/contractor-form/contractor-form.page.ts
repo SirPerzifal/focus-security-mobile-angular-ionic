@@ -295,8 +295,10 @@ export class ContractorFormPage implements OnInit {
             }
             this.router.navigate(['home-vms'])
           } else if (response.result.status_code === 405) {
-            this.functionMain.presentToast('An error occurred while trying to create offence for this alerted visitor!', 'danger');
+            this.functionMain.presentToast(response.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
+          } else if (response.result.status_code === 407) {
+            this.functionMain.presentToast(response.result.status_description, 'danger');
           } else if (response.result.status_code === 206) {
             this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost)
           } else {
