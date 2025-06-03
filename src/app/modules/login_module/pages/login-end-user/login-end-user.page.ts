@@ -242,4 +242,13 @@ export class LoginEndUserPage implements OnInit {
       }
     }
   }
+
+  showForgotPasswordModal: boolean = false;
+  showModalForgotPassword() {
+    this.showForgotPasswordModal = !this.showForgotPasswordModal
+  }
+
+  closeRejectModal() {
+    this.showForgotPasswordModal = !this.showForgotPasswordModal
+  }
 }

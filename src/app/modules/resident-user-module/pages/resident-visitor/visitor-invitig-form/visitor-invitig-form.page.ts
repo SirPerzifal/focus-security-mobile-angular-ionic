@@ -337,11 +337,27 @@ export class VisitorInvitigFormPage implements OnInit {
       this.functionMain.presentToast('Phone is not minimum character', 'danger');
       return;
     }
-    
-    // Update display number
-    this.inviteeFormList[index].contact_number_display = inputValue;
-    // Update full contact number
-    this.updateContactNumber(index);
+    if (inputValue.startsWith('0')) {
+      const readyToInputPhoneNumber = inputValue.slice(1)
+      this.selectedCountry[index].selected_code = '65'
+      this.inviteeFormList[index].contact_number_display = readyToInputPhoneNumber;
+      this.updateContactNumber(index);
+      console.log(readyToInputPhoneNumber, "dari 0");
+    } else if (inputValue.startsWith('6')) {
+      const readyToInputPhoneNumber = inputValue.slice(2)
+      const countryCodeFromContact = inputValue.substring(0, 2);
+      const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+      if (isValidCountryCode) {
+        this.selectedCountry[index].selected_code = countryCodeFromContact
+        console.log(this.selectedCountry[index].selected_code);
+      } else {
+        this.selectedCountry[index].selected_code = '65'
+        console.log(this.selectedCountry[index].selected_code);
+      }
+      this.inviteeFormList[index].contact_number_display = readyToInputPhoneNumber;
+      this.updateContactNumber(index);
+      console.log(readyToInputPhoneNumber, "dari 6");
+    }
   }
 
   navigateToInviteFormHistory() {

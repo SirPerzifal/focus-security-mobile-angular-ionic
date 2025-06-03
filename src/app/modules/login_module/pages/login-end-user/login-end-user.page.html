@@ -66,7 +66,7 @@
           >Stay Logged In</label
         >
       </div>
-      <div>
+      <div (click)="showModalForgotPassword()">
         <a class="text-xs text-blue-500 fsles-bottom hover:underline"
           >Forgot Password?</a
         >
@@ -109,4 +109,21 @@
       </div>
     </div>
   </div>
+
+  <ion-modal
+    id="forgot-password-modal"
+    [isOpen]="showForgotPasswordModal"
+    (didDismiss)="closeRejectModal()"
+  >
+    <ng-template>
+      <div class="wrapper">
+        <div class="w-full">
+          <h2>
+            The forgot password service is currently unavailable. Please contact
+            your administrator for assistance.
+          </h2>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

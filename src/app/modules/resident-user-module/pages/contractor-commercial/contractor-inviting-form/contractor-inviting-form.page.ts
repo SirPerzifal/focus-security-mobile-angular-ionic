@@ -403,11 +403,27 @@ export class ContractorInvitingFormPage implements OnInit {
       this.functionMain.presentToast('Phone is not minimum character', 'danger');
       return;
     }
-    
-    // Update phone_display
-    this.inviteeFormList[index].phone_display = phoneValue;
-    // Update contact_number dengan country code
-    this.updateContactNumber(index);
+    if (phoneValue.startsWith('0')) {
+      const readyToInputPhoneNumber = phoneValue.slice(1)
+      this.selectedCountry[index].selected_code = '65'
+      this.inviteeFormList[index].phone_display = readyToInputPhoneNumber;
+      this.updateContactNumber(index);
+      console.log(readyToInputPhoneNumber, "dari 0");
+    } else if (phoneValue.startsWith('6')) {
+      const readyToInputPhoneNumber = phoneValue.slice(2)
+      const countryCodeFromContact = phoneValue.substring(0, 2);
+      const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+      if (isValidCountryCode) {
+        this.selectedCountry[index].selected_code = countryCodeFromContact
+        console.log(this.selectedCountry[index].selected_code);
+      } else {
+        this.selectedCountry[index].selected_code = '65'
+        console.log(this.selectedCountry[index].selected_code);
+      }
+      this.inviteeFormList[index].phone_display = readyToInputPhoneNumber;
+      this.updateContactNumber(index);
+      console.log(readyToInputPhoneNumber, "dari 6");
+    }
   }
 
   // Method baru untuk update contact_number

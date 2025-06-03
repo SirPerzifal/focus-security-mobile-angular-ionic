@@ -58,28 +58,27 @@
       ></app-image-zoom>
     </div>
     <div
-      class="flex flex-col mt-4 space-y-2"
+      class="flex flex-col mt-4"
       *ngIf="ticketDetail.ticket_status !== 'Solved'"
     >
       <div class="flex flex-col items-start">
-        <p class="text-base font-bold">Content</p>
+        <p class="text-base cw-3:text-sm font-bold">Content</p>
         <textarea
-        id="client_ticket_detail_summary"
-        placeholder=""
-        (focus)="testAddMb(true)"
-        (blur)="testAddMb(false)"
-        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
-        type="text"
-        [(ngModel)]="replyForm.body"
-        name="entryMessage"
-      >
-      </textarea>
+          id="client_ticket_detail_summary"
+          placeholder=""
+          (focus)="testAddMb(true)"
+          (blur)="testAddMb(false)"
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+          type="text"
+          [(ngModel)]="replyForm.body"
+          name="entryMessage"
+        >
+        </textarea>
       </div>
-      
 
-      <div class="w-full mt-1">
+      <div class="w-full">
         <div class="flex flex-row justify-start">
-          <p class="text-base font-bold">Attachment</p>
+          <p class="text-base cw-3:text-sm font-bold">Attachment</p>
         </div>
         <div
           (click)="chooseWhereToChoose()"
@@ -148,7 +147,7 @@
 
       <button
         (click)="submitReply(false)"
-        class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12"
+        class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12 mt-2"
       >
         Reply
       </button>
@@ -164,7 +163,11 @@
         >
           <div class="w-1/5 flex flex-row justify-start" *ngIf="message.is_vms">
             <div class="rounded-full overflow-hidden w-12 h-12">
-              <img class="w-12 h-12" [src]="'assets/icon/exc-client/admin.png'" alt="Admin" />
+              <img
+                class="w-12 h-12"
+                [src]="'assets/icon/exc-client/admin.png'"
+                alt="Admin"
+              />
             </div>
           </div>
           <div
