@@ -64,6 +64,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   showPets: boolean = false;
 
   imageProfile: string = '';
+  familyId: number = 0;
   userName: string = '';
   userType: string = '';
   inputForm: InputForm = {
@@ -216,6 +217,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         if ( value ) {
           const estate = JSON.parse(value) as Estate;
           this.imageProfile = estate.image_profile;
+          this.familyId = estate.family_id;
           this.userName = estate.family_name;
           this.userType = estate.record_type;
           if (this.userType === 'industrial') {
@@ -372,6 +374,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             this.imageProfile = estate.image_profile;
+            this.familyId = estate.family_id;
             this.userName = estate.family_name;
             this.userType = estate.record_type;
             if (this.userType === 'industrial') {
@@ -618,6 +621,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             if ( value ) {
               const estate = JSON.parse(value) as Estate;
               this.imageProfile = estate.image_profile;
+              this.familyId = estate.family_id;
               this.userName = estate.family_name;
               this.userType = estate.record_type;
               if (this.userType === 'industrial') {
@@ -813,6 +817,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   async chooseEstateClick(estate: any) {
     // Mengubah estate menjadi string JSON
     const estateString = JSON.stringify(estate);
+    this.getNotificationPermission(estate.family_id);
     // Melakukan encoding ke Base64
     const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
     this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
@@ -820,8 +825,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
-            this.getNotificationPermission(estate.family_id);
             this.imageProfile = estate.image_profile;
+            this.familyId = estate.family_id;
             this.userName = estate.family_name;
             this.userType = estate.record_type;
             if (this.userType === 'industrial') {
@@ -956,14 +961,14 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           }
         })
         this.webRtcService.initializeSocket();
+        this.showEstate = false;
+        this.showMain = true;
       })
       if (estate.unit_id) {
         this.activeUnit = estate.unit_id;
       } else {
         this.activeUnit = estate.family_id;
       }
-      this.showEstate = false;
-      this.showMain = true;
     })
   }
 
@@ -1011,10 +1016,10 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           if (token.value) {
             this.fcmToken = token.value;
             this.mainResident.endpointCustomProcess({
+              previous_family_id: this.familyId,
               family_id: familyId,
               fcm_token: token.value
             }, '/set/fcm_token').subscribe((response: any) => {
-              console.log(response);
             })
           } else {
             cleanupListeners();
