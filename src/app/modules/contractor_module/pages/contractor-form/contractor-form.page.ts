@@ -407,15 +407,35 @@ export class ContractorFormPage implements OnInit {
 
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.contractorVehicleNumberInput.value = randomVhc
-    // console.log("Vehicle Refresh", randomVhc)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.formData.contact_number = value.contact_number ? value.contact_number : ''
+        this.formData.contractor_name = value.visitor_name ? value.visitor_name  : ''
+        this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
+        this.selectedImage = value.visitor_image
+        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+        this.contactUnit = ''
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          if (value.industrial_host_ids) {
+            this.contactHost = value.industrial_host_ids ? value.industrial_host_ids : ''
+          } else {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          }
+        } else {
+          if (value.block_id) {
+            this.selectedBlock = value.block_id
+            this.loadUnit().then(() => {
+              setTimeout(() => {
+                this.contactUnit = value.unit_id
+              }, 300)
+            })
+          }
+        }
+      }
     })
   }
 
@@ -441,7 +461,11 @@ export class ContractorFormPage implements OnInit {
         this.temp_type = this.identificationType
       }
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        if (contactData.industrial_host_ids) {
+          this.contactHost = contactData.industrial_host_ids ? contactData.industrial_host_ids : ''
+        } else {
+          this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        }
       } else {
         if (contactData.block_id) {
           this.selectedBlock = contactData.block_id

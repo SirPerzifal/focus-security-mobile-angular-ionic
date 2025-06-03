@@ -370,10 +370,15 @@ export class WalkInPage implements OnInit {
 
   toggleShowDrive() {
     if (!this.showQrTrans && !this.showWalkTrans) {
-      if (this.showWalk && !this.isFromScan) {
+      console.log(this.isFromScan)
+      if (!this.showDrive && !this.isFromScan) {
         this.resetForm() 
+        this.refreshVehicle()
       }
       if (this.showQr && this.showClose) {
+        if (!this.isFromScan){
+          this.refreshVehicle()
+        }
         this.stopScanner()
       }
       this.showDriveTrans = true
@@ -382,9 +387,6 @@ export class WalkInPage implements OnInit {
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
-        if (!this.isFromScan){
-          this.refreshVehicle()
-        }
       }, 300)
     }
   }
@@ -446,13 +448,30 @@ export class WalkInPage implements OnInit {
 
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.formData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.formData.visitor_contact_no = value.contact_number ? value.contact_number : ''
+        this.formData.visitor_name = value.visitor_name ? value.visitor_name  : ''
+        this.selectedImage = value.visitor_image
+        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+        this.contactUnit = ''
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+        } else {
+          if (value.block_id) {
+            this.formData.block = value.block_id
+            this.loadUnit().then(() => {
+              setTimeout(() => {
+                this.contactUnit = value.unit_id
+              }, 300)
+            })
+          }
+        }
+      }
     })
     // console.log("Vehicle Refresh", randomVhc)
   }

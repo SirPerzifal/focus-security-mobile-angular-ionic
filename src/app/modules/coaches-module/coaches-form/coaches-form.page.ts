@@ -131,13 +131,23 @@ export class CoachesFormPage implements OnInit {
   vehicle_number = ''
 
 
-  refreshVehicle() {
+  refreshVehicle(is_click: boolean = false) {
     // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
     // let front = ['SBA', 'SBS', 'SAA']
     // let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.schedule.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.schedule.visitor_contact_no = value.contact_number ? value.contact_number : ''
+        this.schedule.visitor_name = value.visitor_name ? value.visitor_name  : ''
+        this.schedule.visitor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
+        this.selectedImage = value.visitor_image
+        if (this.project_config.is_industrial) {
+        } else {
+          
+        }
+      }
     })
   }
 

@@ -195,15 +195,29 @@ export class UnregisteredResidentCarPage implements OnInit {
     toast.present();
   }
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.formData.vehicle_number = randomVhc
-    // console.log("Vehicle Refresh", randomVhc)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.formData.project_id).then((value) => {
       console.log(value)
       this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.formData.contact_number = value.contact_number ? value.contact_number : ''
+        this.formData.name = value.visitor_name ? value.visitor_name  : ''
+        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+        this.contactUnit = ''
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+        } else {
+          if (value.block_id) {
+            this.formData.block_id = value.block_id
+            this.loadUnit().then(() => {
+              setTimeout(() => {
+                this.contactUnit = value.unit_id
+              }, 300)
+            })
+          }
+        }
+      }
     })
   }
 

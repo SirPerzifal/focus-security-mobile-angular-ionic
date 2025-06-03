@@ -139,22 +139,35 @@ export class EmergencyModulePage implements OnInit {
       vehicle_type: '',
       project_id: this.project_id
     }
-    this.refreshVehicle()
     this.contactUnit = ''
     this.contactHost = ''
     this.selectedHost = ''
     this.pass_number = ''
+    this.refreshVehicle()
   }
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.formData.vehicle_number = randomVhc
-    // console.log("Vehicle Refresh", randomVhc)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.formData.contact_number = value.contact_number ? value.contact_number : ''
+        this.formData.officer_name = value.visitor_name ? value.visitor_name  : ''
+        this.contactUnit = ''
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+        } else {
+          if (value.block_id) {
+            this.formData.block_id = value.block_id
+            this.loadUnit().then(() => {
+              setTimeout(() => {
+                this.contactUnit = value.unit_id
+              }, 300)
+            })
+          }
+        }
+      }
     })
   }
 

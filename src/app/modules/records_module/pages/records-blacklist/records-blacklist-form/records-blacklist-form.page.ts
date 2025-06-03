@@ -20,26 +20,45 @@ export class RecordsBlacklistFormPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { record: any[], is_ban_record: boolean, type: string, is_ban_notice: boolean };
     console.log(state)
-    if (state) {
-      this.unitShow = false
-      this.record = state.record
-      console.log(this.record)
-      this.choosenBlock = this.record.block_id
-      this.visitor_type = state.type
-      this.is_ban_visitor = state.is_ban_record
-      this.is_ban_notice = state.is_ban_notice
-      this.is_readonly = true
-      if (this.record.industrial_host_id) {
-        console.log(this.record.industrial_host_id)
-        this.loadHost().then(() => {
-          setTimeout(() => {
-            this.contactHost = this.record.industrial_host_id
-            console.log(this.contactHost)
-          }, 300)
+    this.loadProjectName().then(() => {
+      if (state) {
+        this.unitShow = false
+        this.record = state.record
+        console.log(this.record)
+        this.choosenBlock = this.record.block_id
+        this.visitor_type = state.type
+        this.is_ban_visitor = state.is_ban_record
+        this.is_ban_notice = state.is_ban_notice
+        this.is_readonly = true
+        if (this.record.industrial_host_id) {
+          console.log(this.record.industrial_host_id)
+          this.loadHost().then(() => {
+            setTimeout(() => {
+              this.contactHost = this.record.industrial_host_id
+              console.log(this.contactHost)
+            }, 300)
+            this.formData = {
+              reason: '',
+              block_id: '',
+              unit_id: '',
+              contact_no: this.record.contact_number,
+              vehicle_no: this.record.vehicle_number,
+              visitor_name: this.record.visitor_name ? this.record.visitor_name : this.record.offender_name,
+              last_entry_date_time: this.record.entry_datetime,
+              ban_image: '',
+              banned_by: '',
+              project_id: this.formData.project_id
+            }
+    
+          })
+        }
+        this.loadUnit().then(() => {
+          console.log("TEEESSS")
+          this.contactUnit = this.record.unit_id
           this.formData = {
             reason: '',
-            block_id: '',
-            unit_id: '',
+            block_id: this.record.block_id,
+            unit_id: this.record.unit_id,
             contact_no: this.record.contact_number,
             vehicle_no: this.record.vehicle_number,
             visitor_name: this.record.visitor_name ? this.record.visitor_name : this.record.offender_name,
@@ -48,30 +67,13 @@ export class RecordsBlacklistFormPage implements OnInit {
             banned_by: '',
             project_id: this.formData.project_id
           }
-  
         })
+        
+      } else {
+        this.unitShow = true
+        this.refreshVehicle()
       }
-      this.loadUnit().then(() => {
-        console.log("TEEESSS")
-        this.contactUnit = this.record.unit_id
-        this.formData = {
-          reason: '',
-          block_id: this.record.block_id,
-          unit_id: this.record.unit_id,
-          contact_no: this.record.contact_number,
-          vehicle_no: this.record.vehicle_number,
-          visitor_name: this.record.visitor_name ? this.record.visitor_name : this.record.offender_name,
-          last_entry_date_time: this.record.entry_datetime,
-          ban_image: '',
-          banned_by: '',
-          project_id: this.formData.project_id
-        }
-      })
-      
-    } else {
-      this.unitShow = true
-      this.refreshVehicle()
-    }
+    })
   }
 
   record: any
@@ -171,16 +173,29 @@ export class RecordsBlacklistFormPage implements OnInit {
     })
   }
 
-  refreshVehicle() {
+  refreshVehicle(is_click: any = false) {
     if ((!this.is_ban_visitor && !this.is_ban_notice) || !this.record.vehicle_number ){
-      // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-      // let front = ['SBA', 'SBS', 'SAA']
-      // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-      // this.formData.vehicle_no = randomVhc
-      // console.log("Vehicle Refresh", randomVhc)
       this.functionMain.getLprConfig(this.project_id).then((value) => {
         console.log(value)
         this.formData.vehicle_no = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.formData.contact_no = value.contact_number ? value.contact_number : ''
+          this.formData.visitor_name = value.visitor_name ? value.visitor_name  : ''
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.formData.block_id = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
+          }
+        }
       })
     }
   }

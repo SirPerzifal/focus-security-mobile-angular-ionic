@@ -20,7 +20,9 @@
       (click)="onBack()"></ion-icon>
   </div>
   <!-- CONTENT -->
-  
+  <div class="flex justify-end items-end mx-4 mt-2">
+    <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
+  </div>
   <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
     <ion-spinner name="dots"></ion-spinner>
   </div> -->
@@ -28,7 +30,7 @@
     <app-modal-loading class="mt-4"/>
   </div>
   <div *ngIf="!isLoading">
-    <div class="px-5 text-center mb-24" *ngIf="Notifications.length > 0; else noNotification">
+    <div class="mx-4 text-center mb-24" *ngIf="Notifications.length > 0; else noNotification">
       <div class="mt-4 space-y-4">
         <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
           <div class="flex justify-between mb-1 text-sm">

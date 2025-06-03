@@ -26,18 +26,21 @@ export class ClientNotificationPage implements OnInit {
   async loadNotification(){
     this.isLoading = true
     this.functionMain.vmsPreferences().then((value: any) => {
-      this.clientMainService.getApi({}, '/client/get/notifications').subscribe({
+      this.clientMainService.getApi({page: this.currentPage, limit: this.functionMain.limitHistory}, '/client/get/notifications').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code == 200) {
             this.Notifications = results.result.notifications
             this.filteredNotifications = this.Notifications
+            this.pagination = results.result.pagination
           } else {
+            this.pagination = {}
             this.functionMain.presentToast(`An error occurred while loading notifications!`, 'danger');
           }
           this.isLoading = false
         },
         error: (error) => {
+          this.pagination = {}
           this.functionMain.presentToast('An error occurred while loading notifications!', 'danger');
           console.error(error);
           this.isLoading = false
@@ -55,5 +58,14 @@ export class ClientNotificationPage implements OnInit {
     this.loadNotification().then(() => event.target.complete())
   }
 
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.loadNotification()
+  }
 }
 

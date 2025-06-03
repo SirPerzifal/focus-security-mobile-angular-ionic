@@ -283,15 +283,31 @@ export class RecordsWheelClampedNewPage implements OnInit {
     this.modalController.dismiss(false);
   }
 
-  refreshVehicle() {
+  refreshVehicle(is_click: boolean = false) {
     if (!this.isVehicleNumberReadonly) {
-      // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-      // let front = ['SBA', 'SBS', 'SAA']
-      // let randomVhc = front[Math.floor(Math.random() * front.length)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-      // this.vehicleNumber = randomVhc
       this.functionMain.getLprConfig(this.project_id).then((value) => {
         console.log(value)
         this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.issueContact = value.contact_number ? value.contact_number : ''
+          this.issueName = value.visitor_name ? value.visitor_name  : ''
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            setTimeout(() => {
+              this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+            }, 300)
+          } else {
+            if (value.block_id) {
+              this.blockId = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
+          }
+        }
       })
     }
   }

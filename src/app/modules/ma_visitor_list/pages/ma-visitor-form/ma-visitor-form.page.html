@@ -107,7 +107,7 @@
               ></app-text-input>
             </div>
             <div class="h-25 flex flex-col justify-end">
-              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
             </div>
           </div>
           <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in' && Camera.length > 0">

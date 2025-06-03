@@ -285,14 +285,21 @@ export class PickUpPagePage implements OnInit {
   
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.vehicleNumber = randomVhc
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+        } else {
+          if (value.block_id) {
+            this.blkLocation = value.block_id
+          }
+        }
+      }
     })
   }
 
@@ -328,7 +335,7 @@ export class PickUpPagePage implements OnInit {
 
   identificationType = ''
   nric_value = ''
-  selectedNric = ''
+  selectedNric: any = ''
   pass_number = ''
 
   checkAlert(alert_data: any, openBarrier: boolean) {

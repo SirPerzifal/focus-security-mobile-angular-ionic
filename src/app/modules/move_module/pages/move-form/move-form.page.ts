@@ -288,15 +288,17 @@ export class MoveFormPage implements OnInit {
 
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.vehicle_number = randomVhc
-    // console.log("Vehicle Refresh", randomVhc)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.contact_number = value.contact_number ? value.contact_number : ''
+        this.contractor_name = value.visitor_name ? value.visitor_name  : ''
+        this.selectedImage = value.visitor_image
+        this.identificationType = value.identification_type ? value.identification_type : ''
+        this.nric_value = value.identification_number ? value.identification_number : '' 
+      }
     })
   }
 

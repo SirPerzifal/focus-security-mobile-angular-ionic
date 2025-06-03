@@ -103,11 +103,12 @@ export class ClientApprovalsPage implements OnInit {
       this.approval_name = menu.text
     } else {
       this.activeApprovals = []
+      this.closedApprovals = []
       this.showApprovals = []
+      this.pagination = {}
       this.approval_type = menu.route
       this.approval_name = menu.text
       console.log(menu.route)
-      this.loadApproval()
       this.toggleShowActive()
     }
   }
@@ -117,27 +118,42 @@ export class ClientApprovalsPage implements OnInit {
   async loadApproval(){
     this.isLoading = true
     console.log(this.approval_type)
-    this.clientMainService.getApi({record_list: this.approval_type, project_id: this.project_id}, '/client/get/approval_list').subscribe({
+    let params = {}
+    if (this.isActive) {
+      params = {record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
+    } else {
+      params = {record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+    }
+    this.clientMainService.getApi(params, '/client/get/approval_list').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
-          if (results.result.booking.length > 0){
+          if (this.isActive) {
+            this.activePagination = results.result.pagination
+            this.pagination = this.activePagination
             this.activeApprovals = results.result.booking
-            if (this.isActive) {
-              this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
-            } else {
-              this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) || ['approved', 'rejected'].includes(approval.appeal_status) )
-              this.applyDateFilter()
-            }
+            this.showApprovals = this.activeApprovals
           } else {
+            this.closedPagination = results.result.pagination
+            this.pagination = this.closedPagination
+            this.closedApprovals = results.result.booking
+            this.showApprovals = this.closedApprovals
           }
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
+          if (this.isActive) {
+            this.activePagination = {}
+            this.pagination = this.activePagination
+          } else {
+            this.closedPagination = {}
+            this.pagination = this.closedPagination
+          }
           this.functionMain.presentToast(`Failed!`, 'danger');
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
@@ -165,6 +181,7 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   activeApprovals: any = []
+  closedApprovals: any = []
   showApprovals: any = []
 
   isActive = true
@@ -173,13 +190,21 @@ export class ClientApprovalsPage implements OnInit {
   toggleShowActive() {
     this.isClosed = false
     this.isActive = true
-    this.showApprovals = this.activeApprovals.filter((approval: any) => ['pending_approval', 'requested'].includes(approval.states) || ['issued'].includes(approval.appeal_status) )
+    this.pagination = this.activePagination
+    this.showApprovals = this.activeApprovals
+    if (this.activeApprovals.length == 0) {
+      this.loadApproval()
+    }
   }
 
   toggleShowClosed() {
     this.isActive = false
     this.isClosed = true
-    this.showApprovals = this.activeApprovals.filter((approval: any) => ['rejected', 'cancel', 'approved'].includes(approval.states) || ['approved', 'rejected'].includes(approval.appeal_status) )
+    this.pagination = this.closedPagination
+    this.showApprovals = this.closedApprovals
+    if (this.closedApprovals.length == 0) {
+      this.loadApproval()
+    }
   }
 
   onStartDateChange(value: Event) {
@@ -198,26 +223,29 @@ export class ClientApprovalsPage implements OnInit {
   endDateFilter = ''
 
   applyDateFilter() {
-    this.showApprovals = this.activeApprovals.filter((approval: any) => {
-      const approvalDate = new Date(this.approval_type =='overnight' ? approval.start_date : approval.application_date )
+    // this.showApprovals = this.activeApprovals.filter((approval: any) => {
+    //   const approvalDate = new Date(this.approval_type =='overnight' ? approval.start_date : approval.application_date )
 
-      const approvalType = ['rejected', 'cancel', 'approved'].includes(approval.states)
+    //   const approvalType = ['rejected', 'cancel', 'approved'].includes(approval.states)
 
-      const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
-      if (startDate) {
-        startDate.setHours(0, 0, 0, 0);
-      }
-      if (endDate) {
-        endDate.setHours(23, 59, 59, 59);
-      }
-      // Cek kondisi filtering
-      const isAfterStartDate = startDate ? approvalDate >= startDate : true
-      const isBeforeEndDate = endDate ? approvalDate <= endDate : true
+    //   if (startDate) {
+    //     startDate.setHours(0, 0, 0, 0);
+    //   }
+    //   if (endDate) {
+    //     endDate.setHours(23, 59, 59, 59);
+    //   }
+    //   // Cek kondisi filtering
+    //   const isAfterStartDate = startDate ? approvalDate >= startDate : true
+    //   const isBeforeEndDate = endDate ? approvalDate <= endDate : true
 
-      return isAfterStartDate && isBeforeEndDate && approvalType;
-    });
+    //   return isAfterStartDate && isBeforeEndDate && approvalType;
+    // });
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadApproval()
   }
 
   resetFilter() {
@@ -458,5 +486,17 @@ export class ClientApprovalsPage implements OnInit {
       })
     }
     event.target.complete()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+  activePagination: any = {}
+  closedPagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.loadApproval()
   }
 }

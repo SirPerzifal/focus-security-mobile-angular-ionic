@@ -113,15 +113,14 @@ export class MaVisitorFormPage implements OnInit {
     });
   }
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.record.vehicle_number = randomVhc
-    // console.log("Vehicle Refresh", randomVhc)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.record.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.record.contact_no = value.contact_number ? value.contact_number : ''
+        this.record.name = value.visitor_name ? value.visitor_name  : ''        
+      }
     })
   }
 

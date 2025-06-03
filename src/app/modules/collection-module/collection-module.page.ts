@@ -129,13 +129,13 @@ export class CollectionModulePage implements OnInit {
     if (!this.showWalkTrans){
       if(!this.showDrive){
         this.resetForm()
+        this.refreshVehicle()
       }
       this.showDriveTrans = true
       this.showWalk = false;
       setTimeout(()=>{
         this.showDrive = true;
         this.showDriveTrans = false
-        this.refreshVehicle()
       }, 300)
     }
   }
@@ -436,15 +436,32 @@ export class CollectionModulePage implements OnInit {
 
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        this.driveInFormData.visitor_contact_no = value.contact_number ? value.contact_number : ''
+        this.driveInFormData.visitor_name = value.visitor_name ? value.visitor_name  : ''
+        this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
+        this.selectedImage = value.visitor_image
+        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+        this.contactUnit = ''
+        this.contactHost = ''
+        if (this.project_config.is_industrial) {
+          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+        } else {
+          if (value.block_id) {
+            this.driveInFormData.block = value.block_id
+            this.loadUnit().then(() => {
+              setTimeout(() => {
+                this.contactUnit = value.unit_id
+              }, 300)
+            })
+          }
+        }
+      }
     })
-    // console.log("Vehicle Refresh", randomVhc)
   }
 
   contactUnit = ''

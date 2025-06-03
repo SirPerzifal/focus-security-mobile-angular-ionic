@@ -288,7 +288,6 @@ export class DeliveriesPage implements OnInit {
     };
     this.pass_number = ''
     this.selectedImage = ''
-    this.refreshVehicle()
   }
 
   onSubmitPackage(openBarrier: boolean = false, camera_id: string = '') {
@@ -579,7 +578,7 @@ export class DeliveriesPage implements OnInit {
       this.food_delivery_type = ''
     } else {
       this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
-      if (selectedButton.text == 'drive_in') {
+      if (selectedButton.text == 'DRIVE IN') {
         this.refreshVehicle()
       }
     }
@@ -687,16 +686,44 @@ export class DeliveriesPage implements OnInit {
 
   vehicle_number = ''
 
-  refreshVehicle() {
-    // let alphabet = 'ABCDEFGHIJKLEMNOPQRSTUVWXYZ';
-    // let front = ['SBA', 'SBS', 'SAA']
-    // let randomVhc = front[Math.floor(Math.random() * 3)] + ' ' + Math.floor(1000 + Math.random() * 9000) + ' ' + alphabet[Math.floor(Math.random() * alphabet.length)];
-    // this.formData.vehicle_number = randomVhc
-    // console.log("Vehicle Refresh", this.formData.vehicle_number)
+  refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       this.otherDeliveryForm.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
       this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+      if (!is_click) {
+        if (this.otherDeliveries) {
+          console.log("SHOW OTHER")
+          this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
+          this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
+          this.selectedImage = value.visitor_image
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (value.industrial_host_id) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          }
+        } else {
+          console.log("SHOW PACKAGE")
+          this.formData.contact_number = value.contact_number ? value.contact_number : ''
+          this.selectedImage = value.visitor_image
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.formData.block = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
+          }
+        } 
+      }
     })
   }
 
@@ -896,7 +923,6 @@ export class DeliveriesPage implements OnInit {
       }
       this.showWalkTrans = true
       this.showDrive = false;
-      this.contactHost = ''
       this.showForm = false
       setTimeout(() => {
         this.showForm = true
@@ -908,18 +934,17 @@ export class DeliveriesPage implements OnInit {
 
   toggleShowDrive() {
     if (!this.showWalkTrans) {
-      if (this.showWalk) {
-        this.resetForm() 
+      if (!this.showDrive) {
+        this.resetForm()
+        this.refreshVehicle()
       }
       this.showDriveTrans = true
       this.showWalk = false;
-      this.contactHost = ''
       this.showForm = false
       setTimeout(() => {
         this.showForm = true
         this.showDrive = true;
         this.showDriveTrans = false
-        this.refreshVehicle()
       }, 300)
     }
   }

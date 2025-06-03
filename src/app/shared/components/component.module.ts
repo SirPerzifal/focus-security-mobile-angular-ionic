@@ -31,6 +31,7 @@ import { Base64FileZoomComponent } from './base64-file-zoom/base64-file-zoom.com
 import { NricScanInputComponent } from './nric-scan-input/nric-scan-input.component';
 import { ModalLoadingComponent } from './modal-loading/modal-loading.component';
 import { InputImagePreviewComponent } from './input-image-preview/input-image-preview.component';
+import { ClientPaginationComponent } from './client-pagination/client-pagination.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { InputImagePreviewComponent } from './input-image-preview/input-image-pr
     NricScanInputComponent,
     ModalLoadingComponent,
     InputImagePreviewComponent,
+    ClientPaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -91,6 +93,7 @@ import { InputImagePreviewComponent } from './input-image-preview/input-image-pr
     NricScanInputComponent,
     ModalLoadingComponent,
     InputImagePreviewComponent,
+    ClientPaginationComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
