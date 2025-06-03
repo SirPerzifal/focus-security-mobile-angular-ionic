@@ -6,7 +6,6 @@ import { Preferences } from '@capacitor/preferences';
 import { LoginParams } from 'src/models/resident/resident.model';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { NotificationService } from 'src/app/service/resident/notification/notification.service';
 import { Platform } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage/storage.service';
 
@@ -31,7 +30,6 @@ export class LoginEndUserPage implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private notificationService: NotificationService,
     private functionMain: FunctionMainService,
     private platform: Platform,
     private storage: StorageService,
@@ -109,20 +107,6 @@ export class LoginEndUserPage implements OnInit {
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
             this.fcmToken = token.value;
-            this.notificationService.registerNotification(token.value).subscribe({
-              next: () => {
-                cleanupListeners();
-                resolve(token.value);
-              },
-              error: (err) => {
-                this.functionMain.presentToast(
-                  'An error occurred while registering token push notification',
-                  'danger'
-                );
-                cleanupListeners();
-                resolve(''); // Resolve dengan string kosong untuk tetap melanjutkan proses login
-              },
-            });
           } else {
             cleanupListeners();
             resolve(''); // Resolve dengan string kosong jika token kosong

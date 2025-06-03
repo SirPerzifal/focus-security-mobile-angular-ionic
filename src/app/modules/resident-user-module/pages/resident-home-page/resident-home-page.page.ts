@@ -412,6 +412,15 @@ export class ResidentHomePagePage implements OnInit {
 
   async getNotificationPermission(familyId: number): Promise<string> {
     try {
+      // Cek jika berjalan di simulator
+      const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
+      
+      // Skip proses notifikasi jika di simulator
+      if (isSimulator) {
+        console.log('Running on iOS simulator, skipping push notification setup');
+        return '';
+      }
+      
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');
         return '';
@@ -420,13 +429,22 @@ export class ResidentHomePagePage implements OnInit {
       const permission = await PushNotifications.requestPermissions();
   
       if (permission.receive !== 'granted') {
-        throw new Error('Notification permission not granted');
+        console.log('Notification permission not granted');
+        return '';
       }
   
       PushNotifications.register();
   
       return new Promise((resolve, reject) => {
+        // Set timeout untuk menghindari promise yang tidak pernah resolve
+        const timeout = setTimeout(() => {
+          cleanupListeners();
+          console.log('FCM registration timed out');
+          resolve(''); // Resolve dengan string kosong jika timeout
+        }, 10000); // Timeout setelah 10 detik
+        
         const cleanupListeners = () => {
+          clearTimeout(timeout);
           PushNotifications.removeAllListeners();
         };
   
@@ -441,18 +459,19 @@ export class ResidentHomePagePage implements OnInit {
             })
           } else {
             cleanupListeners();
-            reject('FCM token is empty');
+            resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
   
         PushNotifications.addListener('registrationError', (error) => {
           cleanupListeners();
-          reject('Push notification registration failed: ' + error);
+          console.error('Push notification registration error:', error);
+          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
         });
       });
     } catch (err) {
       console.error('Push Notification Error:', err);
-      return '';
+      return ''; // Return string kosong untuk melanjutkan proses login
     }
   }
 }

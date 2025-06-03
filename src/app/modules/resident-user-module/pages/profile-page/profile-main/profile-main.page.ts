@@ -4,7 +4,7 @@ import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -183,7 +183,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     private storage: StorageService,
     private router: Router,
     private mainResident: MainApiResidentService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: any };
@@ -819,6 +820,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
+            this.getNotificationPermission(estate.family_id);
             this.imageProfile = estate.image_profile;
             this.userName = estate.family_name;
             this.userType = estate.record_type;
@@ -965,8 +967,19 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     })
   }
 
+  fcmToken: string = '';
+
   async getNotificationPermission(familyId: number): Promise<string> {
     try {
+      // Cek jika berjalan di simulator
+      const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
+      
+      // Skip proses notifikasi jika di simulator
+      if (isSimulator) {
+        console.log('Running on iOS simulator, skipping push notification setup');
+        return '';
+      }
+      
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');
         return '';
@@ -975,18 +988,28 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       const permission = await PushNotifications.requestPermissions();
   
       if (permission.receive !== 'granted') {
-        throw new Error('Notification permission not granted');
+        console.log('Notification permission not granted');
+        return '';
       }
   
       PushNotifications.register();
   
       return new Promise((resolve, reject) => {
+        // Set timeout untuk menghindari promise yang tidak pernah resolve
+        const timeout = setTimeout(() => {
+          cleanupListeners();
+          console.log('FCM registration timed out');
+          resolve(''); // Resolve dengan string kosong jika timeout
+        }, 10000); // Timeout setelah 10 detik
+        
         const cleanupListeners = () => {
+          clearTimeout(timeout);
           PushNotifications.removeAllListeners();
         };
   
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
+            this.fcmToken = token.value;
             this.mainResident.endpointCustomProcess({
               family_id: familyId,
               fcm_token: token.value
@@ -995,18 +1018,19 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             })
           } else {
             cleanupListeners();
-            reject('FCM token is empty');
+            resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
   
         PushNotifications.addListener('registrationError', (error) => {
           cleanupListeners();
-          reject('Push notification registration failed: ' + error);
+          console.error('Push notification registration error:', error);
+          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
         });
       });
     } catch (err) {
       console.error('Push Notification Error:', err);
-      return '';
+      return ''; // Return string kosong untuk melanjutkan proses login
     }
   }
 
