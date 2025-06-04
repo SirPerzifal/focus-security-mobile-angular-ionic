@@ -63,7 +63,7 @@
             (click)="toggleShowNew()"></app-visitor-button>
         </div>
       </div>
-      <div class="flex flex-col justify-between mt-4 space-y-2" *ngIf="isClosed">
+      <div class="flex flex-col justify-between mt-4" *ngIf="isClosed">
         <!-- <div class="flex flex-row justify-start">
           <p class="text-base font-bold">Group By</p>
         </div>
@@ -76,35 +76,37 @@
             <option value="Delivery">Delivery</option>
           </select>
         </div> -->
-        <div class="text-base font-bold">Issued Date</div>
+        <div class="text-base font-bold flex flex-row justify-between">
+          <u class="text-base font-bold">Issued Date</u>
+          <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+        </div>
         <div class="w-full flex flex-row space-x-3">
           <div class="w-1/2">
             <app-text-input #clientRaiseTicketFilterStartDateInput [id]="'client_raise_ticket_filter_start_date_input'"
-              [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
+              [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
               [(ngModel)]="startDateFilter"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
               (change)="onStartDateChange($event)"></app-text-input>
           </div>
           <div class="w-1/2">
             <app-text-input #clientRaiseTicketFilterEndDateInput [id]="'client_raise_ticket_filter_end_date_input'"
-              [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
+              [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
               [(ngModel)]="endDateFilter"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
               (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
           </div>
         </div>
-        <div class="w-full flex flex-row-reverse">
-          <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
-        </div>
-
+      </div>
+      <div class="flex justify-end items-end mt-2" *ngIf="!isNew">
+        <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
       </div>
       <!-- <div *ngIf="isLoading && !isNew" class="flex justify-center items-center h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
       <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4"/>
       <div *ngIf="!isLoading && !isNew">
-        <div *ngIf="showTicketList.length > 0; else noTicket">
-          <div *ngFor="let ticket of showTicketList; let i = index" [ngClass]="'rounded p-5 my-4 mt-4 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
+        <div *ngIf="showTicketList.length > 0; else noTicket" class="space-y-4 mt-4">
+          <div *ngFor="let ticket of showTicketList; let i = index" [ngClass]="'rounded p-5 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
             <p class="font-bold text-base text-black mb-2">{{ ticket.ticket_name }} - {{ ticket.ticket_type }}</p>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
@@ -153,14 +155,16 @@
     </div>
 
     <div class="flex flex-col justify-between mt-4 space-y-2 w-full" *ngIf="isNew">
-      <div class="flex flex-row justify-start">
-        <p class="text-base font-bold">Type of Issue</p>
+      <div class="flex flex-col items-start w-full">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">Type of Issue</p>
+        </div>
+        <select id="client_ticket_new_type" [(ngModel)]="newTicket.ticket_type_id" disabled
+          class="bg-[#F5F5F5] border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#7D8390] accent-[var(--ion-color-primary)]">
+          <option value="" selected disabled hidden>Choose Issue Type</option>
+          <option *ngFor="let item of menuItems" [value]="item.id">{{ item.text }}</option>
+        </select>
       </div>
-      <select id="client_ticket_new_type" [(ngModel)]="newTicket.ticket_type_id" disabled
-        class="bg-[#F5F5F5] border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#7D8390] accent-[var(--ion-color-primary)]">
-        <option value="" selected disabled hidden>Choose Issue Type</option>
-        <option *ngFor="let item of menuItems" [value]="item.id">{{ item.text }}</option>
-      </select>
       <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
         <label class="text-base"><b>Block</b></label>
         <select id="blacklist_block"
@@ -172,26 +176,28 @@
       </div>
       <div class="w-full" *ngIf="!project_config.is_industrial">
         <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'Select Units'"
-          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'"
+          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'" [customTopDiv]="''"
           [isOne]="true"></app-m2m-selection>
       </div>
       <div class="w-full" *ngIf="project_config.is_industrial">
         <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'Select Hosts'"
-          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'"
+          [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'" [customTopDiv]="''"
           [isOne]="true"></app-m2m-selection>
       </div>
-      <div class="flex flex-row justify-start mb-1">
-        <p class="text-base font-bold">Report Summary</p>
+      <div class="flex flex-col items-start w-full">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">Report Summary</p>
+        </div>
+        <textarea id="client_ticket_new_summary" placeholder=""
+          class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
+          [(ngModel)]="newTicket.summary" name="entryMessage">
+          </textarea>
       </div>
-      <textarea id="client_ticket_new_summary" placeholder=""
-        class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
-        [(ngModel)]="newTicket.summary" name="entryMessage">
-        </textarea>
       <div class="w-full flex flex-col items-start">
         <app-file-input class="w-full h-25" [labelNonUnderline]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" [isMany]="true"
-              [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
-              [customPlaceholder]="'Click upload to choose a file.'" [labelClass]="'text-black text-base font-bold'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mt-1'" [showPlaceholder]="true"
-              [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
+          [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
+          [customPlaceholder]="'Click upload to choose a file.'" [labelClass]="'text-black text-base font-bold'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'" [showPlaceholder]="true"
+          [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
       </div>
       <div class="w-full ">
         <button (click)="createNewTicket()"

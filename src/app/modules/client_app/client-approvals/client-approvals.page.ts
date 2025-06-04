@@ -124,6 +124,9 @@ export class ClientApprovalsPage implements OnInit {
     } else {
       params = {record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
     }
+    this.activeApprovals = []
+    this.closedApprovals = []
+    this.showApprovals = []
     this.clientMainService.getApi(params, '/client/get/approval_list').subscribe({
       next: (results) => {
         console.log(results)
@@ -251,7 +254,6 @@ export class ClientApprovalsPage implements OnInit {
   resetFilter() {
     this.startDateFilter = '';
     this.endDateFilter = '';
-    this.showApprovals = this.activeApprovals;
     this.applyDateFilter()
   }
 
@@ -497,6 +499,7 @@ export class ClientApprovalsPage implements OnInit {
 
   pageForward(page: number) {
     this.currentPage = page
+    this.inputPage = page
     this.loadApproval()
   }
 }

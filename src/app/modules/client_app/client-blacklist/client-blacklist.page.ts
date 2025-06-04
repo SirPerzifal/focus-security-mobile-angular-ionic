@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -105,7 +105,7 @@ export class ClientBlacklistPage implements OnInit {
       this.isVehicle = false
       this.textSecond = 'Visitor'
       this.pageType = 'visitor'
-      this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+      this.loadBlacklistData()
     }
     if (type == 'vehicle') {
       this.isNew = false
@@ -113,7 +113,7 @@ export class ClientBlacklistPage implements OnInit {
       this.isVehicle = true
       this.textSecond = 'Vehicle'
       this.pageType = 'vehicle'
-      this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
+      this.loadBlacklistData()
     }
     if (type == 'new_data') {
       this.isVisitor = false
@@ -125,8 +125,8 @@ export class ClientBlacklistPage implements OnInit {
     console.log(this.blacklistData)
   }
 
-  activeVehicles: any[] = [];
-  historyVehicles: any[] = [];
+  visitorData: any[] = [];
+  vehicleData: any[] = [];
   existData: any[] = []
   blacklistData: any[] = []
   searchOption: string = ''
@@ -195,14 +195,17 @@ export class ClientBlacklistPage implements OnInit {
 
 
   applyFilters() {
-    this.blacklistData = this.existData.filter(item => {
-      const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
-      const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
-      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_no.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
+    // this.blacklistData = this.existData.filter(item => {
+    //   const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
+    //   const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
+    //   const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_no.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
 
-      return typeMatches && contactMatches && vehicleNumberMatches;
-    });
-    console.log(this.blacklistData)
+    //   return typeMatches && contactMatches && vehicleNumberMatches;
+    // });
+    // console.log(this.blacklistData)
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadBlacklistData()
   }
 
   onArrowClick(vehicle: any[]) {
@@ -217,19 +220,29 @@ export class ClientBlacklistPage implements OnInit {
   isLoading = false
   async loadBlacklistData() {
     this.isLoading = true
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
+    let params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_visitor: this.isVisitor, name: this.filter.name, contact_search: this.filter.contact, vehicle_number: this.filter.vehicle_number}
+    this.visitorData = []
+    this.vehicleData = []
+    this.blacklistData = []
+    this.clientMainService.getApi(params, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
         if (results.result.response_code === 200) {
-          this.existData = results.result.result;
-          // this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
-          this.applyFilters()
+          this.blacklistData = results.result.result;
+          this.pagination = results.result.pagination
+          if (this.isVisitor) {
+            this.visitorData = results.result.result
+          } else {
+            this.vehicleData = results.result.result
+          }
         } else {
+          this.pagination = {}
         }
       },
       error: (error) => {
         this.isLoading = false
+        this.pagination = {}
         this.presentToast('An error occurred while loading blacklist data!', 'danger');
         console.error(error);
       }
@@ -554,15 +567,24 @@ export class ClientBlacklistPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.loadBlacklistData().then(() => {
-      if (this.pageType == 'visitor') {
-        this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
-      } else {
-        this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
-      }
-      this.applyFilters() 
+    if (this.isMain && !this.isNew) {
+      this.loadBlacklistData().then(() => {
+        event.target.complete()
+      })
+    } else {
       event.target.complete()
-    })
+    }
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadBlacklistData()
   }
 
 }

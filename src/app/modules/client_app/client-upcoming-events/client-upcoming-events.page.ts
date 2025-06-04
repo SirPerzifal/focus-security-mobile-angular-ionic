@@ -38,6 +38,7 @@ export class ClientUpcomingEventsPage implements OnInit {
   CalendarView = CalendarView; // Enum untuk binding
   events: CalendarEvent[] = [];
   upcomingEvents: any[] = [];
+  activeEvents: any[] = [];
 
   task: any = [];
   showCompletedTasks: boolean = false; // Menyimpan status untuk menampilkan tugas yang diselesaikan
@@ -70,7 +71,6 @@ export class ClientUpcomingEventsPage implements OnInit {
 
   ngOnInit() {
     this.loadUpcomingEvents();
-    this.loadTask();
     // this.router.events.subscribe(event => {
     //   if (event instanceof NavigationStart) {
     //     const url = event['url'].split('?')[0];
@@ -102,11 +102,22 @@ export class ClientUpcomingEventsPage implements OnInit {
   async loadUpcomingEvents() {
     this.isLoading = true
     const now = new Date();
-    this.clientMainService.getApi({ is_active: false }, '/client/get/upcoming_event').subscribe({
+    let params = {
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory, 
+      is_active: this.isActive,
+      issue_date: this.startDateFilter, 
+      end_issue_date: this.endDateFilter
+    }
+    if (this.isActive) {
+      this.activeEvents = []
+    } else {
+      this.pagination = {}
+      this.events = [];
+    }
+    this.clientMainService.getApi(params, '/client/get/upcoming_event').subscribe({
       next: (results) => {
         console.log(results)
-        this.events = []
-        this.upcomingEvents = []
         if (results.result.response_code == 200) {
           const newEvents = results.result.result.map((result: any) => ({
             id: result.id,
@@ -126,17 +137,23 @@ export class ClientUpcomingEventsPage implements OnInit {
               afterEnd: true,
             },
           }));
-          this.events = [...newEvents];
-          this.upcomingEvents = this.events.filter(item => { console.log(new Date(item.start), now) ;return new Date(item.start) >= now})
-          console.log(this.upcomingEvents)
+          if (this.isActive) {
+            this.activeEvents = [...newEvents];
+            this.pagination = results.result.pagination
+          } else {
+            this.pagination = {}
+            this.events = [...newEvents];
+          }
         } else if (results.result.response_code == 402)  {
-
+          this.pagination = {}
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
+          this.pagination = {}
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
@@ -187,23 +204,6 @@ export class ClientUpcomingEventsPage implements OnInit {
     });
   }
 
-  toggleTaskCompletion(task: any) {
-    task.completed = !task.completed; // Toggle status completed
-  }
-
-  addTask() {
-    if (this.newTaskTitle.trim()) { // Pastikan input tidak kosong
-      const newTask = {
-        id: this.task.length + 1, // Atur ID baru (Anda mungkin ingin menggunakan cara yang lebih baik untuk mengelola ID)
-        title: this.newTaskTitle,
-        completed: false,
-        due_date: new Date().toLocaleString(), // Atur tanggal jatuh tempo (Anda bisa menyesuaikannya)
-      };
-      this.task.push(newTask); // Tambahkan tugas baru ke array
-      this.newTaskTitle = ''; // Reset input
-    }
-  }
-
   calculateEventDuration(event: CalendarEvent): string {
     const start = event.start;
     const end = event.end;
@@ -218,24 +218,6 @@ export class ClientUpcomingEventsPage implements OnInit {
     const endTime = `${endHours?.toString().padStart(2, '0')}:${endMinutes?.toString().padStart(2, '0')}`;
   
     return `${startTime} - ${endTime}`;
-  }
-
-  loadTask() {
-    // Simulasi load data task
-    this.task = [
-      {
-        id: 1,
-        title: 'Task 1',
-        completed: false,
-        due_date: '15.30 am',
-      },
-      {
-        id: 2,
-        title: 'Task 2',
-        completed: true,
-        due_date: '15.31 am',
-      },
-    ];
   }
 
   handleClickDay(day: any) {
@@ -253,11 +235,10 @@ export class ClientUpcomingEventsPage implements OnInit {
   secondText = 'Calendar View'
 
   toggleDirecttoActiveEvent() {
-    // Logic to toggle to active events
-    // this.router.navigate(['resident-upcoming-event']);
     this.isMain = false
     this.isActive = true
     this.secondText = 'Active Event'
+    this.resetFilter()
   }
 
   isMain = true
@@ -266,8 +247,6 @@ export class ClientUpcomingEventsPage implements OnInit {
     this.isActive = false
     this.isMain = true
     this.secondText = 'Calendar View'
-    // Logic to toggle to history
-    // this.router.navigate(['client-upcoming-events']);
   }
 
   prev() {
@@ -310,7 +289,45 @@ export class ClientUpcomingEventsPage implements OnInit {
     this.router.navigate(['/client-events-detail'], {state: {bookingData: record}})
   }
 
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  applyDateFilter() {
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadUpcomingEvents()
+  }
+
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.applyDateFilter()
+  }
+
   handleRefresh(event: any) {
     this.loadUpcomingEvents().then(() => event.target.complete())
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadUpcomingEvents()
   }
 }

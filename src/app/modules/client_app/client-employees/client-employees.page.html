@@ -2,19 +2,9 @@
   <app-resident-header [is_client]="true" [text]="'Employees'" [text_second]="textSecond" />
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-refresher
-    slot="fixed"
-    (ionRefresh)="handleRefresh($event)"
-    style="z-index: 999"
-    pullFactor="0.3"
-    pullMin="40"
-    pullMax="80"
-    *ngIf="!isNew"
-  >
-    <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"
-      refreshingSpinner="none"
-    ></ion-refresher-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80" *ngIf="!isNew">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
   </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
@@ -35,10 +25,29 @@
       </div>
     </div>
     <div class="flex flex-col">
+      <div class="flex flex-col w-full mt-4" *ngIf="!isNew">
+        <div class="w-full flex flex-col">
+          <div class="w-full justify-between flex flex-row">
+            <label class="text-base font-bold"><u>Search Option</u></label>
+            <label class="text-base" (click)="clearFilters()"><b><u>Clear Search</u></b></label>
+          </div>
+          <div class="w-full">
+            <app-text-input #residentClientNameFilter [id]="'resident_client_name_filter'" [placeholder]="'Name'"
+              [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="nameFilter"
+              (change)="onNameFilterChange($event)" [showPlaceholder]="true"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
+            </app-text-input>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end items-end mt-2 w-full" *ngIf="!isNew">
+        <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination"
+          (pageForward)="pageForward($event)" />
+      </div>
       <!-- <div *ngIf="isLoading && !isNew" class="flex justify-center items-center w-full h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
-      <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4"/>
+      <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4" />
       <div class="my-4" *ngIf="!isLoading && !isNew">
         <div class="space-y-3" *ngIf="showVisitorList.length > 0; else noVisitor">
           <div (click)="viewDetail(employee)"
@@ -202,12 +211,14 @@
           <tr class="h-6">
             <td class="w-2/5 font-bold">Department</td>
             <td class="w-[5%]">:</td>
-            <td> {{ visitorDetail.department_id ? functionMain.uppercaseFirstWithUnderscore(visitorDetail.department_id.name) : '-' }}</td>
+            <td> {{ visitorDetail.department_id ?
+              functionMain.uppercaseFirstWithUnderscore(visitorDetail.department_id.name) : '-' }}</td>
           </tr>
           <tr class="h-6">
             <td class="w-2/5 font-bold">Employment Type</td>
             <td class="w-[5%]">:</td>
-            <td> {{ visitorDetail.employment_type ? functionMain.uppercaseFirstWithUnderscore(visitorDetail.employment_type) : '-' }}</td>
+            <td> {{ visitorDetail.employment_type ?
+              functionMain.uppercaseFirstWithUnderscore(visitorDetail.employment_type) : '-' }}</td>
           </tr>
           <tr class="h-6">
             <td class="w-2/5 font-bold">Employee ID / Code</td>
@@ -245,7 +256,7 @@
     </div>
   </div>
   <!-- ############################### -->
-  </ion-content>
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

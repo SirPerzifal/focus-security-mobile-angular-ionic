@@ -69,34 +69,32 @@
         <p class="text-gray-600">No facilities available</p>
       </div> -->
     </div>
-
-    <div class="flex flex-col relative mx-4 mt-2 mb-52" *ngIf="!isFacility  && !isLoading">
-      <div class="flex flex-col" *ngIf="isHistory">
-        <div class="flex flex-row">
-          <p class="text-base font-bold">Filter Date</p>
+    <div class="flex flex-col justify-between mt-4 mx-4" *ngIf="isHistory">
+      <div class="text-base font-bold flex flex-row justify-between">
+        <u class="text-base font-bold">Filter Date</u>
+        <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+      </div>
+      <div class="w-full flex flex-row space-x-3">
+        <div class="w-1/2">
+          <app-text-input #clientRaiseTicketFilterStartDateInput [id]="'client_raise_ticket_filter_start_date_input'"
+            [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+            [(ngModel)]="startDateFilter"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+            (change)="onStartDateChange($event)"></app-text-input>
         </div>
-        <div class="flex flex-row space-x-2">
-          <div class="w-1/2">
-            <app-text-input #clientFacilityHistoryStartDateInput [id]="'client_facility_history_start_date_input'"
-              [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
-              [(ngModel)]="startDateFilter"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
-              (change)="onStartDateChange($event)"></app-text-input>
-          </div>
-          <div class="w-1/2">
-            <app-text-input #clientFacilityHistoryEndDateInput [id]="'client_facility_history_end_date_input'"
-              [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'"
-              [(ngModel)]="endDateFilter"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
-              (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
-          </div>
-        </div>
-
-        <div class="flex flex-row-reverse mt-2">
-          <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+        <div class="w-1/2">
+          <app-text-input #clientRaiseTicketFilterEndDateInput [id]="'client_raise_ticket_filter_end_date_input'"
+            [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+            [(ngModel)]="endDateFilter"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+            (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
         </div>
       </div>
-
+    </div>
+    <div class="flex justify-end items-end mt-2 mx-4" *ngIf="!isFacility">
+      <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
+    </div>
+    <div class="flex flex-col relative mx-4 mt-2 mb-24" *ngIf="!isFacility  && !isLoading">
       <div *ngIf="showBookings.length > 0; else noActiveBookings">
         <div *ngFor="let booking of showBookings; let i = index" [ngClass]="{
 				'bg-green-100': booking.booking_status === 'Approved',

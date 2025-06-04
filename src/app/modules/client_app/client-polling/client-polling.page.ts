@@ -52,8 +52,7 @@ export class ClientPollingPage implements OnInit {
     this.isClosed = false
     this.isActive = true
     this.isNew = false
-    this.showVotedata = this.voteData
-    this.showVotedata = this.voteData.filter((polling: any) => polling.states == 'open')
+    this.loadPolling()
   }
 
   toggleClosed() {
@@ -61,7 +60,7 @@ export class ClientPollingPage implements OnInit {
     this.isClosed = true
     this.isActive = false
     this.isNew = false
-    this.showVotedata = this.voteData.filter((polling: any) => polling.states != 'open')
+    this.loadPolling()
   }
 
   toggleNew() {
@@ -85,10 +84,9 @@ export class ClientPollingPage implements OnInit {
 
   voteNow: boolean = false;
   dataForVote: any = [];
-  closeVote: boolean = false; // Flag for closing animation
-  openVote: boolean = false; // Flag for opening animation
+  closeVote: any = []; // Flag for closing animation
+  openVote: any = []; // Flag for opening animation
   showVotedata: any = []
-  voteData: any = [];
 
   isMain = true
   viewDetail(vote: any) {
@@ -200,25 +198,39 @@ export class ClientPollingPage implements OnInit {
   isLoading = false
   async loadPolling(){
     this.isLoading = true
-    this.clientMainService.getApi({}, '/client/get/polling').subscribe({
+    let params = {}
+    if (this.isActive) {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
+    } else {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+    }
+    this.openVote = []
+    this.closeVote = []
+    this.showVotedata = []
+    this.clientMainService.getApi(params, '/client/get/polling').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
         if (results.result.response_code == 200) {
-          if (results.result.result.length > 0){
-            this.voteData = results.result.result
-            this.showVotedata = this.voteData.filter((polling: any) => polling.states == 'open')
+          if (this.isActive) {
+            this.openVote = results.result.result
+            this.showVotedata = this.openVote
           } else {
+            this.closeVote = results.result.result
+            this.showVotedata = this.closeVote
           }
+          this.pagination = results.result.pagination
         } else if (results.result.response_code == 402)  {
-
+          this.pagination = results.result.pagination
         } else {
           this.functionMain.presentToast(`An error occurred while loading polling data!`, 'danger');
+          this.pagination = {}
         }
       },
       error: (error) => {
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while loading polling data!', 'danger');
+        this.pagination = {}
         console.error(error);
       }
     });
@@ -243,6 +255,44 @@ export class ClientPollingPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadPolling().then(() => event.target.complete())
+  }
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.applyDateFilter()
+  }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  applyDateFilter() {
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadPolling()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadPolling()
   }
 
 }

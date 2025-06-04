@@ -91,6 +91,7 @@ export class ClientAppIssuesPage implements OnInit {
     this.isMain = false
     this.isNewReport = true
     this.textSecond = 'Add App Report'
+    this.resetForm()
     // setTimeout(() => {
     //   this.isNewReport = true
     // }, 300)
@@ -100,7 +101,7 @@ export class ClientAppIssuesPage implements OnInit {
     this.isNewReport = false
     this.isMain = true
     this.textSecond = 'Record of Report'
-    this.resetForm()
+    this.resetFilter()
     // setTimeout(() => {
     //   this.isMain = true
     // }, 300)
@@ -199,31 +200,35 @@ export class ClientAppIssuesPage implements OnInit {
     }
   }
 
-  unitId: number = 1;
   isReportApp: string = '1';
   allData: any = [];
   isLoading = false
 
   async loadTicketFromBackend() {
     this.isLoading = true
-    this.clientMainService.getApi({is_report_app: this.isReportApp}, '/client/get/report_issue').subscribe({
+    let params = {}
+    this.allData = []
+    params = {
+      is_report_app: true, 
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory, 
+      issue_date: this.startDateFilter, 
+      end_issue_date: this.endDateFilter
+    }
+    this.clientMainService.getApi(params, '/client/get/open_ticket_by_type_of_issue').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
-          if (results.result.result.length > 0){
-            this.allData = results.result.result;
-
-          } else {
-          }
-          // this.functionMain.presentToast(`Success!`, 'success');
-        } else if (results.result.response_code == 401) {
-          // this.functionMain.presentToast(`Success!`, 'success');
+          this.allData = results.result.result;
+          this.pagination = results.result.pagination
         } else {
+          this.pagination = {}
           this.functionMain.presentToast(`An error occurred while trying to get report issue!`, 'danger');
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while trying to get report issue!', 'danger');
         console.error(error);
@@ -353,6 +358,54 @@ export class ClientAppIssuesPage implements OnInit {
     this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
+  }
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  applyDateFilter() {
+    // this.showTicketList = this.closedTicket.filter((ticket: any) => {
+    //   const ticketDate = new Date(ticket.issued_on.split(' ')[0]);
+
+    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+
+    //   const isAfterStartDate = !startDate || ticketDate >= startDate;
+    //   const isBeforeEndDate = !endDate || ticketDate <= endDate;
+    //   return isAfterStartDate && isBeforeEndDate;
+    // });
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadTicketFromBackend()
+  }
+
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.applyDateFilter()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadTicketFromBackend()
   }
 
 }

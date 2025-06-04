@@ -108,25 +108,24 @@ export class ClientRaiseTicketPage implements OnInit {
   isLoading = false
   async loadTicketList(menu: any, reload: any = false) {
     let url = ''
+    let params = {}
     if (this.isActive) {
-      if (this.openTicket.length > 0 && !reload) {
-        this.changePage()
-        return
-      }
+      params = {ticket_type_id: menu.id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
       url = '/client/get/open_ticket_by_type_of_issue'
     } else {
-      if (this.closedTicket.length > 0 && !reload) {
-        this.changePage()
-        return
-      }
-      url = '/client/get/closed_ticket_by_type_of_issue'
+      url = '/client/get/open_ticket_by_type_of_issue'
+      params = {ticket_type_id: menu.id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
     }
+    this.openTicket = []
+    this.closedTicket = []
+    this.ticketList = []
     this.isLoading = true
-    this.clientMainService.getApi({ticket_type_id: menu.id}, url).subscribe({
+    this.clientMainService.getApi(params, url).subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
           this.ticketList = results.result.result
+          this.pagination = results.result.pagination
           if (this.isActive) {
             this.openTicket = this.ticketList
           } else {
@@ -135,11 +134,13 @@ export class ClientRaiseTicketPage implements OnInit {
           this.changePage()
           // this.functionMain.presentToast(`Success!`, 'success');
         } else {
+          this.pagination = {}
           this.functionMain.presentToast(`An error occurred while trying to get ticket!`, 'danger');
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while trying to get ticket!', 'danger');
         console.error(error);
@@ -151,11 +152,13 @@ export class ClientRaiseTicketPage implements OnInit {
     if (this.isActive) {
       this.showTicketList = this.openTicket
     } else {
-      this.resetFilter()
+      this.showTicketList = this.closedTicket
+      // this.resetFilter()
     }
   }
 
   onClickMenu(menu: any) {
+    this.pagination = {total_pages: ''}
     this.loadTicketList(menu)
     this.selectedMenu = menu
     this.newTicket.ticket_type_id = menu.id
@@ -215,6 +218,8 @@ export class ClientRaiseTicketPage implements OnInit {
     this.isClosed = true
     this.isNew = false
     this.isData = true
+    this.startDateFilter = ''
+    this.endDateFilter = ''
     this.loadTicketList(this.selectedMenu)
   }
 
@@ -252,16 +257,19 @@ export class ClientRaiseTicketPage implements OnInit {
   endDateFilter = ''
 
   applyDateFilter() {
-    this.showTicketList = this.closedTicket.filter((ticket: any) => {
-      const ticketDate = new Date(ticket.issued_on.split(' ')[0]);
+    // this.showTicketList = this.closedTicket.filter((ticket: any) => {
+    //   const ticketDate = new Date(ticket.issued_on.split(' ')[0]);
 
-      const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
-      const isAfterStartDate = !startDate || ticketDate >= startDate;
-      const isBeforeEndDate = !endDate || ticketDate <= endDate;
-      return isAfterStartDate && isBeforeEndDate;
-    });
+    //   const isAfterStartDate = !startDate || ticketDate >= startDate;
+    //   const isBeforeEndDate = !endDate || ticketDate <= endDate;
+    //   return isAfterStartDate && isBeforeEndDate;
+    // });
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadTicketList(this.selectedMenu, true)
   }
 
   resetFilter() {
@@ -334,10 +342,6 @@ export class ClientRaiseTicketPage implements OnInit {
     } else {
       this.functionMain.presentToast('Choose your file first', 'danger');
     }
-  }
-
-  submitTicket() {
-    console.log(this.newTicket)
   }
 
   createNewTicket() {
@@ -449,6 +453,17 @@ export class ClientRaiseTicketPage implements OnInit {
     this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
     })
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadTicketList(this.selectedMenu, true)
   }
 
 }

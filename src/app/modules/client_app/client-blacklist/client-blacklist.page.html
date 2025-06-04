@@ -44,11 +44,11 @@
         <div class="flex flex-col w-full mt-4">
           <div class="w-full flex flex-col">
             <div class="w-full justify-between flex flex-row">
-              <label class="text-base"><b>Search Option</b></label>
+              <label class="text-base font-bold"><u>Search Option</u></label>
               <label class="text-base" (click)="clearFilters()"><b><u>Clear Search</u></b></label>
             </div>
             <select id="search_option" (change)="onSearchOptionChange($event)" [(ngModel)]="searchOption"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280] my-1"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base text-[#6B7280]"
               style="border: 1px solid #6B7280;">
               <option selected disabled hidden value="">Choose Search By</option>
               <!-- <option [value]="'date'">DATE</option> -->
@@ -62,28 +62,31 @@
             <div class="w-full" *ngIf="pageType == 'visitor' && (searchOption == 'name' || searchOption == 'all')">
               <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelResidentText]="'Name'"
                 [labelResidentClass]="'text-base font-bold'" [placeholder]="'Vhasya'" [customClasses]="{'w-full ':true}"
-                [type]="'text'" [(ngModel)]="filter.name" (keyup)="onNameFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
+                [type]="'text'" [(ngModel)]="filter.name" (change)="onNameFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
               </app-text-input>
             </div>
             <div class="w-full" *ngIf="pageType == 'vehicle' && (searchOption == 'vehicle' || searchOption == 'all')">
               <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'"
                 [labelResidentText]="'Vehicle Number'" [labelResidentClass]="'text-base font-bold'"
                 [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
-                [(ngModel)]="filter.vehicle_number" (keyup)="onVehicleFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
+                [(ngModel)]="filter.vehicle_number" (change)="onVehicleFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
               </app-text-input>
             </div>
             <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
               <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelResidentText]="'Contact'"
                 [labelResidentClass]="'text-base font-bold'" [placeholder]="'+65 7827 323'"
                 [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.contact"
-                (keyup)="onContactFilterChange($event)"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}">
+                (change)="onContactFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
               </app-text-input>
             </div>
           </div>
 
+        </div>
+        <div class="flex justify-end items-end mt-2 w-full" *ngIf="!isNew">
+          <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
         </div>
         <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
           <ion-spinner name="dots"></ion-spinner>

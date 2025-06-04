@@ -65,6 +65,7 @@ export class ClientNotificationPage implements OnInit {
 
   pageForward(page: number) {
     this.currentPage = page
+    this.inputPage = page
     this.loadNotification()
   }
 }

@@ -27,8 +27,6 @@ export class ClientFacilityPage implements OnInit {
       this.project_id = value.id
     })
     this.loadFacilities()
-    this.loadBooking()
-    this.loadHistoryBooking()
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url']
@@ -38,7 +36,6 @@ export class ClientFacilityPage implements OnInit {
           this.toggleShowFacility()
         }
         if (url == '/client-facility?booking=true') {
-          this.loadBooking()
           this.toggleShowBooking()
         }
       }
@@ -81,7 +78,7 @@ export class ClientFacilityPage implements OnInit {
     this.isHistory = true
     this.isBooking = false
     this.textSecond = 'Booking History'
-    this.resetFilter()
+    this.loadBooking()
   }
 
   toggleShowBooking() {
@@ -89,7 +86,7 @@ export class ClientFacilityPage implements OnInit {
     this.isHistory = false
     this.isBooking = true
     this.textSecond = 'Booking Facility'
-    this.showBookings = this.activeBookings
+    this.loadBooking()
   }
 
   facilities: any = []
@@ -141,19 +138,22 @@ export class ClientFacilityPage implements OnInit {
   }
 
   applyDateFilter() {
-    this.showBookings = this.historyBookings.filter((booking: any) => {
-      const bookingDate = new Date(booking.start_datetime.split(' ')[0]);
+    // this.showBookings = this.historyBookings.filter((booking: any) => {
+    //   const bookingDate = new Date(booking.start_datetime.split(' ')[0]);
 
-      // Konversi startDate dan endDate ke Date object jika ada
-      const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-      const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+    //   // Konversi startDate dan endDate ke Date object jika ada
+    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
 
-      // Cek kondisi filtering
-      const isAfterStartDate = !startDate || bookingDate >= startDate;
-      const isBeforeEndDate = !endDate || bookingDate <= endDate;
+    //   // Cek kondisi filtering
+    //   const isAfterStartDate = !startDate || bookingDate >= startDate;
+    //   const isBeforeEndDate = !endDate || bookingDate <= endDate;
 
-      return isAfterStartDate && isBeforeEndDate;
-    });
+    //   return isAfterStartDate && isBeforeEndDate;
+    // });
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadBooking()
   }
 
   startDateFilter = ''
@@ -162,7 +162,7 @@ export class ClientFacilityPage implements OnInit {
   resetFilter() {
     this.startDateFilter = '';
     this.endDateFilter = '';
-    this.showBookings = this.historyBookings;
+    this.applyDateFilter()
   }
 
   isLoading = false
@@ -188,46 +188,34 @@ export class ClientFacilityPage implements OnInit {
 
   async loadBooking() {
     this.isLoading = true
-    this.clientMainService.getApi({}, '/client/get/facility_book').subscribe({
+    let params = {}
+    if (this.isBooking) {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isBooking}
+    } else {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isBooking, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+    }
+    this.activeBookings = []
+    this.historyBookings = []
+    this.showBookings = []
+    this.clientMainService.getApi(params, '/client/get/facility_book').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
         if (results.result.response_code == 200) {
-          if (results.result.active_bookings.length > 0) {
-            this.activeBookings = results.result.active_bookings
+          this.showBookings = results.result.active_bookings
+          this.pagination = results.result.pagination
+          if (this.isBooking) {
+            this.activeBookings = results.result.result
           } else {
+            this.historyBookings = results.result.result
           }
         } else {
+          this.pagination = {}
           this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
         }
-        
       },
       error: (error) => {
-        this.isLoading = false
-        this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
-        console.error(error);
-      }
-    });
-  }
-
-  async loadHistoryBooking() {
-    this.isLoading = true
-    this.clientMainService.getApi({}, '/client/get/booking_history').subscribe({
-      next: (results) => {
-        this.isLoading = false
-        console.log(results)
-        if (results.result.success) {
-          if (results.result.booking.length > 0) {
-            this.historyBookings = results.result.booking
-          } else {
-          }
-        } 
-        // else {
-        //   this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
-        // }
-        
-      },
-      error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while loading booking data!', 'danger');
         console.error(error);
@@ -237,12 +225,23 @@ export class ClientFacilityPage implements OnInit {
 
   handleRefresh(event: any) {
     if (this.isHistory) {
-      this.loadHistoryBooking().then(() => event.target.complete())
+      this.loadBooking().then(() => event.target.complete())
     } else if (this.isBooking) {
       this.loadBooking().then(() => event.target.complete())
     } else {
       this.loadFacilities().then(() => event.target.complete())
     }
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadBooking()
   }
 
 }

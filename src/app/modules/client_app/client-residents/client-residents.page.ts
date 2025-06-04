@@ -25,20 +25,29 @@ export class ClientResidentsPage implements OnInit {
   isLoading = false
   async loadResident(){
     this.isLoading = true
-    this.functionMain.vmsPreferences().then((value: any) => {
-      this.recordsResidentService.loadAllResident(value.project_id, false).subscribe(
-        (response: any) => {
-          console.log(response)
-          if (response.result.status === 'success') {
-            console.log(response)
-            this.Residents = response.result.data;
-          } else {
-            // this.presentToast('Failed to load resident data', 'danger');
-          }
-          this.isLoading = false
-        },
-      )
-    })
+    let params = {
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory, 
+      name: this.nameFilter,
+    }
+    this.Residents = []
+    this.clientMain.getApi(params, '/vms/get/all_record_resident').subscribe({
+      next: (results) => {
+      this.isLoading = false
+      console.log(results)
+      if (results.result.status) {
+        this.Residents = results.result.data
+        this.pagination = results.result.pagination
+      } else {
+        this.pagination = {}
+      }
+    },
+    error: (error) => {
+      this.isLoading = false
+      this.pagination = {}
+      this.functionMain.presentToast('An error occurred while loading blacklist data!', 'danger');
+      console.error(error);
+    }})
   }
 
   onBack() {
@@ -50,8 +59,37 @@ export class ClientResidentsPage implements OnInit {
     this.webRtcService.createOffer(false, resident.family_id, false, false);
   }
 
+  nameFilter = ''
+
+  onNameFilterChange(event: any) {
+    this.nameFilter = event.target.value
+    this.applyFilter()
+  }
+
+  clearFilters() {
+    this.nameFilter = ''
+    this.applyFilter()
+  }
+
+  applyFilter() {
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadResident()
+  }
+
   handleRefresh(event: any) {
     this.loadResident().then(() => event.target.complete())
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadResident()
   }
 
 }

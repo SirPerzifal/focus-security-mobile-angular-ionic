@@ -98,25 +98,36 @@ export class ClientRegisterVisitorPage implements OnInit {
   isLoading = false
   async loadClient() {
     this.isLoading = true
-    this.clientMainService.getApi({project_id: this.project_id}, '/client/get/previsitor').subscribe({
+    let params = {}
+    if (this.isActive) {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
+    } else {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+    }
+    this.activeVisitor = []
+    this.historyVisitor = []
+    this.showVisitorList = []
+    this.clientMainService.getApi(params, '/client/get/previsitor').subscribe({
       next: (results) => {
         this.isLoading = false
         console.log(results)
         if (results.result.status_code === 200) {
-          this.visitorList = results.result.data
           if (this.isActive) {
-            this.changePageList()
+            this.activeVisitor = results.result.data
+            this.showVisitorList = this.activeVisitor
           } else {
-            this.applyDateFilter()
+            this.historyVisitor = results.result.data
+            this.showVisitorList = this.historyVisitor
           }
+          this.pagination = results.result.pagination
           
-        } else if (results.result.status_code === 401) {
-
         } else {
+          this.pagination = {}
           this.functionMain.presentToast(`An error occurred while trying to get the data!`, 'danger');
         }
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('An error occurred while trying to get the data!', 'danger');
         console.error(error);
@@ -142,13 +153,6 @@ export class ClientRegisterVisitorPage implements OnInit {
     });
   }
 
-  changePageList(){
-    console.log(this.isActive)
-    console.log(this.today)
-    this.showVisitorList = this.isActive ? (this.visitorList.filter((item: any) => new Date(item.entry_date).setHours(0,0,0,0) == this.today)) : this.visitorList.filter((item: any) => new Date(item.entry_date).setHours(0,0,0,0) < this.today)
-    console.log(this.showVisitorList)
-  }
-
   textSecond = 'Active Visitor'
 
   isActive = true
@@ -163,16 +167,15 @@ export class ClientRegisterVisitorPage implements OnInit {
     this.isActive = true
     this.isNew = false
     this.textSecond = 'Active Visitor'
-    this.changePageList()
+    this.loadClient()
   }
 
   toggleShowHistory() {
     this.isActive = false
     this.isHistory = true
-    this.resetFilter()
     this.isNew = false
     this.textSecond = 'Visitor History'
-    this.changePageList()
+    this.loadClient()
   }
 
   toggleShowNew() {
@@ -221,28 +224,31 @@ export class ClientRegisterVisitorPage implements OnInit {
   endDateFilter = ''
 
   showVisitorList: any = []
-  visitorList: any = []
+  activeVisitor: any = []
+  historyVisitor: any = []
 
   applyDateFilter() {
-    this.showVisitorList = this.visitorList.filter((visitor: any) => {
-      const visitorDate = new Date(visitor.entry_date).setHours(0,0,0,0);
+    // this.showVisitorList = this.visitorList.filter((visitor: any) => {
+    //   const visitorDate = new Date(visitor.entry_date).setHours(0,0,0,0);
 
-      const startDate = this.startDateFilter ? new Date(this.startDateFilter).setHours(0,0,0,0) : null;
-      const endDate = this.endDateFilter ? new Date(this.endDateFilter).setHours(0,0,0,0) : null;
+    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter).setHours(0,0,0,0) : null;
+    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter).setHours(0,0,0,0) : null;
       
-      const isAfterStartDate = !startDate || visitorDate >= startDate;
-      const isBeforeEndDate = !endDate || visitorDate <= endDate;
+    //   const isAfterStartDate = !startDate || visitorDate >= startDate;
+    //   const isBeforeEndDate = !endDate || visitorDate <= endDate;
 
-      const fixedEndDate = visitorDate < new Date().setHours(0,0,0,0)
+    //   const fixedEndDate = visitorDate < new Date().setHours(0,0,0,0)
 
-      return isAfterStartDate && isBeforeEndDate && fixedEndDate;
-    });
+    //   return isAfterStartDate && isBeforeEndDate && fixedEndDate;
+    // });
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadClient()
   }
 
   resetFilter() {
     this.startDateFilter = '';
     this.endDateFilter = '';
-    this.showVisitorList = this.visitorList;
     this.applyDateFilter()
   }
   
@@ -293,5 +299,16 @@ export class ClientRegisterVisitorPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadClient().then(() => event.target.complete())
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadClient()
   }
 }

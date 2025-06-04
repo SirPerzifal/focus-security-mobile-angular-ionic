@@ -21,7 +21,7 @@
       (click)="onBack()"></ion-icon>
   </div>
 
-  <div class="px-4 mt-2 text-center mb-20" *ngIf="isMain">
+  <div class="px-4 mt-2 text-center mb-24" *ngIf="isMain">
     <div class="flex flex-row justify-between space-x-3">
       <div class="w-full">
         <app-visitor-button [text]="'Active'"
@@ -39,13 +39,38 @@
           (click)="toggleNew()"></app-visitor-button>
       </div>
     </div>
-    <div class="flex flex-row justify-center">
+    <div class="flex flex-col justify-start items-center">
+      <div class="flex flex-col justify-between mt-4" *ngIf="isClosed">
+        <div class="text-base font-bold flex flex-row justify-between">
+          <u class="text-base font-bold">Filter Date</u>
+          <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+        </div>
+        <div class="w-full flex flex-row space-x-3">
+          <div class="w-1/2">
+            <app-text-input #clientRaiseTicketFilterStartDateInput [id]="'client_raise_ticket_filter_start_date_input'"
+              [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+              [(ngModel)]="startDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+              (change)="onStartDateChange($event)"></app-text-input>
+          </div>
+          <div class="w-1/2">
+            <app-text-input #clientRaiseTicketFilterEndDateInput [id]="'client_raise_ticket_filter_end_date_input'"
+              [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+              [(ngModel)]="endDateFilter"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+              (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end items-end mt-2 w-full" *ngIf="!isNew">
+        <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
+      </div>
       <!-- <div *ngIf="isLoading && !isNew" class="flex justify-center items-center w-full h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
       <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4"/>
       <div class="w-full mt-4" *ngIf="isActive && !isLoading">
-        <div *ngIf="showVotedata.length > 0; else noPolling" class="space-y-2">
+        <div *ngIf="showVotedata.length > 0; else noPolling" class="space-y-4">
           <div class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center"
             *ngFor="let vd of showVotedata">
             <div class="flex justify-start flex-col items-start w-full">
@@ -89,7 +114,7 @@
         </div>
       </ng-template>
       <div class="w-full mt-4" *ngIf="isClosed  && !isLoading">
-        <div *ngIf="showVotedata.length > 0; else noPolling" class="space-y-2">
+        <div *ngIf="showVotedata.length > 0; else noPolling" class="space-y-4">
           <div class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center"
             *ngFor="let vd of showVotedata">
             <div class="flex justify-start flex-col items-start w-full">
@@ -131,7 +156,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col justify-between items-start mt-2 space-y-3 w-full" *ngIf="isNew">
+      <div class="flex flex-col justify-between items-start mt-4 space-y-2 w-full" *ngIf="isNew">
         <div class="w-full">
           <app-text-input [labelResidentText]="'Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
             [id]="'client_new_polling_name'" [placeholder]="'Meeting Polling'"
@@ -178,7 +203,7 @@
 
   </div>
 
-  <div *ngIf="!isMain" class="px-5 text-center mb-20">
+  <div *ngIf="!isMain" class="px-5 text-center mb-24">
     <div>
       <h2 class="font-bold mb-2 ml-2.5">{{ dataForGraph.title }}</h2>
     </div>

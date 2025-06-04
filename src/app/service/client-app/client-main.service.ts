@@ -38,6 +38,10 @@ export class ClientMainService extends ApiService {
         if (!params.project_id) {
           params.project_id = this.project.project_id;
         }
+
+        if (!params.family_id) {
+          params.family_id = this.project.family_id;
+        }
   
         const urlSegments = apiUrl.split('/');
         if (urlSegments.length > 2 && urlSegments[2] === 'post') {

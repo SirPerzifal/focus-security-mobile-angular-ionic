@@ -200,22 +200,29 @@ export class ClientEmployeesPage implements OnInit {
 
   async loadEmployees() {
     this.isLoading = true
-    this.clientMainService.getApi({record_list: 'employee', project_id: this.project_id, is_approved: true}, '/client/get/approval_list').subscribe({
+    let params = {
+      record_list: 'employee', 
+      project_id: this.project_id, 
+      is_approved: true,
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory, 
+      name: this.nameFilter,
+    }
+    this.showVisitorList = []
+    this.clientMainService.getApi(params, '/client/get/approval_list').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
-          if (results.result.booking.length > 0){
-            this.visitorList = results.result.booking
-            this.showVisitorList = this.visitorList
-          } else {
-          }
-          // this.functionMain.presentToast(`Success!`, 'success');
+            this.showVisitorList = results.result.booking
+            this.pagination = results.result.pagination
         } else {
           this.functionMain.presentToast(`Failed!`, 'danger');
+          this.pagination = {}
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.pagination = {}
         this.isLoading = false
         this.functionMain.presentToast('Failed!', 'danger');
         console.error(error);
@@ -283,7 +290,37 @@ export class ClientEmployeesPage implements OnInit {
     this.webRtcService.createOffer(false, data.id, false, false);
   }
 
+  nameFilter = ''
+
+  onNameFilterChange(event: any) {
+    this.nameFilter = event.target.value
+    this.applyFilter()
+  }
+
+  clearFilters() {
+    this.nameFilter = ''
+    this.applyFilter()
+  }
+
+  applyFilter() {
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadEmployees()
+  }
+
   handleRefresh(event: any) {
     this.loadEmployees().then(() => event.target.complete())
   }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  pageForward(page: number) {
+    this.currentPage = page
+    this.inputPage = page
+    this.loadEmployees()
+  }
+
 }

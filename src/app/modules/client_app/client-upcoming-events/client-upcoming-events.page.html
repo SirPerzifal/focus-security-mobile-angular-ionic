@@ -20,7 +20,7 @@
       (click)="onBack()"></ion-icon>
   </div>
 
-  <div class="text-center mb-48 mx-4">
+  <div class="text-center mb-24 mx-4">
     <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
       <div class="w-full">
         <app-visitor-button [text]="'Calendar View'"
@@ -61,12 +61,37 @@
         </div>
       </div>
       <div class="w-full" *ngIf="isActive">
+        <div class="flex flex-col justify-between mt-4">
+          <div class="text-base font-bold flex flex-row justify-between">
+            <u class="text-base font-bold">Date Filter</u>
+            <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+          </div>
+          <div class="w-full flex flex-row space-x-3">
+            <div class="w-1/2">
+              <app-text-input #clientApprovalFilterStartDateInput [id]="'client_approval_filter_start_date_input'"
+                [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+                [(ngModel)]="startDateFilter"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                (change)="onStartDateChange($event)"></app-text-input>
+            </div>
+            <div class="w-1/2">
+              <app-text-input #clientApprovalFilterEndDateInput [id]="'client_approval_filter_end_date_input'"
+                [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+                [(ngModel)]="endDateFilter"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+                (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
+            </div>
+          </div>       
+        </div>
+        <div class="flex justify-end items-end mt-2">
+          <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
+        </div>
         <div class="w-full mt-4" *ngIf="isLoading">
           <app-modal-loading />
         </div>
         <div *ngIf="!isLoading" >
-          <div *ngIf="upcomingEvents.length > 0; else noupcomingEvents">
-            <div *ngFor="let upcomingEvent of upcomingEvents; let i = index"
+          <div *ngIf="activeEvents.length > 0; else noupcomingEvents">
+            <div *ngFor="let upcomingEvent of activeEvents; let i = index"
               class="rounded-2xl px-4 py-2 mt-4 w-full bg-green-100">
               <p class="font-bold text-xl text-black text-left mt-2">{{ upcomingEvent.title }}</p>
               <div class="table text-left">
@@ -78,11 +103,6 @@
                   <p class="font-bold table-cell text-base text-black">Coach Name</p>
                   <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.registered_coach_name ?
                     upcomingEvent.registered_coach_name : '-' }}</p>
-                </div>
-                <div class="table-row" *ngIf="upcomingEvent.title">
-                  <p class="font-bold table-cell text-base text-black">Coach Name</p>
-                  <p class="ml-2 table-cell text-base text-black">: {{ upcomingEvent.title ?
-                    upcomingEvent.title : '-' }}</p>
                 </div>
                 <div class="table-row">
                   <p class="font-bold table-cell text-base text-black">Event Start</p>
@@ -171,41 +191,7 @@
           </div>
 
           <!-- Notes Section -->
-          <div
-            class="bg-[var(--ion-color-tertiary)] rounded-lg shadow p-4 mt-4 w-full max-w-[90%] h-full max-h-[340px] overflow-y-auto">
-            <div class="flex justify-start items-center mb-2">
-              <h2 class="text-gray-500 font-bold">Notes</h2>
-            </div>
-
-            <!-- Input untuk menambahkan tugas baru -->
-            <div class="flex mb-2">
-              <app-text-input [id]="'new-task'" [placeholder]="'Tap to add task'" [(ngModel)]="newTaskTitle"
-                [customClasses]="{'w-full':true}" [type]="'text'"
-                [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-              </app-text-input>
-              <button (click)="addTask()"
-                class="bg-[var(--ion-color-primary)] text-white rounded px-4 ml-2">Add</button>
-            </div>
-
-            <ng-container *ngFor="let task of task">
-              <div *ngIf="showCompletedTasks || !task.completed" class="space-y-2 mt-2">
-                <div id="task.id" class="flex items-center mb-2">
-                  <input type="checkbox" class="mr-2" [checked]="task.completed" (change)="toggleTaskCompletion(task)">
-                  <div>
-                    <p>{{ task.title }}</p>
-                    <p class="text-sm text-gray-500">{{ task.due_date }}</p>
-                  </div>
-                  <i class="fas fa-info-circle ml-auto text-blue-500">i</i>
-                </div>
-              </div>
-            </ng-container>
-
-            <div class="mt-2">
-              <button (click)="showCompletedTasks = !showCompletedTasks" class="text-blue-500">
-                {{ showCompletedTasks ? 'Hide Completed Tasks' : 'Show Completed Tasks' }}
-              </button>
-            </div>
-          </div>
+          
         </div>
         <ion-footer class="fixed bottom-0 py-3 px-5 w-full bg-[var(--ion-color-tertiary)]">
           <div class="flex w-full justify-end">
@@ -218,98 +204,6 @@
   </ion-modal>
 
   <!-- Modal untuk nambah event -->
-  <ion-modal id="add-event-modal" [isOpen]="isAddEventClick" (didDismiss)="isAddEventClick = false"
-    [initialBreakpoint]="0.25" [breakpoints]="[0, 0.25, 0.5, 0.85]">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <app-visitor-button [text]="'Cancel'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-28'"></app-visitor-button>
-          </ion-buttons>
-          <ion-title class="text-center font-bold">Add Event</ion-title>
-          <ion-buttons slot="end">
-            <app-visitor-button [text]="'Confirm'"
-              [extraClass]="'bg-[var(--ion-color-primary)] text-white w-28'"></app-visitor-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <!-- Icons Row -->
-        <div class="flex items-center justify-between mb-4">
-          <i class="fas fa-check-square text-blue-500 text-2xl"></i>
-          <i class="fas fa-bell text-gray-400 text-2xl"></i>
-          <i class="fas fa-flag text-gray-400 text-2xl"></i>
-          <i class="fas fa-star text-gray-400 text-2xl"></i>
-        </div>
-
-        <!-- Event Name Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Event name"
-            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <!-- All Day Toggle -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">All day</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" class="sr-only peer">
-            <div
-              class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
-            </div>
-          </label>
-        </div>
-
-        <!-- From Date -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">From</span>
-          <app-text-input [id]="'date_event'" [placeholder]="'dd/mm/yyyy, --:-- --'" [customClasses]="{'w-full':true}"
-            [type]="'date'"
-            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-          </app-text-input>
-        </div>
-
-        <!-- To Date -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">To</span>
-          <app-text-input [id]="'date_event'" [placeholder]="'dd/mm/yyyy, --:-- --'" [customClasses]="{'w-full':true}"
-            [type]="'date'"
-            [customInputClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-8':true, 'text-sm': true, 'border': false}">
-          </app-text-input>
-        </div>
-
-        <!-- Repeat -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Repeat</span>
-          <span>One-time event</span>
-        </div>
-
-        <!-- Reminders -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Reminders</span>
-          <span>5 minutes before</span>
-        </div>
-
-        <!-- Time Zone -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="font-semibold">Time zone</span>
-          <span>(GMT+8:00) Singapore</span>
-        </div>
-
-        <!-- Location Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Location"
-            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <!-- Description Input -->
-        <div class="mb-4">
-          <input type="text" placeholder="Description"
-            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
   <div class="h-[4.5rem]"></div>
 </ion-content>
 <ion-footer>
