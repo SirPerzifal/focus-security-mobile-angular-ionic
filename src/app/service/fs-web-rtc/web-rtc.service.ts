@@ -502,30 +502,30 @@ export class WebRtcService extends ApiService{
           const parsedResident = JSON.parse(decoded);
           if (parsedResident.family_id) {
             this.http.post<any>(`${this.baseUrl}/get/fcm_token`, {jsonrpc: '2.0', params: {family_id: parsedResident.family_id}}).subscribe(
-                res => {
-                  var fcm_token = res.result['status_desc'];
-                  this.getFCMToken().then(token => {
-                    if(token != fcm_token){
-                      const isDesktop = this.platform.is('mobileweb');
-                      if (isDesktop) {
-                        console.log("Your in desktop device", isDesktop);
-                      } else {
-                        this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
-                        console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
-                        setTimeout(()=>{
-                          this.closeSocket();
-                          this.storage.clearAllValueFromStorage();
-                          Preferences.clear();
-                          this.router.navigate(['']);
-                        }, 3000)
-                      }
-                    }else{
+              res => {
+                var fcm_token = res.result['status_desc'];
+                this.getFCMToken().then(token => {
+                  if(token != fcm_token){
+                    const isDesktop = this.platform.is('mobileweb');
+                    if (isDesktop) {
+                      console.log("Your in desktop device", isDesktop);
+                    } else {
+                      this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
+                      console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
+                      setTimeout(()=>{
+                        this.closeSocket();
+                        this.storage.clearAllValueFromStorage();
+                        Preferences.clear();
+                        this.router.navigate(['']);
+                      }, 3000)
                     }
-                  });
-                },
-                error => {
-                }
-              )
+                  }else{
+                  }
+                });
+              },
+              error => {
+              }
+            )
           }
         }
       }
@@ -536,31 +536,31 @@ export class WebRtcService extends ApiService{
   }
 
   async getFCMToken(): Promise<string | null> {
-  try {
-    if (!Capacitor.isNativePlatform()) {
+    try {
+      if (!Capacitor.isNativePlatform()) {
+        return null;
+      }
+
+      const permission = await PushNotifications.requestPermissions();
+      if (permission.receive !== 'granted') {
+        return null;
+      }
+
+      return new Promise((resolve, reject) => {
+        PushNotifications.addListener('registration', (token) => {
+          resolve(token.value);
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+          reject(null);
+        });
+
+        PushNotifications.register();
+      });
+    } catch (error) {
       return null;
     }
-
-    const permission = await PushNotifications.requestPermissions();
-    if (permission.receive !== 'granted') {
-      return null;
-    }
-
-    return new Promise((resolve, reject) => {
-      PushNotifications.addListener('registration', (token) => {
-        resolve(token.value);
-      });
-
-      PushNotifications.addListener('registrationError', (error) => {
-        reject(null);
-      });
-
-      PushNotifications.register();
-    });
-  } catch (error) {
-    return null;
   }
-}
 
   async handleReceiverPendingCall(data:any){
     this.nativeOffer = data.offerObj;

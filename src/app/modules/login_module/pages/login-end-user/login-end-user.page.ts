@@ -67,7 +67,10 @@ export class LoginEndUserPage implements OnInit {
   }
 
   async getNotificationPermission(): Promise<string> {
+    console.log("kepanggil function");
+    
     try {
+      console.log("masuk try");
       // Cek jika berjalan di simulator
       const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
       
@@ -81,38 +84,42 @@ export class LoginEndUserPage implements OnInit {
         console.warn('PushNotifications not available.');
         return '';
       }
-  
+
       const permission = await PushNotifications.requestPermissions();
-  
+
       if (permission.receive !== 'granted') {
         console.log('Notification permission not granted');
         return '';
       }
-  
+
+      // ✅ Cleanup existing listeners sebelum register
+      PushNotifications.removeAllListeners();
       PushNotifications.register();
-  
+
       return new Promise((resolve, reject) => {
+        console.log("masuk udah ke return");
         // Set timeout untuk menghindari promise yang tidak pernah resolve
         const timeout = setTimeout(() => {
           cleanupListeners();
           console.log('FCM registration timed out');
           resolve(''); // Resolve dengan string kosong jika timeout
-        }, 10000); // Timeout setelah 10 detik
+        }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
         
         const cleanupListeners = () => {
           clearTimeout(timeout);
           PushNotifications.removeAllListeners();
         };
-  
+
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
             this.fcmToken = token.value;
+            console.log('FCM Token received:', token.value);
           } else {
             cleanupListeners();
             resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
-  
+
         PushNotifications.addListener('registrationError', (error) => {
           cleanupListeners();
           console.error('Push notification registration error:', error);

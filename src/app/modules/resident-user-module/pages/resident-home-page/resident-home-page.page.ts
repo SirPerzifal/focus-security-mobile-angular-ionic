@@ -257,6 +257,7 @@ export class ResidentHomePagePage implements OnInit {
         if ( result.data ) {
           this.storage.decodeData(result.data).then((value: any) => {
             if ( value ) {
+              this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);
               this.loadMenusConfig();
@@ -389,7 +390,13 @@ export class ResidentHomePagePage implements OnInit {
       this.setData(response.result.new_estate, response.result.new_estate.image_profile);
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
         this.isModalUpdateProfile = false;
-        this.webRtcService.initializeSocket();
+        this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+          if (value) {
+            this.webRtcService.initializeSocket();
+            const decodedUserState = decodeURIComponent(escape(atob(value)));
+            console.log(JSON.parse(decodedUserState).unit_id); // Pastikan untuk mengurai JSON
+          }
+        })
       })
     })
   }
@@ -425,44 +432,58 @@ export class ResidentHomePagePage implements OnInit {
         console.warn('PushNotifications not available.');
         return '';
       }
-  
+
       const permission = await PushNotifications.requestPermissions();
-  
+
       if (permission.receive !== 'granted') {
         console.log('Notification permission not granted');
         return '';
       }
-  
+
+      // ✅ Cleanup existing listeners sebelum register
+      PushNotifications.removeAllListeners();
       PushNotifications.register();
-  
+
       return new Promise((resolve, reject) => {
         // Set timeout untuk menghindari promise yang tidak pernah resolve
         const timeout = setTimeout(() => {
           cleanupListeners();
           console.log('FCM registration timed out');
           resolve(''); // Resolve dengan string kosong jika timeout
-        }, 10000); // Timeout setelah 10 detik
+        }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
         
         const cleanupListeners = () => {
           clearTimeout(timeout);
           PushNotifications.removeAllListeners();
         };
-  
+
         PushNotifications.addListener('registration', (token: Token) => {
           if (token.value) {
             this.fcmToken = token.value;
+            console.log('FCM Token received:', token.value);
+            
+            // ✅ Send token to backend
             this.mainApiResident.endpointCustomProcess({
               family_id: familyId,
               fcm_token: token.value
-            }, '/set/fcm_token').subscribe((response: any) => {
-              console.log(response);
-            })
+            }, '/set/fcm_token').subscribe({
+              next: (response: any) => {
+                console.log('FCM token sent to backend successfully:', response);
+                cleanupListeners();
+                resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
+              },
+              error: (error) => {
+                console.error('Failed to send FCM token to backend:', error);
+                cleanupListeners();
+                resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
+              }
+            });
           } else {
             cleanupListeners();
             resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
-  
+
         PushNotifications.addListener('registrationError', (error) => {
           cleanupListeners();
           console.error('Push notification registration error:', error);
@@ -474,4 +495,5 @@ export class ResidentHomePagePage implements OnInit {
       return ''; // Return string kosong untuk melanjutkan proses login
     }
   }
+
 }

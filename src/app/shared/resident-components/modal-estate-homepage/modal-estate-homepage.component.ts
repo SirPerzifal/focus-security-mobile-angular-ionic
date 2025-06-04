@@ -68,7 +68,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
     const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
     this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
       this.modalController.dismiss(encodedEstate);
-      this.webRtcService.initializeSocket();
     })
   }
 
