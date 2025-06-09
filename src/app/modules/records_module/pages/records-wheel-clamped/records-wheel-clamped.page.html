@@ -178,10 +178,10 @@
 
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
-          <div class="flex flex-row justify-end w-full">
+          <!-- <div class="flex flex-row justify-end w-full">
             <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle"
               (click)="presentModal()"></ion-icon>
-          </div>
+          </div> -->
           <div *ngIf="isLoading" class="flex justify-center items-center h-20">
             <!-- <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner> -->
             <app-modal-loading />

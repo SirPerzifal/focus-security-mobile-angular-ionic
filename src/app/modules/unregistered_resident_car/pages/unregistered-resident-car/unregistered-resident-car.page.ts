@@ -198,23 +198,25 @@ export class UnregisteredResidentCarPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.formData.project_id).then((value) => {
       console.log(value)
-      this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.formData.contact_number = value.contact_number ? value.contact_number : ''
-        this.formData.name = value.visitor_name ? value.visitor_name  : ''
-        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-        this.contactUnit = ''
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-        } else {
-          if (value.block_id) {
-            this.formData.block_id = value.block_id
-            this.loadUnit().then(() => {
-              setTimeout(() => {
-                this.contactUnit = value.unit_id
-              }, 300)
-            })
+      if (value) {
+        this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.formData.contact_number = value.contact_number ? value.contact_number : ''
+          this.formData.name = value.visitor_name ? value.visitor_name  : ''
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.formData.block_id = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
           }
         }
       }
@@ -231,6 +233,11 @@ export class UnregisteredResidentCarPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        if (contactData.identification_type && contactData. identification_number) {
+          this.is_id_disabled = true
+        } else {
+          this.is_id_disabled = false
+        }
       } else {
         if (contactData.block_id) {
           this.formData.block_id = contactData.block_id
@@ -257,6 +264,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     this.selectedHost = event[0]
   }
 
+  is_id_disabled = false
   setFromScan(event: any) {
     console.log(event)
     this.formData.identification_number = event.data.identification_number
@@ -265,6 +273,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
+      this.is_id_disabled = true
       this.formData.name = event.data.contractor_name ? event.data.contractor_name : ''
       this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
       this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''

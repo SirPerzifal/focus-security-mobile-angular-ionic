@@ -17,7 +17,7 @@
     <div class="flex flex-row">
       <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4">
         <div class="w-full" *ngIf="project_config.is_industrial">
-          <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+          <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
         </div>
         <div class="w-full">
           <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. MARCO ZHABIN'" [customClasses]="{'w-full':true}" [type]="'text'"  [(ngModel)]="formData.name"[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>

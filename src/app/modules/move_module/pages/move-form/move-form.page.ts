@@ -291,13 +291,15 @@ export class MoveFormPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.contact_number = value.contact_number ? value.contact_number : ''
-        this.contractor_name = value.visitor_name ? value.visitor_name  : ''
-        this.selectedImage = value.visitor_image
-        this.identificationType = value.identification_type ? value.identification_type : ''
-        this.nric_value = value.identification_number ? value.identification_number : '' 
+      if (value) {
+        this.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.contact_number = value.contact_number ? value.contact_number : ''
+          this.contractor_name = value.visitor_name ? value.visitor_name  : ''
+          this.selectedImage = value.visitor_image
+          this.identificationType = value.identification_type ? value.identification_type : ''
+          this.nric_value = value.identification_number ? value.identification_number : '' 
+        }
       }
     })
   }
@@ -309,12 +311,17 @@ export class MoveFormPage implements OnInit {
   requestor_name = ''
   requestor_vehicle = ''
   
-
+  is_id_disabled = false
   getContactInfo(contactData: any){
     if (contactData) {
       this.requestor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.requestor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
+      this.identificationType = contactData.identification_type
+      this.nric_value = contactData.identification_number
+      if (contactData.identification_type && contactData.identification_number) {
+        this.is_id_disabled = true
+      }
     }
   }
 
@@ -361,6 +368,7 @@ export class MoveFormPage implements OnInit {
                 this.company_name = data.company_name
                 this.contact_number = data.contact_number
                 this.vehicle_number = data.vehicle_number
+                this.is_id_disabled = true
               } 
             } else {
               if (is_pax) {

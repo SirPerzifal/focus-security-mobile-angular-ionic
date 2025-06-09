@@ -29,8 +29,8 @@ export class ContractorNricScanPage implements OnInit {
   }
 
   project_id = 191
-  min_digit = 0
-  max_digit = 0
+  min_digit = 8
+  max_digit = 9
 
   ngOnDestroy() {
     this.isListening = false;

@@ -49,7 +49,7 @@ export class RecordsBlacklistFormPage implements OnInit {
               banned_by: '',
               project_id: this.formData.project_id
             }
-    
+            console.log(this.formData)
           })
         }
         this.loadUnit().then(() => {
@@ -67,8 +67,7 @@ export class RecordsBlacklistFormPage implements OnInit {
             banned_by: '',
             project_id: this.formData.project_id
           }
-        })
-        
+        })        
       } else {
         this.unitShow = true
         this.refreshVehicle()
@@ -174,6 +173,7 @@ export class RecordsBlacklistFormPage implements OnInit {
   }
 
   refreshVehicle(is_click: any = false) {
+    if (this.is_readonly) return
     if ((!this.is_ban_visitor && !this.is_ban_notice) || !this.record.vehicle_number ){
       this.functionMain.getLprConfig(this.project_id).then((value) => {
         console.log(value)
@@ -236,7 +236,7 @@ export class RecordsBlacklistFormPage implements OnInit {
     } else {
       console.log("SAVE")
       let tempDate = new Date().toISOString().split('T')
-      this.formData.last_entry_date_time = tempDate[0] + ' ' + tempDate[1].split('.')[0]
+      this.formData.last_entry_date_time = this.formData.last_entry_date_time ? this.formData.last_entry_date_time : tempDate[0] + ' ' + tempDate[1].split('.')[0]
       let params = {...this.formData, host: this.selectedHost}
       console.log(params)
       this.clientMainService.getApi(params, '/resident/post/ban_visitor').subscribe({

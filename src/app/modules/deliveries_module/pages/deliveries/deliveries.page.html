@@ -46,7 +46,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-row mt-6" *ngIf="food_delivery_type">
+          <div class="flex flex-row mt-6" *ngIf="food_delivery_type" @fadeInOut>
             <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
               <div class="w-full">
                 <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
@@ -55,20 +55,13 @@
                 </app-input-image-preview>
               </div>
               <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-                <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
+                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
                   (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
               </div>
               <div class="w-full">
                 <app-vms-contact-input [(value)]="formData.contact_number" [id]="'deliveries_contact_number'"
                   (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
               </div>
-              <!-- <div class="w-full flex flex-col">
-                <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
-                <input id="contact_number" placeholder="EG. +65 XXXX XXX" type="text" style="border: 1px solid #6B7280;"
-                  class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                  [(ngModel)]="formData.contact_number" name="contact_number">
-
-              </div> -->
               <div *ngIf="food_delivery_type == 'drive_in'" class=" w-full flex flex-row justify-between">
                 <div class="w-[90%] flex flex-col">
                   <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
@@ -161,7 +154,7 @@
                   [(ngModel)]="formData.contact_number" name="contact_number">
               </div> -->
               <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-                <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
+                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
                   (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
               </div>
               <div class="w-full  flex flex-row justify-between">
@@ -280,7 +273,7 @@
             </app-input-image-preview>
           </div>
           <div class="w-full flex flex-col">
-            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
+            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
           </div>
           <div class="w-full">
             <app-text-input [id]="'drive_in_name'" [(ngModel)]="otherDeliveryForm.visitor_name" [labelText]="'NAME'" [placeholder]="'EG. ARTHUR VOYAGE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>

@@ -85,19 +85,19 @@ export class RecordsBlacklistPage implements OnInit {
     if (type == 'visitor') {
       this.pageType = 'visitor'
       this.showVisitor = true;
-      this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+      this.loadBlacklistData()
     }
     if (type == 'vehicle') {
       this.pageType = 'vehicle'
       this.showVehicle = true;
-      this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
+      this.loadBlacklistData()
     }
     console.log(type, this.showVehicle, this.showVisitor)
     console.log(this.blacklistData)
   }
 
-  activeVehicles: any[] = [];
-  historyVehicles: any[] = [];
+  visitorData: any[] = [];
+  vehicleData: any[] = [];
   existData: any[] = []
   blacklistData: any[] = []
   searchOption: string = ''
@@ -206,7 +206,6 @@ export class RecordsBlacklistPage implements OnInit {
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
-    this.applyFilters()
     console.log(event.target.value)
   }
 
@@ -227,18 +226,21 @@ export class RecordsBlacklistPage implements OnInit {
 
 
   applyFilters() {
-    this.blacklistData = this.existData.filter(item => {
-      const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
-      const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
-      const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_no.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
+    // this.blacklistData = this.existData.filter(item => {
+    //   const typeMatches = this.pageType == 'vehicle' ? item.vehicle_no != '' : item.vehicle_no == '';
+    //   const contactMatches = this.filter.contact ? item.contact_no.includes(this.filter.contact) : true;
+    //   const vehicleNumberMatches = this.pageType == 'vehicle' ? ( this.filter.vehicle_number ? item.vehicle_no.toLowerCase().includes(this.filter.vehicle_number.toLowerCase()) : true ) : ( this.filter.name ? item.visitor_name.toLowerCase().includes(this.filter.name.toLowerCase()) : true );
 
-      const blockMatches = this.filter.block ? item.block_id[0] == this.filter.block : true;
-      const unitMatches =  this.filter.unit ? item.unit_id[0] == this.filter.unit : true;
-      const hostMatches =  this.selectedHost ? item.industrial_host_ids.includes(parseInt(this.selectedHost)) : true;
+    //   const blockMatches = this.filter.block ? item.block_id[0] == this.filter.block : true;
+    //   const unitMatches =  this.filter.unit ? item.unit_id[0] == this.filter.unit : true;
+    //   const hostMatches =  this.selectedHost ? item.industrial_host_ids.includes(parseInt(this.selectedHost)) : true;
 
-      return hostMatches && blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
-    });
-    console.log(this.blacklistData)
+    //   return hostMatches && blockMatches && unitMatches && typeMatches && contactMatches && vehicleNumberMatches;
+    // });
+    // console.log(this.blacklistData)
+    this.currentPage = 1
+    this.inputPage = 1
+    this.loadBlacklistData()
   }
 
   onArrowClick(vehicle: any[]) {
@@ -253,25 +255,45 @@ export class RecordsBlacklistPage implements OnInit {
   isLoading = false
   async loadBlacklistData() {
     this.isLoading = true
-    this.existData = []
+    let params = {
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory, 
+      is_visitor: this.showVisitor, 
+      name: this.filter.name, 
+      contact_search: this.filter.contact, 
+      vehicle_number: this.filter.vehicle_number,
+      block: this.filter.block,
+      unit: this.filter.unit,
+      host: this.selectedHost,
+    }
+    this.visitorData = []
+    this.vehicleData = []
     this.blacklistData = []
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/visitor_ban').subscribe({
+    this.clientMainService.getApi(params, '/vms/get/visitor_ban').subscribe({
       next: (results) => {
         console.log(results);
         if (results.result.response_code === 200) {
-          this.existData = results.result.result;
-          this.applyFilters()
-          if (this.pageType == 'visitor') {
-            this.blacklistData = this.existData.filter(item => item.vehicle_no == '')
+          this.blacklistData = results.result.result;
+          this.pagination = results.result.pagination
+          this.total_pages = this.pagination.total_pages
+          if (this.showVisitor) {
+            this.visitorData = results.result.result
           } else {
-            this.blacklistData = this.existData.filter(item => item.vehicle_no != '')
+            this.vehicleData = results.result.result
           }
         } else {
-          this.existData = []
+          this.currentPage = 1
+          this.inputPage = 1
+          this.total_pages = 0
+          this.pagination = {}
         }
         this.isLoading = false
       },
       error: (error) => {
+        this.currentPage = 1
+        this.inputPage = 1
+        this.total_pages = 0
+        this.pagination = {}
         this.presentToast('An error occurred while loading blacklist data!', 'danger');
         console.error(error);
         this.isLoading = false
@@ -307,6 +329,22 @@ export class RecordsBlacklistPage implements OnInit {
   onHostChange(event: any) {
     this.selectedHost = event[0]
     this.applyFilters()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.loadBlacklistData()
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
   handleRefresh(event: any) {

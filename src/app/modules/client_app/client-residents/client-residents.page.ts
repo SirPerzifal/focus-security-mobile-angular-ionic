@@ -45,7 +45,7 @@ export class ClientResidentsPage implements OnInit {
     error: (error) => {
       this.isLoading = false
       this.pagination = {}
-      this.functionMain.presentToast('An error occurred while loading blacklist data!', 'danger');
+      this.functionMain.presentToast('An error occurred while loading resident data!', 'danger');
       console.error(error);
     }})
   }

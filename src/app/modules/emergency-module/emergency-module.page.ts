@@ -149,22 +149,24 @@ export class EmergencyModulePage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.formData.contact_number = value.contact_number ? value.contact_number : ''
-        this.formData.officer_name = value.visitor_name ? value.visitor_name  : ''
-        this.contactUnit = ''
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-        } else {
-          if (value.block_id) {
-            this.formData.block_id = value.block_id
-            this.loadUnit().then(() => {
-              setTimeout(() => {
-                this.contactUnit = value.unit_id
-              }, 300)
-            })
+      if (value) {
+        this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.formData.contact_number = value.contact_number ? value.contact_number : ''
+          this.formData.officer_name = value.visitor_name ? value.visitor_name  : ''
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.formData.block_id = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
           }
         }
       }

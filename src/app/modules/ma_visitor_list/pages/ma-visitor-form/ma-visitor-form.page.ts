@@ -116,10 +116,12 @@ export class MaVisitorFormPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.record.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.record.contact_no = value.contact_number ? value.contact_number : ''
-        this.record.name = value.visitor_name ? value.visitor_name  : ''        
+      if (value) {
+        this.record.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.record.contact_no = value.contact_number ? value.contact_number : ''
+          this.record.name = value.visitor_name ? value.visitor_name  : ''        
+        }
       }
     })
   }

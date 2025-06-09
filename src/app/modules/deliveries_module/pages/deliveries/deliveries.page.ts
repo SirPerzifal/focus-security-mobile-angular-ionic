@@ -288,6 +288,20 @@ export class DeliveriesPage implements OnInit {
     };
     this.pass_number = ''
     this.selectedImage = ''
+    this.is_id_disabled = false
+  }
+
+  resetFormFood() {
+    this.formData.contact_number = ''
+    this.selectedImage = ''
+    this.selectedNric = ''
+    this.formData.block = ''
+    this.contactUnit = ''
+    this.formData.unit = ''
+    this.contactHost = ''
+    this.selectedHost = ''
+    this.pass_number = ''
+    this.is_id_disabled = false
   }
 
   onSubmitPackage(openBarrier: boolean = false, camera_id: string = '') {
@@ -577,10 +591,15 @@ export class DeliveriesPage implements OnInit {
     if (mark){
       this.food_delivery_type = ''
     } else {
-      this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
       if (selectedButton.text == 'DRIVE IN') {
         this.refreshVehicle()
+      } else {
+        this.resetFormFood()
       }
+      this.food_delivery_type = ''
+      setTimeout(() => {
+        this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
+      }, 300)
     }
     
     console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
@@ -689,40 +708,42 @@ export class DeliveriesPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.otherDeliveryForm.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
-      this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        if (this.otherDeliveries) {
-          console.log("SHOW OTHER")
-          this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
-          this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
-          this.selectedImage = value.visitor_image
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-          this.contactUnit = ''
-          this.contactHost = ''
-          if (value.industrial_host_id) {
-            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-          }
-        } else {
-          console.log("SHOW PACKAGE")
-          this.formData.contact_number = value.contact_number ? value.contact_number : ''
-          this.selectedImage = value.visitor_image
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-          this.contactUnit = ''
-          this.contactHost = ''
-          if (this.project_config.is_industrial) {
-            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-          } else {
-            if (value.block_id) {
-              this.formData.block = value.block_id
-              this.loadUnit().then(() => {
-                setTimeout(() => {
-                  this.contactUnit = value.unit_id
-                }, 300)
-              })
+      if (value) {
+        this.otherDeliveryForm.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+        this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          if (this.otherDeliveries) {
+            console.log("SHOW OTHER")
+            this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
+            this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
+            this.selectedImage = value.visitor_image
+            this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+            this.contactUnit = ''
+            this.contactHost = ''
+            if (value.industrial_host_id) {
+              this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
             }
-          }
-        } 
+          } else {
+            console.log("SHOW PACKAGE")
+            this.formData.contact_number = value.contact_number ? value.contact_number : ''
+            this.selectedImage = value.visitor_image
+            this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+            this.contactUnit = ''
+            this.contactHost = ''
+            if (this.project_config.is_industrial) {
+              this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+            } else {
+              if (value.block_id) {
+                this.formData.block = value.block_id
+                this.loadUnit().then(() => {
+                  setTimeout(() => {
+                    this.contactUnit = value.unit_id
+                  }, 300)
+                })
+              }
+            }
+          } 
+        }
       }
     })
   }
@@ -743,6 +764,11 @@ export class DeliveriesPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        if (contactData.identification_type && contactData. identification_number) {
+          this.is_id_disabled = true
+        } else {
+          this.is_id_disabled = false
+        }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -773,12 +799,14 @@ export class DeliveriesPage implements OnInit {
     this.selectedHost = event[0]
   }
 
+  is_id_disabled = false
   setFromScan(event: any) {
     console.log(event)
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
       this.selectedImage = event.data.visitor_image
+      this.is_id_disabled = true
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
@@ -897,6 +925,11 @@ export class DeliveriesPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        if (contactData.identification_type && contactData. identification_number) {
+          this.is_id_disabled = true
+        } else {
+          this.is_id_disabled = false
+        }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id

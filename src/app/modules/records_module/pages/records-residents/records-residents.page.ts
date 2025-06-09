@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { RecordsResidentService } from 'src/app/service/vms/records/records-resident.service';
@@ -21,26 +22,45 @@ export class RecordsResidentsPage implements OnInit {
     private route: ActivatedRoute,
     private recordsResidentService: RecordsResidentService,
     private functionMain: FunctionMainService,
+    private clientMain: ClientMainService
   ) { }
 
   isLoading = false
   initTemp() {
     this.isLoading = true
-    this.logsData = [];
-    this.historyVehicles = this.logsData
-    this.recordsResidentService.loadAllResident(this.project_id, this.project_config.is_windows).subscribe(
-      (response: any) => {
-        console.log(response)
-        if (response.result.status === 'success') {
-          this.logsData = response.result.data;
-          this.historyVehicles = this.logsData
-          this.applyFilters()
-        } else {
-          // this.presentToast('Failed to load resident data', 'danger');
-        }
-        this.isLoading = false
-      },
-    )
+    let params = {
+      page: this.currentPage, 
+      limit: this.functionMain.limitHistory,
+      block: this.filter.block,
+      unit: this.filter.unit,
+      name: this.filter.name,
+    }
+    console.log(this.filter)
+    this.logsData = []
+    this.clientMain.getApi(params, '/vms/get/all_record_resident').subscribe({
+      next: (results) => {
+      this.isLoading = false
+      console.log(results)
+      if (results.result.status) {
+        this.logsData = results.result.data
+        this.pagination = results.result.pagination
+        this.total_pages = this.pagination.total_pages
+      } else {
+        this.currentPage = 1
+        this.inputPage = 1
+        this.total_pages = 0
+        this.pagination = {}
+      }
+    },
+    error: (error) => {
+      this.currentPage = 1
+      this.inputPage = 1
+      this.total_pages = 0
+      this.isLoading = false
+      this.pagination = {}
+      this.functionMain.presentToast(`An error occurred while loading ${this.project_config.is_industrial ? 'employee' : 'resident'} data!`, 'danger');
+      console.error(error);
+    }})
   }
 
   ngOnInit() {
@@ -91,12 +111,18 @@ export class RecordsResidentsPage implements OnInit {
     this.applyFilters()
   }
 
+  onNameFilterChange(event: any) {
+    this.filter.name = event.target.value
+    this.applyFilters()
+  }
+
   Block: any[] = []
   Unit: any[] = []
 
   filter = {
     block: '',
     unit: '',
+    name: '',
   }
 
   loadBlock() {
@@ -142,13 +168,16 @@ export class RecordsResidentsPage implements OnInit {
 
 
   applyFilters() {
-    this.historyVehicles = this.logsData.filter(item => {  
-      const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
-      const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
+    // this.historyVehicles = this.logsData.filter(item => {  
+    //   const blockMatches = this.filter.block ? item.block_id == this.filter.block : true;
+    //   const unitMatches = this.filter.unit ? item.unit_id == this.filter.unit : true;
   
-      return blockMatches && unitMatches;
-    });
-    console.log(this.historyVehicles)
+    //   return blockMatches && unitMatches;
+    // });
+    // console.log(this.historyVehicles)
+    this.currentPage = 1
+    this.inputPage = 1
+    this.initTemp()
   }
 
   onArrowClick(logs: any[]){
@@ -161,35 +190,28 @@ export class RecordsResidentsPage implements OnInit {
     });
   }
 
-  loadRecordsResidents() {
-    // this.isLoading = false;
-
-    // this.offensesService.getOfffenses(this.pageType).subscribe({
-    //   next: (results) => {
-    //     if (results.result.response_code === 200) {
-    //       this.logsData = results.result.response_result;
-    //       console.log(this.logsData)
-    //       this.activeVehicles = this.logsData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0))
-    //       this.historyVehicles = this.logsData
-    //     } else {
-    //       this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     }
-
-    //     // this.isLoading = false;
-    //   },
-    //   error: (error) => {
-    //     this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
-    //     console.error(error);
-    //     // this.isLoading = false;
-    //   }
-    // });
-  }
-
   clearFilters() {
     this.Unit = []
     this.filter.block = ''
     this.filter.unit = ''
+    this.filter.name = ''
     this.applyFilters()
+  }
+
+  currentPage = 1
+  inputPage = 1
+  total_pages = 0
+  pagination: any = {}
+
+  changePage(page: number) {
+    let tempPage = page
+    console.log(tempPage, this.total_pages)
+    if (tempPage > 0 && tempPage <= this.total_pages) {
+      this.currentPage = tempPage
+      this.initTemp()
+    } else {
+    }
+    this.inputPage = this.currentPage
   }
 
   handleRefresh(event: any) {

@@ -92,6 +92,7 @@ export class WalkInPage implements OnInit {
   }
 
   resetForm() {
+    this.is_id_disabled = false
     this.Unit = []
     this.formData.visitor_name = ''
     this.formData.visitor_contact_no = ''
@@ -191,9 +192,11 @@ export class WalkInPage implements OnInit {
             } else {
               this.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
             }
+            this.resetPage()
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
             this.presentToast(res.result.status_description, 'danger');
+            this.resetPage()
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
@@ -294,6 +297,7 @@ export class WalkInPage implements OnInit {
             }else {
               this.presentToast('Walk in data has been successfully saved to the system!', 'success');
             }
+            this.resetPage()
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 205) {
             if (openBarrier) {
@@ -301,6 +305,7 @@ export class WalkInPage implements OnInit {
             } else {
               this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
             }
+            this.resetPage()
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 405) {
             this.presentToast(res.result.status_description, 'danger');
@@ -451,24 +456,26 @@ export class WalkInPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.formData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.formData.visitor_contact_no = value.contact_number ? value.contact_number : ''
-        this.formData.visitor_name = value.visitor_name ? value.visitor_name  : ''
-        this.selectedImage = value.visitor_image
-        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-        this.contactUnit = ''
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-        } else {
-          if (value.block_id) {
-            this.formData.block = value.block_id
-            this.loadUnit().then(() => {
-              setTimeout(() => {
-                this.contactUnit = value.unit_id
-              }, 300)
-            })
+      if (value) {
+        this.formData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.formData.visitor_contact_no = value.contact_number ? value.contact_number : ''
+          this.formData.visitor_name = value.visitor_name ? value.visitor_name  : ''
+          this.selectedImage = value.visitor_image
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.formData.block = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
           }
         }
       }
@@ -476,6 +483,7 @@ export class WalkInPage implements OnInit {
     // console.log("Vehicle Refresh", randomVhc)
   }
 
+  is_id_disabled = false
   getContactInfo(contactData: any){
     this.contactUnit = ''
     this.contactHost = ''
@@ -486,6 +494,11 @@ export class WalkInPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        if (contactData.identification_type && contactData. identification_number) {
+          this.is_id_disabled = true
+        } else {
+          this.is_id_disabled = false
+        }
       } else {
         if (contactData.block_id) {
           this.formData.block = contactData.block_id
@@ -616,9 +629,11 @@ export class WalkInPage implements OnInit {
     if (this.isHidden){
       this.stopScanner()
       setTimeout(() => {
+        this.resetPage()
         this.router.navigate(['home-vms'])
       }, 300);
     } else {
+      this.resetPage()
       this.router.navigate(['home-vms'])
     }
   }
@@ -648,13 +663,14 @@ export class WalkInPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
+      this.is_id_disabled = true
       this.selectedImage = event.data.visitor_image
       this.formData.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
       this.formData.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
       if (this.showDrive) {
         this.formData.visitor_vehicle = event.data.vehicle_number ? event.data.vehicle_number : ''
       }
-    } 
+    }
     console.log(this.nric_value, this.identificationType)
   }
 
@@ -664,6 +680,13 @@ export class WalkInPage implements OnInit {
   pass_number = ''
 
   selectedImage: any = ''
+
+  resetPage() {
+    this.resetForm()
+    this.showWalk = false;
+    this.showDrive = false;
+    this.showQr = false;
+  }
 
   handleRefresh(event: any) {
     if (this.project_config.is_industrial) {

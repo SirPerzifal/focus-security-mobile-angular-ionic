@@ -47,8 +47,8 @@ export class ContractorFormPage implements OnInit {
       } else {
         this.loadBlock()
         this.showDrive = true
+        this.refreshVehicle()
       }
-      this.refreshVehicle()
     })
     this.paxData = Array.from({ length: this.maxPax }, () => ({ contractor_name: '', identification_number: '' }));
   }
@@ -353,6 +353,7 @@ export class ContractorFormPage implements OnInit {
     this.contractor_entry_date = ''
 
     this.selectedImage = ''
+    this.is_id_disabled = false
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -410,29 +411,36 @@ export class ContractorFormPage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.formData.contact_number = value.contact_number ? value.contact_number : ''
-        this.formData.contractor_name = value.visitor_name ? value.visitor_name  : ''
-        this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
-        this.selectedImage = value.visitor_image
-        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-        this.contactUnit = ''
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          if (value.industrial_host_ids) {
-            this.contactHost = value.industrial_host_ids ? value.industrial_host_ids : ''
-          } else {
-            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-          }
-        } else {
-          if (value.block_id) {
-            this.selectedBlock = value.block_id
-            this.loadUnit().then(() => {
+      if (value) {
+        this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.formData.contact_number = value.contact_number ? value.contact_number : ''
+          this.formData.contractor_name = value.visitor_name ? value.visitor_name  : ''
+          this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
+          this.selectedImage = value.visitor_image
+          this.identificationType = value.identification_type ? value.identification_type : ''
+          this.nric_value = value.identification_number ? value.identification_number : '' 
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            if (value.industrial_host_ids.length > 0) {
+              this.contactHost = value.industrial_host_ids ? value.industrial_host_ids : ''
+            } else {
+              this.tempHost = value.industrial_host_id ? [value.industrial_host_id] : ''
               setTimeout(() => {
-                this.contactUnit = value.unit_id
+                this.contactHost = this.tempHost
               }, 300)
-            })
+              console.log(this.contactHost)
+            }
+          } else {
+            if (value.block_id) {
+              this.selectedBlock = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
           }
         }
       }
@@ -448,6 +456,7 @@ export class ContractorFormPage implements OnInit {
 
   contactUnit = ''
   selectedNric: any = ''
+  is_id_disabled = false
   getContactInfo(contactData: any) {
     this.contactUnit = ''
     this.contactHost = ''
@@ -456,15 +465,21 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       this.nric_value = contactData.identification_number
+      if (contactData.identification_type && contactData. identification_number) {
+        this.is_id_disabled = true
+      } else {
+        this.is_id_disabled = false
+      }
       if (contactData.identification_type) {
         this.identificationType = contactData.identification_type
         this.temp_type = this.identificationType
       }
       if (this.project_config.is_industrial) {
-        if (contactData.industrial_host_ids) {
+        if (contactData.industrial_host_ids.lentgh > 0) {
           this.contactHost = contactData.industrial_host_ids ? contactData.industrial_host_ids : ''
         } else {
-          this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+          this.tempHost = contactData.industrial_host_id ? [contactData.industrial_host_id] : ''
+          this.contactHost = this.tempHost
         }
       } else {
         if (contactData.block_id) {
@@ -503,6 +518,7 @@ export class ContractorFormPage implements OnInit {
                 this.nameIdentity[order] = data.contractor_name
               } else {
                 console.log(value)
+                this.is_id_disabled = true
                 this.formData.contractor_name = data.contractor_name
                 this.formData.company_name = data.company_name
                 this.formData.contact_number = data.contact_number

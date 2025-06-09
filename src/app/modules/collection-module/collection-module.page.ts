@@ -121,7 +121,7 @@ export class CollectionModulePage implements OnInit {
     this.identificationType = ''
     this.selectedNric = ''
     this.pass_number = ''
-
+    this.is_id_disabled = false
     this.selectedImage = ''
   }
 
@@ -439,25 +439,27 @@ export class CollectionModulePage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.driveInFormData.visitor_contact_no = value.contact_number ? value.contact_number : ''
-        this.driveInFormData.visitor_name = value.visitor_name ? value.visitor_name  : ''
-        this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
-        this.selectedImage = value.visitor_image
-        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-        this.contactUnit = ''
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-        } else {
-          if (value.block_id) {
-            this.driveInFormData.block = value.block_id
-            this.loadUnit().then(() => {
-              setTimeout(() => {
-                this.contactUnit = value.unit_id
-              }, 300)
-            })
+      if (value) {
+        this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.driveInFormData.visitor_contact_no = value.contact_number ? value.contact_number : ''
+          this.driveInFormData.visitor_name = value.visitor_name ? value.visitor_name  : ''
+          this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
+          this.selectedImage = value.visitor_image
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactUnit = ''
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.driveInFormData.block = value.block_id
+              this.loadUnit().then(() => {
+                setTimeout(() => {
+                  this.contactUnit = value.unit_id
+                }, 300)
+              })
+            }
           }
         }
       }
@@ -496,6 +498,11 @@ export class CollectionModulePage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        if (contactData.identification_type && contactData. identification_number) {
+          this.is_id_disabled = true
+        } else {
+          this.is_id_disabled = false
+        }
       } else {
         if (contactData.block_id) {
           this.walkInFormData.block = contactData.block_id
@@ -526,11 +533,14 @@ export class CollectionModulePage implements OnInit {
     this.selectedHost = event[0]
   }
 
+  
+  is_id_disabled = false
   setFromScan(event: any) {
     console.log(event)
     this.nric_value = event.data.identification_number
     this.identificationType = event.type
     if (event.data.is_server) {
+      this.is_id_disabled = true
       this.selectedImage = event.data.visitor_image
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''

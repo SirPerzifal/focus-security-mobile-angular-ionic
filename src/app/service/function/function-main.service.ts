@@ -358,9 +358,6 @@ export class FunctionMainService {
       console.log(results);
 
       if (results.result.response_code === 200) {
-        if (results.result.response_result[0].vehicle_number) {
-          // this.presentToast('No vehicle found!', 'danger');
-        }
         return results.result.response_result[0];
       } else {
         this.presentToast('Failed to get project latest vehicle number', 'danger');

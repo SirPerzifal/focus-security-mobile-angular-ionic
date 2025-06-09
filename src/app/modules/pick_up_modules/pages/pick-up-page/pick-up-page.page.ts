@@ -138,6 +138,7 @@ export class PickUpPagePage implements OnInit {
     this.selectedNric = ''
     this.pass_number = ''
     this.contactHost = ''
+    this.is_id_disabled = false
   }
 
   toggleShowDrop() {
@@ -288,15 +289,17 @@ export class PickUpPagePage implements OnInit {
   refreshVehicle(is_click: boolean = false) {
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
-      this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
-      if (!is_click) {
-        this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-        this.contactHost = ''
-        if (this.project_config.is_industrial) {
-          this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
-        } else {
-          if (value.block_id) {
-            this.blkLocation = value.block_id
+      if (value) {
+        this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
+        if (!is_click) {
+          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          this.contactHost = ''
+          if (this.project_config.is_industrial) {
+            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+          } else {
+            if (value.block_id) {
+              this.blkLocation = value.block_id
+            }
           }
         }
       }
@@ -320,6 +323,7 @@ export class PickUpPagePage implements OnInit {
     this.selectedHost = event[0]
   }
 
+  is_id_disabled = false
   setFromScan(event: any) {
     console.log(event)
     this.nric_value = event.data.identification_number ? event.data.identification_number : ''
@@ -328,6 +332,7 @@ export class PickUpPagePage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
+      this.is_id_disabled = true
       this.vehicleNumber = event.data.vehicle_number ? event.data.vehicle_number : ''
     } 
     console.log(this.nric_value, this.identificationType)

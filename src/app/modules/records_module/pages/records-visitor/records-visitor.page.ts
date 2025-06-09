@@ -420,7 +420,7 @@ export class RecordsVisitorPage implements OnInit {
     console.log(tempPage, this.total_pages)
     if (tempPage > 0 && tempPage <= this.total_pages) {
       this.currentPage = tempPage
-      this.loadLogs(this.pageType, false)
+      this.loadLogs(this.pageType, this.showActive)
     } else {
     }
     this.inputPage = this.currentPage
@@ -432,7 +432,7 @@ export class RecordsVisitorPage implements OnInit {
     } else {
       this.loadBlock()
     }
-    this.loadLogs(this.pageType, false)
+    this.loadLogs(this.pageType, this.showActive)
     setTimeout(() => {
       event.target.complete()
     }, 1000)

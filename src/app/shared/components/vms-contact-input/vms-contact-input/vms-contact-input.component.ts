@@ -165,7 +165,7 @@ export class VmsContactInputComponent  implements OnInit {
 
   isSmallScreen = false
   checkScreenSize() {
-    this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 570);
+    this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 670);
   }
 
 }

@@ -37,7 +37,7 @@
             </app-input-image-preview>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
           </div>
           <div class="w-full flex flex-col">
             <app-text-input #visitorWalkInName [id]="'walk_in_name'" [labelText]="'NAME'"
@@ -107,7 +107,7 @@
             </app-input-image-preview>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' />
+            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' />
           </div>
           <div class="w-full flex flex-col">
             <app-text-input #visitorDriveInName [id]="'drive_in_name'" [labelText]="'NAME'"
