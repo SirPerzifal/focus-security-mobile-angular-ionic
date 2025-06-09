@@ -312,6 +312,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
         is_provide_unit: this.dataForReinvite.is_provide_unit,
         facility: this.dataForReinvite.facility ? this.dataForReinvite.facility : 0,
       }, 'post/reinvite_visitor').subscribe((response) => {
+        this.functionMain.presentToast('Success reinvite the visitor.', 'success')
         this.router.navigate(['/visitor-main'], {
           queryParams: {
             openActive: true,

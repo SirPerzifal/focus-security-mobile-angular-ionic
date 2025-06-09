@@ -177,38 +177,51 @@ export class PaymentFormVehiclePage implements OnInit {
   }
 
   uploadReceipt() {
+    if (!this.paymentReceipt) {
+      this.functionMainService.presentToast("Please upload payment receipt", 'danger');
+      return;
+    }
     this.mainApiResident.endpointProcess({
       vehicle_id: this.vehicleData?.vehicleId,
       payment_receipt: this.paymentReceipt
     }, 'post/post_vehicle_receipt').subscribe((response: any) => {
       console.log(response);
-      this.functionMainService.presentToast("Success Book", 'success');
+      this.functionMainService.presentToast("Success Pay the Vehicle.", 'success');
       this.isPaymentProcessed = true;
     })
   }
 
     electricPay(stripe: any) {
-      this.mainApiResident.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+      this.mainApiResident.endpointCustomProcess({
+        id: this.vehicleData?.vehicleId,
+        model: 'fs.residential.vehicle',
+        amount_total_field: 'vehicle_amount_total'
+      }, '/create-payment-intent').subscribe((response: any) => {
         const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
         if (clientSecret) {
+          this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
           this.presentModal(clientSecret, stripe)
         }
       })
     }
   
+    stripeId: string = ''; // Replace with your actual publishable key
     async presentModal(clientSecret: string, stripe: any) {
       const modal = await this.modalController.create({
         component: ModalPaymentCustomComponent,
         cssClass: 'payment-modal',
         componentProps: {
           stripe: stripe,
-          clientSecret: clientSecret
+          clientSecret: clientSecret,
+          stripeId: this.stripeId,
+          from: 'my-vehicle-page-main',
         }
       });
   
       modal.onDidDismiss().then((result) => {
         if (result.data) {
-          // console.log(result)
+          this.functionMainService.presentToast("Success Pay the Vehicle", 'success');
+          this.isPaymentProcessed = true;
         } else {
           return
         }

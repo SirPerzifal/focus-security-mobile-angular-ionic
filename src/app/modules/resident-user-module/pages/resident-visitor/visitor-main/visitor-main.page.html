@@ -15,7 +15,7 @@
       [routerLink]="['/resident-home-page']"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
+  <div class="px-4 pb-4 pt-1.5 space-y-2">
     <div id="nav_tabs_main">
       <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
     </div>
@@ -100,7 +100,17 @@
             {{ book.facilityName }}, {{ book.bookName }}, {{ day }}({{
             book.bookingTime }})
           </option>
+          <option value="other">Other</option>
         </select>
+      </div>
+
+      <div *ngIf="facilitySelect.other" class="w-full mt-1">
+        <app-input-component
+          [id]="'facility_other'"
+          [type]="'text'"
+          [labelChild1]="'Other'"
+          (eventEmitter)="onValueChange($event)"
+        ></app-input-component>
       </div>
 
       <div *ngIf="userType !== 'industrial'">

@@ -257,7 +257,7 @@ export class VehicleFormPage implements OnInit {
   
     if (errMsg.length === 0) {
       this.mainApi.endpointMainProcess({
-        owned_by: this.vehicleForm.ownedBy ? this.vehicleForm.ownedBy : this.ownedBy.id,
+        owned_by: Number(this.vehicleForm.ownedBy) ? Number(this.vehicleForm.ownedBy) : this.ownedBy.id,
         previous_vehicle_id: this.vehicleIdForUpdateAndJustUpdateNothingElse,
         vehicle_number: this.vehicleForm.vehicleNumber,
         IU_number: this.vehicleForm.iuNumber,

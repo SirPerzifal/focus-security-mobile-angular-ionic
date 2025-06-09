@@ -48,6 +48,7 @@ export class VisitorInvitigFormPage implements OnInit {
     entryMessage: "",
     isProvideUnit: false,
     facility: '',
+    facility_other: "",
     hiredCar: "",
   }
 
@@ -482,9 +483,10 @@ export class VisitorInvitigFormPage implements OnInit {
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
           is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
-          facility: this.formData.facility ? this.formData.facility : 0,
+          facility: this.formData.facility === 'other' ? 0 : Number(this.formData.facility),
           invitees: submitData,
           hired_car: this.formData.hiredCar,
+          facility_other: this.formData.facility_other,
         }, 'post/create_expected_visitors').subscribe((response: any) => {
           if (response.result.response_code == 200) {
             this.functionMain.presentToast('Success Add Invite', 'success');
@@ -498,6 +500,7 @@ export class VisitorInvitigFormPage implements OnInit {
               entryMessage: "",
               isProvideUnit: false,
               facility: '',
+              facility_other: "",
               hiredCar: "",
             }
             this.router.navigate(['/visitor-main'], {

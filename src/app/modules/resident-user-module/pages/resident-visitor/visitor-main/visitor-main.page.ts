@@ -72,6 +72,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     entryMessage: "",
     isProvideUnit: false,
     facility: '',
+    facility_other: "",
     hiredCar: "",
   }
   selectedDate: string = '';
@@ -170,6 +171,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryMessage: "",
           isProvideUnit: false,
           facility: '',
+          facility_other: "",
           hiredCar: "",
         }
       } else if (params['reload']) {
@@ -229,6 +231,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryMessage: "",
           isProvideUnit: false,
           facility: '',
+          facility_other: "",
           hiredCar: "",
         }
         this.selectedDate = '';
@@ -396,7 +399,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     ).subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.toggleShowActInv()
-        this.functionMain.presentToast('Success resend invite', 'success')
+        this.functionMain.presentToast('Success resend invite.', 'success')
       }
     });
   }
@@ -494,10 +497,28 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.formData.isProvideUnit = !this.formData.isProvideUnit;
   }
 
+  facilitySelect = {
+    fromBackend: true,
+    other: false
+  }
+
   onEntryfacilityChange(event: any) {
     this.formData.facility = event.target.value;
-    console.log(event.target.value);
-    
+    if (this.formData.facility === 'other') {
+      this.facilitySelect = {
+        fromBackend: false,
+        other: true
+      };
+    } else {
+      this.facilitySelect = {
+        fromBackend: true,
+        other: false
+      };
+    }
+  }
+
+  onValueChange(event: any) {
+    this.formData.facility_other = event;
   }
 
   onSubmitNext() {
