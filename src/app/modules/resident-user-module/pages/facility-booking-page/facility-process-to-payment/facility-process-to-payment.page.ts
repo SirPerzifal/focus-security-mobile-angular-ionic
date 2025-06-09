@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { AlertController, ModalController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -305,10 +305,16 @@ export class FacilityProcessToPaymentPage implements OnInit {
     return 0; // Atau nilai default lainnya
   }
 
+  stripeId: string = '';
   electricPay(stripe: any) {
-    this.mainApiResidentService.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApiResidentService.endpointCustomProcess({
+      id: this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromPlaceBooking?.bookingId, // Pastikan booking_id ada di bookingState
+      model: 'room.booking',
+      amount_total_field: 'facility_book_amount_total'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
@@ -320,13 +326,16 @@ export class FacilityProcessToPaymentPage implements OnInit {
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'facility-booking-main',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        // console.log(result)
+        this.functionMainService.presentToast("Success Book", 'success');
+        this.isPaymentProcessed = true;
       } else {
         return
       }

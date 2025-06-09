@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/service/api.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 @Component({
   selector: 'app-modal-payment-custom',
@@ -13,6 +14,8 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
 
   @Input() stripe: any;
   @Input() clientSecret: any;
+  @Input() stripeId: any;
+  @Input() from: any;
   elements: any;
   card: any;
 
@@ -29,7 +32,7 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
     this.card.mount('#card-element');
   }
 
-  constructor(private modalController: ModalController, http: HttpClient, private router: Router) { super(http) }
+  constructor(private modalController: ModalController, http: HttpClient, private router: Router, private mainApi: MainApiResidentService) { super(http) }
 
   ngOnInit() {
     this.setupStripeElements(this.clientSecret);
@@ -54,9 +57,7 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
     this.stripe.confirmPayment({
       clientSecret: this.clientSecret,
       elements: this.elements, // Use the full Elements instance
-      confirmParams: {
-        return_url: 'focussecurity://resident-payment', // Replace with your actual return URL
-      },
+      redirect: 'if_required'
     }).then((result: any) => {
       if (result.error) {
         console.error(result.error.message);
@@ -65,11 +66,21 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
       }
     });
 
-    // Navigate after 2 seconds
-    setTimeout(() => {
-      this.modalController.dismiss(true);
-      this.router.navigate(['/bills-and-fines-page']);
-    }, 2000);
+    // Navigate after 3.5 seconds
+    // setTimeout(() => {
+    console.log('Payment processing...');
+    this.mainApi.endpointCustomProcess({
+      stripe_id: this.stripeId,
+    }, '/get-stripe-payment-info').subscribe((response: any) => {
+      console.log('Payment processed successfully:', response);
+      this.modalController.dismiss(response.result.Intent.id);
+      // this.router.navigate([this.from], {
+      //   state: {
+      //     restart: true,
+      //   }
+      // });
+    });
+    // }, 3500);
   }
   
 
@@ -78,3 +89,4 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
   }
 
 }
+ 
