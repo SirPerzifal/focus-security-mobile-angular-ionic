@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, from, switchMap, mergeMap, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, timeout } from 'rxjs/operators';
 import { ApiService } from '../../api.service';
 import { StorageService } from '../../storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
@@ -109,7 +109,9 @@ export class MainApiResidentService extends ApiService {
           return this.http.post(this.baseUrl + '/resident/' + apiUrl, body, { headers });
         })());
       }),
-      mergeMap(response$ => response$),
+      mergeMap(response$ => response$.pipe(
+        timeout(30000)
+      )),
       tap(() => {
         // Dismiss modal after successful response
         if (modalRef) {

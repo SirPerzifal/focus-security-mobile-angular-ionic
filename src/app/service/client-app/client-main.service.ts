@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
-import { catchError, Observable, throwError, from, mergeMap, tap } from 'rxjs';
+import { catchError, Observable, throwError, from, mergeMap, tap, timeout, TimeoutError } from 'rxjs';
 import { FunctionMainService } from '../function/function-main.service';
 import { ModalController } from '@ionic/angular';
 import { ModalLoadingComponent } from 'src/app/shared/components/modal-loading/modal-loading.component';
@@ -61,7 +61,9 @@ export class ClientMainService extends ApiService {
           params: params,
         }, { headers });
       }),
-      mergeMap(response$ => response$),
+      mergeMap(response$ => response$.pipe(
+        timeout(30000)
+      )),
       tap(() => {
         if (modalRef) {
           modalRef.dismiss();
@@ -71,6 +73,12 @@ export class ClientMainService extends ApiService {
         if (modalRef) {
           modalRef.dismiss();
         }
+
+        if (error instanceof TimeoutError) {
+          this.functionMain.presentToast('Request timed out. Please try again.', 'danger')
+          return throwError(() => new Error('Request timed out. Please try again.'));
+        }
+  
         return this.handleError(error); // Ensure handleError returns `Observable.throwError(...)`
       })
     );

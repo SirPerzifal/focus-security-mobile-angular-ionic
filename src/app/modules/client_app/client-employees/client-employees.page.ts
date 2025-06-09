@@ -248,7 +248,7 @@ export class ClientEmployeesPage implements OnInit {
   toggleShowNew() {
     this.isActive = false
     this.isNew = true
-    this.textSecond = 'New Employees'
+    this.textSecond = 'New Employee'
   }
 
   onBack() {

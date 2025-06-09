@@ -110,7 +110,7 @@
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
               [(ngModel)]="formData.department_id" [disabled]="false">
               <option value="" selected disabled hidden>Choose Department</option>
-              <option *ngFor="let department of Department" [value]="department.id">{{ department.name }}</option>
+              <option *ngFor="let department of Department" [value]="department.id">{{ functionMain.returnNone(department.name) }}</option>
             </select>
           </div>
 
