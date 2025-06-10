@@ -6,6 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-client-settings',
@@ -14,7 +15,12 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 })
 export class ClientSettingsPage implements OnInit {
 
-  constructor(private webRtcService: WebRtcService, private router: Router, private getUserInfoService: GetUserInfoService, private authService: AuthService, public functionMain: FunctionMainService, private storage: StorageService) { }
+  constructor(
+    private webRtcService: WebRtcService, 
+    private clientMainService: ClientMainService,
+    private router: Router,
+    public functionMain: FunctionMainService, 
+    private storage: StorageService) { }
 
   ngOnInit() {
     this.loadProject();
@@ -48,10 +54,14 @@ export class ClientSettingsPage implements OnInit {
   };
 
   logout() {
-    this.storage.clearAllValueFromStorage();
-    this.webRtcService.closeSocket();
-    Preferences.clear();
-    this.router.navigate(['/']);
+    this.clientMainService.getApi({}, '/resident/post/logout').subscribe((response: any) => {
+      if (response.result.status_code === 200) {
+        this.storage.clearAllValueFromStorage();
+        this.webRtcService.closeSocket();
+        Preferences.clear();
+        this.router.navigate(['/']);
+      }
+    })
   }
 
 }

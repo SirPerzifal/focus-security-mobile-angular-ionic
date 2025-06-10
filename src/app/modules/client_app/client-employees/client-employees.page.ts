@@ -175,7 +175,6 @@ export class ClientEmployeesPage implements OnInit {
   Department: any = []
   isLoading = false
   loadDepartment() {
-    this.isLoading = true
     this.clientMainService.getApi({project_id: this.project_id}, '/client/get/department').subscribe({
       next: (results) => {
         console.log(results)
@@ -188,10 +187,8 @@ export class ClientEmployeesPage implements OnInit {
         } else {
           this.functionMain.presentToast(`An error occurred while trying to fetch department data!`, 'danger');
         }
-        this.isLoading = false
       },
       error: (error) => {
-        this.isLoading = false
         this.functionMain.presentToast('An error occurred while trying to fetch department data!', 'danger');
         console.error(error);
       }
