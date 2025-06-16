@@ -189,6 +189,20 @@ export class SettingsMainPage implements OnInit {
     }
   }
 
+  onInputNotificationSettings(type: string) {
+    if (type === 'walkVisitorAlert') {
+      this.activeWalkVisitorAlert = !this.activeWalkVisitorAlert;
+    } else if (type === 'driveVisitorAlert') {
+      this.activeDriveVisitorAlert = !this.activeDriveVisitorAlert;
+    } else if (type === 'doNotDisturb') {
+      console.log('Do Not Disturb Toggled', this.activeDoNotDisturb, this.activeWalkVisitorAlert, this.activeDriveVisitorAlert);
+      
+      this.activeWalkVisitorAlert = false;
+      this.activeDriveVisitorAlert = false;
+      this.activeDoNotDisturb = !this.activeDoNotDisturb;
+    }
+  }
+
   async onSaveChanges(){
     this.mainApi.endpointCustomProcess({
       family_id: this.familyId, 

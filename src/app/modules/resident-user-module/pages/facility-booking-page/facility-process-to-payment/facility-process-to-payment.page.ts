@@ -308,7 +308,7 @@ export class FacilityProcessToPaymentPage implements OnInit {
   stripeId: string = '';
   electricPay(stripe: any) {
     this.mainApiResidentService.endpointCustomProcess({
-      id: this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromPlaceBooking?.bookingId, // Pastikan booking_id ada di bookingState
+      id: (this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromHistoryForm?.bookingId) ? (this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromHistoryForm?.bookingId) :  this.fromPlaceBooking?.bookingId, // Pastikan booking_id ada di bookingState
       model: 'room.booking',
       amount_total_field: 'facility_book_amount_total'
     }, '/create-payment-intent').subscribe((response: any) => {

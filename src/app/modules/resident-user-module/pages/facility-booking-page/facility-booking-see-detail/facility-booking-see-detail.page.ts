@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MyVehicleDetailService } from 'src/app/service/resident/my-vehicle/my-vehicle-detail/my-vehicle-detail.service';
 import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 
 interface BookingData {
   bookingId: number;
@@ -28,12 +29,18 @@ export class FacilityBookingSeeDetailPage implements OnInit {
 
   bookingData: BookingData | null = null;
 
-  constructor(private router: Router, private alertController: AlertController,) {
+  bookingId: number = 0;
+
+  constructor(private router: Router, private alertController: AlertController, private mainApi: MainApiResidentService) {
+    this.onChangeTypeOfUser = this.onChangeTypeOfUser.bind(this);
+    this.onChangeUserType = this.onChangeUserType.bind(this);
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { bookingData: any};
     if (state) {
+      // if (state.bookingData.)
       this.bookingData = state.bookingData;
-      console.log(state.bookingData)
+      console.log('Booking Data:', this.bookingData);
+      this.bookingId = state.bookingData.booking_id ? state.bookingData.booking_id : state.bookingData.id;
     } 
   }
 
@@ -70,8 +77,6 @@ export class FacilityBookingSeeDetailPage implements OnInit {
   typeOfUser: string = ''
   onChangeTypeOfUser(event: any) {
     this.typeOfUser = event;
-    console.log(this.typeOfUser);
-    
   }
 
   formatTime(datetime: string): string {
@@ -90,15 +95,29 @@ export class FacilityBookingSeeDetailPage implements OnInit {
   }
 
   backToHistoryList() {
-    this.router.navigate(['/facility-booking-main']);
+    this.router.navigate(['/facility-booking-main'], {
+      queryParams :  {
+        reload: true
+      }
+    });
     if (this.bookingData?.from) {
-      this.router.navigate(['//facility-booking-main']);
+      this.router.navigate(['//facility-booking-main'], {
+      queryParams :  {
+        reload: false
+      }
+    });
     }
   }
 
   proceedToEmail() {
     // Logika untuk mengirim email
-    // console.log('Sending email for booking:', this.bookingData);
+    console.log('Sending email for booking:', this.bookingId);
+    this.mainApi.endpointMainProcess({
+      booking_id: this.bookingId,
+    }, 'post/facility_send_email').subscribe((response: any) => {
+      console.log(response);
+      
+    })
   }
 
   navigateToProcessPayment(bookingData: any) {
@@ -124,7 +143,9 @@ export class FacilityBookingSeeDetailPage implements OnInit {
 
   calculateTotal(): number {
     if(this.bookingData){
-      return this.bookingData.bookingFee + this.bookingData.amountDeposit;
+      const amountTotal = this.bookingData.bookingFee ? this.bookingData.bookingFee : 0;
+      const amountDeposit = this.bookingData.amountDeposit ? this.bookingData.amountDeposit : this.bookingData.deposit ? this.bookingData.deposit : 0;
+      return amountTotal + amountDeposit;
     }else{
       return 0
     }

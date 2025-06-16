@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <app-header-inner-page
     [text]="'Visitors'"
-    [text_second]="'Daily Invite'"
+    [text_second]="'Hired Car'"
   ></app-header-inner-page>
 </ion-header>
 
@@ -23,11 +23,18 @@
         <app-input-component
           [id]="'type_invitation_title'"
           [type]="'text'"
-          [typeAction]="'Vehicle Number'"
           [labelParent]="'Entry Details'"
           [labelChild1]="'Entry Vehicle Number'"
           [labelChild2]="''"
           (eventEmitter)="changeVehicleNumber($event)"
+        ></app-input-component>
+        <app-input-component
+          [id]="'choose_entry_date_field'"
+          [type]="'date'"
+          [labelChild1]="'Entry Date'"
+          (eventEmitter)="onDateChange($event)"
+          [value]="selectedDate"
+          [minDate]="minDate"
         ></app-input-component>
         <div class="flex flex-row justify-start mt-4">
           <app-submit-button

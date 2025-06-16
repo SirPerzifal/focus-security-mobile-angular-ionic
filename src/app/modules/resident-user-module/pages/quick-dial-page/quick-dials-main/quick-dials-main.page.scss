@@ -44,7 +44,7 @@
     left: 50%;
     transform: translate(-50%, -50%); /* Pusatkan modal */
     z-index: 1001; /* Pastikan modal berada di atas overlay */
-    width: 320px; /* Lebar modal */
-    max-width: 100%; /* Lebar maksimum modal */
+    width: 100%; /* Lebar modal */
+    min-width: 300px; /* Lebar minimum modal */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan untuk modal */
   } 

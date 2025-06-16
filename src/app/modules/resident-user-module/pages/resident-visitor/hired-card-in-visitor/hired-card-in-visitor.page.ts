@@ -37,6 +37,9 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
       routeTo: '/history-in-visitor'
     },
   ]
+  selectedDate: string = '';
+  day: string = '';
+  minDate: string = ''; // Set tanggal minimum saat inisialisasi
 
   vehicleTypeButtons: any[] = [
     {
@@ -81,6 +84,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
   }
 
   formData = {
+    entry_date: '',
     entry_type: 'pick_up',
     vehicle_type: 'phv_vehicle',
     vehicle_number: '',
@@ -105,8 +109,21 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
   )  {}
 
   ngOnInit() {
+    this.getTodayDate();
     this.loaadTextForPage();
     this.formData.vehicle_type = 'phv_vehicle';
+  }
+
+  getTodayDate() {
+    const today = new Date();
+    const string = today.toString;
+    const final = String(today);
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+    const yyyy = today.getFullYear();
+    this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+    // Menyimpan nama hari ke dalam this.day
+    this.day = `${dd}-${mm}-${yyyy}`;
   }
 
   loaadTextForPage() {
@@ -150,6 +167,18 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     this.formData.entry_type = 'drop_off'
   }
 
+  onDateChange(event: any) {
+    if (event) {
+      const date = new Date(event);
+      this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+      this.formData.entry_date = event;
+      console.log(event, this.formData.entry_date);
+      
+    } else {
+      this.selectedDate = ''
+    }
+  }
+
   changeVehicleNumber(value: string): void {
     this.formData.vehicle_number = value
   }
@@ -176,6 +205,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     } else {
       try {
         this.mainApiResidentService.endpointMainProcess({
+          entry_date: this.formData.entry_date,
           entry_type: this.formData.entry_type,
           vehicle_type: this.formData.vehicle_type,
           vehicle_number: this.formData.vehicle_number,

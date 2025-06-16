@@ -33,7 +33,7 @@ export class AppReportMainPage implements OnInit {
       action: 'click'
     },
     {
-      text: 'Report an Issues',
+      text: 'Report an Issue',
       active: false,
       action: 'click'
     },
@@ -90,7 +90,7 @@ export class AppReportMainPage implements OnInit {
       }, 1000)
     } else {
       setTimeout(() => {
-        this.pageName = 'Report Condo Issue';
+        this.pageName = 'Report Issue';
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
         event.target.complete();
@@ -156,13 +156,13 @@ export class AppReportMainPage implements OnInit {
   }
 
   onClick(event: any) {
-    if (event[1] === 'Report an Issues') {
+    if (event[1] === 'Report an Issue') {
       this.showBackButton = true;
       this.showRecord = false;
       this.showForm = true;
       this.navButtons[0].active = false;
       this.navButtons[1].active = true;
-      this.subPageName = 'Form Report'
+      this.subPageName = 'Report Form'
     }
   }
 
@@ -212,19 +212,7 @@ export class AppReportMainPage implements OnInit {
         this.navButtons[1].active = false;
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
-        this.reporterDetailsFrom = {
-          requestorId: 0,
-          blokId: 0,
-          unitId: 0,
-          name: '',
-          contactNumber: '',
-          email: '',
-          blockAndUnit: '',
-          placeOfResidence: '',
-          typeReport: 0,
-          summaryReport: '',
-          ticketAttachment: '',
-        }
+        this.ngOnInit();
       } else {
         // this.presentToast(response.result.message, 'danger');
       }

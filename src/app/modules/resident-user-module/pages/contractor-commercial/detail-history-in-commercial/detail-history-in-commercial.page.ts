@@ -99,7 +99,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
   public async showAlertButtons(headerName: string, className: string) {
     const alertButtons = await this.alertController.create({
       cssClass: className,
-      header: headerName + " this visitor?",
+      header: headerName + " this contractor?",
       buttons: [
         {
           text: 'Confirm',

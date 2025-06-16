@@ -64,37 +64,35 @@
     (didDismiss)="isModalUpdateProfile === false"
   >
     <ng-template>
-      <ion-content id="resident-content">
-        <ion-toolbar>
-          <ion-title>Upload Profile</ion-title>
-        </ion-toolbar>
-        <div class="px-5 pb-3 mt-[70px]">
-          <div class="w-full mt-2">
-            <div class="flex flex-row justify-start mb-1"></div>
-            <div
-              class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
-            >
-              <div (click)="chooseWhereToChoose()">
-                <img
-                  height="50"
-                  [src]="showingProfile || functionMain.getImage(imageProfile)"
-                  width="80"
-                  class="w-80 h-50"
-                  accept="image/*"
-                />
-              </div>
+      <ion-toolbar>
+        <ion-title>Upload Profile</ion-title>
+      </ion-toolbar>
+      <div class="px-5 pb-3 mt-[70px]">
+        <div class="w-full mb-2">
+          <div class="flex flex-row justify-start mb-1"></div>
+          <div
+            class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+          >
+            <div (click)="chooseWhereToChoose()">
+              <img
+                height="50"
+                [src]="showingProfile || functionMain.getImage(imageProfile)"
+                width="80"
+                class="w-80 h-50"
+                accept="image/*"
+              />
             </div>
           </div>
-          <button
-            [disabled]="!selectedProfile"
-            (click)="uploadNewProfile()"
-            [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
-            class="mt-2 w-full text-base rounded h-10 font-bold"
-          >
-            Upload
-          </button>
         </div>
-      </ion-content>
+        <button
+          [disabled]="!selectedProfile"
+          (click)="uploadNewProfile()"
+          [ngClass]="selectedProfile ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-300 text-gray-500'"
+          class="mt-2 w-full text-base rounded h-10 font-bold"
+        >
+          Upload
+        </button>
+      </div>
     </ng-template>
   </ion-modal>
   <ion-modal

@@ -77,6 +77,7 @@ export class HistoryInContractorPage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.typeFilter = 'All';
     this.isLoading = true;
     this.historyData = []
     this.historyData.pop();

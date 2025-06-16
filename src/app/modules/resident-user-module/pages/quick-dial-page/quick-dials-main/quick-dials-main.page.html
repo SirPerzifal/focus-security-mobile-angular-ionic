@@ -45,7 +45,7 @@
     ></div>
     <div class="modal" *ngIf="selectedQuickDial">
       <div
-        class="bg-[#D8ECCF] p-4 rounded-lg w-full max-w-xs text-center"
+        class="bg-[#D8ECCF] p-4 rounded-lg m-3 text-center"
         [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
       >
         <p class="text-lg cw-1:text-sm font-bold mb-4">
@@ -61,7 +61,7 @@
           </button>
           <button
             class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
-            (click)="startCall(selectedQuickDial)"
+            (click)="closePopup(selectedQuickDial.number)"
           >
             Phone Call
           </button>

@@ -85,12 +85,12 @@
                   <td>{{ historyData.vehicle_number || '-' }}</td>
                   <!-- Menampilkan '-' jika vehicle_number kosong -->
                 </tr>
-                <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
+                <!-- <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">
                   <td class="w-[60%] font-bold">Point of Entry</td>
                   <td class="w-[10%]">:</td>
                   <td>{{ historyData.point_of_entry || '-' }}</td>
-                  <!-- Menampilkan '-' jika point_of_entry kosong -->
-                </tr>
+                  Menampilkan '-' jika point_of_entry kosong
+                </tr> -->
                 <tr
                   class="h-6"
                   *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'"
@@ -276,7 +276,17 @@
                 {{ book.facilityName }}, {{ book.bookName }}, {{ day }}({{
                 book.bookingTime }})
               </option>
+              <option value="other">Other</option>
             </select>
+          </div>
+
+          <div *ngIf="facilitySelect.other" class="w-full mt-1">
+            <app-input-component
+              [id]="'facility_other'"
+              [type]="'text'"
+              [labelChild1]="'Other'"
+              (eventEmitter)="onValueChange($event)"
+            ></app-input-component>
           </div>
 
           <div *ngIf="userType !== 'industrial'">

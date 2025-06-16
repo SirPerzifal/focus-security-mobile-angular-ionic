@@ -27,22 +27,24 @@ export class DetailHistoryInVisitorPage implements OnInit {
     entry_message: '',
     is_provide_unit: false,
     facility: '',
+    facility_other: "",
   }
 
   historyData!: {
-    purpose: 'Drop Off' | 'Pick Up' | 'Visiting' | 'Delivery' | string;
-    visitor_name: string;
-    visitor_date: Date;
-    visitor_entry_time: string;
-    visitor_exit_time: string;
-    mode_of_entry: string;
-    vehicle_number: string;
-    point_of_entry: string;
-    mobile_number: string;
-    delivery_type: string;
-    vehicle_type: string;
-    banned: boolean;
-    id: number;
+    purpose: string,
+    id: number,
+    visitor_name: string,
+    vehicle_number: string,
+    mobile_number: string,
+    mode_of_entry: string,
+    visitor_type: string,
+    visitor_date: string,
+    visitor_entry_time: string,
+    visitor_exit_time: string,
+    point_of_entry: string,
+    delivery_type: string,
+    vehicle_type: string,
+    banned: boolean,
   };
 
   formData = {
@@ -233,10 +235,28 @@ export class DetailHistoryInVisitorPage implements OnInit {
     this.dataForReinvite.entry_title = value;
   }
 
+  facilitySelect = {
+    fromBackend: true,
+    other: false
+  };
+
+  onValueChange(event: any) {
+    this.dataForReinvite.facility_other = event;
+  }
+
   onEntryfacilityChange(event: any) {
     this.dataForReinvite.facility = event.target.value;
-    console.log(event.target.value);
-    
+    if (this.dataForReinvite.facility === 'other') {
+      this.facilitySelect = {
+        fromBackend: false,
+        other: true
+      };
+    } else {
+      this.facilitySelect = {
+        fromBackend: true,
+        other: false
+      };
+    }
   }
 
   onChangeTypeUser(event: any) {
@@ -310,7 +330,8 @@ export class DetailHistoryInVisitorPage implements OnInit {
         entry_title: this.dataForReinvite.entry_title,
         entry_message: this.dataForReinvite.entry_message,
         is_provide_unit: this.dataForReinvite.is_provide_unit,
-        facility: this.dataForReinvite.facility ? this.dataForReinvite.facility : 0,
+          facility: this.dataForReinvite.facility === 'other' ? 0 : Number(this.dataForReinvite.facility),
+          facility_other: this.dataForReinvite.facility_other,
       }, 'post/reinvite_visitor').subscribe((response) => {
         this.functionMain.presentToast('Success reinvite the visitor.', 'success')
         this.router.navigate(['/visitor-main'], {

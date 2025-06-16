@@ -36,21 +36,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   userType: string = '';
 
   isLoading: boolean = true;
-  historyData: Array<{
-    purpose: string;
-    visitor_name: string;
-    visitor_date: Date;
-    visitor_entry_time: string;
-    visitor_exit_time: string;
-    mode_of_entry: string;
-    vehicle_number: string;
-    point_of_entry: string;
-    mobile_number: string;
-    delivery_type: string;
-    vehicle_type: string;
-    banned: boolean;
-    id: number;
-  }> = [];
+  historyData: any[] = [];
 
   filteredData: any[] = [];
 
@@ -73,6 +59,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   }
 
   handleRefresh(event: any) {
+    this.typeFilter = 'All';
     this.isLoading = true;
     this.historyData = []
     this.historyData.pop();
@@ -127,25 +114,24 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
           const entryDate = new Date();
           entryDate.setHours(entryHours, entryMinutes, 0, 0); 
           entryDate.setHours(entryDate.getHours() + 1);
-          const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
           const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
           const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
-          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
           this.historyData.push({
             purpose: item['purpose'],
+            id: item['visitor_id'],
             visitor_name: item['visitor_name'],
+            vehicle_number: item['vehicle_number'],
+            mobile_number: item['contact_number'],
+            mode_of_entry: item['mode_of_entry'],
+            visitor_type: item['visitor_type'],
             visitor_date: item['visit_date'] ? item['visit_date'] : new Date(),
             visitor_entry_time: item['entry_time'],
             visitor_exit_time: item['exit_time'],
-            mode_of_entry: item['mode_of_entry'],
-            vehicle_number: item['vehicle_number'],
             point_of_entry: item['point_of_entry'],
-            mobile_number: item['contact_number'],
             delivery_type: item['delivery_type'],
             vehicle_type: item['vehicle_type'],
             banned: item['is_banned'],
-            id: item['visitor_id']
           });
         });
         this.pagination = {
@@ -157,6 +143,8 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
       this.filteredData = [...this.historyData];
+      console.log(JSON.stringify(result));
+      
     })
   }
 
@@ -217,6 +205,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   }
 
   openDetails(historyData: any) {
+    
     this.router.navigate(['/detail-history-in-visitor'], {
       state: {
         historyData: historyData

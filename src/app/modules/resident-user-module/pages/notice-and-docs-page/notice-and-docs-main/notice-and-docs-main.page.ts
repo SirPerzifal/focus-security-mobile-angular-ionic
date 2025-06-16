@@ -62,11 +62,11 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
 
   handleRefresh(event: any) {
     this.isLoading = true;
-    if (this.pageName === 'Notice') {
+    if (this.pageName === 'Notices') {
       setTimeout(() => {
         this.navButtons[1].active = false;
         this.navButtons[0].active = true;
-        this.pageName = 'Notice';
+        this.pageName = 'Notices';
         this.loadNotice();
         this.showDocs = false;
         this.showNotice = true;
@@ -88,13 +88,13 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.pageName = 'Notice'
+    this.pageName = 'Notices'
     this.loadNotice();
   }
 
   onClick(event: any) {
     console.log(event);
-    if (this.pageName === 'Notice') {
+    if (this.pageName === 'Notices') {
       this.notices = [];
       this.originalNotices = [];
       this.navButtons[0].active = false;
@@ -106,7 +106,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     } else {
       this.navButtons[1].active = false;
       this.navButtons[0].active = true;
-      this.pageName = 'Notice';
+      this.pageName = 'Notices';
       this.loadNotice();
       this.showDocs = false;
       this.showNotice = true;

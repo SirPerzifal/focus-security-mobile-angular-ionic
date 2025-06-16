@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -87,7 +87,8 @@ export class FacilityBookingMainPage implements OnInit {
     public functionMain: FunctionMainService,
     private mainApi: MainApiResidentService,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {}
 
   handleRefresh(event: any) {
@@ -106,6 +107,8 @@ export class FacilityBookingMainPage implements OnInit {
         event.target.complete();
       }, 1000)
     } else if (this.subPageName === 'History Bookings') {
+      this.startDateFilter = '';
+      this.endDateFilter = '';
       this.isLoading = true;
       this.originalBookingList = []
       this.filteredBookingList = []
@@ -117,31 +120,78 @@ export class FacilityBookingMainPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.navButtonsMain = [
-      {
-        text: 'Active',
-        active: true,
-        action: 'click',
-      },
-      {
-        text: 'New',
-        active: false,
-        action: 'click',
-      },
-      {
-        text: 'History',
-        active: false,
-        action: 'click'
-      },
-    ];
-    this.subPageName = 'Active Bookings';
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { restart: boolean };
-    if (state) {
-      this.loadActiveBookings();
-    } else {
-      this.loadActiveBookings();
-    }
+    this.activeRoute.queryParams.subscribe(params => {
+      if (params['reload']) {
+        if (params['reload'] === false) {
+          console.log('Reloading bookings based on query params:', params['reload']);
+          this.subPageName = 'Active Bookings';
+          this.loadActiveBookings();
+          this.navButtonsMain = [
+            {
+              text: 'Active',
+              active: true,
+              action: 'click',
+            },
+            {
+              text: 'New',
+              active: false,
+              action: 'click',
+            },
+            {
+              text: 'History',
+              active: false,
+              action: 'click'
+            },
+          ];
+        } else if (params['reload'] === true) {
+          this.subPageName = 'History Bookings';
+          this.loadHistoryBookings();
+          this.navButtonsMain = [
+            {
+              text: 'Active',
+              active: false,
+              action: 'click',
+            },
+            {
+              text: 'New',
+              active: false,
+              action: 'click',
+            },
+            {
+              text: 'History',
+              active: true,
+              action: 'click'
+            },
+          ];
+        }
+      } else {
+        this.navButtonsMain = [
+          {
+            text: 'Active',
+            active: true,
+            action: 'click',
+          },
+          {
+            text: 'New',
+            active: false,
+            action: 'click',
+          },
+          {
+            text: 'History',
+            active: false,
+            action: 'click'
+          },
+        ];
+        this.subPageName = 'Active Bookings';
+        const navigation = this.router.getCurrentNavigation();
+        const state = navigation?.extras.state as { restart: boolean };
+        if (state) {
+          this.loadActiveBookings();
+        } else {
+          this.loadActiveBookings();
+        }
+      }
+    });
   }
 
   resetFilter() {
@@ -354,7 +404,9 @@ export class FacilityBookingMainPage implements OnInit {
   }
 
   navigateToHistoryDetail(booking: any, from: string) {
+      // console.log(from, booking);
     if (from === 'Active') {
+      // console.log(booking);
       let start_time, end_time;
   
       // Cek apakah booking.bookingTime dapat di-split
@@ -383,19 +435,21 @@ export class FacilityBookingMainPage implements OnInit {
       };
   
       // Gunakan NavigationExtras untuk membawa data
+      console.log(from, bookingData);
       this.router.navigate(['/facility-booking-see-detail'], {
         state: {
           bookingData: bookingData
         }
       });
-      console.log(from, bookingData);
     } else {
+      console.log(booking);
+      
       this.router.navigate(['/facility-booking-see-detail'], {
         state: {
           bookingData: booking
         }
       });
-      console.log(from, booking);
+      // console.log(from, booking);
     }
 }
 
@@ -482,8 +536,8 @@ export class FacilityBookingMainPage implements OnInit {
           eventDate: this.functionMain.formatDateFacility(booking.event_date || booking.start_datetime.split(' ')[0]),
           eventDay: this.getDayName(new Date(booking.booking_date || booking.start_datetime)),
           bookingTime: `${this.formatTime(booking.start_datetime)} - ${this.formatTime(booking.stop_datettime)}`,
-          bookingFee: booking.booking_fee || 0,
-          deposit: booking.deposit || 0,
+          bookingFee: booking.amount_total || 0,
+          deposit: booking.amount_deposit || 0,
           bookedBy: booking.booked_by || 'Unknown',
           status: booking.state || booking.booking_status,
           id: booking.id,

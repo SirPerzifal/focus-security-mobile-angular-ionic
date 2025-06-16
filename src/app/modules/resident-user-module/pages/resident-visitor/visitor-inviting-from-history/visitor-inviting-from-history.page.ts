@@ -4,6 +4,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-visitor-inviting-from-history',
@@ -18,7 +19,12 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
 
   faCheck = faCheck
 
-  constructor(private router: Router, private mainApi: MainApiResidentService, private functionMain: FunctionMainService) { }
+  constructor(
+    private router: Router, 
+    private mainApi: MainApiResidentService, 
+    private functionMain: FunctionMainService,
+    private alertController: AlertController
+  ) { }
 
   ngOnInit() {
     this.loadDistinctInviteHistory();
@@ -61,6 +67,13 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
       }
     });
   }
+
+    // Fixed method - no side effects, pure function
+  isInviteeExistedBeforeAddedToForm(invitee: any): boolean {
+    return this.existingInvitees.some(existingInvitee => 
+      existingInvitee.contact_number === invitee.contact_number
+    );
+  }
   
   isInviteeExisted(invitee: any): boolean {
     return this.existingInvitees.some(existingInvitee => 
@@ -69,8 +82,36 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
       existingInvitee.vehicle_number === invitee.vehicle_number
     );
   }
+
+  async presentDuplicateAlert(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertController.create({
+        cssClass: 'custom-alert-class-resident-visitors-page',
+        header: 'Duplicate Number Detected',
+        message: 'You input the same number on previous form. Do you want to add it again or remove it?',
+        buttons: [
+          {
+            text: 'Add it',
+            cssClass: 'confirm-button',
+            handler: () => {
+              resolve(false); // Return false means no problem, continue input
+            }
+          },
+          {
+            text: 'Remove it',
+            cssClass: 'cancel-button',
+            handler: () => {
+              resolve(true); // Return true means user wants to change, clear input
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    });
+  }
   
-  toggleSelect(invitee: any) {
+  async toggleSelect(invitee: any) {
     // Cek apakah invitee sudah ada di selectedInvitees
     const index = this.selectedInvitees.findIndex(
       selected => 
@@ -100,6 +141,27 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
     } else {
       // Jika invitee belum dipilih, tambahkan ke selectedInvitees
       this.selectedInvitees.push(invitee);
+
+      if (this.isInviteeExistedBeforeAddedToForm(invitee)) {
+        const existingInvitee = this.existingInvitees.find(existing => 
+          existing.contact_number === invitee.contact_number
+        );
+        if (existingInvitee) {
+          const removeIt = await this.presentDuplicateAlert();
+          if (removeIt) {
+            this.selectedInvitees.splice(index, 1);
+          }
+          console.log('existingInvitee', existingInvitee);
+          const testExisting = this.existingInvitees.some(existingInvitee => 
+            existingInvitee.visitor_name === invitee.visitor_name &&
+            existingInvitee.contact_number === invitee.contact_number &&
+            existingInvitee.vehicle_number === invitee.vehicle_number
+          );
+          if (testExisting) {
+            console.log('testExisting', testExisting);
+          }
+        }
+      }
       
       // Jika invitee ada di existingInvitees, hapus dari existingInvitees
       if (ifExist > -1) {
