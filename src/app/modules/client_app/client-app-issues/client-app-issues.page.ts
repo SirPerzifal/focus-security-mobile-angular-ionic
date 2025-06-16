@@ -85,12 +85,12 @@ export class ClientAppIssuesPage implements OnInit {
   
   isMain = true
   isNewReport = false
-  textSecond = 'Record of Report'
+  textSecond = 'Reported Issues'
 
   toggleShowNew(){
     this.isMain = false
     this.isNewReport = true
-    this.textSecond = 'Add App Report'
+    this.textSecond = 'Report an Issues'
     this.resetForm()
     // setTimeout(() => {
     //   this.isNewReport = true
@@ -100,7 +100,7 @@ export class ClientAppIssuesPage implements OnInit {
   toggleShowReport(){
     this.isNewReport = false
     this.isMain = true
-    this.textSecond = 'Record of Report'
+    this.textSecond = 'Reported Issues'
     this.resetFilter()
     // setTimeout(() => {
     //   this.isMain = true

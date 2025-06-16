@@ -45,6 +45,7 @@ export class ClientReportsPage implements OnInit {
 
   project_id = 0
   project_config: any = []
+  today = new Date().toISOString().split('T')[0];
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -111,7 +112,7 @@ export class ClientReportsPage implements OnInit {
   checkedFields: any = []
   selectedReport: any = []
 
-  onClickMenu(report: any) {
+  onClickMenu(report: any) { 
     this.is_check_all = false
     this.reportFields = []
     this.checkedFields = []
@@ -120,7 +121,7 @@ export class ClientReportsPage implements OnInit {
     setTimeout(() => {
       this.startDateFilter = ''
       this.endDateFilter = ''
-      this.textSecond = 'Fields Selection'
+      this.textSecond = report.text
       this.isData = true
     }, 300)
     if (report.model) {
@@ -210,7 +211,7 @@ export class ClientReportsPage implements OnInit {
         this.submitLoading = false
       },
       error: (error) => {
-        this.functionMain.presentToast('An error occurred while trying to get payment config!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to get report!', 'danger');
         console.error(error);
         this.submitLoading = false
       }

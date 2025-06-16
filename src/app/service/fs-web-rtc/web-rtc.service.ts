@@ -495,11 +495,17 @@ export class WebRtcService extends ApiService{
 
   async handleKickUser(data:any) {
     const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
-    if (storedValue) {
+    const clientData = (await Preferences.get({ key: 'USER_INFO' })).value;
+    if (storedValue || clientData) {
       try {
-        const decoded = await this.storage.decodeData(storedValue);
+        let decoded = ''
+        if (clientData) {
+          decoded = jwtDecode(clientData)
+        } else if (storedValue) {
+          decoded = await this.storage.decodeData(storedValue);
+        }
         if (decoded) {
-          const parsedResident = JSON.parse(decoded);
+          const parsedResident = clientData ? decoded : JSON.parse(decoded);
           if (parsedResident.family_id) {
             this.http.post<any>(`${this.baseUrl}/get/fcm_token`, {jsonrpc: '2.0', params: {family_id: parsedResident.family_id}}).subscribe(
               res => {

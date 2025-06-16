@@ -160,7 +160,7 @@ export class ClientMainAppPage implements OnInit {
       { src: "assets/icon/resident-icon/polling.png", alt: "Icon for Polling", text: "Polling", route: "/client-polling", permission: [true, true], menu_show: this.project_config.is_allow_client_polling },
       { src: "assets/icon/resident-icon/Notices.png", alt: "Icon for Notices", text: "Notices", route: "/client-notices", permission: [true, true], menu_show: this.project_config.is_allow_client_notices },
       { src: "assets/icon/home-icon/sound.webp", alt: "Icon for Docs", text: "Docs", route: "/client-docs", permission: [true, true], menu_show: this.project_config.is_allow_client_docs },
-      { src: "assets/icon/exc-client/report.png", alt: "Icon for Report an Issue", text: "Reports", route: "/client-reports", permission: [true, true], menu_show: this.project_config.is_allow_client_reports },
+      { src: "assets/icon/exc-client/report.png", alt: "Icon for Report an Issue", text: "Records", route: "/client-reports", permission: [true, true], menu_show: this.project_config.is_allow_client_reports },
       { src: "assets/icon/resident-icon/upcoming-event.png", alt: "Icon for Upcoming Events", text: "Upcoming Events", route: "/client-upcoming-events", permission: [true, true], menu_show: this.project_config.is_allow_client_events },
       { src: "assets/icon/resident-icon/Register_Visitor.png", alt: "Icon for Register a Visitor", text: "My Visitors", route: "/client-register-visitor", permission: [true, true], menu_show: this.project_config.is_allow_client_visitors },
       { src: "assets/icon/resident-icon/Facilities.png", alt: "Icon for Facilities", text: "Facilities", route: "/client-facility", permission: [true, true], menu_show: this.project_config.is_allow_client_facilities },

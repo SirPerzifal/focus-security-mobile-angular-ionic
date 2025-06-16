@@ -225,7 +225,7 @@ export class FamilyFormPage implements OnInit {
       
       const image = await Camera.getPhoto({
         quality: 90,
-        allowEditing: true,
+        // allowEditing: true,
         resultType: CameraResultType.Base64,
         source: CameraSource.Camera,
         promptLabelHeader: 'Take a photo',

@@ -17,7 +17,7 @@
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'vehicle'" />
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-1">
+      <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
         <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
           (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true" />
         <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"
@@ -68,7 +68,7 @@
               *ngIf="searchOption == 'date' || searchOption == 'all'">
               <div class="w-1/2">
                 <app-text-input #recordVisitorSearchDateFilter [id]="'record_visitor_search_date_filter'"
-                  [labelText]="'DATE'" [placeholder]="'24/12/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
+                  [labelText]="'DATE FROM'" [placeholder]="'24/12/2024'" [customClasses]="{'w-full ':true}" [type]="'date'"
                   (change)="onDateChange($event)" [(ngModel)]="filter.issue_date"
                   [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
                 </app-text-input>

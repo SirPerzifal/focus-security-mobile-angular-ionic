@@ -1,0 +1,127 @@
+<ion-header>
+  <app-resident-header [is_client]="true" [text]="'Schedules'" [text_second]="textSecond" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
+  </ion-refresher>
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4">
+    <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
+      <div class="w-full">
+        <app-visitor-button [text]="'Pending'"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isBooking ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleShowBooking()"></app-visitor-button>
+      </div>
+      <div class="w-full">
+        <app-visitor-button [text]="'History'"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isHistory ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleShowHistory()"></app-visitor-button>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col w-full">
+    <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
+      <ion-spinner name="dots"></ion-spinner>
+    </div> -->
+    <!-- <div class="flex flex-col justify-between mt-4 mx-4" *ngIf="isHistory">
+      <div class="text-base font-bold flex flex-row justify-between">
+        <u class="text-base font-bold">Filter Date</u>
+        <u class="text-base font-bold" (click)="resetFilter()">Clear Filter</u>
+      </div>
+      <div class="w-full flex flex-row space-x-3">
+        <div class="w-1/2">
+          <app-text-input #clientRaiseTicketFilterStartDateInput [id]="'client_raise_ticket_filter_start_date_input'"
+            [placeholder]="'Start Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+            [(ngModel)]="startDateFilter"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+            (change)="onStartDateChange($event)"></app-text-input>
+        </div>
+        <div class="w-1/2">
+          <app-text-input #clientRaiseTicketFilterEndDateInput [id]="'client_raise_ticket_filter_end_date_input'"
+            [placeholder]="'End Filter Date'" [customClasses]="{'w-full':true}" [type]="'date'" [showPlaceholder]="true"
+            [(ngModel)]="endDateFilter"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
+            (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
+        </div>
+      </div>
+    </div> -->
+    <div class="flex justify-end items-end mt-2 mx-4">
+      <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination"
+        (pageForward)="pageForward($event)" />
+    </div>
+    <app-modal-loading *ngIf="isLoading" class="mt-4" />
+    <div class="flex flex-col relative mx-4 mt-2 mb-24" *ngIf="isShowForm  && !isLoading">
+      <div class="w-full flex flex-row justify-start items-center mt-3 !border p-4 rounded" *ngIf="isBooking">
+        <input id="report_page_check_all" name="report_page_check_all" type="checkbox"
+          class="rounded w-5 h-5 text-[var(--ion-color-primary)]" [(ngModel)]="is_check_all" (click)="checkAll()">
+        <label class="text-base mt-1 w-full font-bold ml-3" for="report_page_check_all">Check All</label>
+      </div>
+      <div *ngIf="Schedules.length > 0; else noActiveBookings"
+        [class]="'space-y-2 mt-3 overflow-y-auto !border rounded p-4 ' + (isBooking ? 'h-96' : 'h-[33rem]' )">
+        <div *ngFor="let schedule of Schedules; let i = index" (click)="checkInput(schedule)" [ngClass]="{
+				'bg-green-100': schedule.status === 'done',
+				'bg-sky-100': schedule.status === 'published',
+				}" class="flex flex-row w-full items-center h-14 rounded-full justify-start px-4">
+          <div class="flex flex-col justify-center" *ngIf="schedule.status === 'done'">
+            <ion-icon name="checkmark" class="mr-2 p-1 rounded-full text-white text-[18px] bg-green-500">
+            </ion-icon>
+          </div>
+          <div class="mr-3" *ngIf="isBooking">
+            <input [id]="'field_select_' + schedule" [name]="'field_select_' + schedule" type="checkbox"
+              class="rounded w-5 h-5 text-[var(--ion-color-primary)]" [checked]="returnCheckTrue(schedule)">
+          </div>
+          <div class="mt-1">
+            <label class="text-base font-semibold text-gray-600">{{ functionMain.returnNone(schedule.shift) }} Shift ({{
+              functionMain.formatHour(schedule.start_time) }} to {{ functionMain.formatHour(schedule.end_time) }}) {{
+              functionMain.formatShortDate(schedule.shift_date) }}</label>
+          </div>
+        </div>
+
+        <div class="flex flex-rol w-full justify-between mt-4 space-x-2"
+          *ngIf="isBooking">
+          <button (click)="clickButton('approve')"
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full">
+            Approve
+          </button>
+          <button (click)="clickButton('reject')" class="bg-[#E3787E] text-black px-3 py-2 text-base rounded font-bold w-full">
+            Reject
+          </button>
+        </div>
+      </div>
+      <ng-template #noActiveBookings>
+        <div class="w-full bg-transparent p-4 text-center rounded-lg mt-4">
+          <p class="text-gray-600">There are no schedules for this employee.....</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <!-- ############################### -->
+</ion-content>
+<ion-modal id="text-modal" [isOpen]="isRejectModal" (didDismiss)="closeRejectModal()">
+  <ng-template>
+    <div class="wrapper">
+      <div class="w-full">
+        <div class="flex flex-row justify-start mb-1">
+          <p class="text-base font-bold">Reason for rejection</p>
+        </div>
+        <textarea id="reason_ban_entry_message" placeholder=""
+          class="!border-none w-full rounded py-2 px-3 h-20 text-base" type="text" name="reasonForbanning"
+          [(ngModel)]="reject_reason">
+          </textarea>
+      </div>
+      <app-visitor-button [text]="'Confirm Rejection'"
+        [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'"
+        (click)="actionSchedule('reject')"></app-visitor-button>
+    </div>
+  </ng-template>
+</ion-modal>
+
+<ion-footer>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

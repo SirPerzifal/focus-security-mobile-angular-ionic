@@ -74,6 +74,7 @@
       [name]="name"
       (click)="onDisplayInputClick()"
       [min]="type === 'date' ? min : null"
+      [max]="type === 'date' ? max : null"
       [style]="'border: 1px solid #6B7280; cursor: pointer; ' + (isReadonly ? ' background-color: #F5F5F5; color: #7D8390; ' : ' background-color: white; color: black; ')"
       readonly
     />
@@ -86,6 +87,7 @@
     [id]="id + '-date-picker'"
     type="date"
     [min]="min"
+    [max]="type === 'date' ? max : null"
     [ngModel]="hiddenDateValue"
     (ngModelChange)="value = $event"
     (change)="onDateInputChange($event)"

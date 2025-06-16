@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
@@ -18,6 +19,7 @@ export class BottomNavBarComponent implements OnInit {
     private router: Router,
     private navigationService: NavigationService,
     public functionMain: FunctionMainService,
+    private platform: Platform
   ) { }
 
   get activeButton() {
@@ -43,6 +45,7 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initializeBackButtonHandling()
     this.functionMain.vmsPreferences().then((value: any)=> {
       this.is_client = value.is_client
     })
@@ -62,6 +65,13 @@ export class BottomNavBarComponent implements OnInit {
           this.navigationService.setActiveButton('settings');
         }
       }
+    });
+  }
+
+  initializeBackButtonHandling() {
+    console.log("tes");
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      history.back();
     });
   }
 

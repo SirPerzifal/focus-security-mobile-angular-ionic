@@ -77,6 +77,7 @@ export class RecordsWarningHistoryPage implements OnInit {
           is_ban_record: false,
           type: this.pageType,
           is_ban_notice: true,
+          ban_type: 'vehicle'
         }
       })
     }

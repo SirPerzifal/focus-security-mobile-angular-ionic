@@ -53,7 +53,6 @@ export class AlertModalPage implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         source: CameraSource.Camera,
-        allowEditing: true,
         resultType: CameraResultType.Base64
       });
       this.fileInput = image.base64String;
@@ -116,10 +115,10 @@ export class AlertModalPage implements OnInit {
         } else {
           this.functionMain.presentToast(`Failed to ${this.type} vehicle!`, 'danger');
         }
-        setTimeout(() => {this.modalController.dismiss(true)}, 300);
+        setTimeout(() => {this.modalController.dismiss(true)}, 500);
       },
       error: (error) => {
-        this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');
+        this.functionMain.presentToast(`An error occurred while trying to ${this.type} coach data!`, 'danger');
         console.error(error);
       }
     });

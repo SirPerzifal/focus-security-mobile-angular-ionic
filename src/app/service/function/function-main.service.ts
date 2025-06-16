@@ -528,4 +528,23 @@ export class FunctionMainService {
   callPolice() {
     this.callFromPhone(999)
   }
+
+  formatHour(hour: any) {
+    if (!hour) return '-'
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+    return `${hour12}${suffix}`;
+  }
+
+  formatShortDate(dateString: string) {
+    if (!dateString) return '-'
+    const date = new Date(dateString);
+    const day = date.getDate();
+
+    const month = new Intl.DateTimeFormat('en', { month: 'short' }).format(date); // 'May'
+    const weekday = new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date); // 'Mon'
+
+    return `${day} ${month} (${weekday})`;
+  }
+
 }

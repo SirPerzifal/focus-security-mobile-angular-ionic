@@ -15,7 +15,7 @@
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true"/>
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-1">
+      <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
         <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
           (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true" />
         <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"

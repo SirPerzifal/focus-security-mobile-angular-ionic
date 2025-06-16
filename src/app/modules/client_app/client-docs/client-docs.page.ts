@@ -60,9 +60,11 @@ export class ClientDocsPage implements OnInit {
             document_type : file.document_type,
             path : file.path,
           }));
-          this.isLoading = false;
           console.log(this.Files)
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to load the docs!', 'danger')
         }
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching notices:', error);

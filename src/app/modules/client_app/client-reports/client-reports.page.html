@@ -1,5 +1,5 @@
 <ion-header>
-  <app-resident-header [is_client]="true"  [text]="'Reports'" [text_second]="textSecond" />
+  <app-resident-header [is_client]="true"  [text]="'Records'" [text_second]="textSecond" />
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher
@@ -42,22 +42,22 @@
         <div class="font-bold text-base">Timestamp</div>
         <div class="w-full flex flex-row space-x-3 mt-3 mb-3">
           <div class="w-1/2">
-            <app-text-input #clientApprovalFilterStartDateInput [id]="'client_approval_filter_start_date_input'"
+            <app-text-input #clientApprovalFilterStartDateInput [id]="'client_report_filter_start_date_input'"
               [placeholder]="'Start Date'" [customClasses]="{'w-full':true}" [type]="'date'"
-              [(ngModel)]="startDateFilter" [showPlaceholder]="true"
+              [(ngModel)]="startDateFilter" [showPlaceholder]="true" [max]="today"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
               (change)="onStartDateChange($event)"></app-text-input>
           </div>
           <div class="w-1/2">
-            <app-text-input #clientApprovalFilterEndDateInput [id]="'client_approval_filter_end_date_input'"
+            <app-text-input #clientReportFilterEndDateInput [id]="'client_report_filter_end_date_input'"
               [placeholder]="'End Date'" [customClasses]="{'w-full':true}" [type]="'date'"
-              [(ngModel)]="endDateFilter" [showPlaceholder]="true"
+              [(ngModel)]="endDateFilter" [showPlaceholder]="true" [max]="today"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
               (change)="onEndDateChange($event)" [min]="startDateFilter"></app-text-input>
           </div>
         </div>
       </div>
-      <span class="font-bold text-base mt-4">Select the fields you want to display on the report.</span>
+      <span class="font-bold text-base mt-4">Select the fields you want to display on the record.</span>
       <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="w-full">
-            <app-visitor-button [text]="'Get Report'"
+            <app-visitor-button [text]="'Get Record'"
               [extraClass]="!submitLoading ? 'bg-[var(--ion-color-primary)] text-white mt-3 w-full text-base h-14' : 'bg-[#D0D0D0] text-[#757575] w-full mt-3 w-full text-base h-14'" (click)="onSubmit()">
             </app-visitor-button>
           </div>

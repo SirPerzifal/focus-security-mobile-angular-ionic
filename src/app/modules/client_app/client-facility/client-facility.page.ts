@@ -77,7 +77,7 @@ export class ClientFacilityPage implements OnInit {
     this.isFacility = false
     this.isHistory = true
     this.isBooking = false
-    this.textSecond = 'Booking History'
+    this.textSecond = 'History'
     this.loadBooking()
   }
 
@@ -85,7 +85,7 @@ export class ClientFacilityPage implements OnInit {
     this.isFacility = false
     this.isHistory = false
     this.isBooking = true
-    this.textSecond = 'Booking Facility'
+    this.textSecond = 'Bookings'
     this.loadBooking()
   }
 

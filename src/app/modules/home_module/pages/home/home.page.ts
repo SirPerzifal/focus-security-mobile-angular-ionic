@@ -96,6 +96,7 @@ export class HomePage implements OnInit {
           if (results.result.status_code === 200) {
             this.closeModal()
             this.storage.clearAllValueFromStorage();
+            this.webrtc.closeSocket();
             Preferences.clear();
             setTimeout(() => {
               this.router.navigate(['/login-vms']);

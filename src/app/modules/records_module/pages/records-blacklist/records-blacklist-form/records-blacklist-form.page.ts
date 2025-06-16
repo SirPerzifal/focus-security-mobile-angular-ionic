@@ -18,7 +18,7 @@ export class RecordsBlacklistFormPage implements OnInit {
     private clientMainService: ClientMainService,
     public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { record: any[], is_ban_record: boolean, type: string, is_ban_notice: boolean };
+    const state = navigation?.extras.state as { record: any[], is_ban_record: boolean, type: string, is_ban_notice: boolean, ban_type: string };
     console.log(state)
     this.loadProjectName().then(() => {
       if (state) {
@@ -30,6 +30,7 @@ export class RecordsBlacklistFormPage implements OnInit {
         this.is_ban_visitor = state.is_ban_record
         this.is_ban_notice = state.is_ban_notice
         this.is_readonly = true
+        this.hide_vehicle = state.ban_type == 'visitor'
         if (this.record.industrial_host_id) {
           console.log(this.record.industrial_host_id)
           this.loadHost().then(() => {
@@ -81,6 +82,7 @@ export class RecordsBlacklistFormPage implements OnInit {
   is_readonly = false
   visitor_type = 'visitor'
   unitShow = true
+  hide_vehicle = false
 
   ngOnInit() {
     this.loadProjectName().then(() => {

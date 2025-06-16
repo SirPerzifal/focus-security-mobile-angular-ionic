@@ -814,6 +814,15 @@ export class DeliveriesPage implements OnInit {
       if (this.food_delivery_type == 'drive_in' || this.packageDeliveries) {
         this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''
       }
+      if (this.otherDeliveries) {
+        this.otherDeliveryForm.visitor_contact_no = event.data.contact_number ? event.data.contact_number : ''
+        this.otherDeliveryForm.visitor_name = event.data.contractor_name ? event.data.contractor_name : ''
+        this.selectedHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
+        this.otherDeliveryForm.company_name = event.data.company_name ? event.data.company_name : ''
+        if (this.showDrive) {
+          this.otherDeliveryForm.visitor_vehicle = event.data.vehicle_number ? event.data.vehicle_number : ''
+        }
+      }
     } 
     console.log(this.nric_value, this.identificationType)
   }

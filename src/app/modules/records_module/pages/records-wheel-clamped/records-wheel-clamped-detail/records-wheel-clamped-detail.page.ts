@@ -15,8 +15,7 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 export class RecordsWheelClampedDetailPage implements OnInit {
 
   vehicle: any = {};
-  issue_time = ''
-
+  
   constructor(
     private router: Router, 
     private route: ActivatedRoute, 
@@ -31,7 +30,6 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     if (state) {
       this.vehicle = state.vehicle
       console.log(this.vehicle)
-      this.issue_time = this.vehicle.issue_time.split(' ')[1]
     } 
    }
 
@@ -66,7 +64,6 @@ export class RecordsWheelClampedDetailPage implements OnInit {
   name = 'Richard'
   contact_no = '+65 8192 022'
   issue_date = ''
-  // issue_time = '07:30 AM'
   entry_time = '23/12/2024 11:00PM'
   entry_type = 'VISITOR'
   block = 'BLOCK 1'

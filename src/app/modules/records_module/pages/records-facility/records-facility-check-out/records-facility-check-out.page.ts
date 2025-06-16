@@ -91,7 +91,6 @@ export class RecordsFacilityCheckOutPage implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         source: CameraSource.Camera,
-        allowEditing: true,
         resultType: CameraResultType.Base64
       });
       console.log(image)
@@ -139,7 +138,15 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProjectConfig()
   }
+
+  async loadProjectConfig() {
+    await this.functionMainService.vmsPreferences().then((value) => {
+      this.project_config = value.config
+    })
+  }
+  project_config: any = {}
 
   onSubmit() {
     let errMsg = ''

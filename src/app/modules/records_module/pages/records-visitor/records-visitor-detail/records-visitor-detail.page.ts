@@ -65,6 +65,7 @@ export class RecordsVisitorDetailPage implements OnInit {
           is_ban_record: true,
           type: this.pageType,
           is_ban_notice: false,
+          ban_type: this.pageType,
         }
       })
     }

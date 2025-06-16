@@ -45,10 +45,10 @@ export class ClientPollingPage implements OnInit {
   isActive = true
   isClosed = false
   isNew = false
-  textSecond = 'Active Polling'
+  textSecond = 'Active'
 
   toggleActive() {
-    this.textSecond = 'Active Polling'
+    this.textSecond = 'Active'
     this.isClosed = false
     this.isActive = true
     this.isNew = false
@@ -56,7 +56,7 @@ export class ClientPollingPage implements OnInit {
   }
 
   toggleClosed() {
-    this.textSecond = 'Closed Polling'
+    this.textSecond = 'Closed'
     this.isClosed = true
     this.isActive = false
     this.isNew = false
@@ -64,7 +64,7 @@ export class ClientPollingPage implements OnInit {
   }
 
   toggleNew() {
-    this.textSecond = 'New Polling'
+    this.textSecond = 'New Poll'
     this.isClosed = false
     this.isActive = false
     this.isNew = true

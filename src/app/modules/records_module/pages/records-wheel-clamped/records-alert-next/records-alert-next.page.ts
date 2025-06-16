@@ -155,10 +155,10 @@ export class RecordsAlertNextPage implements OnInit {
         console.log(results)
         if (results.result.response_code === 200) {
           this.functionMain.presentToast(results.result.response_message, 'success')
-          setTimeout(() => {this.modalController.dismiss(true)}, 300);
+          setTimeout(() => {this.modalController.dismiss(true)}, 500);
         } else if (results.result.response_code === 201) { 
           this.functionMain.presentToast(results.result.response_message, 'warning')
-          setTimeout(() => {this.modalController.dismiss(true)}, 300);
+          setTimeout(() => {this.modalController.dismiss(true)}, 500);
         } else {
           this.functionMain.presentToast('An error occurred while trying to alert this visitor!', 'danger');
         }

@@ -188,11 +188,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
           if (results.result.response_code === 200) {
             this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
             console.log("HEY CLOSED ON WHEEL CLAMP")
-            setTimeout(() => {this.modalController.dismiss(true)}, 300);            
+            setTimeout(() => {this.modalController.dismiss(true)}, 500);            
           } else {
             if (results.result.error_message.includes('Record does not exist or has been deleted')) {
               this.functionMain.presentToast('Record does not exist or has been deleted!', 'danger');
-              setTimeout(() => {this.modalController.dismiss(true)}, 300);
+              setTimeout(() => {this.modalController.dismiss(true)}, 500);
             } else {
               this.functionMain.presentToast('An error occurred while submitting issue notice!', 'danger');
             }

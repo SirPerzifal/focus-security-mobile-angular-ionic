@@ -26,6 +26,7 @@ export class LoginVmsPage implements OnInit {
    }
 
   ngOnInit() {
+    this.initializeBackButtonHandling()
   }
 
   private routerSubscription!: Subscription;
@@ -175,4 +176,11 @@ export class LoginVmsPage implements OnInit {
   }
 
   project_key = ''
+
+  initializeBackButtonHandling() {
+    console.log("tes");
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/'])
+    });
+  }
 }

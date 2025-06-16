@@ -54,7 +54,6 @@ export class InputImagePreviewComponent implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         source: CameraSource.Camera,
-        allowEditing: true,
         resultType: CameraResultType.Base64
       });
       console.log(image)

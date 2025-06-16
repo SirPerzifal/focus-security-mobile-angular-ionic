@@ -115,6 +115,7 @@ export class PickUpPagePage implements OnInit {
 
   selectedVehicleType = '';
   entryType = '';
+  industrial_location = ''
 
   toggleShowPick() {
     if(this.showDrop){
@@ -138,6 +139,7 @@ export class PickUpPagePage implements OnInit {
     this.selectedNric = ''
     this.pass_number = ''
     this.contactHost = ''
+    this.industrial_location = ''
     this.is_id_disabled = false
   }
 
@@ -193,12 +195,12 @@ export class PickUpPagePage implements OnInit {
     if (!this.selectedVehicleType) {
       errMsg += 'Vehicle type must be selected! \n'
     }
-    if (this.project_config.is_industrial && !this.identificationType) {
-      errMsg += 'Identification type is required! \n'
-    }
-    if (this.project_config.is_industrial && !this.nric_value) {
-      errMsg += 'Identification number is required! \n'
-    }
+    // if (this.project_config.is_industrial && !this.identificationType) {
+    //   errMsg += 'Identification type is required! \n'
+    // }
+    // if (this.project_config.is_industrial && !this.nric_value) {
+    //   errMsg += 'Identification number is required! \n'
+    // }
     if (!vehicleNumber) {
       errMsg += 'Vehicle number is required! \n'
       console.log(this.vehicleNumberInput.value)
@@ -206,12 +208,15 @@ export class PickUpPagePage implements OnInit {
     if (!location && !this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
-    if (!this.selectedHost && this.project_config.is_industrial) {
-      errMsg += 'Host is required! \n'
+    if (!this.industrial_location && this.project_config.is_industrial) {
+      errMsg += 'Location is required! \n'
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
-      errMsg += 'Pass number is required! \n'
-    }
+    // if (!this.selectedHost && this.project_config.is_industrial) {
+    //   errMsg += 'Host is required! \n'
+    // }
+    // if (!this.pass_number && this.project_config.is_industrial) {
+    //   errMsg += 'Pass number is required! \n'
+    // }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger');
       return
@@ -292,10 +297,10 @@ export class PickUpPagePage implements OnInit {
       if (value) {
         this.vehicleNumber = value.vehicle_number ? value.vehicle_number : ''
         if (!is_click) {
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
-          this.contactHost = ''
+          // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          // this.contactHost = ''
           if (this.project_config.is_industrial) {
-            this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+            // this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
           } else {
             if (value.block_id) {
               this.blkLocation = value.block_id

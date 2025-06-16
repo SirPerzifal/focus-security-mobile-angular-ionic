@@ -41,7 +41,7 @@
     <div class="flex flex-col w-full" *ngIf="isData" @fadeInOut>
       <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
         <div class="w-full">
-          <app-visitor-button [text]="'Waiting'"
+          <app-visitor-button [text]="'Pending'"
           [extraClass]="'w-full leading-none cw-4:text-sm ' + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleShowActive()"></app-visitor-button>
         </div>

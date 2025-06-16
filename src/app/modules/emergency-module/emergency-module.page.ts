@@ -176,7 +176,7 @@ export class EmergencyModulePage implements OnInit {
   ngOnInit() {
     this.loadProjectName().then(() => {
       if (this.project_config.is_industrial) {
-        this.loadHost()
+        // this.loadHost()
       } else {
         this.loadBlock()
       }
@@ -284,7 +284,7 @@ export class EmergencyModulePage implements OnInit {
     if (!this.formData.station_devision && (this.showPolice || this.showSCDF || this.showAmbulance)) {
       errMsg += "Station & division is required! \n"
     }
-    if (!this.formData.govtAgency && (this.showOthers)) {
+    if (!this.formData.station_devision && (this.showOthers)) {
       errMsg += "Govt agency name is required! \n"
     }
     if (!this.formData.vehicle_number) {
@@ -293,9 +293,9 @@ export class EmergencyModulePage implements OnInit {
     if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += "Block and unit is required! \n"
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += "Host is required! \n"
-    }
+    // if ((!this.selectedHost) && this.project_config.is_industrial) {
+    //   errMsg += "Host is required! \n"
+    // }
     if (!this.pass_number && this.project_config.is_industrial) {
       errMsg += 'Pass number is required! \n'
     }
@@ -354,15 +354,15 @@ export class EmergencyModulePage implements OnInit {
     })
   }
 
-  onHostChange(event: any) {
-    this.selectedHost = event[0]
-  }
+  // onHostChange(event: any) {
+  //   this.selectedHost = event[0]
+  // }
 
   pass_number = ''
   
   handleRefresh(event: any) {
     if (this.project_config.is_industrial) {
-      this.loadHost()
+      // this.loadHost()
     } else {
       this.loadBlock()
     }

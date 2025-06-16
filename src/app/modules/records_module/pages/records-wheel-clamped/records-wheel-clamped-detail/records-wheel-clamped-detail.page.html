@@ -34,18 +34,17 @@
           <tr>
             <td class="font-bold w-2/5">ISSUED DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.issue_date ? convertToDDMMYYYY(vehicle.issue_date) : '-' }}</td>
+            <td>{{ vehicle.issue_date ? (functionMain.convertNewDateTZ(vehicle.issue_date)).split(' ')[0] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ISSUED TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ issue_time }}</td>
+            <td>{{ vehicle.issue_date ? (functionMain.convertNewDateTZ(vehicle.issue_date)).split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE & TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ vehicle.entry_datetime ? convertToDDMMYYYY(vehicle.entry_datetime.split(' ')[0]) + ' ' +
-              vehicle.entry_datetime.split(' ')[1] : '-' }}</td>
+            <td>{{ vehicle.entry_datetime ? functionMain.convertNewDateTZ(vehicle.entry_datetime) : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">TYPE OF ENTRY</td>

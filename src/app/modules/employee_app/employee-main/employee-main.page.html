@@ -1,0 +1,45 @@
+<ion-content [fullscreen]="true">
+	<div class="header fixed top-0">
+		<div class="flex flex-col justify-start">
+      <div class="flex flex-col justify-end h-full">
+        <img height="80" [src]="'assets/icon/exc-client/admin.png'" width="80" class="w-80 h-80"/>
+        <div class="absolute flex flex-col items-end ml-8">
+          <ion-icon class="drop-shadow-xl text-base bg-white rounded-full p-1" name="pencil" [routerLink]="['/client-my-profile']">
+          </ion-icon>
+        </div>
+      </div>
+			
+			<div class="flex flex-col items-start mt-4 text-start w-[70%]">
+				<h1 class="text-[black]">
+					Welcome Vivian
+				</h1>
+				<p class="text-[black] font-bold">
+					Facility Officer
+				</p>
+			</div>
+		</div>
+		<div class="logo w-[30%] flex flex-row justify-end">
+			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
+		</div>
+	</div>
+  <div class="p-5 text-center mb-24">
+    
+    <div class="flex items-center justify-center flex-col">
+      <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
+        <div class="w-full h-full relative" *ngFor="let menu of menuItems" (click)="onClickMenu(menu.route)">
+          <ion-button fill="clear" class="w-full flex bg-[var(--ion-color-tertiary)] h-28 rounded-2xl relative p-0 m-0" >
+            <div class="w-full flex flex-col items-center">
+              <img class="w-10 h-10 my-2" [src]="menu.src" [alt]="menu.alt"/>
+              <span class="text-sm font-bold text-[black] text-center normal-case">{{ menu.text }}</span>
+            </div>
+          </ion-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

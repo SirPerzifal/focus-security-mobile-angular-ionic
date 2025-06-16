@@ -663,6 +663,14 @@ const routes: Routes = [
     path: 'client-rfid-user-list',
     loadChildren: () => import('./modules/client_app/client-rfid-user-list/client-rfid-user-list.module').then( m => m.ClientRfidUserListPageModule)
   },
+  {
+    path: 'employee-main',
+    loadChildren: () => import('./modules/employee_app/employee-main/employee-main.module').then( m => m.EmployeeMainPageModule)
+  },
+  {
+    path: 'employee-schedule',
+    loadChildren: () => import('./modules/employee_app/employee-schedule/employee-schedule.module').then( m => m.EmployeeSchedulePageModule)
+  },
 ];
 
 @NgModule({

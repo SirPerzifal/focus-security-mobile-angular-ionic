@@ -37,7 +37,7 @@
         <div class="w-full">
           <app-vms-contact-input [(value)]="formData.contact_no" #blacklistContactNumberInput [id]="'blacklist_contact_number'" (contactInfo)="getContactInfo($event)" [disableButton]="is_ban_visitor || is_ban_notice" [isReadonly]="is_readonly"></app-vms-contact-input>
         </div>
-        <div class="w-full flex flex-row justify-between">
+        <div class="w-full flex flex-row justify-between" *ngIf="!hide_vehicle">
           <div class="w-[90%]">
             <app-text-input #blacklistVehicleNumberInput [id]="'blacklist_vehicle_number'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'SAA 8298 N'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_no"  [isReadonly]="is_readonly"></app-text-input>
           </div>

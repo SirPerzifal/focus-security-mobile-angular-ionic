@@ -78,7 +78,6 @@ export class ClientRegisterVisitorPage implements OnInit {
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {
-            this.loadClient()
             this.toggleShowActive()
             this.functionMain.presentToast(`Success!`, 'success');
           } else {

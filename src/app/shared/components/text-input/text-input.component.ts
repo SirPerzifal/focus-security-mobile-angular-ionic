@@ -29,6 +29,7 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Input() name: string = '';
   @Input() isReadonly: boolean = false;
   @Input() min: string | null = null;
+  @Input() max: string | null = null;
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();

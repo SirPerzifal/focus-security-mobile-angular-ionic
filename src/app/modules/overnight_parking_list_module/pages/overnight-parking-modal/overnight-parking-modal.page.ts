@@ -205,7 +205,7 @@ export class OvernightParkingModalPage implements OnInit {
           console.log(results)
           if (results.result.response_code === 200) {
             this.presentToast('Issue notice successfully submitted!', 'success');
-            setTimeout(() => {this.modalController.dismiss(true)}, 300);
+            setTimeout(() => {this.modalController.dismiss(true)}, 500);
           } else {
             this.presentToast('An error occurred while submitting issue notice!', 'danger');
           }

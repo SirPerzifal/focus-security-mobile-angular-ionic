@@ -747,6 +747,11 @@ export class ContractorFormPage implements OnInit {
           this.identificationType = this.searchData.identification_type
           this.selectedImage = this.searchData.visitor_image
           this.nric_value= this.searchData.identification_number
+          if (this.searchData.identification_type && this.searchData.identification_number) {
+            this.is_id_disabled = true
+          } else {
+            this.is_id_disabled = false
+          }
             
           if (this.project_config.is_industrial) {
             setTimeout(() => {
