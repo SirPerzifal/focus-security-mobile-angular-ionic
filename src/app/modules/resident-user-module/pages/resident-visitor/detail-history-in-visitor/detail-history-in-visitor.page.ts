@@ -15,6 +15,8 @@ export class DetailHistoryInVisitorPage implements OnInit {
 
   isModalReasonBanOpen: boolean = false;
   selectedFileName: string = ''; // New property to hold the selected file name
+  isAnimating: boolean = false;
+  selectedQuickDial: any | null = null;
 
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   formattedDate: string = '';
@@ -344,6 +346,38 @@ export class DetailHistoryInVisitorPage implements OnInit {
     } else {
       this.functionMain.presentToast(errMsg, 'danger');
     }
+  }
+
+  selectQuickDial(dial: any) {
+    if (this.selectedQuickDial === dial) {
+      // If the same dial is clicked, close the popup
+      this.closePopup(dial.number);
+    } else {
+      // If a different dial is clicked, animate the popdown first
+      this.isAnimating = true;
+      setTimeout(() => {
+        this.selectedQuickDial = dial;
+        this.isAnimating = false;
+      }, 300); // Match this duration with the CSS animation duration
+    }
+  }
+
+  closePopup(phoneNumber?: string) {
+    if (phoneNumber) {
+      window.open(`tel:${phoneNumber}`, '_system');
+    }
+    this.isAnimating = true;
+    setTimeout(() => {
+      this.selectedQuickDial = null;
+      this.isAnimating = false;
+    }, 300); // Match this duration with the CSS animation duration
+  }
+
+  openWhatsApp(phoneNumber?: string) {
+    const message = encodeURIComponent("Hello!");
+    const url = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(url, "_blank");
+    this.closePopup()
   }
 
   private routerSubscription!: Subscription;

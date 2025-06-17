@@ -36,6 +36,7 @@ export class NotificationMainPage implements OnInit {
   ) { }
 
   handleRefresh(event: any) {
+    this.clearFilter();
     this.notifications = []
     this.isLoading = true;
     setTimeout(() => {

@@ -30,12 +30,12 @@
               [src]="functionMain.getImage(imageProfile)"
               width="128"
             />
-            <ion-icon
+            <!-- <ion-icon
               class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50"
               name="pencil"
               (click)="ableChangeInput()"
             >
-            </ion-icon>
+            </ion-icon> -->
             <!-- <ion-icon
               *ngIf="!disabledInput"
               class="absolute top-24 right-20 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
@@ -68,6 +68,14 @@
             [text]="'Save Changes'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
             (click)="saveChangeProfile()"
+          >
+          </app-submit-button>
+        </div>
+        <div *ngIf="disabledInput" class="w-full">
+          <app-submit-button
+            [text]="'Edit Profile'"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+            (click)="ableChangeInput()"
           >
           </app-submit-button>
         </div>

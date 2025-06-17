@@ -58,7 +58,7 @@ export class MakeANewEventPage implements OnInit {
 
   private _selectedDate: string = '';
 
-  snapDraggedEvents = true;
+  snapDraggedEvents = false;
 
   isRead = false
 
@@ -136,17 +136,17 @@ export class MakeANewEventPage implements OnInit {
     }
   }
 
-  refresh = new Subject<void>();
+  // refresh = new Subject<void>();
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    event.start = newStart;
-    event.end = newEnd;
-    this.refresh.next();
-  }
+  // eventTimesChanged({
+  //   event,
+  //   newStart,
+  //   newEnd,
+  // }: CalendarEventTimesChangedEvent): void {
+  //   event.start = newStart;
+  //   event.end = newEnd;
+  //   this.refresh.next();
+  // }
 
   convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {

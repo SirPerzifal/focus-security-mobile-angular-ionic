@@ -108,7 +108,7 @@ export class AppReportMainPage implements OnInit {
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
       } else {
-        this.pageName = 'Report Condo Issue';
+        this.pageName = 'Report Issue';
         this.loadTicketFromBackendFor(this.fromWhere);
         this.loadTypeFor(this.fromWhere);
       }

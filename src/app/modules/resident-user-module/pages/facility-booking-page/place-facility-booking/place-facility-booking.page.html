@@ -32,7 +32,11 @@
           class="w-4/5 mt-0.5"
           datetime="datetime"
         ></ion-datetime-button>
-        <ion-modal id="choose-date-court-modal" keep-contents-mounted="true">
+        <ion-modal
+          id="choose-date-court-modal"
+          #chooseDateModal
+          keep-contents-mounted="true"
+        >
           <ng-template>
             <ion-datetime
               id="datetime"

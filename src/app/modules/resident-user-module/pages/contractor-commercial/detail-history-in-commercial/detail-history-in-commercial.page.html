@@ -33,6 +33,12 @@
                   <!-- Menampilkan '-' jika purpose kosong -->
                 </tr>
                 <tr class="h-6">
+                  <td class="w-[60%] font-bold">Mobile Number</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.mobile_number || '-' }}</td>
+                  <!-- Menampilkan '-' jika mobile_number kosong -->
+                </tr>
+                <tr class="h-6">
                   <td class="w-[60%] font-bold">Vehicle Number</td>
                   <td class="w-[10%]">:</td>
                   <td>{{ historyData.vehicle_number || '-' }}</td>
@@ -73,7 +79,9 @@
                   <td>
                     <!-- {{ historyData.visitor_date ? (historyData.visitor_date |
                     date: 'dd/MM/yyyy') : '-' }} -->
-                    {{ historyData.entry_full_date ? functionMain.convertNewDateTZ(historyData.entry_full_date).split(' ')[0] : '-' }}
+                    {{ historyData.entry_full_date ?
+                    functionMain.convertNewDateTZ(historyData.entry_full_date).split('
+                    ')[0] : '-' }}
                   </td>
                   <!-- Menampilkan '-' jika visitor_date kosong -->
                 </tr>
@@ -82,7 +90,9 @@
                   <td class="w-[10%]">:</td>
                   <td>
                     <!-- {{ historyData.visitor_entry_time || '-' }} -->
-                    {{ historyData.entry_full_date ? functionMain.convertNewDateTZ(historyData.entry_full_date).split(' ')[1] : '-' }}
+                    {{ historyData.entry_full_date ?
+                    functionMain.convertNewDateTZ(historyData.entry_full_date).split('
+                    ')[1] : '-' }}
                   </td>
                   <!-- Menampilkan '-' jika visitor_entry_time kosong -->
                 </tr>
@@ -134,6 +144,7 @@
               <app-submit-button
                 [text]="'Call'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                (click)="selectQuickDial(historyData)"
               ></app-submit-button>
             </div>
             <div
@@ -153,6 +164,7 @@
               <app-submit-button
                 [text]="'Call'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[80px] cw-4:text-sm'"
+                (click)="selectQuickDial(historyData)"
               ></app-submit-button>
             </div>
           </div>
@@ -164,7 +176,7 @@
   <ion-modal
     id="upload-reason-ban-modal"
     [isOpen]="isModalReasonBanOpen"
-    (didDismiss)="isModalReasonBanOpen === false"
+    (didDismiss)="isModalReasonBanOpen = false"
   >
     <ng-template>
       <div class="wrapper">
@@ -217,7 +229,7 @@
   <ion-modal
     id="reinvite-visitor-modal"
     [isOpen]="isModalReinviteOpen"
-    (didDismiss)="isModalReinviteOpen === false"
+    (didDismiss)="isModalReinviteOpen = false"
   >
     <ng-template>
       <div class="wrapper">
@@ -290,6 +302,37 @@
       </div>
     </ng-template>
   </ion-modal>
+  <!-- Overlay and Modal -->
+  <div
+    class="modal-overlay"
+    *ngIf="selectedQuickDial"
+    (click)="closePopup()"
+  ></div>
+  <div class="modal" *ngIf="selectedQuickDial">
+    <div
+      class="bg-[#D8ECCF] p-4 rounded-lg m-3 text-center"
+      [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
+    >
+      <p class="text-lg cw-1:text-sm font-bold mb-4">
+        Call {{ selectedQuickDial.visitor_name }} Via
+      </p>
+      <p class="text-md mb-4">{{ selectedQuickDial.mobile_number }}</p>
+      <div class="flex justify-between space-x-2">
+        <button
+          (click)="openWhatsApp(selectedQuickDial.mobile_number)"
+          class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
+        >
+          Whatsapp
+        </button>
+        <button
+          class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
+          (click)="closePopup(selectedQuickDial.mobile_number)"
+        >
+          Phone Call
+        </button>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

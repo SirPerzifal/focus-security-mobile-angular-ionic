@@ -76,6 +76,12 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
   }
   
   isInviteeExisted(invitee: any): boolean {
+    console.log(this.existingInvitees.some(existingInvitee => 
+      existingInvitee.visitor_name === invitee.visitor_name &&
+      existingInvitee.contact_number === invitee.contact_number &&
+      existingInvitee.vehicle_number === invitee.vehicle_number
+    ));
+    
     return this.existingInvitees.some(existingInvitee => 
       existingInvitee.visitor_name === invitee.visitor_name &&
       existingInvitee.contact_number === invitee.contact_number &&

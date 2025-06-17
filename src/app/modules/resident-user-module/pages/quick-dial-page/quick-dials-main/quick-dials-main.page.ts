@@ -88,9 +88,9 @@ export class QuickDialsMainPage implements OnInit {
     await this.webRtcService.createOffer(false, record.number, false, true);
   }
 
-  openWhatsApp() {
+  openWhatsApp(phoneNumber: string) {
     const message = encodeURIComponent("Hello!");
-    const url = `https://wa.me/${this.selectedQuickDial?.number}?text=${message}`;
+    const url = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(url, "_blank");
     this.closePopup()
   }

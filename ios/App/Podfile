@@ -28,6 +28,10 @@ end
 
 target 'App' do
   capacitor_pods
+  pod 'Firebase/Core', '~> 10.0'
+  pod 'Firebase/Analytics', '~> 10.0'
+  pod 'Firebase/Messaging', '~> 10.0'
+  pod 'Firebase/Auth', '~> 10.0'
   # Add your Pods here
 end
 

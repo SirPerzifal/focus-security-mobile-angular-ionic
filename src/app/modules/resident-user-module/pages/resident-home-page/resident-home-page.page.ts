@@ -311,6 +311,8 @@ export class ResidentHomePagePage implements OnInit {
         this.squareButton = result.result.result.square_button.filter((squareButton: any) => {
           return squareButton.active === true; // Memfilter polling yang dimulai setelah hari ini
         });
+        console.log(this.squareButton);
+        
       } else {
         console.error('Error fetching notifications:', result);
       }

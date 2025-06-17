@@ -253,7 +253,7 @@
             id="checked-checkbox"
             type="checkbox"
             [disabled]="activeDoNotDisturb"
-            [(ngModel)]="activeWalkVisitorAlert"
+            [checked]="activeWalkVisitorAlert"
             (change)="onInputNotificationSettings('walkVisitorAlert')"
             class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
@@ -268,7 +268,7 @@
             id="checked-checkbox"
             type="checkbox"
             [disabled]="activeDoNotDisturb"
-            [(ngModel)]="activeDriveVisitorAlert"
+            [checked]="activeDriveVisitorAlert"
             (change)="onInputNotificationSettings('driveVisitorAlert')"
             class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
@@ -282,7 +282,7 @@
           <input
             id="checked-checkbox"
             type="checkbox"
-            [(ngModel)]="activeDoNotDisturb"
+            [checked]="activeDoNotDisturb"
             (change)="onInputNotificationSettings('doNotDisturb')"
             class="w-8 h-8 accent-[#10421D] text-[#10421D] bg-gray-100 border-gray-300 focus:bg-[#10421D] rounded focus:ring-[#10421D] dark:focus:ring-[#10421D] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />

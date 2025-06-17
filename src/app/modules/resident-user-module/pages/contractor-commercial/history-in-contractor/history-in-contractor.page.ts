@@ -201,35 +201,36 @@ export class HistoryInContractorPage implements OnInit {
   }
   
   applyFilters() {
-    this.filteredData = this.historyData.filter(item => {
-        const visitorDate = new Date(item.visitor_date);
-        visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-        
-        const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
-        const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`;
-        const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
-        const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
-        
-        // Convert the selected start and end dates to Date objects
-        const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
-        const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
+      this.filteredData = this.historyData.filter(item => {
+          const visitorDate = new Date(item.visitor_date);
+          visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
+          
+          const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
+          const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`;
+          const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
+          const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
+          
+          // Convert the selected start and end dates to Date objects
+          const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
+          const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
 
-        // Set time to 00:00:00 for comparison
-        if (selectedStartDate) {
-            selectedStartDate.setHours(0, 0, 0, 0);
-        }
-        if (selectedEndDate) {
-            selectedEndDate.setHours(0, 0, 0, 0);
-        }
-        const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-        const typeMatches = this.typeFilter && this.typeFilter !== 'All' ? 
-            (this.typeFilter === 'Other' ? 
-                !(item.purpose === 'Delivery' || item.purpose === 'Collections' || item.purpose === 'Meeting') : 
-                item.purpose === this.typeFilter) : 
-            true;
+          // Set time to 00:00:00 for comparison
+          if (selectedStartDate) {
+              selectedStartDate.setHours(0, 0, 0, 0);
+          }
+          if (selectedEndDate) {
+              selectedEndDate.setHours(0, 0, 0, 0);
+          }
+          
+          const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
+          const typeMatches = this.typeFilter && this.typeFilter !== 'All' 
+              ? (this.typeFilter === 'Other' 
+                  ? !(item.purpose === 'Delivery' || item.purpose === 'Collections' || item.purpose === 'Meeting') 
+                  : item.purpose === this.typeFilter) 
+              : true;
 
-        return dateMatches && typeMatches;
-    });
+          return dateMatches && typeMatches;
+      });
   }
 
   openDetails(historyData: any) {

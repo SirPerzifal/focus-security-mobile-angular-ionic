@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonModal } from '@ionic/angular';
 
 import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -17,6 +17,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
   styleUrls: ['./place-facility-booking.page.scss'],
 })
 export class PlaceFacilityBookingPage implements OnInit {
+  @ViewChild('chooseDateModal', { static: false }) chooseDateModal!: IonModal;
   facilityId: number = 1;
   minDate: any = new Date().toISOString();
   roomId: number = 1;
@@ -67,6 +68,11 @@ export class PlaceFacilityBookingPage implements OnInit {
     // Reset room selection saat tanggal diubah
     this.selectedRoom = 'default'; // Kembalikan ke opsi default
     this.loadRoomSchedule(event)
+
+        // Tutup modal setelah tanggal dipilih
+    if (this.chooseDateModal) {
+      this.chooseDateModal.dismiss();
+    }
   }
   
 
