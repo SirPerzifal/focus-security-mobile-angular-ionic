@@ -29,12 +29,12 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="isVehicleNumberReadonly">
           <app-text-input [id]="'record_issue_name'" [labelText]="'NAME'" [placeholder]="'EG. RICK'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueName"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <div class="w-full">
+        <div class="w-full"  *ngIf="isVehicleNumberReadonly">
           <app-vms-contact-input [(value)]="issueContact" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isModal]="true"></app-vms-contact-input>
         </div>
         <div class="w-full">

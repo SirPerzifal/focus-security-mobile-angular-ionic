@@ -21,7 +21,6 @@ export class VmsBackgroundComponent  implements OnInit {
   
   async onLoadBackground() {
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
-      console.log(value)
       if (value) {
         if (value.background) {
           this.showImage = this.functionMain.getImage(value.background)
@@ -33,7 +32,6 @@ export class VmsBackgroundComponent  implements OnInit {
   }
 
   initializeBackButtonHandling() {
-    console.log("tes");
     this.platform.backButton.subscribeWithPriority(10, () => {
       history.back();
     });

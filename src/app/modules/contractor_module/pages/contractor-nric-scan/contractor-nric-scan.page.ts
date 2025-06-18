@@ -17,7 +17,7 @@ export class ContractorNricScanPage implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.startScanner()
+      this.openScanner()
     })
     this.loadProjectName()
   }
@@ -25,6 +25,8 @@ export class ContractorNricScanPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.max_digit = value.config.max_nric_number ? value.config.max_nric_number : 8
+      this.min_digit = value.config.min_nric_number ? value.config.min_nric_number : 8
     })
   }
 
@@ -37,26 +39,26 @@ export class ContractorNricScanPage implements OnInit {
     this.htmlScanner.stop().catch(err => console.log(err))
   }
 
-  async getMinMaxNric() {
-    try {
-      const results = await this.clientMainService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
-      console.log(results.result);
-      if (results.result.response_code === 200) {
-        this.min_digit = results.result.result.min_nric_number_length
-        this.max_digit = results.result.result.max_nric_number_length
-      } else {
-        this.functionMain.presentToast('Failed to get minimum and maximum digit of NRIC / FIN!', 'danger');
-      }
-    } catch (error) {
-      this.functionMain.presentToast('Failed to get minimum and maximum digit of NRIC / FIN!', 'danger');
-      console.error(error);
-    }
-  }
+  // async getMinMaxNric() {
+  //   try {
+  //     const results = await this.clientMainService.getApi({ project_id: this.project_id }, '/vms/get/nric_constraint').toPromise();
+  //     console.log(results.result);
+  //     if (results.result.response_code === 200) {
+  //       this.min_digit = results.result.result.min_nric_number_length
+  //       this.max_digit = results.result.result.max_nric_number_length
+  //     } else {
+  //       this.functionMain.presentToast('Failed to get minimum and maximum digit of NRIC / FIN!', 'danger');
+  //     }
+  //   } catch (error) {
+  //     this.functionMain.presentToast('Failed to get minimum and maximum digit of NRIC / FIN!', 'danger');
+  //     console.error(error);
+  //   }
+  // }
 
   htmlScanner!: Html5Qrcode
   scannerId = 'reader'
   scanResult = ''
-  startScanner() {
+  openScanner() {
     setTimeout(() => {
       this.htmlScanner = new Html5Qrcode(this.scannerId);
       console.log("Scanner Initialized:", this.htmlScanner);
@@ -73,11 +75,13 @@ export class ContractorNricScanPage implements OnInit {
           }
         },
         (decodedText) => {
-          this.scanResult = decodedText
-          console.log(this.scanResult)
-          console.log({data: this.nric_value, min_digit: this.min_digit, max_digit: this.max_digit})
-          this.isListening = false
-          this.modalController.dismiss({data: this.scanResult, min_digit: this.min_digit, max_digit: this.max_digit})
+          if (this.isOpen) {
+            this.scanResult = decodedText
+            console.log(this.scanResult)
+            console.log({data: this.nric_value, min_digit: this.min_digit, max_digit: this.max_digit})
+            this.isListening = false
+            this.modalController.dismiss({data: this.scanResult, min_digit: this.min_digit, max_digit: this.max_digit})
+          }
         },
         (errorMessage) => {
           console.log(errorMessage)
@@ -88,7 +92,13 @@ export class ContractorNricScanPage implements OnInit {
 
   }
 
+  isOpen = false
+  startScanner() {
+    this.isOpen = true
+  }
+
   stopScanner() {
+    this.isOpen = false
     this.htmlScanner.stop().catch(err => console.log(err))
     this.isListening = false
     this.modalController.dismiss({ data: false })

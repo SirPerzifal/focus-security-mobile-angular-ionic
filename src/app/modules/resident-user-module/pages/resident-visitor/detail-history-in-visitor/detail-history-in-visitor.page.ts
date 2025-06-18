@@ -62,7 +62,7 @@ export class DetailHistoryInVisitorPage implements OnInit {
   cardIfJustBan: string = '';
   userType: string = '';
 
-  constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, private functionMain: FunctionMainService) { 
+  constructor(private router: Router, private alertController: AlertController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { historyData: any, from: string };
     if (state) {

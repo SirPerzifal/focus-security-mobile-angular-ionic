@@ -134,13 +134,13 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.vehicleNumber) {
       errMsg += 'Offender vehicle number is required! \n'
     }
-    if (!this.issueName) {
+    if (!this.issueName && this.isVehicleNumberReadonly) {
       errMsg += 'Offender name is required! \n'
     }
-    if (!this.issueContact) {
+    if (!this.issueContact && this.isVehicleNumberReadonly) {
       errMsg += 'Offender contact number is required! \n'
     }
-    if (this.issueContact) {
+    if (this.issueContact && this.isVehicleNumberReadonly) {
       if (this.issueContact.length <= 2 ) {
         errMsg += 'Offender contact number is required! \n'
       }
@@ -165,10 +165,10 @@ export class RecordsWheelClampedNewPage implements OnInit {
     } else {
       let params = {
         vehicle_number: this.vehicleNumber, 
-        visitor_name: this.issueName, 
+        visitor_name: this.isVehicleNumberReadonly ?  this.issueName : '', 
         block_id: this.blockId, 
         unit_id: this.unitId, 
-        contact_number: this.issueContact,
+        contact_number: this.isVehicleNumberReadonly ? this.issueContact : '',
         type_notice: this.selectedNotice, 
         issuing_officer_name: this.issueOfficer,
         type: this.typeOfEntry,

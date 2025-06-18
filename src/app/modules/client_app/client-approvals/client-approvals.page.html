@@ -267,7 +267,7 @@
           <p class="ml-2 table-cell text-base text-black">: {{ selectedApproval.application_date ? functionMain.convertNewDateTZ(selectedApproval.application_date).split(' ')[0] : '-' }}</p>
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
-          <p class="font-bold table-cell w-1/2 text-base text-black">Facility name</p>
+          <p class="font-bold table-cell w-1/2 text-base text-black">Room name</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.facility_name) }}</p>
         </div>
         <div class="table-row" *ngIf="['events'].includes(approval_type)">

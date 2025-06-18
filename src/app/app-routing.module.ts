@@ -671,6 +671,10 @@ const routes: Routes = [
     path: 'employee-schedule',
     loadChildren: () => import('./modules/employee_app/employee-schedule/employee-schedule.module').then( m => m.EmployeeSchedulePageModule)
   },
+  {
+    path: 'employee-leave-application',
+    loadChildren: () => import('./modules/employee_app/employee-leave-application/employee-leave-application.module').then( m => m.EmployeeLeaveApplicationPageModule)
+  },
 ];
 
 @NgModule({

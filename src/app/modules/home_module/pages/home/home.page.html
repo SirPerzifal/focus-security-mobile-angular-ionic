@@ -22,56 +22,58 @@
           (click)="isLogoutModal = true"></ion-icon>
       </div>
     </div>
-    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around items-center mt-8 mb-8 space-y-4' : 'grid grid-cols-3 gap-4 justify-items-center space-y-4  mt-8 mb-8'">
+    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around items-center mt-8 mb-8' : 'grid grid-cols-3 gap-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
       <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry" class="mt-4"
         [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor"
+      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor" class="mt-4"
         [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor')" *ngIf="project_config.is_allow_vms_contractor" 
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor')" *ngIf="project_config.is_allow_vms_contractor" class="mt-4"
         [isActive]="true" [disableClick]="true"/>
 
-      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule"
+      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_renovation_schedule"
+      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_renovation_schedule" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery"
+      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery" class="mt-4"
         [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" *ngIf="project_config.is_allow_vms_collection"
+      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" *ngIf="project_config.is_allow_vms_collection" class="mt-4"
         [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" *ngIf="project_config.is_allow_vms_coaches"
+      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" *ngIf="project_config.is_allow_vms_coaches" class="mt-4"
         (click)="onClickMoveCustom('coach')" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true" *ngIf="project_config.is_allow_vms_emergency_vehicles"
+      <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true" *ngIf="project_config.is_allow_vms_emergency_vehicles" class="mt-4"
         [routerLink]="['/emergency-module']" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor')" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list"
+      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor')" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car"
+      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car" class="mt-4"
         [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" [isClient]="project_config.is_industrial" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list"
+      <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list" class="mt-4"
         [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle"
+      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle" class="mt-4"
         [routerLink]="['/resident-car-list']" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true" 
+      <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true"  class="mt-4"
         [routerLink]="['/records-main']" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts"
+      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts" class="mt-4"
         [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal"/>
 
-      <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial"
+      <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial" class="mt-4"
         [routerLink]="['/vms-checkout']" [isActive]="true" [disableClick]="true" />
 
-        
+    </div>
+    <div *ngIf="isLoading" class="flex justify-center items-center h-20 mt-20">
+      <app-modal-loading />
     </div>
 
   </div>

@@ -22,20 +22,25 @@
   </div>
 
   <div class="px-4 mt-2 text-center mb-24" *ngIf="isMain">
-    <div class="flex flex-row justify-between space-x-3">
-      <div class="w-full">
+    <div class="flex flex-row justify-between space-x-1">
+      <div class="w-1/4">
         <app-visitor-button [text]="'Active'"
-          [extraClass]="'text-base w-full cw-3:text-sm cw-1:w-24 cw-3:w-[88px] '  + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleActive()"></app-visitor-button>
       </div>
-      <div class="w-full">
+      <div class="w-1/4">
+        <app-visitor-button [text]="'Upcoming'"
+          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isUpcoming ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleUpcoming()"></app-visitor-button>
+      </div>
+      <div class="w-1/4">
         <app-visitor-button [text]="'Closed'"
-          [extraClass]="'text-base w-full cw-3:text-sm cw-1:w-24 cw-3:w-[88px] '  + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleClosed()"></app-visitor-button>
       </div>
-      <div class="w-full">
+      <div class="w-1/4">
         <app-visitor-button [text]="'New Poll'"
-          [extraClass]="'text-base w-full cw-3:text-sm cw-1:w-24 cw-3:w-[88px] '  + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleNew()"></app-visitor-button>
       </div>
     </div>
@@ -69,7 +74,7 @@
         <ion-spinner name="dots"></ion-spinner>
       </div> -->
       <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4"/>
-      <div class="w-full mt-4" *ngIf="isActive && !isLoading">
+      <div class="w-full mt-4" *ngIf="(isActive || isUpcoming) && !isLoading">
         <div *ngIf="showVotedata.length > 0; else noPolling" class="space-y-4">
           <div class="bg-[var(--ion-color-tertiary)] rounded p-5 flex justify-between items-center"
             *ngFor="let vd of showVotedata">

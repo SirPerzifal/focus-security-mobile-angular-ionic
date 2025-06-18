@@ -23,12 +23,12 @@
         (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
     </div>
 
-    <div class="flex flex-row">
-      <div class="mt-8 flex flex-col justify-start items-center h-[600px] w-full mx-4" *ngIf="showQr" @fadeInOut>
+    <div class="flex flex-row mx-4">
+      <div class="mt-8 flex flex-col justify-start items-center h-[600px] w-full" *ngIf="showQr" @fadeInOut>
         <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60 mb-4" (click)="startScanner()" *ngIf="!isHidden"/>
         <div id="reader" class="w-full mb-4"></div>
       </div>
-      <div class="justify-between items-center w-full mx-4" *ngIf="showWalk" @fadeInOut>
+      <div class="justify-between items-center w-full" *ngIf="showWalk" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5 mb-4">
           <div class="w-full">
             <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
@@ -98,7 +98,7 @@
         </div>
       </div>
 
-      <div class="justify-between items-center w-full mx-4" *ngIf="showDrive" @fadeInOut>
+      <div class="justify-between items-center w-full" *ngIf="showDrive" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5  mb-4">
           <div class="w-full">
             <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
