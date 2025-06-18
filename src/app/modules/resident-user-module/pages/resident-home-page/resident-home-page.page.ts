@@ -421,14 +421,14 @@ export class ResidentHomePagePage implements OnInit {
 
   async getNotificationPermission(familyId: number): Promise<string> {
     try {
-      // Cek jika berjalan di simulator
-      const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
+      // // Cek jika berjalan di simulator
+      // const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
       
-      // Skip proses notifikasi jika di simulator
-      if (isSimulator) {
-        console.log('Running on iOS simulator, skipping push notification setup');
-        return '';
-      }
+      // // Skip proses notifikasi jika di simulator
+      // if (isSimulator) {
+      //   console.log('Running on iOS simulator, skipping push notification setup');
+      //   return '';
+      // }
       
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');

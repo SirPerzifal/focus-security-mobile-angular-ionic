@@ -456,6 +456,9 @@ export class MakeANewEventPage implements OnInit {
         this.isLoading = false
 
         // console.log(this.Events);
+      } else if (response.result.response_code == 401) {
+        this.isLoading = false
+        this.Events = [];
       } else {
         this.isLoading = false
       }

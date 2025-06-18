@@ -1,5 +1,6 @@
 import Capacitor
 import Firebase
+import FirebaseMessaging // ← Tambahkan ini
 import UIKit
 import UserNotifications
 
@@ -14,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         // Firebase configuration
         FirebaseApp.configure()
+        
+        // ✅ Tambahkan Firebase Messaging delegate
+        Messaging.messaging().delegate = self
 
         // Request notification permissions
         UNUserNotificationCenter.current().delegate = self
@@ -68,6 +72,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
+        // ✅ Tambahkan ini - kirim APNs token ke Firebase
+        Messaging.messaging().apnsToken = deviceToken
+        
         NotificationCenter.default.post(
             name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)
     }
@@ -99,5 +106,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         NotificationCenter.default.post(
             name: NSNotification.Name.init("pushNotificationReceived"), object: response)
         completionHandler()
+    }
+}
+
+// ✅ TAMBAHKAN INI
+// MARK: - MessagingDelegate  
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print("📱 Firebase FCM registration token: \(String(describing: fcmToken))")
+        
+        if let token = fcmToken {
+            print("📱 FCM Token length: \(token.count)")
+            print("📱 FCM Token: \(token)")
+            
+            // Post notification untuk Capacitor
+            NotificationCenter.default.post(
+                name: NSNotification.Name("FCMTokenReceived"), 
+                object: token
+            )
+        }
     }
 }
