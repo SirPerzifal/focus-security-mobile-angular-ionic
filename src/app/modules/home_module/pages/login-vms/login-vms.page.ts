@@ -7,6 +7,7 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 
 @Component({
   selector: 'app-login-vms',
@@ -138,11 +139,16 @@ export class LoginVmsPage implements OnInit {
 
   }
 
-  searchBarcode(barcode: string){
+  async searchBarcode(barcode: string){
     console.log(barcode)
     console.log("HOY OVER HER WORK")
     if (barcode) {
-      this.clientMainService.getApi({barcode: barcode}, '/vms/post/vms_login').subscribe({
+      try {
+        await this.getNotificationPermission();
+      } catch (notificationError) {
+          console.error('Failed to get notification permission:', notificationError);
+      }
+      this.clientMainService.getApi({barcode: barcode, fcm_token: this.fcmToken}, '/vms/post/vms_login').subscribe({
         next: (results) => {
           console.log(results.result)
           if (results.result.status_code === 200) {
@@ -182,5 +188,72 @@ export class LoginVmsPage implements OnInit {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/'])
     });
+  }
+
+  fcmToken: any = ''
+  async getNotificationPermission(): Promise<string> {
+    console.log("kepanggil function");
+    
+    try {
+      console.log("masuk try");
+      // Cek jika berjalan di simulator
+      const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
+      
+      // Skip proses notifikasi jika di simulator
+      if (isSimulator) {
+        console.log('Running on iOS simulator, skipping push notification setup');
+        return '';
+      }
+      
+      if (typeof PushNotifications === 'undefined') {
+        console.warn('PushNotifications not available.');
+        return '';
+      }
+
+      const permission = await PushNotifications.requestPermissions();
+
+      if (permission.receive !== 'granted') {
+        console.log('Notification permission not granted');
+        return '';
+      }
+
+      // ✅ Cleanup existing listeners sebelum register
+      PushNotifications.removeAllListeners();
+      PushNotifications.register();
+
+      return new Promise((resolve, reject) => {
+        console.log("masuk udah ke return");
+        // Set timeout untuk menghindari promise yang tidak pernah resolve
+        const timeout = setTimeout(() => {
+          cleanupListeners();
+          console.log('FCM registration timed out');
+          resolve(''); // Resolve dengan string kosong jika timeout
+        }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
+        
+        const cleanupListeners = () => {
+          clearTimeout(timeout);
+          PushNotifications.removeAllListeners();
+        };
+
+        PushNotifications.addListener('registration', (token: Token) => {
+          if (token.value) {
+            this.fcmToken = token.value;
+            console.log('FCM Token received:', token.value);
+          } else {
+            cleanupListeners();
+            resolve(''); // Resolve dengan string kosong jika token kosong
+          }
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+          cleanupListeners();
+          console.error('Push notification registration error:', error);
+          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
+        });
+      });
+    } catch (err) {
+      console.error('Push Notification Error:', err);
+      return ''; // Return string kosong untuk melanjutkan proses login
+    }
   }
 }

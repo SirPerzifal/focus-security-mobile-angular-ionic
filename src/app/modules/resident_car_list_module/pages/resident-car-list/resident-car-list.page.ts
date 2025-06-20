@@ -184,7 +184,7 @@ export class ResidentCarListPage implements OnInit {
       cssClass: 'record-modal',
       componentProps: {
         issue: issue,
-        vehicle: vehicle,
+        vehicle: {...vehicle, industrial_host_id: vehicle.industrial_host_ids.length > 0 ? [vehicle.industrial_host_ids[0]] : vehicle.industrial_host_id },
         search: true,
         alert: true
       }
@@ -340,7 +340,8 @@ export class ResidentCarListPage implements OnInit {
 
   callResident(vehicle: any) {
     if (this.project_config.is_industrial){
-      this.webRtcService.createOffer(false, vehicle.industrial_host_id[0], false, false);
+      console.log(vehicle)
+      this.webRtcService.createOffer(false, vehicle.industrial_host_ids.length > 0 ? vehicle.industrial_host_ids[0] : vehicle.industrial_host_id[0], false, false);
     }else{
       this.webRtcService.createOffer(false, false, vehicle.unit_id[0], false);
     }

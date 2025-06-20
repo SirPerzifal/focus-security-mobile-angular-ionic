@@ -29,6 +29,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     const state = navigation?.extras.state as { vehicle: any[]};
     if (state) {
       this.vehicle = state.vehicle
+      this.hideCallEmployee = this.vehicle.industrial_host_id || this.vehicle.unit_id || this.vehicle.industrial_host_ids.length > 0
       console.log(this.vehicle)
     } 
    }
@@ -40,6 +41,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
       this.params = params
     })
   }
+  hideCallEmployee= false
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {

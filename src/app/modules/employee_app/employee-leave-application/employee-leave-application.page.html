@@ -16,16 +16,23 @@
       <div class="w-full">
         <app-text-input [labelResidentText]="'Full Name'" [labelResidentClass]="'text-base font-bold'"
           [id]="'employee_leave_name'" [placeholder]="'Employee Name'" [showPlaceholder]="true"
-          [customClasses]="{'w-full items-start': true}" [type]="'text'"
+          [customClasses]="{'w-full items-start': true}" [type]="'text'" [isReadonly]="true"
           [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
           [(ngModel)]="leaveForm.full_name"></app-text-input>
       </div>
       <div class="w-full">
         <app-text-input [labelResidentText]="''" [labelResidentClass]="'text-base font-bold'"
-          [id]="'employee_leave_name'" [placeholder]="'Date of Application'" [showPlaceholder]="true"
-          [customClasses]="{'w-full items-start': true}" [type]="'Date'"
+          [id]="'employee_leave_application_date'" [placeholder]="'Date of Application'" [showPlaceholder]="true"
+          [customClasses]="{'w-full items-start': true}" [type]="'date'"
           [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
           [(ngModel)]="leaveForm.application_date"></app-text-input>
+      </div>
+      <div class="w-full">
+        <app-text-input [labelResidentText]="'Work Site'" [labelResidentClass]="'text-base font-bold'"
+          [id]="'employee_leave_worK_site'" [placeholder]="'Entert Your Work Site'" [showPlaceholder]="true"
+          [customClasses]="{'w-full items-start': true}" [type]="'text'" [isReadonly]="true"
+          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+          [(ngModel)]="leaveForm.work_site"></app-text-input>
       </div>
       <div class="flex flex-col w-full">
         <div class="flex flex-row justify-start">
@@ -37,12 +44,12 @@
           <option value="" selected disabled hidden></option>
         </select>
       </div>
-      <!-- <div class="flex flex-col w-full">
+      <div class="flex flex-col w-full">
         <div class="flex flex-row justify-start">
-          <p class="text-base font-bold">MC</p>
+          <p class="text-base font-bold">Supporting Document</p>
         </div>
         <div class="w-full flex flex-row justify-between items-end">
-          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #employeeMC
+          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #employeeSupporting
             class="hidden" accept="application/pdf" />
           <div class="w-4/6">
             <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
@@ -54,7 +61,7 @@
             Upload
           </button>
         </div>
-      </div> -->
+      </div>
       <div class="flex flex-row justify-between space-x-1.5 w-full">
         <div class="w-1/2">
           <app-text-input #employee_leave_start_date [id]="'employee_leave_start_date'" [placeholder]="'Start Date'" [(ngModel)]="leaveForm.start_leave_date"
@@ -70,6 +77,13 @@
             (change)="onChangeEndDate($event)">
           </app-text-input>
         </div>
+      </div>
+      <div class="w-full">
+        <app-text-input [labelResidentText]="'Number of Days'" [labelResidentClass]="'text-base font-bold'"
+          [id]="'employee_leave_days_total'" [placeholder]="'Days Total'" [showPlaceholder]="true"
+          [customClasses]="{'w-full items-start': true}" [type]="'text'" [isReadonly]="true"
+          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+          [(ngModel)]="leaveForm.full_name"></app-text-input>
       </div>
       <!-- Choose Post To -->
       <div class="w-full ">

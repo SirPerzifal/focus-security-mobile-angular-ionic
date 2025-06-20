@@ -6,6 +6,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { SearchNricConfirmationPage } from 'src/app/modules/resident_car_list_module/pages/search-nric-confirmation/search-nric-confirmation.page';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { OvernightParkingModalPage } from 'src/app/modules/overnight_parking_list_module/pages/overnight-parking-modal/overnight-parking-modal.page';
 
 @Component({
   selector: 'app-records-visitor-detail',
@@ -24,6 +25,7 @@ export class RecordsVisitorDetailPage implements OnInit {
       this.loadProjectName().then(() => {
         this.getBlacklist()
         this.record = state.logs
+        this.hideCallEmployee = this.record.industrial_host_id || this.record.unit_id || this.record.industrial_host_ids.length > 0
       })
     } 
    }
@@ -37,6 +39,8 @@ export class RecordsVisitorDetailPage implements OnInit {
       })
     })
   }
+
+  hideCallEmployee = false
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
@@ -71,15 +75,19 @@ export class RecordsVisitorDetailPage implements OnInit {
     }
   }
 
+  issueResult: any = {}
   blacklist: any = []
   getBlacklist(){
     this.clientMainService.getApi({name: this.record.visitor_name ? this.record.visitor_name : '', vehicle_number: this.record.vehicle_number ? this.record.vehicle_number : '', project_id: this.project_id}, '/vms/get/visitor_ban_by_data').subscribe({
       next: (results) => {
+        console.log(this.record)
         console.log(results.result)
         if (results.result.response_code === 200) {
           this.blacklist = results.result.result
+          this.issueResult = results.result.issue_result
         } else {
           this.blacklist = []
+          this.issueResult = results.result.issue_result
         }
       },
       error: (error) => {
@@ -135,7 +143,7 @@ export class RecordsVisitorDetailPage implements OnInit {
   async callResident(){
     console.log("tirgger olso", this.record);
     if (this.project_config.is_industrial){
-      this.webrtc.createOffer(false, this.record.industrial_host_id, false, false);
+      this.webrtc.createOffer(false, this.record.industrial_host_ids.length > 0 ? this.record.industrial_host_ids[0] : this.record.industrial_host_id, false, false);
     }else{
       this.webrtc.createOffer(false, this.record.requestor_id, this.record.unit_id, false);
     }
@@ -146,6 +154,39 @@ export class RecordsVisitorDetailPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  async presentModal(issue: string= 'wheel_clamp') {
+    const modal = await this.modalController.create({
+      component: OvernightParkingModalPage,
+      cssClass: 'record-modal',
+      componentProps: {
+        issue: issue,
+        vehicle: {...this.record, ...this.issueResult, create_date: this.record.entry_datetime, industrial_host_id: this.record.industrial_host_ids.length > 0 ? [this.record.industrial_host_ids[0]] : [this.record.industrial_host_id]},
+        search: true,
+        alert: true
+      }
+  
+    });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if(result.data){
+          this.getBlacklist()
+          console.log("SUCCEED")
+        }
+      }
+    });
+
+    return await modal.present();
   }
 
 }

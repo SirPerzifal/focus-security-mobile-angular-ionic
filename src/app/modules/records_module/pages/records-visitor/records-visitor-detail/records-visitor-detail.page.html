@@ -30,7 +30,7 @@
             <td>{{ returnNone(record.contact_number) }}</td>
           </tr>
           <tr>
-            <td class="font-bold w-2/5">ENTRY FROM</td>
+            <td class="font-bold w-2/5">ENTRY TYPE</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.entry_type) }}</td>
           </tr>
@@ -74,15 +74,23 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.requestor) }}</td>
           </tr>
+          <tr *ngIf="pageType == 'vehicle'">
+            <td class="font-bold w-2/5">WARNING ISSUE</td>
+            <td class="w-[5%]">:</td>
+            <td class="uppercase">{{ issueResult ? (issueResult.offence_type ? issueResult.offence_type.replace('_', ' ') : '-') : 'NO ISSUE' }}</td>
+          </tr>
         </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="functionMain.callFromPhone(record.contact_number)">CALL VISITOR</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="functionMain.callFromPhone(record.contact_number)" *ngIf="record.contact_number">CALL VISITOR</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()"  *ngIf="hideCallEmployee">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
           <div class="flex flex-row w-full justify-around mb-4" >
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onBlacklist()" *ngIf="blacklist.length == 0">BLACKLIST VISITOR</button>
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onLiftBan()" *ngIf="blacklist.length > 0">LIFT BAN</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="presentModal('none')" *ngIf="!issueResult && pageType == 'vehicle'">FIRST WARNING</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="presentModal('first_warning')" *ngIf="issueResult && issueResult.offence_type == 'first_warning' && pageType == 'vehicle'">SECOND WARNING</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="presentModal('wheel_clamp')" *ngIf="issueResult && issueResult.offence_type == 'second_warning' && pageType == 'vehicle'">WHEEL CLAMP</button>
           </div>
         </div>
       </div>

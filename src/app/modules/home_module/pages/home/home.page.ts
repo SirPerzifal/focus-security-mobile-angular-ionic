@@ -57,11 +57,13 @@ export class HomePage implements OnInit {
       this.project_name = value.project_name.toUpperCase()
       this.project_id = value.project_id
       this.project_config = value.config
+      this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
     })
   }
   project_name = ''
   project_id = 0
   project_config: any = []
+  fcm_token_id: any = false
 
   ngOnDestroy() {
     if (this.routerSubscription) {
@@ -90,7 +92,7 @@ export class HomePage implements OnInit {
 
   onLogout() {
     if (this.project_key != '') {
-      this.clientMainService.getApi({project_id: this.project_id, project_key: this.project_key}, '/vms/post/project_key').subscribe({
+      this.clientMainService.getApi({project_id: this.project_id, project_key: this.project_key, fcm_token_id: this.fcm_token_id}, '/vms/post/project_key').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {
@@ -172,7 +174,7 @@ export class HomePage implements OnInit {
   isLoading = false
   loadConfig() {
     this.isLoading = true
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/current_config').subscribe({
+    this.clientMainService.getApi({project_id: this.project_id, fcm_token_id: this.fcm_token_id}, '/vms/get/current_config').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.status_code === 200) {

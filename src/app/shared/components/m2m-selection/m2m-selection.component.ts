@@ -121,6 +121,9 @@ export class M2mSelectionComponent implements OnInit {
           } else {
             this.unitArrayProcess.push(unitId);
             this.unitNames.push({ 'name': unit.name, 'id': unitId });
+            if (this.isVMS) {
+              this.setDropdownChooseUnit = false
+            }
           }
           
         }

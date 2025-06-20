@@ -419,6 +419,7 @@ export class ContractorFormPage implements OnInit {
           this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
           this.selectedImage = value.visitor_image
           this.identificationType = value.identification_type ? value.identification_type : ''
+          this.temp_type = this.identificationType
           this.nric_value = value.identification_number ? value.identification_number : '' 
           this.contactUnit = ''
           this.contactHost = ''

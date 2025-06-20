@@ -134,26 +134,26 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.vehicleNumber) {
       errMsg += 'Offender vehicle number is required! \n'
     }
-    if (!this.issueName && this.isVehicleNumberReadonly) {
-      errMsg += 'Offender name is required! \n'
-    }
-    if (!this.issueContact && this.isVehicleNumberReadonly) {
-      errMsg += 'Offender contact number is required! \n'
-    }
-    if (this.issueContact && this.isVehicleNumberReadonly) {
-      if (this.issueContact.length <= 2 ) {
-        errMsg += 'Offender contact number is required! \n'
-      }
-    }
-    if (!this.typeOfEntry) {
-      errMsg += 'Offender type of entry is required! \n'
-    }
+    // if (!this.issueName && this.isVehicleNumberReadonly) {
+    //   errMsg += 'Offender name is required! \n'
+    // }
+    // if (!this.issueContact && this.isVehicleNumberReadonly) {
+    //   errMsg += 'Offender contact number is required! \n'
+    // }
+    // if (this.issueContact && this.isVehicleNumberReadonly) {
+    //   if (this.issueContact.length <= 2 ) {
+    //     errMsg += 'Offender contact number is required! \n'
+    //   }
+    // }
+    // if (!this.typeOfEntry) {
+    //   errMsg += 'Offender type of entry is required! \n'
+    // }
     if ((!this.blockId || !this.unitId) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
-    }
+    // if ((!this.selectedHost) && this.project_config.is_industrial) {
+    //   errMsg += 'Host must be selected! \n'
+    // }
     if (!this.reasonOfIssuance) {
       errMsg += 'You must provide an issue reason! \n'
     }

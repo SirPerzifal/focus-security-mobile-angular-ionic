@@ -29,7 +29,7 @@ export class AlertMainPage implements OnInit {
     this.checkScreenSize();
    }
 
-  alertsIssues: any[] = [];
+  alertsIssues: any = [];
 
   showIssues: any[] = this.alertsIssues
 
@@ -74,8 +74,53 @@ export class AlertMainPage implements OnInit {
       }
     })
     
-    this.loadAll()
+    // this.loadAll()
+    this.onLoadCount()
   }
+
+  result: any = {}
+  onLoadCount() {
+    let params = {project_id: this.project_id}
+    this.loadProjectName().then(()=>{
+      this.clientMainService.getApi(params, '/vms/get/offenses_count').subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.result = results.result.response_result[0]
+            console.log(this.result)
+            this.overstayRedTotal = this.result.total_overstay_offences_red
+            this.overstayTotal = this.result.total_overstay_offences
+            this.unregisteredTotal = this.result.total_unregistered_offences
+            this.ticketsTotal = this.result.total_ticket_offences
+            this.ticketsRedTotal = this.result.total_ticket_offences_red
+            this.firstWarningTotal = this.result.total_first_warning_offences
+            this.firstWarningRedTotal = this.result.total_first_warning_offences_red
+            this.secondWarningTotal = this.result.total_second_warning_offences
+            this.secondWarningRedTotal = this.result.total_second_warning_offences_red
+            this.wheelClampedTotal = this.result.total_wheel_clamp_offences
+          } else {
+            this.overstayRedTotal = 0
+            this.overstayTotal = 0
+            this.unregisteredTotal = 0
+            this.ticketsTotal = 0
+            this.ticketsRedTotal = 0
+            this.firstWarningTotal = 0
+            this.firstWarningRedTotal = 0
+            this.secondWarningTotal = 0
+            this.secondWarningRedTotal = 0
+            this.wheelClampedTotal = 0
+          }
+          console.log(this.overstayRedTotal,this.overstayTotal,this.unregisteredTotal,this.ticketsTotal,this.ticketsRedTotal,this.firstWarningTotal,this.firstWarningRedTotal,this.secondWarningTotal,this.secondWarningRedTotal,this.wheelClampedTotal)
+          this.actionTotalIssue()
+          this.recordAction()
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+    })
+  }
+
 
   loadAll() {
     this.loadProjectName().then(() => {
@@ -111,106 +156,203 @@ export class AlertMainPage implements OnInit {
   }
 
   loadRecordsWheelClamp(offenceType: string = 'wheel_clamp') {
-    this.alertsIssues = this.alertsIssues.filter(item => item.type !== offenceType);
-    this.offensesService.getOfffenses(offenceType, true).subscribe({
+    if (!this.main) {
+      this.isLoading = true
+    }
+    this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== offenceType);
+    let params = {
+      is_alert: true, 
+      is_active: true, 
+      alert_type: offenceType, 
+      project_id: this.project_id,
+      limit: this.functionMain.limitHistory, 
+      page: this.currentPage
+    }
+    this.clientMainService.getApi(params, '/vms/get/offenses').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
-          this.alertsIssues.push({ type: offenceType, data: results.result.response_result })
+          this.alertsIssues.push({ type: offenceType, data: results.result.response_result, total_pages: results.result.pagination.total_pages })
+          this.total_pages = results.result.pagination.total_pages
           if (offenceType == 'wheel_clamp') {
-            this.wheelClampedTotal = results.result.response_result.length
+            this.wheelClampedTotal = results.result.pagination.total_records
           }
           else if (offenceType == 'first_warning') {
-            this.firstWarningTotal = results.result.response_result.length
-            this.firstWarningRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
+            this.firstWarningTotal = results.result.pagination.total_records
+            this.firstWarningRedTotal = results.result.pagination.total_red_records
           }
           else {
-            this.secondWarningTotal = results.result.response_result.length
-            this.secondWarningRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
+            this.secondWarningTotal = results.result.pagination.total_records
+            this.secondWarningRedTotal = results.result.pagination.total_red_records
           }
           this.recordAction();
-
           this.actionTotalIssue()
           if (!this.main) {
-            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
           }
         } else {
-          // this.presentToast('There is no data in the system!', 'danger');
+          this.alertsIssues.push({ type: offenceType, data: [], total_pages: 0 })
+          if (offenceType == 'wheel_clamp') {
+            this.wheelClampedTotal = 0
+          }
+          else if (offenceType == 'first_warning') {
+            this.firstWarningTotal = 0
+            this.firstWarningRedTotal = 0
+          }
+          else {
+            this.secondWarningTotal = 0
+            this.secondWarningRedTotal = 0
+          }
+          this.recordAction();
+          this.actionTotalIssue()
+          this.isLoading = false
+          this.total_pages = 0
         }
 
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
-        // this.isLoading = false;
+        this.alertsIssues.push({ type: offenceType, data: [], total_pages: 0 })
+        if (offenceType == 'wheel_clamp') {
+          this.wheelClampedTotal = 0
+        }
+        else if (offenceType == 'first_warning') {
+          this.firstWarningTotal = 0
+          this.firstWarningRedTotal = 0
+        }
+        else {
+          this.secondWarningTotal = 0
+          this.secondWarningRedTotal = 0
+        }
+        this.isLoading = false
+        this.total_pages = 0
+        this.recordAction();
+        this.actionTotalIssue()
       }
     });
   }
 
   loadUnregisteredCar(){
-    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'unregistered');
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/unregistered_car_list').subscribe({
+    if (!this.main) {
+      this.isLoading = true
+    }
+    this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== 'unregistered');
+    this.clientMainService.getApi({project_id: this.project_id, limit: this.functionMain.limitHistory, page: this.currentPage}, '/vms/get/unregistered_car_list').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
-          this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result })
-          this.unregisteredTotal = results.result.response_result.length
-
+          this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result, total_pages: results.result.pagination.total_pages})
+          this.unregisteredTotal = results.result.pagination.total_records
+          this.total_pages = results.result.pagination.total_pages
           this.recordAction();
           this.actionTotalIssue()
           if (!this.main) {
-            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
           }
-        } 
+        } else {
+          this.alertsIssues.push({ type: 'unregistered', data: [], total_pages: 0 })
+          this.unregisteredRedTotal = 0
+          this.total_pages = 0
+          this.recordAction();
+          this.actionTotalIssue()
+        }
+        this.isLoading = false
       },
       error: (error) => {
+        this.alertsIssues.push({ type: 'unregistered', data: [], total_pages: 0  })
         this.presentToast('An error occurred while loading unregistered car data!', 'danger');
         console.error(error);
+        this.unregisteredRedTotal = 0
+        this.total_pages = 0
+        this.isLoading = false
+        this.recordAction();
+        this.actionTotalIssue()
       }
     });
   }
 
   loadOverstay(){
-    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'overstay');
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/overstay_list').subscribe({
+    if (!this.main) {
+      this.isLoading = true
+    }
+    this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== 'overstay');
+    this.clientMainService.getApi({project_id: this.project_id,  limit: this.functionMain.limitHistory, page: this.currentPage}, '/vms/get/overstay_list').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
-          this.alertsIssues.push({ type: 'overstay', data: results.result.response_result })
-          this.overstayTotal = results.result.response_result.length
-          this.overstayRedTotal = results.result.response_result.filter((item: any) => item.is_overminute).length
+          this.alertsIssues.push({ type: 'overstay', data: results.result.response_result, total_pages: results.result.pagination.total_pages })
+          this.overstayRedTotal = results.result.pagination.total_red_records
+          this.overstayTotal = results.result.pagination.total_records
+          this.total_pages = results.result.pagination.total_pages
+          this.isLoading = false
           console.log(this.overstayRedTotal)
           this.recordAction();
           this.actionTotalIssue()
           if (!this.main) {
-            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
           }
-        } 
+        } else {
+          this.alertsIssues.push({ type: 'overstay', data: [], total_pages: 0 })
+          this.overstayTotal = 0
+          this.overstayRedTotal = 0
+          this.total_pages = 0
+          this.isLoading = false
+          this.recordAction();
+          this.actionTotalIssue()
+        }
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overstay car data!', 'danger');
         console.error(error);
+        this.alertsIssues.push({ type: 'overstay', data: [], total_pages: 0 })
+        this.overstayTotal = 0
+        this.overstayRedTotal = 0
+        this.isLoading = false
+        this.total_pages = 0
+        this.recordAction();
+        this.actionTotalIssue()
       }
     });
   }
 
   loadTickets(){
-    this.alertsIssues = this.alertsIssues.filter(item => item.type !== 'tickets');
-    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/report_issue').subscribe({
+    if (!this.main) {
+      this.isLoading = true
+    }
+    this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== 'tickets');
+    this.clientMainService.getApi({project_id: this.project_id, limit: this.functionMain.limitHistory, page: this.currentPage}, '/vms/get/report_issue').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.alertsIssues.push({ type: 'tickets', data: results.result.response_result })
-          this.ticketsTotal = results.result.response_result.length
-          this.ticketsRedTotal = results.result.response_result.filter((item: any) =>  item.message_count === 0).length
+          this.alertsIssues.push({ type: 'tickets', data: results.result.response_result, total_pages: results.result.pagination.total_pages })
+          this.ticketsRedTotal = results.result.pagination.total_red_records
+          this.ticketsTotal = results.result.pagination.total_records
+          this.total_pages = results.result.pagination.total_pages
+          this.isLoading = false
           this.recordAction();
           this.actionTotalIssue()
           if (!this.main) {
-            this.showIssues = this.alertsIssues.filter(item => item.type === this.active_type)
+            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
           }
-        } 
+        } else {
+          this.alertsIssues.push({ type: 'tickets', data: [], total_pages: 0 })
+          this.ticketsTotal = 0
+          this.ticketsRedTotal = 0
+          this.total_pages = 0
+          this.isLoading = false
+          this.recordAction();
+          this.actionTotalIssue()
+        }
       },
       error: (error) => {
         this.presentToast('An error occurred while loading tickets!', 'danger');
         console.error(error);
+        this.alertsIssues.push({ type: 'tickets', data: [], total_pages: 0 })
+        this.ticketsTotal = 0
+        this.ticketsRedTotal = 0
+        this.total_pages = 0
+        this.isLoading = false
+        this.recordAction();
+        this.actionTotalIssue()
       }
     });
   }
@@ -293,6 +435,7 @@ export class AlertMainPage implements OnInit {
   record_text = ''
   active_type = ''
   selectedMenu: any[] = []
+  Datas: any = []
 
   toggleRecordsButton(records: any) {
     if (records.type == this.active_type) {
@@ -300,19 +443,33 @@ export class AlertMainPage implements OnInit {
       this.record_text = ''
       records.isActive = true
       this.active_type = ''
+      this.currentPage = 1
+      this.inputPage = 1
+      this.total_pages = 0
     } else {
       this.main = false
       this.record_text = records.text
       this.active_type = records.type
       records.isActive = true
-      this.showIssues = this.alertsIssues.filter(item => item.type === records.type)
-      if (!this.showIssues[0]) {
-        this.showIssues = [{
-          type: this.active_type,
-          data: []
-        }]
-      }
+      // this.total_pages = this.alertsIssues.filter((item: any) => item.type === records.type)[0].total_pages
+      console.log(this.alertsIssues.filter((item: any) => item.type === records.type)[0])
+      // this.showIssues = this.alertsIssues.filter((item: any) => item.type === records.type)
+      // if (!this.showIssues[0]) {
+      //   this.showIssues = [{
+      //     type: this.active_type,
+      //     data: []
+      //   }]
+      // }
       this.selectedMenu = this.recordsMenu.filter((item: any) => item.type === records.type)
+      if (this.active_type == 'unregistered') {
+        this.loadUnregisteredCar()
+      } else if (this.active_type == 'overstay') {
+        this.loadOverstay()
+      } else if (this.active_type == 'tickets') {
+        this.loadTickets()
+      } else {
+        this.loadRecordsWheelClamp(this.active_type)
+      }
     }
   }
 
@@ -322,6 +479,8 @@ export class AlertMainPage implements OnInit {
   }
 
   onBackDetail() {
+    this.currentPage = 1
+    this.inputPage = 1
     this.main = !this.main
   }
 
@@ -513,7 +672,7 @@ export class AlertMainPage implements OnInit {
   }
 
   refreshClicked() {
-    this.loadAll()
+    this.onLoadCount()
   }
 
   isSmallScreen = false;
@@ -529,7 +688,7 @@ export class AlertMainPage implements OnInit {
 
   handleRefresh(event: any) {
     if (this.main) {
-      this.loadAll()
+      this.onLoadCount()
     } else {
       if (this.active_type == 'unregistered') {
         this.loadUnregisteredCar()
@@ -556,9 +715,20 @@ export class AlertMainPage implements OnInit {
     console.log(tempPage, this.total_pages)
     if (tempPage > 0 && tempPage <= this.total_pages) {
       this.currentPage = tempPage
+      if (this.active_type == 'unregistered') {
+        this.loadUnregisteredCar()
+      } else if (this.active_type == 'overstay') {
+        this.loadOverstay()
+      } else if (this.active_type == 'tickets') {
+        this.loadTickets()
+      } else {
+        this.loadRecordsWheelClamp(this.active_type)
+      }
     } else {
     }
     this.inputPage = this.currentPage
   }
+
+  isLoading = false
 
 }
