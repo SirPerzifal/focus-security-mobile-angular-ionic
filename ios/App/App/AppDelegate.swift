@@ -87,11 +87,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let apnsToken = tokenParts.joined()
         print("📱 APNs Token: \(apnsToken)")
         
-        // Post ke Capacitor
-        NotificationCenter.default.post(
-            name: .capacitorDidRegisterForRemoteNotifications, 
-            object: deviceToken
-        )
+        // // Post ke Capacitor
+        // NotificationCenter.default.post(
+        //     name: .capacitorDidRegisterForRemoteNotifications, 
+        //     object: deviceToken
+        // )
         
         // ✅ Request FCM token setelah APNs token di-set
         self.requestFCMToken()
@@ -117,6 +117,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("📱 FCM registration token: \(token)")
                 print("📏 FCM Token length: \(token.count)")
                 
+                // Post ke Capacitor
+                NotificationCenter.default.post(
+                    name: .capacitorDidRegisterForRemoteNotifications, 
+                    object: token
+                )
+
                 // Post notification untuk JavaScript
                 // DispatchQueue.main.async {
                 //     NotificationCenter.default.post(

@@ -40,28 +40,42 @@
     <!-- Overlay and Modal -->
     <div
       class="modal-overlay"
-      *ngIf="selectedQuickDial"
+      *ngIf="selectedQuickDialParam"
       (click)="closePopup()"
     ></div>
-    <div class="modal" *ngIf="selectedQuickDial">
+    <div class="modal" *ngIf="selectedQuickDialParam">
       <div
         class="bg-[#D8ECCF] p-4 rounded-lg m-3 text-center"
         [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
       >
         <p class="text-lg cw-1:text-sm font-bold mb-4">
-          Call {{ selectedQuickDial.name }} Via
+          Call {{ selectedQuickDialParam.name }} Via
         </p>
-        <p class="text-md mb-4">{{ selectedQuickDial.number }}</p>
-        <div class="flex justify-between space-x-2">
+        <p class="text-md mb-4">{{ selectedQuickDialParam.number }}</p>
+        <div
+          *ngIf="selectedQuickDialParam.is_allow_whatsapp === true"
+          class="flex justify-between space-x-2"
+        >
           <button
-            (click)="openWhatsApp(selectedQuickDial.number)"
+            (click)="openWhatsApp(selectedQuickDialParam.number)"
             class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
           >
             Whatsapp
           </button>
           <button
             class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
-            (click)="closePopup(selectedQuickDial.number)"
+            (click)="closePopup(selectedQuickDialParam.number)"
+          >
+            Phone Call
+          </button>
+        </div>
+        <div
+          *ngIf="selectedQuickDialParam.is_allow_whatsapp === false"
+          class="flex justify-between space-x-2"
+        >
+          <button
+            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
+            (click)="startCall(selectedQuickDialParam)"
           >
             Phone Call
           </button>

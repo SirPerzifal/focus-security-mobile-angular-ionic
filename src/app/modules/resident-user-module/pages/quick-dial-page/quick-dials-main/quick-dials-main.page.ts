@@ -16,7 +16,7 @@ export class QuickDialsMainPage implements OnInit {
   quickDials: QuickDial[] = [];
   projectId: number = 0;
 
-  selectedQuickDial: QuickDial | null = null;
+  selectedQuickDialParam: QuickDial | null = null;
   isAnimating: boolean = false;
 
   isLoading: boolean = true;
@@ -50,9 +50,12 @@ export class QuickDialsMainPage implements OnInit {
       name : dial.name,
       number : dial.contact_number,
       is_allow_resident_quick_dials : dial.is_allow_resident_quick_dials,
+      is_allow_whatsapp : dial.is_allow_whatsapp,
       icon : dial.image_profile,
     }));
     if (this.quickDials) {
+      console.log(this.quickDials);
+      
       this.isLoading = false;
     }
     // // console.log(this.quickDials);
@@ -60,14 +63,19 @@ export class QuickDialsMainPage implements OnInit {
  }
 
   selectQuickDial(dial: QuickDial) {
-    if (this.selectedQuickDial === dial) {
+    console.log(dial);
+    
+    if (this.selectedQuickDialParam === dial) {
+      console.log("selectedQuickDial", this.selectedQuickDialParam);
+      
       // If the same dial is clicked, close the popup
       this.closePopup(dial.number);
     } else {
       // If a different dial is clicked, animate the popdown first
       this.isAnimating = true;
       setTimeout(() => {
-        this.selectedQuickDial = dial;
+        this.selectedQuickDialParam = dial;
+        console.log("selectedQuickDial", this.selectedQuickDialParam);
         this.isAnimating = false;
       }, 300); // Match this duration with the CSS animation duration
     }
@@ -79,7 +87,7 @@ export class QuickDialsMainPage implements OnInit {
     }
     this.isAnimating = true;
     setTimeout(() => {
-      this.selectedQuickDial = null;
+      this.selectedQuickDialParam = null;
       this.isAnimating = false;
     }, 300); // Match this duration with the CSS animation duration
   }

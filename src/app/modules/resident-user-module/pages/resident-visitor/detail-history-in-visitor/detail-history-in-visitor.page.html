@@ -76,7 +76,7 @@
                 >
                   <td class="w-[60%] font-bold">Mode of Entry</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.mode_of_entry || '-' }}</td>
+                  <td>{{ historyData.visitor_type || '-' }}</td>
                   <!-- Menampilkan '-' jika mode_of_entry kosong -->
                 </tr>
                 <tr class="h-6" *ngIf="historyData.mode_of_entry !== 'Walk In'">

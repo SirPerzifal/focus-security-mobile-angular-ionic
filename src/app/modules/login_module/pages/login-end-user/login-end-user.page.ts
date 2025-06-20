@@ -75,39 +75,10 @@ export class LoginEndUserPage implements OnInit {
     this.existUser.password = password;
   }
 
-  async getValueFromNative() {
-    console.log("suk sini");
-    
-    const token = await Preferences.get({ key: 'FCMToken' });
-    console.log('📦 FCM token from UserDefaults:', token.value);
-    // Cek apakah berjalan di native platform
-    if (!Capacitor.isNativePlatform()) {
-      console.log('Not running on native platform');
-      return;
-    }
-
-    try {
-      console.log('Calling AppDelegatePlugin...');
-      const result = await AppDelegatePlugin.getValueFromAppDelegate();
-      console.log('Success:', result.value);
-    } catch (error) {
-      console.error('Error getting data from AppDelegate:', error);
-    }
-  }
-
   async getNotificationPermission(): Promise<string> {
     
     try {
       console.log("masuk try");
-      // Cek jika berjalan di simulator
-      // const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
-      
-      // // Skip proses notifikasi jika di simulator
-      // if (isSimulator) {
-      //   console.log('Running on iOS simulator, skipping push notification setup');
-      //   return '';
-      // }
-      
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');
         return '';
@@ -127,16 +98,37 @@ export class LoginEndUserPage implements OnInit {
       return new Promise((resolve, reject) => {
         console.log("masuk udah ke return");
         if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
-          this.getValueFromNative();
-          try {
-            document.addEventListener('FCMTokenReceived', (event: any) => {
-              const token = event.detail;
-              console.log('📥 Received FCM Token from native iOS:', token);
-            });
-          } catch (err) {
-            console.error('❌ Failed to get value from native plugin:', err);
-          }
+          console.log("Masuk ios logic");
+          // Set timeout untuk menghindari promise yang tidak pernah resolve
+          const timeout = setTimeout(() => {
+            cleanupListeners();
+            console.log('FCM registration timed out');
+            resolve(''); // Resolve dengan string kosong jika timeout
+          }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
+          
+          const cleanupListeners = () => {
+            clearTimeout(timeout);
+            PushNotifications.removeAllListeners();
+          };
+  
+          PushNotifications.addListener('registration', (token: Token) => {
+            if (token.value) {
+              this.fcmToken = token.value;
+              resolve(token.value)
+              console.log('FCM Token received:', token.value);
+            } else {
+              cleanupListeners();
+              resolve(''); // Resolve dengan string kosong jika token kosong
+            }
+          });
+  
+          PushNotifications.addListener('registrationError', (error) => {
+            cleanupListeners();
+            console.error('Push notification registration error:', error);
+            resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
+          });
         } else {
+          console.log("Masuk android logic");
           // Set timeout untuk menghindari promise yang tidak pernah resolve
           const timeout = setTimeout(() => {
             cleanupListeners();

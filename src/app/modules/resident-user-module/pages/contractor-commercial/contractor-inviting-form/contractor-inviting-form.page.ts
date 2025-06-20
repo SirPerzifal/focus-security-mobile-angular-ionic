@@ -538,7 +538,7 @@ export class ContractorInvitingFormPage implements OnInit {
       } else if (invitee.expected_number_of_visit < 0) {
         errMsg += 'Please fill expected number of visit! \n';
       } else if (invitee.expected_number_of_visit > 0) {
-          this.formData.entryType = 'multiple_entry';
+          this.formData.entryType = '';
         } else {
         errMsg = '';
       }
