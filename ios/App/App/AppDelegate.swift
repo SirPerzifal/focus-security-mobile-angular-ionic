@@ -33,6 +33,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    // Function that returns a simple string value
+    func getCustomValue() -> String {
+        return "Hello from AppDelegate - \(Date())"
+    }
+
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state.
     }
@@ -72,18 +77,69 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        // ✅ Tambahkan ini - kirim APNs token ke Firebase
+        print("📱 APNs Device Token received")
+        
+        // ✅ PENTING: Set APNs token ke Firebase
         Messaging.messaging().apnsToken = deviceToken
         
+        // Convert device token to string for logging
+        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+        let apnsToken = tokenParts.joined()
+        print("📱 APNs Token: \(apnsToken)")
+        
+        // Post ke Capacitor
         NotificationCenter.default.post(
-            name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)
+            name: .capacitorDidRegisterForRemoteNotifications, 
+            object: deviceToken
+        )
+        
+        // ✅ Request FCM token setelah APNs token di-set
+        self.requestFCMToken()
     }
 
     func application(
-        _ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error
+        _ application: UIApplication, 
+        didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
+        print("❌ Failed to register for remote notifications: \(error)")
         NotificationCenter.default.post(
-            name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+            name: .capacitorDidFailToRegisterForRemoteNotifications, 
+            object: error
+        )
+    }
+
+    // ✅ Method untuk request FCM token
+    private func requestFCMToken() {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("❌ Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("📱 FCM registration token: \(token)")
+                print("📏 FCM Token length: \(token.count)")
+                
+                // Post notification untuk JavaScript
+                // DispatchQueue.main.async {
+                //     NotificationCenter.default.post(
+                //         name: NSNotification.Name("FCMTokenReceived"), 
+                //         object: token
+                //     )
+                // }
+
+                DispatchQueue.main.async {
+                    if let webView = self.window?.rootViewController?.view.subviews.first(where: { $0 is WKWebView }) as? WKWebView {
+                        let javascript = """
+                            document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
+                                detail: '\(token)'
+                            }));
+                        """
+                        webView.evaluateJavaScript(javascript, completionHandler: nil)
+                    }
+                }
+                
+                // ✅ Simpan ke UserDefaults sebagai backup
+                UserDefaults.standard.set(token, forKey: "FCMToken")
+            }
+        }
     }
 }
 
@@ -109,21 +165,48 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-// ✅ TAMBAHKAN INI
 // MARK: - MessagingDelegate  
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("📱 Firebase FCM registration token: \(String(describing: fcmToken))")
+        print("📱 Firebase FCM registration token updated: \(String(describing: fcmToken))")
         
-        if let token = fcmToken {
-            print("📱 FCM Token length: \(token.count)")
-            print("📱 FCM Token: \(token)")
-            
-            // Post notification untuk Capacitor
-            NotificationCenter.default.post(
-                name: NSNotification.Name("FCMTokenReceived"), 
-                object: token
-            )
+        guard let token = fcmToken else {
+            print("❌ FCM token is nil")
+            return
         }
+        
+        print("📱 FCM Token length: \(token.count)")
+        print("📱 FCM Token: \(token)")
+        
+        // ✅ Simpan ke UserDefaults
+        UserDefaults.standard.set(token, forKey: "FCMToken")
+        
+        // // ✅ Post notification untuk JavaScript
+        // DispatchQueue.main.async {
+        //     NotificationCenter.default.post(
+        //         name: NSNotification.Name("FCMTokenReceived"), 
+        //         object: token
+        //     )
+        // }
+
+        DispatchQueue.main.async {
+            if let webView = self.window?.rootViewController?.view.subviews.first(where: { $0 is WKWebView }) as? WKWebView {
+                let javascript = """
+                    document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
+                        detail: '\(token)'
+                    }));
+                """
+                webView.evaluateJavaScript(javascript, completionHandler: nil)
+            }
+        }
+        
+        // ✅ Optional: Send langsung ke server jika perlu
+        // self.sendTokenToServer(token)
+    }
+    
+    // Optional method untuk kirim token ke server
+    private func sendTokenToServer(_ token: String) {
+        // Implementasi untuk kirim token ke server Anda
+        print("📤 Sending FCM token to server: \(token)")
     }
 }

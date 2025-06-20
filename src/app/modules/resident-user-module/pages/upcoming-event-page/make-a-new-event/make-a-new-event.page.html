@@ -361,7 +361,7 @@
                     class="w-full text-sm"
                     [(ngModel)]="selectedStartTime"
                     #startTimeEventInput
-                    [readonly]="isRead"
+                    [readonly]="userType == 'industrial'"
                   />
                 </div>
               </div>
@@ -394,7 +394,7 @@
                     class="w-full text-sm"
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
-                    [readonly]="isRead"
+                    [readonly]="userType == 'industrial'"
                     #endTimeEventInput
                   />
                 </div>

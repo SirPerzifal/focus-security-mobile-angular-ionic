@@ -509,8 +509,8 @@ export class VisitorInvitigFormPage implements OnInit {
                 formData: null
               }
             });
-          } else if (response.result.response_code === 206) {
-            this.functionMain.presentToast('This Vehicle Number/Contact Number is Banned!', 'danger');
+          } else if (response.result.status_code === 206) {
+            this.functionMain.presentToast('Visitor has been banned!', 'danger');
           } else {
             this.functionMain.presentToast('Failed Add Invite', 'danger');
           }

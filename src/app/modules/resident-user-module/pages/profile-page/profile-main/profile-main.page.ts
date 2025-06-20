@@ -976,149 +976,81 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   async getNotificationPermission(familyId: number): Promise<string> {
     try {
-      console.log('🔄 Starting FCM registration process...');
+      // // Cek jika berjalan di simulator
+      // const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
       
-      // Check platform
-      console.log('📱 Platform:', {
-        ios: this.platform.is('ios'),
-        android: this.platform.is('android'),
-        cordova: this.platform.is('cordova'),
-        capacitor: this.platform.is('capacitor')
-      });
-
+      // // Skip proses notifikasi jika di simulator
+      // if (isSimulator) {
+      //   console.log('Running on iOS simulator, skipping push notification setup');
+      //   return '';
+      // }
+      
       if (typeof PushNotifications === 'undefined') {
-        console.warn('❌ PushNotifications not available.');
+        console.warn('PushNotifications not available.');
         return '';
       }
 
-      // Step 1: Check current permissions
-      console.log('🔍 Checking current permissions...');
-      const currentPermissions = await PushNotifications.checkPermissions();
-      console.log('📋 Current permissions:', currentPermissions);
-
-      // Step 2: Request permissions
-      console.log('🙏 Requesting permissions...');
       const permission = await PushNotifications.requestPermissions();
-      console.log('✅ Permission result:', permission);
 
       if (permission.receive !== 'granted') {
-        console.log('❌ Notification permission not granted:', permission.receive);
+        console.log('Notification permission not granted');
         return '';
       }
 
-      // Step 3: Clean up and register
-      console.log('🧹 Cleaning up existing listeners...');
-      await PushNotifications.removeAllListeners();
-      
-      console.log('📝 Registering for push notifications...');
-      await PushNotifications.register();
+      // ✅ Cleanup existing listeners sebelum register
+      PushNotifications.removeAllListeners();
+      PushNotifications.register();
 
       return new Promise((resolve, reject) => {
-        let resolved = false;
-        
-        // Set timeout dengan waktu yang lebih lama untuk iOS
+        // Set timeout untuk menghindari promise yang tidak pernah resolve
         const timeout = setTimeout(() => {
-          if (!resolved) {
-            resolved = true;
-            console.log('⏰ FCM registration timed out after 20 seconds');
-            cleanupListeners();
-            resolve(''); // Resolve dengan string kosong jika timeout
-          }
-        }, 20000); // 20 detik untuk iOS
-
+          cleanupListeners();
+          console.log('FCM registration timed out');
+          resolve(''); // Resolve dengan string kosong jika timeout
+        }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
+        
         const cleanupListeners = () => {
-          if (!resolved) {
-            resolved = true;
-            clearTimeout(timeout);
-            PushNotifications.removeAllListeners();
-          }
+          clearTimeout(timeout);
+          PushNotifications.removeAllListeners();
         };
 
-        // Listen for successful registration
         PushNotifications.addListener('registration', (token: Token) => {
-          console.log('🎉 Registration listener triggered');
-          console.log('🔑 Token received:', token);
-          
-          if (token.value && !resolved) {
-            resolved = true;
+          if (token.value) {
             this.fcmToken = token.value;
-            console.log('✅ FCM Token stored:', token.value);
+            console.log('FCM Token received:', token.value);
             
-            // Send token to backend
-            console.log('📤 Sending token to backend...');
+            // ✅ Send token to backend
             this.mainResident.endpointCustomProcess({
               previous_family_id: this.familyId,
               family_id: familyId,
               fcm_token: token.value
             }, '/set/fcm_token').subscribe({
               next: (response: any) => {
-                console.log('✅ FCM token sent to backend successfully:', response);
+                console.log('FCM token sent to backend successfully:', response);
                 cleanupListeners();
-                resolve(token.value);
+                resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
               },
               error: (error) => {
-                console.error('❌ Failed to send FCM token to backend:', error);
+                console.error('Failed to send FCM token to backend:', error);
                 cleanupListeners();
-                resolve(token.value); // Tetap resolve dengan token meski gagal kirim ke backend
+                resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
               }
             });
-          } else if (!token.value && !resolved) {
-            resolved = true;
-            console.log('❌ Empty token received');
+          } else {
             cleanupListeners();
-            resolve('');
+            resolve(''); // Resolve dengan string kosong jika token kosong
           }
         });
 
-        // Listen for registration errors
         PushNotifications.addListener('registrationError', (error) => {
-          console.error('❌ Push notification registration error:', error);
-          if (!resolved) {
-            resolved = true;
-            cleanupListeners();
-            resolve(''); // Resolve dengan string kosong untuk melanjutkan proses
-          }
+          cleanupListeners();
+          console.error('Push notification registration error:', error);
+          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
         });
-
-        // Additional debugging - check if we can get token from native storage
-        if (this.platform.is('ios')) {
-          console.log('🍎 iOS detected - checking for stored FCM token...');
-          setTimeout(() => {
-            // Try to get token directly if available
-            if ((window as any).FirebasePlugin) {
-              (window as any).FirebasePlugin.getToken((token: string) => {
-                console.log('🔑 Direct FCM token from FirebasePlugin:', token);
-                if (token && !resolved) {
-                  resolved = true;
-                  this.fcmToken = token;
-                  cleanupListeners();
-                  
-                  // Send to backend
-                  this.mainResident.endpointCustomProcess({
-                    previous_family_id: this.familyId,
-                    family_id: familyId,
-                    fcm_token: token
-                  }, '/set/fcm_token').subscribe({
-                    next: (response: any) => {
-                      console.log('✅ Direct FCM token sent to backend:', response);
-                      resolve(token);
-                    },
-                    error: (error) => {
-                      console.error('❌ Failed to send direct FCM token:', error);
-                      resolve(token);
-                    }
-                  });
-                }
-              }, (error: any) => {
-                console.log('❌ Could not get direct FCM token:', error);
-              });
-            }
-          }, 2000); // Wait 2 seconds before trying direct approach
-        }
       });
     } catch (err) {
-      console.error('💥 Push Notification Error:', err);
-      return '';
+      console.error('Push Notification Error:', err);
+      return ''; // Return string kosong untuk melanjutkan proses login
     }
   }
 

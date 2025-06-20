@@ -16,6 +16,7 @@
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		FA94F7292E00FF3000957584 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA94F7282E00FF3000957584 /* GoogleService-Info.plist */; };
+		FADAA0562E03C9DC00BCF18A /* AppDelegatePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADAA0532E03C9DC00BCF18A /* AppDelegatePlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,9 @@
 		B21496D83BAF18BE03FA4036 /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
 		FA57867B2DEED97C00FF2127 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		FA94F7282E00FF3000957584 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FADAA0502E03C9DC00BCF18A /* App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "App-Bridging-Header.h"; sourceTree = "<group>"; };
+		FADAA0512E03C9DC00BCF18A /* AppDelegatePlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegatePlugin.h; sourceTree = "<group>"; };
+		FADAA0532E03C9DC00BCF18A /* AppDelegatePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegatePlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
+				FADAA0542E03C9DC00BCF18A /* Plugins */,
 				FA57867B2DEED97C00FF2127 /* App.entitlements */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
@@ -97,6 +102,16 @@
 				81B824AAFEDDC7492B43B701 /* Pods-App.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		FADAA0542E03C9DC00BCF18A /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				FADAA0502E03C9DC00BCF18A /* App-Bridging-Header.h */,
+				FADAA0512E03C9DC00BCF18A /* AppDelegatePlugin.h */,
+				FADAA0532E03C9DC00BCF18A /* AppDelegatePlugin.swift */,
+			);
+			path = Plugins;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,7 +147,7 @@
 				TargetAttributes = {
 					504EC3031FED79650016851F = {
 						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 1100;
+						LastSwiftMigration = 1620;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -220,6 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FADAA0562E03C9DC00BCF18A /* AppDelegatePlugin.swift in Sources */,
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -359,6 +375,7 @@
 			baseConfigurationReference = B21496D83BAF18BE03FA4036 /* Pods-App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -375,6 +392,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = IFS360;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "App/Plugins/App-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -385,6 +404,7 @@
 			baseConfigurationReference = 81B824AAFEDDC7492B43B701 /* Pods-App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -400,6 +420,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ifs360sg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "App/Plugins/App-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

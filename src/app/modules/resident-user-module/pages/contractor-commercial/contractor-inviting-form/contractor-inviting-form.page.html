@@ -160,7 +160,6 @@
                   [id]="'myself' + i"
                   [name]="'entry' + i"
                   [value]="'myself'"
-                  [checkedText]="entryCheck === 'myself'"
                   [text]="'Myself'"
                   (valueEmit)="changeHost($event, i)"
                 ></app-radio-check-input-case>
@@ -169,7 +168,6 @@
                   [id]="'multiple_host' + i"
                   [name]="'entry' + i"
                   [value]="'other_host'"
-                  [checkedText]="entryCheck === 'other_host'"
                   [text]="'Other Host'"
                   (valueEmit)="changeHost($event, i)"
                 ></app-radio-check-input-case>

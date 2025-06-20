@@ -531,12 +531,10 @@ export class ContractorInvitingFormPage implements OnInit {
         errMsg += 'Please fill contractor Name! \n';
       } else if (invitee.contact_number.trim() === '') {
         errMsg += 'Please fill contact number! \n';
-      } else if (invitee.type_of_work.trim() === '') {
-        errMsg += 'Please fill type of work! \n';
       } else if (invitee.company_name.trim() === '') {
         errMsg += 'Please fill company name! \n';
       } else if (invitee.host_ids.length <= 0) {
-        errMsg += 'Please choos whether show just you or include another host! \n';
+        errMsg += 'Please choose whether show just you or include another host! \n';
       } else if (invitee.expected_number_of_visit < 0) {
         errMsg += 'Please fill expected number of visit! \n';
       } else if (invitee.expected_number_of_visit > 0) {
@@ -579,8 +577,8 @@ export class ContractorInvitingFormPage implements OnInit {
                 formData: null
               }
             });
-          } else if (response.result.response_code === 206) {
-            this.functionMain.presentToast('This Vehicle Number/Contact Number is Banned!', 'danger');
+          } else if (response.result.status_code === 206) {
+            this.functionMain.presentToast('Contractor has been banned!', 'danger');
           } else {
             this.functionMain.presentToast('Failed Add Invite', 'danger');
           }
@@ -590,7 +588,7 @@ export class ContractorInvitingFormPage implements OnInit {
         this.functionMain.presentToast(String(error), 'danger');
       }
     } else if (errMsg !== '') {
-      this.functionMain.presentToast('Please fill all needed field.', 'danger');
+      this.functionMain.presentToast(errMsg, 'danger');
     }
   }
 
