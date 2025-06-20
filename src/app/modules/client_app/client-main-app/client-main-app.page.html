@@ -1,35 +1,42 @@
-<ion-content [fullscreen]="true">
-	<div class="header fixed top-0">
-		<div class="flex flex-col justify-start">
+<ion-header>
+  <div class="header fixed top-0">
+    <div class="flex flex-col justify-start">
       <div class="flex flex-col justify-end h-full">
-        <img height="80" [src]="functionMain.getImage(userData.image_profile)" width="80" class="w-80 h-80"/>
+        <img height="80" [src]="functionMain.getImage(userData.image_profile)" width="80" class="w-80 h-80" />
         <div class="absolute flex flex-col items-end ml-8">
-          <ion-icon class="drop-shadow-xl text-base bg-white rounded-full p-1" name="pencil" [routerLink]="['/client-my-profile']">
+          <ion-icon class="drop-shadow-xl text-base bg-white rounded-full p-1" name="pencil"
+            [routerLink]="['/client-my-profile']">
           </ion-icon>
         </div>
       </div>
-			
-			<div class="flex flex-col items-start mt-4 text-start w-[70%]">
-				<h1 class="text-[black]">
-					Welcome {{ userData.name }}
-				</h1>
-				<p class="text-[black] font-bold">
-					{{ userData.name_condo }}
-				</p>
-			</div>
-		</div>
-		<div class="logo w-[30%] flex flex-row justify-end">
-			<img alt="iFS360 logo" height="60" src="assets/logoIFS.png"/>
-		</div>
-	</div>
+
+      <div class="flex flex-col items-start mt-4 text-start w-[70%]">
+        <h1 class="text-[black]">
+          Welcome {{ userData.name }}
+        </h1>
+        <p class="text-[black] font-bold">
+          {{ userData.name_condo }}
+        </p>
+      </div>
+    </div>
+    <div class="logo w-[30%] flex flex-row justify-end">
+      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png" />
+    </div>
+  </div>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
+  </ion-refresher>
   <div class="p-5 text-center mb-24">
-    
-    <div class="flex items-center justify-center flex-col">
+
+    <div class="flex items-center justify-center flex-col" *ngIf="!isLoading">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems" (click)="onClickMenu(menu.route)">
-          <ion-button fill="clear" class="w-full flex bg-[var(--ion-color-tertiary)] h-28 rounded-2xl relative p-0 m-0" >
+          <ion-button fill="clear" class="w-full flex bg-[var(--ion-color-tertiary)] h-28 rounded-2xl relative p-0 m-0">
             <div class="w-full flex flex-col items-center">
-              <img class="w-10 h-10 my-2" [src]="menu.src" [alt]="menu.alt"/>
+              <img class="w-10 h-10 my-2" [src]="menu.src" [alt]="menu.alt" />
               <span class="text-sm font-bold text-[black] text-center normal-case">{{ menu.text }}</span>
             </div>
           </ion-button>
@@ -37,8 +44,9 @@
       </div>
 
     </div>
+    <app-modal-loading *ngIf="isLoading" class=""/>
   </div>
-  </ion-content>
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

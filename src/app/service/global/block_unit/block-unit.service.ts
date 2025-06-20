@@ -22,7 +22,6 @@ export class BlockUnitService extends ApiService {
         'project_id',
     ).then((value) => {
       this.project_id = value.project_id != null ? value.project_id : 1;
-      console.log(this.project_id)
     })
   }
 

@@ -15,8 +15,8 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.visitor_name) }}</td>
           </tr>
-          <tr>
-            <td class="font-bold w-[45%]">VEHICLE NO</td>
+          <tr *ngIf="record.vehicle_no">
+            <td class="font-bold w-[45%]">VEHICLE NUMBER</td>
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.vehicle_no) }}</td>
           </tr>

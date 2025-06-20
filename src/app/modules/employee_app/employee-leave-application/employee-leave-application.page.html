@@ -1,0 +1,88 @@
+<ion-header>
+  <app-resident-header [is_client]="true" [text]="'Leave Application Form'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
+  </ion-refresher>
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4">
+    <div class="flex flex-col justify-between mt-4 space-y-2 w-full" >
+      <div class="w-full">
+        <app-text-input [labelResidentText]="'Full Name'" [labelResidentClass]="'text-base font-bold'"
+          [id]="'employee_leave_name'" [placeholder]="'Employee Name'" [showPlaceholder]="true"
+          [customClasses]="{'w-full items-start': true}" [type]="'text'"
+          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+          [(ngModel)]="leaveForm.full_name"></app-text-input>
+      </div>
+      <div class="w-full">
+        <app-text-input [labelResidentText]="''" [labelResidentClass]="'text-base font-bold'"
+          [id]="'employee_leave_name'" [placeholder]="'Date of Application'" [showPlaceholder]="true"
+          [customClasses]="{'w-full items-start': true}" [type]="'Date'"
+          [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+          [(ngModel)]="leaveForm.application_date"></app-text-input>
+      </div>
+      <div class="flex flex-col w-full">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">Reason for Leave</p>
+        </div>
+        <select id="post_to_selection"
+          class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+          [(ngModel)]="leaveForm.reason_for_leave">
+          <option value="" selected disabled hidden></option>
+        </select>
+      </div>
+      <!-- <div class="flex flex-col w-full">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">MC</p>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end">
+          <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #employeeMC
+            class="hidden" accept="application/pdf" />
+          <div class="w-4/6">
+            <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+              class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
+              readonly />
+          </div>
+          <button id="employee_ticket_new_upbload_attachment" (click)="uploadFile()"
+            class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold">
+            Upload
+          </button>
+        </div>
+      </div> -->
+      <div class="flex flex-row justify-between space-x-1.5 w-full">
+        <div class="w-1/2">
+          <app-text-input #employee_leave_start_date [id]="'employee_leave_start_date'" [placeholder]="'Start Date'" [(ngModel)]="leaveForm.start_leave_date"
+            [customClasses]="{'w-full':true}" [type]="'date'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
+            (change)="onChangeStartDate($event)">
+          </app-text-input>
+        </div>
+        <div class="w-1/2">
+          <app-text-input #employee_leave_end_date [id]="'employee_leave_end_date'" [placeholder]="'End Date'" [(ngModel)]="leaveForm.end_leave_date"
+            [customClasses]="{'w-full':true}" [type]="'date'" [min]="leaveForm.start_leave_date"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
+            (change)="onChangeEndDate($event)">
+          </app-text-input>
+        </div>
+      </div>
+      <!-- Choose Post To -->
+      <div class="w-full ">
+        <button (click)="onSubmit()"
+          class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
+          Submit Leave Application
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ############################### -->
+</ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar></app-bottom-nav-bar>
+</ion-footer>

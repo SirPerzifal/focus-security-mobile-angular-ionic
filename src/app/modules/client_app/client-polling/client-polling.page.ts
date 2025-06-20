@@ -43,6 +43,7 @@ export class ClientPollingPage implements OnInit {
   project_id = 191
 
   isActive = true
+  isUpcoming = false
   isClosed = false
   isNew = false
   textSecond = 'Active'
@@ -50,7 +51,17 @@ export class ClientPollingPage implements OnInit {
   toggleActive() {
     this.textSecond = 'Active'
     this.isClosed = false
+    this.isUpcoming = false
     this.isActive = true
+    this.isNew = false
+    this.loadPolling()
+  }
+
+  toggleUpcoming() {
+    this.textSecond = 'Upcoming'
+    this.isClosed = false
+    this.isActive = false
+    this.isUpcoming = true
     this.isNew = false
     this.loadPolling()
   }
@@ -59,6 +70,7 @@ export class ClientPollingPage implements OnInit {
     this.textSecond = 'Closed'
     this.isClosed = true
     this.isActive = false
+    this.isUpcoming = false
     this.isNew = false
     this.loadPolling()
   }
@@ -67,6 +79,7 @@ export class ClientPollingPage implements OnInit {
     this.textSecond = 'New Poll'
     this.isClosed = false
     this.isActive = false
+    this.isUpcoming = false
     this.isNew = true
     this.resetForm()
   }
@@ -86,6 +99,7 @@ export class ClientPollingPage implements OnInit {
   dataForVote: any = [];
   closeVote: any = []; // Flag for closing animation
   openVote: any = []; // Flag for opening animation
+  upcomingVote: any = []
   showVotedata: any = []
 
   isMain = true
@@ -200,9 +214,11 @@ export class ClientPollingPage implements OnInit {
     this.isLoading = true
     let params = {}
     if (this.isActive) {
-      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: true}
+    } else if (this.isUpcoming) {
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: false, is_upcoming: true}
     } else {
-      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+      params = {page: this.currentPage, limit: this.functionMain.limitHistory, is_active: false, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
     }
     this.openVote = []
     this.closeVote = []
@@ -215,6 +231,9 @@ export class ClientPollingPage implements OnInit {
           if (this.isActive) {
             this.openVote = results.result.result
             this.showVotedata = this.openVote
+          } else if (this.isUpcoming) {
+            this.upcomingVote = results.result.result
+            this.showVotedata = this.upcomingVote
           } else {
             this.closeVote = results.result.result
             this.showVotedata = this.closeVote

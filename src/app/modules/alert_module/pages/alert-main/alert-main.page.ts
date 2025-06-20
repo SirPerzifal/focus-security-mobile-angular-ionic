@@ -345,7 +345,7 @@ export class AlertMainPage implements OnInit {
       this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({
         next: (results) => {
           if (results.result.response_code === 200) {
-            this.presentToast(`Successfully ${type} vehicle!`, 'success');
+            this.presentToast(`Successfully ${type} this vehicle!`, 'success');
             if (this.active_type == 'unregistered' || this.active_type == 'overstay') {
               this.loadUnregisteredCar()
               this.loadOverstay()
@@ -353,7 +353,7 @@ export class AlertMainPage implements OnInit {
               this.loadRecordsWheelClamp(this.active_type)
             }
           } else {
-            this.presentToast(`Failed to ${type} vehicle!`, 'danger');
+            this.presentToast(`Failed to ${type} this vehicle!`, 'danger');
           }
           
   

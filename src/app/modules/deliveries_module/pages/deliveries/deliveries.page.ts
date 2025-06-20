@@ -842,15 +842,18 @@ export class DeliveriesPage implements OnInit {
 
   onSubmitOther(openBarrier: boolean = true, camera_id: string = ''){
     let errMsg = ""
+    if (this.showWalk) {
+      this.otherDeliveryForm.visitor_vehicle = ''
+    }
     if (!this.selectedImage) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.otherDeliveryForm.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -862,7 +865,7 @@ export class DeliveriesPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.otherDeliveryForm.visitor_vehicle) {
+    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive) {
       errMsg += 'Vehicle number is required!\n';
     }
     if ((!this.otherDeliveryForm.company_name) && this.project_config.is_industrial) {
@@ -887,7 +890,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, identification_type: this.identificationType, nric_value: this.nric_value, pass_number: this.pass_number, host: this.selectedHost, visitor_image: this.selectedImage,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({

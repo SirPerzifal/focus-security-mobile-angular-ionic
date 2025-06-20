@@ -155,7 +155,7 @@ export class VmsContactInputComponent  implements OnInit {
    faQuestion = faQuestionCircle
 
   showMessage() {
-    this.functionMain.presentToast("Press field below code to choose country extension code!", 'dark');
+    this.functionMain.presentToast("Press field below code text to choose country extension code!", 'dark');
   }
 
   @HostListener('window:resize', [])
@@ -165,7 +165,7 @@ export class VmsContactInputComponent  implements OnInit {
 
   isSmallScreen = false
   checkScreenSize() {
-    this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 670);
+    this.isSmallScreen = window.innerWidth < (this.isModal ? 800 : 750);
   }
 
 }

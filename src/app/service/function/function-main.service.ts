@@ -225,18 +225,27 @@ export class FunctionMainService {
     return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1])
   }
 
-  convertNewDateTZ(date_string: string) {
+  convertNewDateTZ(date_string: string, isNeedSS: boolean = true) {
     let tz = new Date().getTimezoneOffset() / -60
     let dateObj = new Date(date_string);
 
     // Adjust the datetime by adding the timezone offset in hours
     dateObj.setHours(dateObj.getHours() + tz);
 
-    return dateObj.toLocaleString('en-GB', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    }).replace(',', '');
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    
+    if (isNeedSS) {
+      options.second = '2-digit';
+    }
+
+    return dateObj.toLocaleString('en-GB', options).replace(',', '');
   }
 
   preference: any = {}
@@ -246,7 +255,6 @@ export class FunctionMainService {
         // console.log(result.value)
         this.preference = jwtDecode(result.value);
         this.preference['access_token'] = result.value
-        console.log(this.preference);
         
         return this.preference;
       } else {
@@ -521,7 +529,7 @@ export class FunctionMainService {
     if (contact) {
       window.open(`tel:${contact}`, '_system');
     } else {
-      this.presentToast("Contact number is empty!")
+      this.presentToast("Contact number is empty!", 'danger')
     }
   }
 

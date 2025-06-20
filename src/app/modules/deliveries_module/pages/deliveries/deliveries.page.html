@@ -272,9 +272,9 @@
               [(cameraSelected)]="selectedImage">
             </app-input-image-preview>
           </div>
-          <div class="w-full flex flex-col">
+          <!-- <div class="w-full flex flex-col">
             <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
-          </div>
+          </div> -->
           <div class="w-full">
             <app-text-input [id]="'drive_in_name'" [(ngModel)]="otherDeliveryForm.visitor_name" [labelText]="'NAME'" [placeholder]="'EG. ARTHUR VOYAGE'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
           </div> 

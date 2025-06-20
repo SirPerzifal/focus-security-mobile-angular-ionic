@@ -27,12 +27,10 @@ export class OffensesService extends ApiService{
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         });
-        console.log(this.project_id)
         let params: Record<string, any> = {alert_type: type, is_active: is_active, project_id: this.project_id};
         if (id !== 0) {
           params['id'] = id;
         }
-        console.log(params);
   
         return this.http.post(this.baseUrl + apiUrl, { jsonrpc: '2.0', params }, { headers })
           .pipe(catchError(this.handleError));

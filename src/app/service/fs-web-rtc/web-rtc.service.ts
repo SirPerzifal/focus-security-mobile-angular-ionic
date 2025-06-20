@@ -258,6 +258,7 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-info', (data: any) => this.handleReceiverInfo(data));
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
+      this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
       this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
   
       // Listen for native events
@@ -512,7 +513,11 @@ export class WebRtcService extends ApiService{
                 var fcm_token = res.result['status_desc'];
                 this.getFCMToken().then(token => {
                   if(token != fcm_token){
+                    console.log(this.platform.platforms(), this.platform.platforms().join(', '));
+                    
                     const isDesktop = this.platform.is('mobileweb');
+                    console.log("Is Dekstop", isDesktop);
+                    
                     if (isDesktop) {
                       console.log("Your in desktop device", isDesktop);
                     } else {
@@ -571,6 +576,7 @@ export class WebRtcService extends ApiService{
   async handleReceiverPendingCall(data:any){
     this.nativeOffer = data.offerObj;
     this.callerId = data.callerId;
+    this.callerSocketId = data.callerSocketId;
     if (this.callAction === 'acceptCall'){
       await this.startLocalStream();
       if (!this.peerConnection) {
@@ -622,7 +628,8 @@ export class WebRtcService extends ApiService{
       });
     
       await this.showOngoingCallModal(true);
-    }else if(this.callAction === 'openDialogCall'){
+    // }else if(this.callAction === 'openDialogCall'){
+    }else {
       await this.startLocalStream();
       if (!this.peerConnection) {
         this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
@@ -672,13 +679,15 @@ export class WebRtcService extends ApiService{
       callerSocketId: this.callerSocketId,
       receiverSocketId: this.receiverSocketId
     });
+  }
+  
+  async handleOngoingCallModal(){
     if(this.targetSocketIds){
       let newTargetSocketIds = this.targetSocketIds.filter((target:any) => target != this.receiverSocketId);
       this.socket.emit('reject-call', {
         targetSocketIds: newTargetSocketIds,
       });
     }
-  
     await this.showOngoingCallModal(true);
   }
 

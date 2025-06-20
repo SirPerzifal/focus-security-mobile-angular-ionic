@@ -10,6 +10,7 @@ import { Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 
 @Component({
   selector: 'app-client-main-app',
@@ -36,14 +37,13 @@ export class ClientMainAppPage implements OnInit {
 
   constructor(
     private webRtcService: WebRtcService,
-    private notificationService: NotificationService, 
-    private router: Router, 
-    private getUserInfoService: GetUserInfoService, 
-    private authService: AuthService, 
+    private router: Router,
     private route: ActivatedRoute,
     private platform: Platform,
     private storage: StorageService,
-    public functionMain: FunctionMainService) {
+    public functionMain: FunctionMainService,
+    private clientMainService: ClientMainService,
+  ) {
       this.initializeBackButtonHandling();
     }
 
@@ -74,11 +74,15 @@ export class ClientMainAppPage implements OnInit {
   }
 
   project_config: any = []
+  user_id: any = ''
+  project_id: any = ''
 
   async loadProject() {
     await this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_config = value.config
+      this.user_id = value.user_id
+      this.project_id = value.project_id
       this.initMenu()
       this.userData = {
         name: value.name,
@@ -95,55 +99,6 @@ export class ClientMainAppPage implements OnInit {
       })
     })
   }
-
-  // loadUserInfo() {
-    
-  //   this.getUserInfoService.getPreferenceStorage(['user', 'project_name', 'type_family', 'block_name', 'unit_name']).then((value) => {
-  //     const parse_user = this.authService.parseJWTParams(value.user);
-
-  //     this.userData = {
-  //       name: parse_user.name,
-  //       name_condo: value.project_name,
-  //       type: value.type_family,
-  //       block: value.block_name,
-  //       unit: value.unit_name,
-  //       email: parse_user.email,
-  //       contact: parse_user.email,
-  //     }
-
-  //     console.log(this.userData);
-      
-  //   })
-  // }
-
-  // async loadPreferenceProjectName(){
-  //   const projectName = await Preferences.get({key: 'PROJECT_NAME'})
-  //   if(projectName?.value){
-  //     this.condominiumName = projectName.value
-  //   }
-  // }
-
-
-
-  // loadCountNotification() {
-  //   this.notificationService.countNotifications(this.unit_id, this.partner_id)
-  //     .subscribe({next: (response: any) => {
-  //       if (response.result.response_code === 200) {
-  //         // Map data dengan tipe yang jelas
-  //         this.paramForBadgeNotification = response.result.notifications; // Simpan jumlah notifikasi baru
-  //         // if (this.paramForBadgeNotification) {
-  //         //   console.log('it works!', this.paramForBadgeNotification)
-  //         // }
-  //         console.log(response.result)
-  //       } else {
-  //         console.error('Error:', response);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error:', error);
-  //     }
-  //   });
-  // }
 
   directToNotifications() {
     this.paramForBadgeNotification = 0;
@@ -189,6 +144,46 @@ export class ClientMainAppPage implements OnInit {
     } else {
       this.router.navigate([route])
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadConfig()
+    event.target.complete()
+  }
+
+  isLoading = false
+  loadConfig() {
+    this.isLoading = true
+    this.clientMainService.getApi({id: this.user_id, selected_project_id: this.project_id}, '/client/get/current_config').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          Preferences.clear()
+          Preferences.set({
+            key: 'USER_INFO',
+            value: results.result.access_token,
+          }).then(()=>{
+            this.storage.clearAllValueFromStorage()
+            let storageData = {
+              'image_profile': results.result.image_profile
+            }
+            this.storage.setValueToStorage('USESATE_DATA', storageData)
+            this.loadProject().then(() => {
+              this.initMenu()
+              this.isLoading = false
+            })
+          });
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to get current config!', 'danger');
+          this.isLoading = false
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get current config!', 'danger');
+        console.error(error);
+        this.isLoading = false
+      }
+    });
   }
 
 }

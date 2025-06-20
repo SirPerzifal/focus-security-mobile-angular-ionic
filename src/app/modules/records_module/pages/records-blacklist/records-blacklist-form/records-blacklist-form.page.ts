@@ -19,7 +19,6 @@ export class RecordsBlacklistFormPage implements OnInit {
     public functionMain: FunctionMainService) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { record: any[], is_ban_record: boolean, type: string, is_ban_notice: boolean, ban_type: string };
-    console.log(state)
     this.loadProjectName().then(() => {
       if (state) {
         this.unitShow = false
@@ -32,10 +31,11 @@ export class RecordsBlacklistFormPage implements OnInit {
         this.is_readonly = true
         this.hide_vehicle = state.ban_type == 'visitor'
         if (this.record.industrial_host_id) {
-          console.log(this.record.industrial_host_id)
           this.loadHost().then(() => {
+            console.log(this.Host)
             setTimeout(() => {
               this.contactHost = this.record.industrial_host_id
+              this.selectedHost = this.record.industrial_host_id
               console.log(this.contactHost)
             }, 300)
             this.formData = {
@@ -360,6 +360,13 @@ export class RecordsBlacklistFormPage implements OnInit {
   async loadHost() {
     this.clientMainService.getApi({}, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.record.industrial_host_id) {
+        this.contactHost = ''
+        setTimeout(() => {
+          this.contactHost = this.record.industrial_host_id
+        }, 300)
+      }
+      console.log(this.Host)
     })
   }
 

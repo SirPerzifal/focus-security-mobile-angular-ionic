@@ -163,9 +163,43 @@ export class HomePage implements OnInit {
 
   handleRefresh(event: any) {
     this.onLoadCount()
+    this.loadConfig()
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  isLoading = false
+  loadConfig() {
+    this.isLoading = true
+    this.clientMainService.getApi({project_id: this.project_id}, '/vms/get/current_config').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.status_code === 200) {
+          Preferences.clear()
+          Preferences.set({
+            key: 'USER_INFO',
+            value: results.result.response_status.access_token,
+          }).then(()=>{
+            this.storage.clearAllValueFromStorage()
+            let storageData = {
+              'background': results.result.response_status.background
+            }
+            this.storage.setValueToStorage('USESATE_DATA', storageData)
+            this.loadProjectName()
+          });
+          this.isLoading = false
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to get current config!', 'danger');
+          this.isLoading = false
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get current config!', 'danger');
+        console.error(error);
+        this.isLoading = false
+      }
+    });
   }
 
 }

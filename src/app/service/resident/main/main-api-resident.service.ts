@@ -110,7 +110,7 @@ export class MainApiResidentService extends ApiService {
         })());
       }),
       mergeMap(response$ => response$.pipe(
-        timeout(30000)
+        
       )),
       tap(() => {
         // Dismiss modal after successful response

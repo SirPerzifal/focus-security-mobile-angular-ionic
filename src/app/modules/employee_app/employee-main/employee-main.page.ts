@@ -36,7 +36,7 @@ export class EmployeeMainPage implements OnInit {
 
   initMenu() {
     this.menuItems = [
-      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for Schedule", text: "HR Module", route: "/employee-schedule", permission: [true, true], menu_show: this.project_config.is_allow_client_hr_approval },
+      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for Schedule", text: "HR Module", route: "/employee-leave-application", permission: [true, true], menu_show: this.project_config.is_allow_client_hr_approval },
       { src: "assets/icon/resident-icon/Approvals.png", alt: "Icon for Schedule", text: "OPS Module", route: "/employee-schedule", permission: [true, true], menu_show: this.project_config.is_allow_client_approval },
       { src: "assets/icon/home-icon/sound.webp", alt: "Icon for Docs", text: "Documents", route: "/client-docs", permission: [true, true], menu_show: this.project_config.is_allow_client_docs },
       { src: "assets/icon/exc-client/house_rules.png", alt: "Icon for House Rules", text: "Employee Handbook", route: "/client-house-rules", permission: [true, true], menu_show: this.project_config.is_allow_client_house_rules },

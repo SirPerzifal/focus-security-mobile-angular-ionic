@@ -62,7 +62,7 @@ export class ClientMainService extends ApiService {
         }, { headers });
       }),
       mergeMap(response$ => response$.pipe(
-        timeout(30000)
+        
       )),
       tap(() => {
         if (modalRef) {
@@ -70,14 +70,16 @@ export class ClientMainService extends ApiService {
         }
       }),
       catchError(error => {
-        if (modalRef) {
-          modalRef.dismiss();
-        }
-
+        console.log(error)
         if (error instanceof TimeoutError) {
           this.functionMain.presentToast('Request timed out. Please try again.', 'danger')
           return throwError(() => new Error('Request timed out. Please try again.'));
         }
+        
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+
   
         return this.handleError(error); // Ensure handleError returns `Observable.throwError(...)`
       })
