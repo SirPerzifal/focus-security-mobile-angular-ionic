@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
@@ -974,85 +975,88 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   fcmToken: string = '';
 
-  async getNotificationPermission(familyId: number): Promise<string> {
+    async getNotificationPermission(familyId: number): Promise<string> {
     try {
-      // // Cek jika berjalan di simulator
-      // const isSimulator = this.platform.is('ios') && (window as any).navigator.simulator === true;
-      
-      // // Skip proses notifikasi jika di simulator
-      // if (isSimulator) {
-      //   console.log('Running on iOS simulator, skipping push notification setup');
-      //   return '';
-      // }
-      
+      // Check if PushNotifications is available
       if (typeof PushNotifications === 'undefined') {
         console.warn('PushNotifications not available.');
         return '';
       }
 
+      // Request permissions
       const permission = await PushNotifications.requestPermissions();
-
       if (permission.receive !== 'granted') {
         console.log('Notification permission not granted');
         return '';
       }
 
-      // ✅ Cleanup existing listeners sebelum register
+      // Clean up and register
       PushNotifications.removeAllListeners();
       PushNotifications.register();
 
-      return new Promise((resolve, reject) => {
-        // Set timeout untuk menghindari promise yang tidak pernah resolve
-        const timeout = setTimeout(() => {
-          cleanupListeners();
-          console.log('FCM registration timed out');
-          resolve(''); // Resolve dengan string kosong jika timeout
-        }, 15000); // ✅ Increase timeout untuk iOS (15 detik)
-        
-        const cleanupListeners = () => {
-          clearTimeout(timeout);
-          PushNotifications.removeAllListeners();
-        };
-
-        PushNotifications.addListener('registration', (token: Token) => {
-          if (token.value) {
-            this.fcmToken = token.value;
-            console.log('FCM Token received:', token.value);
-            
-            // ✅ Send token to backend
-            this.mainResident.endpointCustomProcess({
-              previous_family_id: this.familyId,
-              family_id: familyId,
-              fcm_token: token.value
-            }, '/set/fcm_token').subscribe({
-              next: (response: any) => {
-                console.log('FCM token sent to backend successfully:', response);
-                cleanupListeners();
-                resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
-              },
-              error: (error) => {
-                console.error('Failed to send FCM token to backend:', error);
-                cleanupListeners();
-                resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
-              }
-            });
-          } else {
-            cleanupListeners();
-            resolve(''); // Resolve dengan string kosong jika token kosong
-          }
-        });
-
-        PushNotifications.addListener('registrationError', (error) => {
-          cleanupListeners();
-          console.error('Push notification registration error:', error);
-          resolve(''); // Resolve dengan string kosong untuk melanjutkan proses login
-        });
-      });
+      // Return promise for token registration
+      return this.waitForToken(familyId);
     } catch (err) {
       console.error('Push Notification Error:', err);
-      return ''; // Return string kosong untuk melanjutkan proses login
+      return '';
     }
   }
+
+  private waitForToken(familyId: number): Promise<string> {
+    return new Promise((resolve) => {
+      const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
+      
+      const timeout = setTimeout(() => {
+        this.cleanupTokenListeners();
+        console.log('FCM registration timed out');
+        resolve('');
+      }, TIMEOUT_MS);
+
+      const onRegistration = (token: Token) => {
+        this.cleanupTokenListeners();
+        if (token.value) {
+          this.fcmToken = token.value;
+          console.log('FCM Token received:', token.value);
+            
+          // ✅ Send token to backend
+          this.mainResident.endpointCustomProcess({
+            family_id: familyId,
+            fcm_token: token.value
+          }, '/set/fcm_token').subscribe({
+            next: (response: any) => {
+              console.log('FCM token sent to backend successfully:', response);
+              resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
+            },
+            error: (error) => {
+              console.error('Failed to send FCM token to backend:', error);
+              resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
+            }
+          });
+          resolve(token.value);
+        } else {
+          resolve('');
+        }
+      };
+
+      const onRegistrationError = (error: any) => {
+        this.cleanupTokenListeners();
+        console.error('Push notification registration error:', error);
+        resolve('');
+      };
+
+      // Add listeners
+      PushNotifications.addListener('registration', onRegistration);
+      PushNotifications.addListener('registrationError', onRegistrationError);
+
+      // Store cleanup function
+      this.cleanupTokenListeners = () => {
+        clearTimeout(timeout);
+        PushNotifications.removeAllListeners();
+      };
+    });
+  }
+
+  private cleanupTokenListeners: () => void = () => {};
 
   getHistoryList() {
     this.isLoading = true;
