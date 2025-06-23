@@ -11,6 +11,7 @@ import { FunctionMainService } from '../../function/function-main.service';
 })
 export class BlockUnitService extends ApiService {
   private apiBlock = this.baseUrl + '/residential/get/block';
+  private apiBlockNoToken = this.baseUrl + '/residential/get/block_without_token';
   private apiUnit = this.baseUrl + '/residential/get/units';
 
   constructor(http: HttpClient, private getUserInfoService: GetUserInfoService,private functionMain: FunctionMainService) { 
@@ -91,7 +92,7 @@ export class BlockUnitService extends ApiService {
     };
   
     // Change to send data in request body
-    return this.http.post(`${this.apiBlock}`, body, { headers }).pipe(
+    return this.http.post(`${this.apiBlockNoToken}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }

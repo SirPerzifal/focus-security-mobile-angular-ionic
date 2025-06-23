@@ -28,6 +28,7 @@ export class RecordsResidentsModalPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProject()
     this.loadOfficer()
     const closeModalOnBack = () => {
       this.modalController.dismiss(false);
@@ -36,7 +37,14 @@ export class RecordsResidentsModalPage implements OnInit {
     window.addEventListener('popstate', closeModalOnBack)
   }
 
-  url = '/vms/post/offenses'
+  url = '/vms/post/employee_nric'
+
+  loadProject() {
+    this.functionMain.vmsPreferences().then(value => {
+      this.project_config = value.config
+    })
+  }
+  project_config: any = {}
 
   onSubmit() {
     let errMsg = ''
@@ -44,45 +52,38 @@ export class RecordsResidentsModalPage implements OnInit {
       errMsg += 'You must provide your NRIC! \n'
     }
     if (errMsg) {
-      this.presentToast(errMsg, 'danger');
+      this.functionMain.presentToast(errMsg, 'danger');
     } else {
-      let params = {}
+      let params = {
+        nric: this.nric_resident,
+        menu: `Record > ${this.project_config.is_industrial ? 'Employees' : 'Residents'}`
+      }
       console.log(params)
       if (this.nric_resident != '') {
-        this.router.navigate(['/records-residents'], {state: {nric: this.nric_resident}})
-        this.modalController.dismiss(true);
+        this.clientMainService.getApi(params, this.url ).subscribe({
+          next: (results) => {
+            console.log(results)
+            if (results.result.status_code === 200) {
+              this.functionMain.presentToast(results.result.status_description, 'danger');
+              setTimeout(() => {
+                this.router.navigate(['/records-residents'], {state: {nric: this.nric_resident}})
+                this.modalController.dismiss(true)
+              }, 500);
+            } else if (results.result.status_code === 401) {
+              this.functionMain.presentToast(results.result.status_description, 'danger');
+            } else {
+              this.functionMain.presentToast('An error occurred while trying to record this activity!', 'danger');
+            }
+          },
+          error: (error) => {
+            this.functionMain.presentToast('An error occurred while trying to record this activity!', 'danger');
+            console.error(error);
+          }
+        });
       } else {
-        this.presentToast('FAILED!', 'danger')
+        this.functionMain.presentToast('Please fill the NRIC!', 'danger')
       }
-      // this.clientMainService.getApi(params, this.url ).subscribe({
-      //   next: (results) => {
-      //     console.log(results)
-      //     if (results.result.response_code === 200) {
-      //       this.presentToast('Success!', 'success');
-      //       this.modalController.dismiss(true);
-      //     } else {
-      //       this.presentToast('Failed!', 'danger');
-      //     }
-  
-      //     // this.isLoading = false;
-      //   },
-      //   error: (error) => {
-      //     this.presentToast('Failed!', 'danger');
-      //     console.error(error);
-      //   }
-      // });
     }
-  }
-
-  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-
-    toast.present().then(() => {
-    });
   }
 
   onCancel() {

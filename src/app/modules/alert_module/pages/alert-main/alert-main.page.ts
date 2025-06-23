@@ -533,7 +533,7 @@ export class AlertMainPage implements OnInit {
       componentProps: {
         issue: issue == 'none' ? issue : (issue == 'second_warning' ? 'wheel_clamp' : 'first_warning'),
         vehicle: vehicle,
-        alert: true
+        alert: true,
       }
 
     });
@@ -630,14 +630,23 @@ export class AlertMainPage implements OnInit {
   }
 
   async presentModalFirstWarning(vehicle_number: any, entry_type: any) {
-    const modal = await this.modalController.create({
-      component: RecordsWheelClampedNewPage,
-      cssClass: 'record-modal',
-      componentProps: {
-        type: 'first_warning',
+    let comp = {}
+    if (entry_type == 'overstay') {
+      comp = {
+        type: entry_type == 'first_issue',
         vehicle_number: vehicle_number,
         type_of_entry: entry_type,
       }
+    } else {
+      comp = {
+        type: entry_type == 'wheel_clamp',
+        vehicle_number: vehicle_number,
+      }
+    }
+    const modal = await this.modalController.create({
+      component: RecordsWheelClampedNewPage,
+      cssClass: 'record-modal',
+      componentProps: comp
     });
 
     history.pushState(null, '', location.href);
@@ -650,7 +659,7 @@ export class AlertMainPage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result) {
         if(result.data){
-          this.loadRecordsWheelClamp('first_warning')
+          this.loadRecordsWheelClamp(result.data)
           if (this.active_type == 'unregistered') {
             this.loadUnregisteredCar()
           } else if (this.active_type == 'overstay') {

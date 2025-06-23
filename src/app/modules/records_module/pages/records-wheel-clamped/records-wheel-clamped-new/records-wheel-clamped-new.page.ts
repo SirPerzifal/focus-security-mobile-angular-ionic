@@ -20,6 +20,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
     private functionMain: FunctionMainService,
   ) {
     this.type = this.navParams.get('type')
+    this.openSelection = this.navParams.get('is_open_selection')
     const vehicle_number = navParams.get('vehicle_number')
     if (vehicle_number){
       this.vehicleNumber = vehicle_number
@@ -42,7 +43,8 @@ export class RecordsWheelClampedNewPage implements OnInit {
     } else {
       this.showType = 'WHEEL CLAMP NOTICE'
     }
-   }
+  }
+  openSelection = false
 
   ngOnInit() {
     this.loadProjectName().then(() => {
@@ -188,11 +190,11 @@ export class RecordsWheelClampedNewPage implements OnInit {
           if (results.result.response_code === 200) {
             this.functionMain.presentToast('Issue notice successfully submitted!', 'success');
             console.log("HEY CLOSED ON WHEEL CLAMP")
-            setTimeout(() => {this.modalController.dismiss(true)}, 500);            
+            setTimeout(() => {this.modalController.dismiss(this.selectedNotice)}, 500);            
           } else {
             if (results.result.error_message.includes('Record does not exist or has been deleted')) {
               this.functionMain.presentToast('Record does not exist or has been deleted!', 'danger');
-              setTimeout(() => {this.modalController.dismiss(true)}, 500);
+              setTimeout(() => {this.modalController.dismiss(this.selectedNotice)}, 500);
             } else {
               this.functionMain.presentToast('An error occurred while submitting issue notice!', 'danger');
             }
