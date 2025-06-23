@@ -287,6 +287,11 @@ export class ContractorInvitingFormPage implements OnInit {
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
+        } else if (newPhoneNumber.startsWith('9')) {
+          processedNumber = newPhoneNumber.slice(2);
+          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+          selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
         }
 
         // Buat nomor lengkap untuk pengecekan duplikasi
@@ -422,6 +427,11 @@ export class ContractorInvitingFormPage implements OnInit {
       const countryCodeFromInput = phoneValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromInput);
       selectedCountryCode = isValidCountryCode ? countryCodeFromInput : '65';
+    } else if (phoneValue.startsWith('9')) {
+      processedNumber = phoneValue.slice(2);
+      const countryCodeFromContact = phoneValue.substring(0, 2);
+      const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+      selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
     } else {
       // Jika nomor telepon tidak dimulai dengan '0' atau '6', tetap simpan nomor telepon
       processedNumber = phoneValue;
@@ -538,7 +548,7 @@ export class ContractorInvitingFormPage implements OnInit {
       } else if (invitee.expected_number_of_visit < 0) {
         errMsg += 'Please fill expected number of visit! \n';
       } else if (invitee.expected_number_of_visit > 0) {
-          this.formData.entryType = '';
+          this.formData.entryType = 'multiple_entry';
         } else {
         errMsg = '';
       }

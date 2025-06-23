@@ -38,6 +38,11 @@ export class VisitorInvitigFormPage implements OnInit {
       code: '60',
       digit: 9,
     },
+    {
+      country: 'IDD',
+      code: '91',
+      digit: 9,
+    },
   ]
 
   formData = {
@@ -231,6 +236,16 @@ export class VisitorInvitigFormPage implements OnInit {
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
+        } else if (newPhoneNumber.startsWith('9')) {
+          processedNumber = newPhoneNumber.slice(2);
+          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+          selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
+        } else {
+          processedNumber = newPhoneNumber;
+          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+          selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
         }
 
         // Buat nomor lengkap untuk pengecekan duplikasi
@@ -400,6 +415,11 @@ export class VisitorInvitigFormPage implements OnInit {
       const countryCodeFromInput = inputValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromInput);
       selectedCountryCode = isValidCountryCode ? countryCodeFromInput : '65';
+    } else if (inputValue.startsWith('9')) {
+      processedNumber = inputValue.slice(2);
+      const countryCodeFromContact = inputValue.substring(0, 2);
+      const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+      selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
     } else {
       processedNumber = inputValue;
       selectedCountryCode = this.selectedCountry[index]?.selected_code || '65';

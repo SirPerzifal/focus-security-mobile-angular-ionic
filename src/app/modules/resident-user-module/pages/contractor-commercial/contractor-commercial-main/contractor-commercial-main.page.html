@@ -209,7 +209,10 @@
                   <td>:</td>
                   <td>{{invite.vehicleNo ? invite.vehicleNo : '-'}}</td>
                 </tr>
-                <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                <tr
+                  *ngIf="!invite.expectedDays"
+                  class="text-base cw-2:text-sm text-gray-800 h-1"
+                >
                   <td class="font-bold">Type of Entry</td>
                   <td>:</td>
                   <td>{{invite.entryType}}</td>
