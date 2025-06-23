@@ -17,6 +17,7 @@ export class AuthService extends ApiService{
     login: string, 
     password: string,
     fcmToken: string,
+    device: string
   ): Observable<any> {
 
     const headers = new HttpHeaders({
@@ -32,7 +33,8 @@ export class AuthService extends ApiService{
         params: {
           login,
           password,
-          fcm_token: fcmToken
+          fcm_token: fcmToken,
+          device: device
         }
       },
       {headers}

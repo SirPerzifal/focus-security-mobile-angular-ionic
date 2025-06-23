@@ -183,79 +183,157 @@ export class LoginEndUserPage implements OnInit {
           console.error('Failed to get notification permission:', notificationError);
           // Lanjutkan proses login meskipun gagal mendapatkan token notifikasi
       }
-        this.authService.postLoginAuthenticate(
-          this.existUser.login, 
-          this.existUser.password, 
-          this.fcmToken
-        ).subscribe(
-          res => {
-            console.log(res);            
-            if (res.result.status_code == 200) {
-              if (res.result.is_client) {
-                Preferences.set({
-                  key: 'USER_INFO',
-                  value: res.result.access_token,
-                }).then(()=>{
-                  this.storage.clearAllValueFromStorage()
-                  let storageData = {
-                    'image_profile': res.result.image_profile
-                  }
-                  this.storage.setValueToStorage('USESATE_DATA', storageData)
-                  this.waitingResponseLoginApi = true;
-                  this.isAnimating = true;
-                  setTimeout(() => {
-                    this.isAnimating = false;
-                    this.waitingResponseLoginApi = false;
-                    this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
-                  }, 300); // Match this duration with the CSS animation duration
-                });
-              } else if (res.result.is_resident) {
-                const estates = res.result.estates;
-                const emailOrPhone = res.result.login;
-                const userCredentials = {
-                  emailOrPhone: emailOrPhone,
-                  access_token: res.result.access_token
-                }
-                console.log(userCredentials)
-
-                Preferences.set({
-                  key: 'USER_CREDENTIAL',
-                  value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
-                }).then(() => {
-                  this.existUser = {
-                    login: '',
-                    password: '',
-                  }
-                  this.router.navigate(['/resident-home-page'], {
-                    state: {
-                      estate: estates,
+        if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+          this.authService.postLoginAuthenticate(
+            this.existUser.login, 
+            this.existUser.password, 
+            this.fcmToken,
+            'ios'
+          ).subscribe(
+            res => {
+              console.log(res);            
+              if (res.result.status_code == 200) {
+                if (res.result.is_client) {
+                  Preferences.set({
+                    key: 'USER_INFO',
+                    value: res.result.access_token,
+                  }).then(()=>{
+                    this.storage.clearAllValueFromStorage()
+                    let storageData = {
+                      'image_profile': res.result.image_profile
                     }
+                    this.storage.setValueToStorage('USESATE_DATA', storageData)
+                    this.waitingResponseLoginApi = true;
+                    this.isAnimating = true;
+                    setTimeout(() => {
+                      this.isAnimating = false;
+                      this.waitingResponseLoginApi = false;
+                      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
+                    }, 300); // Match this duration with the CSS animation duration
                   });
-                  this.waitingResponseLoginApi = false;
-                  this.isAnimating = true;
-                  setTimeout(() => {
-                    this.isAnimating = false;
-                  }, 300); // Match this duration with the CSS animation duration
-                })
-              };
-            } else {
+                } else if (res.result.is_resident) {
+                  const estates = res.result.estates;
+                  const emailOrPhone = res.result.login;
+                  const userCredentials = {
+                    emailOrPhone: emailOrPhone,
+                    access_token: res.result.access_token
+                  }
+                  console.log(userCredentials)
+
+                  Preferences.set({
+                    key: 'USER_CREDENTIAL',
+                    value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
+                  }).then(() => {
+                    this.existUser = {
+                      login: '',
+                      password: '',
+                    }
+                    this.router.navigate(['/resident-home-page'], {
+                      state: {
+                        estate: estates,
+                      }
+                    });
+                    this.waitingResponseLoginApi = false;
+                    this.isAnimating = true;
+                    setTimeout(() => {
+                      this.isAnimating = false;
+                    }, 300); // Match this duration with the CSS animation duration
+                  })
+                };
+              } else {
+                this.waitingResponseLoginApi = false;
+                this.isAnimating = true;
+                setTimeout(() => {
+                  this.isAnimating = false;
+                }, 300); // Match this duration with the CSS animation duration
+                this.functionMain.presentToast(`${res.result.status_desc}`, 'danger');
+              }
+            },
+            error => {
               this.waitingResponseLoginApi = false;
               this.isAnimating = true;
               setTimeout(() => {
                 this.isAnimating = false;
               }, 300); // Match this duration with the CSS animation duration
-              this.functionMain.presentToast(`${res.result.status_desc}`, 'danger');
+              this.functionMain.presentToast('Login Failed : Server not response well', 'danger');
             }
-          },
-          error => {
-            this.waitingResponseLoginApi = false;
-            this.isAnimating = true;
-            setTimeout(() => {
-              this.isAnimating = false;
-            }, 300); // Match this duration with the CSS animation duration
-            this.functionMain.presentToast('Login Failed : Server not response well', 'danger');
-          }
-        );
+          );
+        } else {
+          this.authService.postLoginAuthenticate(
+            this.existUser.login, 
+            this.existUser.password, 
+            this.fcmToken,
+            'android'
+          ).subscribe(
+            res => {
+              console.log(res);            
+              if (res.result.status_code == 200) {
+                if (res.result.is_client) {
+                  Preferences.set({
+                    key: 'USER_INFO',
+                    value: res.result.access_token,
+                  }).then(()=>{
+                    this.storage.clearAllValueFromStorage()
+                    let storageData = {
+                      'image_profile': res.result.image_profile
+                    }
+                    this.storage.setValueToStorage('USESATE_DATA', storageData)
+                    this.waitingResponseLoginApi = true;
+                    this.isAnimating = true;
+                    setTimeout(() => {
+                      this.isAnimating = false;
+                      this.waitingResponseLoginApi = false;
+                      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
+                    }, 300); // Match this duration with the CSS animation duration
+                  });
+                } else if (res.result.is_resident) {
+                  const estates = res.result.estates;
+                  const emailOrPhone = res.result.login;
+                  const userCredentials = {
+                    emailOrPhone: emailOrPhone,
+                    access_token: res.result.access_token
+                  }
+                  console.log(userCredentials)
+
+                  Preferences.set({
+                    key: 'USER_CREDENTIAL',
+                    value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
+                  }).then(() => {
+                    this.existUser = {
+                      login: '',
+                      password: '',
+                    }
+                    this.router.navigate(['/resident-home-page'], {
+                      state: {
+                        estate: estates,
+                      }
+                    });
+                    this.waitingResponseLoginApi = false;
+                    this.isAnimating = true;
+                    setTimeout(() => {
+                      this.isAnimating = false;
+                    }, 300); // Match this duration with the CSS animation duration
+                  })
+                };
+              } else {
+                this.waitingResponseLoginApi = false;
+                this.isAnimating = true;
+                setTimeout(() => {
+                  this.isAnimating = false;
+                }, 300); // Match this duration with the CSS animation duration
+                this.functionMain.presentToast(`${res.result.status_desc}`, 'danger');
+              }
+            },
+            error => {
+              this.waitingResponseLoginApi = false;
+              this.isAnimating = true;
+              setTimeout(() => {
+                this.isAnimating = false;
+              }, 300); // Match this duration with the CSS animation duration
+              this.functionMain.presentToast('Login Failed : Server not response well', 'danger');
+            }
+          );
+        }
       } catch (error) {
         this.waitingResponseLoginApi = false;
         this.isAnimating = true;
