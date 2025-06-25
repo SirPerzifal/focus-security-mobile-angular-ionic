@@ -83,9 +83,9 @@ export class WebRtcService extends ApiService{
         this.receiverName = actionData.receiverName;
         this.callerSocketId = actionData.callerSocketId;
         this.callAction = actionData.callAction;
-        if (actionData.callAction === 'rejectCall'){
-          this.rejectCall();
-        }
+        // if (actionData.callAction === 'rejectCall'){
+        //   this.rejectCall();
+        // }
       }
       localStorage.removeItem('callData');
     }
@@ -577,6 +577,8 @@ export class WebRtcService extends ApiService{
     this.nativeOffer = data.offerObj;
     this.callerId = data.callerId;
     this.callerSocketId = data.callerSocketId;
+    this.receiverSocketId = data.receiverSocketId;
+    this.targetSocketIds = data.targetSocketIds;
     if (this.callAction === 'acceptCall'){
       await this.startLocalStream();
       if (!this.peerConnection) {
@@ -628,6 +630,8 @@ export class WebRtcService extends ApiService{
       });
     
       await this.showOngoingCallModal(true);
+    }else if (this.callAction === 'rejectCall'){
+      this.rejectCall();
     // }else if(this.callAction === 'openDialogCall'){
     }else {
       await this.startLocalStream();

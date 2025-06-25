@@ -51,6 +51,11 @@ export class VmsContactInputComponent  implements OnInit {
         code: '60',
         digit: 9,
       },
+      {
+        country: 'IN',
+        code: '91',
+        digit: 10,
+      },
     ]
   }
 
