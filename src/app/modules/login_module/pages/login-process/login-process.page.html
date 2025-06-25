@@ -1,46 +1,62 @@
-<ion-content
-  class="ion-padding h-full flex flex-col justify-center items-center w-full"
->
-  <!-- Video Background -->
-  <div class="absolute inset-0 overflow-hidden z-0">
-    <video
-      autoplay
-      loop
-      muted
-      playsinline
-      class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
+<ion-content [fullscreen]="true">
+  <div class="p-4 h-full w-full flex flex-col justify-center items-center">
+    <!-- Video Background dengan iOS fixes -->
+    <div class="absolute inset-0 overflow-hidden -z-10">
+      <video
+        autoplay
+        loop
+        muted
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        class="absolute top-0 right-0 w-full h-full object-cover"
+        style="
+          pointer-events: none;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+        "
+      >
+        <source
+          src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+      <!-- Fallback background untuk iOS yang bermasalah -->
+      <div class="absolute inset-0 opacity-80 video-fallback">
+        <img
+          alt="iFS360 logo"
+          class="w-full h-full opacity-20"
+          src="assets/tes_back_wztgzm.gif"
+        />
+      </div>
+    </div>
+    <div
+      class="w-full rounded-lg flex flex-col items-center justify-center p-4 bg-opacity-[0.9]"
     >
-      <source
-        src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
-        type="video/mp4"
-      />
-      Your browser does not support the video tag.
-    </video>
-  </div>
-  <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png" />
-  <h2
-    class="fslp-title font-bold text-[var(--ion-color-primary)] text-center text-2xl"
-  >
-    Welcome To <br />
-    <p class="text-3xl">IFS360 APP</p>
-  </h2>
-  <div class="fslp-container relative">
-    <div class="flex flex-col justify-center items-center">
-      <ion-button
-        fill="clear"
-        class="fslp-button bg-[var(--ion-color-primary)]"
-        [routerLink]="['/login-end-user']"
-      >
-        End User
-      </ion-button>
-      <br />
-      <ion-button
-        fill="clear"
-        class="fslp-button bg-[var(--ion-color-primary)]"
-        [routerLink]="['/login-vms']"
-      >
-        Visitor Management System
-      </ion-button>
+      <img alt="iFS360 logo" class="w-48 h-36" src="assets/logoIFS.png" />
+      <div class="text-center mt-4">
+        <h2 class="font-bold text-[var(--ion-color-primary)] text-xl">
+          Welcome To
+        </h2>
+        <p class="font-bold text-[var(--ion-color-primary)] text-3xl">
+          iFS360 APP
+        </p>
+      </div>
+      <div class="w-full flex flex-col mt-16 space-y-3">
+        <button
+          class="w-full h-12 bg-[var(--ion-color-primary)] text-base rounded-lg font-bold text-white"
+          [routerLink]="['/login-end-user']"
+        >
+          End User
+        </button>
+        <button
+          class="w-full h-12 bg-[var(--ion-color-primary)] text-base rounded-lg font-bold text-white"
+          [routerLink]="['/login-vms']"
+        >
+          Visitor Management System
+        </button>
+      </div>
     </div>
   </div>
 </ion-content>

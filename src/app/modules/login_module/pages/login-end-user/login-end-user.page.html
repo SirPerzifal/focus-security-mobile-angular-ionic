@@ -1,105 +1,241 @@
-<ion-content class="ion-padding h-dvh flex flex-col">
-  <!-- Video Background -->
-  <div id="video-background" class="video-bg">
-    <video
-      #videoElement
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="auto"
-      class="top-0 right-0 w-full min-h-[100dvh] object-cover opacity-20"
-    >
-      <source
-        src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1745402465/WhatsApp_Video_2025-04-23_at_16.39.32_online-video-cutter.com_b2hab7.mp4"
-        type="video/mp4"
-      />
-      Your browser does not support the video tag.
-    </video>
-  </div>
-  <!-- <div class="absolute z-50"> -->
-  <div class="w-1/6 flex items-start">
+<ion-content [fullscreen]="true">
+  <div class="absolute z-50 mt-2 ml-2">
     <ion-icon
       name="arrow-back-circle"
       size="large"
-      class="text-[var(--ion-color-primary)] size-12"
+      class="text-[var(--ion-color-primary)] size-12 clickable-element"
       [routerLink]="['']"
+      style="position: relative; z-index: 20; cursor: pointer"
     ></ion-icon>
   </div>
-  <div class="fslp-container">
-    <img alt="iFS360 logo" class="fslp-logo" src="assets/logoIFS.png" />
-    <h2
-      class="fslp-title font-bold text-[var(--ion-color-primary)] text-center text-2xl"
-    >
-      Welcome To <br />
-      <p class="text-3xl">IFS360 APP</p>
-    </h2>
-    <div class="w-full">
-      <input
-        id="email"
-        type="text"
-        placeholder="Email or Phone"
-        class="border outline-gray-400 w-full rounded py-2 px-3 focus:outline-none focus:border-none h-12 text-sm bg-white"
-        [value]="existUser.login"
-        (change)="onLoginChange($event)"
-        (blur)="addMarginBottomExtend = false"
-        (focus)="handleFocus()"
-      />
-    </div>
-    <div class="mt-2 w-full">
-      <app-input-password
-        [passwordPlaceholder]="'*************'"
-        (addMarginBottomExtend)="handleFocus($event)"
-        (password)="onPasswordChange($event)"
-      ></app-input-password>
-    </div>
-    <div class="flex flex-row justify-between items-center mt-2 w-full p-[2px]">
-      <div>
-        <input
-          checked
-          id="checked-checkbox"
-          type="checkbox"
-          value=""
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+  <div class="p-4 h-full w-full flex flex-col justify-center items-center">
+    <!-- Video Background dengan iOS fixes -->
+    <div class="absolute inset-0 overflow-hidden -z-10">
+      <video
+        autoplay
+        loop
+        muted
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        class="absolute top-0 right-0 w-full h-full object-cover"
+        style="
+          pointer-events: none;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+        "
+      >
+        <source
+          src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
+          type="video/mp4"
         />
-        <label
-          for="checked-checkbox"
-          class="ms-2 fsles-bottom text-xs font-medium text-gray-900 dark:text-gray-300"
-          >Stay Logged In</label
-        >
-      </div>
-      <div (click)="showModalForgotPassword()">
-        <a class="text-xs text-blue-500 fsles-bottom hover:underline"
-          >Forgot Password?</a
-        >
+        Your browser does not support the video tag.
+      </video>
+      <!-- Fallback background untuk iOS yang bermasalah -->
+      <div class="absolute inset-0 opacity-80 video-fallback">
+        <img
+          alt="iFS360 logo"
+          class="w-full h-full opacity-20"
+          src="assets/tes_back_wztgzm.gif"
+        />
       </div>
     </div>
-    <div class="fsles-button-container mt-3.5">
-      <ion-button
-        fill="clear"
-        [ngClass]="(existUser.login && existUser.password) ? 'fslp-button h-12 w-full bg-[var(--ion-color-primary)]' : 'bg-gray-300 h-12 fslp-button-disabled w-full'"
-        (click)="loginResident()"
-      >
-        Log In
-      </ion-button>
-    </div>
-    <p class="mt-6 text-xs text-center text-black fsles-bottom">
-      New User?
-      <a
-        [routerLink]="['/register']"
-        class="text-xs text-blue-500 fsles-bottom hover:underline"
-        >Register Now</a
-      >
-    </p>
-  </div>
-  <!-- </div> -->
-  <!-- <div *ngIf="addMarginBottomExtend" class="h-96"></div> -->
 
-  <div class="modal-overlay" *ngIf="waitingResponseLoginApi"></div>
-  <div class="modal" *ngIf="waitingResponseLoginApi">
+    <div
+      class="w-full rounded-lg login-container"
+      style="position: relative; z-index: 10"
+    >
+      <div
+        class="pb-4 px-4 space-y-4 flex flex-col justify-center items-center"
+        style="position: relative; z-index: 15"
+      >
+        <img alt="iFS360 logo" class="w-48 h-36" src="assets/logoIFS.png" />
+        <div class="text-center mt-4">
+          <h2 class="font-bold text-[var(--ion-color-primary)] text-xl">
+            Welcome To
+          </h2>
+          <p class="font-bold text-[var(--ion-color-primary)] text-3xl">
+            iFS360 APP
+          </p>
+        </div>
+        <form class="space-y-2 w-full" style="position: relative; z-index: 15">
+          <div>
+            <label
+              for="email"
+              class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+              >Email or Phone</label
+            >
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="!border !border-gray-300 text-gray-900 !rounded-lg block w-full p-3.5 text-sm clickable-element"
+              placeholder="Email or Phone"
+              [value]="existUser.login"
+              (change)="onLoginChange($event)"
+              style="
+                position: relative;
+                z-index: 20;
+                -webkit-appearance: none;
+                appearance: none;
+              "
+              required=""
+            />
+          </div>
+          <div>
+            <label class="block text-sm mb-1 dark:text-white">Password</label>
+            <div class="relative">
+              <input
+                id="hs-toggle-password"
+                [type]="showPassword"
+                class="py-3.5 pl-4 pr-12 block w-full !border !border-gray-200 !rounded-lg text-sm clickable-element focus:border-blue-500 focus:ring-blue-500"
+                placeholder="Enter password"
+                [value]="existUser.password"
+                (change)="onPasswordChange($event)"
+                style="
+                  padding-right: 2.5rem !important;
+                  position: relative;
+                  z-index: 1;
+                "
+              />
+              <button
+                (click)="onToggleShowPassword()"
+                type="button"
+                class="absolute top-0 right-0 h-full flex items-center justify-center w-10 text-gray-400 hover:text-gray-600 focus:outline-none clickable-element"
+                style="
+                  position: absolute !important;
+                  top: 50% !important;
+                  right: 8px !important;
+                  transform: translateY(-50%) !important;
+                  z-index: 10 !important;
+                  background: transparent !important;
+                  border: none !important;
+                  padding: 0 !important;
+                  width: 24px !important;
+                  height: 24px !important;
+                  display: flex !important;
+                  align-items: center !important;
+                  justify-content: center !important;
+                  -webkit-tap-highlight-color: transparent;
+                "
+              >
+                <svg
+                  *ngIf="showPassword == 'password'"
+                  class="size-5"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg
+                  *ngIf="showPassword == 'text'"
+                  class="size-5"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                  <path
+                    d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                  ></path>
+                  <path
+                    d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                  ></path>
+                  <line x1="2" x2="22" y1="2" y2="22"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex flex-row items-center justify-center">
+              <div class="flex items-center h-5">
+                <input
+                  id="remember"
+                  aria-describedby="remember"
+                  type="checkbox"
+                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 clickable-element"
+                  style="
+                    position: relative;
+                    z-index: 20;
+                    -webkit-appearance: none;
+                    appearance: none;
+                  "
+                  required=""
+                />
+              </div>
+              <div class="ml-1 text-xs">
+                <label
+                  for="remember"
+                  class="text-gray-500 dark:text-gray-300 clickable-element"
+                  style="position: relative; z-index: 20; cursor: pointer"
+                  >Stay logged in</label
+                >
+              </div>
+            </div>
+            <a
+              class="text-xs font-medium text-blue-500 clickable-element"
+              (click)="showModalForgotPassword()"
+              style="
+                position: relative;
+                z-index: 20;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+              "
+              >Forgot password?</a
+            >
+          </div>
+          <button
+            type="submit"
+            class="w-full font-medium rounded-lg text-sm px-5 py-3.5 text-center !mt-6 clickable-element"
+            [ngClass]="(existUser.login && existUser.password) ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-100 text-gray-300'"
+            (click)="loginResident()"
+            style="
+              position: relative;
+              z-index: 20;
+              -webkit-tap-highlight-color: transparent;
+              -webkit-appearance: none;
+              appearance: none;
+            "
+          >
+            Log in
+          </button>
+          <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-2">
+            Don't have an account yet?
+            <a
+              [routerLink]="['/register']"
+              class="font-medium text-blue-500 clickable-element"
+              style="position: relative; z-index: 20; cursor: pointer"
+              >Register</a
+            >
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Modal dengan iOS fixes -->
+  <div
+    class="modal-overlay"
+    *ngIf="waitingResponseLoginApi"
+    style="z-index: 9999"
+  ></div>
+  <div class="modal" *ngIf="waitingResponseLoginApi" style="z-index: 10000">
     <div
       class="p-4 rounded-lg w-full max-w-xs text-center"
       [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
+      style="position: relative; z-index: 10001"
     >
       <div class="flex justify-center items-center h-full">
         <img
@@ -112,6 +248,7 @@
     </div>
   </div>
 
+  <!-- Forgot Password Modal -->
   <ion-modal
     id="forgot-password-modal"
     [isOpen]="showForgotPasswordModal"
@@ -120,7 +257,15 @@
     <ng-template>
       <div class="wrapper">
         <div class="w-full text-center">
-          <video autoplay loop muted playsinline width="300" height="300">
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            webkit-playsinline
+            width="300"
+            height="300"
+          >
             <source
               src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1749453409/Animation_-_1749453252648_aruvnu.webm"
               type="video/mp4"

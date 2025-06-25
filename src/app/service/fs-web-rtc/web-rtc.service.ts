@@ -515,7 +515,7 @@ export class WebRtcService extends ApiService{
                   if(token != fcm_token){
                     console.log(this.platform.platforms(), this.platform.platforms().join(', '));
                     
-                    const isDesktop = this.platform.is('mobileweb');
+                    const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
                     console.log("Is Dekstop", isDesktop);
                     
                     if (isDesktop) {
