@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
   styleUrls: ['./login-end-user.page.scss'],
 })
 export class LoginEndUserPage implements OnInit {
+  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
 
   isAnimating: boolean = false;
   waitingResponseLoginApi: boolean = false;
@@ -39,6 +40,16 @@ export class LoginEndUserPage implements OnInit {
   ngOnInit() {
     this.waitingResponseLoginApi = false
     this.initializeBackButtonHandling();
+    const video = document.querySelector('#video-background video') as HTMLVideoElement;
+    if (video) {
+      video.load(); // Force reload the video
+      video.play().catch(err => console.log('Video play failed:', err));
+    }
+    setTimeout(() => {
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.load();
+      }
+    }, 100);
   }
 
   initializeBackButtonHandling() {

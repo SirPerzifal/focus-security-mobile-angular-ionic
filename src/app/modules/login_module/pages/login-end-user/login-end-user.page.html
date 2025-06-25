@@ -2,10 +2,12 @@
   <!-- Video Background -->
   <div id="video-background" class="video-bg">
     <video
+      #videoElement
       autoplay
       loop
       muted
       playsinline
+      preload="auto"
       class="top-0 right-0 w-full min-h-[100dvh] object-cover opacity-20"
     >
       <source
@@ -37,7 +39,7 @@
         id="email"
         type="text"
         placeholder="Email or Phone"
-        class="border w-full rounded py-2 px-3 outline-none border-none focus:outline-none focus:border-none h-12 text-sm"
+        class="border outline-gray-400 w-full rounded py-2 px-3 focus:outline-none focus:border-none h-12 text-sm bg-white"
         [value]="existUser.login"
         (change)="onLoginChange($event)"
         (blur)="addMarginBottomExtend = false"

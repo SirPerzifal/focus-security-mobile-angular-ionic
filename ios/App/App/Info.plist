@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>UILaunchStoryboardName</key>
+	<string>UILaunchStoryboardName</string>
 	<key>CFBundleDisplayName</key>
 	<string>IFS360</string>
 	<key>CFBundleExecutable</key>
@@ -46,8 +48,11 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>Main.storyboard</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>SystemBackgroundColor</string>
+	</dict>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
