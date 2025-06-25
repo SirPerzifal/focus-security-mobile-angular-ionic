@@ -408,6 +408,7 @@ export class ClientBlacklistPage implements OnInit {
       ban_image: '',
       banned_by: '',
     }
+    this.fileName = ''
   }
 
   formData = {

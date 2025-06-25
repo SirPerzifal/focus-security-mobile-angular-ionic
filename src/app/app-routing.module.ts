@@ -220,7 +220,8 @@ const routes: Routes = [
   },
   {
     path: 'client-main-app',
-    loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule)
+    loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule),
+    canActivate:[authGuard]
   },
   {
     path: 'records-residents-modal',
@@ -674,6 +675,10 @@ const routes: Routes = [
   {
     path: 'employee-leave-application',
     loadChildren: () => import('./modules/employee_app/employee-leave-application/employee-leave-application.module').then( m => m.EmployeeLeaveApplicationPageModule)
+  },
+  {
+    path: 'unregistered-simulation-module',
+    loadChildren: () => import('./modules/vms_app/unregistered-simulation-module/unregistered-simulation-module.module').then( m => m.UnregisteredSimulationModulePageModule)
   },
 ];
 

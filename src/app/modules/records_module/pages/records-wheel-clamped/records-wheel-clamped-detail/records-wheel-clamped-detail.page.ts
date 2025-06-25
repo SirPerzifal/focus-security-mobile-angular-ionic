@@ -29,8 +29,7 @@ export class RecordsWheelClampedDetailPage implements OnInit {
     const state = navigation?.extras.state as { vehicle: any[]};
     if (state) {
       this.vehicle = state.vehicle
-      this.hideCallEmployee = this.vehicle.industrial_host_id || this.vehicle.unit_id || this.vehicle.industrial_host_ids.length > 0
-      console.log(this.vehicle)
+      this.hideCallEmployee = this.vehicle.industrial_host_id || this.vehicle.unit_id || (this.vehicle.industrial_host_ids && this.vehicle.industrial_host_ids.length > 0)
     } 
    }
 

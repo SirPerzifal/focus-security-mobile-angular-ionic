@@ -40,6 +40,11 @@ export class ContractorInvitingFormPage implements OnInit {
       code: '60',
       digit: 9,
     },
+    {
+      country: 'IN',
+      code: '91',
+      digit: 9,
+    },
   ]
 
   formData = {

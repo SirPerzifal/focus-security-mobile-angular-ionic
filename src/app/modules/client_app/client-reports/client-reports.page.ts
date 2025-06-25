@@ -182,6 +182,9 @@ export class ClientReportsPage implements OnInit {
 
   submitLoading = false
   onSubmit() {
+    let date_now = new Date()
+    let print_time = ("0" + date_now.getDate()).slice(-2) + "/" + ("0" + (date_now.getMonth()+1)).slice(-2)  + "/" + date_now.getFullYear() + " "  + ("0" + date_now.getHours()).slice(-2) + ":" + ("0" + date_now.getMinutes()).slice(-2) + ":"  + ("0" + date_now.getSeconds()).slice(-2);
+    console.log(print_time)
     let errMsg = ''
     if (!this.startDateFilter || !this.endDateFilter) {
       errMsg += 'Start date and end date filter must be selected! \n'
@@ -198,7 +201,8 @@ export class ClientReportsPage implements OnInit {
       time_start: this.startDateFilter + ' 00:00:01',
       time_end: this.endDateFilter + ' 23:59:59',
       model_name: this.selectedReport.model,
-      timeframe_field: 'create_date'
+      timeframe_field: 'create_date',
+      print_time: print_time
     }
     console.log(params)
     this.submitLoading = true
