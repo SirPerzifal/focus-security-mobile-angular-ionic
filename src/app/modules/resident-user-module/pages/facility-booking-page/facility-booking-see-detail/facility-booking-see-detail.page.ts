@@ -18,6 +18,7 @@ interface BookingData {
   status: string;
   from: string;
   amountDeposit: number;
+  reasonForRejection: string;
 }
 
 @Component({
@@ -100,13 +101,13 @@ export class FacilityBookingSeeDetailPage implements OnInit {
         reload: true
       }
     });
-    if (this.bookingData?.from) {
-      this.router.navigate(['//facility-booking-main'], {
-      queryParams :  {
-        reload: false
-      }
-    });
-    }
+    // if (this.bookingData?.from) {
+    //   this.router.navigate(['/facility-booking-main'], {
+    //     queryParams :  {
+    //       reload: false
+    //     }
+    //   });
+    // }
   }
 
   proceedToEmail() {

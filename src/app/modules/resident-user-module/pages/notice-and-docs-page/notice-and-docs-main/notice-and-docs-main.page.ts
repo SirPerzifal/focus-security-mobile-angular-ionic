@@ -130,27 +130,37 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
   }
 
   loadNotice() {
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/notice').subscribe((response: any) => {
       this.notices = response.result.response_result
-      .map((notice: any) => ({
-        id: notice.id,
-        name: notice.name,
-        notice_title: notice.notice_title,
-        notice_content: notice.notice_content,
-        notice_attachment: notice.notice_attachment,
-        start_date: notice.start_date,
-        end_date: notice.end_date,
-        create_date: notice.create_date,
-        is_prioritize: notice.is_prioritize
-      }))
-      .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0)); // Mengurutkan berdasarkan prioritas
+        .filter((notice: any) => {
+          const noticeStartDate = new Date(notice.start_date).toISOString().split('T')[0];
+          const noticeEndDate = new Date(notice.end_date).toISOString().split('T')[0];
+          
+          // Filter untuk notice yang sedang aktif (start_date <= today <= end_date)
+          return noticeStartDate <= todayString && noticeEndDate >= todayString;
+        })
+        .map((notice: any) => ({
+          id: notice.id,
+          name: notice.name,
+          notice_title: notice.notice_title,
+          notice_content: notice.notice_content,
+          notice_attachment: notice.notice_attachment,
+          start_date: notice.start_date,
+          end_date: notice.end_date,
+          create_date: notice.create_date,
+          is_prioritize: notice.is_prioritize
+        }))
+        .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0));
 
-      this.originalNotices = [...this.notices]; // Simpan salinan asli
+      this.originalNotices = [...this.notices];
       if (this.originalNotices) {
         this.isLoading = false;
       }
-    })
+    });
   }
 
   prioritizeNotice(noticeid: any) {

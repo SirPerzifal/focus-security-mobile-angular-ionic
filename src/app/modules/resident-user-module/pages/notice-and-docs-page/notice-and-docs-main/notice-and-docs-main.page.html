@@ -50,50 +50,69 @@
       >
         <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
-      <div *ngFor="let notice of notices">
-        <div
-          *ngIf="!isLoading"
-          class="bg-[var(--ion-color-tertiary)] p-4 rounded"
-        >
-          <h2 class="font-bold">{{ notice.notice_title }}</h2>
-          <p>{{ notice.notice_content }}</p>
-          <table>
-            <tr>
-              <td class="pr-2">Start</td>
-              <td>
-                : {{ functionMainService.convertToDDMMYYYY(notice.start_date) }}
-              </td>
-            </tr>
-            <tr>
-              <td class="pr-2">End</td>
-              <td>
-                : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
-              </td>
-            </tr>
-          </table>
-          <div class="flex justify-between items-center">
-            <button
-              class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm"
-              (click)="downloadAttachment(notice.notice_attachment)"
-            >
-              Download Attachment
-            </button>
-            <ion-icon
-              *ngIf="notice.is_prioritize !== false; else notPriority"
-              class="text-yellow-500 text-4xl"
-              name="star"
-              (click)="prioritizeNotice(notice)"
-            >
-            </ion-icon>
-            <ng-template #notPriority>
-              <div (click)="prioritizeNotice(notice)">
-                <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
-                </ion-icon>
-              </div>
-            </ng-template>
+      <div *ngIf="notices.length > 0; else noNotice">
+        <div *ngFor="let notice of notices">
+          <div
+            *ngIf="!isLoading"
+            class="bg-[var(--ion-color-tertiary)] p-4 rounded"
+          >
+            <h2 class="font-bold">{{ notice.notice_title }}</h2>
+            <p>{{ notice.notice_content }}</p>
+            <table>
+              <tr>
+                <td class="pr-2">Start Date</td>
+                <td>
+                  : {{ functionMainService.convertToDDMMYYYY(notice.start_date)
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="pr-2">End Date</td>
+                <td>
+                  : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
+                </td>
+              </tr>
+            </table>
+            <div class="flex justify-between items-center">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm"
+                (click)="downloadAttachment(notice.notice_attachment)"
+              >
+                Download Attachment
+              </button>
+              <ion-icon
+                *ngIf="notice.is_prioritize !== false; else notPriority"
+                class="text-yellow-500 text-4xl"
+                name="star"
+                (click)="prioritizeNotice(notice)"
+              >
+              </ion-icon>
+              <ng-template #notPriority>
+                <div (click)="prioritizeNotice(notice)">
+                  <ion-icon
+                    class="text-yellow-500 text-4xl"
+                    name="star-outline"
+                  >
+                  </ion-icon>
+                </div>
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>
+      <ng-template #noNotice>
+        <div
+          class="flex flex-col text-base items-center text-center justify-center mt-4"
+        >
+          <p class="text-gray-600">You have no notice yet.....</p>
+          <p class="text-gray-600">
+            Go to
+            <strong
+              ><a [routerLink]="['/resident-home-page']">Home Page</a></strong
+            >
+          </p>
+        </div>
+      </ng-template>
     </div>
     <div *ngIf="showDocs" class="mt-2" @fadeInOut>
       <nav

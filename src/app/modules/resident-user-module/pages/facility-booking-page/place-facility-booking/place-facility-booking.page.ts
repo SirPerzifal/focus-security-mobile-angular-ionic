@@ -64,6 +64,15 @@ export class PlaceFacilityBookingPage implements OnInit {
     });
   }
 
+  onBack() {
+    console.log("test");
+    this.router.navigate(['/facility-booking-main'], {
+      queryParams :  {
+        reload: 'test'
+      }
+    });
+  }
+
   onDateChange(event: any) {
     // Reset room selection saat tanggal diubah
     this.selectedRoom = 'default'; // Kembalikan ke opsi default

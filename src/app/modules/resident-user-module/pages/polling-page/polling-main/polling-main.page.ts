@@ -265,7 +265,14 @@ export class PollingMainPage implements OnInit {
       polling_option_ids: this.chooseOptionId
     }, 'post/vote_polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {
-        window.location.reload();
+        this.loadPolling();
+        this.closeVote = true; // Set closing animation
+        this.chooseOptionId = [];
+        setTimeout(() => {
+          this.voteNow = false; // Hide graph after animation
+          this.closeVote = false; // Reset closing animation
+        }, 500); // Match the duration of the animation
+        this.functionMain.presentToast('Your vote successfully save', 'success')
       }
     }, (error) => {
       console.error(error);

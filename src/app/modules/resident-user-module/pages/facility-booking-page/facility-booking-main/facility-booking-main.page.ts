@@ -122,6 +122,7 @@ export class FacilityBookingMainPage implements OnInit {
   ionViewWillEnter() {
     this.activeRoute.queryParams.subscribe(params => {
       if (params['reload']) {
+        console.log(params['reload']);
         if (params['reload'] === false) {
           console.log('Reloading bookings based on query params:', params['reload']);
           this.subPageName = 'Active Bookings';
@@ -160,6 +161,26 @@ export class FacilityBookingMainPage implements OnInit {
             {
               text: 'History',
               active: true,
+              action: 'click'
+            },
+          ];
+        } else if (params['reload'] === 'test') {
+          this.subPageName = 'New Bookings';
+          this.loadFacilities();
+          this.navButtonsMain = [
+            {
+              text: 'Active',
+              active: false,
+              action: 'click',
+            },
+            {
+              text: 'New',
+              active: true,
+              action: 'click',
+            },
+            {
+              text: 'History',
+              active: false,
               action: 'click'
             },
           ];
@@ -540,6 +561,7 @@ export class FacilityBookingMainPage implements OnInit {
           deposit: booking.amount_deposit || 0,
           bookedBy: booking.booked_by || 'Unknown',
           status: booking.state || booking.booking_status,
+          reasonForRejection: booking.reason_for_rejeection,
           id: booking.id,
           rawDate: new Date(booking.event_date || booking.start_datetime) // Tambahkan raw date untuk filtering
         }));

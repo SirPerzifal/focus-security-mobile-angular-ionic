@@ -110,49 +110,67 @@
         </nav>
       </div>
       <div *ngIf="!isLoading" class="space-y-2">
-        <div
-          *ngFor="let report of allData"
-          [ngClass]="{
-          'bg-[var(--ion-color-tertiary)]': report.ticket_status === 'Solved',
-          'bg-[#F8F1BA]': report.ticket_status === 'New',
-          'bg-[#E3787E]': report.ticket_status === 'Canceled',
-          'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
-          }"
-          class="bg-[#F8F1BA] p-4 rounded shadow"
-        >
-          <h2 class="font-bold text-left">
-            {{ report.ticket_name }} - {{ report.ticket_type }}
-          </h2>
-          <table class="w-full text-left border-collapse mt-2">
-            <tbody>
-              <tr>
-                <td class="font-bold">Reported On</td>
-                <td class="cw-3:text-sm">
-                  : {{ report.issued_on ?
-                  functionMain.convertNewDateTZ(report.issued_on) : 'N/A' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-bold">Resolved On</td>
-                <td class="cw-3:text-sm">
-                  : {{ report.solved_on ?
-                  functionMain.convertNewDateTZ(report.solved_on) : 'N/A' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-bold">Ticket Status</td>
-                <td class="cw-3:text-sm">: {{ report.ticket_status }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="flex mt-[6px] w-full" (click)="seeDetail(report)">
-            <button
-              class="cw-2:text-[13px] bg-[var(--ion-color-primary)] w-full text-white px-3 py-2 text-base rounded-md font-bold"
-            >
-              View Details
-            </button>
+        <div *ngIf="allData.length > 0; else noResportIssue">
+          <div
+            *ngFor="let report of allData"
+            [ngClass]="{
+            'bg-[var(--ion-color-tertiary)]': report.ticket_status === 'Solved',
+            'bg-[#F8F1BA]': report.ticket_status === 'New',
+            'bg-[#E3787E]': report.ticket_status === 'Canceled',
+            'bg-sky-200': report.ticket_status === 'In Progress' || report.ticket_status === 'On Hold'
+            }"
+            class="bg-[#F8F1BA] p-4 rounded shadow"
+          >
+            <h2 class="font-bold text-left">
+              {{ report.ticket_name }} - {{ report.ticket_type }}
+            </h2>
+            <table class="w-full text-left border-collapse mt-2">
+              <tbody>
+                <tr>
+                  <td class="font-bold">Reported On</td>
+                  <td class="cw-3:text-sm">
+                    : {{ report.issued_on ?
+                    functionMain.convertNewDateTZ(report.issued_on) : 'N/A' }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-bold">Resolved On</td>
+                  <td class="cw-3:text-sm">
+                    : {{ report.solved_on ?
+                    functionMain.convertNewDateTZ(report.solved_on) : 'N/A' }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-bold">Ticket Status</td>
+                  <td class="cw-3:text-sm">: {{ report.ticket_status }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="flex mt-[6px] w-full" (click)="seeDetail(report)">
+              <button
+                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] w-full text-white px-3 py-2 text-base rounded-md font-bold"
+              >
+                View Details
+              </button>
+            </div>
           </div>
         </div>
+        <ng-template #noResportIssue>
+          <div
+            class="flex flex-col text-sm items-center text-center justify-center mt-4"
+          >
+            <p class="text-gray-600">You have no reportes issue.....</p>
+            <p class="text-gray-600">
+              Go to
+              <strong><a (click)="onBack()">Home Page</a></strong>
+              or
+            </p>
+            <p class="text-gray-600">
+              <strong><a (click)="onClick('')">Click Here</a></strong>
+              to make a new report issue.
+            </p>
+          </div>
+        </ng-template>
       </div>
     </div>
 

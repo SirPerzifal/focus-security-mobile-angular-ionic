@@ -233,8 +233,11 @@
                     </tr>
                     <tr>
                       <td class="font-bold">Results</td>
-                      <td class="truncate">
+                      <td *ngIf="vd.winning_response" class="truncate">
                         : Option <strong>{{ vd.winning_response }}</strong> win
+                      </td>
+                      <td *ngIf="!vd.winning_response" class="truncate">
+                        : No option win
                       </td>
                     </tr>
                   </tbody>

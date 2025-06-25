@@ -56,7 +56,8 @@ export class ContractorInvitingFormPage implements OnInit {
     // hiredCar: "",
     // isProvideUnit: false,
   }
-  entryCheck: string = '';
+  familyId: number = 0;
+  entryCheck: { [key: number]: string } = {}; // Ubah jadi object untuk tracking per index
   showOther: boolean = false;
 
   nameFromContact = '';
@@ -91,6 +92,7 @@ export class ContractorInvitingFormPage implements OnInit {
 
   ngOnInit() {
     this.loadHost();
+    this.loadFamilyId(); // Tambahkan method untuk load family ID
     this.isFormInitialized = false;
     // Jika selectedCountry belum diinisialisasi
     if (!this.selectedCountry || this.selectedCountry.length === 0) {
@@ -102,25 +104,47 @@ export class ContractorInvitingFormPage implements OnInit {
     });
   }
 
+  // Method baru untuk load family ID saat komponen dimuat
+  loadFamilyId() {
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if (value) {
+        this.storage.decodeData(value).then((value: any) => {
+          if (value) {
+            const estate = JSON.parse(value) as Estate;
+            this.familyId = estate.family_id;
+          }
+        });
+      }
+    });
+  }
+
+  // Method untuk mengecek apakah host adalah diri sendiri
+  isHostMyself(index: number): boolean {
+    const hostIds = this.inviteeFormList[index]?.host_ids || [];
+    return hostIds.length === 1 && hostIds[0] === this.familyId;
+  }
+
+  // Perbaikan method addInitialInvitee
   addInitialInvitee() {
     const initialInvitee: any = { 
       contractor_name: '', 
       contact_number: '', 
-      phone_display: '', // Tambahkan field untuk display
+      phone_display: '',
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
       expected_number_of_visit: '',
-      host_ids: []
+      host_ids: [] // Pastikan ini array kosong
     };
+    
     const selectedCode: any = { 
       selected_code: '65'
     };
 
     this.inviteeFormList.push(initialInvitee);
-    this.selectedCountry.push(selectedCode)
-    this.isFormVisible = true; // Show form since we have at least one invitee
-    this.addInviteeText = 'Add More Invitees'; // Update button text
+    this.selectedCountry.push(selectedCode);
+    this.isFormVisible = true;
+    this.addInviteeText = 'Add More Invitees';
   }
 
   onchangeTypeOfWork(event: any, type?: string, index?: any) {
@@ -212,36 +236,25 @@ export class ContractorInvitingFormPage implements OnInit {
     this.isFormInitialized = true;
   }
 
-  changeHost(event: any, index: any) {
-    this.entryCheck = event.value;
-    if (event.value === 'myself') {
-      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-        if ( value ) {
-          this.storage.decodeData(value).then((value: any) => {
-            if ( value ) {
-              const estate = JSON.parse(value) as Estate;
-              this.inviteeFormList[index].host_ids.push(estate.family_id);
-            }
-          })
-        }
-      })
-    } else {
-      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-        if ( value ) {
-          this.storage.decodeData(value).then((value: any) => {
-            if ( value ) {
-              const estate = JSON.parse(value) as Estate;
-              this.inviteeFormList[index].host_ids.push(estate.family_id);
-            }
-          })
-        }
-      })
+  // Perbaikan method changeHost
+  changeHost(event: any, index: number) {
+    const selectedValue = event.value;
+    this.entryCheck[index] = selectedValue;
+
+    if (selectedValue === 'myself') {
+      // Set host_ids hanya berisi familyId
+      this.inviteeFormList[index].host_ids = [this.familyId];
+    } else if (selectedValue === 'other_host') {
+      // Reset host_ids untuk memungkinkan pemilihan host lain
+      this.inviteeFormList[index].host_ids = [];
     }
   }
 
-  hostChange(event: any, index: any) {
-    console.log(this.inviteeFormList[index].host_ids, event)
-    this.inviteeFormList[index].host_ids = [...event, ...this.inviteeFormList[index].host_ids];
+  // Perbaikan method hostChange
+  hostChange(event: any, index: number) {
+    console.log('Host selection changed:', event);
+    // Set host_ids dengan nilai yang dipilih dari m2m-selection
+    this.inviteeFormList[index].host_ids = event;
   }
 
   Host: any = []
@@ -368,20 +381,20 @@ export class ContractorInvitingFormPage implements OnInit {
     await alert.present();
   }
 
+  // Perbaikan method addInvitee
   addInvitee() {
     const newInvitee: any = { 
       contractor_name: '', 
       contact_number: '', 
-      phone_display: '', // Tambahkan field untuk display
+      phone_display: '',
       vehicle_number: '',
       company_name: '',
       type_of_work: '',
       expected_number_of_visit: '',
-      host_ids: []
+      host_ids: [] // Pastikan ini array kosong
     };
     
     this.inviteeFormList.push(newInvitee);
-    // Pastikan juga menambahkan item baru ke selectedCountry
     this.selectedCountry.push({ selected_code: '65' });
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
@@ -538,24 +551,26 @@ export class ContractorInvitingFormPage implements OnInit {
     return true;
   }
 
+  // Perbaikan validasi di onSubmit
   onSubmit() {
-    console.log(this.inviteeFormList)
+    console.log(this.inviteeFormList);
     let errMsg = '';
-    this.inviteeFormList.every((invitee:any) => {
+    
+    this.inviteeFormList.forEach((invitee: any, index: number) => {
       if (invitee.contractor_name.trim() === '') {
-        errMsg += 'Please fill contractor Name! \n';
-      } else if (invitee.contact_number.trim() === '') {
-        errMsg += 'Please fill contact number! \n';
-      } else if (invitee.company_name.trim() === '') {
-        errMsg += 'Please fill company name! \n';
-      } else if (invitee.host_ids.length <= 0) {
-        errMsg += 'Please choose whether show just you or include another host! \n';
-      } else if (invitee.expected_number_of_visit < 0) {
-        errMsg += 'Please fill expected number of visit! \n';
-      } else if (invitee.expected_number_of_visit > 0) {
-          this.formData.entryType = 'multiple_entry';
-        } else {
-        errMsg = '';
+        errMsg += `Form ${index + 1}: Please fill contractor Name!\n`;
+      }
+      if (invitee.contact_number.trim() === '') {
+        errMsg += `Form ${index + 1}: Please fill contact number!\n`;
+      }
+      if (invitee.company_name.trim() === '') {
+        errMsg += `Form ${index + 1}: Please fill company name!\n`;
+      }
+      if (!invitee.host_ids || invitee.host_ids.length === 0) {
+        errMsg += `Form ${index + 1}: Please choose host!\n`;
+      }
+      if (!invitee.expected_number_of_visit || invitee.expected_number_of_visit < 0) {
+        errMsg += `Form ${index + 1}: Please fill expected number of visit!\n`;
       }
     });
 
@@ -563,48 +578,59 @@ export class ContractorInvitingFormPage implements OnInit {
     const isFormValid = this.validateFormBeforeSubmit();
 
     if (errMsg === '' && isFormValid) {
-      try {
-        console.log(this.formData);
-        
-        this.mainApiResidentService.endpointMainProcess({
-          date_of_visit: this.formData.dateOfInvite, 
-          entry_type: this.formData.entryType, 
-          entry_title: this.formData.entryTitle,
-          entry_message: this.formData.entryMessage,
-          // is_provide_unit: this.formData.isProvideUnit,
-          invitees: this.inviteeFormList,
-        }, 'post/create_expected_contractor').subscribe((response: any) => {
-          if (response.result.response_code == 200) {
-            this.functionMain.presentToast('Success Add Invite', 'success');
-            this.inviteeFormList = [];
-            this.inviteeFormList = null;
-            this.formData = {
-              dateOfInvite: new Date(),
-              vehicleNumber: "",
-              entryType: "",
-              entryTitle: "",
-              entryMessage: "",
-              // isProvideUnit: false,
-            }
-            this.router.navigate(['/contractor-commercial-main'], {
-              queryParams: {
-                openActive: true,
-                formData: null
-              }
-            });
-          } else if (response.result.status_code === 206) {
-            this.functionMain.presentToast('Contractor has been banned!', 'danger');
-          } else {
-            this.functionMain.presentToast('Failed Add Invite', 'danger');
-          }
-        })
-      } catch (error) {
-        console.error('Unexpected error:', error);
-        this.functionMain.presentToast(String(error), 'danger');
-      }
+      // Set entry type berdasarkan expected number of visit
+      const hasMultipleVisits = this.inviteeFormList.some((invitee: any) => 
+        invitee.expected_number_of_visit > 1
+      );
+      this.formData.entryType = hasMultipleVisits ? 'multiple_entry' : 'single_entry';
+
+      // Lanjutkan dengan API call...
+      this.submitInvitation();
     } else if (errMsg !== '') {
       this.functionMain.presentToast(errMsg, 'danger');
     }
+  }
+
+  // Method terpisah untuk submit invitation
+  private submitInvitation() {
+    this.mainApiResidentService.endpointMainProcess({
+      date_of_visit: this.formData.dateOfInvite, 
+      entry_type: this.formData.entryType, 
+      entry_title: this.formData.entryTitle,
+      entry_message: this.formData.entryMessage,
+      invitees: this.inviteeFormList,
+    }, 'post/create_expected_contractor').subscribe((response: any) => {
+      if (response.result.response_code == 200) {
+        this.functionMain.presentToast('Success Add Invite', 'success');
+        this.resetForm();
+        this.router.navigate(['/contractor-commercial-main'], {
+          queryParams: {
+            openActive: true,
+            formData: null
+          }
+        });
+      } else if (response.result.status_code === 206) {
+        this.functionMain.presentToast('Contractor has been banned!', 'danger');
+      } else {
+        this.functionMain.presentToast('Failed Add Invite', 'danger');
+      }
+    });
+  }
+
+  // Method untuk reset form
+  private resetForm() {
+    this.inviteeFormList = [];
+    this.selectedCountry = [];
+    this.entryCheck = {};
+    this.isFormVisible = false;
+    this.addInviteeText = 'Add Invitee';
+    this.formData = {
+      dateOfInvite: new Date(),
+      vehicleNumber: "",
+      entryType: "",
+      entryTitle: "",
+      entryMessage: "",
+    };
   }
 
   shouldShowForm(): boolean {

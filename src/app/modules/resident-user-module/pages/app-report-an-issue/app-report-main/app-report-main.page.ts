@@ -138,7 +138,7 @@ export class AppReportMainPage implements OnInit {
 
   record_type = 'residential'
 
-  onBack() {
+  onBack(toWhere?: string) {
     if (this.showBackButton === true) {
       this.showBackButton = false;
       this.showForm = false;
@@ -157,6 +157,13 @@ export class AppReportMainPage implements OnInit {
 
   onClick(event: any) {
     if (event[1] === 'Report an Issue') {
+      this.showBackButton = true;
+      this.showRecord = false;
+      this.showForm = true;
+      this.navButtons[0].active = false;
+      this.navButtons[1].active = true;
+      this.subPageName = 'Report Form'
+    } else {
       this.showBackButton = true;
       this.showRecord = false;
       this.showForm = true;

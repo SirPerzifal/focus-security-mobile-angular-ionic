@@ -228,7 +228,7 @@ export class VehicleFormPage implements OnInit {
       errMsg.push('Please fill vehicle number!');
     }
     if (this.vehicleForm.iuNumber == "") {
-      errMsg.push("Please choose entry type!");
+      errMsg.push("Please fill iu number!");
     }
     if (this.vehicleForm.typeOfApplication == "") {
       errMsg.push("Please fill type of application!");

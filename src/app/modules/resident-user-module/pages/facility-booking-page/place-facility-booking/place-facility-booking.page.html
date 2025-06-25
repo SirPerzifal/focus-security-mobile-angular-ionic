@@ -25,7 +25,7 @@
             name="arrow-back-circle"
             size="large"
             class="text-[var(--ion-color-primary)] size-12"
-            [routerLink]="['/facility-booking-main']"
+            (click)="onBack()"
           ></ion-icon>
         </div>
         <ion-datetime-button
