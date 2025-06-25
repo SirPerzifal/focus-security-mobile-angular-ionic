@@ -296,7 +296,7 @@ export class EmergencyModulePage implements OnInit {
     // if ((!this.selectedHost) && this.project_config.is_industrial) {
     //   errMsg += "Host is required! \n"
     // }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if (!this.pass_number && this.project_config.is_industrial && this.showOthers) {
       errMsg += 'Pass number is required! \n'
     }
     if (errMsg) {

@@ -59,6 +59,9 @@
       <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list" class="mt-4"
         [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
 
+      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" [routerLink]="['/unregistered-simulation-module']" *ngIf="project_config.is_allow_vms_unregistered_simulation" class="mt-4"
+        [isActive]="true" [disableClick]="true" />
+
       <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle" class="mt-4"
         [routerLink]="['/resident-car-list']" />
 

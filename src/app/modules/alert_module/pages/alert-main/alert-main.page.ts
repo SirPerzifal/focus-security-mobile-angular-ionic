@@ -633,13 +633,13 @@ export class AlertMainPage implements OnInit {
     let comp = {}
     if (entry_type == 'overstay') {
       comp = {
-        type: entry_type == 'first_issue',
+        type: 'first_issue',
         vehicle_number: vehicle_number,
         type_of_entry: entry_type,
       }
     } else {
       comp = {
-        type: entry_type == 'wheel_clamp',
+        type: 'wheel_clamp',
         vehicle_number: vehicle_number,
       }
     }

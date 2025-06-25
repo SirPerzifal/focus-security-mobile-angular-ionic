@@ -25,7 +25,7 @@ export class RecordsVisitorDetailPage implements OnInit {
       this.loadProjectName().then(() => {
         this.getBlacklist()
         this.record = state.logs
-        this.hideCallEmployee = this.record.industrial_host_id || this.record.unit_id || this.record.industrial_host_ids.length > 0
+        this.hideCallEmployee = this.record.industrial_host_id || this.record.unit_id || (this.record.industrial_host_ids && this.record.industrial_host_ids.length > 0)
       })
     } 
    }

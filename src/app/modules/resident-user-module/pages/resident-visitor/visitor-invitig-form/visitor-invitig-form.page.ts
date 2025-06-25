@@ -39,7 +39,7 @@ export class VisitorInvitigFormPage implements OnInit {
       digit: 9,
     },
     {
-      country: 'IDD',
+      country: 'IN',
       code: '91',
       digit: 9,
     },

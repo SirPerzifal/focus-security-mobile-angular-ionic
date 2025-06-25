@@ -64,7 +64,7 @@ export class RecordsResidentsModalPage implements OnInit {
           next: (results) => {
             console.log(results)
             if (results.result.status_code === 200) {
-              this.functionMain.presentToast(results.result.status_description, 'danger');
+              this.functionMain.presentToast(results.result.status_description, 'success');
               setTimeout(() => {
                 this.router.navigate(['/records-residents'], {state: {nric: this.nric_resident}})
                 this.modalController.dismiss(true)

@@ -510,7 +510,7 @@ export class ContractorFormPage implements OnInit {
           this.identificationType = value.is_fin ? 'fin' : 'nric'
           this.nric_value = value.data;
         } 
-        this.clientMainService.getApi({nric: value.data, project_id: this.project_id}, '/vms/get/contractor_by_nric').subscribe({
+        this.clientMainService.getApi({nric: value.data, project_id: this.project_id, is_visitor_logs: true}, '/vms/get/contractor_by_nric').subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.status_code === 200) {

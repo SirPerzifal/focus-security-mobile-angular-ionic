@@ -74,6 +74,16 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.requestor) }}</td>
           </tr>
+          <tr *ngIf="record.checkout_datetime">
+            <td class="font-bold w-2/5">ENTRY DATE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[0] }}</td>
+          </tr>         
+          <tr *ngIf="record.checkout_datetime">
+            <td class="font-bold w-2/5">ENTRY TIME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[1] }}</td>
+          </tr>
           <tr *ngIf="pageType == 'vehicle'">
             <td class="font-bold w-2/5">WARNING ISSUE</td>
             <td class="w-[5%]">:</td>
