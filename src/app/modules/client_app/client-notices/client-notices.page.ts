@@ -56,7 +56,7 @@ export class ClientNoticesPage implements OnInit {
   textSecond = ''
 
   onBack() {
-    this.router.navigate(['/client-main-app'])
+    this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
   }
 
   toggleShowNotice() {

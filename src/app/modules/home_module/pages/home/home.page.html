@@ -4,7 +4,9 @@
     <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <app-vms-background />
+    <div class="flex flex-row justify-center fixed inset-0 ">
+      <img alt="IFS360" [src]="showImage" class="object-contain w-full h-full" />
+    </div>
   </div>
   <div class="flex flex-col relative mt-3">
     <div class="flex flex-row justify-between items-center text-center mx-4">

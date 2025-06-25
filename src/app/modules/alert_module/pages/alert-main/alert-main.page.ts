@@ -184,11 +184,6 @@ export class AlertMainPage implements OnInit {
             this.secondWarningTotal = results.result.pagination.total_records
             this.secondWarningRedTotal = results.result.pagination.total_red_records
           }
-          this.recordAction();
-          this.actionTotalIssue()
-          if (!this.main) {
-            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
-          }
         } else {
           this.alertsIssues.push({ type: offenceType, data: [], total_pages: 0 })
           if (offenceType == 'wheel_clamp') {
@@ -202,12 +197,14 @@ export class AlertMainPage implements OnInit {
             this.secondWarningTotal = 0
             this.secondWarningRedTotal = 0
           }
-          this.recordAction();
-          this.actionTotalIssue()
           this.isLoading = false
           this.total_pages = 0
         }
-
+        this.recordAction();
+        this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
         this.isLoading = false;
       },
       error: (error) => {
@@ -224,6 +221,9 @@ export class AlertMainPage implements OnInit {
         else {
           this.secondWarningTotal = 0
           this.secondWarningRedTotal = 0
+        }
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
         }
         this.isLoading = false
         this.total_pages = 0
@@ -244,17 +244,17 @@ export class AlertMainPage implements OnInit {
           this.alertsIssues.push({ type: 'unregistered', data: results.result.response_result, total_pages: results.result.pagination.total_pages})
           this.unregisteredTotal = results.result.pagination.total_records
           this.total_pages = results.result.pagination.total_pages
-          this.recordAction();
-          this.actionTotalIssue()
-          if (!this.main) {
-            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
-          }
         } else {
           this.alertsIssues.push({ type: 'unregistered', data: [], total_pages: 0 })
+          this.unregisteredTotal = 0
           this.unregisteredRedTotal = 0
           this.total_pages = 0
-          this.recordAction();
-          this.actionTotalIssue()
+        }
+        console.log(this.showIssues)
+        this.recordAction();
+        this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
         }
         this.isLoading = false
       },
@@ -262,11 +262,15 @@ export class AlertMainPage implements OnInit {
         this.alertsIssues.push({ type: 'unregistered', data: [], total_pages: 0  })
         this.presentToast('An error occurred while loading unregistered car data!', 'danger');
         console.error(error);
+        this.unregisteredTotal = 0
         this.unregisteredRedTotal = 0
         this.total_pages = 0
         this.isLoading = false
         this.recordAction();
         this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
       }
     });
   }
@@ -285,19 +289,17 @@ export class AlertMainPage implements OnInit {
           this.total_pages = results.result.pagination.total_pages
           this.isLoading = false
           console.log(this.overstayRedTotal)
-          this.recordAction();
-          this.actionTotalIssue()
-          if (!this.main) {
-            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
-          }
         } else {
           this.alertsIssues.push({ type: 'overstay', data: [], total_pages: 0 })
           this.overstayTotal = 0
           this.overstayRedTotal = 0
           this.total_pages = 0
           this.isLoading = false
-          this.recordAction();
-          this.actionTotalIssue()
+        }
+        this.recordAction();
+        this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
         }
       },
       error: (error) => {
@@ -307,6 +309,9 @@ export class AlertMainPage implements OnInit {
         this.overstayTotal = 0
         this.overstayRedTotal = 0
         this.isLoading = false
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
         this.total_pages = 0
         this.recordAction();
         this.actionTotalIssue()
@@ -328,19 +333,17 @@ export class AlertMainPage implements OnInit {
           this.ticketsTotal = results.result.pagination.total_records
           this.total_pages = results.result.pagination.total_pages
           this.isLoading = false
-          this.recordAction();
-          this.actionTotalIssue()
-          if (!this.main) {
-            this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
-          }
         } else {
           this.alertsIssues.push({ type: 'tickets', data: [], total_pages: 0 })
           this.ticketsTotal = 0
           this.ticketsRedTotal = 0
           this.total_pages = 0
           this.isLoading = false
-          this.recordAction();
-          this.actionTotalIssue()
+        }
+        this.recordAction();
+        this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
         }
       },
       error: (error) => {
@@ -351,6 +354,9 @@ export class AlertMainPage implements OnInit {
         this.ticketsRedTotal = 0
         this.total_pages = 0
         this.isLoading = false
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
         this.recordAction();
         this.actionTotalIssue()
       }
@@ -629,18 +635,20 @@ export class AlertMainPage implements OnInit {
     this.router.navigate(['/home-vms'])
   }
 
-  async presentModalFirstWarning(vehicle_number: any, entry_type: any) {
+  async presentModalFirstWarning(vehicle_number: any, entry_type: any, issue_time: any) {
     let comp = {}
     if (entry_type == 'overstay') {
       comp = {
         type: 'first_issue',
         vehicle_number: vehicle_number,
         type_of_entry: entry_type,
+        issue_time: issue_time,
       }
     } else {
       comp = {
         type: 'wheel_clamp',
         vehicle_number: vehicle_number,
+        issue_time: issue_time,
       }
     }
     const modal = await this.modalController.create({

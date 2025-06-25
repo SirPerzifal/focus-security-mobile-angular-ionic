@@ -33,14 +33,16 @@ export class ClientPollingPage implements OnInit {
 
   onBack() {
     if (this.isMain) {
-      this.router.navigate(['/client-main-app'])
+      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
     } else {
       this.isMain = true
       this.dataForGraph = []
     }
   }
 
-  project_id = 191
+  project_id = 0
+
+  today = new Date().toISOString().split('T')[0];
 
   isActive = true
   isUpcoming = false

@@ -20,6 +20,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
     private functionMain: FunctionMainService,
   ) {
     this.type = this.navParams.get('type')
+    this.issueTime = this.navParams.get('issue_time')
     this.openSelection = this.navParams.get('is_open_selection')
     const vehicle_number = navParams.get('vehicle_number')
     if (vehicle_number){
@@ -79,6 +80,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   afterClampImageFile = '';
   imageBeforeClampInput: string = '';
   imageAfterClampInput: string = '';
+  issueTime: any = false
   issueOfficer = ''
   issueName = ''
   vehicleNumber = ''
@@ -179,7 +181,8 @@ export class RecordsWheelClampedNewPage implements OnInit {
         before_clamp_image: this.type == 'wheel_clamp' ? this.beforeClampImageFile : false,
         after_clamp_image: this.type == 'wheel_clamp' ? this.afterClampImageFile : false,
         project_id: this.project_id,
-        host: this.selectedHost
+        host: this.selectedHost,
+        entry_datetime: this.issueTime,
       }
       
       console.log(params)

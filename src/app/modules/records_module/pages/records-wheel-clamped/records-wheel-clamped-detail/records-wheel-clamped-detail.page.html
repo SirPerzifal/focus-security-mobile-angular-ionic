@@ -78,33 +78,33 @@
           </tr>
 
         </table>
-        <div class="flex flex-col justify-between w-full">
-          <div class="flex flex-row w-full justify-around space-x-2">
+        <div class="flex flex-col justify-between w-full mb-4">
+          <div class="flex flex-row w-full justify-around gap-4 flex-wrap">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" *ngIf="vehicle.contact_number" (click)="functionMain.callFromPhone(vehicle.contact_number)">CALL VISITOR</button>
             <!-- <button *ngIf="pageType == 'wheel_clamp'" class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14">CHECK VISITOR</button> -->
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" *ngIf="hideCallEmployee" (click)="callResident(vehicle)">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
-          </div>
-          <div class="flex flex-row w-full justify-around space-x-2">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+          <!-- </div> -->
+          <!-- <div class="flex flex-row w-full justify-around space-x-2"> -->
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="onHistoryClick()">CHECK HISTORY</button>
             <button *ngIf="pageType == 'wheel_clamp' && vehicle.is_pay && vehicle.states == 'issued'"
-              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="showCheckoutAlert(vehicle.id, 'release')">RELEASE</button>
             <button *ngIf="pageType == 'wheel_clamp' && !vehicle.is_pay"
-              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="onPaymentClick()">PAYMENT</button>
             <button *ngIf="pageType == 'first_warning'"
-              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="presentModal('first_warning', vehicle)">ISSUE 2ND WARNING</button>
             <button *ngIf="pageType == 'second_warning'"
-              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4"
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="presentModal('second_warning', vehicle)">WHEEL CLAMP</button>
 
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" *ngIf="pageType != 'wheel_clamp' && vehicle.states == 'issued'"
+                (click)="showCheckoutAlert(vehicle.id, 'checkout')">CHECKOUT</button>
           </div>
           <div class="flex flex-row w-full justify-around space-x-2"
-            *ngIf="pageType != 'wheel_clamp' && vehicle.states == 'issued'">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14 mb-4"
-              (click)="showCheckoutAlert(vehicle.id, 'checkout')">CHECKOUT</button>
+            >
           </div>
         </div>
       </div>

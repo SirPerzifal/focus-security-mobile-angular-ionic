@@ -170,14 +170,14 @@
             [(ngModel)]="newPollingName"></app-text-input>
         </div>
         <div class="w-full">
-          <app-text-input #clientNewPollingStartDate [labelResidentText]="'Start On'"
+          <app-text-input #clientNewPollingStartDate [labelResidentText]="'Start On'" [min]="today"
             [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'client_new_polling_start_date'"
             [placeholder]="'DD/MM/YYYY'" [customClasses]="{'w-full items-start': true}" [type]="'date'"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
             [(ngModel)]="newPollingStartDate"></app-text-input>
         </div>
         <div class="w-full">
-          <app-text-input #clientNewPollingEndDate [labelResidentText]="'End On'"
+          <app-text-input #clientNewPollingEndDate [labelResidentText]="'End On'" [min]="newPollingStartDate || today"
             [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'client_new_polling_end_date'"
             [placeholder]="'DD/MM/YYYY'" [customClasses]="{'w-full items-start': true}" [type]="'date'"
             [min]="newPollingStartDate"
