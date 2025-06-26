@@ -7,14 +7,16 @@
     <div class="h-full w-full bg-white pt-4 pb-48">
       <div class="flex flex-col h-full justify-between items-center">
         <div class="flex flex-col justify-center items-center">
-          <span *ngIf="isReceiver" class="font-bold text-white mt-4">{{ getCallerName() }}</span>
-          <span *ngIf="!isReceiver" class="font-bold text-white mt-4">{{ getReceiverName() }}</span>
-          <span class="text-white font-bold">{{ formattedTime }}</span>
+          <span *ngIf="isReceiver" class="font-bold text-black mt-4">{{ getCallerName() }}</span>
+          <span *ngIf="!isReceiver" class="font-bold text-black mt-4">{{ getReceiverName() }}</span>
+          <span class="text-black font-bold">{{ formattedTime }}</span>
         </div>
-        <div class="rounded-full w-44 h-44 bg-[#333333] overflow-hidden flex items-center justify-center">
+        <!-- <div class="rounded-full w-44 h-44 bg-[#333333] overflow-hidden flex items-center justify-center">
           <img [src]="getSenderProfilePic()" class="w-full h-full" *ngIf="isReceiver">
           <img [src]="getReceiverProfilePic()" class="w-full h-full" *ngIf="!isReceiver">
-        </div>
+        </div> -->
+          <img [src]="getSenderProfilePic()" class="max-w-1/2 max-h-40" *ngIf="isReceiver">
+          <img [src]="getReceiverProfilePic()" class="max-w-1/2 max-h-40" *ngIf="!isReceiver">
         <div></div>
       </div>
     </div>
