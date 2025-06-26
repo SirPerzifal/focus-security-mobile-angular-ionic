@@ -1,32 +1,29 @@
 <ion-content [fullscreen]="true">
-  <div class="absolute z-50 mt-2 ml-2">
+  <div class="absolute z-50 mt-5 ml-2">
     <ion-icon
       name="arrow-back-circle"
       size="large"
       class="text-[var(--ion-color-primary)] size-12 clickable-element"
       [routerLink]="['']"
-      style="position: relative; z-index: 20; cursor: pointer"
     ></ion-icon>
   </div>
-  <div class="p-4 h-full w-full flex flex-col justify-center items-center">
-    <!-- Video Background dengan iOS fixes -->
-    <div class="absolute inset-0 overflow-hidden -z-10">
-      <!-- Fallback background untuk iOS yang bermasalah -->
-      <div class="absolute inset-0 video-fallback object-cover h-full w-full">
-        <img
-          alt="iFS360 logo"
-          class="w-full h-full opacity-20 object-cover"
-          src="assets/tes_back_wztgzm.gif"
-        />
-      </div>
+  <div class="absolute inset-0 overflow-hidden -z-10">
+    <!-- Fallback background untuk iOS yang bermasalah -->
+    <div class="absolute inset-0 video-fallback object-cover h-full w-full">
+      <img
+        alt="iFS360 logo"
+        class="w-full h-full opacity-20 object-cover"
+        src="assets/tes_back_wztgzm.gif"
+      />
     </div>
-
+  </div>
+  <div class="p-4 h-full w-full flex flex-col justify-center items-center">
     <div
       class="w-full rounded-lg login-container"
       style="position: relative; z-index: 10"
     >
       <div
-        class="pb-4 px-4 space-y-4 flex flex-col justify-center items-center"
+        class="pb-4 space-y-4 flex flex-col justify-center items-center"
         style="position: relative; z-index: 15"
       >
         <img alt="iFS360 logo" class="w-48 h-36" src="assets/logoIFS.png" />
@@ -38,7 +35,7 @@
             iFS360 APP
           </p>
         </div>
-        <form class="space-y-2 w-full" style="position: relative; z-index: 15">
+        <div class="space-y-2 w-full" style="position: relative; z-index: 15">
           <div>
             <input
               type="email"
@@ -48,13 +45,6 @@
               placeholder="Email or Phone"
               [value]="existUser.login"
               (change)="onLoginChange($event)"
-              style="
-                position: relative;
-                z-index: 20;
-                -webkit-appearance: none;
-                appearance: none;
-              "
-              required=""
             />
           </div>
           <div>
@@ -66,11 +56,6 @@
                 placeholder="**************"
                 [value]="existUser.password"
                 (change)="onPasswordChange($event)"
-                style="
-                  padding-right: 2.5rem !important;
-                  position: relative;
-                  z-index: 1;
-                "
               />
               <button
                 (click)="onToggleShowPassword()"
@@ -165,7 +150,7 @@
           </div>
           <ion-button
             fill="clear"
-            class="fslp-button"
+            class="fslp-button !rounded-lg"
             [ngClass]="(existUser.login && existUser.password) ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-100 text-gray-400'"
             (click)="loginResident()"
           >
@@ -195,7 +180,7 @@
               >Register</a
             >
           </p>
-        </form>
+        </div>
       </div>
     </div>
   </div>

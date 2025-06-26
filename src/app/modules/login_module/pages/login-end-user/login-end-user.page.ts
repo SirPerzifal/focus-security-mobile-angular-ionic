@@ -34,25 +34,6 @@ export class LoginEndUserPage implements OnInit {
     private platform: Platform,
     private storage: StorageService,
   ) {}
-
-  ionViewWillEnter() {
-    // Force video load di iOS
-    if (this.isIOS()) {
-      const video = document.querySelector('video');
-      if (video) {
-        video.load();
-        video.play().catch(err => {
-          console.log('Video autoplay failed:', err);
-          // Show fallback background
-          const fallback = document.querySelector('.video-fallback');
-          if (fallback) {
-            (fallback as HTMLElement).style.display = 'block';
-          }
-        });
-      }
-    }
-  }
-
   private isIOS(): boolean {
     return /iPad|iPhone|iPod/.test(navigator.userAgent);
   }

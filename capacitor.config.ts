@@ -26,7 +26,7 @@ const config: CapacitorConfig = {
           'android.permission.READ_CONTACTS': 'We need access to your contacts for the app functionality.'
         }
       },
-    },
+    }
   },
 };
 

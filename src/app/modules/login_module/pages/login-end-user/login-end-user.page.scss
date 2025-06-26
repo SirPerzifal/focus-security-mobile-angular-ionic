@@ -1,35 +1,4 @@
-.video-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  z-index: -1; // Behind everything
-}
-
-
-
-.fslp-container {
-    text-align: center;
-}
-.fslp-logo {
-    width: 200px;
-    margin: 50px auto 20px;
-}
-.fslp-title {
-    font-size: 24px;
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 20px;
-}
-.fsles-button-container {
-    margin-right: 4px;
-}
-.fsles-bottom {
-    font-family: 'Montserrat', sans-serif;
-}
-
-.fslp-button {
+  .fslp-button {
     font-family: 'Abyssinica SIL', serif;
     font-size: 12px;
     padding: 5px 10px;
@@ -39,17 +8,7 @@
     width: 100%;
     cursor: pointer;
 }
-.fslp-button-disabled {
-    font-family: 'Abyssinica SIL', serif;
-    font-size: 12px;
-    color: rgb(107 114 128);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.focus-visible {
-    outline: 2px solid blue; /* Gaya fokus yang diinginkan */
-  }
+
   @keyframes popup {
     0% {
       transform: scale(0);
@@ -111,112 +70,4 @@
 ion-modal#forgot-password-modal .wrapper {
     padding: 15px;
     background-color: white;
-}
-
-/* iOS Video dan Z-index Fixes */
-
-/* Video background fixes untuk iOS */
-video {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  pointer-events: none;
-}
-
-/* Pastikan container login selalu di atas */
-.login-container {
-  position: relative;
-  z-index: 10 !important;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-/* Elemen yang bisa diklik harus memiliki z-index tinggi */
-.clickable-element {
-  position: relative;
-  z-index: 20 !important;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-/* Modal fixes */
-.modal-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9999 !important;
-}
-
-.modal {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000 !important;
-}
-
-/* Fallback background untuk video yang tidak load */
-.video-fallback {
-  display: none;
-}
-
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
-  /* Ini akan apply hanya di iOS Safari */
-  
-  /* Force hardware acceleration */
-  * {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-  
-  /* Video fallback jika video tidak load */
-  video:not([src]) + .video-fallback,
-  video[src=""] + .video-fallback {
-    display: block !important;
-  }
-  
-  /* Fix untuk z-index stacking context */
-  ion-content {
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Pastikan semua interactive elements bisa diklik */
-  input, button, a, label, ion-icon {
-    position: relative !important;
-    z-index: 999 !important;
-  }
-}
-
-/* Media query untuk iOS 16 ke bawah - deteksi berdasarkan viewport */
-@media screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
-  /* iPhone specific fixes */
-  
-  video {
-    /* Coba force video untuk load */
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-  }
-  
-  /* Jika video masih bermasalah, paksa gunakan fallback */
-  .video-fallback {
-    display: block !important;
-  }
-  
-  /* Tingkatkan z-index untuk semua interactive elements */
-  .clickable-element {
-    z-index: 9999 !important;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
 }

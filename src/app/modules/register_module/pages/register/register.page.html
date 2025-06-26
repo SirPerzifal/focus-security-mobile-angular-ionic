@@ -1,19 +1,15 @@
 <ion-content class="ion-padding h-full flex flex-col">
   <!-- Video Background -->
-  <div class="absolute inset-0 overflow-hidden -z-50">
-    <video
-      autoplay
-      loop
-      muted
-      playsinline
-      class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
-    >
-      <source
-        src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
-        type="video/mp4"
+
+  <div class="absolute inset-0 overflow-hidden -z-10">
+    <!-- Fallback background untuk iOS yang bermasalah -->
+    <div class="absolute inset-0 video-fallback object-cover h-full w-full">
+      <img
+        alt="iFS360 logo"
+        class="w-full h-full opacity-20 object-cover"
+        src="assets/tes_back_wztgzm.gif"
       />
-      Your browser does not support the video tag.
-    </video>
+    </div>
   </div>
   <div class="w-1/6 flex items-start">
     <ion-icon
@@ -29,7 +25,15 @@
       New User Registration
     </h2>
     <div>
-      <app-text-input [id]="'location'" [placeholder]="'Location Code'" [showPlaceholder]="true" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [(ngModel)]="projectCode"></app-text-input>
+      <app-text-input
+        [id]="'location'"
+        [placeholder]="'Location Code'"
+        [showPlaceholder]="true"
+        [customClasses]="{'w-full':true}"
+        [type]="'text'"
+        [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"
+        [(ngModel)]="projectCode"
+      ></app-text-input>
       <!-- <app-filterable-select [customClasses]="{'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-fit':true, 'text-xs':true, 'border':true, }" [options]="projectList" (optionSelected)="onOptionSelected($event)" ></app-filterable-select> -->
     </div>
     <div class="fsles-button-container mt-5">
@@ -40,7 +44,7 @@
       >
         Next
       </ion-button>
-      <br/>
+      <br />
       <!-- <ion-button fill="clear" class="fslp-button w-full bg-[var(--ion-color-primary)]" (click)="onRegisterCommercial()">
        Next (Commercial)
       </ion-button> -->
