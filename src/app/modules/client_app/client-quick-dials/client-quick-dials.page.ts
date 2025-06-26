@@ -43,7 +43,7 @@ export class ClientQuickDialsPage implements OnInit {
       this.toggleShowEdit()
     } else {
       if (this.isMain) {
-        this.router.navigate(['/client-main-app'])
+        this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
       } else {
         this.isSetting = false
         this.isAdd = false

@@ -93,7 +93,7 @@ export class ClientReportsPage implements OnInit {
   onBack() {
     if (this.submitLoading) return
     if (this.isHome) {
-      this.router.navigate(['/client-main-app'])
+      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
     } else {
       this.checkedFields = []
       this.reportFields = []

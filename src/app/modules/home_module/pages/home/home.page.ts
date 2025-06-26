@@ -59,6 +59,28 @@ export class HomePage implements OnInit {
       this.project_config = value.config
       this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
     })
+    this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+      if (value) {
+        if (value.background) {
+          this.showImage = this.functionMain.getImage(value.background)
+        } else {
+          this.showImage = `assets/img/focus_logo-removebg.png`
+        }
+      } 
+    })
+  }
+
+  showImage = `assets/img/focus_logo-removebg.png`
+  async onLoadBackground() {
+    this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+      if (value) {
+        if (value.background) {
+          this.showImage = this.functionMain.getImage(value.background)
+        } else {
+          this.showImage = `assets/img/focus_logo-removebg.png`
+        }
+      } 
+    })
   }
   project_name = ''
   project_id = 0

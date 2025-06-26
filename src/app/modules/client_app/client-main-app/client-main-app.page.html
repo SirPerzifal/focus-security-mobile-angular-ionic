@@ -34,6 +34,8 @@
     <div class="flex items-center justify-center flex-col" *ngIf="!isLoading">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems" (click)="onClickMenu(menu.route)">
+
+          <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2 z-10" *ngIf="menu.menu_count > 0">{{ menu.menu_count }}</span>
           <ion-button fill="clear" class="w-full flex bg-[var(--ion-color-tertiary)] h-28 rounded-2xl relative p-0 m-0">
             <div class="w-full flex flex-col items-center">
               <img class="w-10 h-10 my-2" [src]="menu.src" [alt]="menu.alt" />

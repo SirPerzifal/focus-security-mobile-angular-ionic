@@ -147,7 +147,7 @@ export class ClientWheelClampPage implements OnInit {
 
   onBack() {
     if (this.isMain) {
-      this.router.navigate(['/client-main-app'])
+      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
     } else {
       this.onDeleteImage()
       this.qr_code = ''

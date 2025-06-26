@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
+import { App } from '@capacitor/app'
 
 @Component({
   selector: 'app-bottom-nav-bar',
@@ -31,7 +32,8 @@ export class BottomNavBarComponent implements OnInit {
   
   routeTo() {
     this.navigationService.setActiveButton('home');
-    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-home-page']);
+    let params = this.clientRoute ? {queryParams: {reload: true}} : {}
+    this.router.navigate([this.clientRoute ? '/client-main-app' : '/resident-home-page'], params);
   }
 
   reportIssue() {
@@ -45,13 +47,13 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initializeBackButtonHandling()
     this.functionMain.vmsPreferences().then((value: any)=> {
       this.is_client = value.is_client
     })
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
+        this.initializeBackButtonHandling(url === '/client-main-app')
         if (url !== '/resident-home-page' && url !== '/record-app-report' && url !== '/resident-settings-page') {
           this.navigationService.setActiveButton('');
         }
@@ -68,10 +70,13 @@ export class BottomNavBarComponent implements OnInit {
     });
   }
 
-  initializeBackButtonHandling() {
-    console.log("tes");
+  initializeBackButtonHandling(is_home: boolean = false) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      history.back();
+      if (is_home) {
+        App.exitApp();
+      } else {
+        history.back();
+      }
     });
   }
 

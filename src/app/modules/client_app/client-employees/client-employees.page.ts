@@ -250,7 +250,7 @@ export class ClientEmployeesPage implements OnInit {
 
   onBack() {
     if (this.isMain) {
-      this.router.navigate(['/client-main-app'])
+      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
     } else {
       this.isDetail = false
       setTimeout(() => {

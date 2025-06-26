@@ -170,7 +170,7 @@ export class ClientApprovalsPage implements OnInit {
       this.selectedApproval = []
     } else {
       if (this.isHome) {
-        this.router.navigate(['/client-main-app'])
+        this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
       } else {
         this.isData = false
         setTimeout(() => {

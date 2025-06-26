@@ -259,7 +259,7 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
-      this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
+      // this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
   
       // Listen for native events
       this.listenForNativeEvents();

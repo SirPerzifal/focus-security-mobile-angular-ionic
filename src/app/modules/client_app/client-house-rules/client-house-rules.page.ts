@@ -41,7 +41,7 @@ export class ClientHouseRulesPage implements OnInit {
   }
 
   onBack(){
-    this.router.navigate(['/client-main-app'])
+    this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
   }
 
   documentList: any = []

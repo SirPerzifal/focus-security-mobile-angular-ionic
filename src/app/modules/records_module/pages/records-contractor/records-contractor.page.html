@@ -164,7 +164,7 @@
           </div>
           <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
             *ngFor="let log of filteredActiveContractor" (click)="onArrowClick(log)">
-            <span class="text-2xl font-bold text-white">{{ functionMain.returnNone(log.contractor_name) }}, {{ functionMain.returnNone(log.identification_number) }}  {{ project_config.is_windows ? (log.check_out ? '(CHECKED OUT)' : '(NOT CHECKED OUT)') : '' }}</span>
+            <span class="text-2xl font-bold text-white">{{ functionMain.returnNone(log.contractor_name) }}, {{ functionMain.returnNone(log.identification_number) }}  {{ project_config.is_industrial ? (log.out_datetime ? '(CHECKED OUT)' : '(NOT CHECKED OUT)') : '' }}</span>
             <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
           </div>
         </div>

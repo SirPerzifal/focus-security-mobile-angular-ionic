@@ -152,7 +152,7 @@ export class EmergencyModulePage implements OnInit {
       if (value) {
         this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
         if (!is_click) {
-          this.formData.contact_number = value.contact_number ? value.contact_number : ''
+          // this.formData.contact_number = value.contact_number ? value.contact_number : ''
           this.formData.officer_name = value.visitor_name ? value.visitor_name  : ''
           this.contactUnit = ''
           this.contactHost = ''
@@ -273,14 +273,14 @@ export class EmergencyModulePage implements OnInit {
     if (!this.formData.officer_name && (this.showOthers)) {
       errMsg += "Govt agency name is required! \n"
     }
-    if (!this.formData.contact_number && (this.showOthers || this.showPolice)) {
-      errMsg += "Contact number is required! \n"
-    }
-    if (this.formData.contact_number && (this.showOthers || this.showPolice)) {
-      if (this.formData.contact_number.length <= 2) {
-        errMsg += "Contact number is required! \n"
-      }
-    }
+    // if (!this.formData.contact_number && (this.showOthers || this.showPolice)) {
+    //   errMsg += "Contact number is required! \n"
+    // }
+    // if (this.formData.contact_number && (this.showOthers || this.showPolice)) {
+    //   if (this.formData.contact_number.length <= 2) {
+    //     errMsg += "Contact number is required! \n"
+    //   }
+    // }
     if (!this.formData.station_devision && (this.showPolice || this.showSCDF || this.showAmbulance)) {
       errMsg += "Station & division is required! \n"
     }

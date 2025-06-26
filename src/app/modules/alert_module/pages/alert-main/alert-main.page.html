@@ -63,7 +63,7 @@
       <app-modal-loading />
     </div>
     <div class="flex flex-row mt-8 mb-4" *ngIf="!main && !isLoading">
-      <div class="w-full mx-4" *ngIf="showIssues[0].data.length > 0; else noAlerts">
+      <div class="w-full mx-4" *ngIf="(showIssues.length > 0 && showIssues[0].data.length > 0); else noAlerts">
         <div class="w-full space-y-5" *ngIf="active_type != 'tickets'">
           <div *ngFor="let alert of showIssues[0].data"
             class="w-full p-4 rounded-lg flex justify-between items-center " [ngClass]="alert.is_overminute ? 'bg-[var(--ion-color-vms-alert)]' : ( active_type === 'wheel_clamp' ? 'bg-[var(--ion-color-vms-alert)]' :'bg-[var(--ion-color-primary)]')">
@@ -82,7 +82,7 @@
             <div class="w-1/3 flex flex-col items-center">
               <ion-button fill="clear" *ngIf="active_type === 'unregistered' || active_type === 'overstay'"
                 class="rounded-md w-full font-bold text-xl comic-font bg-white text-black h-14"
-                (click)="presentModalFirstWarning(alert.vehicle_number, alert.entry_type)">
+                (click)="presentModalFirstWarning(alert.vehicle_number, alert.entry_type, alert.issue_time)">
                 <b>{{active_type === 'unregistered' ? 'CLAMP VEHICLE' :'ISSUE 1ST WARNING'}}</b>
               </ion-button>
               <ion-button fill="clear" *ngIf="active_type === 'first_warning'"
