@@ -11,31 +11,11 @@
   <div class="p-4 h-full w-full flex flex-col justify-center items-center">
     <!-- Video Background dengan iOS fixes -->
     <div class="absolute inset-0 overflow-hidden -z-10">
-      <video
-        autoplay
-        loop
-        muted
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
-        style="
-          pointer-events: none;
-          -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-        "
-      >
-        <source
-          src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
       <!-- Fallback background untuk iOS yang bermasalah -->
-      <div class="absolute inset-0 opacity-80 video-fallback">
+      <div class="absolute inset-0 video-fallback object-cover h-full w-full">
         <img
           alt="iFS360 logo"
-          class="w-full h-full opacity-20"
+          class="w-full h-full opacity-20 object-cover"
           src="assets/tes_back_wztgzm.gif"
         />
       </div>
@@ -60,11 +40,6 @@
         </div>
         <form class="space-y-2 w-full" style="position: relative; z-index: 15">
           <div>
-            <label
-              for="email"
-              class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-              >Email or Phone</label
-            >
             <input
               type="email"
               name="email"
@@ -83,13 +58,12 @@
             />
           </div>
           <div>
-            <label class="block text-sm mb-1 dark:text-white">Password</label>
             <div class="relative">
               <input
                 id="hs-toggle-password"
                 [type]="showPassword"
                 class="py-3.5 pl-4 pr-12 block w-full !border !border-gray-200 !rounded-lg text-sm clickable-element focus:border-blue-500 focus:ring-blue-500"
-                placeholder="Enter password"
+                placeholder="**************"
                 [value]="existUser.password"
                 (change)="onPasswordChange($event)"
                 style="
@@ -166,13 +140,6 @@
                   aria-describedby="remember"
                   type="checkbox"
                   class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 clickable-element"
-                  style="
-                    position: relative;
-                    z-index: 20;
-                    -webkit-appearance: none;
-                    appearance: none;
-                  "
-                  required=""
                 />
               </div>
               <div class="ml-1 text-xs">
@@ -196,7 +163,15 @@
               >Forgot password?</a
             >
           </div>
-          <button
+          <ion-button
+            fill="clear"
+            class="fslp-button"
+            [ngClass]="(existUser.login && existUser.password) ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-100 text-gray-400'"
+            (click)="loginResident()"
+          >
+            LOG IN
+          </ion-button>
+          <!-- <button
             type="submit"
             class="w-full font-medium !rounded-lg text-sm px-5 py-3.5 text-center !mt-6 clickable-element"
             [ngClass]="(existUser.login && existUser.password) ? 'bg-[var(--ion-color-primary)] text-white' : 'bg-gray-100 text-gray-300'"
@@ -210,7 +185,7 @@
             "
           >
             Log in
-          </button>
+          </button> -->
           <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-2">
             Don't have an account yet?
             <a

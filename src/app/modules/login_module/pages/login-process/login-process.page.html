@@ -2,31 +2,11 @@
   <div class="p-4 h-full w-full flex flex-col justify-center items-center">
     <!-- Video Background dengan iOS fixes -->
     <div class="absolute inset-0 overflow-hidden -z-10">
-      <video
-        autoplay
-        loop
-        muted
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        class="absolute top-0 right-0 w-full h-full object-cover opacity-20"
-        style="
-          pointer-events: none;
-          -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-        "
-      >
-        <source
-          src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1741830093/tes_back_wztgzm.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
       <!-- Fallback background untuk iOS yang bermasalah -->
-      <div class="absolute inset-0 opacity-80 video-fallback">
+      <div class="absolute inset-0 video-fallback object-cover h-full w-full">
         <img
           alt="iFS360 logo"
-          class="w-full h-full opacity-20"
+          class="w-full h-full opacity-20 object-cover"
           src="assets/tes_back_wztgzm.gif"
         />
       </div>
@@ -43,19 +23,24 @@
           iFS360 APP
         </p>
       </div>
-      <div class="w-full flex flex-col mt-16 space-y-3">
-        <button
-          class="w-full h-12 bg-[var(--ion-color-primary)] text-base rounded-lg font-bold text-white"
+      <div
+        class="w-full flex flex-col mt-16 items-center justify-center space-y-3"
+      >
+        <ion-button
+          fill="clear"
+          class="fslp-button bg-[var(--ion-color-primary)]"
           [routerLink]="['/login-end-user']"
         >
           End User
-        </button>
-        <button
-          class="w-full h-12 bg-[var(--ion-color-primary)] text-base rounded-lg font-bold text-white"
+        </ion-button>
+        <br />
+        <ion-button
+          fill="clear"
+          class="fslp-button bg-[var(--ion-color-primary)]"
           [routerLink]="['/login-vms']"
         >
           Visitor Management System
-        </button>
+        </ion-button>
       </div>
     </div>
   </div>
