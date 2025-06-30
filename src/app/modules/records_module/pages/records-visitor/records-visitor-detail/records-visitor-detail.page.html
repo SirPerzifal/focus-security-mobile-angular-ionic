@@ -30,6 +30,11 @@
             <td>{{ returnNone(record.contact_number) }}</td>
           </tr>
           <tr>
+            <td class="font-bold w-2/5">VISIT TYPE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ returnNone(record.visit_type) }}</td>
+          </tr>
+          <tr>
             <td class="font-bold w-2/5">ENTRY TYPE</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.entry_type) }}</td>
@@ -74,15 +79,15 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.requestor) }}</td>
           </tr>
-          <tr *ngIf="record.checkout_datetime">
+          <tr>
             <td class="font-bold w-2/5">EXIT DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[0] }}</td>
+            <td>{{ record.checkout_datetime ? functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[0] : '-' }}</td>
           </tr>         
-          <tr *ngIf="record.checkout_datetime">
+          <tr>
             <td class="font-bold w-2/5">EXIT TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[1] }}</td>
+            <td>{{ record.checkout_datetime ? functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[1] : '-' }}</td>
           </tr>
           <tr *ngIf="pageType == 'vehicle'">
             <td class="font-bold w-2/5">WARNING ISSUE</td>

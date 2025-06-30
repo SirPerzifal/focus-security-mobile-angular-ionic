@@ -211,9 +211,9 @@ export class DeliveriesPage implements OnInit {
           console.log(res);
           if (res.result.status_code == 200){
             if (openBarrier){
-              this.functionMain.presentToast('Successfully Insert Food Delivery Record and Opened the Barrier', 'success');
+              this.functionMain.presentToast('Successfully Saved Food Delivery Record and Opened the Barrier', 'success');
             } else {
-              this.functionMain.presentToast('Successfully Insert Food Delivery Record', 'success');
+              this.functionMain.presentToast('Successfully Saved Food Delivery Record', 'success');
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 205) {
@@ -231,7 +231,7 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
           } else {
-            this.functionMain.presentToast('Failed To Insert Food Delivery Record', 'danger');
+            this.functionMain.presentToast('Failed To Saved Food Delivery Record', 'danger');
           }
         },
         error => {
@@ -383,9 +383,9 @@ export class DeliveriesPage implements OnInit {
           if (res.result.status_code == 200){
             if (openBarrier){
               console.log("Barrier Opened")
-              this.functionMain.presentToast('Successfully Insert Package Delivery Record and Opened the Barrier', 'success');
+              this.functionMain.presentToast('Successfully Saved Package Delivery Record and Opened the Barrier', 'success');
             }else {
-              this.functionMain.presentToast('Successfully Insert Package Delivery Record', 'success');
+              this.functionMain.presentToast('Successfully Saved Package Delivery Record', 'success');
             }
             this.router.navigate(['home-vms'])
           } else if (res.result.status_code === 205) {
@@ -403,7 +403,7 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 206) {
             this.functionMain.banAlert(res.result.status_description, this.package_delivery_type === 'multiple' ? false : this.formData.unit, this.selectedHost)
           } else {
-            this.functionMain.presentToast('Failed To Insert Package Delivery Record', 'danger');
+            this.functionMain.presentToast('Failed To Saved Package Delivery Record', 'danger');
           }
         },
         error => {
@@ -897,9 +897,9 @@ export class DeliveriesPage implements OnInit {
       next: (res) => {
         if (res.result.status_code === 200) {
           if (openBarrier){
-            this.functionMain.presentToast('Successfully Insert New Delivery Data and Opened the Barrier!', 'success');
+            this.functionMain.presentToast('Successfully Saved New Delivery Data and Opened the Barrier!', 'success');
           } else {
-            this.functionMain.presentToast('Successfully Insert New Delivery Data!', 'success');
+            this.functionMain.presentToast('Successfully Saved New Delivery Data!', 'success');
           }
           this.router.navigate(['home-vms'])
         } else if (res.result.status_code === 205) {

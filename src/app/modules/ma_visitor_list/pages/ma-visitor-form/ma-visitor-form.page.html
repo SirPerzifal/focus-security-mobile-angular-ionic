@@ -112,12 +112,12 @@
           </div>
           <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in' && Camera.length > 0">
             <div class="w-full" *ngFor="let camera of Camera; let i = index">
-              <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"  (click)="onSubmitRecord(true)"
+              <app-visitor-button [text]="'SAVE CHANGES & OPEN BARRIER ' + camera.CamID"  (click)="onSubmitRecord(true)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (i == 0 ? 'mt-6' : 'mt-1' )"></app-visitor-button>
             </div>
           </div>
           <div class="w-full">
-            <app-visitor-button [text]="'SAVE RECORD' + (record.selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
+            <app-visitor-button [text]="'SAVE CHANGES' + (record.selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl mt-1'"></app-visitor-button>
           </div>
         </div>

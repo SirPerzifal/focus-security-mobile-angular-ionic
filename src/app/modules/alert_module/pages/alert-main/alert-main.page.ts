@@ -641,7 +641,7 @@ export class AlertMainPage implements OnInit {
       comp = {
         type: 'first_issue',
         vehicle_number: vehicle_number,
-        type_of_entry: entry_type,
+        // type_of_entry: entry_type,
         issue_time: issue_time,
       }
     } else {

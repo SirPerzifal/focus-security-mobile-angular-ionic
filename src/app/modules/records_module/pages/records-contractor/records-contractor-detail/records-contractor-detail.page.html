@@ -73,10 +73,15 @@
             <td class="w-[5%]">:</td>
             <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.visit_date) : '-' }}</td>
           </tr>
-          <tr *ngIf="record.out_datetime">
+          <tr>
             <td class="font-bold w-2/5">EXIT DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.convertNewDateTZ(record.out_datetime) }}</td>
+            <td>{{ record.out_datetime ? functionMain.convertNewDateTZ(record.out_datetime) : '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ENTRY PURPOSE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.purpose) }}</td>
           </tr>
           <tr *ngIf=project_config.is_industrial>
             <td class="font-bold w-2/5">PASS NUMBER</td>

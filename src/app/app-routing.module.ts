@@ -14,7 +14,8 @@ const routes: Routes = [
   },
   {
     path: 'home-vms',
-    loadChildren: () => import('./modules/home_module/pages/home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./modules/home_module/pages/home/home.module').then( m => m.HomePageModule),
+    canActivate:[authGuard]
   },
   {
     path: 'login-process',

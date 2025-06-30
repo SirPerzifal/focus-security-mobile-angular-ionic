@@ -38,6 +38,15 @@ export class ClientAppIssuesPage implements OnInit {
   ngOnInit() {
     console.log("tes");
     this.loadUserInfo()
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['close_id']){
+          console.log("enter here")
+          this.toggleShowClosed()
+        }
+      }
+    })
   }
 
   userData = {
@@ -84,12 +93,14 @@ export class ClientAppIssuesPage implements OnInit {
   }
   
   isMain = true
+  isClosed = false
   isNewReport = false
   textSecond = 'Reported Issues'
 
   toggleShowNew(){
     this.isMain = false
     this.isNewReport = true
+    this.isClosed = false
     this.textSecond = 'Report an Issues'
     this.resetForm()
     // setTimeout(() => {
@@ -100,7 +111,19 @@ export class ClientAppIssuesPage implements OnInit {
   toggleShowReport(){
     this.isNewReport = false
     this.isMain = true
+    this.isClosed = false
     this.textSecond = 'Reported Issues'
+    this.resetFilter()
+    // setTimeout(() => {
+    //   this.isMain = true
+    // }, 300)
+  }
+
+  toggleShowClosed(){
+    this.isNewReport = false
+    this.isMain = false
+    this.isClosed = true
+    this.textSecond = 'Closed Issues'
     this.resetFilter()
     // setTimeout(() => {
     //   this.isMain = true
@@ -213,7 +236,8 @@ export class ClientAppIssuesPage implements OnInit {
       page: this.currentPage, 
       limit: this.functionMain.limitHistory, 
       issue_date: this.startDateFilter, 
-      end_issue_date: this.endDateFilter
+      end_issue_date: this.endDateFilter,
+      is_active: this.isMain,
     }
     this.clientMainService.getApi(params, '/client/get/open_ticket_by_type_of_issue').subscribe({
       next: (results) => {

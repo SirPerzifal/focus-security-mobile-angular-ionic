@@ -30,12 +30,17 @@
           (click)="toggleShowReport()"></app-visitor-button>
       </div>
       <div class="w-full">
+        <app-visitor-button [text]="'Closed Issues'"
+          [extraClass]="'w-full leading-none cw-4:text-sm ' + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          (click)="toggleShowClosed()"></app-visitor-button>
+      </div>
+      <div class="w-full">
         <app-visitor-button [text]="'Report an Issues'"
           [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNewReport ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleShowNew()"></app-visitor-button>
       </div>
     </div>
-    <div class="flex flex-col w-full" *ngIf="isMain">
+    <div class="flex flex-col w-full" *ngIf="isMain || isClosed">
       <div class="flex flex-col justify-between mt-4">
         <div class="text-base font-bold flex flex-row justify-between">
           <u class="text-base font-bold">Issued Date</u>

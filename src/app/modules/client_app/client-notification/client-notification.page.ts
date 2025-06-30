@@ -26,7 +26,7 @@ export class ClientNotificationPage implements OnInit {
   async loadNotification(){
     this.isLoading = true
     this.functionMain.vmsPreferences().then((value: any) => {
-      this.clientMainService.getApi({page: this.currentPage, limit: this.functionMain.limitHistory}, '/client/get/notifications').subscribe({
+      this.clientMainService.getApi({page: this.currentPage, limit: this.functionMain.limitHistory, text: this.searchTerm}, '/client/get/notifications').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code == 200) {
@@ -63,6 +63,7 @@ export class ClientNotificationPage implements OnInit {
   total_pages = 0
   pagination: any = {}
 
+  searchTerm = ''
   pageForward(page: number) {
     this.currentPage = page
     this.inputPage = page

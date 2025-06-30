@@ -53,7 +53,7 @@
           <app-text-input #contractorNameInput [id]="'contractor_name'" [labelText]="'NAME'" [placeholder]="'EG. MIFTAH AKHBAR'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.contractor_name"></app-text-input>
         </div> 
         <div class="w-full">
-          <app-vms-contact-input #contractorContactNumberInput [id]="'contractor_contact_number'" [(value)]="formData.contact_number" [valueExist]="formData.contact_number" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input #contractorContactNumberInput [id]="'contractor_contact_number'" [(value)]="formData.contact_number" [valueExist]="formData.contact_number" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-row justify-between space-x-2" *ngIf="showDrive">
           <div class="w-[90%]">

@@ -13,14 +13,19 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const tokenData = await Preferences.get({ key: 'USER_CREDENTIAL' });
   const useStateData = await Preferences.get({ key: 'USESTATE_DATA' });
   const userInfoData = await Preferences.get({ key: 'USER_INFO'})
+
+  let currentUrl = (state.url).split('?')[0]
   
   if (!tokenData.value && !userInfoData.value) {
-    if(state.url=='/'){
+    if (currentUrl == '/'){
       return true;
-    }else if(state.url!='/login-end-user'){
+    } else if(currentUrl == '/home-vms'){
+      router.navigate(['/login-vms']);
+      return false;
+    } else if(currentUrl != '/login-end-user'){
       router.navigate(['/login-end-user']);
       return false;
-    }else{
+    } else{
       return true;
     }
   } 
@@ -29,9 +34,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
   
   // if (!tokenData.value) {
   //   await Preferences.remove({ key: 'USER_EMAIL' });
-  //   if(state.url=='/'){
+  //   if(currentUrl=='/'){
   //     return true;
-  //   }else if(state.url!='/login-end-user'){
+  //   }else if(currentUrl!='/login-end-user'){
   //     router.navigate(['/login-end-user']);
   //     return false;
   //   }else{
@@ -42,7 +47,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   console.log('555555555555555555authGuardauthGuardauthGuard555555555555555555authGuardauthGuardauthGuard');
   
 
-  if(state.url=='/' || state.url=='/login-end-user'){
+  if(currentUrl=='/' || currentUrl=='/login-end-user'){
     await functionMain.vmsPreferences().then((value) => {
       if (value.is_resident) {
         router.navigate(['/resident-home-page']);

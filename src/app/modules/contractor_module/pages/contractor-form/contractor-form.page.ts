@@ -300,7 +300,7 @@ export class ContractorFormPage implements OnInit {
           } else if (response.result.status_code === 407) {
             this.functionMain.presentToast(response.result.status_description, 'danger');
           } else if (response.result.status_code === 206) {
-            this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost)
+            this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost[0])
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }

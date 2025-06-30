@@ -20,7 +20,18 @@
       (click)="onBack()"></ion-icon>
   </div>
   <!-- CONTENT -->
-  <div class="flex justify-end items-end mx-4 mt-2">
+  <div class="flex flex-row justify-between items-center mx-4 mt-2">
+    <div class="w-full">
+      <input
+        type="text"
+        id="simple-search"
+        [(ngModel)]="searchTerm"
+        (change)="loadNotification()"
+        class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Search notification"
+        required
+      />
+    </div>
     <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
   </div>
   <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
