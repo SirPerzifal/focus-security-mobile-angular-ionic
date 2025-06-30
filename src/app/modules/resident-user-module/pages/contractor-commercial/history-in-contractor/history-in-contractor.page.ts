@@ -47,7 +47,8 @@ export class HistoryInContractorPage implements OnInit {
     banned: boolean;
     id: number;
     identification_number: string;
-    identification_type: string
+    identification_type: string;
+    sub_contractor_ids: []
   }> = [];
 
   filteredData: any[] = [];
@@ -154,6 +155,7 @@ export class HistoryInContractorPage implements OnInit {
             visitor_exit_time: item['exit_time'],
             point_of_entry: item['point_of_entry'],
             banned: item['is_banned'],
+            sub_contractor_ids: item['sub_contractor_ids']
           });
           
           this.isLoading = false;

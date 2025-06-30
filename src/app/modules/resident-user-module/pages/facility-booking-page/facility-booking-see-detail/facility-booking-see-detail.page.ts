@@ -4,6 +4,7 @@ import { MyVehicleDetailService } from 'src/app/service/resident/my-vehicle/my-v
 import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 interface BookingData {
   bookingId: number;
@@ -32,7 +33,7 @@ export class FacilityBookingSeeDetailPage implements OnInit {
 
   bookingId: number = 0;
 
-  constructor(private router: Router, private alertController: AlertController, private mainApi: MainApiResidentService) {
+  constructor(private router: Router, private alertController: AlertController, private mainApi: MainApiResidentService, private functionMain: FunctionMainService) {
     this.onChangeTypeOfUser = this.onChangeTypeOfUser.bind(this);
     this.onChangeUserType = this.onChangeUserType.bind(this);
     const navigation = this.router.getCurrentNavigation();
@@ -117,7 +118,7 @@ export class FacilityBookingSeeDetailPage implements OnInit {
       booking_id: this.bookingId,
     }, 'post/facility_send_email').subscribe((response: any) => {
       console.log(response);
-      
+      this.functionMain.presentToast("Receipt has been sent to your email.", "success")
     })
   }
 

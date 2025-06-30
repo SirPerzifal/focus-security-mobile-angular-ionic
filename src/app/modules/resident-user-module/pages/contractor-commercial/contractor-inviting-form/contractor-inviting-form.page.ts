@@ -569,9 +569,6 @@ export class ContractorInvitingFormPage implements OnInit {
       if (!invitee.host_ids || invitee.host_ids.length === 0) {
         errMsg += `Form ${index + 1}: Please choose host!\n`;
       }
-      if (!invitee.expected_number_of_visit || invitee.expected_number_of_visit < 0) {
-        errMsg += `Form ${index + 1}: Please fill expected number of visit!\n`;
-      }
     });
 
     // Validasi form sebelum submit

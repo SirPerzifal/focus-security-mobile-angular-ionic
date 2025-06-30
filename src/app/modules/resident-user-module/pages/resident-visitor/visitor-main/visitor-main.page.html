@@ -95,7 +95,7 @@
           (change)="onEntryfacilityChange($event)"
           [(ngModel)]="formData.facility"
         >
-          <option selected disabled hidden></option>
+          <option selected value="no_facility">No Facility Provided</option>
           <option *ngFor="let book of facility" [value]="book.id">
             {{ book.facilityName }}, {{ book.bookName }}, {{ day }}({{
             book.bookingTime }})

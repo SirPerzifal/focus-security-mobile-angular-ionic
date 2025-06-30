@@ -509,6 +509,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         fromBackend: false,
         other: true
       };
+    } else if (this.formData.facility === 'no_facility') {
+      this.facilitySelect = {
+        fromBackend: false,
+        other: false
+      };
     } else {
       this.facilitySelect = {
         fromBackend: true,
@@ -531,6 +536,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }
     if (this.formData.entryTitle == "") {
       errMsg += "Please fill entry title! \n";
+    }
+    if (this.facilitySelect.other) {
+      if (this.formData.facility_other == "") {
+        errMsg += "Please fill other facility! \n";
+      }
     }
     
     if (errMsg == '') {

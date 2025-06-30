@@ -119,6 +119,15 @@
                 </tr>
                 <tr
                   class="h-6"
+                  *ngIf="historyData.sub_contractor_ids.length > 0"
+                >
+                  <td class="w-[60%] font-bold">Number of Sub Contractor</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.sub_contractor_ids.length || '-' }}</td>
+                  <!-- Menampilkan '-' jika vehicle_number kosong -->
+                </tr>
+                <tr
+                  class="h-6"
                   *ngIf="historyData.purpose === 'Visiting' || historyData.purpose === 'Delivery'"
                 >
                   <td class="w-[60%] font-bold">Contact No</td>

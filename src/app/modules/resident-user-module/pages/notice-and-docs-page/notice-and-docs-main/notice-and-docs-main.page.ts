@@ -80,6 +80,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         this.navButtons[1].active = true;
         this.pageName = 'Docs';
         this.loadFile();
+        this.previousParentNames = [];
         this.showNotice = false;
         this.showDocs = true;
         event.target.complete();

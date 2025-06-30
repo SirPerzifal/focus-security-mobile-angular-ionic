@@ -47,7 +47,8 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     banned: boolean;
     id: number;
     identification_number: string;
-    identification_type: string
+    identification_type: string;
+    sub_contractor_ids: []
   };
 
   formData = {

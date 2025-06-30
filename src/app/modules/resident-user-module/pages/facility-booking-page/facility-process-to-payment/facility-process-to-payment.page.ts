@@ -190,7 +190,13 @@ export class FacilityProcessToPaymentPage implements OnInit {
   }
 
   proceedToEmail() {
-    // console.log("email sent");
+      // Logika untuk mengirim email
+    this.mainApiResidentService.endpointMainProcess({
+      booking_id: (this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromHistoryForm?.bookingId) ? (this.bookingState?.booking_id ? this.bookingState.booking_id : this.fromHistoryForm?.bookingId) :  this.fromPlaceBooking?.bookingId,
+    }, 'post/facility_send_email').subscribe((response: any) => {
+      console.log(response);
+      this.functionMainService.presentToast("Receipt has been sent to your email.", "success")
+    })
   }
 
   proceedToDirectActiveBooking() {

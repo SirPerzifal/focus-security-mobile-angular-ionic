@@ -503,7 +503,7 @@ export class VisitorInvitigFormPage implements OnInit {
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
           is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
-          facility: this.formData.facility === 'other' ? 0 : Number(this.formData.facility),
+          facility: this.formData.facility === 'other' || this.formData.facility === 'no_facility' ? 0 : Number(this.formData.facility),
           invitees: submitData,
           hired_car: this.formData.hiredCar,
           facility_other: this.formData.facility_other,
