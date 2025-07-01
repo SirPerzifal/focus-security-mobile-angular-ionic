@@ -110,7 +110,7 @@
         </nav>
       </div>
       <div *ngIf="!isLoading" class="space-y-2">
-        <div *ngIf="allData.length > 0; else noResportIssue">
+        <div *ngIf="allData.length > 0; else noResportIssue" class="space-y-2">
           <div
             *ngFor="let report of allData"
             [ngClass]="{

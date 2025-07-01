@@ -300,12 +300,12 @@ export class ContractorInvitingFormPage implements OnInit {
         if (newPhoneNumber.startsWith('0')) {
           processedNumber = newPhoneNumber.slice(1);
           selectedCountryCode = '65';
-        } else if (newPhoneNumber.startsWith('6')) {
+        } else if (newPhoneNumber.startsWith('65') || newPhoneNumber.startsWith('62')) {
           processedNumber = newPhoneNumber.slice(2);
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
-        } else if (newPhoneNumber.startsWith('9')) {
+        } else if (newPhoneNumber.startsWith('91')) {
           processedNumber = newPhoneNumber.slice(2);
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
@@ -440,12 +440,12 @@ export class ContractorInvitingFormPage implements OnInit {
       processedNumber = phoneValue.slice(1);
       selectedCountryCode = '65';
       console.log(processedNumber, "dari 0");
-    } else if (phoneValue.startsWith('6')) {
+    } else if (phoneValue.startsWith('65') || phoneValue.startsWith('62')) {
       processedNumber = phoneValue.slice(2);
       const countryCodeFromInput = phoneValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromInput);
       selectedCountryCode = isValidCountryCode ? countryCodeFromInput : '65';
-    } else if (phoneValue.startsWith('9')) {
+    } else if (phoneValue.startsWith('91')) {
       processedNumber = phoneValue.slice(2);
       const countryCodeFromContact = phoneValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);

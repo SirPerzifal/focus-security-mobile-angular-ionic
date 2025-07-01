@@ -14,6 +14,20 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../resident/authenticate/authenticate.service';
 import { StorageService } from '../storage/storage.service';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { BehaviorSubject } from 'rxjs';
+import { registerPlugin } from '@capacitor/core';
+interface RingtonePlugin {
+  play(): Promise<void>;
+  stop(): Promise<void>;
+}
+
+const Ringtone = registerPlugin<RingtonePlugin>('Ringtone', {
+  android: {
+    pkg: 'com.sgeede.focus.security.plugin',
+    class: 'RingtonePlugin'
+  }
+});
+
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +79,7 @@ export class WebRtcService extends ApiService{
   private pendingCandidates: RTCIceCandidate[] = [];
   private callerpendingCandidates: RTCIceCandidate[] = [];
   private remoteDescriptionSet = false;
+  audioStatus = new BehaviorSubject<string>('');
 
 
   constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController, 
@@ -275,6 +290,30 @@ export class WebRtcService extends ApiService{
     }
   }
 
+  async playRingtone() {
+    if (Capacitor.getPlatform() === 'android') {
+      try {
+        await Ringtone.play();
+      } catch (err) {
+        console.error('Ringtone error:', err);
+      }
+    } else {
+      console.log('Ringtone not supported on this platform.');
+    }
+  }
+
+  async stopRingtone() {
+    if (Capacitor.getPlatform() === 'android') {
+      try {
+        await Ringtone.stop();
+      } catch (err) {
+        console.error('Ringtone error:', err);
+      }
+    } else {
+      console.log('Ringtone not supported on this platform.');
+    }
+  }
+
   async startLocalStream(): Promise<boolean> {
     try {
       // 1. Cek apakah MediaDevices API tersedia
@@ -400,6 +439,20 @@ export class WebRtcService extends ApiService{
       remoteVideo.srcObject = this.remoteStream;
     };
 
+    this.peerConnection.oniceconnectionstatechange = () => {
+      const state = this.peerConnection.iceConnectionState;
+
+      switch (state) {
+        case "checking":
+          this.updateAudioStatus("Connecting audio...");
+          break;
+        case "connected":
+        case "completed":
+          this.updateAudioStatus("Audio connected");
+          break;
+      }
+    };
+
     const offer = await this.peerConnection.createOffer();
     await this.peerConnection.setLocalDescription(offer);
 
@@ -442,6 +495,19 @@ export class WebRtcService extends ApiService{
           remoteVideo.srcObject = this.remoteStream;
         }
       };
+      this.peerConnection.oniceconnectionstatechange = () => {
+        const state = this.peerConnection.iceConnectionState;
+
+        switch (state) {
+          case "checking":
+            this.updateAudioStatus("Connecting audio...");
+            break;
+          case "connected":
+          case "completed":
+            this.updateAudioStatus("Audio connected");
+            break;
+        }
+      };
     } else {
     }
     this.callerName = offer.callerName;
@@ -455,7 +521,11 @@ export class WebRtcService extends ApiService{
   }
 
 
+
+
   async handleAnswer(answer: any) {
+    await this.stopRingtone();
+    
     this.callerName = answer.callerName;
     this.receiverName = answer.receiverName;
     this.receiverSocketId = answer.receiverSocketId;
@@ -472,6 +542,20 @@ export class WebRtcService extends ApiService{
       if (!this.remoteStream) {
         const remoteVideo: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
         remoteVideo.srcObject = this.remoteStream;
+      }
+    };
+
+    this.peerConnection.oniceconnectionstatechange = () => {
+      const state = this.peerConnection.iceConnectionState;
+
+      switch (state) {
+        case "checking":
+          this.updateAudioStatus("Connecting audio...");
+          break;
+        case "connected":
+        case "completed":
+          this.updateAudioStatus("Audio connected");
+          break;
       }
     };
   }
@@ -605,6 +689,19 @@ export class WebRtcService extends ApiService{
             remoteVideo.srcObject = this.remoteStream;
           }
         };
+        this.peerConnection.oniceconnectionstatechange = () => {
+          const state = this.peerConnection.iceConnectionState;
+
+          switch (state) {
+            case "checking":
+              this.updateAudioStatus("Connecting audio...");
+              break;
+            case "connected":
+            case "completed":
+              this.updateAudioStatus("Audio connected");
+              break;
+          }
+        };
       } else {
       }
     
@@ -655,6 +752,19 @@ export class WebRtcService extends ApiService{
             remoteVideo.srcObject = this.remoteStream;
           }
         };
+        this.peerConnection.oniceconnectionstatechange = () => {
+          const state = this.peerConnection.iceConnectionState;
+
+          switch (state) {
+            case "checking":
+              this.updateAudioStatus("Connecting audio...");
+              break;
+            case "connected":
+            case "completed":
+              this.updateAudioStatus("Audio connected");
+              break;
+          }
+        };
       }
 
       await this.showIncomingCallModal(this.nativeOffer);
@@ -663,6 +773,7 @@ export class WebRtcService extends ApiService{
   
   
   async acceptCall(offer: any) {
+    await this.stopRingtone();
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     this.remoteDescriptionSet = true;
     for (const candidate of this.pendingCandidates) {
@@ -737,11 +848,13 @@ export class WebRtcService extends ApiService{
   }
 
   async handleRejectCall() {
+    await this.stopRingtone();
     await this.closeModal();
     this.resetCallData();
   }
 
   async rejectCall() {
+    await this.stopRingtone();
     this.socket.emit('reject-call', {
       callerSocketId: this.callerSocketId,
       receiverSocketId: this.receiverSocketId,
@@ -801,6 +914,10 @@ export class WebRtcService extends ApiService{
   }
 
   async showOutgoingCallModal() {
+    if (this.activeModal) {
+      await this.activeModal.dismiss();
+      this.activeModal = null;
+    }
     this.activeModal = await this.modalController.create({
       component: OutgoingCallPage,
       componentProps: { receiverName: this.receiverName },
@@ -810,6 +927,11 @@ export class WebRtcService extends ApiService{
   }
   
   async showIncomingCallModal(offer: any) {
+    if (this.activeModal) {
+      await this.activeModal.dismiss();
+      this.activeModal = null;
+    }
+    await this.playRingtone();
     this.activeModal = await this.modalController.create({
       component: IncomingCallPage,
       componentProps: { offer: offer, callerName: this.callerName },
@@ -850,6 +972,10 @@ export class WebRtcService extends ApiService{
   }
   getReceiverProfilePic(){
     return `${this.baseUrl}/web/image/fs.residential.family/${this.receiverId}/image_profile`;
+  }
+
+  updateAudioStatus(status: string) {
+    this.audioStatus.next(status);
   }
   
 }

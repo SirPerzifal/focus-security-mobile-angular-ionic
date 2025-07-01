@@ -272,7 +272,7 @@ export class PollingMainPage implements OnInit {
           this.voteNow = false; // Hide graph after animation
           this.closeVote = false; // Reset closing animation
         }, 500); // Match the duration of the animation
-        this.functionMain.presentToast('Your vote successfully save', 'success')
+        this.functionMain.presentToast('Your vote has been successfully saved', 'success')
       }
     }, (error) => {
       console.error(error);

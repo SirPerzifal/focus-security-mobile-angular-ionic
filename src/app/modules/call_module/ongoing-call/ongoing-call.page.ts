@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { Platform } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-ongoing-call',
@@ -16,12 +17,14 @@ export class OngoingCallPage implements OnInit {
   timer: number = 0;
   intervalId: any;
   userName: string = '';
-
+  audioStatus!: Observable<string>;
+  
   constructor(private webrtc: WebRtcService, private platform: Platform) {
-
+    
   }
-
+  
   ngOnInit() {
+      this.audioStatus = this.webrtc.audioStatus.asObservable();
     const navigation = history.state;
     if (navigation && navigation.isReceiver) {
       this.isReceiver = navigation.isReceiver;

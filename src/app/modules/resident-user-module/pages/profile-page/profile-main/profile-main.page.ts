@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IonContent } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
@@ -57,6 +58,7 @@ interface pet {
   ]
 })
 export class ProfileMainPage implements OnInit, OnDestroy {
+  @ViewChild(IonContent) content!: IonContent;
 
   pageName: string = '';
   showMain: boolean = true;
@@ -732,6 +734,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   onClickSquareBottom(event: any) {
     if (event[1] === 'Ban') {
+      this.content.scrollToTop(300); // 300 adalah durasi animasi dalam milidetik
       this.pageName = 'Ban';
       this.showMain = false;
       this.showEstate = false;
@@ -760,12 +763,14 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         }
       });
     } else if (event[1] === 'Estate') {
+      this.content.scrollToTop(300); // 300 adalah durasi animasi dalam milidetik
       this.pageName = 'Choose Estate';
       this.showMain = false;
       this.showPets = false;
       this.showBanVisitorContractor = false;
       this.showEstate = true;
     } else if (event[1] === 'Pets') {
+      this.content.scrollToTop(300); // 300 adalah durasi animasi dalam milidetik
       this.pageName = 'My Pets';
       this.showMain = false;
       this.showEstate = false;
