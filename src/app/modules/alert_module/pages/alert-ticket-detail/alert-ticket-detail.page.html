@@ -36,13 +36,10 @@
             </div>
 
             <hr class="" style="height: 20px; border-top: 5px solid white;">
-            <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'" *ngIf="showFile"
-              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black h-20'" [isCamera]="true"
-              [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"
+            <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'" [Selected]="fileResetValue"
+              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black h-20 uppercase'" [isCamera]="true" [isFileAndCamera]="true"
+              [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [labelClass]="'text-white'" [isMany]="true"
               [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)"></app-file-input>
-              <app-file-input class="w-full h-25" [labelText]="'ATTACHMENT'" [buttonText]="'UPLOAD'" *ngIf="!showFile"
-              [isCustomName]="true" [extraButtonClass]="'bg-white rounded-md text-black h-20'" [disableUpload]="true"
-              [customPlaceholder]="'PNG, JPG, OR JPEG FILES'" [fileName]="image_name" [labelClass]="'text-white'"></app-file-input>
             <div class="w-full mt-4">
               <app-text-input [id]="'reply_message'" [(ngModel)]="reply_message" [labelText]="'REPLY MESSAGE'"
                 [placeholder]="'EG. NEW STATUS IS . . .'" [customClasses]="{'w-full':true}" [type]="'text'"
@@ -87,12 +84,12 @@
                     <span class="text-xl text-black" [innerHtml]="message.body">
                       <!-- {{ functionMain.returnNone(message.body) }} -->
                     </span>
-                    <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
-                      <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
+                    <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas && message.attachment_datas.length > 0">
+                      <!-- <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
                         <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas" [bgColor]="'bg-white'"></app-image-zoom>
-                        <!-- <img [src]="functionMain.getImage(attachment.datas)" *ngIf="attachment.mimetype.startsWith('image/')"> -->
-                        <!-- <span>{{ attachment.name}}</span> -->
-                      </div>
+                      </div> -->
+                      <app-image-zoom [imageArray]="message.attachment_datas"
+                        [bgColor]="'bg-white'" [imageClass]="'h-20 object-contain'"></app-image-zoom>
                     </div>
                   </div>
                 </div>

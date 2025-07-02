@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
   selector: 'app-m2m-selection',
@@ -59,14 +60,17 @@ export class M2mSelectionComponent implements OnInit {
 
   faPhone = faPhone
 
-  constructor(private webRtcService: WebRtcService) { }
+  constructor(
+    private webRtcService: WebRtcService,
+    private functionMain: FunctionMainService
+  ) { }
 
   ngOnInit() {
     this.showUnit = this.Arrays
   }
 
   showUnit: any = []
-  unitNames: any[] = [];
+  unitNames: any = [];
   unitArrayProcess: any = []
   setDropdownChooseUnit = false;
   unit_key = ''
@@ -168,10 +172,14 @@ export class M2mSelectionComponent implements OnInit {
   selectAll = false
 
   onClickCall() {
-    console.log(this.unitNames)
-    if (this.unitNames){
-      console.log("CALL")
-      this.webRtcService.createOffer(false, this.unitNames[0].id, false, false);
+    if (!this.unitNames || this.unitNames.length == 0) {
+      this.functionMain.presentToast("At least select one data from the selection!", 'warning')
+    } else {
+      if (this.unitNames[0].id == 'security') {
+        this.functionMain.presentToast("This data can't be called!", 'warning')
+      } else {
+        this.webRtcService.createOffer(false, this.unitNames[0].id, false, false);
+      }
     }
   }
 

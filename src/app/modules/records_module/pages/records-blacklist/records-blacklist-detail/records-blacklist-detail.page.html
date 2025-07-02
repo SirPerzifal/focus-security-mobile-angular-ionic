@@ -45,15 +45,15 @@
             <td class="w-[5%]">:</td>
             <td>{{ record.block_id[1] ? record.block_id[1] : '-' }} | {{ record.unit_id[1] ? record.unit_id[1] : '-' }}</td>
           </tr>
-          <tr *ngIf="project_config.is_industrial">
+          <!-- <tr *ngIf="project_config.is_industrial">
             <td class="font-bold w-[45%]">HOST</td>
             <td class="w-[5%]">:</td>
             <td>{{ record.host_name.length > 0 ? functionMain.getHostName(record.host_name) : '-' }} </td>
-          </tr>
+          </tr> -->
           <tr>
-            <td class="font-bold w-[45%]">BANNED BY</td>
+            <td class="font-bold w-[45%]">BAN REQUESTOR</td>
             <td class="w-[5%]">:</td>
-            <td>{{ functionMain.returnNone(record.ban_by) }}</td>
+            <td>{{ functionMain.returnNone(record.ban_by ? record.ban_by : record.ban_requestor_name) }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[45%]">REASON OF BAN</td>
@@ -64,15 +64,15 @@
         <div class="w-full flex flex-col items-center" *ngIf="record.ban_image">
           <img [src]="ban_image" class="w-4/5">
         </div>
-        <div class="flex flex-row justify-around w-full">
-          <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callMA()">CALL MANAGEMENT</button>
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="onLiftBan()">LIFT BAN</button>
+        <div class="flex w-full justify-around gap-4 flex-wrap">
+          <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" (click)="callMA()">CALL MANAGEMENT</button>
+          <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" (click)="onLiftBan()">LIFT BAN</button>
+          <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" (click)="callResident()" *ngIf="record.ban_requestor_id && record.ban_requestor_id.length > 0">CALL REQUESTOR</button>
+          <button class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14" (click)="functionMain.callPolice()">CALL POLICE</button>
+          <!-- <div class="flex flex-col w-1/2 items-center">
           </div>
           <div class="flex flex-col w-1/2 items-center">
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident()" *ngIf="record.industrial_host_ids.length > 0 || record.unit_id">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
-            <button class="w-4/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="functionMain.callPolice()">CALL POLICE</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

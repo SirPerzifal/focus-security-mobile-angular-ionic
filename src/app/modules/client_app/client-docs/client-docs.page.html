@@ -94,14 +94,14 @@
           <div class="w-full flex flex-row justify-between mb-2 items-start">
             <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientUploadDocument accept="application/pdf"
               class="hidden" />
-            <div class="w-4/6">
-              <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+            <div class="w-full">
+              <input placeholder="" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
                 class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer" readonly/>
             </div>
-            <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
+            <!-- <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
               class="bg-[var(--ion-color-primary)] text-white w-[30%] h-12 text-base rounded font-bold">
               Upload
-            </button>
+            </button> -->
           </div>
         </div>
         <app-visitor-button [text]="'Add Document'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-gray-800 p-2 w-40 rounded border border-black font-bold h-12'" (click)="uploadDocument()"></app-visitor-button>

@@ -484,24 +484,28 @@ export class FunctionMainService {
 
   async banAlert(message: string, unit_id: any = false, host_id: any = false,) {
     console.log(unit_id, host_id)
+    let buttonArray: any = []
+    if (message[1]) {
+      buttonArray.push({
+        text: 'Call',
+        role: 'confirm',
+        handler: () => {
+          console.log(message[1])
+          this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false);
+        },
+      })
+    }
+    buttonArray.push({
+      text: 'Close',
+      role: 'cancel',
+      handler: () => {
+      },
+    },)
+
     const alertButtons = await this.alertController.create({
       cssClass: 'checkout-alert',
-      header: `${message} Please kindly contact ${unit_id ? 'the unit' : (host_id ? 'the host' : 'the security')}.`,
-      buttons: [
-        {
-          text: 'Call',
-          role: 'confirm',
-          handler: () => {
-            this.webRtcService.createOffer(false, host_id ? host_id : false, unit_id ? unit_id : false, false);
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-          },
-        },
-      ]
+      header: `${message[0]} ${message[1] ? 'Please kindly contact the ban requestor.' : ''}`,
+      buttons: buttonArray
     }
     )
     await alertButtons.present();

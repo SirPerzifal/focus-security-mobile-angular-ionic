@@ -66,9 +66,9 @@
           <app-m2m-selection [Arrays]="UnitNew" (outputValue)="onUnitChangeNew($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit" ></app-m2m-selection>
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <!-- <div class="w-full" *ngIf="project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
-        </div>
+        </div> -->
         <div class="w-full">
           <app-file-input class="w-full h-25" [labelText]="'BAN IMAGE'" [buttonText]="'UPLOAD'" [isCamera]="true"
           [extraButtonClass]="'rounded-md text-white h-20'" [customPlaceholder]="'EG. VIOLATION.png'"

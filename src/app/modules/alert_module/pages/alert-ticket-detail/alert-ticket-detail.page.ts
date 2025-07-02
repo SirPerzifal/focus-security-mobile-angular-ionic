@@ -102,7 +102,7 @@ export class AlertTicketDetailPage implements OnInit {
     if (is_close){
       apiUrl = '/vms/post/reply_ticket_and_close'
     }
-    this.clientMainService.getApi({ticket_id: this.params.ticket_id, body: this.reply_message, ir_attachment_datas: this.image_file, ir_attachment_name: this.image_name, user_id: this.user_id}, apiUrl).subscribe({
+    this.clientMainService.getApi({ticket_id: this.params.ticket_id, body: this.reply_message, ir_attachments: this.ir_attachments, user_id: this.user_id}, apiUrl).subscribe({
       next: (results) => {
         console.log('tickets', results)
         this.showFile = false
@@ -111,8 +111,8 @@ export class AlertTicketDetailPage implements OnInit {
             this.router.navigate(['/alert-main'], {queryParams: { ticket: true }})
           } else {
             this.reply_message = ''
-            this.image_file = ''
-            this.image_name = ''
+            this.ir_attachments = []
+            this.fileResetValue = []
             this.loadTicketsDetail()
           }
           
@@ -128,30 +128,21 @@ export class AlertTicketDetailPage implements OnInit {
     });
   }
 
-  image_file = ''
-  image_name = ''
-  image_mimetype = ''
+  // image_file = ''
+  // image_name = ''
+  // image_mimetype = ''
+  ir_attachments: any = []
+  fileResetValue = []
   onUploadImage(file: any): void {
     if (file){
-      let data = file;
-      this.image_file = file.image
-      this.image_name = file.name
-      this.image_mimetype = file.type
-      console.log(data)
+      // let data = file;
+      // this.image_file = file.image
+      // this.image_name = file.name
+      // this.image_mimetype = file.type
+      // console.log(data)
+      this.ir_attachments = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      console.log(this.ir_attachments)
     }
-    //   if (['image/png', 'application/pdf', 'application/msword', 'image/jpeg', 'image/jpg'].includes(data.type)) {
-    //     this.image_name = data.name
-    //     console.log(this.image_name)
-    //     this.convertToBase64(data).then((base64: string) => {
-    //       this.image_file = base64.split(',')[1]
-    //     }).catch(error => {
-    //       console.error('Error converting to base64', error);
-    //     });
-    //   } else {
-    //     this.image_name = ''
-    //     this.functionMain.presentToast("Can only receive pdf, doc, png, jpg, and jpg files!", 'danger')
-    //   }
-    // } 
   }
 
   convertToBase64(file: File): Promise<string> {

@@ -72,36 +72,34 @@ export class ClientTicketDetailPage implements OnInit {
   fileName = ''
 
   selectedFile: File | null = null;
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      if (['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
-        this.selectedFile = file;
-        this.fileName = file.name
-        this.replyForm.ir_attachment_name = file.name;
-        console.log(file.name)
+  // onFileSelected(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+  //       this.selectedFile = file;
+  //       this.fileName = file.name
+  //       this.replyForm.ir_attachment_name = file.name;
+  //       console.log(file.name)
   
-        // Konversi file ke base64
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          // Hapus prefix data URL jika ada
-          const base64 = e.target.result.split(',')[1] || e.target.result;
-          this.replyForm.ir_attachment_datas = base64;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        this.fileName = ''
-        this.functionMain.presentToast("Can only receive png, jpg, and jpg files!", 'danger')
-      }     
-    }
-  }
+  //       // Konversi file ke base64
+  //       const reader = new FileReader();
+  //       reader.onload = (e: any) => {
+  //         // Hapus prefix data URL jika ada
+  //         const base64 = e.target.result.split(',')[1] || e.target.result;
+  //         this.replyForm.ir_attachment_datas = base64;
+  //       };
+  //       reader.readAsDataURL(file);
+  //     } else {
+  //       this.fileName = ''
+  //       this.functionMain.presentToast("Can only receive png, jpg, and jpg files!", 'danger')
+  //     }     
+  //   }
+  // }
 
   replyForm = {
     user_id: '',
     ticket_id: 0,
-    ir_attachment_datas: '',
-    ir_attachment_name: '',
-    ir_attachment_mimetype: '',
+    ir_attachments: [],
     body: ''
   }
 
@@ -156,6 +154,7 @@ export class ClientTicketDetailPage implements OnInit {
   }
 
   showFile = true
+  fileResetValue = []
   submitReply(is_close: boolean = false) {
     if (!this.replyForm.body) {
       this.functionMain.presentToast('Reply content is required!', 'danger')
@@ -175,7 +174,8 @@ export class ClientTicketDetailPage implements OnInit {
             this.onBack(true)
           } else {
             this.replyForm.body = ''
-            this.replyForm.ir_attachment_datas = ''
+            this.replyForm.ir_attachments = []
+            this.fileResetValue = []
             this.fileName = ''
             this.loadDetail()
           }
@@ -193,18 +193,25 @@ export class ClientTicketDetailPage implements OnInit {
     });
   }
 
-  onUploadImage(file: any): void {
-    if (file){
-      let data = file;
-      this.replyForm.ir_attachment_datas = file.image
-      this.replyForm.ir_attachment_name = file.name
-      this.replyForm.ir_attachment_mimetype = file.type
-      console.log(data)
-    }
-  }
+  // onUploadImage(file: any): void {
+  //   if (file){
+  //     let data = file;
+  //     this.replyForm.ir_attachment_datas = file.image
+  //     this.replyForm.ir_attachment_name = file.name
+  //     this.replyForm.ir_attachment_mimetype = file.type
+  //     console.log(data)
+  //   }
+  // }
 
   handleRefresh(event: any) {
     this.loadDetail(false).then(() => event.target.complete())
+  }
+
+  onUploadImage(file: any): void {
+    if (file){
+      this.replyForm.ir_attachments = file.map((data: any) => {return {ir_attachment_name: data.name, ir_attachment_datas: data.image, ir_attachment_mimetype: data.type }});
+      console.log(this.replyForm)
+    }
   }
   
   

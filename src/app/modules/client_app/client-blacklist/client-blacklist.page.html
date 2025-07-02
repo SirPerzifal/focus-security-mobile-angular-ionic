@@ -155,11 +155,11 @@
             [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Unit'"
             [isOne]="true"></app-m2m-selection>
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <!-- <div class="w-full" *ngIf="project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="'Select Hosts'"
             [divOuterClass]="'border-[#6B7280] min-h-14 text-base'" [labelText]="'Host'"
             [isOne]="true"></app-m2m-selection>
-        </div>
+        </div> -->
         <!-- <div class="w-full">
           <app-file-input class="w-full h-25" [labelText]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'"
             [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" [isCamera]="true"
@@ -173,15 +173,15 @@
           <div class="w-full flex flex-row justify-between items-end">
             <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientBlacklistUploadImage
               class="hidden" accept="image/jpg, image/jpeg, image/png, image/gif, image/webp" />
-            <div class="w-4/6">
-              <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+            <div class="w-full">
+              <input placeholder="" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
                 class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
                 readonly />
             </div>
-            <button id="client_blacklist_new_upload_attachment" (click)="uploadFile()"
+            <!-- <button id="client_blacklist_new_upload_attachment" (click)="uploadFile()"
               class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold">
               Upload
-            </button>
+            </button> -->
           </div>
         </div>
         <div class="w-full flex flex-col">
@@ -193,8 +193,8 @@
         <div class="w-full">
           <app-text-input #submitNameInput [id]="'submit_name'" [labelResidentText]="'Submitted By'"
             [placeholder]="'Eric'" [customClasses]="{'w-full':true}" [type]="'text'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}"
-            [(ngModel)]="formData.banned_by" [labelResidentClass]="'text-base font-bold'"></app-text-input>
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-14':true, 'text-base':true}" [isReadonly]="true"
+            [(ngModel)]="formData.submitted_by" [labelResidentClass]="'text-base font-bold'"></app-text-input>
         </div>
 
         <div class="w-full flex flex-col">
@@ -254,16 +254,16 @@
                 ?
                 blacklistDetail.unit_id[1] : '-' }}</td>
             </tr>
-            <tr *ngIf="project_config.is_industrial">
+            <!-- <tr *ngIf="project_config.is_industrial">
               <td class="font-bold w-[45%]">Host</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.host_name.length > 0 ? functionMain.getHostName(blacklistDetail.host_name) : '-' }}
               </td>
-            </tr>
+            </tr> -->
             <tr>
-              <td class="font-bold w-[45%]">Banned By</td>
+              <td class="font-bold w-[45%]">Ban Requestor</td>
               <td class="w-[5%]">:</td>
-              <td>{{ functionMain.returnNone(blacklistDetail.ban_by) }}</td>
+              <td>{{ functionMain.returnNone(blacklistDetail.ban_by ? blacklistDetail.ban_by : blacklistDetail.ban_requestor_name) }}</td>
             </tr>
             <tr>
               <td class="font-bold w-[45%]">Reason Of Ban</td>

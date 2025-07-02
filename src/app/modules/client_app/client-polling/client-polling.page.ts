@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -12,7 +13,7 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 })
 export class ClientPollingPage implements OnInit {
 
-  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private getUserInfoService: GetUserInfoService) { }
+  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private getUserInfoService: GetUserInfoService, private alertController: AlertController) { }
 
   ngOnInit() {
     this.getUserInfoService.getPreferenceStorage(
@@ -314,6 +315,51 @@ export class ClientPollingPage implements OnInit {
     this.currentPage = page
     this.inputPage = page
     this.loadPolling()
+  }
+  
+  public async onCancel(visitor: any) {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: `Are you sure you want to cancel ${visitor.name}?`,
+      message: '', 
+      buttons: [
+        {
+          text: 'Confirm',
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.closePolling(visitor)
+          }
+        },
+        {
+          text: 'Cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan
+          }
+        },
+      ]
+    });
+    await alertButtons.present();
+  }
+
+  async closePolling(visitor: any){
+    this.clientMainService.getApi({polling_id: visitor.id}, '/client/post/cancel_polling').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.loadPolling()
+          this.functionMain.presentToast(`Successfully closed the polling!`, 'success');
+        } else {
+          this.functionMain.presentToast(`An error occurred while closing the polling!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.isLoading = false
+        this.functionMain.presentToast('An error occurred while closing the polling!', 'danger');
+        console.error(error);
+      }
+    });
   }
 
 }

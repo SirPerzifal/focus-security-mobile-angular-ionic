@@ -43,6 +43,7 @@ export class ClientBlacklistPage implements OnInit {
     this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id;
+      this.formData.submitted_by = value.name
       this.project_config = value.config
       if (this.project_config.is_industrial) {
         this.loadHost()
@@ -344,15 +345,15 @@ export class ClientBlacklistPage implements OnInit {
     if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if (!this.formData.host && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
-    }
+    // if (!this.formData.host && this.project_config.is_industrial) {
+    //   errMsg += 'Host must be selected! \n'
+    // }
     // if (!this.formData.ban_image) {
     //   errMsg += 'Ban image is required! \n'
     // }
-    if (!this.formData.banned_by) {
-      errMsg += 'Issue officer is required! \n'
-    }
+    // if (!this.formData.banned_by) {
+    //   errMsg += 'Issue officer is required! \n'
+    // }
     if (errMsg != ''){
       this.functionMain.presentToast(errMsg, 'danger')
     } else {
@@ -360,7 +361,7 @@ export class ClientBlacklistPage implements OnInit {
       let tempDate = new Date().toISOString().split('T')
       this.formData.last_entry_date_time = tempDate[0] + ' ' + tempDate[1].split('.')[0]
       console.log(this.formData)
-      this.clientMainService.getApi(this.formData, '/resident/post/ban_visitor').subscribe({
+      this.clientMainService.getApi({...this.formData, is_check_contact: true}, '/resident/post/ban_visitor').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_status === 200) {
@@ -372,6 +373,8 @@ export class ClientBlacklistPage implements OnInit {
               this.toggleSlide('visitor')
             }
             this.clearForm()
+          } else if (results.result.response_status === 405) {
+            this.functionMain.presentToast(results.result.response_description, 'warning');
           } else {
             this.functionMain.presentToast('An error occurred while submitting blacklist data!', 'danger');
           }
@@ -406,7 +409,7 @@ export class ClientBlacklistPage implements OnInit {
       visitor_name: '',
       last_entry_date_time: '',
       ban_image: '',
-      banned_by: '',
+      submitted_by: this.formData.submitted_by,
     }
     this.fileName = ''
   }
@@ -421,7 +424,7 @@ export class ClientBlacklistPage implements OnInit {
     visitor_name: '',
     last_entry_date_time: '',
     ban_image: '',
-    banned_by: '',
+    submitted_by: '',
   };
 
   record: any

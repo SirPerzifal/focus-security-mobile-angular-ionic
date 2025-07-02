@@ -104,10 +104,16 @@
                   </tr> -->
                 </table>
               </div>
-              <button class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded"
-                (click)="viewDetail(vd)">
-                View Details
-              </button>
+              <div class="flex mt-4 flex-wrap">
+                <button class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded mr-2"
+                  (click)="viewDetail(vd)">
+                  View Details
+                </button>
+                <button class="bg-[#E3787E] text-black w-40 mt-3 font-bold px-4 py-2 rounded" *ngIf="isActive"
+                  (click)="closePolling(vd)">
+                  Close Polling
+                </button>
+              </div>
             </div>
           </div>
         </div>

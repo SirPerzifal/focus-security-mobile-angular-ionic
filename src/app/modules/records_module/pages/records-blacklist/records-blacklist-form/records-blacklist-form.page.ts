@@ -224,9 +224,9 @@ export class RecordsBlacklistFormPage implements OnInit {
     if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
-    }
+    // if ((!this.selectedHost) && this.project_config.is_industrial) {
+    //   errMsg += 'Host must be selected! \n'
+    // }
     // if (!this.formData.ban_image) {
     //   errMsg += 'Ban image is required! \n'
     // }
@@ -239,7 +239,7 @@ export class RecordsBlacklistFormPage implements OnInit {
       console.log("SAVE")
       let tempDate = new Date().toISOString().split('T')
       this.formData.last_entry_date_time = this.formData.last_entry_date_time ? this.formData.last_entry_date_time : tempDate[0] + ' ' + tempDate[1].split('.')[0]
-      let params = {...this.formData, host: this.selectedHost}
+      let params = {...this.formData, is_check_contact: true}
       console.log(params)
       this.clientMainService.getApi(params, '/resident/post/ban_visitor').subscribe({
         next: (results) => {
@@ -247,6 +247,8 @@ export class RecordsBlacklistFormPage implements OnInit {
           if (results.result.response_status === 200) {
             this.functionMain.presentToast('Successfully create blacklist data!', 'success');
             this.onBackMove()
+          } else if (results.result.response_status === 405) {
+            this.functionMain.presentToast(results.result.response_description, 'warning');
           } else {
             this.functionMain.presentToast('An error occurred while submitting blacklist data!', 'danger');
           }

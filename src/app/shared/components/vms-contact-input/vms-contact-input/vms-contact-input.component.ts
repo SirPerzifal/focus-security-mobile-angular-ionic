@@ -145,7 +145,7 @@ export class VmsContactInputComponent  implements OnInit {
               console.log(results.result.result)
               this.contactInfo.emit(results.result.result)
             } else {
-              this.functionMain.presentToast('Failed to get data!', 'danger');
+              this.functionMain.presentToast('No data found!', 'danger');
             }
           },
           error: (error) => {

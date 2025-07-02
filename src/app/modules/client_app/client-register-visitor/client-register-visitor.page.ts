@@ -267,7 +267,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   public async onCancel(visitor: any) {
     const alertButtons = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
-      header: `Are you sure you want to cancel ${visitor.visitor_name}?`,
+      header: `Are you sure you want to cancel ${visitor.name}?`,
       message: '', 
       buttons: [
         {

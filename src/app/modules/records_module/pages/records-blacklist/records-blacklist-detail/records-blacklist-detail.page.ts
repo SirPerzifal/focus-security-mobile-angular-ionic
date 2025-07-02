@@ -132,12 +132,8 @@ export class RecordsBlacklistDetailPage implements OnInit {
   }
 
   callResident(){
-    if(this.project_config.is_industrial){
-      console.log(this.record)
-      this.webRtcService.createOffer(false, this.record.industrial_host_ids[0], false, false);
-    }else{
-      this.webRtcService.createOffer(false, false, this.record.unit_id, false);
-    }
+    console.log(this.record.ban_requestor_id[0])
+    this.webRtcService.createOffer(false, this.record.ban_requestor_id[0], false, false);
   }
 
   callMA(){

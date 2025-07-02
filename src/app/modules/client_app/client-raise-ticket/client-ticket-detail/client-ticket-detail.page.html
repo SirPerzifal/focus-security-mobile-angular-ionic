@@ -71,14 +71,14 @@
             [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold mb-2 '" 
             [customPlaceholder]="'Choose a file'" [labelClass]="'text-black text-base'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem] mb-2 '"></app-file-input>
         </div> -->
-        <div class="flex flex-row justify-start">
+        <!-- <div class="flex flex-row justify-start">
           <p class="text-base font-bold">Attachment</p>
-        </div>
-        <div class="w-full flex flex-row justify-between ">
+        </div> -->
+        <!-- <div class="w-full flex flex-row justify-between ">
           <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientTicketDetailAttachment
             accept="image/*" class="hidden" />
-          <div class="w-4/6">
-            <input placeholder="Choose a file" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+          <div class="w-full">
+            <input placeholder="" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
               class="!border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
               readonly />
           </div>
@@ -86,6 +86,12 @@
             class="bg-[var(--ion-color-primary)] h-14 text-white w-[30%] text-base rounded font-bold mb-4">
             Upload
           </button>
+        </div> -->
+        <div class="w-full flex flex-col items-start">
+          <app-file-input class="w-full h-25" [labelNonUnderline]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" [isMany]="true"
+            [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
+            [customPlaceholder]="'Click upload to choose a file.'" [labelClass]="'text-black text-base font-bold'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'" [showPlaceholder]="true"
+            [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true" [Selected]="fileResetValue"></app-file-input>
         </div>
         <button (click)="submitReply(false)"
           class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-14">
@@ -121,14 +127,14 @@
               <div class="w-full p-3 rounded"
                 [ngClass]="message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]'">
                 <span [innerHtml]="message.body"></span>
-                <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas.length > 0">
-                  <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
+                <div class="flex flex-row w-full space-x-2" *ngIf="message.attachment_datas && message.attachment_datas.length > 0">
+                  <!-- <div class="flex flex-col mt-2 items-center" *ngFor="let attachment of message.attachment_datas">
                     <app-image-zoom [imageZoom]="functionMain.getImage(attachment.datas)" *ngIf="attachment.datas"
                       [bgColor]="(message.is_vms ? 'bg-[#D7F2FB]' : 'bg-white border border-[#BDBDBD]')"
                       [imageClass]="'h-20 object-contain'"></app-image-zoom>
-                    <!-- <img [src]="functionMain.getImage(attachment.datas)" (click)="clickImage(functionMain.getImage(attachment.datas))" class="h-32 object-contain"  *ngIf="attachment.mimetype.startsWith('image/')"> -->
-                    <!-- <span>{{ attachment.name}}</span> -->
-                  </div>
+                  </div> -->
+                  <app-image-zoom [imageArray]="message.attachment_datas"
+                    [bgColor]="'bg-white'" [imageClass]="'h-20 object-contain'"></app-image-zoom>
                 </div>
               </div>
 

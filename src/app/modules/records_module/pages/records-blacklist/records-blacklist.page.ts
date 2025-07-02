@@ -318,13 +318,25 @@ export class RecordsBlacklistPage implements OnInit {
   contactHost = ''
   loadHost() {
     this.contactHost = ''
-    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
-      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    this.clientMainService.getApi({ project_id: this.project_id, is_include_client: true }, '/industrial/get/family').subscribe((value: any) => {
+      let tempHost = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      this.Host = [{id: 'security', name: 'Security'}, ...tempHost]
       if (this.selectedHost) {
         this.contactHost = this.selectedHost
       }
     })
   }
+
+  // loadClient() {
+  //   this.contactHost = ''
+  //   this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family_client').subscribe((value: any) => {
+  //     let hostTemp = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+  //     this.Host = [...hostTemp, {id: 'security', name: 'Security'}, ...this.Host]
+  //     if (this.selectedHost) {
+  //       this.contactHost = this.selectedHost
+  //     }
+  //   })
+  // }
 
   onHostChange(event: any) {
     this.selectedHost = event[0]

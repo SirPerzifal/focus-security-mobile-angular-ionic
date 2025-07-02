@@ -181,4 +181,15 @@ export class FileInputComponent  implements OnInit {
     this.fileInput?.nativeElement.click();
   }
 
+  @Input()
+  set Selected(value: any) {
+    console.log(value)
+    this.cameraArray = value
+    if (this.isMany) {
+      this.cameraSelected.emit(value);
+    } else {
+      this.cameraSelected.emit(value)
+    }
+  }
+
 }
