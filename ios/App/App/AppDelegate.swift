@@ -13,18 +13,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        print("🔥 NOTIFICATION RECEIVED")
         // Firebase configuration
         FirebaseApp.configure()
-        
+      
+        // Setup notification categories
+        setupNotificationCategories()
+      
         // ✅ Tambahkan Firebase Messaging delegate
         Messaging.messaging().delegate = self
 
         // Request notification permissions
-        UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, error in
             if granted {
                 DispatchQueue.main.async {
+                    UNUserNotificationCenter.current().delegate = self
                     application.registerForRemoteNotifications()
                 }
             }
@@ -94,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // )
         
         // ✅ Request FCM token setelah APNs token di-set
-        self.requestFCMToken()
+        requestFCMToken()
     }
 
     func application(
@@ -147,6 +151,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+  
+    func setupNotificationCategories() {
+        print("this function is call")
+        let answerAction = UNNotificationAction(
+            identifier: "ANSWER_ACTION",
+            title: "Answer",
+            options: [.foreground] // opens the app
+        )
+
+        let declineAction = UNNotificationAction(
+            identifier: "DECLINE_ACTION",
+            title: "Decline",
+            options: [.destructive]
+        )
+
+        let callCategory = UNNotificationCategory(
+            identifier: "CALL_CATEGORY",
+            actions: [answerAction, declineAction],
+            intentIdentifiers: [],
+            options: [.customDismissAction]
+        )
+        print("this function is return", callCategory)
+
+        UNUserNotificationCenter.current().setNotificationCategories([callCategory])
+    }
 }
 
 // MARK: - UNUserNotificationCenterDelegate
@@ -157,6 +186,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) ->
             Void
     ) {
+        print("🔥 NOTIFICATION RECEIVED willPresent")
+        let userInfo = notification.request.content.userInfo
+        print("user info", userInfo)
+        let aps = userInfo["aps"] as? [String: Any]
+        
+        // Cara 1: Ambil dari aps.alert (jika payload APNs)
+        if let alert = aps?["alert"] as? [String: String] {
+            let title = alert["title"] ?? "No Title"
+            let body = alert["body"] ?? "No Body"
+            print("📢 [APS Alert] Title:", title)
+            print("📢 [APS Alert] Body:", body)
+        }
+        
+        // Cara 2: Ambil langsung dari content notifikasi
+        let content = notification.request.content
+        print("📢 [Content] Title:", content.title) // "Security"
+        print("📢 [Content] Body:", content.body)   // "Incoming call"
         completionHandler([.alert, .badge, .sound])
     }
 
@@ -165,9 +211,36 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
+        print("🔥 NOTIFICATION RECEIVED didReceive")
+        let content = response.notification.request.content
+        print("content", content)
+        print("📢 Title dari Alert:", content.title) // "Security"
+        print("📢 Body dari Alert:", content.body)   // "Incoming call"
+        let actionId = response.actionIdentifier
+        if actionId == "ANSWER_ACTION" {
+            print("📞 Answer pressed")
+            // Notify JS via NotificationCenter or route in WKWebView
+        } else if actionId == "DECLINE_ACTION" {
+            print("📞 Decline pressed")
+            // Same here
+        }
+        
+        // Akses custom data
+        let userInfo = content.userInfo
+        if let callerName = userInfo["callerName"] as? String {
+            print("📢 Caller Name:", callerName) // "Security"
+        }
         NotificationCenter.default.post(
             name: NSNotification.Name.init("pushNotificationReceived"), object: response)
         completionHandler()
+    }
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("🔥 NOTIFICATION RECEIVED")
+        print("caller", userInfo)
+        
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        completionHandler(.noData)
     }
 }
 

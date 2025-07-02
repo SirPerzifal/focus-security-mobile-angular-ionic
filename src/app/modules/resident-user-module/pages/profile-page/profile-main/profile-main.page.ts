@@ -980,7 +980,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   fcmToken: string = '';
 
-    async getNotificationPermission(familyId: number): Promise<string> {
+  async getNotificationPermission(familyId: number): Promise<string> {
     try {
       // Check if PushNotifications is available
       if (typeof PushNotifications === 'undefined') {

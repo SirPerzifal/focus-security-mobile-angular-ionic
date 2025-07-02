@@ -579,7 +579,7 @@ export class ContractorInvitingFormPage implements OnInit {
       const hasMultipleVisits = this.inviteeFormList.some((invitee: any) => 
         invitee.expected_number_of_visit > 1
       );
-      this.formData.entryType = hasMultipleVisits ? 'multiple_entry' : 'single_entry';
+      this.formData.entryType = hasMultipleVisits ? 'multiple_entry' : 'one_time_entry';
 
       // Lanjutkan dengan API call...
       this.submitInvitation();
