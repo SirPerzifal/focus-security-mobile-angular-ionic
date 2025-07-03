@@ -597,7 +597,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         'post/cancel_invite'
       ).subscribe(
         res => {
-          this.functionMain.presentToast('Successfully cancel invites!', 'success')
+          this.functionMain.presentToast('Successfully canceled the invite!', 'success')
           this.activeInvites = this.activeInvites.filter(inviteItem => inviteItem.invite_id !== invite.invite_id)
         },
         error => {

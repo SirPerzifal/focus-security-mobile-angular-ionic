@@ -16,8 +16,6 @@ PODS:
   - CapacitorCordova (6.1.2)
   - CapacitorFilesystem (6.0.2):
     - Capacitor
-  - CapacitorGeolocation (4.1.0):
-    - Capacitor
   - CapacitorHaptics (6.0.1):
     - Capacitor
   - CapacitorPreferences (6.0.3):
@@ -221,7 +219,6 @@ SPEC CHECKSUMS:
   CapacitorCommunityImageToText: 635946faf55ca226e583d454a2cad7b3ec4a32e1
   CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
   CapacitorFilesystem: a6b43788d8f9489fc95fb761f3d0d37d0bceaddf
-  CapacitorGeolocation: b9f502f2ed5ad8edf377fafbd62509e390e817ae
   CapacitorHaptics: 05d33e20e394b1977dfd2a00a2621e04098164c1
   CapacitorPreferences: f3eadae2369ac3ab8e21743a2959145b0d1286a3
   CapacitorPushNotifications: 9b178e010634d2f7bfca97b81478503463f86b6c
@@ -242,6 +239,6 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: 858c290a741c1095a2ff5abf4ed63cf0c2264a6f
+PODFILE CHECKSUM: a0e89295a58f0d6d7d662e23bd6de6f6dfbd1592
 
 COCOAPODS: 1.16.2

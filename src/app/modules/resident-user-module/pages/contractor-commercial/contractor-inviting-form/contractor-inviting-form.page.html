@@ -128,7 +128,7 @@
               <select
                 [id]="'invf_type_of_work_' + i"
                 class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280] mt-1"
-                (change)="onchangeTypeOfWork($event, 'select')"
+                (change)="onchangeTypeOfWork($event, 'select', i)"
                 [(ngModel)]="inviteeFormList[i].type_of_work"
                 required
               >
@@ -139,7 +139,7 @@
                 <option value="Others">Others</option>
               </select>
               <input
-                *ngIf="showOther"
+                *ngIf="showOther[i] && inviteeFormList[i].type_of_work === 'Others'"
                 [id]="'invf_type_of_work_' + i"
                 name="type_of_work_{{i}}"
                 placeholder=""

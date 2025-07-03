@@ -58,7 +58,7 @@ export class ContractorInvitingFormPage implements OnInit {
   }
   familyId: number = 0;
   entryCheck: { [key: number]: string } = {}; // Ubah jadi object untuk tracking per index
-  showOther: boolean = false;
+  showOther: boolean[] = [];
 
   nameFromContact = '';
   phoneFromContact = '';
@@ -94,6 +94,7 @@ export class ContractorInvitingFormPage implements OnInit {
     this.loadHost();
     this.loadFamilyId(); // Tambahkan method untuk load family ID
     this.isFormInitialized = false;
+    
     // Jika selectedCountry belum diinisialisasi
     if (!this.selectedCountry || this.selectedCountry.length === 0) {
       this.selectedCountry = [];
@@ -149,13 +150,19 @@ export class ContractorInvitingFormPage implements OnInit {
 
   onchangeTypeOfWork(event: any, type?: string, index?: any) {
     const value = event.target.value;
-    if (value === 'Others' && type === 'select') {
-      this.showOther = true;
+    
+    if (type === 'select') {
+      // Ketika user memilih dari dropdown
+      if (value === 'Others') {
+        this.showOther[index] = true;
+        this.inviteeFormList[index].type_of_work = 'Others';
+      } else {
+        this.showOther[index] = false;
+        this.inviteeFormList[index].type_of_work = value;
+      }
     } else if (type === 'input') {
-      this.showOther = true;
-      this.inviteeFormList[index].type_of_work = event.target.value;
-    } else {
-      this.showOther = false;
+      // Ketika user mengetik di input "Others"
+      this.inviteeFormList[index].type_of_work = value;
     }
   }
 

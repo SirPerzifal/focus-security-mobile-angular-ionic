@@ -3,6 +3,19 @@
 </ion-header>
 
 <ion-content id="resident-content" [fullscreen]="true">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="w-full flex items-start justify-start mt-2 ml-3">
     <ion-icon
       name="arrow-back-circle"
@@ -14,8 +27,8 @@
   <div *ngIf="isLoading" class="flex h-[50%] justify-center items-center">
     <app-loading-animation *ngIf="isLoading"></app-loading-animation>
   </div>
-  <div *ngIf="!isLoading" class="px-5 text-center mb-24">
-    <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
+  <div *ngIf="!isLoading" class="px-4 text-center mb-24">
+    <div class="w-full mt-2.5 grid grid-cols-3 flex-wrap justify-center gap-3">
       <div *ngFor="let dial of quickDials" class="w-full h-full relative">
         <ion-button
           fill="clear"

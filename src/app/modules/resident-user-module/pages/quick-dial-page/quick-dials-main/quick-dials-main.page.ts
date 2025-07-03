@@ -42,6 +42,24 @@ export class QuickDialsMainPage implements OnInit {
     })
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+        if ( value ) {
+          this.storage.decodeData(value).then((value: any) => {
+            if ( value ) {
+              const estate = JSON.parse(value) as Estate;
+              this.projectId = estate.project_id;
+              this.loadQuickDials();
+            }
+          })
+        } 
+      })
+      event.target.complete();
+    }, 1000)
+  }
+
  loadQuickDials() {
   this.mainApiResidentService.endpointProcess({project_id: String(this.projectId)}, 'get/contact_list').subscribe((result: any) => {
     // // console.log(result);
