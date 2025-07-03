@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-login-process',
@@ -11,6 +12,7 @@ export class LoginProcessPage implements OnInit {
 
   constructor(    
     private platform: Platform,
+    private webRtc: WebRtcService
   ) {}
 
   private isIOS(): boolean {
@@ -18,6 +20,7 @@ export class LoginProcessPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.webRtc.closeSocket();
     this.initializeBackButtonHandling();
     // Force video load di iOS
     if (this.isIOS()) {
@@ -36,8 +39,7 @@ export class LoginProcessPage implements OnInit {
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   initializeBackButtonHandling() {
     this.platform.backButton.subscribeWithPriority(10, () => {

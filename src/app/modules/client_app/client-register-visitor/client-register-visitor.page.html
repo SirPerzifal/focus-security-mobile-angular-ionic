@@ -72,16 +72,20 @@
       <div *ngIf="!isLoading && !isNew">
         <div *ngIf="showVisitorList.length > 0; else noVisitor">
           <div *ngFor="let visitor of showVisitorList; let i = index"
-            class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full">
-            <p class="font-bold text-base text-black mb-2"><u>{{ functionMain.returnNone(visitor.name) }}</u></p>
+            [class]="(visitor.is_cancel ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]') + ' rounded p-5 my-4 mt-4 w-full'">
+            <p class="font-bold text-base text-black mb-2"><u>{{ functionMain.returnNone(visitor.name) }}</u> {{ visitor.is_cancel ? '(Cancelled)' : '' }}</p>
             <div class="table w-full">
               <div class="table-row">
-                <p class="font-bold table-cell text-base text-black">Date of Invite</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertNewDateTZ(visitor.entry_date).split(' ')[0] }}</p>
+                <p class="font-bold table-cell text-base text-black w-2/5">Date of Invite</p>
+                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ functionMain.convertNewDateTZ(visitor.create_date).split(' ')[0] }}</p>
               </div>
               <div class="table-row">
-                <p class="font-bold table-cell text-base text-black">Type</p>
-                <p class="ml-2 table-cell text-base text-black">: {{ visitor.visitor_show_type }}</p>
+                <p class="font-bold table-cell text-base text-black w-2/5">Entry Time</p>
+                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ functionMain.convertNewDateTZ(visitor.entry_date) }}</p>
+              </div>
+              <div class="table-row">
+                <p class="font-bold table-cell text-base text-black w-2/5">Type</p>
+                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ visitor.visitor_show_type }}</p>
               </div>
             </div>
             <div class="flex mt-4 flex-wrap">
@@ -153,25 +157,20 @@
 
   <div class="flex flex-col relative mx-4 mb-24 mt-4 w-full" *ngIf="isDetail" @fadeInOut>
     <div
-      [class]="visitorDetail.banned ? 'bg-[#E3787E] p-4 rounded flex flex-col justify-between w-full mb-1' : 'bg-green-100 p-4 rounded flex flex-col justify-between w-full mb-1'">
+      [class]="visitorDetail.is_cancel ? 'bg-[#E3787E] p-4 rounded flex flex-col justify-between w-full mb-1' : 'bg-[var(--ion-color-tertiary)] p-4 rounded flex flex-col justify-between w-full mb-1'">
       <div class="text-base w-ful">
         <div class="text-base font-bold mb-2">{{ visitorDetail.name || '-' }}</div>
         <table class="w-full">
           <tr class="h-6">
-            <td class="w-2/5  font-bold">Date Of Visit</td>
+            <td class="w-2/5  font-bold">Date of Invite</td>
             <td class="w-[5%]">:</td>
-            <td>{{ visitorDetail.entry_date ? functionMain.convertNewDateTZ(visitorDetail.entry_date).split(' ')[0] : '-' }}</td>
+            <td>{{ visitorDetail.entry_date ? functionMain.convertNewDateTZ(visitorDetail.create_date).split(' ')[0] : '-' }}</td>
           </tr>
           <tr class="h-6">
             <td class="w-2/5  font-bold">Entry Time</td>
             <td class="w-[5%]">:</td>
             <td>{{ visitorDetail.entry_date ? functionMain.convertNewDateTZ(visitorDetail.entry_date).split(' ')[1] : '-' }}</td>
           </tr>
-          <!-- <tr class="h-6">
-            <td class="w-2/5  font-bold">Exit Time</td>
-            <td class="w-[5%]">:</td>
-            <td>{{ visitorDetail.visitor_exit_time || '-' }}</td>
-          </tr> -->
           <tr class="h-6">
             <td class="w-2/5  font-bold">Company Name</td>
             <td class="w-[5%]">:</td>

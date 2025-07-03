@@ -74,6 +74,11 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.coach_type) }}</td>
           </tr>
+          <tr *ngIf="['ma_visitor'].includes(pageType)">
+            <td class="font-bold w-2/5">DATE OF INVITE</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ record.invite_date ? functionMain.convertNewDateTZ(record.invite_date).split(' ')[0] : '-' }}</td>
+          </tr>
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
