@@ -177,7 +177,7 @@
             <app-file-input class="w-full h-25" [labelNonUnderline]="'Attachment'" [buttonText]="'Upload'" [outClass]="'min-h-14'" [isMany]="true"
               [isCustomName]="true" [extraButtonClass]="'bg-[var(--ion-color-primary)] text-white rounded h-14 text-base font-bold '" [isCamera]="true"
               [customPlaceholder]="'Click upload to choose a file.'" [labelClass]="'text-black text-base text-start font-bold'" [isNotVMS]="true" [divOuterClass]="'!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base min-h-14 text-[#6B7280] text-left pl-[0.75rem]'" [showPlaceholder]="true"
-              [fileAccept]="'application/pdf'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
+              [fileAccept]="'application/pdf, image/*'" (cameraSelected)="onUploadImage($event)" [isFileAndCamera]="true"></app-file-input>
           </div>
         </div>
       </div>
