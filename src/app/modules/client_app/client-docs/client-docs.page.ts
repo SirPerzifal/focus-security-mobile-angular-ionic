@@ -131,6 +131,8 @@ export class ClientDocsPage implements OnInit {
     this.isOpenModal = false
     this.selectedFile = null
     this.fileName = ''
+    this.attachment = ''
+    this.attachment_name = ''
   }
 
   @ViewChild('clientUploadDocument') fileInput!: ElementRef;
@@ -196,6 +198,8 @@ export class ClientDocsPage implements OnInit {
           this.functionMain.presentToast('Successfully upload new document!', 'success')
           this.selectedFile = null
           this.fileName = ''
+          this.attachment = ''
+          this.attachment_name = ''
           this.isOpenModal = false
           if (parent_id) {
             this.loadNotices(parent_id)

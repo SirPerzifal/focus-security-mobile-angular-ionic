@@ -83,7 +83,7 @@
               <ion-button fill="clear" *ngIf="active_type === 'unregistered' || active_type === 'overstay'"
                 class="rounded-md w-full font-bold text-xl comic-font bg-white text-black h-14"
                 (click)="presentModalFirstWarning(alert.vehicle_number, alert.entry_type, alert.issue_time)">
-                <b>{{active_type === 'unregistered' ? 'CLAMP VEHICLE' :'ISSUE 1ST WARNING'}}</b>
+                <b>{{active_type === 'unregistered' ? 'ISSUE VEHICLE' :'ISSUE 1ST WARNING'}}</b>
               </ion-button>
               <ion-button fill="clear" *ngIf="active_type === 'first_warning'"
                 class="rounded-md w-full font-bold text-xl comic-font bg-white text-black h-14"

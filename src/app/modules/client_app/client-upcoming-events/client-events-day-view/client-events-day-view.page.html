@@ -138,7 +138,7 @@
                         <select id="event_form_coach" [disabled]="isRead" (change)="onFacilityChange($event)"
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="EventsForm.facility_id">
-                            <option value="" selected disabled hidden>Choose Facility</option>
+                            <option value="" selected disabled hidden>{{Facilities.length > 0 ? 'Choose Facility' : 'No Facility Found'}}</option>
                             <option *ngFor="let facility of Facilities" [value]="facility.facility_id">{{
                                 facility.facility_name }}</option>
                         </select>
@@ -156,7 +156,7 @@
                         <select id="event_form_coach" [disabled]="isRead"
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="EventsForm.room_id">
-                            <option value="" selected disabled hidden>Choose Room</option>
+                            <option value="" selected disabled hidden>{{Rooms.length > 0 ? 'Choose Room' : 'Choose The Facility First'}}</option>
                             <option *ngFor="let room of Rooms" [value]="room.room_id">{{
                                 room.room_name }}</option>
                         </select>

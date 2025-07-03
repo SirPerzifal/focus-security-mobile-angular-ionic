@@ -71,6 +71,7 @@ export class WebRtcService extends ApiService{
   private receiverSocketId: any;
   private nativeOffer: any;
   private targetSocketIds: any;
+  private project_id: any;
   private callAction: string = '';
   private callerId: number = 0;
   private receiverId: number = 0;
@@ -134,6 +135,7 @@ export class WebRtcService extends ApiService{
       this.receiverSocketId = null;
       this.nativeOffer = null;
       this.targetSocketIds = null;
+      this.project_id = null;
       this.callAction = '';
       this.pendingCandidates = [];
       this.callerpendingCandidates = [];
@@ -156,7 +158,7 @@ export class WebRtcService extends ApiService{
   //       }
 
   //       let userInfo = {
-  //         family_mobile_number: '0812345678-Security',
+  //         family_mobile_number: 'Public-User',
   //         family_id: '',
   //         family_name: 'Security',
   //         email: 'admin@example.com',
@@ -184,7 +186,7 @@ export class WebRtcService extends ApiService{
   //       this.userName = userInfo.family_name ? userInfo.family_name : 'Security';
   //       this.userId = userInfo.family_id ? parseInt(userInfo.family_id, 10) || 0 : 0;
   //       this.socket = io('wss://ws.sgeede.com', {
-  //         query: { uniqueId: userInfo.family_id ? userInfo.family_id : '0812345678-Security' }
+  //         query: { uniqueId: userInfo.family_id ? userInfo.family_id : 'Public-User' }
   //       });
   //       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
   //       this.socket.on('answer', (answer: any) => this.handleAnswer(answer));
@@ -205,7 +207,7 @@ export class WebRtcService extends ApiService{
   async initializeSocket() {
     try {
       let userInfo = {
-        family_mobile_number: '0812345678-Security',
+        family_mobile_number: 'Public-User',
         family_id: '',
         family_name: 'Security',
         email: 'admin@example.com',
@@ -239,11 +241,23 @@ export class WebRtcService extends ApiService{
           }
         }
       }
+
+      if (!userInfo.family_id) {
+        const vmsData = await Preferences.get({ key: 'USER_INFO' }).then((result) => {
+          if (result.value) {
+            const parsedVMS = jwtDecode(result.value) as {project_name: string; project_id: number};
+            if (parsedVMS.project_id && parsedVMS.project_name){
+              userInfo.family_name = parsedVMS.project_name;
+              userInfo.family_id = 'project-' + parsedVMS.project_id.toString();
+            }
+          }
+        });
+      }
   
       // Set default kalau tetap kosong
       if (!userInfo.family_id) {
-        userInfo.family_mobile_number = '0812345678-Security';
-        userInfo.family_id = '';
+        userInfo.family_mobile_number = 'Public-User';
+        userInfo.family_id = 'Public-User';
         userInfo.family_name = 'Security';
         console.log("Fallback to default userInfo", userInfo);
       }
@@ -259,7 +273,7 @@ export class WebRtcService extends ApiService{
   
       // Connect ke WebSocket
       this.socket = io('wss://ws.sgeede.com', {
-        query: { uniqueId: userInfo.family_id || '0812345678-Security' },
+        query: { uniqueId: userInfo.family_id || 'Public-User' },
       });
       console.log('this.socketthis.socketthis.socket',this.socket);
   
@@ -274,7 +288,7 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
-      this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
+      // this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
   
       // Listen for native events
       this.listenForNativeEvents();
@@ -517,6 +531,7 @@ export class WebRtcService extends ApiService{
     this.callerSocketId = offer.callerSocketId;
     this.receiverSocketId = offer.receiverSocketId;
     this.targetSocketIds = offer.targetSocketIds;
+    this.project_id = offer.project_id;
     await this.showIncomingCallModal(offer.offerObj);
   }
 
@@ -663,6 +678,7 @@ export class WebRtcService extends ApiService{
     this.callerSocketId = data.callerSocketId;
     this.receiverSocketId = data.receiverSocketId;
     this.targetSocketIds = data.targetSocketIds;
+    this.project_id = data.project_id;
     if (this.callAction === 'acceptCall'){
       await this.startLocalStream();
       if (!this.peerConnection) {
@@ -801,6 +817,7 @@ export class WebRtcService extends ApiService{
       let newTargetSocketIds = this.targetSocketIds.filter((target:any) => target != this.receiverSocketId);
       this.socket.emit('reject-call', {
         targetSocketIds: newTargetSocketIds,
+        project_id: this.project_id,
       });
     }
     await this.showOngoingCallModal(true);
@@ -859,6 +876,7 @@ export class WebRtcService extends ApiService{
       callerSocketId: this.callerSocketId,
       receiverSocketId: this.receiverSocketId,
       targetSocketIds: this.targetSocketIds,
+      project_id: this.project_id,
       receiverId: this.receiverId,
       callerId: this.callerId,
       callerName: this.callerName
@@ -896,6 +914,7 @@ export class WebRtcService extends ApiService{
     this.callerSocketId = data.callerSocketId;
     this.receiverSocketId = data.receiverSocketId;
     this.targetSocketIds = data.targetSocketIds;
+    this.project_id = data.project_id;
     await this.showOutgoingCallModal();
   }
 

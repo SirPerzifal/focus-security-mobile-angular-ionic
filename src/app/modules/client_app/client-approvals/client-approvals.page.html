@@ -519,11 +519,11 @@
           <p class="font-bold table-cell w-1/2 text-base text-black">Reason For Rejetion</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.reason_for_rejection)   }}</p>
         </div>
-        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'temporary_vehicle'">
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'Temporary Vehicle'">
           <p class="font-bold table-cell w-1/2 text-base text-black">Temporary Car Request</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.temporary_car_request) }}</p>
         </div>
-        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'temporary_vehicle'">
+        <div class="table-row" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.type_of_application == 'Temporary Vehicle'">
           <p class="font-bold table-cell w-1/2 text-base text-black">Temporary Car End Date</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.convertToDDMMYYYY(selectedApproval.temporary_end_date) }}</p>
         </div>
@@ -539,8 +539,9 @@
       </div>
       <div class="w-full flex flex-col justify-start mt-2" *ngIf="['vehicle'].includes(approval_type) && selectedApproval.vehicle_log">
         <p class="text-base text-black"><b>Vehicle Log</b></p>
-        <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
+        <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download" *ngIf="selectedApproval.vehicle_log_type.includes('application')" 
             (click)="functionMain.downloadDocument(selectedApproval.vehicle_log, selectedApproval.vehicle_number + '_Vehicle Log')" />
+        <app-image-zoom [imageZoom]="functionMain.getImage(selectedApproval.vehicle_log)" [imageClass]="'h-40 object-contain'" [bgColor]="getBgClass()" *ngIf="selectedApproval.vehicle_log_type.includes('image')"></app-image-zoom>
       </div>
       <div class="w-full flex flex-col justify-start mt-2" *ngIf="['family'].includes(approval_type) && selectedApproval.tenancy_aggrement">
         <p class="text-base text-black"><b>Tenancy Agreement</b></p>

@@ -40,10 +40,12 @@ export class ClientReportsPage implements OnInit {
       console.log(value)
       this.project_id = value.project_id
       this.project_config = value.config
+      this.family_name = value.name
     })
   }
 
   project_id = 0
+  family_name = ''
   project_config: any = []
   today = new Date().toISOString().split('T')[0];
 
@@ -58,7 +60,7 @@ export class ClientReportsPage implements OnInit {
   isData = false
   textSecond = ''
 
-  menuItems = [
+  menuItems: any = [
     { src: 'assets/icon/exc-client/report.png', alt: 'Clocking Reports', model: '', params: {}, text: 'Clocking Reports', permission: [true, false]},
     { src: 'assets/icon/exc-client/report.png', alt: 'Security Attendance', model: '', params: {}, text: 'Security Attendance', permission: [true, false]},
     { src: 'assets/icon/exc-client/report.png', alt: 'Cleaners Attendance', model: '', params: {}, text: 'Cleaners Attendance', permission: [true, false]},
@@ -127,6 +129,32 @@ export class ClientReportsPage implements OnInit {
     if (report.model) {
       this.loadConfig()
     }
+  }
+
+  async loadRecord(){
+    this.isLoading = true
+    this.clientMainService.getApi({}, '/client/get/records_config').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.menuItems = results.result.result.map((item: any) => ({
+            src: 'assets/icon/exc-client/report.png', 
+            alt: item.title, 
+            model: item.model, 
+            text: item.title, 
+            }
+          ))
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to get the fields!`, 'danger');
+        }
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get the fields!', 'danger');
+        console.error(error);
+        this.isLoading = false
+      }
+    });
   }
 
   async loadConfig(){
@@ -202,7 +230,8 @@ export class ClientReportsPage implements OnInit {
       time_end: this.endDateFilter + ' 23:59:59',
       model_name: this.selectedReport.model,
       timeframe_field: 'create_date',
-      print_time: print_time
+      print_time: print_time,
+      family_name: this.family_name,
     }
     console.log(params)
     this.submitLoading = true

@@ -81,6 +81,9 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   callVms() {
-    this.webRtcService.createOffer(false, '0812345678-Security', false, true);
+    this.functionMain.vmsPreferences().then((value: any)=> {
+      const project_id = 'project-' + value.project_id.toString();
+      this.webRtcService.createOffer(false, project_id, false, true);
+    })
   }
 }
