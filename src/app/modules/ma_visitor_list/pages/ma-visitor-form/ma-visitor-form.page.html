@@ -64,6 +64,7 @@
               [type]="'text'"
               [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-20': true, 'text-2xl': true}"
               [(ngModel)]="record.name"
+              [isReadonly]="record.is_submitted"
             ></app-text-input>
           </div>
           <div class="w-full">
@@ -76,6 +77,7 @@
               [type]="'text'"
               [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-20': true, 'text-2xl': true}"
               [(ngModel)]="record.company_name"
+              [isReadonly]="record.is_submitted"
             ></app-text-input>
           </div>
           <div class="w-full">
@@ -86,7 +88,7 @@
           <div class="w-full mt-1">
             <label class="text-2xl font-bold mb-[-4px]"><u>Visitor Type</u></label>
             <select id="register_visitor_type"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" [disabled]="record.is_submitted"
               [(ngModel)]="record.selection_type" name="visitorType">
               <option selected hidden disabled value="">Choose Visitor Type</option>
               <option [value]="'walk_in'">Walk In</option>
@@ -102,6 +104,7 @@
                 [placeholder]="'EG. SAA 7827 V'"
                 [customClasses]="{'w-full': true}"
                 [type]="'text'"
+                [isReadonly]="record.is_submitted"
                 [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-20': true, 'text-2xl': true}"
                 [(ngModel)]="record.vehicle_number"
               ></app-text-input>
@@ -110,13 +113,13 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
             </div>
           </div>
-          <div class="w-full space-y-5" *ngIf="record.selection_type == 'drive_in' && Camera.length > 0">
+          <div class="w-full space-y-5" *ngIf="(record.selection_type == 'drive_in' && Camera.length > 0) && !record.is_submitted">
             <div class="w-full" *ngFor="let camera of Camera; let i = index">
               <app-visitor-button [text]="'SAVE CHANGES & OPEN BARRIER ' + camera.CamID"  (click)="onSubmitRecord(true)"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl ' + (i == 0 ? 'mt-6' : 'mt-1' )"></app-visitor-button>
             </div>
           </div>
-          <div class="w-full">
+          <div class="w-full" *ngIf="!record.is_submitted">
             <app-visitor-button [text]="'SAVE CHANGES' + (record.selection_type == 'drive_in' ? ' ONLY' : '')" (click)="onSubmitRecord(false)"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full h-20 text-2xl mt-1'"></app-visitor-button>
           </div>

@@ -226,6 +226,7 @@ export class FunctionMainService {
   }
 
   convertNewDateTZ(date_string: string, isNeedSS: boolean = true) {
+    if (!date_string) return '-'
     let tz = new Date().getTimezoneOffset() / -60
     let dateObj = new Date(date_string);
 

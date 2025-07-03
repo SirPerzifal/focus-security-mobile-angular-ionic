@@ -44,17 +44,17 @@
             class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full">
             <div class="flex flex-row justify-between text-base">
               <span class="font-bold">{{ notice.title }}</span>
-              <span>{{ notice.notice_date }}</span>
+              <span>{{ functionMain.convertToDDMMYYYY(notice.notice_date) }}</span>
             </div>
             <p class="text-base text-black mt-3">{{ notice.remark }}</p>
             <table class="w-full">
               <tr>
                 <td class="text-base text-black w-2/5">Start Date</td>
-                <td class="ml-2 text-base text-black">: {{ notice.start_time }}</td>
+                <td class="ml-2 text-base text-black">: {{ (functionMain.convertToDDMMYYYY(notice.start_time)) }}</td>
               </tr>
               <tr>
                 <td class="text-base text-black w-2/5">End Date</td>
-                <td class="ml-2 text-base text-black">: {{ notice.end_time }}</td>
+                <td class="ml-2 text-base text-black">: {{ (functionMain.convertToDDMMYYYY(notice.end_time)) }}</td>
               </tr>
             </table>
             <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
