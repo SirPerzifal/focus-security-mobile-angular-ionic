@@ -81,6 +81,8 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         this.pageName = 'Docs';
         this.loadFile();
         this.previousParentNames = [];
+        this.previousParentId = 0;
+        this.isRoot = false;
         this.showNotice = false;
         this.showDocs = true;
         event.target.complete();

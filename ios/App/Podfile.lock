@@ -156,7 +156,6 @@ DEPENDENCIES:
   - "CapacitorCommunityImageToText (from `../../node_modules/@capacitor-community/image-to-text`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
-  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
@@ -203,8 +202,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
-  CapacitorGeolocation:
-    :path: "../../node_modules/@capacitor/geolocation"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorPreferences:

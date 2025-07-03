@@ -6,7 +6,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, from, switchMap, mergeMap, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { GeolocationService, LocationData } from 'src/app/service/geolocation/geolocation.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -20,7 +19,6 @@ import { ApiService } from 'src/app/service/api.service';
 })
 export class DoorAccessMainPage extends ApiService implements OnInit {
 
-  locationData: LocationData | null = null;
   isLoading = true;
   error: string | null = null;
   watchSubscription: Subscription | null = null;
@@ -35,7 +33,6 @@ export class DoorAccessMainPage extends ApiService implements OnInit {
   projectId: number = 0;
 
   constructor(
-    private geolocationService: GeolocationService, 
     private functionMain: FunctionMainService,
     private storage: StorageService,
     private platform: Platform,
@@ -47,8 +44,6 @@ export class DoorAccessMainPage extends ApiService implements OnInit {
   }
 
   ionViewWillEnter() {
-    // Check permissions when page loads
-    this.checkPermissions();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       if ( value ) {
         this.storage.decodeData(value).then((value: any) => {
@@ -64,51 +59,6 @@ export class DoorAccessMainPage extends ApiService implements OnInit {
 
   ionViewWillLeave() {
     this.stopWatchingLocation();
-  }
-
-  async checkPermissions() {
-    this.hasPermissions = await this.geolocationService.requestPermissions();
-    if (this.hasPermissions) {
-      // Optionally get location immediately upon permission approval
-      this.startWatchingLocation();
-    }
-  }
-
-  async startWatchingLocation() {
-    if (this.isWatching) {
-      return;
-    }
-
-    // Check permissions first if not already checked
-    if (!this.hasPermissions) {
-      this.hasPermissions = await this.geolocationService.requestPermissions();
-      if (!this.hasPermissions) {
-        this.error = 'Location permission denied';
-        this.functionMain.presentToast(this.error, 'danger');
-        return;
-      }
-    }
-
-    this.isWatching = true;
-    this.isLoading = true;
-    this.error = null;
-    
-    this.watchSubscription = this.geolocationService.watchLocation().subscribe({
-      next: (data) => {
-        this.isLoading = false;
-        this.locationData = data;
-        // console.log('location', this.locationData)
-        this.functionMain.presentToast('Your location successfully to fetch', 'success');
-        this.stopWatchingLocation();
-      },
-      error: (err) => {
-        this.error = 'Failed to watch location: ' + (err.message || 'Unknown error');
-        this.functionMain.presentToast(this.error, 'danger');
-        this.isLoading = false;
-        this.isWatching = false;
-        // console.error('Watch location error:', err);
-      }
-    });
   }
 
   stopWatchingLocation() {

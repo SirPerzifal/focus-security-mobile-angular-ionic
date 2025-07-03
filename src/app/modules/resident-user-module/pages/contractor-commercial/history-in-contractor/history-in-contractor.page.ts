@@ -201,38 +201,54 @@ export class HistoryInContractorPage implements OnInit {
     this.showDate = '';
     this.applyFilters();
   }
-  
+ 
   applyFilters() {
-      this.filteredData = this.historyData.filter(item => {
-          const visitorDate = new Date(item.visitor_date);
-          visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-          
-          const [ dayStart, monthStart, yearStart ] = this.startDateFilter.split('/');
-          const setDefaultValueDateStart = `${yearStart}-${monthStart}-${dayStart}`;
-          const [ dayEnd, monthEnd, yearEnd ] = this.endDateFilter.split('/');
-          const setDefaultValueDateEnd = `${yearEnd}-${monthEnd}-${dayEnd}`;
-          
-          // Convert the selected start and end dates to Date objects
-          const selectedStartDate = this.startDateFilter ? new Date(setDefaultValueDateStart) : null;
-          const selectedEndDate = this.endDateFilter ? new Date(setDefaultValueDateEnd) : null;
+    this.filteredData = this.historyData.filter(item => {
+      const visitorDate = new Date(item.visitor_date);
+      visitorDate.setHours(0, 0, 0, 0);
+      
+      const [dayStart, monthStart, yearStart] = this.startDateFilter.split('/');
+      const selectedStartDate = this.startDateFilter ? new Date(`${yearStart}-${monthStart}-${dayStart}`) : null;
+      const [dayEnd, monthEnd, yearEnd] = this.endDateFilter.split('/');
+      const selectedEndDate = this.endDateFilter ? new Date(`${yearEnd}-${monthEnd}-${dayEnd}`) : null;
 
-          // Set time to 00:00:00 for comparison
-          if (selectedStartDate) {
-              selectedStartDate.setHours(0, 0, 0, 0);
-          }
-          if (selectedEndDate) {
-              selectedEndDate.setHours(0, 0, 0, 0);
-          }
-          
-          const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-          const typeMatches = this.typeFilter && this.typeFilter !== 'All' 
-              ? (this.typeFilter === 'Other' 
-                  ? !(item.purpose === 'Delivery' || item.purpose === 'Collections' || item.purpose === 'Meeting') 
-                  : item.purpose === this.typeFilter) 
-              : true;
+      if (selectedStartDate) {
+        selectedStartDate.setHours(0, 0, 0, 0);
+      }
+      if (selectedEndDate) {
+        selectedEndDate.setHours(0, 0, 0, 0);
+      }
 
-          return dateMatches && typeMatches;
-      });
+      const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && 
+                        (!selectedEndDate || visitorDate <= selectedEndDate);
+
+      // Improved type filtering with better normalization
+      const itemPurpose = (item.purpose || '').toString().trim().toLowerCase();
+      const typeFilterLower = this.typeFilter.toLowerCase();
+
+      let typeMatches = true;
+      
+      if (this.typeFilter && this.typeFilter !== 'All') {
+        if (typeFilterLower === 'other' || typeFilterLower === 'others') {
+          // For "Other/Others", exclude known types
+          typeMatches = !['delivery', 'deliveries', 'collection', 'collections', 'meeting', 'meetings'].includes(itemPurpose);
+        } else if (typeFilterLower === 'collections') {
+          // Match both singular and plural forms
+          typeMatches = ['collection', 'collections'].includes(itemPurpose);
+        } else if (typeFilterLower === 'delivery') {
+          // Match both singular and plural forms  
+          typeMatches = ['delivery', 'deliveries'].includes(itemPurpose);
+        } else if (typeFilterLower === 'meeting') {
+          // Match both singular and plural forms
+          typeMatches = ['meeting', 'meetings'].includes(itemPurpose);
+        } else {
+          // Fallback to exact match
+          typeMatches = itemPurpose === typeFilterLower;
+        }
+      }
+
+      return dateMatches && typeMatches;
+    });
   }
 
   openDetails(historyData: any) {

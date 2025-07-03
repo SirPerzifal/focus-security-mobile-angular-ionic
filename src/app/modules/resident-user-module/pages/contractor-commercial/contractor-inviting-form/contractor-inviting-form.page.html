@@ -168,14 +168,14 @@
                   [type]="'radio'"
                   [id]="'multiple_host' + i"
                   [name]="'entry' + i"
-                  [checkedText]="!isHostMyself(i) && this.inviteeFormList[i].host_ids.length > 0"
+                  [checkedText]="entryCheck[i] === 'other_host'"
                   [value]="'other_host'"
                   [text]="'Other Host'"
                   (valueEmit)="changeHost($event, i)"
                 ></app-radio-check-input-case>
               </div>
               <div
-                *ngIf="!isHostMyself(i) && this.inviteeFormList[i].host_ids.length > 0"
+                *ngIf="entryCheck[i] === 'other_host'"
                 class="w-full mb-2 text-base cw-3:text-sm"
               >
                 <app-m2m-selection

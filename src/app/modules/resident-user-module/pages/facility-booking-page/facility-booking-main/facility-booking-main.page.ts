@@ -550,9 +550,14 @@ export class FacilityBookingMainPage implements OnInit {
     this.mainApi.endpointMainProcess({
       page: page
     }, 'get/booking_history').subscribe((response: any) => {
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
       if (response.result && response.result.booking && Array.isArray(response.result.booking)) {
         // Simpan daftar booking asli
-        this.originalBookingList = response.result.booking.map((booking: any) => ({
+        this.originalBookingList = response.result.booking.filter((booking: any) => {
+          const eventDate = new Date(booking.event_date).toISOString().split('T')[0];
+          return eventDate <= todayString && (booking.state || booking.booking_status) !== 'Approved'; // Memfilter polling yang dimulai setelah hari ini
+        }).map((booking: any) => ({
           facilityName: booking.facility || 'Unknown Facility',
           eventDate: this.functionMain.formatDateFacility(booking.event_date || booking.start_datetime.split(' ')[0]),
           eventDay: this.getDayName(new Date(booking.booking_date || booking.start_datetime)),

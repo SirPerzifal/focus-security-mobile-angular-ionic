@@ -36,12 +36,7 @@
 	<string>This app requires access to camera to take pictur when you add and edit image</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires access to contacts to invite visitor from your contact</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location in the background to provide continuous location updates.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location in the background to provide continuous location updates.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide accurate location information.</string>
+
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to microphone for audio recording and communication features</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
