@@ -1,4 +1,22 @@
 PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - CallKit (0.1.0):
+    - AFNetworking (>= 4.0.0)
+    - RTCEngineKit
   - Capacitor (6.1.2):
     - CapacitorCordova
   - CapacitorApp (6.0.1):
@@ -24,6 +42,7 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (6.0.1):
     - Capacitor
+  - CocoaAsyncSocket (7.6.5)
   - Firebase/Analytics (10.29.0):
     - Firebase/Core
   - Firebase/Auth (10.29.0):
@@ -143,8 +162,11 @@ PODS:
   - nanopb/encode (2.30910.0)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
+  - RTCEngineKit (2.2.5):
+    - CocoaAsyncSocket
 
 DEPENDENCIES:
+  - CallKit
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
@@ -165,6 +187,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AFNetworking
+    - CallKit
+    - CocoaAsyncSocket
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -180,6 +205,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - RecaptchaInterop
+    - RTCEngineKit
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -210,6 +236,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
 
 SPEC CHECKSUMS:
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
+  CallKit: e7a02c892f396acc29b55e1798ee63abac8daa7f
   Capacitor: 69c7f687aabb8d85e543497411e40638b5cc08c0
   CapacitorApp: f51c08c64df914fc934239fd1b3fc809d62a02f6
   CapacitorCamera: 9bc7b005d0e6f1d5f525b8137045b60cffffce79
@@ -223,6 +251,7 @@ SPEC CHECKSUMS:
   CapacitorPreferences: f3eadae2369ac3ab8e21743a2959145b0d1286a3
   CapacitorPushNotifications: 9b178e010634d2f7bfca97b81478503463f86b6c
   CapacitorStatusBar: 9ed7f06318fd436917072a9bf60fda56d12c8bdb
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
   FirebaseAnalytics: 23717de130b779aa506e757edb9713d24b6ffeda
   FirebaseAppCheckInterop: 6a1757cfd4067d8e00fccd14fcc1b8fd78cfac07
@@ -238,7 +267,8 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  RTCEngineKit: 67ac3a1d95e98defa2a33c1e2df55ad571de7841
 
-PODFILE CHECKSUM: a0e89295a58f0d6d7d662e23bd6de6f6dfbd1592
+PODFILE CHECKSUM: f3b48345bdd37bfe1cfd1ad565ad8dbb1aab3f6d
 
 COCOAPODS: 1.16.2

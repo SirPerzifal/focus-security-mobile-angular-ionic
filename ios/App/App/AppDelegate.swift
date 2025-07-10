@@ -1,6 +1,7 @@
+import CallKit
 import Capacitor
 import Firebase
-import FirebaseMessaging // ← Tambahkan ini
+import FirebaseMessaging  // ← Tambahkan ini
 import UIKit
 import UserNotifications
 
@@ -16,10 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("🔥 NOTIFICATION RECEIVED")
         // Firebase configuration
         FirebaseApp.configure()
-      
+
         // Setup notification categories
         setupNotificationCategories()
-      
+
         // ✅ Tambahkan Firebase Messaging delegate
         Messaging.messaging().delegate = self
 
@@ -82,32 +83,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         print("📱 APNs Device Token received")
-        
+
         // ✅ PENTING: Set APNs token ke Firebase
         Messaging.messaging().apnsToken = deviceToken
-        
+
         // Convert device token to string for logging
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let apnsToken = tokenParts.joined()
         print("📱 APNs Token: \(apnsToken)")
-        
+
         // // Post ke Capacitor
         // NotificationCenter.default.post(
-        //     name: .capacitorDidRegisterForRemoteNotifications, 
+        //     name: .capacitorDidRegisterForRemoteNotifications,
         //     object: deviceToken
         // )
-        
+
         // ✅ Request FCM token setelah APNs token di-set
         requestFCMToken()
     }
 
     func application(
-        _ application: UIApplication, 
+        _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
         print("❌ Failed to register for remote notifications: \(error)")
         NotificationCenter.default.post(
-            name: .capacitorDidFailToRegisterForRemoteNotifications, 
+            name: .capacitorDidFailToRegisterForRemoteNotifications,
             object: error
         )
     }
@@ -120,44 +121,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if let token = token {
                 print("📱 FCM registration token: \(token)")
                 print("📏 FCM Token length: \(token.count)")
-                
+
                 // Post ke Capacitor
                 NotificationCenter.default.post(
-                    name: .capacitorDidRegisterForRemoteNotifications, 
+                    name: .capacitorDidRegisterForRemoteNotifications,
                     object: token
                 )
 
                 // Post notification untuk JavaScript
                 // DispatchQueue.main.async {
                 //     NotificationCenter.default.post(
-                //         name: NSNotification.Name("FCMTokenReceived"), 
+                //         name: NSNotification.Name("FCMTokenReceived"),
                 //         object: token
                 //     )
                 // }
 
                 DispatchQueue.main.async {
-                    if let webView = self.window?.rootViewController?.view.subviews.first(where: { $0 is WKWebView }) as? WKWebView {
+                    if let webView = self.window?.rootViewController?.view.subviews.first(where: {
+                        $0 is WKWebView
+                    }) as? WKWebView {
                         let javascript = """
-                            document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
-                                detail: '\(token)'
-                            }));
-                        """
+                                document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
+                                    detail: '\(token)'
+                                }));
+                            """
                         webView.evaluateJavaScript(javascript, completionHandler: nil)
                     }
                 }
-                
+
                 // ✅ Simpan ke UserDefaults sebagai backup
                 UserDefaults.standard.set(token, forKey: "FCMToken")
             }
         }
     }
-  
+
     func setupNotificationCategories() {
         print("this function is call")
         let answerAction = UNNotificationAction(
             identifier: "ANSWER_ACTION",
             title: "Answer",
-            options: [.foreground] // opens the app
+            options: [.foreground]  // opens the app
         )
 
         let declineAction = UNNotificationAction(
@@ -190,7 +193,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         print("user info", userInfo)
         let aps = userInfo["aps"] as? [String: Any]
-        
+
         // Cara 1: Ambil dari aps.alert (jika payload APNs)
         if let alert = aps?["alert"] as? [String: String] {
             let title = alert["title"] ?? "No Title"
@@ -198,11 +201,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("📢 [APS Alert] Title:", title)
             print("📢 [APS Alert] Body:", body)
         }
-        
+
         // Cara 2: Ambil langsung dari content notifikasi
         let content = notification.request.content
-        print("📢 [Content] Title:", content.title) // "Security"
-        print("📢 [Content] Body:", content.body)   // "Incoming call"
+        print("📢 [Content] Title:", content.title)  // "Security"
+        print("📢 [Content] Body:", content.body)  // "Incoming call"
         completionHandler([.alert, .badge, .sound])
     }
 
@@ -214,8 +217,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("🔥 NOTIFICATION RECEIVED didReceive")
         let content = response.notification.request.content
         print("content", content)
-        print("📢 Title dari Alert:", content.title) // "Security"
-        print("📢 Body dari Alert:", content.body)   // "Incoming call"
+        print("📢 Title dari Alert:", content.title)  // "Security"
+        print("📢 Body dari Alert:", content.body)  // "Incoming call"
         let actionId = response.actionIdentifier
         if actionId == "ANSWER_ACTION" {
             print("📞 Answer pressed")
@@ -224,65 +227,69 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("📞 Decline pressed")
             // Same here
         }
-        
+
         // Akses custom data
         let userInfo = content.userInfo
         if let callerName = userInfo["callerName"] as? String {
-            print("📢 Caller Name:", callerName) // "Security"
+            print("📢 Caller Name:", callerName)  // "Security"
         }
         NotificationCenter.default.post(
             name: NSNotification.Name.init("pushNotificationReceived"), object: response)
         completionHandler()
     }
 
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("🔥 NOTIFICATION RECEIVED")
-        print("caller", userInfo)
-        
-        Messaging.messaging().appDidReceiveMessage(userInfo)
-        completionHandler(.noData)
+    func application(
+        _ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+
+        print("🔔 Silent Push Received:", userInfo)
+        // Lakukan sesuatu di background
+        completionHandler(.newData)
     }
 }
 
-// MARK: - MessagingDelegate  
+// MARK: - MessagingDelegate
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("📱 Firebase FCM registration token updated: \(String(describing: fcmToken))")
-        
+
         guard let token = fcmToken else {
             print("❌ FCM token is nil")
             return
         }
-        
+
         print("📱 FCM Token length: \(token.count)")
         print("📱 FCM Token: \(token)")
-        
+
         // ✅ Simpan ke UserDefaults
         UserDefaults.standard.set(token, forKey: "FCMToken")
-        
+
         // // ✅ Post notification untuk JavaScript
         // DispatchQueue.main.async {
         //     NotificationCenter.default.post(
-        //         name: NSNotification.Name("FCMTokenReceived"), 
+        //         name: NSNotification.Name("FCMTokenReceived"),
         //         object: token
         //     )
         // }
 
         DispatchQueue.main.async {
-            if let webView = self.window?.rootViewController?.view.subviews.first(where: { $0 is WKWebView }) as? WKWebView {
+            if let webView = self.window?.rootViewController?.view.subviews.first(where: {
+                $0 is WKWebView
+            }) as? WKWebView {
                 let javascript = """
-                    document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
-                        detail: '\(token)'
-                    }));
-                """
+                        document.dispatchEvent(new CustomEvent('FCMTokenReceived', {
+                            detail: '\(token)'
+                        }));
+                    """
                 webView.evaluateJavaScript(javascript, completionHandler: nil)
             }
         }
-        
+
         // ✅ Optional: Send langsung ke server jika perlu
         // self.sendTokenToServer(token)
     }
-    
+
     // Optional method untuk kirim token ke server
     private func sendTokenToServer(_ token: String) {
         // Implementasi untuk kirim token ke server Anda
