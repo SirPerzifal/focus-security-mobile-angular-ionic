@@ -53,6 +53,10 @@ export class ClientRaiseTicketPage implements OnInit {
           console.log(this.closedTicket)
           console.log(this.openTicket)
         }
+        if (params['is_repplied']){
+          console.log("enter here reply")
+          this.loadMenuItems()
+        }
       }
     })
   }
@@ -87,7 +91,8 @@ export class ClientRaiseTicketPage implements OnInit {
               src: result.image, 
               alt: 'Icon for' + result.name, 
               route: '', 
-              text: result.name
+              text: result.name,
+              count: result.count,
             }))
           } else {
           }
@@ -366,6 +371,10 @@ export class ClientRaiseTicketPage implements OnInit {
         if (results.result.response_code == 200) {
           this.functionMain.presentToast(`Successfully create new ticket!`, 'success');
           this.openTicket = []
+          let index = this.menuItems.findIndex((item: any) => item.id == this.newTicket.ticket_type_id)
+          console.log(index)
+          console.log(this.menuItems[index])
+          this.menuItems[index].count = this.menuItems[index].count + 1
           this.toggleShowActive()
         } else {
           this.functionMain.presentToast(`An error occurred while creating new ticket!`, 'danger');

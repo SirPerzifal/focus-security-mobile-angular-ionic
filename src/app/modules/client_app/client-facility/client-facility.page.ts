@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
 
 @Component({
   selector: 'app-client-facility',
@@ -17,7 +19,7 @@ export class ClientFacilityPage implements OnInit {
     private clientMainService: ClientMainService, 
     public functionMain: FunctionMainService, 
     private route: ActivatedRoute,
-    private getUserInfoService: GetUserInfoService
+    private facilityService: NewBookingService,
   ) { }
 
   ngOnInit() {
@@ -243,5 +245,99 @@ export class ClientFacilityPage implements OnInit {
     this.inputPage = page
     this.loadBooking()
   }
+
+  isModal = false
+  
+  openModal() {
+    if (this.isFacility) {
+      this.isModal = true
+    } else {
+      this.router.navigate(['/client-facility-new-booking'])
+    }
+  }
+  
+  closeModal() {
+    this.isModal = false
+    this.newFacilityForm = {}
+  }
+
+  newFacilityForm: any = {}
+  onSubmitNewFacility() {
+    console.log(this.newFacilityForm)
+    let errMsg = ''
+    if (!this.newFacilityForm.facility_name) {
+      errMsg += "Facility name is required! \n"
+    }
+    // if (!this.newFacilityForm.facility_banner) {
+    //   errMsg += "Room name is required! \n"
+    // }
+    if (errMsg != '') {
+      this.functionMain.presentToast(errMsg, 'danger')
+      return
+    }
+    this.clientMainService.getApi(this.newFacilityForm, '/client/post/edit_facility').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.functionMain.presentToast(this.newFacilityForm.facility_id ? `Successfully update facility!` : `Successfully add new facility!`, 'success');
+          this.loadFacilities()
+          this.closeModal()
+        } else {
+          this.functionMain.presentToast(`An error occurred while ${this.newFacilityForm.facility_id ? 'adding new' : 'updating'} facility!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast(`An error occurred while ${this.newFacilityForm.facility_id ? 'adding new' : 'updating'} facility!`, 'danger');
+        console.error(error);
+      }
+    });
+    
+  }
+
+  async takePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        source: CameraSource.Camera,
+        resultType: CameraResultType.Base64
+      });
+      this.newFacilityForm.facility_banner = image.base64String;
+    } catch (error) {
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as { message: string }).message;
+        if (errorMessage === 'User cancelled photos app') {
+          return;
+        }
+      }
+      
+      this.newFacilityForm.facility_banner = false
+      this.functionMain.presentToast('Error taking photo', 'danger')
+      console.error(error)
+    }
+    
+  };
+
+  editFacility(facility: any) {
+    this.newFacilityForm = {
+      facility_name: facility.facility_name,
+      facility_banner: facility.facility_banner,
+      facility_id: facility.facility_id,
+    }
+    this.openModal()
+  }
+
+  minDate: any = new Date().toISOString();
+  selectedDate: string = new Date().toISOString();
+  selectedRoom: any = false
+
+  onDateChange(event: any) {
+    this.selectedRoom = false; // Kembalikan ke opsi default
+    // this.loadRoomSchedule(event)
+
+    // if (this.chooseDateModal) {
+    //   this.chooseDateModal.dismiss();
+    // }
+  }
+
 
 }

@@ -133,9 +133,22 @@
                             [(ngModel)]="EventsForm.event_title">
                         </app-text-input>
                     </div>
+                    <div class="w-full flex flex-col mb-2" *ngIf="!isRead && project_config.is_industrial">
+                        <label class="block text-black font-bold mb-1 text-base">Booking</label>
+                        <select
+                            id="event_form_coach"
+                            [disabled]="isRead"
+                            (change)="onBookChange($event)"
+                            class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+                            [(ngModel)]="selectedBookId"
+                        >
+                        <option value="0" selected disabled hidden>{{ BookingResult.length > 0 ? 'Choose Booking' : 'No Bookings Found Today'}}</option>
+                        <option *ngFor="let book of BookingResult" [value]="book.id">{{ book.name }} ({{ functionMain.convertDateExtend(book.start_datetime) }} - {{functionMain.convertDateExtend(book.stop_datetime) }})</option>
+                        </select>
+                    </div>
                     <div class="w-full flex flex-col mb-2">
                         <label class="block text-black font-bold mb-1 text-base">Facility</label>
-                        <select id="event_form_coach" [disabled]="isRead" (change)="onFacilityChange($event)"
+                        <select id="event_form_coach" [disabled]="project_config.is_industrial" (change)="onFacilityChange($event)"
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="EventsForm.facility_id">
                             <option value="" selected disabled hidden>{{Facilities.length > 0 ? 'Choose Facility' : 'No Facility Found'}}</option>
@@ -153,7 +166,7 @@
                     </div>
                     <div class="w-full flex flex-col mb-2" *ngIf="!isRead">
                         <label class="block text-black font-bold mb-1 text-base">Room</label>
-                        <select id="event_form_coach" [disabled]="isRead"
+                        <select id="event_form_coach" [disabled]="project_config.is_industrial"
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="EventsForm.room_id">
                             <option value="" selected disabled hidden>{{Rooms.length > 0 ? 'Choose Room' : 'Choose The Facility First'}}</option>
@@ -220,11 +233,11 @@
                                     [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'text-black':true, 'px-3':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
                                     (change)="onStartDateChange($event)" [(ngModel)]="selectedEndDate">
                                 </app-text-input>
-                                <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs"
-                                    [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'">
+                                <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
+                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
                                     <input id="startTimeEventInput" type="time" (change)="onStartTimeChange($event)"
                                         class="w-[95%] text-sm" [(ngModel)]="selectedStartTime" #startTimeEventInput
-                                        [readonly]="isRead">
+                                        [readonly]="true">
                                 </div>
                             </div>
                         </div>
@@ -237,11 +250,11 @@
                                     [customInputClasses]="{'border':true, 'bg-white':true, '!border-gray-500':true , 'w-full':true, 'rounded-lg':true, 'py-2':true, 'px-3':true, 'outline-gray-500':true, 'h-12':true, 'text-sm':true, 'cw-3:text-xs':true}"
                                     (change)="onEndDateChange($event)" [min]="selectedStartDate">
                                 </app-text-input>
-                                <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs"
-                                    [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'">
+                                <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
+                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
                                     <input id="endTimeEventInput" type="time" (change)="onEndTimeChange($event)"
                                         class="w-[95%] text-sm" [min]="selectedStartTime" [(ngModel)]="selectedEndTime"
-                                        [readonly]="isRead" #endTimeEventInput>
+                                        [readonly]="true" #endTimeEventInput>
                                 </div>
                             </div>
                         </div>

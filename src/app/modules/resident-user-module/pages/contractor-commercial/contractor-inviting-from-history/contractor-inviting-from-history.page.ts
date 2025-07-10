@@ -43,7 +43,7 @@ export class ContractorInvitingFromHistoryPage implements OnInit {
           )
         );
         this.existingInvitees = existingInvitees; // Tandai invitee yang sudah ada di form sebelumnya
-        // console.log('tes-top', existingInvitees)
+        console.log('tes-top', existingInvitees)
       }
       // console.log('tes', existingInvitees)
       
@@ -55,7 +55,6 @@ export class ContractorInvitingFromHistoryPage implements OnInit {
       next: (response: any) => {
         if (response.result.response_status === 200) {
           this.historyData = response.result.response_result;
-          // console.log(response.result.response_result)
         } else {
           this.functionMain.presentToast('Failed to load history data', 'danger');
           // console.log(response)
@@ -75,12 +74,6 @@ export class ContractorInvitingFromHistoryPage implements OnInit {
   }
   
   isInviteeExisted(invitee: any): boolean {
-    console.log(this.existingInvitees.some(existingInvitee => 
-      existingInvitee.visitor_name === invitee.visitor_name &&
-      existingInvitee.contact_number === invitee.contact_number &&
-      existingInvitee.vehicle_number === invitee.vehicle_number
-    ));
-    
     return this.existingInvitees.some(existingInvitee => 
       existingInvitee.visitor_name === invitee.visitor_name &&
       existingInvitee.contact_number === invitee.contact_number &&

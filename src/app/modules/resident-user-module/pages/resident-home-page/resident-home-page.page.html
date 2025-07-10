@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" *ngIf="callActionStatus != 'acceptCall'">
   <app-header
     [userName]="useName"
     [condoName]="condominiumName"
@@ -6,8 +6,10 @@
     [condoImage]="condoImage"
   ></app-header>
 </ion-header>
-
-<ion-content id="resident-content" [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="callActionStatus == 'acceptCall'">
+  <app-loading-animation></app-loading-animation>
+</ion-content>
+<ion-content id="resident-content" [fullscreen]="true" *ngIf="callActionStatus != 'acceptCall'">
   <ion-refresher
     slot="fixed"
     (ionRefresh)="handleRefresh($event)"
@@ -21,6 +23,7 @@
       refreshingSpinner="none"
     ></ion-refresher-content>
   </ion-refresher>
+  
   <app-loading-animation *ngIf="isLoading"></app-loading-animation>
   <div *ngIf="!isLoading" class="p-5 text-center">
     <!-- <div class="w-full flex flex-row mb-4">
@@ -144,6 +147,6 @@
   </ion-modal>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="callActionStatus != 'acceptCall'">
   <app-botton-nav-bar></app-botton-nav-bar>
 </ion-footer>

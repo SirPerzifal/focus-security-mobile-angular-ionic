@@ -370,7 +370,7 @@ export class DeliveriesPage implements OnInit {
         },
         project_id: this.project_id,
         camera_id: camera_id,
-        host: this.selectedHost,
+        host: this.package_delivery_type === 'multiple' ? false : this.selectedHost,
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: '',

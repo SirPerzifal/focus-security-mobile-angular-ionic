@@ -17,7 +17,7 @@
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodBar.webp'" [text]="'FOOD DELIVERY'"
         (click)="toggleFoodDeliveries()" [isActive]="buttonStates.foodDeliveries" [disableClick]="true" />
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Package.webp'" [text]="'PACKAGE DELIVERIES'"
-        *ngIf="!project_config.is_industrial" (click)="togglePackageDeliveries()"
+        (click)="togglePackageDeliveries()"
         [isActive]="buttonStates.packageDeliveries" [disableClick]="true" />
       <app-button-icon [customNameIcon]="'faCouch'" [text]="'BULKY ITEM DELIVERIES'"
         *ngIf="!project_config.is_industrial" (click)="toggleBulkyItemDeliveries()"
@@ -143,6 +143,10 @@
                   [(cameraSelected)]="selectedImage">
                 </app-input-image-preview>
               </div>
+              <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
+                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
+              </div>
               <div class="w-full">
                 <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'"
                   (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
@@ -153,17 +157,13 @@
                   class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                   [(ngModel)]="formData.contact_number" name="contact_number">
               </div> -->
-              <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
-                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
-              </div>
               <div class="w-full  flex flex-row justify-between">
                 <div class="flex flex-col w-[90%]">
                   <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label> -->
                   <!-- <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
                     class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
                     [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
-                    <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'NAME'"
+                    <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
                       [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
                       [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
                 </div>
@@ -176,22 +176,22 @@
                   <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
                     (change)="onUnitTypeChange('multiple')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
                   <label for="inline-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Multiple
-                    Units</label>
+                    {{ project_config.is_industrial ? 'Hosts' : 'Units'}}</label>
                 </div>
                 <div class="flex items-center">
                   <input id="inline-2-radio" type="radio" value="single" name="inline-radio-group"
                     (change)="onUnitTypeChange('single')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
                   <label for="inline-2-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Single
-                    Unit</label>
+                    {{ project_config.is_industrial ? 'Host' : 'Units'}}</label>
                 </div>
               </div>
               <div class="w-full" *ngIf="showPax" @fadeInOut>
                 <form class="mx-auto flex flex-col">
-                  <label class="text-2xl"><u><b>NUMBER OF UNITS</b></u></label>
+                  <label class="text-2xl"><u><b>NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</b></u></label>
                   <select id="number_pax"
                     class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
                     style="border: 1px solid #6B7280;" [(ngModel)]="formData.pax" name="number_pax">
-                    <option value="0" selected hidden>CHOOSE NUMBER OF UNITS</option>
+                    <option value="0" selected hidden>CHOOSE NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>

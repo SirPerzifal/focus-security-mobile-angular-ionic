@@ -172,6 +172,7 @@ export class FunctionMainService {
   }
 
   convertDateExtend(dateString: string): string {
+    if (!dateString) return '-'
     let dateFront = dateString.split(' ')[0]
     const [year, month, day] = dateFront.split('-'); // Pisahkan string berdasarkan "-"
     return `${day}/${month}/${year} ` + dateString.split(' ')[1]; // Gabungkan dalam format dd/mm/yyyy
@@ -483,28 +484,31 @@ export class FunctionMainService {
     });
   }
 
-  async banAlert(message: string, unit_id: any = false, host_id: any = false,) {
+  async banAlert(message: string, unit_id: any = false, host_id: any = false, is_client: any = false) {
     console.log(unit_id, host_id)
     let buttonArray: any = []
-    if (message[1]) {
-      buttonArray.push({
-        text: 'Call',
-        role: 'confirm',
-        handler: () => {
-          console.log(message[1])
-          this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false);
-        },
-      })
+    if (!is_client) {
+      if (message[1]) {
+        buttonArray.push({
+          text: 'Call',
+          role: 'confirm',
+          handler: () => {
+            console.log(message[1])
+            this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false);
+          },
+        })
+      }
     }
     buttonArray.push({
       text: 'Close',
       role: 'cancel',
+      cssClass: 'cancel-button',
       handler: () => {
       },
     },)
 
     const alertButtons = await this.alertController.create({
-      cssClass: 'checkout-alert',
+      cssClass: is_client ? 'custom-alert-class-resident-visitors-page' : 'checkout-alert',
       header: `${message[0]} ${message[1] ? 'Please kindly contact the ban requestor.' : ''}`,
       buttons: buttonArray
     }
@@ -532,6 +536,9 @@ export class FunctionMainService {
 
   callFromPhone(contact: any) {
     if (contact) {
+      if (contact[0] != '+' && contact[0] != '0'){
+        contact = '+' + contact
+      }
       window.open(`tel:${contact}`, '_system');
     } else {
       this.presentToast("Contact number is empty!", 'danger')

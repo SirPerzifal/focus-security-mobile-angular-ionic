@@ -350,10 +350,8 @@
                   [(ngModel)]="selectedEndDate"
                 >
                 </app-text-input>
-                <div
-                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
-                  [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"
-                >
+                <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
+                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
                   <input
                     id="startTimeEventInput"
                     type="time"
@@ -383,10 +381,8 @@
                   [min]="selectedStartDate"
                 >
                 </app-text-input>
-                <div
-                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
-                  [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"
-                >
+                <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
+                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
                   <input
                     id="endTimeEventInput"
                     type="time"

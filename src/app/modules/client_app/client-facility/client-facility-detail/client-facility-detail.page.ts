@@ -35,13 +35,30 @@ export class ClientFacilityDetailPage implements OnInit {
 
   facilityForm: any = []
   submitForm: any = []
+  isNew = false
 
   onRoomChange(event: any) {
     this.selectedRoomId = event.target.value
-    this.selectedRoom = this.facilityForm.room_ids.filter((item: any) => item.room_id == event.target.value)[0]
-    console.log(this.selectedRoom)
-    this.submitForm = this.selectedRoom
-    this.roomName = this.submitForm.room_name
+    console.log(this.selectedRoomId)
+    if (this.selectedRoomId == 'create_new') {
+      this.isNew = true
+      this.roomName = ''
+
+      this.selectedRoom = {
+        start_time: false,
+        end_time: false,
+        is_close_for_maintenance: false,
+        is_need_checked: false,
+        terms_and_conditions: '',
+      }
+      this.submitForm = this.selectedRoom
+    } else {
+      this.isNew = false
+      this.selectedRoom = this.facilityForm.room_ids.filter((item: any) => item.room_id == event.target.value)[0]
+      console.log(this.selectedRoom)
+      this.submitForm = this.selectedRoom
+      this.roomName = this.submitForm.room_name
+    }
   }
 
   selectedRoom: any
@@ -55,11 +72,15 @@ export class ClientFacilityDetailPage implements OnInit {
       this.functionMain.presentToast('Select a room first', 'danger')
       return
     } else {
-      if (!this.submitForm.room_name) {
+      if (!this.roomName) {
         errMsg += "Room name is required! \n"
       }
-      if (this.functionMain.timeToInt(this.submitForm.end_time) <= this.functionMain.timeToInt(this.submitForm.start_time)) {
-        errMsg += "Close hour can't be the same as or less than open hour! \n"
+      if (!this.submitForm.end_time || !this.functionMain.timeToInt(this.submitForm.start_time)) {
+        errMsg += "Open hour and close hour are required! \n"
+      } else {
+        if (this.functionMain.timeToInt(this.submitForm.end_time) <= this.functionMain.timeToInt(this.submitForm.start_time)) {
+          errMsg += "Close hour can't be the same as or less than open hour! \n"
+        }
       }
       if (errMsg != '') {
         this.functionMain.presentToast(errMsg, 'danger')
@@ -67,7 +88,9 @@ export class ClientFacilityDetailPage implements OnInit {
       }
       console.log(this.submitForm.start_time, this.submitForm.end_time, this.functionMain.timeToInt(this.submitForm.start_time), this.functionMain.timeToInt(this.submitForm.end_time))
       let params = {
-        room_id : this.selectedRoomId,
+        is_new: this.isNew,
+        facility_id: this.facilityForm.facility_id,
+        room_id : this.isNew ? this.selectedRoomId : false,
         name : this.roomName,
         open_time : this.functionMain.timeToInt(this.submitForm.start_time),
         close_time : this.functionMain.timeToInt(this.submitForm.end_time),

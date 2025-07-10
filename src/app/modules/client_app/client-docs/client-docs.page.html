@@ -51,16 +51,21 @@
             <div *ngFor="let file of Files">
               <div *ngIf="file.document_type === 'folder'; else otherFile" class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded" (click)="reqParent(file.id, file.name, file.parent_id)">
                 <img class="w-10 h-10 my-2" src="assets/icon/folder-enhance.png" alt="Folder Image"/>
-                <h2 class="font-bold">
+                <span class="text-base font-bold">
                   {{ file.name }}
-                </h2>
+                </span>
               </div>
               <ng-template #otherFile>
                 <div class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded" (click)="functionMain.downloadDocument(file.document, file.name)">
                   <img class="w-10 h-10 my-2" src="assets/icon/text-icon.png" alt="Folder Image"/>
-                  <h2 class="font-bold">
-                   {{ file.name }}
-                  </h2>
+                  <div class="flex flex-col">
+                    <span class="text-base font-bold">
+                      {{ file.name }}
+                    </span>
+                    <span class="text-sm">
+                      Published date: {{ functionMain.convertDateExtend(file.create_date) }}
+                    </span>
+                  </div>
                 </div>
               </ng-template>
             </div>
@@ -74,12 +79,24 @@
       </div>
     </div>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="bottom: 90px;">
-    <ion-fab-button (click)="addItem()">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="mb-20">
+    <ion-fab-button (click)="openModalChoose()">
       <ion-icon name="add" class="text-white"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-modal id="text-modal" [isOpen]="isOpenModal" (didDismiss)="closeModal()">
+  <ion-modal id="text-modal" [isOpen]="isModalChoose" (didDismiss)="closeModalChoose()">
+    <ng-template>
+      <div class="wrapper space-x-2 flex flex-row !w-full">
+        <div class="w-full">
+          <app-visitor-button [text]="'Add Folder'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-gray-800 p-2 !w-full rounded border border-black font-bold h-12 text-base'" (click)="openModalAddFolder()"></app-visitor-button>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'Add Document'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-gray-800 p-2 !w-full rounded border border-black font-bold h-12 text-base'" (click)="openModalAddDocument()"></app-visitor-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal id="text-modal" [isOpen]="isOpenModalAddDocument" (didDismiss)="closeModalAddDocument()">
     <ng-template>
       <div class="wrapper space-y-2">
         <div class="w-full">
@@ -108,7 +125,22 @@
       </div>
     </ng-template>
   </ion-modal>
-  </ion-content>
+    <ion-modal id="text-modal" [isOpen]="isOpenModalAddFolder" (didDismiss)="closeModalAddFolder()">
+    <ng-template>
+      <div class="wrapper space-y-2">
+        <div class="w-full mb-2">
+          <app-text-input [labelResidentText]="'Folder Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_folder_name'" [customClasses]="{'w-full items-start': true}"
+            [type]="'text'"
+            [(ngModel)]="folderName"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-12': true, 'text-base': true}">
+          </app-text-input>
+        </div>
+        <app-visitor-button [text]="'Add Folder'" [extraClass]="'bg-[var(--ion-color-primary)] text-white text-gray-800 p-2 w-40 rounded border border-black font-bold h-12'" (click)="uploadDocument()"></app-visitor-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

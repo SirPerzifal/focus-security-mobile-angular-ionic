@@ -681,6 +681,18 @@ const routes: Routes = [
     path: 'unregistered-simulation-module',
     loadChildren: () => import('./modules/vms_app/unregistered-simulation-module/unregistered-simulation-module.module').then( m => m.UnregisteredSimulationModulePageModule)
   },
+  {
+    path: 'client-facility-new-booking',
+    loadChildren: () => import('./modules/client_app/client-facility/client-facility-new-booking/client-facility-new-booking.module').then( m => m.ClientFacilityNewBookingPageModule)
+  },
+  {
+    path: 'splash-call',
+    loadChildren: () => import('./modules/call_module/splash-call/splash-call.module').then( m => m.SplashCallPageModule)
+  },
+  {
+    path: 'client-department',
+    loadChildren: () => import('./modules/client_app/client-department/client-department.module').then( m => m.ClientDepartmentPageModule)
+  },
 ];
 
 @NgModule({

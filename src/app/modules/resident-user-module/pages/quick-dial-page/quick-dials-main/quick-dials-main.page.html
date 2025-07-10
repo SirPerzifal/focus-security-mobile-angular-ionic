@@ -33,12 +33,12 @@
         <ion-button
           fill="clear"
           class="w-full flex bg-[#D8ECCF] h-24 rounded-2xl relative p-0 m-0"
-          (click)="selectQuickDial(dial)"
+          (click)="onClickCallButton(dial)"
         >
           <div class="w-full flex flex-col items-center">
             <img
               class="w-12 h-12"
-              [src]="functionMain.getImage(dial.icon)"
+              [src]="functionMain.getImage(dial.image)"
               [alt]="'Icon for ' + dial.name"
             />
             <span
@@ -51,50 +51,43 @@
     </div>
 
     <!-- Overlay and Modal -->
-    <div
-      class="modal-overlay"
-      *ngIf="selectedQuickDialParam"
-      (click)="closePopup()"
-    ></div>
-    <div class="modal" *ngIf="selectedQuickDialParam">
-      <div
-        class="bg-[#D8ECCF] p-4 rounded-lg m-3 text-center"
-        [ngClass]="{'animate-popup': !isAnimating, 'animate-popdown': isAnimating}"
-      >
-        <p class="text-lg cw-1:text-sm font-bold mb-4">
-          Call {{ selectedQuickDialParam.name }} Via
-        </p>
-        <p class="text-md mb-4">{{ selectedQuickDialParam.number }}</p>
-        <div
-          *ngIf="selectedQuickDialParam.is_allow_whatsapp === true"
-          class="flex justify-between space-x-2"
-        >
-          <button
-            (click)="openWhatsApp(selectedQuickDialParam.number)"
-            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
-          >
-            Whatsapp
-          </button>
-          <button
-            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
-            (click)="closePopup(selectedQuickDialParam.number)"
-          >
-            Phone Call
-          </button>
+    <ion-modal id="text-modal" [isOpen]="isModalDetailPhone" (didDismiss)="closeModal()">
+      <ng-template>
+        <div class="wrapper-green">
+          <div class="w-full flex flex-col items-center justify-center">
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base font-bold">{{ dataSelect.name }}</p>
+            </div>
+            <div class="flex flex-row justify-start mb-1">
+              <p class="text-base">{{ dataSelect.contact_number }}</p>
+            </div>
+          </div>
+          <div *ngIf="dataSelect.can_call_with === 'both'" class="w-full flex flex-col justify-center items-center">
+            <div class="w-full flex flex-row space-x-2">
+              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+                Phone Dial
+              </button>
+              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToInAppCall(dataSelect.id)">
+                In App Call
+              </button>
+            </div>
+            <button *ngIf="dataSelect.is_whatsapp" class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+              Whatsapp
+            </button>
+          </div>
+          <div *ngIf="dataSelect.can_call_with === 'phone_dial'" class="w-full flex flex-col justify-center items-center">
+            <div class="w-full flex flex-row space-x-2">
+              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+                Phone Dial
+              </button>
+              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+                Whatsapp
+              </button>
+            </div>
+          </div>
         </div>
-        <div
-          *ngIf="selectedQuickDialParam.is_allow_whatsapp === false"
-          class="flex justify-between space-x-2"
-        >
-          <button
-            class="bg-[var(--ion-color-primary)] text-white font-bold border rounded-lg px-4 py-2 w-full"
-            (click)="startCall(selectedQuickDialParam)"
-          >
-            Phone Call
-          </button>
-        </div>
-      </div>
-    </div>
+      </ng-template>
+    </ion-modal>
   </div>
 </ion-content>
 

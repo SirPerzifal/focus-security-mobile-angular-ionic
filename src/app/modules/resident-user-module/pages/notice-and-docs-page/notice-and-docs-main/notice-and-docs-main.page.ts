@@ -74,15 +74,22 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
       }, 1000)
     } else {
       setTimeout(() => {
-        this.notices = [];
-        this.originalNotices = [];
         this.navButtons[0].active = false;
         this.navButtons[1].active = true;
         this.pageName = 'Docs';
-        this.loadFile();
-        this.previousParentNames = [];
-        this.previousParentId = 0;
-        this.isRoot = false;
+        if (this.previousParentNames.length > 0) {
+          console.log("suk atas", this.previousParentIds, this.isRoot);
+          // Ambil parentId terakhir dari array
+          const lastParentId = this.previousParentNames[this.previousParentNames.length - 1].id // Hapus dan ambil parentId terakhir
+          // // console.log(this.previousParentNames);
+          this.loadDocuments(lastParentId); // Muat dokumen untuk parentId tersebut
+          this.isRoot = this.previousParentNames.length === 0; // Periksa apakah masih di root
+        } else {
+          console.log("suk bawah", this.previousParentId, this.isRoot);
+          this.previousParentId = 0;
+          this.isRoot = false;
+          this.loadFile(); // Kembali ke file utama jika tidak ada parent
+        }
         this.showNotice = false;
         this.showDocs = true;
         event.target.complete();
@@ -202,6 +209,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         document : file.document,
         document_type : file.document_type,
         path : file.path,
+        create_date: file.create_date,
       }));
       this.isLoading = false;
     })
@@ -220,6 +228,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         document : file.document,
         document_type : file.document_type,
         path : file.path,
+        create_date: file.create_date,
       }));
       this.isLoading = false
       // if (this.files.is_root = true) {

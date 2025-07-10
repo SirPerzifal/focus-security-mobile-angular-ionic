@@ -24,10 +24,11 @@
     <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5" *ngIf="!isMainLoading && menuItems.length > 0; else noTicketType">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems">
+          <span class="absolute top-0 right-0 bg-red-500 text-white text-base rounded-full px-2 z-10" *ngIf="menu.count > 0">{{ menu.count }}</span>
           <ion-button fill="clear" class="w-full h-[150px] flex bg-[var(--ion-color-tertiary)] rounded-2xl relative p-0 m-0"
             (click)="onClickMenu(menu)">
             <div class="w-full flex flex-col items-center">
-              <img class="w-16 h-13" [src]="menu.src ? functionMain.getImage(menu.src) : 'assets/icon/exc-client/ticket.png'" [alt]="menu.alt" />
+              <img class="w-16 h-13" [src]="menu.src ? functionMain.getImage(menu.src) : 'assets/icon/exc-client/ticket_2.png'" [alt]="menu.alt" />
               <span class="text-sm font-bold text-[black] text-center normal-case cw-4:text-[11.5px]">{{ menu.text
                 }}</span>
             </div>

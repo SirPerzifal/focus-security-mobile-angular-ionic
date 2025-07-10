@@ -1,8 +1,11 @@
 export interface QuickDial {
-    id: number;
-    name: string;
-    number: string;
-    is_allow_resident_quick_dials: boolean;
-    is_allow_whatsapp: boolean;
-    icon: string;
+    image: string,
+    name: string,
+    is_add: false,
+    can_call_with: string,
+    for_what_user: string,
+    related_account: number,
+    contact_number: string,
+    is_whatsapp: boolean,
+    id: number
   }

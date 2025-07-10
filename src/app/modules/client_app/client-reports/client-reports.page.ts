@@ -47,7 +47,8 @@ export class ClientReportsPage implements OnInit {
   project_id = 0
   family_name = ''
   project_config: any = []
-  today = new Date().toISOString().split('T')[0];
+  // today = new Date().toISOString().split('T')[0] + 'T' + new Date().toISOString().split('T')[1].slice(0, 5);
+  today = new Date().toISOString().split('T')[0]
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -214,8 +215,12 @@ export class ClientReportsPage implements OnInit {
     let print_time = ("0" + date_now.getDate()).slice(-2) + "/" + ("0" + (date_now.getMonth()+1)).slice(-2)  + "/" + date_now.getFullYear() + " "  + ("0" + date_now.getHours()).slice(-2) + ":" + ("0" + date_now.getMinutes()).slice(-2) + ":"  + ("0" + date_now.getSeconds()).slice(-2);
     console.log(print_time)
     let errMsg = ''
-    if (!this.startDateFilter || !this.endDateFilter) {
-      errMsg += 'Start date and end date filter must be selected! \n'
+    if (!this.startDateFilter || !this.endDateFilter || !this.startTimeFilter || !this.endTimeFilter) {
+      errMsg += 'Start date time and end date time filter must be selected! \n'
+    } else {
+      if (new Date(this.startDateFilter + ` ${this.startTimeFilter}:00`) > new Date(this.endDateFilter + ` ${this.endTimeFilter}:59`)) {
+        errMsg += "Start date can't be higher than end date! \n"
+      }
     }
     if (this.checkedFields.length == 0) {
       errMsg += 'At least one field is selected! \n'
@@ -226,8 +231,12 @@ export class ClientReportsPage implements OnInit {
     }
     let params = {
       fields: this.checkedFields.map((item: any) => { return {name: item.field, label: item.name}} ),
-      time_start: this.startDateFilter + ' 00:00:01',
-      time_end: this.endDateFilter + ' 23:59:59',
+      // time_start: this.startDateFilter.replace('T', ' ') + ':00',
+      // time_end: this.endDateFilter.replace('T', ' ') + ':00',
+      // time_start: this.startDateFilter + ' 00:00:00',
+      // time_end: this.endDateFilter + ' 23:59:59',
+      time_start: this.startDateFilter + ` ${this.startTimeFilter}:00`,
+      time_end: this.endDateFilter + ` ${this.endTimeFilter}:59`,
       model_name: this.selectedReport.model,
       timeframe_field: 'create_date',
       print_time: print_time,
@@ -255,16 +264,31 @@ export class ClientReportsPage implements OnInit {
   startDateFilter = ''
   endDateFilter = ''
 
+  startTimeFilter = '00:00'
+  endTimeFilter = '23:59'
+
   onStartDateChange(value: Event) {
     const input = value.target as HTMLInputElement;
     this.startDateFilter = input.value;
     console.log(this.startDateFilter)
   }
 
+  onStartTimeChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startTimeFilter = input.value;
+    console.log(this.startTimeFilter)
+  }
+
   onEndDateChange(value: Event) {
     const input = value.target as HTMLInputElement;
     this.endDateFilter = input.value;
     console.log(this.endDateFilter)
+  }
+
+  onEndTimeChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endTimeFilter = input.value;
+    console.log(this.endTimeFilter)
   }
 
   handleRefresh(event: any) {

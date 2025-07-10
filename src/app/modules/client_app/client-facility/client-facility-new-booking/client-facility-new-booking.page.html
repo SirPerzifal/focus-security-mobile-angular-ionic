@@ -1,0 +1,109 @@
+<ion-header>
+  <app-resident-header [is_client]="true" [text]="'Facilities'" [text_second]="'New Booking'" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
+  </ion-refresher>
+  <div class="flex flex-row justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+    <ion-datetime-button
+      class="w-4/5 mt-0.5"
+      datetime="datetime"
+    ></ion-datetime-button>
+    <ion-modal
+      id="choose-date-court-modal"
+      #chooseDateModal
+      keep-contents-mounted="true"
+    >
+      <ng-template>
+        <ion-datetime
+          id="datetime"
+          min="{{minDate}}"
+          presentation="date"
+          [(ngModel)]="selectedDate"
+          (ionChange)="onDateChange($event)"
+          [formatOptions]="{
+            date: {
+              day: '2-digit',
+              weekday: 'short',
+              month: 'long',
+            },
+          }"
+        ></ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <div class="size-12">
+      
+    </div>
+  </div>
+  <div class="flex flex-col mx-4 space-y-2 mb-20">
+
+    <div class="w-full flex flex-col">
+      <label class="text-base"><b>Facility</b></label>
+      <select id="client_new_booking_facility"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+        (change)="onFacilityChange($event)" [(ngModel)]="selectedFacility"  [disabled]="false">
+        <option value="" selected disabled hidden>Choose Facility</option>
+        <option *ngFor="let facility of Facilities" [value]="facility.facility_id">{{ facility.facility_name }}</option>
+      </select>
+    </div>
+
+    <div class="w-full flex flex-col">
+      <label class="text-base"><b>Room</b></label>
+      <select id="client_new_booking_room"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
+        [(ngModel)]="selectedRoom" (change)="loadRoomSchedule($event)"
+        [disabled]="false">
+        <option value="" selected disabled hidden>{{selectedFacility ? (Rooms.length == 0 ? 'There Is No Room Found' : 'Choose Room') : 'Choose The Facility First'}}</option>
+        <option *ngFor="let room of Rooms" [value]="room.room_id">{{ room.room_name }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center h-full my-[50px]">
+      <app-loading-animation *ngIf="isLoading"></app-loading-animation>
+    </div>
+    <div *ngIf="!isLoading && selectedRoom" class="grid grid-cols-3 gap-2 mb-4">
+      <button
+        *ngFor="let timeSlot of roomSchedule"
+        [ngClass]="getTimeSlotClass(timeSlot)"
+        (click)="selectTimeSlot(timeSlot)"
+        class="py-2 rounded h-14 text-base"
+      >
+        {{ timeSlot.start_time }} - {{ timeSlot.end_time }}
+      </button>
+    </div>
+
+    <div *ngIf="!isCloseForMaintenance && selectedRoom" class="">
+      <div class="flex items-start mb-4">
+        <input
+          id="termsCheckbox"
+          class="mr-2 mt-1"
+          type="checkbox"
+          [(ngModel)]="isTermsAccepted"
+        />
+        <label for="termsCheckbox" class="text-sm font-bold">
+          By clicking "Book Now," I acknowledge that I have read and agree to
+          the&nbsp;<u class="text-blue-400" (click)="presentModalAgreement()"
+            >Terms and Conditions</u
+          >&nbsp;for using this facility.
+        </label>
+      </div>
+
+      <div class="text-center mb-4">
+        <app-submit-button
+          [text]="'Book Now'"
+          [extraClass]="isTermsAccepted ? 'bg-[#10421d] text-[white] w-full h-14 text-base' : 'bg-[#D0D0D0] text-[#757575] w-full h-14 text-base cursor-not-allowed'"
+          (click)="uploadFacilityBooking()"
+        ></app-submit-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-footer>

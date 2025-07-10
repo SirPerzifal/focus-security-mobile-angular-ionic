@@ -139,12 +139,13 @@
                 <option value="Others">Others</option>
               </select>
               <input
-                *ngIf="showOther[i] && inviteeFormList[i].type_of_work === 'Others'"
+                *ngIf="showOther[i]"
                 [id]="'invf_type_of_work_' + i"
                 name="type_of_work_{{i}}"
                 placeholder=""
+                [value]
                 class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
-                (change)="onchangeTypeOfWork($event, 'input', i)"
+                [(ngModel)]="inviteeFormList[i].other"
                 required
               />
             </div>
@@ -159,7 +160,7 @@
                   [type]="'radio'"
                   [id]="'myself' + i"
                   [name]="'entry' + i"
-                  [checkedText]="isHostMyself(i)"
+                  [checkedText]="entryCheck[i] === 'myself'"
                   [value]="'myself'"
                   [text]="'Myself'"
                   (valueEmit)="changeHost($event, i)"
@@ -183,7 +184,7 @@
                   (outputValue)="hostChange($event, i)"
                   [divOuterClass]="'min-h-12 text-sm rounded border-black'"
                   [customTextClass]="'p-0 text-sm'"
-                  [Selected]="selectedHost"
+                  [Selected]="inviteeFormList[i].host_ids"
                   [labelText]="'Host'"
                 >
                 </app-m2m-selection>
