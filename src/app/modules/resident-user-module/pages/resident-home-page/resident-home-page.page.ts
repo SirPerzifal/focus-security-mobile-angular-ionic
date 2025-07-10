@@ -16,7 +16,7 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 
 import { Estate } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
-
+import { Observable } from 'rxjs';
 
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
@@ -44,6 +44,7 @@ export class ResidentHomePagePage implements OnInit {
   useName: string = '';
   imageProfile: string = '';
   familyType: string = '';
+  callActionStatus: string = '';
 
   longButtondata: any[] = [
     {
@@ -205,6 +206,9 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   ngOnInit() {
+    this.webRtcService.callActionStatus.subscribe(status => {
+      this.callActionStatus = status;
+    });
   }
 
   async loadEstate( email:string ) {

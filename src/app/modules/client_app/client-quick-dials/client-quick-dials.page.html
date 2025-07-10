@@ -3,19 +3,19 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher
-  slot="fixed"
-  (ionRefresh)="handleRefresh($event)"
-  style="z-index: 999"
-  pullFactor="0.3"
-  pullMin="40"
-  pullMax="80"
-  *ngIf="!isAdd"
->
-  <ion-refresher-content
-    pullingIcon="chevron-down-circle-outline"
-    refreshingSpinner="none"
-  ></ion-refresher-content>
-</ion-refresher>
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+    *ngIf="!isAdd"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
@@ -58,7 +58,7 @@
               class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
               *ngFor="let contact of header.data">
               <span class="text-lg font-bold">{{ contact.name }}</span>
-              <a [href]="'tel:' + contact.contact_number">
+              <a (click)="onClickCallButton(contact)">
                 <div
                   class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
                   <fa-icon [icon]="faPhone"
@@ -115,7 +115,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col relative mx-4" *ngIf="isAdd" @fadeInOut>
+    <div class="flex flex-col relative mx-4 mb-28" *ngIf="isAdd" @fadeInOut>
       <div class="flex flex-col justify-between mt-8 space-y-2 w-full">
         <div class="w-full flex flex-col justify-center items-center">
           <input #fileInput type="file" class="hidden" (change)="onFileChange($event)" accept="image/*">
@@ -135,21 +135,67 @@
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
             [(ngModel)]="contactForm.name"></app-text-input>
         </div>
-        <div class="w-full">
-          <app-vms-contact-input [(value)]="contactForm.contact_number" [id]="'client_contact_add_contact_number'"
-            [vmsPage]="false" [contactLabel]="'Mobile Number'" [labelClass]="'text-base'"
-            [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"></app-vms-contact-input>
-        </div>
         <div class="flex flex-row justify start items-center">
           <input id="client_contact_add_close" name="client_contact_add_close" type="checkbox"
             class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_add">
           <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Add to Resident App Quick
             Dials</label>
         </div>
-        <div class="flex flex-row justify start items-center">
+        <div class="w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">Can Call With</p>
+          </div>
+          <select
+            id="can_call_with"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
+            (change)="onChangeOfCanCallWith($event)"
+            [(ngModel)]="contactForm.can_call_with"
+          >
+            <option selected disabled hidden></option>
+            <option value="phone_dial">Phone Dial</option>
+            <option value="in_app_call">In App Call</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+        <div class="flex flex-row justify start items-center" *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'">
+          <input id="client_contact_add_close" name="client_contact_add_close" type="checkbox"
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="is_show_code">
+          <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Show Country Code</label>
+        </div>
+        <div class="w-full" *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both') && !is_show_code">
+          <app-text-input [labelResidentText]="'Mobile Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_contact_add_name'" [placeholder]="'Lana Ray'" [customClasses]="{'w-full items-start': true}"
+            [type]="'number'"
+            [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+            [(ngModel)]="contactForm.contact_number"></app-text-input>
+        </div>
+        <div *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both')  && is_show_code" class="w-full">
+          <app-vms-contact-input [(value)]="contactForm.contact_number" [id]="'client_contact_add_contact_number'"
+            [vmsPage]="false" [contactLabel]="'Mobile Number'" [labelClass]="'text-base'"
+            [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"></app-vms-contact-input>
+        </div>
+        <div *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'" class="flex flex-row justify start items-center">
           <input id="client_contact_whatsapp" name="client_contact_whatsapp" type="checkbox"
             class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_whatsapp">
           <label class="text-base font-bold mt-1 ml-3" for="client_contact_whatsapp">Allow Whatsapp</label>
+        </div>
+        <div *ngIf="contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'" class="w-full">
+          <div class="flex flex-row justify-start">
+            <p class="text-base font-bold">For What User?</p>
+          </div>
+          <select
+            id="for_what_user"
+            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
+            (change)="onChangeOfForWhatUser($event)"
+            [(ngModel)]="contactForm.for_what_user"
+          >
+            <option selected disabled hidden></option>
+            <option value="vms">VMS</option>
+            <option value="client_or_end_user">End User</option>
+          </select>
+        </div>
+        <div class="w-full" *ngIf="contactForm.for_what_user === 'client_or_end_user' && contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'">
+          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="''" [isOne]="true" [isVMS]="false" [divOuterClass]="'!outline-[#BDBDBD] !border-1 !border-black min-h-14'" [labelText]="'Related Account'" [Selected]="contactForm.related_account"></app-m2m-selection>
         </div>
         <div class="w-full ">
           <button (click)="onSubmit()"
@@ -167,7 +213,46 @@
       <p class="text-gray-600">There are no contacts.....</p>
     </div>
   </ng-template>
-  </ion-content>
+
+  <ion-modal id="text-modal" [isOpen]="isModalDetailPhone" (didDismiss)="closeModal()">
+    <ng-template>
+      <div class="wrapper-green">
+        <div class="w-full flex flex-col items-center justify-center">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">{{ dataSelect.name }}</p>
+          </div>
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base">{{ dataSelect.contact_number }}</p>
+          </div>
+        </div>
+        <div *ngIf="dataSelect.can_call_with === 'both'" class="w-full flex flex-col justify-center items-center">
+          <div class="w-full flex flex-row space-x-2">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+              Phone Dial
+            </button>
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10" (click)="actionToInAppCall(dataSelect.id)">
+              In App Call
+            </button>
+          </div>
+          <button *ngIf="dataSelect.is_whatsapp" class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+            Whatsapp
+          </button>
+        </div>
+        <div *ngIf="dataSelect.can_call_with === 'phone_dial'" class="w-full flex flex-col justify-center items-center">
+          <div class="w-full flex flex-row space-x-2">
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+              Phone Dial
+            </button>
+            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+              Whatsapp
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

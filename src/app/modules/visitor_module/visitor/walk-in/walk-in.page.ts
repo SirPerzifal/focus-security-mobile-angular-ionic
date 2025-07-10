@@ -33,7 +33,25 @@ export class WalkInPage implements OnInit {
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private blockUnitService: BlockUnitService,
-  ) { }
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { params: any};
+    if (state) {
+      console.log(state)
+      this.fromMa = true
+      this.maForm = state
+      this.maId = this.maForm.id
+      if (this.maForm.selection_type == 'drive_in') {
+        this.toggleShowDrive()
+        this.formData.visitor_vehicle = this.maForm.vehicle_number
+      } else {
+        this.toggleShowWalk()
+      }
+      this.formData.visitor_name = this.maForm.name
+      this.formData.visitor_name = this.maForm.name
+      this.formData.visitor_contact_no = this.maForm.contact_no
+
+    }  }
   
   ngOnInit() {
     this.paramsActiveFromCoaches.queryParams.subscribe(params => {
@@ -60,6 +78,10 @@ export class WalkInPage implements OnInit {
     family_id: '',
     purpose: ''
   };
+
+  maForm: any = false
+  maId: any = false
+  fromMa = false
 
   async loadProjectId() {
     await this.functionMain.vmsPreferences().then((value) => {
@@ -172,7 +194,9 @@ export class WalkInPage implements OnInit {
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
-        visitor_image: this.selectedImage
+        visitor_image: this.selectedImage,
+        ma_id: this.maId,
+        ma_form: this.maForm,
       }
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
@@ -185,7 +209,7 @@ export class WalkInPage implements OnInit {
               this.presentToast('Drive in data has been successfully saved to the system!', 'success');
             }
             
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 205) {
             if (openBarrier) {
               this.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
@@ -193,11 +217,11 @@ export class WalkInPage implements OnInit {
               this.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
             }
             this.resetPage()
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 405) {
             this.presentToast(res.result.status_description, 'danger');
             this.resetPage()
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
@@ -285,7 +309,9 @@ export class WalkInPage implements OnInit {
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
-        visitor_image: this.selectedImage
+        visitor_image: this.selectedImage,
+        ma_id: this.maId,
+        ma_form: this.maForm,
       }
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
@@ -298,7 +324,7 @@ export class WalkInPage implements OnInit {
               this.presentToast('Walk in data has been successfully saved to the system!', 'success');
             }
             this.resetPage()
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 205) {
             if (openBarrier) {
               this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
@@ -306,10 +332,10 @@ export class WalkInPage implements OnInit {
               this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
             }
             this.resetPage()
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 405) {
             this.presentToast(res.result.status_description, 'danger');
-            this.router.navigate(['home-vms'])
+            this.routeAfterSubmit()
           } else if (res.result.status_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
@@ -344,6 +370,8 @@ export class WalkInPage implements OnInit {
         this.isFromScan = false
       }
       this.showQrTrans = true
+      this.maId = false
+      this.maForm = false
       this.showDrive = false;
       this.showWalk = false;
       this.isHidden = true
@@ -357,10 +385,10 @@ export class WalkInPage implements OnInit {
 
   toggleShowWalk() {
     if (!this.showQrTrans && !this.showDriveTrans) {
-      if (this.showDrive && !this.isFromScan) {
+      if ((this.showDrive && !this.isFromScan) || !this.maId) {
         this.resetForm() 
       }
-      if (this.showQr && this.showClose) {
+      if ((this.showQr && this.showClose) || !this.maId) {
         this.stopScanner()
       }
       this.showWalkTrans = true
@@ -376,12 +404,13 @@ export class WalkInPage implements OnInit {
   toggleShowDrive() {
     if (!this.showQrTrans && !this.showWalkTrans) {
       console.log(this.isFromScan)
-      if (!this.showDrive && !this.isFromScan) {
+      console.log(this.maId)
+      if ((!this.showDrive && !this.isFromScan) && !this.maId) {
         this.resetForm() 
         this.refreshVehicle()
       }
       if (this.showQr && this.showClose) {
-        if (!this.isFromScan){
+        if (!this.isFromScan || !this.maId){
           this.refreshVehicle()
         }
         this.stopScanner()
@@ -454,6 +483,7 @@ export class WalkInPage implements OnInit {
   vehicle_number = ''
 
   refreshVehicle(is_click: boolean = false) {
+    console.log("ENTER REFRESH")
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       if (value) {
@@ -586,6 +616,7 @@ export class WalkInPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
+          this.fromMa = false
           this.isFromScan = true
           this.stopScanner()
           this.searchData = results.result.result[0]
@@ -631,16 +662,33 @@ export class WalkInPage implements OnInit {
   }
 
   onBackHome() {
+    let back_url = 'home-vms'
+    let params = {}
+    if (this.fromMa) {
+      back_url = '/ma-visitor-form'
+      params = {state: {schedule: this.maForm} }
+    } 
     if (this.isHidden){
       this.stopScanner()
       setTimeout(() => {
         this.resetPage()
-        this.router.navigate(['home-vms'])
+        this.router.navigate([back_url])
       }, 300);
     } else {
       this.resetPage()
-      this.router.navigate(['home-vms'])
+      this.router.navigate([back_url])
     }
+    
+  }
+
+  routeAfterSubmit() {
+    let back_url = 'home-vms'
+    let params = {}
+    if (this.fromMa) {
+      back_url = '/move-home'
+      params = {queryParams: {type: 'ma_visitor'} }
+    } 
+    this.router.navigate([back_url], params)
   }
 
   Host: any[] = [];

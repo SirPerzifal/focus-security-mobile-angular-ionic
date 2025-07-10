@@ -1,0 +1,12 @@
+ion-modal#text-modal {
+  --width: 90%;
+  --min-width: 250px;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#text-modal .wrapper-green {
+  padding: 15px;
+  background-color: #D8ECCF;
+}

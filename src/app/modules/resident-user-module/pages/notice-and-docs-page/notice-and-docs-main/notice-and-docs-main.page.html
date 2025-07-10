@@ -159,7 +159,7 @@
       </div>
       <div class="w-full space-y-3 mt-2 text-left" *ngIf="!isLoading">
         <div
-          *ngIf="previousParentId || isRoot"
+          *ngIf="previousParentNames.length > 0"
           class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] pl-1 pr-2.5 py-1.5 rounded"
           (click)="backToPreviousparent()"
         >
@@ -183,7 +183,7 @@
               src="assets/icon/folder-enhance.png"
               alt="Folder Image"
             />
-            <h2 class="font-bold">{{ file.name }}</h2>
+            <span class="text-base font-bold">{{ file.name }}</span>
           </div>
           <ng-template #otherFile>
             <div
@@ -195,7 +195,14 @@
                 src="assets/icon/text-icon.png"
                 alt="Folder Image"
               />
-              <h2 class="font-bold">{{ file.name }}</h2>
+              <div class="flex flex-col">
+                <span class="text-base font-bold">
+                  {{ file.name }}
+                </span>
+                <span class="text-sm">
+                  Published date: {{ functionMainService.convertDateExtend(file.create_date) }}
+                </span>
+              </div>
             </div>
           </ng-template>
         </div>

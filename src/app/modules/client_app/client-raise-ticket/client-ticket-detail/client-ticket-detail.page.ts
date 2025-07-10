@@ -57,11 +57,12 @@ export class ClientTicketDetailPage implements OnInit {
   secondTitle = 'Details'
 
   onBack(is_include_id: boolean = false) {
-    let params = is_include_id ? {queryParams: {close_id: this.ticket.id}} : {}
+    let params = is_include_id ? {close_id: this.ticket.id} : {}
+    let params_new = {...params, is_repplied: this.is_repplied}
     if(this.is_issue) {
-      this.router.navigate(['/client-app-issues'], params)
+      this.router.navigate(['/client-app-issues'], {queryParams: params_new})
     } else {
-      this.router.navigate(['/client-raise-ticket'], params)
+      this.router.navigate(['/client-raise-ticket'], {queryParams: params_new})
     }
   }
 
@@ -102,6 +103,8 @@ export class ClientTicketDetailPage implements OnInit {
     ir_attachments: [],
     body: ''
   }
+
+  is_repplied = false
 
   messageArray = [
     {
@@ -166,6 +169,7 @@ export class ClientTicketDetailPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
+          this.is_repplied = true
           this.showFile = false
           this.functionMain.presentToast(`Successfully add new reply!`, 'success');
           if (is_close) {

@@ -59,6 +59,7 @@
                 class="py-3.5 pl-4 pr-12 block w-full !border !border-gray-200 !rounded-lg text-sm clickable-element focus:border-blue-500 focus:ring-blue-500"
                 placeholder="**************"
                 [value]="existUser.password"
+                [(ngModel)]="existUser.password"
                 (change)="onPasswordChange($event)"
               />
               <button

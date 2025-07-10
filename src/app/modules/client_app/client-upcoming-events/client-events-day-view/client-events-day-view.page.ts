@@ -124,10 +124,12 @@ export class ClientEventsDayViewPage implements OnInit {
       this.EventsForm.unit_id = value.unit != null ? value.unit : 1
       this.project_id = value.project_id != null ? value.project_id : 1;
       this.project_config = value.config
+      this.family_id = value.family_id
       this.loadFacilityList()
       this.loadUpcomingEvents()
       if (this.project_config.is_industrial) {
         this.loadHost()
+        this.loadBook()
       } else {
         this.loadBlock()
         this.loadUnit()
@@ -137,6 +139,7 @@ export class ClientEventsDayViewPage implements OnInit {
 
   project_config: any = {}
 
+  family_id = ''
   Block: any = []
   Unit: any = []
   Host: any = []
@@ -288,6 +291,8 @@ export class ClientEventsDayViewPage implements OnInit {
       host_ids: event.event.host_ids,
       color: [] as string[],
     }
+    this.selectedBookId = 0
+    this.selectedBook = {}
     this.selectedHost = event.event.host_ids
     this.selectedBlock = event.event.block_ids
     this.selectedUnit = event.event.unit_ids
@@ -395,6 +400,9 @@ export class ClientEventsDayViewPage implements OnInit {
     let errMsg = ''
     if (!this.EventsForm.event_title) {
       errMsg += 'Title is required! \n'
+    }
+    if (this.selectedBookId == 0) {
+      errMsg += 'Booking is required! \n'
     }
     if (this.EventsForm.facility_id == '') {
       errMsg += 'Facility is required! \n'
@@ -531,6 +539,8 @@ export class ClientEventsDayViewPage implements OnInit {
     this.selectedStartTime = ''
     this.selectedStartDate = this.selectedDate
     this.selectedEndDate = this.selectedDate
+    this.selectedBookId = 0
+    this.selectedBook = {}
   }
 
   onClose() {
@@ -554,6 +564,8 @@ export class ClientEventsDayViewPage implements OnInit {
       unit_ids: [],
       host_ids: [],
     }
+    this.selectedBookId = 0
+    this.selectedBook = {}
     this.selectedHost = []
     this.selectedBlock = []
     this.selectedUnit = []
@@ -619,6 +631,47 @@ export class ClientEventsDayViewPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadUpcomingEvents().then(() => event.target.complete())
+  }
+
+  onBookChange(event: any) {
+    console.log(event.target.value) 
+    this.selectedBook = this.BookingResult.filter((item: any) => item.id == this.selectedBookId)[0]
+    this.selectedStartTime = (this.selectedBook.start_datetime).split(' ')[1]
+    this.selectedEndTime = (this.selectedBook.stop_datetime).split(' ')[1]
+    this.EventsForm.facility_id = this.selectedBook.facility_id
+    this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+    this.EventsForm.room_id = this.selectedBook.room_id
+    console.log(this.selectedBook)
+  }
+  
+  BookingResult: any = []
+  selectedBook: any = {}
+  selectedBookId = 0
+
+  loadBook() {
+    this.selectedBookId = 0
+    this.selectedBook = {}
+    this.BookingResult = []
+    let dateObj = new Date(this.selectedDate);
+    let localDateOnly = dateObj.toLocaleDateString('en-CA'); 
+    let params = {
+      selected_date: localDateOnly,
+      host_id: this.family_id,
+      is_client: true,
+    }
+    console.log(params)
+    this.clientMainService.getApi(params, '/residential/get/room_booking_based_on_host_id').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.BookingResult = results.result.result_booking
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get booking data!', 'danger');
+        console.error(error);
+      }
+    });
   }
 
 }

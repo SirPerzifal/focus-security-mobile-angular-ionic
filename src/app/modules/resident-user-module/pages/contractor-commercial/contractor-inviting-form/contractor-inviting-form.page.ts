@@ -78,10 +78,11 @@ export class ContractorInvitingFormPage implements OnInit {
     const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
   
     if (state) {
-        this.formData = {
-          ...state.formData,
-          dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
-        };
+      this.formData = {
+        ...state.formData,
+        dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
+      };
+
       if (state.selectedInvitees) {
         this.inviteeFormList = state.selectedInvitees; // Update local list
         this.isFormVisible = true; // Show form if there are invitees
@@ -101,6 +102,8 @@ export class ContractorInvitingFormPage implements OnInit {
     }
     // Gunakan setTimeout untuk memastikan rendering
     this.route.queryParams.subscribe(params => {
+      console.log(params);
+      
       this.initializeInviteeForm(params);
     });
   }
@@ -162,7 +165,8 @@ export class ContractorInvitingFormPage implements OnInit {
       }
     } else if (type === 'input') {
       // Ketika user mengetik di input "Others"
-      this.inviteeFormList[index].type_of_work = value;
+      // this.inviteeFormList[index].type_of_work = value;
+      this.inviteeFormList[index].other = value;
     }
   }
 
@@ -177,6 +181,8 @@ export class ContractorInvitingFormPage implements OnInit {
     // Prioritaskan state dari navigasi
     if (navigationState && navigationState['selectedInvitees']) {
       selectedInvitees = navigationState['selectedInvitees'];
+      console.log(selectedInvitees);
+      
     } 
     // Jika tidak ada, cek params
     else if (params && params['selectedInvitees']) {
@@ -188,6 +194,8 @@ export class ContractorInvitingFormPage implements OnInit {
     }
 
     if (selectedInvitees && selectedInvitees.length > 0) {
+      this.showOther = []
+      this.entryCheck = {}
       this.inviteeFormList = selectedInvitees.map((invitee: any) => {
         let contact_number = invitee.contact_number || '';
         let phone_display = '';
@@ -200,8 +208,8 @@ export class ContractorInvitingFormPage implements OnInit {
         } else {
           phone_display = contact_number;
         }
-  
-        return {
+
+        const value: any = {
           contractor_name: invitee.contractor_name || '',
           contact_number: contact_number,
           phone_display: phone_display, // Field terpisah untuk display
@@ -210,7 +218,24 @@ export class ContractorInvitingFormPage implements OnInit {
           type_of_work: invitee.type_of_work || '',
           expected_number_of_visit: invitee.expected_number_of_visit || '',
           host_ids: invitee.host_ids || []
-        };
+        }
+
+        // Perbaikan: gunakan assignment biasa, bukan append
+        if (invitee.other) {
+          value.other = invitee.other;
+        }
+  
+        return value;
+      });
+      console.log(this.inviteeFormList);
+      console.log(this.inviteeFormList.length);
+      console.log(this.showOther);
+      console.log(this.entryCheck);
+      this.showOther = this.inviteeFormList.map((invitee: any, index: number) => {
+        return invitee.type_of_work && invitee.type_of_work === 'Others' ? true : false;
+      });
+      this.inviteeFormList.forEach((invitee: any, index: number) => {
+        this.entryCheck[index] = (invitee.host_ids && invitee.host_ids.length > 1) ? "other_host" : "";
       });
 
       // Update selectedCountry berdasarkan contact_number
@@ -259,7 +284,6 @@ export class ContractorInvitingFormPage implements OnInit {
 
   // Perbaikan method hostChange
   hostChange(event: any, index: number) {
-    console.log('Host selection changed:', event);
     // Set host_ids dengan nilai yang dipilih dari m2m-selection
     this.inviteeFormList[index].host_ids = event;
   }
@@ -408,6 +432,8 @@ export class ContractorInvitingFormPage implements OnInit {
   }
 
   navigateToInviteFormHistory() {
+    console.log(this.inviteeFormList);
+    
     this.router.navigate(['/contractor-inviting-from-history'], { 
       state: { existingInvitees: this.inviteeFormList } 
     });
@@ -576,6 +602,9 @@ export class ContractorInvitingFormPage implements OnInit {
       if (!invitee.host_ids || invitee.host_ids.length === 0) {
         errMsg += `Form ${index + 1}: Please choose host!\n`;
       }
+      if (invitee.type_of_work === 'Others') {
+        invitee.type_of_work = invitee.other
+      }
     });
 
     // Validasi form sebelum submit
@@ -587,6 +616,7 @@ export class ContractorInvitingFormPage implements OnInit {
         invitee.expected_number_of_visit > 1
       );
       this.formData.entryType = hasMultipleVisits ? 'multiple_entry' : 'one_time_entry';
+
 
       // Lanjutkan dengan API call...
       this.submitInvitation();

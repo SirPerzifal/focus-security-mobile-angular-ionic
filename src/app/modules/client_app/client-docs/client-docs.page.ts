@@ -59,6 +59,7 @@ export class ClientDocsPage implements OnInit {
             document : file.document,
             document_type : file.document_type,
             path : file.path,
+            create_date: file.create_date,
           }));
           console.log(this.Files)
         } else {
@@ -121,14 +122,39 @@ export class ClientDocsPage implements OnInit {
     console.log(file)
   }
 
-  isOpenModal = false
-  addItem() {
-    // console.log(this.currentParentId)
-    this.isOpenModal = true
+  isModalChoose = false
+  isOpenModalAddDocument = false
+  isOpenModalAddFolder = false
+  status = ''
+
+  openModalChoose() {
+    this.isModalChoose = true
   }
 
-  closeModal() {
-    this.isOpenModal = false
+  closeModalChoose() {
+    this.isModalChoose = false
+  }
+
+  folderName = ''
+  openModalAddFolder() {
+    this.isModalChoose = false
+    this.isOpenModalAddFolder = true
+    this.status = 'Add Folder'
+  }
+
+  closeModalAddFolder() {
+    this.folderName = ''
+    this.isOpenModalAddFolder = false
+  }
+
+  openModalAddDocument() {
+    this.isModalChoose = false
+    this.status = 'Add Document'
+    this.isOpenModalAddDocument = true
+  }
+
+  closeModalAddDocument() {
+    this.isOpenModalAddDocument = false
     this.selectedFile = null
     this.fileName = ''
     this.attachment = ''
@@ -173,23 +199,43 @@ export class ClientDocsPage implements OnInit {
 
   uploadDocument() {
     let parent_id = this.previousParentNames.length > 0 ? this.previousParentNames[this.previousParentNames.length - 1].id : false
-    let params = {
-      project_id: this.project_id,
-      name: this.attachment_name,
-      parent_id: parent_id,
-      attachment: this.attachment
+    
+    let params = {}
+    if (this.status === 'Add Folder') {
+      params = {
+        project_id: this.project_id,
+        name: '',
+        folder_name: this.folderName,
+        parent_id: parent_id,
+        attachment: '',
+        status: this.status
+      }
+    } else if (this.status === 'Add Document') {
+      params = {
+        project_id: this.project_id,
+        name: this.attachment_name,
+        folder_name: '',
+        parent_id: parent_id,
+        attachment: this.attachment,
+        status: this.status
+      }
     }
+    
     let errMsg = ''
-    if (!this.attachment_name) {
+    if (!this.attachment_name && this.status === 'Add Document') {
       errMsg += 'File name is required! \n'
     }
-    if (!this.attachment) {
+    if (!this.folderName && this.status === 'Add Folder') {
+      errMsg += 'Folder name is required! \n'
+    }
+    if (!this.attachment && this.status === 'Add Document') {
       errMsg += 'Document is required! \n'
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
+    
     console.log(params)
     this.clientMainService.getApi(params, '/client/post/docs_document').subscribe(
       (results) => {
@@ -200,7 +246,8 @@ export class ClientDocsPage implements OnInit {
           this.fileName = ''
           this.attachment = ''
           this.attachment_name = ''
-          this.isOpenModal = false
+          this.isOpenModalAddDocument = false
+          this.isOpenModalAddFolder = false
           if (parent_id) {
             this.loadNotices(parent_id)
           } else {

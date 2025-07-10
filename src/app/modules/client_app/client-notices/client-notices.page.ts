@@ -88,11 +88,12 @@ export class ClientNoticesPage implements OnInit {
   isLoading = false
   async loadNotice() {
     const params = {
-      unit_id: [this.dataUser .unit_id], // Pastikan ini adalah array
-      block_id: [this.dataUser .block_id] // Pastikan ini adalah array
+      issue_date: this.startDateFilter,
+      end_issue_date: this.endDateFilter,
     };
     this.isLoading = true
-    this.clientMainService.getApi({}, '/client/get/notice').subscribe(
+    this.showNotice = []
+    this.clientMainService.getApi(params, '/client/get/notice').subscribe(
       (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
@@ -107,11 +108,15 @@ export class ClientNoticesPage implements OnInit {
               end_time: notice.end_date,
             };
           })
+        } else if (results.result.response_code == 401) {
+          
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to fetch notice data!', 'danger')
         }
         this.isLoading = false
       },
       (error) => {
-        console.error('Error fetching notices:', error);
+        this.functionMain.presentToast('An error occurred while trying to fetch notice data!', 'danger')
         this.isLoading = false
       }
     );
@@ -123,8 +128,6 @@ export class ClientNoticesPage implements OnInit {
       (results) => {
         if (results.result.response_code == 200) {
           this.loadNotice()
-          this.showNotice = [];
-          this.loadNotice();
           this.functionMain.presentToast(`Successfully deleted the notice!`,'success');
         } else {
           this.functionMain.presentToast(`An error occurred while deleting the notice!`, 'danger');
@@ -498,6 +501,31 @@ export class ClientNoticesPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadNotice().then(() => event.target.complete())
+  }
+
+  onStartDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.startDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.endDateFilter = input.value;
+    this.applyDateFilter();
+  }
+
+  startDateFilter = ''
+  endDateFilter = ''
+
+  applyDateFilter() {
+    this.loadNotice()
+  }
+
+  resetFilter() {
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+    this.applyDateFilter()
   }
 
 }

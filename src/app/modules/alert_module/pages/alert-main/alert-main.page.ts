@@ -635,22 +635,11 @@ export class AlertMainPage implements OnInit {
     this.router.navigate(['/home-vms'])
   }
 
-  async presentModalFirstWarning(vehicle_number: any, entry_type: any, issue_time: any) {
-    let comp = {}
-    if (entry_type == 'overstay') {
-      comp = {
-        type: 'first_warning',
-        vehicle_number: vehicle_number,
-        // type_of_entry: entry_type,
-        issue_time: issue_time,
-      }
-    } else {
-      comp = {
-        type: 'first_warning',
-        vehicle_number: vehicle_number,
-        is_open_selection: true,
-        issue_time: issue_time,
-      }
+  async presentModalFirstWarning(vehicle_number: any, entry_type: any, issue_time: any, issue_type: any) {
+    let comp = {
+      type: issue_type,
+      vehicle_number: vehicle_number,
+      issue_time: issue_time,
     }
     const modal = await this.modalController.create({
       component: RecordsWheelClampedNewPage,

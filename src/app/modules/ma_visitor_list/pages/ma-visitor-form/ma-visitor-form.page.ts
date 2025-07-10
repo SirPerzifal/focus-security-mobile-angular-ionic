@@ -28,6 +28,7 @@ export class MaVisitorFormPage implements OnInit {
     const state = navigation?.extras.state as { schedule: any};
     if (state) {
       this.record = state.schedule
+      console.log(this.record)
       if (this.record.vehicle_number != '') {
         this.selection_type = 'drive_in'
       }
@@ -49,7 +50,6 @@ export class MaVisitorFormPage implements OnInit {
       this.project_id = value.project_id
       this.project_config = value.config
       this.Camera = value.config.lpr
-      console.log(this.project_config);
     })
   }
 
@@ -81,39 +81,41 @@ export class MaVisitorFormPage implements OnInit {
     if (!this.record.vehicle_number && this.record.selection_type == 'drive_in') {
       errMsg += 'Vehicle number is required!\n';
     }
-    let params = {...this.record, camera_id: camera_id}
+    let params = {...this.record}
     console.log(params)
-    this.clientMainService.getApi(params, '/client/post/update_ma_visitor').subscribe({
-      next: (results) => {
-        console.log(results.result)
-        if (results.result.status_code === 200) {
-          this.functionMain.presentToast('Successfully update this visitor' + (is_open ? ' and open the barrier!' : '!'), 'success');
-          this.onBackMove()
-        } else if (results.result.status_code === 205) {
-          if (is_open) {
-            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
-          } else {
-            this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
-          }
-          this.router.navigate(['/home-vms'])
-        } else if (results.result.status_code === 405) {
-          this.functionMain.presentToast(results.result.status_description, 'danger');
-          this.router.navigate(['/home-vms'])
-        } else {
-          this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
-        }
+    this.router.navigate(['/walk-in'], {state: params})
+    // this.clientMainService.getApi(params, '/client/post/update_ma_visitor').subscribe({
+    //   next: (results) => {
+    //     console.log(results.result)
+    //     if (results.result.status_code === 200) {
+    //       this.functionMain.presentToast('Successfully update this visitor' + (is_open ? ' and open the barrier!' : '!'), 'success');
+    //       this.onBackMove()
+    //     } else if (results.result.status_code === 205) {
+    //       if (is_open) {
+    //         this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added. The barrier is now open!', 'success');
+    //       } else {
+    //         this.functionMain.presentToast('This data has been alerted on previous visit and offence data automatically added!', 'success');
+    //       }
+    //       this.router.navigate(['/home-vms'])
+    //     } else if (results.result.status_code === 405) {
+    //       this.functionMain.presentToast(results.result.status_description, 'danger');
+    //       this.router.navigate(['/home-vms'])
+    //     } else {
+    //       this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
+    //     }
 
-        // this.isLoading = false;
-      },
-      error: (error) => {
-        this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
-        console.error(error);
-        // this.isLoading = false;
-      }
-    });
+    //     // this.isLoading = false;
+    //   },
+    //   error: (error) => {
+    //     this.functionMain.presentToast('An error occurred while updating visitor data!', 'danger');
+    //     console.error(error);
+    //     // this.isLoading = false;
+    //   }
+    // });
   }
 
   refreshVehicle(is_click: boolean = false) {
+    if (this.record.is_submitted) return
     this.functionMain.getLprConfig(this.project_id).then((value) => {
       console.log(value)
       if (value) {

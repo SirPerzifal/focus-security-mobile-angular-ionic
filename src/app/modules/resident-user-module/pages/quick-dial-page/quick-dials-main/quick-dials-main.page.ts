@@ -16,7 +16,6 @@ export class QuickDialsMainPage implements OnInit {
   quickDials: QuickDial[] = [];
   projectId: number = 0;
 
-  selectedQuickDialParam: QuickDial | null = null;
   isAnimating: boolean = false;
 
   isLoading: boolean = true;
@@ -63,61 +62,123 @@ export class QuickDialsMainPage implements OnInit {
  loadQuickDials() {
   this.mainApiResidentService.endpointProcess({project_id: String(this.projectId)}, 'get/contact_list').subscribe((result: any) => {
     // // console.log(result);
-    this.quickDials = result.result.response_result.map((dial: any) => ({
-      id : dial.id,
-      name : dial.name,
-      number : dial.contact_number,
-      is_allow_resident_quick_dials : dial.is_allow_resident_quick_dials,
-      is_allow_whatsapp : dial.is_allow_whatsapp,
-      icon : dial.image_profile,
-    }));
+    this.quickDials = result.result.response_result
     if (this.quickDials) {
       console.log(this.quickDials);
-      
       this.isLoading = false;
     }
     // // console.log(this.quickDials);
   })
  }
 
-  selectQuickDial(dial: QuickDial) {
-    console.log(dial);
+  isModalDetailPhone = false;
+  dataSelect = {
+    image: '',
+    name: '',
+    is_add: false,
+    can_call_with: '',
+    for_what_user: '',
+    related_account: 0,
+    contact_number: '',
+    is_whatsapp: false,
+    id: 0
+  }
+
+  pushedModalState = false
+  onClickCallButton(contact: any) {
+    console.log(contact);
     
-    if (this.selectedQuickDialParam === dial) {
-      console.log("selectedQuickDial", this.selectedQuickDialParam);
-      
-      // If the same dial is clicked, close the popup
-      this.closePopup(dial.number);
-    } else {
-      // If a different dial is clicked, animate the popdown first
-      this.isAnimating = true;
-      setTimeout(() => {
-        this.selectedQuickDialParam = dial;
-        console.log("selectedQuickDial", this.selectedQuickDialParam);
-        this.isAnimating = false;
-      }, 300); // Match this duration with the CSS animation duration
+    if (contact.can_call_with === 'phone_dial') {
+      if (contact.is_whatsapp) {
+        this.dataSelect = {
+          name: contact.name,
+          contact_number: contact.mobile_number,
+          is_add: contact.is_add,
+          can_call_with: contact.can_call_with,
+          for_what_user: contact.for_what_user,
+          related_account: contact.related_account,
+          image: contact.image,
+          id: contact.id,
+          is_whatsapp: contact.is_whatsapp,
+        }
+        this.isModalDetailPhone = true
+        console.log("data select for phone dial is whatsapp true", this.dataSelect);
+      } else {
+        this.actionToPhoneDial(contact.mobile_number)
+      }
+    } else if (contact.can_call_with === 'in_app_call') {
+      if (contact.for_what_user === 'vms') {
+        this.actionToInAppCall(`Project-${this.projectId}`)
+      } else if ( contact.for_what_user === 'client_or_end_user') {
+        this.actionToInAppCall(contact.related_account)
+      }
+    } else if (contact.can_call_with === 'both') {
+      this.dataSelect = {
+        name: contact.name,
+        contact_number: contact.mobile_number,
+        is_add: contact.is_add,
+        can_call_with: contact.can_call_with,
+        for_what_user: contact.for_what_user,
+        related_account: contact.related_account,
+        image: contact.image,
+        id: contact.id,
+        is_whatsapp: contact.is_whatsapp,
+      }
+      this.isModalDetailPhone = true
+      console.log("data select for both (in app call and phone dial true", this.dataSelect);
+    }
+    if (this.isModalDetailPhone) {
+        this.layerBack()
     }
   }
 
-  closePopup(phoneNumber?: string) {
-    if (phoneNumber) {
-      window.open(`tel:${phoneNumber}`, '_system');
+  actionToPhoneDial(phoneNumber: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
     }
-    this.isAnimating = true;
-    setTimeout(() => {
-      this.selectedQuickDialParam = null;
-      this.isAnimating = false;
-    }, 300); // Match this duration with the CSS animation duration
+    window.open(`tel:${phoneNumber}`, '_system');
   }
 
-  async startCall(record:any){
-    await this.webRtcService.createOffer(false, record.number, false, true);
-  }
-
-  openWhatsApp(phoneNumber: string) {
+  actionOpenWhatsapp(phoneNumber: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
+    }
     const message = encodeURIComponent("Hello!");
     const url = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(url, "_blank");
-    this.closePopup()
+  }
+
+  async actionToInAppCall(id: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
+    }
+    if (typeof id === 'string') {
+      await this.webRtcService.createOffer(false, id, false, true);
+    } else if (typeof id === 'number') {
+      await this.webRtcService.createOffer(false, id, false, false);
+    }
+  }
+
+  layerBack() {
+    if (!this.pushedModalState) {
+      history.pushState(null, '', location.href);
+      this.pushedModalState = true;
+    }
+  
+    const closeModalOnBack = () => {
+      this.pushedModalState = false
+      this.isModalDetailPhone = false
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+  }
+
+  closeModal() {
+    this.isModalDetailPhone = false
+    if (this.pushedModalState) {
+      this.pushedModalState = false;
+      history.back(); // simulate the back button
+    }
+  
   }
 }

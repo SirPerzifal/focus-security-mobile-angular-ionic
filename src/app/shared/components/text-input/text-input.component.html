@@ -58,6 +58,7 @@
       [readonly]="isReadonly" 
       [autocomplete]="autoComplete"
       [min]="type === 'date' ? min : null"
+      [max]="type === 'date' ? max : null"
       style="border: 1px solid #6B7280;"
     />
     <textarea [id]="id" rows="4" [name]="name" *ngIf="type === 'textarea'" [rows]="rows"

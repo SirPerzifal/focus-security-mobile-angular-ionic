@@ -6,6 +6,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { AlertController } from '@ionic/angular';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-client-quick-dials',
@@ -25,10 +26,14 @@ import { AlertController } from '@ionic/angular';
 })
 export class ClientQuickDialsPage implements OnInit {
 
-  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private alertController: AlertController) { }
+  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private alertController: AlertController, private webRtcService: WebRtcService) { }
 
   ngOnInit() {
-    this.loadContact()
+    this.loadContact();
+    this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.project_id = value.project_id
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -84,6 +89,7 @@ export class ClientQuickDialsPage implements OnInit {
   isEdit = true
 
   toggleShowAdd() {
+    this.loadProjectId();
     this.isCurrentEdit = false
     this.isEdit = false
     this.resetForm()
@@ -101,23 +107,67 @@ export class ClientQuickDialsPage implements OnInit {
   }
 
   contactForm = {
-    name: '',
-    contact_number: '',
-    is_add: false,
-    is_whatsapp: false,
     image: '',
+    name: '',
+    is_add: false,
+    can_call_with: '',
+    for_what_user: '',
+    related_account: 0,
+    contact_number: '',
+    is_whatsapp: false,
     id: 0
   }
 
   resetForm() {
+    this.is_show_code = false
     this.contactForm = {
       name: '',
       contact_number: '',
       is_add: false,
+      can_call_with: '',
+      for_what_user: '',
+      related_account: 0,
       is_whatsapp: false,
       image: '',
       id: 0
     }
+  }
+
+  onChangeOfCanCallWith(event: any) {
+    let value = event.target.value;
+    this.contactForm.can_call_with = value;
+    console.log(this.contactForm);
+  }
+
+  onChangeOfForWhatUser(event: any) {
+    let value = event.target.value;
+    this.contactForm.for_what_user = value;
+    console.log(this.contactForm);
+  }
+
+  async loadProjectId() {
+    await this.functionMain.vmsPreferences().then((value) => {
+      console.log(value)
+      this.project_id = value.project_id
+      this.loadHost();
+    })
+  }
+
+  Host: any[] = [];
+  contactHost = '';
+  project_id = 0;
+  loadHost() {
+    this.contactHost = ''
+    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.contactForm.for_what_user) {
+        this.contactHost = this.contactForm.for_what_user
+      }
+    })
+  }
+
+  onHostChange(event: any) {
+    this.contactForm.related_account = event[0]
   }
 
   onSubmit() {
@@ -157,16 +207,22 @@ export class ClientQuickDialsPage implements OnInit {
   
   isCurrentEdit = false
   onEditButton(contact: any) {
+    this.loadProjectId();
     this.isCurrentEdit = true
     this.isEdit = false
     this.contactForm = {
       name: contact.name,
-      contact_number: contact.contact_number,
-      is_add: contact.is_allow_resident_quick_dials,
-      image: contact.image_profile,
+      contact_number: contact.mobile_number,
+      is_add: contact.is_add,
+      can_call_with: contact.can_call_with,
+      for_what_user: contact.for_what_user,
+      related_account: contact.related_account,
+      image: contact.image,
       id: contact.id,
       is_whatsapp: contact.is_whatsapp,
     }
+    console.log('this.contactForm', this.contactForm);
+    
     setTimeout(() => {
       this.isAdd = true
     }, 300)
@@ -181,14 +237,103 @@ export class ClientQuickDialsPage implements OnInit {
     }, 300)
   }
 
+  isModalDetailPhone = false;
+  dataSelect = {
+    image: '',
+    name: '',
+    is_add: false,
+    can_call_with: '',
+    for_what_user: '',
+    related_account: 0,
+    contact_number: '',
+    is_whatsapp: false,
+    id: 0
+  }
+
+  pushedModalState = false
+  onClickCallButton(contact: any) {
+    if (contact.can_call_with === 'phone_dial') {
+      if (contact.is_whatsapp) {
+        this.dataSelect = {
+          name: contact.name,
+          contact_number: contact.mobile_number,
+          is_add: contact.is_add,
+          can_call_with: contact.can_call_with,
+          for_what_user: contact.for_what_user,
+          related_account: contact.related_account,
+          image: contact.image,
+          id: contact.id,
+          is_whatsapp: contact.is_whatsapp,
+        }
+        this.isModalDetailPhone = true
+        console.log("data select for phone dial is whatsapp true", this.dataSelect);
+      } else {
+        this.actionToPhoneDial(contact.mobile_number)
+      }
+    } else if (contact.can_call_with === 'in_app_call') {
+      if (contact.for_what_user === 'vms') {
+        this.actionToInAppCall(`Project-${this.project_id}`)
+      } else if ( contact.for_what_user === 'client_or_end_user') {
+        this.actionToInAppCall(contact.related_account)
+      }
+    } else if (contact.can_call_with === 'both') {
+      this.dataSelect = {
+        name: contact.name,
+        contact_number: contact.mobile_number,
+        is_add: contact.is_add,
+        can_call_with: contact.can_call_with,
+        for_what_user: contact.for_what_user,
+        related_account: contact.related_account,
+        image: contact.image,
+        id: contact.id,
+        is_whatsapp: contact.is_whatsapp,
+      }
+      this.isModalDetailPhone = true
+      console.log("data select for both (in app call and phone dial true", this.dataSelect);
+    }
+    if (this.isModalDetailPhone) {
+        this.layerBack()
+    }
+  }
+
+  actionToPhoneDial(phoneNumber: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
+    }
+    // this.functionMain.callFromPhone(phoneNumber)
+    window.open(`tel:${phoneNumber}`, '_system');
+  }
+
+  actionOpenWhatsapp(phoneNumber: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
+    }
+    const message = encodeURIComponent("Hello!");
+    const url = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(url, "_blank");
+  }
+
+  async actionToInAppCall(id: any) {
+    if (this.isModalDetailPhone === true) {
+      this.closeModal();
+    }
+    if (typeof id === 'string') {
+      await this.webRtcService.createOffer(false, id, false, true);
+    } else if (typeof id === 'number') {
+      await this.webRtcService.createOffer(false, id, false, false);
+    }
+  }
+
   sortContact: any = []
   isLoading = false
   async loadContact() {
     this.isLoading = true
+    this.contactList = []
+    this.sortContact = []
     this.clientMainService.getApi({}, '/client/get/contact_list').subscribe({
       next: (results) => {
         this.isLoading = false
-        console.log(results)
+        // console.log(results)
         if (results.result.response_code == 200) {
           if (results.result.response_result.length > 0){
             this.contactList = results.result.response_result
@@ -200,7 +345,7 @@ export class ClientQuickDialsPage implements OnInit {
               schedule_date: '',
               data: this.contactList.filter((item: any) => item.name.charAt(0) == name),            
             }));;
-            console.log(this.sortContact)
+            // console.log(this.sortContact)
           } else {
           }
           // this.functionMain.presentToast(`Success!`, 'success');
@@ -293,4 +438,30 @@ export class ClientQuickDialsPage implements OnInit {
   handleRefresh(event: any) {
     this.loadContact().then(() => event.target.complete())
   }
+
+  layerBack() {
+    if (!this.pushedModalState) {
+      history.pushState(null, '', location.href);
+      this.pushedModalState = true;
+    }
+  
+    const closeModalOnBack = () => {
+      this.pushedModalState = false
+      this.isModalDetailPhone = false
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+  }
+
+  closeModal() {
+    this.isModalDetailPhone = false
+    if (this.pushedModalState) {
+      this.pushedModalState = false;
+      history.back(); // simulate the back button
+    }
+  
+  }
+
+  is_show_code = false
+
 }

@@ -80,6 +80,8 @@ export class ClientRegisterVisitorPage implements OnInit {
           if (results.result.status_code === 200) {
             this.toggleShowActive()
             // this.functionMain.presentToast(`Success!`, 'success');
+          } else if (results.result.status_code === 206) {
+            this.functionMain.banAlert(results.result.status_description, false, false, true)
           } else {
             this.functionMain.presentToast(`An error occurred while trying to register new visitor!`, 'danger');
           }

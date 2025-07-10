@@ -9,6 +9,7 @@ import {jwtDecode} from 'jwt-decode';
 import { OutgoingCallPage } from 'src/app/modules/call_module/outgoing-call/outgoing-call.page';
 import { IncomingCallPage } from 'src/app/modules/call_module/incoming-call/incoming-call.page';
 import { OngoingCallPage } from 'src/app/modules/call_module/ongoing-call/ongoing-call.page';
+import { SplashCallPage } from 'src/app/modules/call_module/splash-call/splash-call.page';
 import { ApiService } from '../api.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../resident/authenticate/authenticate.service';
@@ -77,11 +78,12 @@ export class WebRtcService extends ApiService{
   private receiverId: number = 0;
   private userName: string = '';
   private userId: number = 0;
+  private modalLock = false;
   private pendingCandidates: RTCIceCandidate[] = [];
   private callerpendingCandidates: RTCIceCandidate[] = [];
   private remoteDescriptionSet = false;
   audioStatus = new BehaviorSubject<string>('');
-
+  callActionStatus = new BehaviorSubject<string>('');
 
   constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController, 
     private router:Router, private platform:Platform) {
@@ -99,12 +101,131 @@ export class WebRtcService extends ApiService{
         this.receiverName = actionData.receiverName;
         this.callerSocketId = actionData.callerSocketId;
         this.callAction = actionData.callAction;
+        this.callActionStatus.next(actionData.callAction);
         // if (actionData.callAction === 'rejectCall'){
         //   this.rejectCall();
         // }
       }
       localStorage.removeItem('callData');
     }
+  }
+
+  async presentSingletonModal(component: any, componentProps: any = {}) {
+    if (this.modalLock) return;
+    this.modalLock = true;
+
+    try {
+      // Tutup semua modal aktif terlebih dahulu
+      let topModal = await this.modalController.getTop();
+      while (topModal) {
+        try {
+          await topModal.dismiss();
+        } catch (e) {
+          console.warn('Gagal dismiss modal:', e);
+        }
+        topModal = await this.modalController.getTop();
+      }
+
+      const modal = await this.modalController.create({
+        component,
+        componentProps,
+        backdropDismiss: false,
+      });
+
+      modal.onDidDismiss().then(() => {
+        this.modalLock = false;
+      });
+
+      await modal.present();
+    } catch (e) {
+      console.error('Gagal membuka modal:', e);
+      this.modalLock = false;
+    }
+    this.callActionStatus.next('');
+  }
+
+  // async showSplashScreen(){
+  //   if (this.activeModal) {
+  //     await this.activeModal.dismiss();
+  //     this.activeModal = null;
+  //   }
+  //   this.activeModal = await this.modalController.create({
+  //     component: SplashCallPage,
+  //     backdropDismiss: false,
+  //   });
+  //   return await this.activeModal.present();
+  // }
+
+  //  async showOutgoingCallModal() {
+  //   if (this.activeModal) {
+  //     await this.activeModal.dismiss();
+  //     this.activeModal = null;
+  //   }
+  //   this.activeModal = await this.modalController.create({
+  //     component: OutgoingCallPage,
+  //     componentProps: { receiverName: this.receiverName },
+  //     backdropDismiss: false,
+  //   });
+  //   return await this.activeModal.present();
+  // }
+  
+  // async showIncomingCallModal(offer: any) {
+  //   if (this.activeModal) {
+  //     await this.activeModal.dismiss();
+  //     this.activeModal = null;
+  //   }
+  //   await this.playRingtone();
+  //   this.activeModal = await this.modalController.create({
+  //     component: IncomingCallPage,
+  //     componentProps: { offer: offer, callerName: this.callerName },
+  //     backdropDismiss: false,
+  //   });
+  //   return await this.activeModal.present();
+  // }
+  
+  // async showOngoingCallModal(isReceiver: boolean) {
+  //   if (this.activeModal) {
+  //     await this.activeModal.dismiss();
+  //     this.activeModal = null;
+  //   }
+  //   this.activeModal = await this.modalController.create({
+  //     component: OngoingCallPage,
+  //     componentProps: { isReceiver: isReceiver },
+  //     backdropDismiss: false,
+  //   });
+  //   return await this.activeModal.present();
+  // }
+
+  async showIncomingCallModal(offer: any) {
+    await this.playRingtone();
+    return this.presentSingletonModal(IncomingCallPage, {
+      offer: offer,
+      callerName: this.callerName,
+    });
+  }
+
+  async showOutgoingCallModal() {
+    return this.presentSingletonModal(OutgoingCallPage, {
+      receiverName: this.receiverName,
+    });
+  }
+
+  async showOngoingCallModal(isReceiver: boolean) {
+    const topModal = await this.modalController.getTop();
+    if (topModal) {
+      try {
+        await topModal.dismiss();
+      } catch (e) {
+        console.warn('Gagal dismiss modal lama:', e);
+      }
+    }
+    return this.presentSingletonModal(OngoingCallPage, {
+      isReceiver,
+    });
+  }
+
+  async showSplashScreen() {
+    return this.presentSingletonModal(SplashCallPage);
   }
 
   private async resetCallData() {
@@ -140,6 +261,7 @@ export class WebRtcService extends ApiService{
       this.pendingCandidates = [];
       this.callerpendingCandidates = [];
       this.remoteDescriptionSet = false;
+      this.callActionStatus.next('');
   
       localStorage.removeItem('callData');
     } catch (error) {
@@ -214,6 +336,9 @@ export class WebRtcService extends ApiService{
       };
   
       // Coba ambil dari USESTATE_DATA
+      if (this.callAction){
+        this.showSplashScreen();
+      }
       const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
       console.log(storedValue)
       if (storedValue) {
@@ -288,7 +413,7 @@ export class WebRtcService extends ApiService{
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
-      // this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
+      this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
   
       // Listen for native events
       this.listenForNativeEvents();
@@ -932,51 +1057,16 @@ export class WebRtcService extends ApiService{
     toast.present();
   }
 
-  async showOutgoingCallModal() {
-    if (this.activeModal) {
-      await this.activeModal.dismiss();
-      this.activeModal = null;
-    }
-    this.activeModal = await this.modalController.create({
-      component: OutgoingCallPage,
-      componentProps: { receiverName: this.receiverName },
-      backdropDismiss: false,
-    });
-    return await this.activeModal.present();
-  }
-  
-  async showIncomingCallModal(offer: any) {
-    if (this.activeModal) {
-      await this.activeModal.dismiss();
-      this.activeModal = null;
-    }
-    await this.playRingtone();
-    this.activeModal = await this.modalController.create({
-      component: IncomingCallPage,
-      componentProps: { offer: offer, callerName: this.callerName },
-      backdropDismiss: false,
-    });
-    return await this.activeModal.present();
-  }
-  
-  async showOngoingCallModal(isReceiver: boolean) {
-    if (this.activeModal) {
-      await this.activeModal.dismiss();
-      this.activeModal = null;
-    }
-    this.activeModal = await this.modalController.create({
-      component: OngoingCallPage,
-      componentProps: { isReceiver: isReceiver },
-      backdropDismiss: false,
-    });
-    return await this.activeModal.present();
-  }
 
   async closeModal() {
-    if (this.activeModal) {
-      await this.activeModal.dismiss();
-      this.activeModal = null;
-    }
+    const topModal = await this.modalController.getTop();
+    if (topModal) {
+      try {
+        await topModal.dismiss();
+      } catch (e) {
+        console.warn('Gagal dismiss modal aktif:', e);
+      }
+  }
   }
 
   getCallerName(){
