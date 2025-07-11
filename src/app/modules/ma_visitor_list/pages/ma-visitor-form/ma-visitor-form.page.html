@@ -22,27 +22,27 @@
       <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
         <!-- <label class="text-2xl font-bold mb-5">NUMBER OF PAX ENTERED: {{ number_of_pax }}</label> -->
           <table class="text-2xl">
-            <tr class="font-bold">
+            <tr class="">
               <td class="font-bold w-2/5">NAME</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(record.name) }}</td>
             </tr>
-            <tr class="font-bold">
+            <tr class="">
               <td class="font-bold w-2/5">COMPANY NAME</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(record.company_name) }}</td>
             </tr>
-            <tr class="font-bold">
+            <tr class="">
               <td class="font-bold w-2/5">CONTACT NUMBER</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(record.contact_no) }}</td>
             </tr>
-            <tr class="font-bold">
+            <tr class="">
               <td class="font-bold w-2/5">VISITOR TYPE</td>
               <td class="w-[5%]">:</td>
               <td>{{ record.selection_type == 'walk_in' ? 'Walk In' : 'Drive In' }}</td>
             </tr>
-            <tr class="font-bold" *ngIf="showForm && record.selection_type == 'drive_in'">
+            <tr class="" *ngIf="showForm && record.selection_type == 'drive_in'">
               <td class="font-bold w-2/5">VEHICLE NUMBER</td>
               <td class="w-[5%]">:</td>
               <td>{{ functionMain.returnNone(record.vehicle_number) }}</td>

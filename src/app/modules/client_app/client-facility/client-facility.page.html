@@ -177,7 +177,7 @@
 
     </div>
   </div>
-  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end">
+  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end" *ngIf="!isHistory">
     <ion-fab-button (click)="openModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

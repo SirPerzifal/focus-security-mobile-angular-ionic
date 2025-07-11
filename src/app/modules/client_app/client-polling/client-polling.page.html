@@ -186,7 +186,6 @@
           <app-text-input #clientNewPollingEndDate [labelResidentText]="'End On'" [min]="newPollingStartDate || today"
             [labelResidentClass]="'text-base font-bold mb-[-2px]'" [id]="'client_new_polling_end_date'"
             [placeholder]="'DD/MM/YYYY'" [customClasses]="{'w-full items-start': true}" [type]="'date'"
-            [min]="newPollingStartDate"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
             [(ngModel)]="newPollingEndDate"></app-text-input>
         </div>

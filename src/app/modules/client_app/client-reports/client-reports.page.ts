@@ -100,6 +100,7 @@ export class ClientReportsPage implements OnInit {
     } else {
       this.checkedFields = []
       this.reportFields = []
+      this.timeframeFields = []
       this.isData = false
       this.is_check_all = false
       setTimeout(() => {
@@ -110,6 +111,7 @@ export class ClientReportsPage implements OnInit {
   }
 
   reportFields: any = []
+  timeframeFields: any = []
   isLoading = false
 
   checkedFields: any = []
@@ -118,6 +120,7 @@ export class ClientReportsPage implements OnInit {
   onClickMenu(report: any) { 
     this.is_check_all = false
     this.reportFields = []
+    this.timeframeFields = []
     this.checkedFields = []
     this.selectedReport = report
     this.isHome = false
@@ -164,7 +167,11 @@ export class ClientReportsPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.reportFields = results.result.result
+          this.reportFields = results.result.result.fields
+          this.timeframeFields = results.result.result.timeframe_fields
+          if (this.timeframeFields.length > 0) {
+            this.selectedTimeframe = this.timeframeFields[0].field
+          }
         } else {
           this.functionMain.presentToast(`An error occurred while trying to get the fields!`, 'danger');
         }
@@ -209,6 +216,7 @@ export class ClientReportsPage implements OnInit {
     }
   }
 
+  selectedTimeframe = ''
   submitLoading = false
   onSubmit() {
     let date_now = new Date()
@@ -238,7 +246,7 @@ export class ClientReportsPage implements OnInit {
       time_start: this.startDateFilter + ` ${this.startTimeFilter}:00`,
       time_end: this.endDateFilter + ` ${this.endTimeFilter}:59`,
       model_name: this.selectedReport.model,
-      timeframe_field: 'create_date',
+      timeframe_field: this.selectedTimeframe,
       print_time: print_time,
       family_name: this.family_name,
     }

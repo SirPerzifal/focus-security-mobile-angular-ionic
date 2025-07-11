@@ -34,10 +34,21 @@
       </div>
       <div class="w-full"  *ngIf="selectedRoomId">
         <app-text-input [labelResidentText]="'Close Time'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-            [id]="'client_facility_edit_close_time'" [placeholder]="'21:00'"
-            [customClasses]="{'w-full items-start': true}" [type]="'time'"
+        [id]="'client_facility_edit_close_time'" [placeholder]="'21:00'"
+        [customClasses]="{'w-full items-start': true}" [type]="'time'"
+        [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
+        [(ngModel)]="submitForm.end_time"></app-text-input>
+      </div>
+      <div class="w-full"  *ngIf="selectedRoomId">
+        <app-text-input [labelResidentText]="'Hours Interval'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_facility_edit_open_time'" [placeholder]="'1'"
+            [customClasses]="{'w-full items-start': true}" [type]="'number'"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-            [(ngModel)]="submitForm.end_time"></app-text-input>
+            [(ngModel)]="submitForm.hours_interval"></app-text-input>
+      </div>
+      <div class="flex flex-row justify-between items-center"  *ngIf="selectedRoomId">
+        <label class="text-base font-bold mt-1" for="client_facility_edit_approval">Require Approval</label>
+        <input id="client_facility_edit_approval" name="client_facility_edit_approval" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="submitForm.is_require_approval">
       </div>
       <div class="flex flex-row justify-between items-center"  *ngIf="selectedRoomId">
         <label class="text-base font-bold mt-1" for="client_facility_edit_close">Close for Maintenance</label>
@@ -65,6 +76,11 @@
     </div>
   </div>
   <!-- ############################### -->
+  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="createNew()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   </ion-content>
 
 <ion-footer>

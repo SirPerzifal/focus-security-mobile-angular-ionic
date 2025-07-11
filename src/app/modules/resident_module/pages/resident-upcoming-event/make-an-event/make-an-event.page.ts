@@ -442,8 +442,8 @@ export class MakeAnEventPage implements OnInit {
             unit_ids: result.unit_ids,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
-              beforeStart: true,
-              afterEnd: true,
+              beforeStart: false,
+              afterEnd: false,
             },
           }));
 

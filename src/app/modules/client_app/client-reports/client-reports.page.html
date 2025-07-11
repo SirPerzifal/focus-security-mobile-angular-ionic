@@ -107,6 +107,16 @@
           </div>
         </div>
       </div>
+      <div class="w-full mb-3" *ngIf="!isLoading && timeframeFields.length > 0">
+        <div class="flex flex-row justify-start">
+          <p class="text-base font-bold">Timeframe Field</p>
+        </div>
+        <select id="type_of_issue" placeholder="Type of Issue" [(ngModel)]="selectedTimeframe" style="border-color: #e5e7eb;"
+          class="!border w-full rounded py-2 px-3 mt-3 outline-[#BDBDBD] text-base h-14 text-black">
+          <option value="" selected disabled hidden>Choose Timeframe Field</option>
+          <option *ngFor="let field of timeframeFields" [value]="field.field">{{ field.name }}</option>
+        </select>
+      </div>
       <span class="font-bold text-base mt-4">Select the fields you want to display on the record.</span>
       <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
         <ion-spinner name="dots"></ion-spinner>
@@ -118,7 +128,7 @@
             <label class="text-base mt-1 w-full" for="report_page_check_all">Check All Fields</label>
             <input id="report_page_check_all" name="report_page_check_all" type="checkbox" class="rounded w-5 h-5 mt-1 text-[var(--ion-color-primary)]"  [(ngModel)]="is_check_all" (click)="checkAll()">
           </div>
-          <div class="w-full !border p-3 space-y-3 mt-3 rounded max-h-[30%] overflow-y-auto">
+          <div class="w-full !border p-3 space-y-3 mt-3 rounded max-h-[25%] overflow-y-auto">
             <div class="w-full flex flex-row justify-between items-center" *ngFor="let field of reportFields">
               <label class="text-base mt-1 w-full" [for]="'field_select_' + field.field">{{ field.name}}</label>
               <input [id]="'field_select_' + field.field" [name]="'field_select_' + field.field" type="checkbox" class="rounded w-5 h-5 mt-1 text-[var(--ion-color-primary)]" (click)="checkInput(field)" [checked]="returnCheckTrue(field.field)">

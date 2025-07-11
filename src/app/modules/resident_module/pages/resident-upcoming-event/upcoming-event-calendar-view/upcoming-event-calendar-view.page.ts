@@ -110,8 +110,8 @@ export class UpcomingEventCalendarViewPage implements OnInit {
             registered_coach_id: result.registered_coach_id,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
-              beforeStart: true,
-              afterEnd: true,
+              beforeStart: false,
+              afterEnd: false,
             },
           }));
   

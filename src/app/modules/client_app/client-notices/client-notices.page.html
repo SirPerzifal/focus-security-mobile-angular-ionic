@@ -116,14 +116,14 @@
         <div class="flex flex-row justify-between space-x-1.5 w-full">
           <div class="w-1/2">
             <app-text-input #startDateNotice [id]="'start_notice'" [placeholder]="'Start Date'" [(ngModel)]="startDate"
-              [customClasses]="{'w-full':true}" [type]="'date'"
+              [customClasses]="{'w-full':true}" [type]="'date'" [min]="today"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
               (change)="onChangeStartDate($event)">
             </app-text-input>
           </div>
           <div class="w-1/2">
             <app-text-input #endDateNotice [id]="'end_notice'" [placeholder]="'End Date'" [(ngModel)]="endDate"
-              [customClasses]="{'w-full':true}" [type]="'date'" [min]="startDate"
+              [customClasses]="{'w-full':true}" [type]="'date'" [min]="startDate || today"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
               (change)="onChangeEndDate($event)">
             </app-text-input>

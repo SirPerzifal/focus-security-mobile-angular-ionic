@@ -47,6 +47,7 @@ export class ClientMainAppPage implements OnInit {
       this.initializeBackButtonHandling();
     }
 
+  callActionStatus: string = '';
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       console.log(params)
@@ -62,6 +63,9 @@ export class ClientMainAppPage implements OnInit {
     this.loadProject().then(()=>{
       this.loadNotificationCount()
     })
+    this.webRtcService.callActionStatus.subscribe(status => {
+      this.callActionStatus = status;
+    });
   }
 
   initializeBackButtonHandling() {
@@ -200,14 +204,15 @@ export class ClientMainAppPage implements OnInit {
         if (results.result.response_code === 200) {
           let counts = results.result.counts
           console.log(counts)
-          counts.forEach((count: any) => {
-            console.log(count)
-            let index = this.menuItems.findIndex((item: any) => item.id == count.title)
-            console.log(index)
-            console.log(this.menuItems[index])
-            this.menuItems[index].menu_count = count.counts
-          })
-          
+          if (counts) {
+            counts.forEach((count: any) => {
+              console.log(count)
+              let index = this.menuItems.findIndex((item: any) => item.id == count.title)
+              console.log(index)
+              console.log(this.menuItems[index])
+              this.menuItems[index].menu_count = count.counts
+            })
+          }
         } else {
           this.functionMain.presentToast('An error occurred while trying to get notifications!', 'danger');
         }

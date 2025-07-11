@@ -25,6 +25,7 @@ export class HomePage implements OnInit {
 
   alertColor = 'red'
 
+  callActionStatus: string = '';
   private routerSubscription!: Subscription;
   ngOnInit() {
     this.initializeBackButtonHandling();
@@ -42,6 +43,9 @@ export class HomePage implements OnInit {
     this.loadProjectName().then(() => {
       this.onLoadCount()
     })
+    this.webrtc.callActionStatus.subscribe(status => {
+      this.callActionStatus = status;
+    });
     // this.onLoadCount()
   }
 

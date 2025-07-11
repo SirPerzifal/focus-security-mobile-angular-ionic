@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header  *ngIf="callActionStatus != 'acceptCall'">
   <div class="header fixed top-0">
     <div class="flex flex-col justify-start">
       <div class="flex flex-col justify-end h-full">
@@ -24,7 +24,10 @@
     </div>
   </div>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="callActionStatus == 'acceptCall'">
+  <app-loading-animation></app-loading-animation>
+</ion-content>
+<ion-content [fullscreen]="true" *ngIf="callActionStatus != 'acceptCall'">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
     pullMax="80">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
@@ -50,6 +53,6 @@
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="callActionStatus != 'acceptCall'">
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
 </ion-footer>

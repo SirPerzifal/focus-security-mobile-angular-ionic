@@ -97,8 +97,8 @@ export class ResidentUpcomingEventPage implements OnInit {
             registered_coach_name: result.registered_coach_name,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
-              beforeStart: true,
-              afterEnd: true,
+              beforeStart: false,
+              afterEnd: false,
             },
           }));
           // console.log(this.upcomingEvents)

@@ -446,8 +446,8 @@ export class MakeANewEventPage implements OnInit {
           host_ids: result.host_ids,
           color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
           resizable: {
-            beforeStart: true,
-            afterEnd: true,
+            beforeStart: false,
+            afterEnd: false,
           },
         }));
         console.log(newEvents)

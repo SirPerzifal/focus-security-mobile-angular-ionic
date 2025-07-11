@@ -528,4 +528,6 @@ export class ClientNoticesPage implements OnInit {
     this.applyDateFilter()
   }
 
+  today = new Date().toISOString().split('T')[0];
+
 }
