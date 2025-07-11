@@ -186,9 +186,7 @@
           </button>
         </nav>
       </div>
-      <div
-        *ngIf="activeInvites.length > 0 && isLoading === false; else noInvites"
-      >
+      <div *ngIf="activeInvites.length > 0 && !isLoading; else noInvites">
         <div
           *ngFor="let invite of activeInvites"
           class="w-full bg-[#D8ECCF] p-4 my-4 rounded-lg flex flex-col items-start"
@@ -254,7 +252,10 @@
       </div>
       <!-- Template untuk kondisi tidak ada invite -->
       <ng-template #noInvites>
-        <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+        <div
+          *ngIf="!isLoading"
+          class="w-full bg-transparent p-4 text-center rounded-lg mt-10"
+        >
           <p class="text-gray-600">
             You have no active invitee contractor.....
           </p>

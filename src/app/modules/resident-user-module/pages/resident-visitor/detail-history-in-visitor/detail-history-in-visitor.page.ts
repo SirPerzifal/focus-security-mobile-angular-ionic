@@ -335,13 +335,29 @@ export class DetailHistoryInVisitorPage implements OnInit {
           facility: this.dataForReinvite.facility === 'other' ? 0 : Number(this.dataForReinvite.facility),
           facility_other: this.dataForReinvite.facility_other,
       }, 'post/reinvite_visitor').subscribe((response) => {
-        this.functionMain.presentToast('Success reinvite the visitor.', 'success')
-        this.router.navigate(['/visitor-main'], {
-          queryParams: {
-            openActive: true,
-            formData: null
+        if (response.result.response_status === 400) {
+          this.functionMain.presentToast(response.result.response_description, 'danger');
+          this.isModalReinviteOpen = false;
+          this.formattedDate = '';
+          this.dataForReinvite = {
+            visitor_id: 0,
+            date_of_visit: '',
+            entry_type: '',
+            entry_title: '',
+            entry_message: '',
+            is_provide_unit: false,
+            facility: '',
+            facility_other: "",
           }
-        });
+        } else {
+          this.functionMain.presentToast('Success reinvite the visitor.', 'success');
+          this.router.navigate(['/visitor-main'], {
+            queryParams: {
+              openActive: true,
+              formData: null
+            }
+          });
+        }
       })
     } else {
       this.functionMain.presentToast(errMsg, 'danger');

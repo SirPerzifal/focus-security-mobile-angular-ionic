@@ -9,6 +9,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-settings-main',
@@ -55,11 +56,16 @@ export class SettingsMainPage implements OnInit {
       routeTo: '/info-page-settings',
       isClick: false,
     },{
+      text: 'Non-Active Account',
+      isRoute: false,
+      route: '',
+      isClick: true,
+    },{
       text: 'Logout',
       isRoute: false,
       routeTo: '',
       isClick: true,
-    },
+    }
   ]
 
   pageName: string = '';
@@ -93,7 +99,8 @@ export class SettingsMainPage implements OnInit {
     private route: Router,
     public functionMain: FunctionMainService,
     private authService: AuthService,
-    private mainApi: MainApiResidentService
+    private mainApi: MainApiResidentService,
+    private alertController: AlertController
   ) {
     const navigation = this.route.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: any, familyId: any };
@@ -291,6 +298,9 @@ export class SettingsMainPage implements OnInit {
         })
       } else if (button.text === 'Logout') {
         this.logout();
+      } else if (button.text === 'Non-Active Account') {
+        console.log('Non-Active Account Clicked');
+        this.isModalNonActivateAccount = true;
       }
     } else if (role === 'back') {
       if (this.familyIdFromFamilyPage) {
@@ -302,6 +312,50 @@ export class SettingsMainPage implements OnInit {
         this.showNotificationSettings = false;
       }
     } 
+  }
+
+  reasonForNonActiveAccount: string = '';
+  closeModalNonActivateAccount() {
+    this.reasonForNonActiveAccount = '';
+    this.isModalNonActivateAccount = false;
+  }
+
+  public async showAlertButtons(type: string = 'non-active') {
+    this.closeModalNonActivateAccount();
+    const alertButtons = await this.alertController.create({
+      cssClass: 'non-active-account-alert',
+      header: `Are you sure you want to ${type} this account?`,
+      buttons: [
+        {
+          text: 'Confirm',
+          role: 'confirm',
+          handler: () => {
+            this.nonActiveAccount();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          },
+        },
+      ]
+    }
+    )
+    await alertButtons.present();
+  }
+
+  isModalNonActivateAccount: boolean = false;
+  nonActiveAccount() {
+    this.mainApi.endpointCustomProcess({
+      reason_for_non_active_account: this.reasonForNonActiveAccount,
+      family_id: this.familyId
+    }, '/unactive_account_user').subscribe((response: any) => {
+      if (response.result.status_code === 200) {
+        this.closeModalNonActivateAccount();
+        this.logout();
+      }
+    })
   }
 
   logout() {

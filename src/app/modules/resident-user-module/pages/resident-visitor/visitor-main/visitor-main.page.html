@@ -291,7 +291,10 @@
       </div>
       <!-- Template untuk kondisi tidak ada invite -->
       <ng-template #noInvites>
-        <div class="w-full bg-transparent p-4 text-center rounded-lg mt-10">
+        <div
+          *ngIf="!isLoading"
+          class="w-full bg-transparent p-4 text-center rounded-lg mt-10"
+        >
           <p class="text-gray-600">You have no active invitee.....</p>
           <p class="text-gray-600">
             Go to

@@ -400,6 +400,52 @@ select:focus>option:checked:before {
   }
 }
 
+.non-active-account-alert{
+  .alert-wrapper {
+      background: #E3787E;
+      border-radius: 0.5rem;
+      width: 24rem;
+      padding: 20px 0px 20px 0px;
+      text-align: center;
+  }
+  .alert-title{
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 1rem;
+      text-align: center;
+  }
+  .alert-input-group{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .alert-input-wrapper#textarea {
+    color: white !important;
+  }
+  .alert-button-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      column-gap: 10px !important;
+  }
+  .alert-button{
+      background: white;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      height: 40px;
+      min-width: 42% !important;
+      margin-right: 0px;
+  }
+  .alert-button-inner{
+      font-weight: 700;
+      color: black;
+      justify-content: center;
+  }
+  .alert-message{
+    color: black;
+  }
+}
+
 @font-face {
   font-family: 'Cambria';
   src: url('https://raw.githubusercontent.com/jondot/dotfiles2/master/.fonts/cambria.ttf') format('truetype');

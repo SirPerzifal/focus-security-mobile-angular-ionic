@@ -235,12 +235,27 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
         entry_message: this.dataForReinvite.entry_message,
         // is_provide_unit: this.dataForReinvite.is_provide_unit,
       }, 'post/contractor_reinvite_visitor').subscribe((response) => {
-        this.router.navigate(['/contractor-commercial-main'], {
-          queryParams: {
-            openActive: true,
-            formData: null
+        if (response.result.response_status === 400) {
+          this.functionMain.presentToast(response.result.response_description, 'danger');
+          this.isModalReinviteOpen = false;
+          this.formattedDate = '';
+          this.dataForReinvite = {
+            visitor_id: 0,
+            date_of_visit: '',
+            entry_type: '',
+            entry_title: '',
+            entry_message: '',
+            // is_provide_unit: false,
           }
-        });
+        } else {
+          this.functionMain.presentToast('Success reinvite the con.', 'success');
+          this.router.navigate(['/contractor-commercial-main'], {
+            queryParams: {
+              openActive: true,
+              formData: null
+            }
+          });
+        }
       })
     } else {
       this.functionMain.presentToast(errMsg, 'danger');

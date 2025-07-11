@@ -102,6 +102,7 @@
       </div>
       <ng-template #noNotice>
         <div
+          *ngIf="!isLoading"
           class="flex flex-col text-base items-center text-center justify-center mt-4"
         >
           <p class="text-gray-600">You have no notice yet.....</p>
@@ -196,11 +197,10 @@
                 alt="Folder Image"
               />
               <div class="flex flex-col">
-                <span class="text-base font-bold">
-                  {{ file.name }}
-                </span>
+                <span class="text-base font-bold"> {{ file.name }} </span>
                 <span class="text-sm">
-                  Published date: {{ functionMainService.convertDateExtend(file.create_date) }}
+                  Published date: {{
+                  functionMainService.convertDateExtend(file.create_date) }}
                 </span>
               </div>
             </div>

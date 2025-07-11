@@ -301,6 +301,51 @@
     </div>
   </div>
   <div class="h-[6.5rem]"></div>
+  <ion-modal
+    id="non-active-modal"
+    [isOpen]="isModalNonActivateAccount"
+    (didDismiss)="closeModalNonActivateAccount()"
+  >
+    <ng-template>
+      <div class="wrapper">
+        <div class="flex flex-col items-center justify-center">
+          <div class="w-full mt-1 flex flex-col">
+            <div class="flex flex-row justify-start">
+              <p class="text-base text-white font-bold mb-1">
+                Reason for non-active
+              </p>
+            </div>
+            <textarea
+              id="reason_non-active"
+              placeholder=""
+              class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-sm"
+              type="text"
+              [(ngModel)]="reasonForNonActiveAccount"
+              name="entryMessage"
+            ></textarea>
+          </div>
+          <div class="flex flex-row w-full space-x-2 mt-2">
+            <div class="w-full">
+              <app-submit-button
+                [text]="'Confirm'"
+                [extraClass]="'bg-[#D0D0D0] text-black outline-black mt-1 w-full text-base !font-bold'"
+                (click)="showAlertButtons()"
+              >
+              </app-submit-button>
+            </div>
+            <div class="w-full">
+              <app-submit-button
+                [text]="'Cancel'"
+                [extraClass]="'bg-[#D0D0D0] text-black mt-1 w-full text-base !font-bold'"
+                (click)="closeModalNonActivateAccount()"
+              >
+              </app-submit-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
 <ion-footer>

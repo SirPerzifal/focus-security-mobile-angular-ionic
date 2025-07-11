@@ -2,3 +2,18 @@ ion-header {
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
 }
+
+ion-modal#non-active-modal {
+  --width: 80%;
+  --height: 100%;
+  --max-height: 210px;
+  --border-radius: 6px;
+  --background-color: #E3787E;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#non-active-modal .wrapper {
+    background-color: #E3787E;
+    margin-bottom: 10px;
+    padding: 25px 15px;
+}

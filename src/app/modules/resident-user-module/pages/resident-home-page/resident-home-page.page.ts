@@ -470,7 +470,8 @@ export class ResidentHomePagePage implements OnInit {
           // ✅ Send token to backend
           this.mainApiResident.endpointCustomProcess({
             family_id: familyId,
-            fcm_token: token.value
+            fcm_token: token.value,
+            device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
           }, '/set/fcm_token').subscribe({
             next: (response: any) => {
               console.log('FCM token sent to backend successfully:', response);

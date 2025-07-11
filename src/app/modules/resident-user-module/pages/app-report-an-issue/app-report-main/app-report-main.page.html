@@ -41,7 +41,7 @@
       </div>
       <div
         class="flex justify-end items-end mt-2 mb-2"
-        *ngIf="allData.length > 0"
+        *ngIf="allData.length > 0 && !isLoading"
       >
         <nav class="flex items-center gap-x-1" aria-label="Pagination">
           <button
@@ -157,6 +157,7 @@
         </div>
         <ng-template #noResportIssue>
           <div
+            *ngIf="!isLoading"
             class="flex flex-col text-sm items-center text-center justify-center mt-4"
           >
             <p class="text-gray-600">You have no reportes issue.....</p>
