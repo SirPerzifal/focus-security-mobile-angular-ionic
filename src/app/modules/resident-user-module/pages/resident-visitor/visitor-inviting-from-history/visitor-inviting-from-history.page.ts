@@ -57,12 +57,12 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
           this.historyData = response.result.response_result;
           // console.log(response.result.response_result)
         } else {
-          this.functionMain.presentToast('Failed to load vehicle data', 'danger');
+          // this.functionMain.presentToast('Now you have no visitor history data', 'danger');
           // console.log(response)
         }
       },
       error: (error) => {
-        this.functionMain.presentToast('Error loading vehicle data', 'danger');
+        this.functionMain.presentToast('Error loading visitor history data', 'danger');
         console.error('Error:', error);
       }
     });

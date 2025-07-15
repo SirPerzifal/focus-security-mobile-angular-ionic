@@ -30,7 +30,6 @@ target 'App' do
   pod 'Firebase/Analytics', '~> 10.0'
   pod 'Firebase/Messaging', '~> 10.0'
   pod 'Firebase/Auth', '~> 10.0'
-  pod 'CallKit'
   # Add your Pods here
 end
 

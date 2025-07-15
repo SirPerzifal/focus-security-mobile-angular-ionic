@@ -169,8 +169,11 @@
             </button>
           </nav>
         </div>
-        <div class="w-full mt-4">
-          <div clas="flex flex-col w-full justify-start">
+        <div
+          *ngIf="filteredData.length > 0; else noFilteredData"
+          class="w-full mt-4"
+        >
+          <div class="flex flex-col w-full justify-start">
             <div
               *ngIf="isLoading"
               class="flex justify-center items-center h-full mt-[50px]"
@@ -227,6 +230,27 @@
             </div>
           </div>
         </div>
+        <ng-template #noFilteredData>
+          <div
+            *ngIf="!isLoading"
+            class="w-full bg-transparent p-4 text-center rounded-lg mt-10"
+          >
+            <p class="text-gray-600">You have no history visitor.....</p>
+            <p class="text-gray-600">
+              Go to
+              <strong
+                ><a [routerLink]="['/resident-home-page']">Home Page</a></strong
+              >
+              or
+            </p>
+            <p class="text-gray-600">
+              <strong
+                ><a [routerLink]="['/visitor-main']">Click Here</a></strong
+              >
+              to make a new active visitor.
+            </p>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

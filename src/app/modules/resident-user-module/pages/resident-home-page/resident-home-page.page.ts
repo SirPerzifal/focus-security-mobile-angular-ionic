@@ -350,32 +350,30 @@ export class ResidentHomePagePage implements OnInit {
 
   async openCamera() {
     try {
-      // Request camera permissions
       const permissionStatus = await Camera.checkPermissions();
       if (permissionStatus.camera !== 'granted') {
         await Camera.requestPermissions();
       }
       
       const image = await Camera.getPhoto({
-        quality: 90,
-        // allowEditing: true,
-        resultType: CameraResultType.Base64,
+        quality: 50,
+        resultType: CameraResultType.Uri, // Ubah ke Uri
         source: CameraSource.Camera,
+        width: 500,
+        height: 500,
         promptLabelHeader: 'Take a photo',
         promptLabelCancel: 'Cancel',
         promptLabelPhoto: 'Take Photo',
       });
       
-      if (image && image.base64String) {
+      if (image && image.webPath) {
         this.isModalChooseUpload = !this.isModalChooseUpload;
-        // Update the form data with the base64 image
-        this.selectedProfile = image.base64String;
-        
-        // Update display name to show a camera capture was made
-        const timestamp = new Date().toISOString().split('T')[0];
-        this.showingProfile = image.base64String;
-        
-        // Display success message
+        if (this.selectedProfile.startsWith('file://')) {
+          const response = await fetch(this.selectedProfile);
+          const blob = await response.blob();
+          this.selectedProfile = await this.blobToBase64(blob);
+        }
+        this.showingProfile = image.webPath;
         this.functionMain.presentToast('Photo captured successfully', 'success');
       }
     } catch (error) {
@@ -383,6 +381,18 @@ export class ResidentHomePagePage implements OnInit {
       this.functionMain.presentToast(String(error), 'danger');
     }
   }
+
+  private blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = (reader.result as string).split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
 
   uploadNewProfile() {
     this.mainApiResident.endpointMainProcess({

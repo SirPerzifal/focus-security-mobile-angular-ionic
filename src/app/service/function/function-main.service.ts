@@ -186,11 +186,19 @@ export class FunctionMainService {
   }
 
   getImage(image: string) {
-    if (this.isValidBase64(image)) {
-      return `data:image/png;base64,${image}`
-    } else {
-      return `assets/icon/exc-client/no_image.jpg`
+    if (!image) return 'assets/icon/exc-client/no_image.jpg';
+    
+    // Jika sudah berupa URL/path, return langsung
+    if (image.startsWith('http') || image.startsWith('file://') || image.startsWith('blob:')) {
+      return image;
     }
+    
+    // Jika base64, tambahkan prefix
+    if (this.isValidBase64(image)) {
+      return `data:image/png;base64,${image}`;
+    }
+    
+    return 'assets/icon/exc-client/no_image.jpg';
   }
 
   getRandomColor() {

@@ -56,7 +56,7 @@ export class ContractorInvitingFromHistoryPage implements OnInit {
         if (response.result.response_status === 200) {
           this.historyData = response.result.response_result;
         } else {
-          this.functionMain.presentToast('Failed to load history data', 'danger');
+          // this.functionMain.presentToast('Failed to load history data', 'danger');
           // console.log(response)
         }
       },
