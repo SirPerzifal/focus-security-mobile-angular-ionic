@@ -152,7 +152,7 @@ export class FunctionMainService {
       }
       return {
         data: nric_clear.split('').map((char: any, index: number) => (index >= 1 && index <= nric_clear.length - 5 ? 'X' : char)).join(''),
-        is_fin: /\d$/.test(nric)
+        is_fin: nric[0] == 'F' || nric[0] == 'G' || nric[0] == 'f' || nric[0] == 'g'
       }
     }
 

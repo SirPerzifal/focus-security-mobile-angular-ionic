@@ -76,7 +76,7 @@ export class RecordsContractorPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
+        this.presentToast('An error occurred while loading contractor data!', 'danger');
         console.error(error);
         this.isLoading = false;
         this.pagination = {}

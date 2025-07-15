@@ -194,25 +194,26 @@ export class RecordsWheelClampedPage implements OnInit {
   }
 
   applyRadio() {
+    console.log(this.selectedRadio)
     if (this.selectedRadio == 'sort_date') {
       this.sortVehicle = Array.from(
-        new Set(this.vehicleData.map((record) => new Date(record.issue_date).toISOString()))
+        new Set(this.historyVehicles.map((record) => new Date(record.issue_date).toISOString()))
       ).map((date) => ({
         vehicle_number: '',
         date: new Date(date),
         issue_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.vehicleData.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)),            
+        data: this.historyVehicles.filter(item => new Date(item.issue_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)),            
       })).sort((a, b) => b.date.getTime() - a.date.getTime());;
       console.log(this.sortVehicle)
     }
     if (this.selectedRadio == 'sort_vehicle') {
       this.sortVehicle = Array.from(
-        new Set(this.vehicleData.map((record) => record.vehicle_number))
+        new Set(this.historyVehicles.map((record) => record.vehicle_number))
       ).map((vehicle_number) => ({
         vehicle_number: vehicle_number,
         date: new Date(),
         issue_date: '',
-        data: this.vehicleData.filter(item => item.vehicle_number == vehicle_number),            
+        data: this.historyVehicles.filter(item => item.vehicle_number == vehicle_number),            
       }));;
       console.log(this.sortVehicle)
     }
@@ -390,7 +391,6 @@ export class RecordsWheelClampedPage implements OnInit {
     this.clientMainService.getApi(params, '/vms/get/offenses').subscribe({
       next: (results) => {
         console.log(results.result)
-        this.historyVehicles = this.vehicleData
         if (results.result.response_code === 200) {
           if (this.is_active){
             this.activeVehicles = results.result.response_result;

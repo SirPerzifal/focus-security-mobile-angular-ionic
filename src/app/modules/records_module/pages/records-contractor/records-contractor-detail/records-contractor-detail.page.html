@@ -71,12 +71,22 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.visit_date) : '-' }}</td>
+            <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.visit_date).split(' ')[0] : '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">ENTRY TIME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ record.create_date ? functionMain.convertNewDateTZ(record.visit_date).split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">EXIT DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.out_datetime ? functionMain.convertNewDateTZ(record.out_datetime) : '-' }}</td>
+            <td>{{ record.out_datetime ? functionMain.convertNewDateTZ(record.out_datetime).split(' ')[0] : '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold w-2/5">EXIT TIME</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ record.out_datetime ? functionMain.convertNewDateTZ(record.out_datetime).split(' ')[1] : '-' }}</td>
           </tr>
           <tr>
             <td class="font-bold w-2/5">ENTRY PURPOSE</td>
