@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { authGuard } from './service/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./modules/login_module/pages/login-process/login-process.module').then( m => m.LoginProcessPageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'login',
@@ -14,12 +15,12 @@ const routes: Routes = [
   {
     path: 'home-vms',
     loadChildren: () => import('./modules/home_module/pages/home/home.module').then( m => m.HomePageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'login-process',
     loadChildren: () => import('./modules/login_module/pages/login-process/login-process.module').then( m => m.LoginProcessPageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'vms-barcode',
@@ -56,7 +57,7 @@ const routes: Routes = [
   {
     path: 'login-end-user',
     loadChildren: () => import('./modules/login_module/pages/login-end-user/login-end-user.module').then( m => m.LoginEndUserPageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'register',
@@ -221,7 +222,7 @@ const routes: Routes = [
   {
     path: 'client-main-app',
     loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'records-residents-modal',
@@ -391,7 +392,7 @@ const routes: Routes = [
   {
     path: 'resident-home-page',
     loadChildren: () => import('./modules/resident-user-module/pages/resident-home-page/resident-home-page.module').then( m => m.ResidentHomePagePageModule),
-    // canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'app-report-main',

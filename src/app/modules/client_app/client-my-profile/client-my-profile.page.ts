@@ -217,6 +217,7 @@ export class ClientMyProfilePage implements OnInit {
 
   async getAccessToken(familyId: number, client?: string) {
     this.mainResident.endpointCustomProcess({
+      previous_family_id: this.userData.id,
       family_id: familyId,
     }, '/get/access_token').subscribe({
       next: (response: any) => {

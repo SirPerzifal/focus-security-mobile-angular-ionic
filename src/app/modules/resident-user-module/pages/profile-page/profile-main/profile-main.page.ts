@@ -825,6 +825,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   async getAccessToken(familyId: number, client?: string) {
     this.mainResident.endpointCustomProcess({
+      previous_family_id: this.familyId,
       family_id: familyId,
     }, '/get/access_token').subscribe({
       next: (response: any) => {
