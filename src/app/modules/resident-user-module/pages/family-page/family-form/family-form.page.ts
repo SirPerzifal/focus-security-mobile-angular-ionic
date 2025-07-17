@@ -492,8 +492,14 @@ export class FamilyFormPage implements OnInit {
       helper_work_permit: '',
       resubmit_id: this.familyId
     }, 'post/post_family_detail').subscribe((response: any) => {
-      this.router.navigate(['family-page-main']);
-      this.functionMain.presentToast('Successfully to resubmit data.', 'success');
+      if (response.result.response_code == 200) {
+        this.router.navigate(['family-page-main']);
+        this.functionMain.presentToast('Successfully to resubmit data.', 'success');
+      } else {
+        this.processEdit('resubmit');
+        const message = response.result.response_description ? response.result.response_description : 'Failed to resubmit data';
+        this.functionMain.presentToast(message, 'danger');
+      }
     })
   }
 
@@ -526,6 +532,10 @@ export class FamilyFormPage implements OnInit {
       }
     } else if (resubmit && this.disableForm) {
       this.resubmitForApproval();
+      return;
+    } else if (resubmit) {
+      this.buttonNameEdit = 'Resubmit For Approval';
+      this.functionMain.presentToast('You can change your profile data now to resubmit', 'success');
       return;
     }
     this.buttonNameEdit = 'Save Edit Change';

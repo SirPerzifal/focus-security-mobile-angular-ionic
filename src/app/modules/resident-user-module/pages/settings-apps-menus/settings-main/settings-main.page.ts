@@ -255,7 +255,7 @@ export class SettingsMainPage implements OnInit {
             if ( value ) {
               const estate = JSON.parse(value) as Estate;
               this.familyId = estate.family_id
-              Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+              Preferences.get({key: 'USER_INFO'}).then(async (value) => {
                 if(value?.value){
                   const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                   const credential = JSON.parse(decodedEstateString);

@@ -248,11 +248,12 @@ export class BillsAndFinesPagePage implements OnInit {
     })
   }
 
-  clearFilter() {
-    this.filterByTypeValue = '';
-    this.viewDate = new Date();
-    this.isFilterApplied = false; // Reset filter
-    this.loadHistoryPayment(); // Memuat ulang semua data
+  // Method tambahan untuk perbaikan
+  onDateChange(event: any) {
+    this.viewDate = new Date(event.detail.value);
+    this.isFilterApplied = true;
+    this.isDatePickerOpen = false; // Tutup modal setelah memilih tanggal
+    this.loadHistoryPayment(); // Reload data dengan filter baru
   }
 
   filterByType(event: any) {
@@ -261,10 +262,11 @@ export class BillsAndFinesPagePage implements OnInit {
     this.loadHistoryPayment();
   }
 
-  onDateChange(event: any) {
-    this.viewDate = new Date(event.detail.value);
-    this.isFilterApplied = true; // Tandai bahwa filter telah diterapkan
-    this.loadHistoryPayment(); // Memuat ulang data berdasarkan tanggal yang dipilih
+  clearFilter() {
+    this.filterByTypeValue = '';
+    this.viewDate = new Date();
+    this.isFilterApplied = false;
+    this.loadHistoryPayment();
   }
 
   openDatePicker() {
@@ -274,10 +276,12 @@ export class BillsAndFinesPagePage implements OnInit {
   loadHistoryPayment() {
     this.mergeData = [];
     this.mergeData.pop();
-    // // console.log(this.unitId, this.projectId, this.blockId);
+    
     this.mainApiResidentService.endpointMainProcess({}, 'get/payment_history').subscribe((response: any) => {
       const fines = response.result.response_result.fines;
       const bills = response.result.response_result.bills;
+      
+      // Transform fines data
       this.historyFines = fines.map((fine: FinesResponse) => {
         return {
           id: fine.id,
@@ -295,7 +299,8 @@ export class BillsAndFinesPagePage implements OnInit {
           pay_date: fine.pay_date,
         }
       });
-    
+
+      // Transform bills data
       this.bills = bills.map((bill: BillsResponse) => {
         return {
           id: bill.id,
@@ -307,33 +312,25 @@ export class BillsAndFinesPagePage implements OnInit {
           start_date: bill.start_date,
         }
       });
-    
-      // Mengurutkan mergeData berdasarkan start_date
+
+      // Merge data berdasarkan filter tipe
+      if (this.filterByTypeValue === 'bills') {
+        this.mergeData = [...this.bills];
+      } else if (this.filterByTypeValue === 'fines') {
+        this.mergeData = [...this.historyFines];
+      } else {
+        this.mergeData = [...this.historyFines, ...this.bills];
+      }
+
+      // Urutkan berdasarkan tanggal
       this.mergeData.sort((a, b) => {
         const dateA = new Date(a.start_date);
         const dateB = new Date(b.start_date);
-        return dateA.getTime() - dateB.getTime(); // Convert to timestamps before subtraction
+        return dateA.getTime() - dateB.getTime();
       });
-      // Filter berdasarkan tanggal
 
-      // Jika filter belum diterapkan, muat semua data
-      if (!this.isFilterApplied) {
-        if (this.filterByTypeValue === 'bills') {
-          this.mergeData = this.bills;
-          // Grouping the data by month and year
-          this.groupedData = this.groupByMonthYear(this.mergeData);
-          this.isLoading = false;
-        } else if (this.filterByTypeValue === 'fines') {
-          this.mergeData = this.historyFines;
-          this.groupedData = this.groupByMonthYear(this.mergeData);
-          this.isLoading = false;
-        } else {
-          this.mergeData = [...this.historyFines, ...this.bills];
-          this.groupedData = this.groupByMonthYear(this.mergeData);
-          this.isLoading = false;
-        }
-      } else {
-        // Filter berdasarkan tanggal
+      // Filter berdasarkan tanggal jika filter diterapkan
+      if (this.isFilterApplied) {
         const selectedMonth = this.viewDate.getMonth();
         const selectedYear = this.viewDate.getFullYear();
 
@@ -346,8 +343,6 @@ export class BillsAndFinesPagePage implements OnInit {
       // Grouping the data by month and year
       this.groupedData = this.groupByMonthYear(this.mergeData);
       this.isLoading = false;
-    
-      // // console.log(this.mergeData);
     });
   }
 

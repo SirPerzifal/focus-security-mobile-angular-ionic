@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
 import { App } from '@capacitor/app';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -147,6 +148,7 @@ export class ResidentHomePagePage implements OnInit {
     private storage: StorageService,
     public functionMain: FunctionMainService,
     private platform: Platform,
+    private router: Router
   ) {}
 
   handleRefresh(event: any) {
@@ -168,13 +170,14 @@ export class ResidentHomePagePage implements OnInit {
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
             this.loadMenusConfig();
+            this.getNotificationPermission(estate.family_id);
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
           }
         })
       } else {
-        Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+        Preferences.get({key: 'USER_INFO'}).then(async (value) => {
           if(value?.value){
             console.log(value.value)
             const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
@@ -220,6 +223,7 @@ export class ResidentHomePagePage implements OnInit {
         for (var key in result.result.response){
           if(result.result.response.hasOwnProperty(key)){
             listedEstate.push({
+              user_id: result.result.response[key]?.user_id,
               family_id: result.result.response[key]?.family_id,
               family_name: result.result.response[key]?.family_name || '',
               family_nickname: result.result.response[key]?.family_nickname || '',
@@ -259,12 +263,13 @@ export class ResidentHomePagePage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result) {
         this.isLoading = false;
-        if ( result.data ) {
+        if (result.data !== 'gas ini dari client' && result.data !== 'gas ini dari resident') {
           this.storage.decodeData(result.data).then((value: any) => {
-            if ( value ) {
+            if (value) {
               this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);
+              console.log(estate);
               this.loadMenusConfig();
               if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
@@ -272,8 +277,10 @@ export class ResidentHomePagePage implements OnInit {
               this.getNotificationPermission(estate.family_id);
             }
           })
+        } else if (result.data === 'gas ini dari resident') {
+          this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
         } else {
-          Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+          Preferences.get({key: 'USER_INFO'}).then(async (value) => {
             if(value?.value){
               const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
               this.isLoading = true;

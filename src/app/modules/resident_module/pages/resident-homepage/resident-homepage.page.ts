@@ -56,7 +56,7 @@ export class ResidentHomepagePage implements OnInit {
     if (state) {
       this.estate = state.estate;
     } else {
-      Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+      Preferences.get({key: 'USER_INFO'}).then(async (value) => {
         if (value?.value) {
         }
       })
@@ -77,7 +77,7 @@ export class ResidentHomepagePage implements OnInit {
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+            Preferences.get({key: 'USER_INFO'}).then(async (value) => {
               if(value?.value){
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                 const credential = JSON.parse(decodedEstateString);
@@ -87,7 +87,7 @@ export class ResidentHomepagePage implements OnInit {
         })
       } else {
         console.log("tes");
-        Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+        Preferences.get({key: 'USER_INFO'}).then(async (value) => {
           if(value?.value){
             const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
             this.isLoading = true;
@@ -174,7 +174,7 @@ export class ResidentHomepagePage implements OnInit {
               }
             })
           } else {
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+            Preferences.get({key: 'USER_INFO'}).then(async (value) => {
               if(value?.value){
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                 this.isLoading = true;

@@ -158,7 +158,6 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
           name: notice.name,
           notice_title: notice.notice_title,
           notice_content: notice.notice_content,
-          notice_attachment: notice.notice_attachment,
           start_date: notice.start_date,
           end_date: notice.end_date,
           create_date: notice.create_date,
@@ -210,6 +209,10 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         document_type : file.document_type,
         path : file.path,
         create_date: file.create_date,
+        has_document: file.has_document || false,
+        file_size: file.file_size || 0,
+        file_size_mb: file.file_size_mb || 0,
+        download_url: file.download_url || '',
       }));
       this.isLoading = false;
     })
@@ -229,6 +232,10 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         document_type : file.document_type,
         path : file.path,
         create_date: file.create_date,
+        has_document: file.has_document || false,
+        file_size: file.file_size || 0,
+        file_size_mb: file.file_size_mb || 0,
+        download_url: file.download_url || '',
       }));
       this.isLoading = false
       // if (this.files.is_root = true) {
@@ -281,40 +288,43 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     this.loadDocuments(id)
   }
 
-  async downloadAttachment(base64Attachment: any) {
-    // console.log(base64Attachment);
-    
-    const title = "document";
-    try {
-      const byteCharacters = atob(base64Attachment);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+  async downloadAttachment(idDocument: number, type: string = '') {
+    this.mainApi.endpointMainProcess({
+      document_id: idDocument,
+      type_request: type
+    }, 'get/download_document').subscribe(async (response: any) => {
+      console.log("download", response);
+      try {
+        const byteCharacters = atob(response.result.blob);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: response.result.type });
+  
+        if (Capacitor.isNativePlatform()) {
+          const base64 = await this.convertBlobToBase64(blob);
+          const saveFile = await Filesystem.writeFile({
+            path: `${response.result.title}`,
+            data: base64,
+            directory: Directory.Data
+          });
+          const path = saveFile.uri;
+          await FileOpener.open({
+            filePath: path,
+            contentType: blob.type
+          });
+          // console.log('File is opened');
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          this.downloadFile(href, `${response.result.title}`);
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        // Optionally, show an error message to the user
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      if (Capacitor.isNativePlatform()) {
-        const base64 = await this.convertBlobToBase64(blob);
-        const saveFile = await Filesystem.writeFile({
-          path: `${title}.pdf`,
-          data: base64,
-          directory: Directory.Data
-        });
-        const path = saveFile.uri;
-        await FileOpener.open({
-          filePath: path,
-          contentType: blob.type
-        });
-        // console.log('File is opened');
-      } else {
-        const href = window.URL.createObjectURL(blob);
-        this.downloadFile(href, `${title}.pdf`);
-      }
-    } catch (error) {
-      console.error('Error downloading document:', error);
-      // Optionally, show an error message to the user
-    }
+    });
   }
 
   convertBlobToBase64(blob: Blob) {

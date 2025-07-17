@@ -15,6 +15,8 @@ export class StorageService {
   }
 
   async setValueToStorage(key: string, value: any) {
+    console.log('keoanggil bang', key, value);
+    
     this.storage.set(`${key}`, value);
   }
 

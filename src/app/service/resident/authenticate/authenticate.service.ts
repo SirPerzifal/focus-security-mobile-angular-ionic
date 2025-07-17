@@ -117,29 +117,24 @@ export class AuthService extends ApiService{
   }
 
   async getToken(): Promise<string | null> {
+    const residentValue = await Preferences.get({ key: 'USER_INFO' });
+    console.log(residentValue.value, "the resident value");
 
-    const value = await Preferences.get({ key: 'USER_INFO' });
-    const residentValue = await Preferences.get({ key: 'USER_CREDENTIAL'})
-    let decodedEstateString = ''
     if (residentValue.value) {
-      // console.log("RESIDENT")
-      decodedEstateString = decodeURIComponent(escape(atob(residentValue.value)));
-      const credential = JSON.parse(decodedEstateString);
-      // console.log(credential)
-      return credential.access_token
-    }
-            // Mengubah string JSON menjadi objek JavaScript
-    // console.log(value)
-
-    if (value && value.value) {
-      // console.log("VLIENT")
-      const accessToken = value.value;
-      // console.log(accessToken);
-      return accessToken; // actually return the value
+      try {
+        const decodedEstateString = decodeURIComponent(escape(atob(residentValue.value)));
+        console.log('suk sini 1');
+        const credential = JSON.parse(decodedEstateString);
+        console.log(credential);
+        return credential.access_token;
+      } catch (error) {
+        console.log('suk sini 2');
+        console.error("Decoding or parsing failed:", error);
+        return residentValue.value; // fallback: return the raw value
+      }
     }
 
-    return null; // fallback return
-
+    return null;
   }
 
   jwtdecoded : any = {}
@@ -169,7 +164,7 @@ export class AuthService extends ApiService{
             }
             console.log(userCredentials)
             Preferences.set({
-              key: 'USER_CREDENTIAL',
+              key: 'USER_INFO',
               value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
             });
           }

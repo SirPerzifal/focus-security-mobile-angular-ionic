@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const functionMain = inject(FunctionMainService) 
 
-  const tokenData = await Preferences.get({ key: 'USER_CREDENTIAL' });
+  const tokenData = await Preferences.get({ key: 'USER_INFO' });
   const useStateData = await Preferences.get({ key: 'USESTATE_DATA' });
   const userInfoData = await Preferences.get({ key: 'USER_INFO'})
 
@@ -56,7 +56,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
       } else if (value.is_client) {
         router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       } else {
-        Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+        Preferences.get({key: 'USER_INFO'}).then(async (value) => {
           if(value?.value){
             router.navigate(['/resident-home-page']);
           } 

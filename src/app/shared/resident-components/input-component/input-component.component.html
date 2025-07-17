@@ -35,6 +35,7 @@
           #dateTimePicker
           [presentation]="'date'"
           [min]="changeDateFormatToDefault(minDate)"
+          [max]="changeDateFormatToDefault(maxDate)"
           (ionChange)="onDateTimeChange($event)"
           [value]="isoStringValue"
         ></ion-datetime>

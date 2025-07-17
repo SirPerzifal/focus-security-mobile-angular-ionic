@@ -216,6 +216,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      console.log(value);
+      
       this.storage.decodeData(value).then((value: any) => {
         if ( value ) {
           const estate = JSON.parse(value) as Estate;
@@ -310,7 +312,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           } else {
             this.activeUnit = estate.family_id;
           }
-          Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+          Preferences.get({key: 'USER_INFO'}).then(async (value) => {
             if(value?.value){
               const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
               this.isLoading = true;
@@ -500,7 +502,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             } else {
               this.activeUnit = estate.family_id;
             }
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+            Preferences.get({key: 'USER_INFO'}).then(async (value) => {
               if(value?.value){
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                 this.isLoading = true;
@@ -715,7 +717,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               } else {
                 this.activeUnit = estate.family_id;
               }
-              Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
+              Preferences.get({key: 'USER_INFO'}).then(async (value) => {
                 if(value?.value){
                   const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                   this.isLoading = true;
@@ -790,6 +792,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           for (var key in response.result.response){
             if(response.result.response.hasOwnProperty(key)){
               listedEstate.push({
+                user_id: response.result.response[key]?.user_id,
                 family_id: response.result.response[key]?.family_id,
                 family_name: response.result.response[key]?.family_name || '',
                 family_nickname: response.result.response[key]?.family_nickname || '',
@@ -820,162 +823,206 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     );
   }
 
-  async chooseEstateClick(estate: any) {
-    // Mengubah estate menjadi string JSON
-    const estateString = JSON.stringify(estate);
-    this.getNotificationPermission(estate.family_id);
-    // Melakukan encoding ke Base64
-    const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
-    this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
-      this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-        this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
-            this.webRtcService.initializeSocket();
-            const estate = JSON.parse(value) as Estate;
-            this.imageProfile = estate.image_profile;
-            this.familyId = estate.family_id;
-            this.userName = estate.family_name;
-            this.userType = estate.record_type;
-            if (this.userType === 'industrial') {
-              this.inputData = [
-                {
-                  id: 'family_nickname',
-                  formParams: 'familyNickname',
-                  name: 'Nickname',
-                  disabledInput: true
-                },    {
-                  id: 'condominium_name',
-                  formParams: 'nameCondominium',
-                  name: 'Project Name',
-                  disabledInput: true
-                },    {
-                  id: 'email_owner',
-                  formParams: 'email',
-                  name: 'Email',
-                  disabledInput: this.disabledInput
-                },    {
-                  id: 'phone_number',
-                  formParams: 'phone',
-                  name: 'Contact',
-                  disabledInput: this.disabledInput
-                }
-              ]
-              this.inputForm = {
-                familyNickname: estate.family_nickname,
-                nameCondominium: estate.project_name,
-                statusOwner: estate.family_type,
-                blockName: estate.block_name,
-                unitName: estate.unit_name,
-                email: estate.family_email,
-                phone: estate.family_mobile_number,
-              }
-              this.squareButton = [
-                {
-                  name: 'Estate',
-                  src: 'assets/icon/resident-icon/profile/Home.png',
-                },    {
-                  name: 'Ban',
-                  src: 'assets/icon/resident-icon/profile/No User.webp',
-                },{
-                  name: 'Vehicles',
-                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
-                }
-              ];
-            } else {
-              this.inputData = [
-                {
-                  id: 'family_nickname',
-                  formParams: 'familyNickname',
-                  name: 'Nickname',
-                  disabledInput: true
-                },    {
-                  id: 'condominium_name',
-                  formParams: 'nameCondominium',
-                  name: 'Condominium Name',
-                  disabledInput: true
-                },    {
-                  id: 'status_owner',
-                  formParams: 'statusOwner',
-                  name: 'Status',
-                  disabledInput: true
-                },    {
-                  id: 'block_name',
-                  formParams: 'blockName',
-                  name: 'Block',
-                  disabledInput: true
-                },    {
-                  id: 'unit_name',
-                  formParams: 'unitName',
-                  name: 'Unit',
-                  disabledInput: true
-                },    {
-                  id: 'email_owner',
-                  formParams: 'email',
-                  name: 'Email',
-                  disabledInput: this.disabledInput
-                },    {
-                  id: 'phone_number',
-                  formParams: 'phone',
-                  name: 'Contact',
-                  disabledInput: this.disabledInput
-                }
-              ]
-              this.inputForm = {
-                familyNickname: estate.family_nickname,
-                nameCondominium: estate.project_name,
-                statusOwner: estate.family_type,
-                blockName: estate.block_name,
-                unitName: estate.unit_name,
-                email: estate.family_email,
-                phone: estate.family_mobile_number,
-              }
-              this.squareButton = [
-                {
-                  name: 'Family',
-                  src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
-                },    {
-                  name: 'Employee',
-                  src: 'assets/icon/resident-icon/profile/Furniture.webp',
-                },    {
-                  name: 'Estate',
-                  src: 'assets/icon/resident-icon/profile/Home.png',
-                },    {
-                  name: 'Ban',
-                  src: 'assets/icon/resident-icon/profile/No User.webp',
-                },    {
-                  name: 'Pets',
-                  src: 'assets/icon/resident-icon/profile/Pets.webp',
-                },    {
-                  name: 'Vehicles',
-                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
-                }
-              ];
+  async getAccessToken(familyId: number, client?: string) {
+    this.mainResident.endpointCustomProcess({
+      family_id: familyId,
+    }, '/get/access_token').subscribe({
+      next: (response: any) => {
+        if (response.result.status_code === 200) {
+          Preferences.clear();
+          if (response.result.email) {
+            const userCredentials = {
+              emailOrPhone: response.result.email,
+              access_token: response.result.access_token
             }
-            if (estate.unit_id) {
-              this.activeUnit = estate.unit_id;
-            } else {
-              this.activeUnit = estate.family_id;
-            }
-            Preferences.get({key: 'USER_CREDENTIAL'}).then(async (value) => {
-              if(value?.value){
-                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-                this.isLoading = true;
-                // Mengubah string JSON menjadi objek JavaScript
-                const credential = JSON.parse(decodedEstateString);
-                this.loadEstate(credential.emailOrPhone);
-              }
+            Preferences.set({
+              key: 'USER_INFO',
+              value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
+            })
+          } else {
+            this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+            Preferences.set({
+              key: 'USER_INFO',
+              value: response.result.access_token,
             })
           }
-        })
-        this.showEstate = false;
-        this.showMain = true;
-      })
-      if (estate.unit_id) {
-        this.activeUnit = estate.unit_id;
-      } else {
-        this.activeUnit = estate.family_id;
+        }
+      },
+      error: (error) => {
+        console.error('Failed to get access token:', error);
       }
-    })
+    });
+  }
+
+  async chooseEstateClick(estate: any) {
+    if (estate.user_id) {
+      let storageData = {
+        'image_profile': estate.image_profile
+      }
+      this.storage.clearAllValueFromStorage();
+      this.storage.setValueToStorage('USESATE_DATA', storageData)
+      this.getNotificationPermission(estate.family_id);
+      this.getAccessToken(estate.family_id, 'client');
+      // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+      return;
+    } else {
+      // Mengubah estate menjadi string JSON
+      const estateString = JSON.stringify(estate);
+      this.getNotificationPermission(estate.family_id);
+      this.getAccessToken(estate.family_id);
+      // Melakukan encoding ke Base64
+      const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
+      this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
+        this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+          this.storage.decodeData(value).then((value: any) => {
+            if ( value ) {
+              this.webRtcService.initializeSocket();
+              const estate = JSON.parse(value) as Estate;
+              this.imageProfile = estate.image_profile;
+              this.familyId = estate.family_id;
+              this.userName = estate.family_name;
+              this.userType = estate.record_type;
+              if (this.userType === 'industrial') {
+                this.inputData = [
+                  {
+                    id: 'family_nickname',
+                    formParams: 'familyNickname',
+                    name: 'Nickname',
+                    disabledInput: true
+                  },    {
+                    id: 'condominium_name',
+                    formParams: 'nameCondominium',
+                    name: 'Project Name',
+                    disabledInput: true
+                  },    {
+                    id: 'email_owner',
+                    formParams: 'email',
+                    name: 'Email',
+                    disabledInput: this.disabledInput
+                  },    {
+                    id: 'phone_number',
+                    formParams: 'phone',
+                    name: 'Contact',
+                    disabledInput: this.disabledInput
+                  }
+                ]
+                this.inputForm = {
+                  familyNickname: estate.family_nickname,
+                  nameCondominium: estate.project_name,
+                  statusOwner: estate.family_type,
+                  blockName: estate.block_name,
+                  unitName: estate.unit_name,
+                  email: estate.family_email,
+                  phone: estate.family_mobile_number,
+                }
+                this.squareButton = [
+                  {
+                    name: 'Estate',
+                    src: 'assets/icon/resident-icon/profile/Home.png',
+                  },    {
+                    name: 'Ban',
+                    src: 'assets/icon/resident-icon/profile/No User.webp',
+                  },{
+                    name: 'Vehicles',
+                    src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                  }
+                ];
+              } else {
+                this.inputData = [
+                  {
+                    id: 'family_nickname',
+                    formParams: 'familyNickname',
+                    name: 'Nickname',
+                    disabledInput: true
+                  },    {
+                    id: 'condominium_name',
+                    formParams: 'nameCondominium',
+                    name: 'Condominium Name',
+                    disabledInput: true
+                  },    {
+                    id: 'status_owner',
+                    formParams: 'statusOwner',
+                    name: 'Status',
+                    disabledInput: true
+                  },    {
+                    id: 'block_name',
+                    formParams: 'blockName',
+                    name: 'Block',
+                    disabledInput: true
+                  },    {
+                    id: 'unit_name',
+                    formParams: 'unitName',
+                    name: 'Unit',
+                    disabledInput: true
+                  },    {
+                    id: 'email_owner',
+                    formParams: 'email',
+                    name: 'Email',
+                    disabledInput: this.disabledInput
+                  },    {
+                    id: 'phone_number',
+                    formParams: 'phone',
+                    name: 'Contact',
+                    disabledInput: this.disabledInput
+                  }
+                ]
+                this.inputForm = {
+                  familyNickname: estate.family_nickname,
+                  nameCondominium: estate.project_name,
+                  statusOwner: estate.family_type,
+                  blockName: estate.block_name,
+                  unitName: estate.unit_name,
+                  email: estate.family_email,
+                  phone: estate.family_mobile_number,
+                }
+                this.squareButton = [
+                  {
+                    name: 'Family',
+                    src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
+                  },    {
+                    name: 'Employee',
+                    src: 'assets/icon/resident-icon/profile/Furniture.webp',
+                  },    {
+                    name: 'Estate',
+                    src: 'assets/icon/resident-icon/profile/Home.png',
+                  },    {
+                    name: 'Ban',
+                    src: 'assets/icon/resident-icon/profile/No User.webp',
+                  },    {
+                    name: 'Pets',
+                    src: 'assets/icon/resident-icon/profile/Pets.webp',
+                  },    {
+                    name: 'Vehicles',
+                    src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
+                  }
+                ];
+              }
+              if (estate.unit_id) {
+                this.activeUnit = estate.unit_id;
+              } else {
+                this.activeUnit = estate.family_id;
+              }
+              Preferences.get({key: 'USER_INFO'}).then(async (value) => {
+                if(value?.value){
+                  const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                  this.isLoading = true;
+                  // Mengubah string JSON menjadi objek JavaScript
+                  const credential = JSON.parse(decodedEstateString);
+                  this.loadEstate(credential.emailOrPhone);
+                }
+              })
+            }
+          })
+          this.showEstate = false;
+          this.showMain = true;
+        })
+        if (estate.unit_id) {
+          this.activeUnit = estate.unit_id;
+        } else {
+          this.activeUnit = estate.family_id;
+        }
+      })
+    }
   }
 
   fcmToken: string = '';

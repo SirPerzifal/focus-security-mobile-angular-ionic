@@ -70,6 +70,15 @@ export class IssueAppDetailPage implements OnInit {
     } 
   }
 
+  isLoading: boolean = false;
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.loadDetail();
+      event.target.complete();
+    }, 1000)
+  }
+
   ngOnInit() {
   }
 
@@ -84,6 +93,7 @@ export class IssueAppDetailPage implements OnInit {
       next: (results) => {
         // console.log(results)
         if (results.result.response_code == 200) {
+          this.isLoading = false;
           this.messageDetail = results.result.conversation_result.filter((item: any) => item.body !== '')
           this.ticketDetail = results.result.result[0]
           // this.ticketDetail.attachment = results.result.result[0].attachment.map((item:any) => this.functionMain.getImage(item) )

@@ -6,11 +6,12 @@ import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-use
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Subscription } from 'rxjs';
-import { Platform } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
 
 @Component({
   selector: 'app-client-main-app',
@@ -43,6 +44,7 @@ export class ClientMainAppPage implements OnInit {
     private storage: StorageService,
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
+    private modalController: ModalController,
   ) {
       this.initializeBackButtonHandling();
     }
@@ -59,9 +61,6 @@ export class ClientMainAppPage implements OnInit {
           this.webRtcService.initializeSocket()
         }
       }
-    })
-    this.loadProject().then(()=>{
-      this.loadNotificationCount()
     })
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
@@ -103,9 +102,82 @@ export class ClientMainAppPage implements OnInit {
         image_profile: '',
       }
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
-        this.userData.image_profile = value.image_profile
+        if ( value ) {
+          this.userData.image_profile = value.image_profile
+        } else {
+          this.isLoading = true;
+          this.loadEstate(this.userData.email);
+        }
       })
     })
+  }
+
+  async loadEstate( email:string ) {
+    this.clientMainService.getApi({
+      email: email
+    }, '/resident/get/estate').subscribe((result: any) => {
+      if (result.result.status_code === 200) {
+        var listedEstate = []
+        for (var key in result.result.response){
+          if(result.result.response.hasOwnProperty(key)){
+            listedEstate.push({
+              user_id: result.result.response[key]?.user_id,
+              family_id: result.result.response[key]?.family_id,
+              family_name: result.result.response[key]?.family_name || '',
+              family_nickname: result.result.response[key]?.family_nickname || '',
+              image_profile: result.result.response[key]?.image_profile || '',
+              family_email: result.result.response[key]?.family_email || '',
+              family_mobile_number: result.result.response[key]?.family_mobile_number || '',
+              family_type: result.result.response[key]?.family_type || '',
+              unit_id: result.result.response[key]?.unit_id,
+              unit_name: result.result.response[key]?.unit_name || '',
+              block_id: result.result.response[key]?.block_id,
+              block_name: result.result.response[key]?.block_name || '',
+              project_id: result.result.response[key]?.project_id,
+              project_name: result.result.response[key]?.project_name || '',
+              project_image: result.result.response[key]?.project_image || '',
+              record_type: result.result.response[key]?.record_type || '',
+            })
+          }
+        }
+        this.presentModal(listedEstate);
+      } else {
+        console.error('Error fetching Estate:', result);
+      }
+    })
+  }
+
+  async presentModal(estate: any) {
+    const modal = await this.modalController.create({
+      component: ModalEstateHomepageComponent,
+      cssClass: 'record-modal',
+      componentProps: {
+        estate: estate,
+        client: true,
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        this.isLoading = false;
+        console.log(result.data);
+        if (result.data !== 'gas ini dari resident' && result.data !== 'gas ini dari client') {
+          const value = result.data;
+          let storageData = {
+            'image_profile': value.image_profile
+          }
+          this.storage.setValueToStorage('USESATE_DATA', storageData)
+          this.loadConfig();
+        } else if (result.data === 'gas ini dari client') {
+          this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
+        } else {
+          this.isLoading = true;
+          this.loadEstate(this.userData.email);
+        }
+      }
+    });
+
+    return await modal.present();
   }
 
   directToNotifications() {

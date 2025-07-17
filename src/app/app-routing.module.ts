@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { authGuard } from './service/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./modules/login_module/pages/login-process/login-process.module').then( m => m.LoginProcessPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'login',
@@ -15,12 +14,12 @@ const routes: Routes = [
   {
     path: 'home-vms',
     loadChildren: () => import('./modules/home_module/pages/home/home.module').then( m => m.HomePageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'login-process',
     loadChildren: () => import('./modules/login_module/pages/login-process/login-process.module').then( m => m.LoginProcessPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'vms-barcode',
@@ -57,7 +56,7 @@ const routes: Routes = [
   {
     path: 'login-end-user',
     loadChildren: () => import('./modules/login_module/pages/login-end-user/login-end-user.module').then( m => m.LoginEndUserPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'register',
@@ -222,7 +221,7 @@ const routes: Routes = [
   {
     path: 'client-main-app',
     loadChildren: () => import('./modules/client_app/client-main-app/client-main-app.module').then( m => m.ClientMainAppPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'records-residents-modal',
@@ -407,7 +406,7 @@ const routes: Routes = [
   {
     path: 'settings-main',
     loadChildren: () => import('./modules/resident-user-module/pages/settings-apps-menus/settings-main/settings-main.module').then( m => m.SettingsMainPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'info-page-settings',
@@ -513,57 +512,57 @@ const routes: Routes = [
   {
     path: 'resident-raise-a-request',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/resident-raise-a-request.module').then( m => m.ResidentRaiseARequestPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'rejected-request',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/rejected-request/rejected-request.module').then( m => m.RejectedRequestPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
     {
     path: 'overnight-form-rar',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/overnight-form-rar/overnight-form-rar.module').then( m => m.OvernightFormRarPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
     {
     path: 'move-in-out-permit',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/move-in-out-permit/move-in-out-permit.module').then( m => m.MoveInOutPermitPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
     {
     path: 'renovation-permit',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/renovation-permit/renovation-permit.module').then( m => m.RenovationPermitPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
     {
     path: 'appeal-parking-fines',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-parking-fines.module').then( m => m.AppealParkingFinesPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'appeal-form',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/appeal-parking-fines/appeal-form/appeal-form.module').then( m => m.AppealFormPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'access-card-application',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/access-card-application/access-card-application.module').then( m => m.AccessCardApplicationPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'bicycle-tag-application',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/bicycle-tag-application/bicycle-tag-application.module').then( m => m.BicycleTagApplicationPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'coach-registration',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/coach-registration/coach-registration.module').then( m => m.CoachRegistrationPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'pet-registration',
     loadChildren: () => import('./modules/resident_module/pages/resident-raise-a-request/pet-registration/pet-registration.module').then( m => m.PetRegistrationPageModule),
-    canActivate:[authGuard]
+    // canActivate:[authGuard]
   },
   {
     path: 'upcoming-event-page-main',

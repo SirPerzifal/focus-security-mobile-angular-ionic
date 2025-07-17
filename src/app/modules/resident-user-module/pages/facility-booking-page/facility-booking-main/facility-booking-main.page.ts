@@ -83,6 +83,8 @@ export class FacilityBookingMainPage implements OnInit {
   originalBookingList: any[] = []; // Tambahkan properti untuk menyimpan daftar booking asli
   filteredBookingList: any[] = []; // Properti untuk menyimpan daftar booking yang difilter
 
+  todayDate: string = this.functionMain.formatDate(new Date());
+
   constructor(
     public functionMain: FunctionMainService,
     private mainApi: MainApiResidentService,
@@ -147,6 +149,8 @@ export class FacilityBookingMainPage implements OnInit {
         } else if (params['reload'] === true) {
           this.subPageName = 'History Bookings';
           this.loadHistoryBookings();
+          const date = new Date();
+          this.todayDate = this.functionMain.formatDate(date);
           this.navButtonsMain = [
             {
               text: 'Active',

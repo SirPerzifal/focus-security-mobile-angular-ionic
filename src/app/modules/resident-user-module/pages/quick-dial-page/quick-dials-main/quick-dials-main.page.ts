@@ -143,8 +143,8 @@ export class QuickDialsMainPage implements OnInit {
     if (this.isModalDetailPhone === true) {
       this.closeModal();
     }
-    const message = encodeURIComponent("Hello!");
-    const url = `https://wa.me/${phoneNumber}?text=${message}`;
+    
+    const url = `https://wa.me/${phoneNumber}`;
     window.open(url, "_blank");
   }
 

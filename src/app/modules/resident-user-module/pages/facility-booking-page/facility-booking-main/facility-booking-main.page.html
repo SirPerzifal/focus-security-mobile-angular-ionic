@@ -293,6 +293,7 @@
               [labelChild1]="''"
               [labelChild2]="''"
               [value]="startDateFilter"
+              [maxDate]="todayDate"
               (eventEmitter)="onChangeStartDate($event)"
             ></app-input-component>
           </div>
@@ -305,6 +306,7 @@
               [labelChild1]="''"
               [labelChild2]="''"
               [value]="endDateFilter"
+              [maxDate]="todayDate"
               (eventEmitter)="onChangeEndDate($event)"
               [minDate]="startDateFilter"
             ></app-input-component>

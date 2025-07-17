@@ -31,8 +31,10 @@
               width="128"
             />
             <ion-icon
-              class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50"
+              *ngIf="userType !== 'industrial' && disabledInput"
+              class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
               name="pencil"
+              (click)="chooseWhereToChoose()"
             >
             </ion-icon>
             <!-- <ion-icon

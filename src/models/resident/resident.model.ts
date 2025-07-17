@@ -19,6 +19,7 @@ export interface EstateProfile {
 }
 
 export interface Estate {
+    user_id: number;
     family_id: number;
     family_name: string;
     family_nickname: string;

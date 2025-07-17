@@ -81,7 +81,7 @@
         [labelParent]="''"
         [labelChild1]="'Resident Email'"
         [labelChild2]="''"
-        [disabled]="pageForWhat === 'editData'"
+        [disabled]="pageForWhat === 'editData' && !formData.reject_reason && disableForm"
         [value]="formData.email_address"
         (eventEmitter)="onValueChange($event, 'email')"
       ></app-input-component>
@@ -129,7 +129,7 @@
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
           type="number"
           placeholder=""
-          disabled
+          [disabled]="pageForWhat === 'editData' && !formData.reject_reason && disableForm"
           [(ngModel)]="contactValue"
           (keyup)="onKeyUp($event)"
           name="contry_code"
@@ -252,7 +252,7 @@
       class="w-full"
     >
       <app-submit-button
-        [text]="'Resubmit For Approval'"
+        [text]="buttonNameEdit"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="processEdit('resubmit')"
       >

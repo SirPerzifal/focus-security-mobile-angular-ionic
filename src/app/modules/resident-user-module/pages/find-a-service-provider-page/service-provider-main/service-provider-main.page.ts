@@ -85,8 +85,7 @@ export class ServiceProviderMainPage implements OnInit {
   }
 
   openWhatsApp() {
-    const message = encodeURIComponent("Hello!");
-    const url = `https://wa.me/${this.selectedQuickDial?.number}?text=${message}`;
+    const url = `https://wa.me/${this.selectedQuickDial?.number}`;
     window.open(url, "_blank");
   }
 }
