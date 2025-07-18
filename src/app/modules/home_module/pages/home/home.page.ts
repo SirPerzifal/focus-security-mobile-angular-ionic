@@ -147,11 +147,11 @@ export class HomePage implements OnInit {
 
   onClickMoveCustom(type: string) {
     if (type == 'contractor') {
-      if (this.project_config.office_closing_hours) {
-        this.functionMain.presentToast("Can't open this menu because office hours have ended!", 'danger')
-      } else {
-        this.router.navigate([this.project_config.is_windows ? 'contractor-commercial-form' : 'contractor-form']);
-      }
+      // if (this.project_config.office_closing_hours) {
+      //   this.functionMain.presentToast("Can't open this menu because office hours have ended!", 'danger')
+      // } else {
+        this.router.navigate(['contractor-form']);
+      // }
     } else {
       this.router.navigate(['move-home'], {
         queryParams: { type: type }
@@ -160,6 +160,7 @@ export class HomePage implements OnInit {
   }
 
   alertTotal = 0
+  totalRedAlerts = 0
 
   onLoadCount() {
     let params = {project_id: this.project_id}
@@ -168,6 +169,7 @@ export class HomePage implements OnInit {
         console.log(results)
         if (results.result.response_code === 200) {
           this.alertTotal = results.result.response_result[0].total_alerts
+          this.totalRedAlerts = results.result.response_result[0].total_red_alerts
         } else {
           this.alertTotal = 0
         }

@@ -148,7 +148,7 @@ export class DeliveriesPage implements OnInit {
     if (!this.food_delivery_id){
       errMsg += 'Please select a delivery platform!\n';
     }
-    if (!this.food_delivery_type){
+    if (!this.showDrive && !this.showWalk){
       errMsg += 'Please select a delivery type!\n';
     }
     if (!this.selectedImage) {
@@ -177,7 +177,7 @@ export class DeliveriesPage implements OnInit {
     if ((!this.selectedHost) && this.project_config.is_industrial){
       errMsg += 'Please insert a host!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
     if(errMsg != ""){
@@ -187,12 +187,12 @@ export class DeliveriesPage implements OnInit {
     try {
       let params = {
         contact_number: this.formData.contact_number,
-        vehicle_number: this.food_delivery_type === 'drive_in' ? this.formData.vehicle_number : '',
+        vehicle_number: this.showDrive ? this.formData.vehicle_number : '',
         delivery_type: 'food',
         food_delivery: {
           id: this.food_delivery_id === 'other' ? 0 : parseInt(this.food_delivery_id),
           other: this.food_delivery_id === 'other' ? 'Others Checked' : '',
-          delivery_option: this.food_delivery_type
+          delivery_option: this.showDrive ? 'drive_in' : 'walk_in',
         },
         package_delivery: {},
         block: this.formData.block,
@@ -292,15 +292,34 @@ export class DeliveriesPage implements OnInit {
   }
 
   resetFormFood() {
-    this.formData.contact_number = ''
+    this.formData = {
+      contact_number: '', 
+      vehicle_number: '', 
+      delivery_type: '', 
+      food_delivery: {
+        id: 0,
+        other: '',
+        delivery_option: ''
+      }, 
+      package_delivery: {
+        id: 0,
+        other: '',
+        delivery_option: ''
+      }, 
+      block: '', 
+      unit: '',
+      pax:'0',
+      remarks: ''
+    };
     this.selectedImage = ''
     this.selectedNric = ''
-    this.formData.block = ''
     this.contactUnit = ''
-    this.formData.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
     this.pass_number = ''
+    this.showRemarks = false
+    this.showPax = false
+    this.showUnit = false
     this.is_id_disabled = false
   }
 
@@ -315,7 +334,7 @@ export class DeliveriesPage implements OnInit {
     if (!this.package_delivery_id){
       errMsg += 'Please select a delivery platform!\n';
     }
-    if (!this.package_delivery_type){
+    if (!this.showDrive && !this.showWalk){
       errMsg += 'Please select a delivery type!\n';
     }
     if (!this.selectedImage) {
@@ -335,8 +354,14 @@ export class DeliveriesPage implements OnInit {
     if ((!this.nric_value) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.formData.vehicle_number){
+    if (!this.formData.vehicle_number && this.showDrive){
       errMsg += 'Please insert visitor vehicle number!\n';
+    }
+    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+      errMsg += 'Pass number is required! \n'
+    }
+    if (!this.package_delivery_type){
+      errMsg += 'Please select a delivery option!\n';
     }
     if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial){
       errMsg += 'Please insert visitor block and unit!\n';
@@ -354,13 +379,14 @@ export class DeliveriesPage implements OnInit {
     try{
       let params = {
         contact_number: this.formData.contact_number,
-        vehicle_number: this.formData.vehicle_number,
+        vehicle_number: this.showDrive ? this.formData.vehicle_number : '',
         delivery_type: 'package',
         food_delivery: {}, // Kosong karena bukan food delivery
         package_delivery: {
           id: this.package_delivery_id === 'other' ? 0 : parseInt(this.package_delivery_id),
           other: this.package_delivery_id === 'other' ? 'Others Checked' : '',
-          delivery_option: this.package_delivery_type
+          delivery_option: this.package_delivery_type,
+          delivery_type: this.showDrive ? 'drive_in' : 'walk_in',
         },
         block: this.package_delivery_type === 'multiple' ? '' : this.formData.block,
         unit: this.package_delivery_type === 'multiple' ? '' : this.formData.unit,
@@ -373,7 +399,7 @@ export class DeliveriesPage implements OnInit {
         host: this.package_delivery_type === 'multiple' ? false : this.selectedHost,
         identification_type: this.identificationType,
         identification_number: this.nric_value,
-        pass_number: '',
+        pass_number: this.pass_number,
         visitor_image: this.selectedImage,
       }
       
@@ -437,7 +463,7 @@ export class DeliveriesPage implements OnInit {
   otherDeliveriesTrans = false
 
   toggleFoodDeliveries() {
-    if (!this.bulkyItemDeliveriesTrans && !this.packageDeliveriesTrans) {
+    if (!this.bulkyItemDeliveriesTrans && !this.packageDeliveriesTrans && !this.otherDeliveriesTrans) {
       if (!this.foodDeliveries) {
         this.resetForm()
       }
@@ -452,6 +478,10 @@ export class DeliveriesPage implements OnInit {
       this.buttonStates.bulkyItemDeliveries = false;
       this.buttonStates.OthersDeliveries = false
 
+      this.showDrive = false
+      this.showWalk = false
+      this.showForm = false
+
       setTimeout(() => {
         this.foodDeliveries = true;
         this.foodDeliveriesTrans = false
@@ -460,18 +490,24 @@ export class DeliveriesPage implements OnInit {
   }
 
   togglePackageDeliveries() {
-    if (!this.foodDeliveriesTrans && !this.bulkyItemDeliveriesTrans) {
+    if (!this.foodDeliveriesTrans && !this.bulkyItemDeliveriesTrans && !this.otherDeliveriesTrans) {
       if (!this.packageDeliveries) {
         this.resetForm()
       }
       this.packageDeliveriesTrans = true
       this.bulkyItemDeliveries = false;
       this.foodDeliveries = false;
+      this.otherDeliveries = false
 
       // Update status tombol
       this.buttonStates.foodDeliveries = false;
       this.buttonStates.packageDeliveries = true;
       this.buttonStates.bulkyItemDeliveries = false;
+      this.buttonStates.OthersDeliveries = false;
+      
+      this.showDrive = false
+      this.showWalk = false
+      this.showForm = false
 
       setTimeout(() => {
         this.packageDeliveries = true;
@@ -482,18 +518,24 @@ export class DeliveriesPage implements OnInit {
   }
 
   toggleBulkyItemDeliveries() {
-    if (!this.foodDeliveriesTrans && !this.packageDeliveriesTrans) {
+    if (!this.foodDeliveriesTrans && !this.packageDeliveriesTrans && !this.otherDeliveriesTrans) {
       if (!this.bulkyItemDeliveries) {
         this.resetForm()
       }
       this.bulkyItemDeliveriesTrans = true
       this.packageDeliveries = false;
       this.foodDeliveries = false;
+      this.otherDeliveries = false
 
       // Update status tombol
       this.buttonStates.foodDeliveries = false;
       this.buttonStates.packageDeliveries = false;
       this.buttonStates.bulkyItemDeliveries = true;
+      this.buttonStates.OthersDeliveries = false;
+
+      this.showDrive = false
+      this.showWalk = false
+      this.showForm = false
 
       setTimeout(() => {
         this.bulkyItemDeliveries = true;
@@ -503,14 +545,18 @@ export class DeliveriesPage implements OnInit {
   }
 
   toggleOtherDeliveries() {
-    if (!this.foodDeliveriesTrans) {
+    if (!this.foodDeliveriesTrans && !this.bulkyItemDeliveriesTrans && !this.packageDeliveriesTrans) {
       if (!this.bulkyItemDeliveries) {
         this.resetForm()
       }
       this.otherDeliveriesTrans = true
+      this.bulkyItemDeliveries = false;
+      this.packageDeliveries = false;
       this.foodDeliveries = false;
 
       this.buttonStates.foodDeliveries = false;
+      this.buttonStates.packageDeliveries = false;
+      this.buttonStates.bulkyItemDeliveries = false;
       this.buttonStates.OthersDeliveries = true;
 
       this.showDrive = false
@@ -541,7 +587,7 @@ export class DeliveriesPage implements OnInit {
   onButtonClick(event: { text: string, isActive: boolean }) {
     console.log(`Button clicked: ${event.text}, Active: ${event.isActive}`);
   }
-
+  
   toggleDeliveryButton(selectedButton: any) {
     // Reset all buttons to inactive
     console.log(selectedButton)
@@ -549,20 +595,24 @@ export class DeliveriesPage implements OnInit {
     console.log(this.food_delivery_id)
     if (this.foodDeliveries) {
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
-      if(this.food_delivery_id != String(selectedButton.id)){
-        this.food_delivery_id = String(selectedButton.id)
-      } else {
-        this.food_delivery_id = ''
-      }
+      this.food_delivery_id = ''
+      setTimeout(() => {
+        if (this.food_delivery_id != String(selectedButton.id)){
+          this.food_delivery_id = String(selectedButton.id)
+        } 
+      }, 300);
     }
+
+    this.resetFormFood()
 
     if (this.packageDeliveries) {
       this.packageDeliveryButtons.forEach(button => button.isActive = false);
-      if(this.package_delivery_id != String(selectedButton.id)){
-        this.package_delivery_id = String(selectedButton.id)
-      } else {
-        this.package_delivery_id = ''
-      }
+      this.package_delivery_id = ''
+      setTimeout(() => {
+        if(this.package_delivery_id != String(selectedButton.id)){
+          this.package_delivery_id = String(selectedButton.id)
+        }
+      }, 300)
     }
     console.log('new', this.food_delivery_id)
 
@@ -588,10 +638,13 @@ export class DeliveriesPage implements OnInit {
     if (this.food_delivery_type == 'drive_in' && selectedButton.text == 'DRIVE IN') {
       mark = true
     }
+    this.foodDeliveryButtons.forEach(button => button.isActive = false);
+    this.food_delivery_id = ''
     if (mark){
       this.food_delivery_type = ''
     } else {
       if (selectedButton.text == 'DRIVE IN') {
+        this.resetFormFood()
         this.refreshVehicle()
       } else {
         this.resetFormFood()

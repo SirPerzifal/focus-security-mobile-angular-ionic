@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Html5Qrcode } from 'html5-qrcode';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { NodeWebSocket } from 'socket.io-client';
 @Component({
   selector: 'app-contractor-form',
   templateUrl: './contractor-form.page.html',
@@ -57,6 +58,7 @@ export class ContractorFormPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
       this.project_config = value.config
+      this.checkOpenTime()
       this.Camera = value.config.lpr
     })
   }
@@ -231,7 +233,7 @@ export class ContractorFormPage implements OnInit {
     if (!this.contractor_gate_pass_number && this.project_config.is_industrial) {
       errMsg += 'Gate pass number is required! \n'
     }
-    if (!this.contractor_pass_number && this.project_config.is_industrial) {
+    if (!this.contractor_pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
     if (this.checkPaxData()) {
@@ -712,11 +714,16 @@ export class ContractorFormPage implements OnInit {
   }
 
   stopScanner() {
-    if (this.htmlScanner) {
-      this.htmlScanner.stop().catch( err => console.log(err))
+    try {
+      if (this.htmlScanner) {
+        this.htmlScanner.stop().catch( err => console.log(err))
+      }
+      this.isHidden = false
+      this.showClose = false
+    } catch (error) {
+      this.isHidden = false
+      this.showClose = false
     }
-    this.isHidden = false
-    this.showClose = false
   }
 
   isProcess = false
@@ -811,6 +818,37 @@ export class ContractorFormPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  isOpen = true
+  checkOpenTime() {
+    if (this.project_config.is_industrial) return
+    let today_date = new Date()
+    let current_hour = today_date.getHours()
+    let current_minute = today_date.getMinutes()
+    let is_before_open = false
+    let is_before_close = false
+    console.log(current_hour, current_minute)
+    if (this.project_config.office_opening_hours) {
+      let open_hour = parseInt(this.project_config.office_opening_hours.split(':')[0])
+      let open_minute = parseInt(this.project_config.office_opening_hours.split(':')[1])
+      console.log(open_hour, open_minute)
+      if ((current_hour < open_hour) || (current_hour == open_hour && current_minute < open_minute) ) {
+        is_before_open = true
+      }
+      console.log(is_before_open)
+    }
+    if (this.project_config.office_closing_hours) {
+      let close_hour = parseInt(this.project_config.office_closing_hours.split(':')[0])
+      let close_minute = parseInt(this.project_config.office_closing_hours.split(':')[1])
+      console.log(close_hour, close_minute)
+      if ((current_hour > close_hour) || (current_hour == close_hour && current_minute > close_minute) ) {
+        is_before_close = true
+      }
+      console.log(is_before_close)
+    }
+    
+    this.isOpen = !(is_before_open || is_before_close)
   }
   
 }

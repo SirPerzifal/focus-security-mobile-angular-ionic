@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -76,7 +76,8 @@ export class AppReportMainPage implements OnInit {
     private router: Router,
     private mainApi: MainApiResidentService,
     public functionMain: FunctionMainService,
-    private storage: StorageService
+    private storage: StorageService,
+    private route: ActivatedRoute,
   ) {  }
 
   handleRefresh(event: any) {
@@ -133,6 +134,14 @@ export class AppReportMainPage implements OnInit {
           this.record_type = estate.record_type;
         }
       })
+    })
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['reload']){
+          this.loadTicketFromBackendFor(this.fromWhere);
+        }
+      }
     })
   }
 

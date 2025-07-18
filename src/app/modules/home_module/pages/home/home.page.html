@@ -64,8 +64,8 @@
       <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list" class="mt-4"
         [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" [routerLink]="['/unregistered-simulation-module']" *ngIf="project_config.is_allow_vms_unregistered_simulation" class="mt-4"
-        [isActive]="true" [disableClick]="true" />
+      <!-- <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" [routerLink]="['/unregistered-simulation-module']" *ngIf="project_config.is_allow_vms_unregistered_simulation" class="mt-4"
+        [isActive]="true" [disableClick]="true" /> -->
 
       <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle" class="mt-4"
         [routerLink]="['/resident-car-list']" />
@@ -74,7 +74,7 @@
         [routerLink]="['/records-main']" />
 
       <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts" class="mt-4"
-        [routerLink]="['/alert-main']" [isWarning]="alertTotal" [totalWarning]="alertTotal"/>
+        [routerLink]="['/alert-main']" [isWarning]="totalRedAlerts" [totalWarning]="alertTotal"/>
 
       <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial" class="mt-4"
         [routerLink]="['/vms-checkout']" [isActive]="true" [disableClick]="true" />

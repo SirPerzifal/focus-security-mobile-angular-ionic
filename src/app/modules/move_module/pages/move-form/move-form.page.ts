@@ -25,6 +25,7 @@ export class MoveFormPage implements OnInit {
   unit = '';
   scheduleType = '';
   identificationType = '';
+  pass_number = ''
 
   // Array untuk menyimpan data pax
   paxData: any[] = [];
@@ -45,6 +46,12 @@ export class MoveFormPage implements OnInit {
       this.contractor_name = this.record.contact_person
       this.contact_number = this.record.contact_number
       this.company_name = this.record.company_name
+      this.vehicle_number = this.record.vehicle_number
+      this.block = this.record.block_name
+      this.unit = this.record.unit_name
+      this.block_id = this.record.block_id
+      this.unit_id = this.record.unit_id
+      this.requestor_id = this.record.requestor_id
       console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     } 
@@ -58,20 +65,7 @@ export class MoveFormPage implements OnInit {
     })
     this.route.queryParams.subscribe(params => {
       console.log(params)
-      this.block = params['block'] || '';
-      this.unit = params['unit'] || '';
-      this.block_id = params['block_id'] || '';
-      this.unit_id = params['unit_id'] || '';
       this.scheduleType = params['schedule_type'] || 'move_in_out';
-      this.requestor_id = params['requestor_id'] || ''
-  
-      // Setel nilai input secara manual
-      setTimeout(() => {
-        this.setInputValue('block', this.block);
-        this.setInputValue('unit', this.unit);
-        this.setInputValue('block_id', this.block_id);
-        this.setInputValue('unit_id', this.unit_id);
-      });
     });
   }
 
@@ -181,6 +175,9 @@ export class MoveFormPage implements OnInit {
   // Fungsi submit umum
   submitForm(openBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
+    if (!this.block_id || !this.unit_id) {
+      errMsg += 'Block and unit must be selected! \n'
+    }
     if (!this.selectedImage) {
       errMsg += 'Visitor image is required!\n';
     }
@@ -201,11 +198,11 @@ export class MoveFormPage implements OnInit {
     if (!this.nric_value) {
       errMsg += 'Identification number is required! \n'
     }
-    if (!this.block_id || !this.unit_id) {
-      errMsg += 'Block and unit must be selected! \n'
-    }
     if (!this.getInputValue('contractor_company_name')) {
       errMsg += 'Company name is required! \n'
+    }
+    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+      errMsg += 'Pass number is required! \n'
     }
     if (this.checkPaxData()) {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
@@ -239,6 +236,7 @@ export class MoveFormPage implements OnInit {
       project_id: this.project_id,
       camera_id: camera_id,
       visitor_image: this.selectedImage,
+      pass_number: this.pass_number,
     }    
     this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {
@@ -364,10 +362,10 @@ export class MoveFormPage implements OnInit {
               } else {
                 console.log(value)
                 this.selectedImage = data.visitor_image
-                this.contractor_name = data.contractor_name
-                this.company_name = data.company_name
-                this.contact_number = data.contact_number
-                this.vehicle_number = data.vehicle_number
+                // this.contractor_name = data.contractor_name
+                // this.company_name = data.company_name
+                // this.contact_number = data.contact_number
+                // this.vehicle_number = data.vehicle_number
                 this.is_id_disabled = true
               } 
             } else {

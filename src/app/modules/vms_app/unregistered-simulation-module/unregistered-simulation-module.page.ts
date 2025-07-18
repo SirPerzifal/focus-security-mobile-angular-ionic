@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
@@ -28,6 +29,17 @@ export class UnregisteredSimulationModulePage implements OnInit {
       }
       this.refreshVehicle()
     })
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  onBack() {
+    this.router.navigate(['/alert-main'], {queryParams: {unregistered: true}})
   }
 
   async loadProjectName() {
@@ -68,7 +80,7 @@ export class UnregisteredSimulationModulePage implements OnInit {
           console.log(results)
           if (results.result.response_code === 200) {
             this.functionMain.presentToast('Unregistered vehicle successfully submitted!', 'success');
-            this.router.navigate(['/home-vms'])
+            this.onBack()
           } else {
             this.functionMain.presentToast('An error occurred while submitting unregistered vehicle!', 'danger');
           }

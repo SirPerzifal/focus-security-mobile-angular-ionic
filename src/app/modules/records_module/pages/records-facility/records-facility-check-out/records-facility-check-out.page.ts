@@ -197,7 +197,6 @@ export class RecordsFacilityCheckOutPage implements OnInit {
   isLoading = false
   submitForm() {
     if (this.isLoading) return
-    this.isLoading = true
     let errMsg = ''
     this.formData.map((item: any) => {
       if (!item.quantity) {
@@ -217,38 +216,39 @@ export class RecordsFacilityCheckOutPage implements OnInit {
     })
     if (errMsg) {
       this.functionMainService.presentToast(errMsg, 'danger')
-      return
-    }
-    let params = { 
-      booking_id: this.record.id,
-      form_type: this.purpose,
-      form_data: this.formData,
-    }
-    console.log(params)
-    this.clientMainService.getApi(params, '/vms/post/check_in_check_out_form').subscribe({
-      next: (results) => {
-        console.log(results)
-        if (results.result.response_code === 200) {
-          this.functionMainService.presentToast(results.result.message, 'success');
-          if (this.purpose == 'check_in') {
-            this.record.is_form_check_in = true
-            console.log("CHECK IN")
-          } else {
-            this.record.is_form_check_out = true
-            console.log("CHECK OUT")
-          }
-          console.log(this.record)
-        } else {
-          this.functionMainService.presentToast(results.result.response_description, 'danger');
-        }
-        this.isLoading = false
-      },
-      error: (error) => {
-        this.functionMainService.presentToast('An error occurred while submitting the form!', 'danger');
-        console.error(error);
-        this.isLoading = false
+    } else {
+      this.isLoading = true
+      let params = { 
+        booking_id: this.record.id,
+        form_type: this.purpose,
+        form_data: this.formData,
       }
-    });
+      console.log(params)
+      this.clientMainService.getApi(params, '/vms/post/check_in_check_out_form').subscribe({
+        next: (results) => {
+          console.log(results)
+          if (results.result.response_code === 200) {
+            this.functionMainService.presentToast(results.result.message, 'success');
+            if (this.purpose == 'check_in') {
+              this.record.is_form_check_in = true
+              console.log("CHECK IN")
+            } else {
+              this.record.is_form_check_out = true
+              console.log("CHECK OUT")
+            }
+            console.log(this.record)
+          } else {
+            this.functionMainService.presentToast(results.result.response_description, 'danger');
+          }
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.functionMainService.presentToast('An error occurred while submitting the form!', 'danger');
+          console.error(error);
+          this.isLoading = false
+        }
+      });
+    }
   }
 
   onClear(resident: boolean = true) {

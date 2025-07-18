@@ -93,10 +93,10 @@
             <button *ngIf="pageType == 'wheel_clamp' && !vehicle.is_pay"
               class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="onPaymentClick()">PAYMENT</button>
-            <button *ngIf="pageType == 'first_warning'"
+            <button *ngIf="pageType == 'first_warning' && vehicle.states == 'issued'"
               class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="presentModal('first_warning', vehicle)">ISSUE 2ND WARNING</button>
-            <button *ngIf="pageType == 'second_warning'"
+            <button *ngIf="pageType == 'second_warning' && vehicle.states == 'issued'"
               class="w-2/5 bg-white text-black text-2xl font-bold rounded h-14"
               (click)="presentModal('second_warning', vehicle)">WHEEL CLAMP</button>
 

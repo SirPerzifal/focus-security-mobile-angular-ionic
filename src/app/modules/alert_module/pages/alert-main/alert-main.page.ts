@@ -71,6 +71,11 @@ export class AlertMainPage implements OnInit {
             this.loadTickets()
           })
         }
+        if (params['unregistered']){
+          this.loadProjectName().then(() => {
+            this.loadUnregisteredCar()
+          })
+        }
       }
     })
     
@@ -136,12 +141,14 @@ export class AlertMainPage implements OnInit {
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
+      this.project_config = value.config
       this.project_name = value.project_name.toUpperCase()
     })
   }
 
   project_id = 0
   project_name = 0
+  project_config: any = {}
 
   private routerSubscription!: Subscription;
   ngOnDestroy() {
@@ -282,25 +289,25 @@ export class AlertMainPage implements OnInit {
     this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== 'overstay');
     this.clientMainService.getApi({project_id: this.project_id,  limit: this.functionMain.limitHistory, page: this.currentPage}, '/vms/get/overstay_list').subscribe({
       next: (results) => {
+        console.log(results)
         if (results.result.response_code === 200) {
           this.alertsIssues.push({ type: 'overstay', data: results.result.response_result, total_pages: results.result.pagination.total_pages })
           this.overstayRedTotal = results.result.pagination.total_red_records
           this.overstayTotal = results.result.pagination.total_records
           this.total_pages = results.result.pagination.total_pages
-          this.isLoading = false
           console.log(this.overstayRedTotal)
         } else {
           this.alertsIssues.push({ type: 'overstay', data: [], total_pages: 0 })
           this.overstayTotal = 0
           this.overstayRedTotal = 0
           this.total_pages = 0
-          this.isLoading = false
         }
         this.recordAction();
         this.actionTotalIssue()
         if (!this.main) {
           this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
         }
+        this.isLoading = false
       },
       error: (error) => {
         this.presentToast('An error occurred while loading overstay car data!', 'danger');
@@ -315,6 +322,7 @@ export class AlertMainPage implements OnInit {
         this.total_pages = 0
         this.recordAction();
         this.actionTotalIssue()
+        this.isLoading = false
       }
     });
   }
@@ -737,5 +745,9 @@ export class AlertMainPage implements OnInit {
   }
 
   isLoading = false
+
+  addUnregistered() {
+    this.router.navigate(['/unregistered-simulation-module'])
+  }
 
 }

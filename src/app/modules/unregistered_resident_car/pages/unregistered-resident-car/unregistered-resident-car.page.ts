@@ -57,13 +57,16 @@ export class UnregisteredResidentCarPage implements OnInit {
   submitLoading = false
   onSubmit(isOpenBarrier: boolean = false, camera_id: string = '') {
     let errMsg = ''
-    if (!this.formData.name) {
+    if (!this.formData.name && !this.project_config.is_industrial) {
       errMsg += 'Name is missing! \n'
     }
-    if (!this.formData.contact_number) {
+    if ((!this.selectedHost) && this.project_config.is_industrial) {
+      errMsg += 'Host must be selected! \n'
+    }
+    if (!this.formData.contact_number && !this.project_config.is_industrial) {
       errMsg += 'Contact number is missing! \n'
     }
-    if (this.formData.contact_number) {
+    if (this.formData.contact_number && !this.project_config.is_industrial) {
       if (this.formData.contact_number.length <= 2 ) {
         errMsg += 'Contact number is missing! \n'
       }
@@ -71,17 +74,14 @@ export class UnregisteredResidentCarPage implements OnInit {
     if (!this.formData.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
     }
-    if (this.project_config.is_industrial && !this.formData.identification_type) {
-      errMsg += 'Identification type is required! \n'
-    }
-    if (this.project_config.is_industrial && !this.formData.identification_number) {
-      errMsg += 'Identification number is required! \n'
-    }
+    // if (this.project_config.is_industrial && !this.formData.identification_type) {
+    //   errMsg += 'Identification type is required! \n'
+    // }
+    // if (this.project_config.is_industrial && !this.formData.identification_number) {
+    //   errMsg += 'Identification number is required! \n'
+    // }
     if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
-    }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
     }
     if (!this.formData.reason) {
       errMsg += 'Reason must be filled! \n'
@@ -201,14 +201,14 @@ export class UnregisteredResidentCarPage implements OnInit {
       if (value) {
         this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
         if (!is_click) {
-          this.formData.contact_number = value.contact_number ? value.contact_number : ''
-          this.formData.name = value.visitor_name ? value.visitor_name  : ''
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
           this.contactUnit = ''
           this.contactHost = ''
           if (this.project_config.is_industrial) {
             this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
           } else {
+            this.formData.contact_number = value.contact_number ? value.contact_number : ''
+            this.formData.name = value.visitor_name ? value.visitor_name  : ''
             if (value.block_id) {
               this.formData.block_id = value.block_id
               this.loadUnit().then(() => {

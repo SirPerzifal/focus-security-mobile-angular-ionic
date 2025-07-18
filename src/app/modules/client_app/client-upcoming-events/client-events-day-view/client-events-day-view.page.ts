@@ -660,7 +660,7 @@ export class ClientEventsDayViewPage implements OnInit {
       is_client: true,
     }
     console.log(params)
-    this.clientMainService.getApi(params, '/residential/get/room_booking_based_on_host_id').subscribe({
+    this.clientMainService.getApi(params, '/resident/get/room_booking_based_on_host_id').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

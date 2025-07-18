@@ -98,10 +98,18 @@ export class ContractorNricScanPage implements OnInit {
   }
 
   stopScanner() {
-    this.isOpen = false
-    this.htmlScanner.stop().catch(err => console.log(err))
-    this.isListening = false
-    this.modalController.dismiss({ data: false })
+    try {
+      this.isOpen = false
+      this.isListening = false
+      this.htmlScanner.stop().catch(err => {
+        this.modalController.dismiss({ data: false })
+        console.log(err)
+      })
+      this.modalController.dismiss({ data: false })
+    } catch (error) {
+      console.log(error )
+      this.modalController.dismiss({ data: false })
+    }
   }
 
   isListening = true;

@@ -39,6 +39,7 @@ export class FunctionMainService {
   }
 
   convertToDDMMYYYY(dateString: string | undefined): string | undefined {
+    if (!dateString) return '-'
     // Memisahkan string berdasarkan "-"
     const parts = dateString?.split('-');
     
@@ -554,7 +555,7 @@ export class FunctionMainService {
   }
 
   callPolice() {
-    this.callFromPhone(999)
+    window.open(`tel:999`, '_system');
   }
 
   formatHour(hour: any) {

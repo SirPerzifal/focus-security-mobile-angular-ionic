@@ -30,6 +30,7 @@
               [customClasses]="{'w-full ':true}" 
               [type]="'text'" 
               [isReadonly]="true"
+              [(ngModel)]="block"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
           </div>
@@ -41,6 +42,7 @@
               [customClasses]="{'w-full':true}" 
               [type]="'text'" 
               [isReadonly]="true"
+              [(ngModel)]="unit"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
           </div>
@@ -118,7 +120,7 @@
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-            [value]="vehicle_number">
+            [(ngModel)]="vehicle_number">
           </app-text-input>
           </div>
           <div class="h-25 flex flex-col justify-end">
@@ -136,6 +138,11 @@
             [customInputClasses]="{'border':true, 'w-full':true ,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
+        <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
+          <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+        </div>
         <div class="w-full flex flex-col">
           <label class="text-2xl"><u><b>NUMBER OF PAX</b></u></label>
           <select name="no-of-pax" [value]="paxCount" id="no-of-pax" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]" (change)="onPaxCountChange($event)">

@@ -7,11 +7,11 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/home-vms'"/>
+      <app-vms-header [urlCustom]="'/alert-main'" [params]="{unregistered: true}"/>
     </div>
     <div class="flex flex-row mt-8">
       <div class="flex flex-col items-center">
-        <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+        <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" (click)="onBack()" [isActive]="true" [disableClick]="true" />
       </div>
     </div>
     <div class="flex flex-row">

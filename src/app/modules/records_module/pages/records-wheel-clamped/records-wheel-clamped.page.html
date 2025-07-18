@@ -178,7 +178,7 @@
 
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
-          <div class="flex flex-row justify-end w-full">
+          <div class="flex flex-row justify-end w-full" *ngIf="pageType != 'second_warning'">
             <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle"
               (click)="presentModal()"></ion-icon>
           </div>

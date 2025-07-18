@@ -167,7 +167,7 @@ export class LoginVmsPage implements OnInit {
               }, 300)
             });
           } else {
-            this.functionMain.presentToast('Residence codes not found!', 'danger');
+            this.functionMain.presentToast('Project code not found!', 'danger');
           }
         },
         error: (error) => {

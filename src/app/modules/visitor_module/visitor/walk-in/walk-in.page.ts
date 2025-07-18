@@ -162,7 +162,7 @@ export class WalkInPage implements OnInit {
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
@@ -276,7 +276,7 @@ export class WalkInPage implements OnInit {
     if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
     if ((!this.selectedHost) && this.project_config.is_industrial) {
@@ -385,10 +385,10 @@ export class WalkInPage implements OnInit {
 
   toggleShowWalk() {
     if (!this.showQrTrans && !this.showDriveTrans) {
-      if ((this.showDrive && !this.isFromScan) || !this.maId) {
+      if ((this.showDrive && !this.isFromScan) && !this.maId) {
         this.resetForm() 
       }
-      if ((this.showQr && this.showClose) || !this.maId) {
+      if ((this.showQr && this.showClose) && !this.maId) {
         this.stopScanner()
       }
       this.showWalkTrans = true
@@ -410,7 +410,7 @@ export class WalkInPage implements OnInit {
         this.refreshVehicle()
       }
       if (this.showQr && this.showClose) {
-        if (!this.isFromScan || !this.maId){
+        if (!this.isFromScan && !this.maId){
           this.refreshVehicle()
         }
         this.stopScanner()
@@ -599,11 +599,16 @@ export class WalkInPage implements OnInit {
   }
 
   stopScanner() {
-    if (this.htmlScanner) {
-      this.htmlScanner.stop().catch( err => console.log(err))
+    try {
+      if (this.htmlScanner) {
+        this.htmlScanner.stop().catch( err => console.log(err))
+      }
+      this.isHidden = false
+      this.showClose = false
+    } catch (error) {
+      this.isHidden = false
+      this.showClose = false
     }
-    this.isHidden = false
-    this.showClose = false
   }
 
   entry_id = 0
@@ -642,8 +647,10 @@ export class WalkInPage implements OnInit {
             })
           }
           if (this.formData.visitor_type == 'walk_in') {
+            console.log("SHOW WALK HEY")
             this.toggleShowWalk()
           } else {
+            console.log("SHOW WALK HEY 222")
             this.toggleShowDrive()
           }
         } else {
@@ -665,18 +672,18 @@ export class WalkInPage implements OnInit {
     let back_url = 'home-vms'
     let params = {}
     if (this.fromMa) {
-      back_url = '/ma-visitor-form'
-      params = {state: {schedule: this.maForm} }
+      back_url = '/move-home'
+      params = {state: {schedule: this.maForm}, queryParams: {type: 'ma_visitor'} }
     } 
     if (this.isHidden){
       this.stopScanner()
       setTimeout(() => {
         this.resetPage()
-        this.router.navigate([back_url])
+        this.router.navigate([back_url], params)
       }, 300);
     } else {
       this.resetPage()
-      this.router.navigate([back_url])
+      this.router.navigate([back_url], params)
     }
     
   }

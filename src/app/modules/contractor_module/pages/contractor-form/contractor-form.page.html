@@ -26,7 +26,10 @@
         <!-- <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60 mb-4" (click)="startScanner()" *ngIf="!isHidden"/> -->
         <div id="reader" class="w-full mb-4"></div>
       </div>
-      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4" *ngIf="showWalk || showDrive" @fadeInOut>
+      <div class="w-full mt-5" *ngIf="((showWalk || showDrive) && !isOpen) && !project_config.is_industrial">
+        <i class="text-2xl font-bold break-words whitespace-normal w-full text-left">*CONTRACTOR FORM IS LOCKED BECAUSE THE CURRENT TIME IS OUTSIDE THE OFFICE HOURS.</i>
+      </div>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4" *ngIf="(showWalk || showDrive) && isOpen" @fadeInOut>
         <div class="w-full">
           <app-input-image-preview class="w-full h-25" [labelText]="'CONTRACTOR IMAGE'" [buttonText]="'UPLOAD'" 
             [extraButtonClass]="'rounded-md text-white h-20'" 
@@ -86,46 +89,44 @@
           <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
             [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
         </div>
-        <div class="w-full space-y-5" *ngIf="project_config.is_industrial">
-          <div class="w-full">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isOne]="false"></app-m2m-selection>
-          </div>
-          <div class="w-full">
-            <app-text-input #contractorTotalPackage [id]="'contractor_total_package'" [labelText]="'TOTAL PACKAGE'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'number'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [(ngModel)]="contractor_total_package"></app-text-input>
-          </div>
-          <div class="w-full">
-            <app-text-input 
-              #contractorExpiredDate
-              [id]="'contractor_expired_date'" 
-              [(ngModel)]="contractor_expired_date"
-              [labelText]="'SIC EXPIRY DATE'" [placeholder]="''" 
-              [customClasses]="{'w-full ':true}" 
-              [type]="'date'" 
-              (change)="onExpiredDateChange($event)"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
-            </app-text-input>
-          </div>
-          <div class="w-full">
-            <app-text-input #contractorEntryPurpose [id]="'contractor_entry_purpose'" [labelText]="'ENTRY PURPOSE'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" 
-              [(ngModel)]="contractor_entry_purpose"></app-text-input>
-          </div>
-          <div class="w-full">
-            <app-text-input #contractorGatePass [id]="'contractor_gate_pass'" [labelText]="'GATE PASS NUMBER'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
-              [(ngModel)]="contractor_gate_pass_number"></app-text-input>
-          </div>
-          <div class="w-full">
-            <app-text-input #contractorPassNumber [id]="'contractor_pass_number'" [labelText]="'PASS NUMBER'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" 
-              [(ngModel)]="contractor_pass_number"></app-text-input>
-          </div>        
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isOne]="false"></app-m2m-selection>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-text-input #contractorTotalPackage [id]="'contractor_total_package'" [labelText]="'TOTAL PACKAGE'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'number'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+            [(ngModel)]="contractor_total_package"></app-text-input>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-text-input 
+            #contractorExpiredDate
+            [id]="'contractor_expired_date'" 
+            [(ngModel)]="contractor_expired_date"
+            [labelText]="'SIC EXPIRY DATE'" [placeholder]="''" 
+            [customClasses]="{'w-full ':true}" 
+            [type]="'date'" 
+            (change)="onExpiredDateChange($event)"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+          </app-text-input>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-text-input #contractorEntryPurpose [id]="'contractor_entry_purpose'" [labelText]="'ENTRY PURPOSE'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" 
+            [(ngModel)]="contractor_entry_purpose"></app-text-input>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial">
+          <app-text-input #contractorGatePass [id]="'contractor_gate_pass'" [labelText]="'GATE PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+            [(ngModel)]="contractor_gate_pass_number"></app-text-input>
+        </div>
+        <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
+          <app-text-input #contractorPassNumber [id]="'contractor_pass_number'" [labelText]="'PASS NUMBER'"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" 
+            [(ngModel)]="contractor_pass_number"></app-text-input>
         </div>
         <div class="w-full">
           <app-text-input #remarksInput [id]="'remarks'" [labelText]="'REMARKS'" [placeholder]="'Remarks'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="remarksValue"></app-text-input>

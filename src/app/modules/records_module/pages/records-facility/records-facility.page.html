@@ -133,7 +133,7 @@
           <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
         </div> -->
         <app-modal-loading *ngIf="isLoading" class=""/>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of filteredHistorySchedules" (click)="form(record)">
+        <div [class]="'flex flex-row justify-between h-32 w-full items-center rounded p-4 ' + (returnStatus(record) == '(CHECKED IN)' ? 'bg-[var(--ion-color-warning-darker)]' : 'bg-[var(--ion-color-primary)]' )" *ngFor="let record of filteredHistorySchedules" (click)="form(record)">
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility }} {{returnStatus(record)}}</span>
             <span class="text-2xl text-white">{{ getBookingTime(record) }}</span>
@@ -153,7 +153,7 @@
             records.vehicle_number }}</span>
           <div class="flex flex-col w-full space-y-5 pl-4 mt-5">
             <div
-              class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+              [class]="'flex flex-row justify-between h-32 w-full items-center rounded p-4 ' + (returnStatus(record) == '(CHECKED IN)' ? 'bg-[var(--ion-color-warning-darker)]' : 'bg-[var(--ion-color-primary)]' )"
               *ngFor="let record of records.data" (click)="form(record)">
               <div class="flex flex-col">
                 <span class="text-2xl font-bold text-white">{{ record.facility }} {{returnStatus(record)}}</span>
@@ -172,7 +172,7 @@
           <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
         </div> -->
         <app-modal-loading *ngIf="isLoading" class=""/>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of upcomingSchedules" (click)="form(record)">
+        <div [class]="'flex flex-row justify-between h-32 w-full items-center rounded p-4 ' + (returnStatus(record) == '(CHECKED IN)' ? 'bg-[var(--ion-color-warning-darker)]' : 'bg-[var(--ion-color-primary)]' )" *ngFor="let record of upcomingSchedules" (click)="form(record)">
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility_name }} {{returnStatus(record)}}</span>
             <span class="text-2xl text-white">{{ getBookingTime(record) }}</span>
@@ -186,7 +186,7 @@
           <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
         </div> -->
         <app-modal-loading *ngIf="isLoading" class=""/>
-        <div class="flex flex-row justify-between h-32 w-full bg-[var(--ion-color-primary)] items-center rounded p-4" *ngFor="let record of daySchedules" (click)="form(record)">
+        <div [class]="'flex flex-row justify-between h-32 w-full items-center rounded p-4 ' + (returnStatus(record) == '(CHECKED IN)' ? 'bg-[var(--ion-color-warning-darker)]' : 'bg-[var(--ion-color-primary)]' )" *ngFor="let record of daySchedules" (click)="form(record)">
           <div class="flex flex-col">
             <span class="text-2xl font-bold text-white">{{ record.facility_name }} {{returnStatus(record)}}</span>
             <span class="text-2xl text-white">{{ getBookingTime(record) }}</span>

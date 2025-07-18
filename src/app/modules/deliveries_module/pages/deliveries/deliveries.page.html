@@ -30,97 +30,96 @@
       <div class="justify-between items-center w-full mb-4" *ngIf="foodDeliveries" @fadeInOut>
         <div class="w-full">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="flex flex-col">
-            <div class="flex flex-row w-full flex-wrap">
+          <div class="flex flex-row space-x-1 overflow-x-auto w-full">
+            <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
+              (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
+            <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
+              (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
+          </div>
+          <div class="flex flex-col" *ngIf="showForm" @fadeInOut>
+            <div class="flex flex-row w-full flex-wrap mt-6">
               <div *ngFor="let button of foodDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image ? button.image : ''" [text]="button.text"
                   [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)"
                   [extraParentClass]="'mr-1'" />
               </div>
             </div>
-            <div class="flex flex-row space-x-1 mt-6 overflow-x-auto" *ngIf="food_delivery_id" @fadeInOut>
-              <div *ngFor="let deliveriesButton of deliveriesType">
-                <app-button-icon [customNameIcon]="deliveriesButton.icon ? deliveriesButton.icon : ''"
-                  [text]="deliveriesButton.text" [isActive]="deliveriesButton.isActive"
-                  (buttonClick)="toggleDeliveryTypeButton(deliveriesButton)" [extraParentClass]="'mr-1'" />
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-row mt-6" *ngIf="food_delivery_type" @fadeInOut>
-            <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
-              <div class="w-full">
-                <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
-                  [extraButtonClass]="'rounded-md text-white h-20'" 
-                  [(cameraSelected)]="selectedImage">
-                </app-input-image-preview>
-              </div>
-              <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
-                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
-              </div>
-              <div class="w-full">
-                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'deliveries_contact_number'"
-                  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
-              </div>
-              <div *ngIf="food_delivery_type == 'drive_in'" class=" w-full flex flex-row justify-between">
-                <div class="w-[90%] flex flex-col">
-                  <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
-                  <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
-                    class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                    [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
-                  <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
-                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
-                </div>
-                <div class="flex flex-col justify-end">
-                  <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
-                </div>
-              </div>
-              <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
-                <label class="text-2xl"><u><b>BLOCK</b></u></label>
-                <select id="delivery_food_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block"
-                  name="delivery_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
-                  style="border: 1px solid #6B7280;">
-                  <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-                  <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-                </select>
-              </div>
-              <!-- <div class="w-full flex flex-col">
-                <label class="text-2xl"><u><b>UNIT</b></u></label>
-                <select id="delivery_food_unit" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="delivery_food_unit"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" style="border: 1px solid #6B7280;">
-                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
-                  <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-                </select>
-              </div> -->
-              <div class="w-full" *ngIf="!project_config.is_industrial">
-                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
-                  [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
-              </div>
-              <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
+            <div class="flex flex-row mt-6" *ngIf="food_delivery_id" @fadeInOut>
+              <div class="flex flex-col justify-around items-center w-full space-y-5 mx-4">
                 <div class="w-full">
-                  <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
-                    (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
-                    [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                  <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
+                    [extraButtonClass]="'rounded-md text-white h-20'" 
+                    [(cameraSelected)]="selectedImage">
+                  </app-input-image-preview>
+                </div>
+                <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+                  <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
+                    (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
                 </div>
                 <div class="w-full">
+                  <app-vms-contact-input [(value)]="formData.contact_number" [id]="'deliveries_contact_number'"
+                    (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+                </div>
+                <div *ngIf="showDrive" class=" w-full flex flex-row justify-between">
+                  <div class="w-[90%] flex flex-col">
+                    <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label>
+                    <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
+                      class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
+                      [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
+                    <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
+                      [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                      [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
+                  </div>
+                  <div class="flex flex-col justify-end">
+                    <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
+                  </div>
+                </div>
+                <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
+                  <label class="text-2xl"><u><b>BLOCK</b></u></label>
+                  <select id="delivery_food_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block"
+                    name="delivery_food_block"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                    style="border: 1px solid #6B7280;">
+                    <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+                    <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
+                  </select>
+                </div>
+                <!-- <div class="w-full flex flex-col">
+                  <label class="text-2xl"><u><b>UNIT</b></u></label>
+                  <select id="delivery_food_unit" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="delivery_food_unit"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" style="border: 1px solid #6B7280;">
+                    <option value="" selected disabled hidden>CHOOSE UNIT</option>
+                    <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+                  </select>
+                </div> -->
+                <div class="w-full" *ngIf="!project_config.is_industrial">
+                  <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
+                    [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+                </div>
+                <div class="w-full flex flex-col space-y-5" *ngIf="project_config.is_industrial">
+                  <div class="w-full">
+                    <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
+                      (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
+                      [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                  </div>
+                </div>
+                <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
                   <app-text-input #deliveryFoodPass [id]="'delivery_food_pass_number'" [labelText]="'PASS NUMBER'"
                     [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
                     [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
                 </div>
-              </div>
-              <div class="w-full space-y-5" *ngIf="food_delivery_type == 'drive_in' && Camera.length > 0">
-                <div class="w-full " *ngFor="let camera of Camera; let i = index">
-                  <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
-                    [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
-                    (click)="onSubmitFood(true, camera.CamSentId)"></app-visitor-button>
+                <div class="w-full space-y-5" *ngIf="food_delivery_type == 'drive_in' && Camera.length > 0">
+                  <div class="w-full " *ngFor="let camera of Camera; let i = index">
+                    <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
+                      [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+                      (click)="onSubmitFood(true, camera.CamSentId)"></app-visitor-button>
+                  </div>
                 </div>
-              </div>
-              <div class="w-full">
-                <app-visitor-button [text]="food_delivery_type == 'drive_in' ? 'SAVE RECORD ONLY' : 'SAVE RECORD'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20 ' + (food_delivery_type == 'walk_in' ? 'mt-6' : 'mt-1' )"
-                  (click)="onSubmitFood()"></app-visitor-button>
+                <div class="w-full">
+                  <app-visitor-button [text]="food_delivery_type == 'drive_in' ? 'SAVE RECORD ONLY' : 'SAVE RECORD'"
+                    [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20 ' + (food_delivery_type == 'walk_in' ? 'mt-6' : 'mt-1' )"
+                    (click)="onSubmitFood()"></app-visitor-button>
+                </div>
               </div>
             </div>
           </div>
@@ -129,125 +128,128 @@
 
       <div class="justify-between items-center mb-4 w-full" *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
-          <div class="flex flex-row w-full flex-wrap">
-            <div *ngFor="let button of packageDeliveryButtons">
-              <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
-                [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'" />
-            </div>
+          <div class="flex flex-row space-x-1 overflow-x-auto w-full">
+            <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
+              (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
+            <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
+              (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
           </div>
-          <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
-            <div class="flex flex-col justify-between items-center w-full space-y-5 mx-4">
-              <div class="w-full">
-                <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
-                  [extraButtonClass]="'rounded-md text-white h-20'" 
-                  [(cameraSelected)]="selectedImage">
-                </app-input-image-preview>
+          <div class="flex flex-col mt-6" *ngIf="showForm" @fadeInOut>
+            <div class="flex flex-row w-full flex-wrap">
+              <div *ngFor="let button of packageDeliveryButtons">
+                <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
+                  [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'" />
               </div>
-              <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-                <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
-                  (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
-              </div>
-              <div class="w-full">
-                <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'"
-                  (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
-              </div>
-              <!-- <div class="w-full flex flex-col">
-                <label class="text-2xl"><u><b>CONTACT NUMBER</b></u></label>
-                <input id="package_contact_number" placeholder="EG. +65 XXXX XXX" type="text" style="border: 1px solid #6B7280;"
-                  class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                  [(ngModel)]="formData.contact_number" name="contact_number">
-              </div> -->
-              <div class="w-full  flex flex-row justify-between">
-                <div class="flex flex-col w-[90%]">
-                  <!-- <label class="text-2xl"><u><b>VEHICLE NUMBER</b></u></label> -->
-                  <!-- <input id="vehicle_number" placeholder="" type="text" style="border: 1px solid #6B7280;"
-                    class="border outline-[#DBDBD] w-full rounded py-2 px-3 text-2xl h-20"
-                    [(ngModel)]="formData.vehicle_number" name="vehicle_number"> -->
-                    <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
-                      [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-                      [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
+            </div>
+            <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
+              <div class="flex flex-col justify-between items-center w-full space-y-5 mx-4">
+                <div class="w-full">
+                  <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
+                    [extraButtonClass]="'rounded-md text-white h-20'" 
+                    [(cameraSelected)]="selectedImage">
+                  </app-input-image-preview>
                 </div>
-                <div class="flex flex-col justify-end">
-                  <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
+                <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
+                  <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true"
+                    (outputScan)="setFromScan($event)" [Selected]="selectedNric" />
                 </div>
-              </div>
-              <div class="w-full flex  gap-x-8">
-                <div class="flex items-center me-4 ml-1 my-2">
-                  <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
-                    (change)="onUnitTypeChange('multiple')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
-                  <label for="inline-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Multiple
-                    {{ project_config.is_industrial ? 'Hosts' : 'Units'}}</label>
+                <div class="w-full">
+                  <app-vms-contact-input [(value)]="formData.contact_number" [id]="'package_contact_number'"
+                    (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
                 </div>
-                <div class="flex items-center">
-                  <input id="inline-2-radio" type="radio" value="single" name="inline-radio-group"
-                    (change)="onUnitTypeChange('single')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
-                  <label for="inline-2-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Single
-                    {{ project_config.is_industrial ? 'Host' : 'Units'}}</label>
+                <div class="w-full  flex flex-row justify-between" *ngIf="showDrive">
+                  <div class="flex flex-col w-[90%]">
+                      <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
+                        [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                        [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.vehicle_number"></app-text-input>
+                  </div>
+                  <div class="flex flex-col justify-end">
+                    <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
+                  </div>
                 </div>
-              </div>
-              <div class="w-full" *ngIf="showPax" @fadeInOut>
-                <form class="mx-auto flex flex-col">
-                  <label class="text-2xl"><u><b>NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</b></u></label>
-                  <select id="number_pax"
-                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
-                    style="border: 1px solid #6B7280;" [(ngModel)]="formData.pax" name="number_pax">
-                    <option value="0" selected hidden>CHOOSE NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
+                <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
+                  <app-text-input #deliveryPackagePass [id]="'delivery_package_pass_number'" [labelText]="'PASS NUMBER'"
+                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                    [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+                </div>
+                <div class="w-full flex  gap-x-8">
+                  <div class="flex items-center me-4 ml-1 my-2">
+                    <input id="inline-radio" type="radio" value="multiple" name="inline-radio-group"
+                      (change)="onUnitTypeChange('multiple')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
+                    <label for="inline-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Multiple
+                      {{ project_config.is_industrial ? 'Hosts' : 'Units'}}</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input id="inline-2-radio" type="radio" value="single" name="inline-radio-group"
+                      (change)="onUnitTypeChange('single')" class="w-5 h-5 mr-2 text-[var(--ion-color-primary)]">
+                    <label for="inline-2-radio" class="ms-2 text-2xl font-bold text-gray-500 dark:text-gray-300">Single
+                      {{ project_config.is_industrial ? 'Host' : 'Units'}}</label>
+                  </div>
+                </div>
+                <div class="w-full" *ngIf="showPax" @fadeInOut>
+                  <form class="mx-auto flex flex-col">
+                    <label class="text-2xl"><u><b>NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</b></u></label>
+                    <select id="number_pax"
+                      class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
+                      style="border: 1px solid #6B7280;" [(ngModel)]="formData.pax" name="number_pax">
+                      <option value="0" selected hidden>CHOOSE NUMBER OF {{ project_config.is_industrial ? 'HOSTS' : 'UNITS'}}</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                    </select>
+                  </form>
+                </div>
+                <div class="w-full flex flex-col" *ngIf="showRemarks" @fadeInOut>
+                  <app-text-input [id]="'delivery_package_remarks'" [name]="'delivery_package_remarks'" [labelText]="'REMARKS'" [rows]="4"
+                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
+                    [(ngModel)]="formData.remarks"></app-text-input>
+                  <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
+                  <textarea id="remarks" rows="4" name="remarks_delivery"
+                    class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
+                    placeholder="" [(ngModel)]="formData.remarks"></textarea> -->
+                </div>
+  
+                <div class="w-full flex flex-col" *ngIf="showBlock && !project_config.is_industrial" @fadeInOut>
+                  <label class="text-2xl"><u><b>BLOCK</b></u></label>
+                  <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;"
+                    [(ngModel)]="formData.block" name="package_food_block"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
+                    <option value="" selected disabled hidden>CHOOSE BLOCK</option>
+                    <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
                   </select>
-                </form>
-              </div>
-              <div class="w-full flex flex-col" *ngIf="showRemarks" @fadeInOut>
-                <app-text-input [id]="'delivery_package_remarks'" [name]="'delivery_package_remarks'" [labelText]="'REMARKS'" [rows]="4"
-                  [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
-                  [(ngModel)]="formData.remarks"></app-text-input>
-                <!-- <label class="text-2xl"><u><b>REMARKS</b></u></label>
-                <textarea id="remarks" rows="4" name="remarks_delivery"
-                  class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
-                  placeholder="" [(ngModel)]="formData.remarks"></textarea> -->
-              </div>
-
-              <div class="w-full flex flex-col" *ngIf="showBlock && !project_config.is_industrial" @fadeInOut>
-                <label class="text-2xl"><u><b>BLOCK</b></u></label>
-                <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;"
-                  [(ngModel)]="formData.block" name="package_food_block"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-                  <option value="" selected disabled hidden>CHOOSE BLOCK</option>
-                  <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-                </select>
-              </div>
-              <!-- <div class="w-full flex flex-col" *ngIf="showUnit" @fadeInOut>
-                <label class="text-2xl"><u><b>UNIT</b></u></label>
-                <select id="package_food_unit" (change)="onUnitChange($event)" style="border: 1px solid #6B7280;" [(ngModel)]="formData.unit" name="package_food_unit"
-                  class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
-                  <option value="" selected disabled hidden>CHOOSE UNIT</option>
-                  <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-                </select>
-              </div> -->
-              <div class="w-full" *ngIf="showUnit && !project_config.is_industrial" @fadeInOut>
-                <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
-                  [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
-              </div>
-              <div class="w-full" *ngIf="showUnit && project_config.is_industrial">
-                <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
-                  (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
-                  [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
-              </div>
-              <div class="w-full " *ngFor="let camera of Camera; let i = index">
-                <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
-                  (click)="onSubmitPackage(true, camera.CamSentId)"></app-visitor-button>
-              </div>
-              <div class="w-full">
-                <app-visitor-button [text]="'SAVE RECORD ONLY'"
-                  [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'"
-                  (click)="onSubmitPackage()"></app-visitor-button>
+                </div>
+                <!-- <div class="w-full flex flex-col" *ngIf="showUnit" @fadeInOut>
+                  <label class="text-2xl"><u><b>UNIT</b></u></label>
+                  <select id="package_food_unit" (change)="onUnitChange($event)" style="border: 1px solid #6B7280;" [(ngModel)]="formData.unit" name="package_food_unit"
+                    class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
+                    <option value="" selected disabled hidden>CHOOSE UNIT</option>
+                    <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
+                  </select>
+                </div> -->
+                <div class="w-full" *ngIf="showUnit && !project_config.is_industrial" @fadeInOut>
+                  <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'"
+                    [isOne]="true" [isVMS]="true" [labelText]="'UNIT'" [Selected]="contactUnit"></app-m2m-selection>
+                </div>
+                <div class="w-full" *ngIf="showUnit && project_config.is_industrial">
+                  <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial"
+                    (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true"
+                    [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
+                </div>
+                <div class="w-full " *ngFor="let camera of Camera; let i = index">
+                  <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"
+                    [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+                    (click)="onSubmitPackage(true, camera.CamSentId)"></app-visitor-button>
+                </div>
+                <div class="w-full">
+                  <app-visitor-button [text]="'SAVE RECORD ONLY'"
+                    [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-2xl h-20'"
+                    (click)="onSubmitPackage()"></app-visitor-button>
+                </div>
               </div>
             </div>
           </div>

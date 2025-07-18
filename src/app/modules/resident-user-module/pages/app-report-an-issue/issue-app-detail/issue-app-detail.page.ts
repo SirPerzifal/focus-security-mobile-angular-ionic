@@ -89,7 +89,7 @@ export class IssueAppDetailPage implements OnInit {
   }
 
   loadDetail(){
-    this.clientMainService.getApi({ticket_id: this.ticketDetail.ticket_id}, '/client/get/report_issue_detail').subscribe({
+    this.mainApi.endpointMainProcess({ticket_id: this.ticketDetail.ticket_id}, 'get/report_issue_detail').subscribe({
       next: (results) => {
         // console.log(results)
         if (results.result.response_code == 200) {
@@ -219,7 +219,7 @@ export class IssueAppDetailPage implements OnInit {
       if (results.result.response_code == 200) {
         this.functionMain.presentToast(`Successfully add new reply!`, 'success');
         if (is_close) {
-          this.onBack()
+          this.onBack(true)
         } else {
           this.replyForm.body = ''
           this.replyForm.ir_attachments = []
@@ -234,11 +234,11 @@ export class IssueAppDetailPage implements OnInit {
   }
 
   showFile = true
-  onBack() {
+  onBack(is_reload: boolean = false) {
     if ( this.fromWhere === 'fromCondo') {
-      this.router.navigate(['/condo-report-main'])
+      this.router.navigate(['/condo-report-main'], is_reload ? {queryParams: {reload: true}} : {})
     } else {
-      this.router.navigate(['/app-report-main'])
+      this.router.navigate(['/app-report-main'], is_reload ? {queryParams: {reload: true}} : {})
     }
   }
 

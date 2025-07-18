@@ -34,7 +34,6 @@
     <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
       <ion-spinner name="dots"></ion-spinner>
     </div> -->
-    <app-modal-loading *ngIf="isLoading" class="mt-4" />
     <div class="mt-2 mb-24 flex flex-col items-center flex-grow w-full" *ngIf="isFacility && !isLoading">
       <!-- Dynamic Facility Rendering -->
       <div *ngIf="facilities.length > 0; else noFacility" class="w-full flex flex-col items-center">
@@ -94,6 +93,7 @@
       <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination"
         (pageForward)="pageForward($event)" />
     </div>
+    <app-modal-loading *ngIf="isLoading" class="mt-4" />
     <div class="flex flex-col relative mx-4 mt-2 mb-24" *ngIf="!isFacility  && !isLoading">
       <div *ngIf="showBookings.length > 0; else noActiveBookings">
         <div *ngFor="let booking of showBookings; let i = index" [ngClass]="{
@@ -124,45 +124,51 @@
             {{ getBookingStatusLabel(booking.booking_status) }}
           </h2>
           <p class="font-bold text-base text-black">{{ booking.facility_name }}</p>
-          <div class="table w-full">
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Event Date</p>
-              <p class="ml-2 table-cell text-base text-black">: {{
-                functionMain.convertDateExtend(booking.start_datetime).split(' ')[0] }}</p>
-            </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Booking Start Time</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ booking.start_datetime ?
-                booking.start_datetime.split(' ')[1] : '-' }}</p>
-            </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Booking End Time</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ booking.stop_datettime ?
-                booking.stop_datettime.split(' ')[1] : '-' }}</p>
-            </div>
-            <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Booked By</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(booking.booked_by) }}</p>
-            </div>
-            <div class="table-row" *ngIf="!project_config.is_industrial">
-              <p class="font-bold table-cell text-base text-black">Unit</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(booking.unit_name) }}</p>
-            </div>
-            <!-- <div class="table-row">
-              <p class="font-bold table-cell text-base text-black">Booked By</p>
-              <p class="ml-2 table-cell text-base text-black">: {{ booking.bookedBy }}</p>
-            </div> -->
-          </div>
-          <div class="flex mt-2 space-x-2">
-            <button (click)="viewDetails(booking)"
+          <table class="w-full">
+            <tr class="w-full">
+              <td class="w-2/5">Event Date</td>
+              <td class="w-[5%]">: </td>
+              <td class="text-base text-black w-3/5">{{
+                functionMain.convertDateExtend(booking.start_datetime).split(' ')[0] }}</td>
+            </tr>
+            <tr class="w-full">
+              <td class="w-2/5">Booking Start Time</td>
+              <td class="w-[5%]">: </td>
+              <td class="text-base text-black w-3/5">{{ booking.start_datetime ?
+                booking.start_datetime.split(' ')[1] : '-' }}</td>
+              </tr>
+            <tr class="w-full">
+              <td class="w-2/5">Booking End Time</td>
+              <td class="w-[5%]">: </td>
+              <td class="text-base text-black w-3/5">{{ booking.stop_datettime ?
+                booking.stop_datettime.split(' ')[1] : '-' }}</td>
+            </tr>
+            <tr class="w-full">
+              <td class="w-2/5">Booked By</td>
+              <td class="w-[5%]">: </td>
+              <td class="text-base text-black w-3/5">{{ functionMain.returnNone(booking.booked_by) }}</td>
+            </tr>
+            <tr class="w-full" *ngIf="!project_config.is_industrial">
+              <td class="w-2/5">Unit</td>
+              <td class="w-[5%]">: </td>
+              <td class="text-base text-black w-3/5">{{ functionMain.returnNone(booking.unit_name) }}</td>
+            </tr>
+            <!-- <tr class="w-full">
+              <td class="w-2/5">Booked By</td>
+              <td>:</td>
+              <td class="text-base text-black w-3/5"> {{ booking.bookedBy }}</td>
+            </tr> -->
+          </table>
+          <!-- <div class="flex mt-2 space-x-2"> -->
+            <!-- <button (click)="viewDetails(booking)"
               class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold"
               *ngIf="booking.booking_status === 'Requested' || booking.booking_status === 'Pending Approval' || booking.booking_status === 'Approved'">
               View Details
-            </button>
+            </button> -->
             <!-- <button class="bg-[#E3787E] text-black px-3 py-2 text-base cw-2:text-[13px] rounded-md font-bold" (click)="cancelBooking(booking.id)">
 						Cancel Booking
 					  </button> -->
-          </div>
+          <!-- </div> -->
         </div>
 
       </div>
@@ -177,7 +183,7 @@
 
     </div>
   </div>
-  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end" *ngIf="!isHistory">
+  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end" *ngIf="isBooking">
     <ion-fab-button (click)="openModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -198,7 +204,7 @@
       <div class="mx-4">
         <div class="w-full flex flex-col space-y-2" *ngIf="isFacility">
           <div class="flex flex-col justify-between mt-4 space-y-2 w-full mb-24">
-            <img [src]="newFacilityForm.facility_banner ? functionMain.getImage(newFacilityForm.facility_banner) : 'assets/icon/exc-client/no_image.jpg'" class="w-full h-40 object-cover rounded-2xl" (click)="takePicture()">
+            <img [src]="newFacilityForm.facility_banner ? functionMain.getImage(newFacilityForm.facility_banner) : 'assets/icon/exc-client/no_image.jpg'" class="w-full h-40 object-cover rounded-2xl" (click)="openModalSelection()">
             <div class="w-full">
               <app-text-input [labelResidentText]="'Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
                   [id]="'client_facility_edit_name'" [placeholder]="'Tennis Court'"
@@ -214,28 +220,35 @@
             </div>
           </div>
         </div>
-
-        <!-- <div class="flex flex-col w-full my-4 space-y-2" *ngIf="!isFacility">
-          <div class="w-full">
-            <app-text-input #clientNewBookingDate [id]="'client_new_booking_date'"
-            [customClasses]="{'w-full':true}" [type]="'date'"  [labelResidentClass]="'text-base font-bold'"
-            [showPlaceholder]="true" [(ngModel)]="selectedDate" [labelResidentText]="'Booking Date'"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true, 'cw-3:text-xs':true}"
-            (change)="onDateChange($event)"></app-text-input>
-          </div>
-          <div class="w-full flex flex-col">
-            <label class="text-base"><b>Facility</b></label>
-            <select id="blacklist_block"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base cw-3:text-xs text-[#6B7280]"
-              [disabled]="false">
-              <option value="" selected disabled hidden>Choose Facility</option>
-            </select>
-          </div>
-        </div> -->
       </div>
       <ion-content class="ion-padding">
         
       </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal id="facility-open-file-camera-selection" [isOpen]="isModalSelectionOpen" (didDismiss)="closeModalSelection()">
+    <ng-template>
+      <div class="p-[15px] bg-white w-full flex flex-col justify-between">
+        <input type="file" #fileFacilityIconInput (change)="onFileSelected($event)" class="hidden"
+          accept="image/*" />
+        <div class="flex flex-row justify-between">
+          <button id="client_ticket_new_upbload_attachment" (click)="openFile()"
+            class="!bg-[var(--ion-color-primary)] !text-white w-[45%] text-base rounded h-14 font-bold">
+            Open Folder
+          </button>
+          <button id="client_ticket_new_upbload_attachment" (click)="takePicture()"
+            class="!bg-[var(--ion-color-primary)] !text-white w-[45%] text-base rounded h-14 font-bold">
+            Open Camera
+          </button>
+        </div>
+        <div class="flex flex-row justify-end mt-4">
+          <button id="client_ticket_new_upbload_attachment" (click)="closeModalSelection()"
+            class="!bg-white !text-[var(--ion-color-primary)] w-full text-base rounded h-14 font-bold" style="border: 2px solid var(--ion-color-primary);">
+            Close Selection
+          </button>
+        </div>
+      </div>
     </ng-template>
   </ion-modal>
 

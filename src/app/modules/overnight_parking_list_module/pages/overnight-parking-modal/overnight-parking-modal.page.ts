@@ -190,7 +190,7 @@ export class OvernightParkingModalPage implements OnInit {
           contact_number: this.vehicle.contact_number,
           type_notice: this.selectedNotice, 
           issuing_officer_name: this.issueOfficer,
-          type: this.vehicle.entry_type ? this.vehicle.entry_type : 'Drive In',
+          type: this.vehicle.visit_type ? this.vehicle.visit_type : 'Drive In',
           entry_datetime: this.vehicle.create_date ? this.vehicle.create_date : false,
           reason: this.reason,
           notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,

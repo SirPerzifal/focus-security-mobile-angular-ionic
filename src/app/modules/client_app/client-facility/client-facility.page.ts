@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
@@ -250,6 +250,7 @@ export class ClientFacilityPage implements OnInit {
   
   openModal() {
     if (this.isFacility) {
+      this.addLayerHistory()
       this.isModal = true
     } else {
       this.router.navigate(['/client-facility-new-booking'])
@@ -259,6 +260,7 @@ export class ClientFacilityPage implements OnInit {
   closeModal() {
     this.isModal = false
     this.newFacilityForm = {}
+    this.closeLayerHistory()
   }
 
   newFacilityForm: any = {}
@@ -294,29 +296,6 @@ export class ClientFacilityPage implements OnInit {
     
   }
 
-  async takePicture() {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        source: CameraSource.Camera,
-        resultType: CameraResultType.Base64
-      });
-      this.newFacilityForm.facility_banner = image.base64String;
-    } catch (error) {
-      if (typeof error === 'object' && error !== null && 'message' in error) {
-        const errorMessage = (error as { message: string }).message;
-        if (errorMessage === 'User cancelled photos app') {
-          return;
-        }
-      }
-      
-      this.newFacilityForm.facility_banner = false
-      this.functionMain.presentToast('Error taking photo', 'danger')
-      console.error(error)
-    }
-    
-  };
-
   editFacility(facility: any) {
     this.newFacilityForm = {
       facility_name: facility.facility_name,
@@ -339,5 +318,82 @@ export class ClientFacilityPage implements OnInit {
     // }
   }
 
+  isModalSelectionOpen = false
+
+  openModalSelection() {
+    this.isModalSelectionOpen = true
+  }
+
+  closeModalSelection() {
+    this.isModalSelectionOpen = false
+  }
+
+  @ViewChild('fileFacilityIconInput') fileInput!: ElementRef;
+  openFile() {
+    this.fileInput?.nativeElement.click();
+  }
+
+  async onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      console.log(file)
+      let fileReady = await this.functionMain.convertFileToBase64(file)
+      console.log(fileReady.split(',')[1])
+      this.newFacilityForm.facility_banner = fileReady.split(',')[1]
+      console.log(this.newFacilityForm)
+      this.closeModalSelection()
+    }
+  }
+
+  async takePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        source: CameraSource.Camera,
+        resultType: CameraResultType.Base64
+      });
+      console.log(image.base64String)
+      this.newFacilityForm.facility_banner = image.base64String;
+      console.log(this.newFacilityForm)
+      this.closeModalSelection()
+    } catch (error) {
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as { message: string }).message;
+        if (errorMessage === 'User cancelled photos app') {
+          return;
+        }
+      }
+      
+      this.newFacilityForm.facility_banner = false
+      this.functionMain.presentToast('Error taking photo', 'danger')
+      console.error(error)
+    }
+    
+  };
+
+  pushedModalState = false
+  pushedSelectionModalState = false
+  addLayerHistory() {
+    if (!this.pushedModalState) {
+      history.pushState(null, '', location.href);
+      this.pushedModalState = true;
+    }
+
+    const closeModalOnBack = () => {
+      this.pushedModalState = false
+      this.isModal = false
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
+  }
+
+  closeLayerHistory() {
+    this.closeModalSelection()
+    if (this.pushedModalState) {
+      this.pushedModalState = false;
+      history.back(); // simulate the back button
+    }
+  }
 
 }

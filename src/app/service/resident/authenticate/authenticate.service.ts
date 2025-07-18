@@ -118,18 +118,13 @@ export class AuthService extends ApiService{
 
   async getToken(): Promise<string | null> {
     const residentValue = await Preferences.get({ key: 'USER_INFO' });
-    console.log(residentValue.value, "the resident value");
 
     if (residentValue.value) {
       try {
         const decodedEstateString = decodeURIComponent(escape(atob(residentValue.value)));
-        console.log('suk sini 1');
         const credential = JSON.parse(decodedEstateString);
-        console.log(credential);
         return credential.access_token;
       } catch (error) {
-        console.log('suk sini 2');
-        console.error("Decoding or parsing failed:", error);
         return residentValue.value; // fallback: return the raw value
       }
     }
@@ -140,29 +135,23 @@ export class AuthService extends ApiService{
   jwtdecoded : any = {}
 
   refreshToken(): Observable<any> {
-    console.log('Refreshing Token...')
     return this.http.post<any>(`${this.baseUrl}/focus/post/refresh`, {}).pipe(
       map((response) => {
         console.log(response)
         if (response.result?.access_token) {
-          console.log('Acquired New Token', response.result.access_token)
           this.jwtdecoded = jwtDecode(response.result.access_token)
-          // console.log(jwtDecode(response.result.access_token), "the decoded")
           if (this.jwtdecoded?.is_client){
-            console.log("IM ON IS CLIENT")
             Preferences.set({
               key: 'USER_INFO',
               value: response.result?.access_token,
             });
           }
           else{
-            console.log("IM ON IS RESIDENT")
             let EmailOrPhone = this.jwtdecoded?.email || this.jwtdecoded?.mobile_number
             const userCredentials = {
               emailOrPhone: EmailOrPhone,
               access_token: response.result?.access_token
             }
-            console.log(userCredentials)
             Preferences.set({
               key: 'USER_INFO',
               value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
@@ -170,7 +159,6 @@ export class AuthService extends ApiService{
           }
           // Store the new token
           
-          console.log("Returning the new Token")
           return response.result?.access_token;
         } else {
           throw new Error('Failed to refresh token');

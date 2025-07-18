@@ -354,12 +354,25 @@ export class MoveHomePage implements OnInit, OnDestroy {
   }
 
   coachForm(schedule: any) {
-    let url = this.pageType == 'ma_visitor' ? '/ma-visitor-form' : '/coaches-form'
-    this.router.navigate([url], {
-      state: {
-        schedule: schedule
+    if (this.pageType ==  'ma_visitor') {
+      if (schedule.is_submitted) {
+        this.onClickHistory(schedule)
+      } else {
+        if (this.project_config.is_guarded) {
+          this.router.navigate(['/walk-in'], {
+            state: {...schedule}
+          })
+        } else {
+          this.onClickHistory(schedule)
+        }
       }
-    })
+    } else {
+      this.router.navigate(['/coaches-form'], {
+        state: {
+          schedule: schedule
+        }
+      })
+    }
   }
 
   renov_form(block: string, unit: string, block_id: string = '1', unit_id: string = '1') {

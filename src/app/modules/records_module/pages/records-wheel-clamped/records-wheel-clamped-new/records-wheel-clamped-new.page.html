@@ -29,15 +29,15 @@
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-text-input [id]="'record_issue_name'" [labelText]="'NAME'" [placeholder]="'EG. RICK'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="issueName"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div>
-        <div class="w-full" >
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-vms-contact-input [(value)]="issueContact" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isModal]="true"></app-vms-contact-input>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!project_config.is_industrial">
           <app-text-input [id]="'record_issue_type'" [labelText]="'TYPE OF ENTRY'" [placeholder]="'EG. DRIVE IN'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="typeOfEntry" [isReadonly]="isTypeOfEntryReadonly"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
@@ -60,9 +60,9 @@
             <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
           </select> -->
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <!-- <div class="w-full" *ngIf="project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
-        </div>
+        </div> -->
         <div class="w-full">
           <app-text-input [id]="'record_issue_reason'" [labelText]="'REASON OF ISSUANCE'" [placeholder]="'EG. ILLEGAL PARKING'"
             [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="reasonOfIssuance"

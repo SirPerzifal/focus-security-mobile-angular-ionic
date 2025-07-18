@@ -560,7 +560,8 @@ export class FacilityBookingMainPage implements OnInit {
         // Simpan daftar booking asli
         this.originalBookingList = response.result.booking.filter((booking: any) => {
           const eventDate = new Date(booking.event_date).toISOString().split('T')[0];
-          return eventDate <= todayString && (booking.state || booking.booking_status) !== 'Approved'; // Memfilter polling yang dimulai setelah hari ini
+          // return eventDate <= todayString && (booking.state || booking.booking_status) !== 'Approved'; // Memfilter polling yang dimulai setelah hari ini
+          return eventDate
         }).map((booking: any) => ({
           facilityName: booking.facility || 'Unknown Facility',
           eventDate: this.functionMain.formatDateFacility(booking.event_date || booking.start_datetime.split(' ')[0]),

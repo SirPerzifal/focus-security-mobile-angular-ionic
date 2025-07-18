@@ -711,7 +711,7 @@ export class MakeANewEventPage implements OnInit {
       selected_date: localDateOnly
     }
     console.log(params)
-    this.clientMainService.getApi(params, '/residential/get/room_booking_based_on_host_id').subscribe({
+    this.mainApi.endpointMainProcess(params, 'get/room_booking_based_on_host_id').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {

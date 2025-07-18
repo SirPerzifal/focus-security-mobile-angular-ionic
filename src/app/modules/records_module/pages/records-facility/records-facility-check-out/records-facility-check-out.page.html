@@ -8,7 +8,7 @@
       <app-vms-header [urlCustom]="'/records-facility-detail'" [homeRoute]="true"/>
     </div>
     <div class="flex flex-row mx-4">
-      <div class="flex flex-col mt-8 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
+      <div [class]="'flex flex-col mt-8 mb-4 w-full text-white p-5 rounded '+ (purpose == 'check_in' ? 'bg-[var(--ion-color-primary)]' : 'bg-[var(--ion-color-warning-darker)]' )">
         <label class="text-2xl font-bold">{{record.facility_name ? record.facility_name : (record.facility ? record.facility : '-')}} | {{purpose == 'check_in' ? 'CHECK IN' : 'CHECK OUT'}} FORM</label>
         <div class="flex flex-col justify-around w-full">
           <table class="mt-5 text-2xl "  *ngIf="(purpose == 'check_in' ? !record.is_form_check_in : !record.is_form_check_out) && record.is_today">

@@ -18,17 +18,17 @@
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF 1ST WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
-            <td>{{ offence_detail.total_first_warning_offences }}</td>
+            <td>{{ offence_detail.total_first_warning_offences || 0 }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF 2ND WARNING ISSUED</td>
             <td class="w-[5%]">:</td>
-            <td>{{ offence_detail.total_second_warning_offences }}</td>
+            <td>{{ offence_detail.total_second_warning_offences || 0 }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[60%]">TOTAL NUMBER OF WHEEL CLAMPS</td>
             <td class="w-[5%]">:</td>
-            <td>{{ offence_detail.total_wheel_clamp_offences }}</td>
+            <td>{{ offence_detail.total_wheel_clamp_offences || 0 }}</td>
           </tr>
           <tr>
             <td class="font-bold w-[60%]">LAST OFFENCE DATE</td>

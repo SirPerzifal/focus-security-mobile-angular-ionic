@@ -51,6 +51,11 @@
       </div>
     </div>
 
+    <div class="mx-4" *ngIf="project_config.is_allow_vms_unregistered_simulation && active_type === 'unregistered'">
+      <div class="flex flex-row justify-end w-full">
+        <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle" (click)="addUnregistered()"></ion-icon>
+      </div>
+    </div>
     <div class="flex flex-row w-full justify-end mt-5" *ngIf="!main">
       <div class="flex flex-row space-x-5 items-center mx-4">
         <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
