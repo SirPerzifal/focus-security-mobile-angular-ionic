@@ -172,7 +172,7 @@
                     {{estate.project_name}}
                   </p>
                   <p class="cw-3:text[13px]">{{estate.family_name}}</p>
-                  <p *ngIf="estate.record_type !== 'industrial'">
+                  <p *ngIf="estate.record_type !== 'industrial' && !estate.user_id">
                     {{ estate.family_type }}
                   </p>
                   <p

@@ -73,7 +73,7 @@
           <p>
             {{ estate.family_name }}
           </p>
-          <p *ngIf="estate.record_type !== 'industrial'">
+          <p *ngIf="estate.record_type !== 'industrial' && !estate.user_id">
             {{ estate.family_type }}
           </p>
           <p *ngIf="estate.block_name && estate.unit_name">

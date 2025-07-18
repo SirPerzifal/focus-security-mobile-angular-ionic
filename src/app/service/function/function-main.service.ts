@@ -263,9 +263,9 @@ export class FunctionMainService {
   vmsPreferences(): Promise<any> {
     return Preferences.get({ key: 'USER_INFO' }).then((result) => {
       if (result.value) {
-        // console.log(result.value)
         this.preference = jwtDecode(result.value);
         this.preference['access_token'] = result.value
+        console.log(this.preference['access_token'], "eufiohewfwoidwqodewifhewf")
         
         return this.preference;
       } else {

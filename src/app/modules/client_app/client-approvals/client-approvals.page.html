@@ -234,10 +234,10 @@
                 <p class="font-bold table-cell w-1/2 text-base text-black">Approved Date</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ approval.approved_date ? functionMain.convertNewDateTZ(approval.approved_date) : '-' }}</p>
               </div>
-              <!-- <div class="table-row" *ngIf="['facility'].includes(approval_type)">
+              <div class="table-row" *ngIf="['facility'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Booked By</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.requestor_id.name) }}</p>
-              </div> -->
+              </div>
               <div class="table-row" *ngIf="['family'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">Applied By</p>
                 <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(approval.requestor) }}</p>
@@ -480,7 +480,7 @@
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.vehicle_type.name) }}</p>
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">
-          <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Brand</p>
+          <p class="font-bold table-cell w-1/2 text-base text-black">Vehicle Make</p>
           <p class="ml-2 table-cell text-base text-black">: {{ functionMain.returnNone(selectedApproval.vehicle_make.name) }}</p>
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">

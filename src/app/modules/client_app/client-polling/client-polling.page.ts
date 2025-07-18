@@ -113,6 +113,7 @@ export class ClientPollingPage implements OnInit {
       id: vote.id,
       title: vote.polling_name,
       time_close: vote.polling_end_date,
+      is_multiple_answer: vote.is_multiple_answer,
       states: vote.states,
       time_you_vote: '',
       you_vote: '',
@@ -207,7 +208,10 @@ export class ClientPollingPage implements OnInit {
         this.newPollingOptions.splice(num, 1)
       }
     } else {
-      this.newPollingOptions.push({name: '', sequence: 0})
+      let checkEmpty = this.newPollingOptions.filter((item: any) => item.name == '')
+      if (checkEmpty.length == 0)  {
+        this.newPollingOptions.push({name: '', sequence: 0})
+      }
     }
     
   }

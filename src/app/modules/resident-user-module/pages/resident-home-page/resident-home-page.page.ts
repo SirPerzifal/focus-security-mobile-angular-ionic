@@ -278,7 +278,9 @@ export class ResidentHomePagePage implements OnInit {
             }
           })
         } else if (result.data === 'gas ini dari resident') {
-          this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+          setTimeout(() => {
+            this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+          }, 500)
         } else {
           Preferences.get({key: 'USER_INFO'}).then(async (value) => {
             if(value?.value){

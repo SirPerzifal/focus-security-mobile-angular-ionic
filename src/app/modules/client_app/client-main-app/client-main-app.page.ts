@@ -58,7 +58,6 @@ export class ClientMainAppPage implements OnInit {
           this.loadProject().then(()=>{
             this.loadNotificationCount()
           })
-          this.webRtcService.initializeSocket()
         }
       }
     })
@@ -103,6 +102,7 @@ export class ClientMainAppPage implements OnInit {
       }
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
         if ( value ) {
+          // this.webRtcService.initializeSocket()
           this.userData.image_profile = value.image_profile
         } else {
           this.isLoading = true;
@@ -174,6 +174,8 @@ export class ClientMainAppPage implements OnInit {
           this.isLoading = true;
           this.loadEstate(this.userData.email);
         }
+
+        this.webRtcService.initializeSocket()
       }
     });
 

@@ -48,22 +48,32 @@ export const authGuard: CanActivateFn = async (route, state) => {
   
 
   if(currentUrl=='/' || currentUrl=='/login-end-user'){
-    await functionMain.vmsPreferences().then((value) => {
-      if (value.is_resident) {
-        router.navigate(['/resident-home-page']);
-      } else if (value.is_vms) {
-        router.navigate(['/home-vms']);
-      } else if (value.is_client) {
-        router.navigate(['/client-main-app'], {queryParams: {reload: true}});
-      } else {
-        Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-          if(value?.value){
-            router.navigate(['/resident-home-page']);
-          } 
-        })
-      }
-    })
-    return false
+    try {
+      await functionMain.vmsPreferences().then((value) => {
+        console.log(value, "vallueauthfuatfevallueauthfuatfevallueauthfuatfevallueauthfuatfevallueauthfuatfe");
+        if (value.is_resident) {
+          router.navigate(['/resident-home-page']);
+        } else if (value.is_vms) {
+          router.navigate(['/home-vms']);
+        } else if (value.is_client) {
+          router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+        } else {
+          Preferences.get({key: 'USER_INFO'}).then(async (value) => {
+            
+            if(value?.value){
+              router.navigate(['/resident-home-page']);
+            } 
+          })
+        }
+      })
+      return false
+    } catch(e) {
+      Preferences.get({key: 'USER_INFO'}).then(async (value) => {
+        if(value?.value){
+          router.navigate(['/resident-home-page']);
+        } 
+      })
+    }
   }
 
   return true;

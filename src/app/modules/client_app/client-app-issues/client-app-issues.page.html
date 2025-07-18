@@ -9,7 +9,7 @@
     pullFactor="0.3"
     pullMin="40"
     pullMax="80"
-    *ngIf="isMain"
+    *ngIf="isMain || isClosed"
   >
     <ion-refresher-content
       pullingIcon="chevron-down-circle-outline"
@@ -137,9 +137,9 @@
           </div>
           <div class="w-full">
             <div class="flex flex-row justify-start">
-              <p class="text-base font-bold">Contact Email</p>
+              <p class="text-base font-bold">Contact Number</p>
             </div>
-            <app-text-input [id]="'report_contact_email'" [placeholder]="'Contact Email'"
+            <app-text-input [id]="'report_contact_email'" [placeholder]="'Contact Number'"
               [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'border-black':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true, 'h-14':true, 'text-base': true}"
               [isReadonly]="true" [(ngModel)]="userData.contact">

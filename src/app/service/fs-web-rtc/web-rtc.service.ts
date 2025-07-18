@@ -336,9 +336,9 @@ export class WebRtcService extends ApiService{
       };
   
       // Coba ambil dari USESTATE_DATA
-      if (this.callAction){
-        this.showSplashScreen();
-      }
+      // if (this.callAction){
+      //   this.showSplashScreen();
+      // }
       const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
       console.log(storedValue)
       if (storedValue) {

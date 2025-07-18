@@ -81,13 +81,13 @@ export class ModalEstateHomepageComponent  implements OnInit {
         this.storage.clearAllValueFromStorage();
         this.storage.setValueToStorage('USESATE_DATA', storageData)
         this.getNotificationPermission(estate.family_id);
-          this.getAccessToken(estate.family_id);
+        await this.getAccessToken(estate.family_id);
         // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
         return;
       } else {
         this.modalController.dismiss(estate);
         this.getNotificationPermission(estate.family_id);
-          this.getAccessToken(estate.family_id);
+        await this.getAccessToken(estate.family_id);
         return;
       }
     } else {
