@@ -58,6 +58,8 @@ export class VehicleFormPage implements OnInit {
 
   vehicleIdForUpdateAndJustUpdateNothingElse: number = 0;
 
+  fromWhere: string = ''; // Default value, can be 'add' or 'update'
+
   constructor(
     private router: Router,
     private mainApi: MainApiResidentService,
@@ -79,6 +81,7 @@ export class VehicleFormPage implements OnInit {
         ]
       }
       if (state.vehicleId) {
+        this.fromWhere = 'update'
         this.vehicleIdForUpdateAndJustUpdateNothingElse = state.vehicleId;
         this.mainApi.endpointMainProcess({
           vehicle_id: state.vehicleId
@@ -91,17 +94,18 @@ export class VehicleFormPage implements OnInit {
             typeOfVehicle: vehicle.vehicle_type,
             vehicleMake: vehicle.vehicle_make,
             vehicleColour: vehicle.vehicle_color,
-            vehicleLog: '',
+            vehicleLog: vehicle.vehicle_log_exists,
             isFirstVehicle: vehicle.is_first_vehicle,
             primaryVehicle: 'false',
             ownedBy: '',
           }
+          this.selectedNameVehicleLog = `${vehicle.vehicle_number} Log`
           this.selectedDate = String(this.functionMain.convertToDDMMYYYY(vehicle.end_date_for_temporary_pass)); // Update selectedDate with the chosen date in dd/mm/yyyy format
           this.additionalTemporary = {
             endDate: vehicle.end_date_for_temporary_pass,
             temporaryCarRequest: vehicle.temporary_car_request
           }
-          console.log(this.selectedDate, this.additionalTemporary);
+          console.log(this.selectedDate, this.additionalTemporary, this.vehicleForm);
           
         }, (error) => {
           // this.presentToast('Data fetched failed!', 'danger');
@@ -110,6 +114,14 @@ export class VehicleFormPage implements OnInit {
         })
       }
     } 
+  }
+
+  backButton() {
+    if (this.fromWhere === 'update') {
+      this.router.navigate(['my-vehicle-page-main'], {queryParams: {reload: true}});
+    } else {
+      this.router.navigate(['my-vehicle-page-main']);
+    }
   }
 
   ngOnInit() {

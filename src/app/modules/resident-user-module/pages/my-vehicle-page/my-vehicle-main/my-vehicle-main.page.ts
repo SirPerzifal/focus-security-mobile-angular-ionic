@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ComponentRef } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -78,7 +78,8 @@ export class MyVehicleMainPage implements OnInit {
     private mainApi: MainApiResidentService,
     private router: Router,
     private alertController: AlertController,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private route: ActivatedRoute
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { from: string };
@@ -101,6 +102,17 @@ export class MyVehicleMainPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['reload']){
+          this.pageName = 'Vehicle Detail';
+          this.getTodayDate();
+          console.log(params['reload']);
+          // this.vehicleDetail = vehicle as VehicleDetail;
+        }
+      }
+    })
     this.loadVehicleFromBackend();
   }
 
