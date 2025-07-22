@@ -148,13 +148,11 @@ export class ClientPollingPage implements OnInit {
     if(!this.newPollingStartDate) {
       errMsg += 'Polling start date is required! \n'
     }
-    if(this.newPollingOptions.length < 2) {
-        errMsg += 'At least there are two options exist! \n'
-    } 
-    if (this.newPollingOptions.length == 2) {
-      if (this.newPollingOptions[0].options == '' || this.newPollingOptions[1].options == '') {
-        errMsg += 'At least there are two options exist! \n'
-      }
+    if(!this.newPollingEndDate) {
+      errMsg += 'Polling end date is required! \n'
+    }
+    if (this.newPollingOptions.filter((polling: any) => polling.name !== '').length < 2) {
+      errMsg += 'At least there are two options exist! \n'
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')

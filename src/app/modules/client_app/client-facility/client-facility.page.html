@@ -212,10 +212,14 @@
                   [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
                   [(ngModel)]="newFacilityForm.facility_name"></app-text-input>
             </div>
-            <div class="w-full">
+            <div class="w-full flex flex-col space-y-2">
               <button (click)="onSubmitNewFacility()"
                 class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
                 Save
+              </button>
+              <button (click)="onDeleteNewFacility()" *ngIf="newFacilityForm.facility_id"
+                class="bg-[#E3787E] text-black px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
+                Delete
               </button>
             </div>
           </div>

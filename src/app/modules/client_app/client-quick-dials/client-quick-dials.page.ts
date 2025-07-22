@@ -33,6 +33,7 @@ export class ClientQuickDialsPage implements OnInit {
     this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id
+      this.project_config = value.config
     })
   }
 
@@ -156,6 +157,7 @@ export class ClientQuickDialsPage implements OnInit {
   Host: any[] = [];
   contactHost = '';
   project_id = 0;
+  project_config: any = {}
   loadHost() {
     this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
@@ -216,7 +218,7 @@ export class ClientQuickDialsPage implements OnInit {
       is_add: contact.is_add,
       can_call_with: contact.can_call_with,
       for_what_user: contact.for_what_user,
-      related_account: contact.related_account,
+      related_account: 0,
       image: contact.image,
       id: contact.id,
       is_whatsapp: contact.is_whatsapp,
@@ -225,6 +227,7 @@ export class ClientQuickDialsPage implements OnInit {
     
     setTimeout(() => {
       this.isAdd = true
+      this.contactForm.related_account = contact.related_account
     }, 300)
   }
 

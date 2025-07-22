@@ -732,31 +732,40 @@ export class WebRtcService extends ApiService{
         if (decoded) {
           const parsedResident = clientData ? decoded : JSON.parse(decoded);
           if (parsedResident.family_id) {
+            console.log(parsedResident)
             this.http.post<any>(`${this.baseUrl}/get/fcm_token`, {jsonrpc: '2.0', params: {family_id: parsedResident.family_id}}).subscribe(
               res => {
-                var fcm_token = res.result['status_desc'];
-                this.getFCMToken().then(token => {
-                  if(token != fcm_token){
-                    console.log(this.platform.platforms(), this.platform.platforms().join(', '));
-                    
-                    const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
-                    console.log("Is Dekstop", isDesktop);
-                    
-                    if (isDesktop) {
-                      console.log("Your in desktop device", isDesktop);
-                    } else {
-                      this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
-                      console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
-                      setTimeout(()=>{
-                        this.closeSocket();
-                        this.storage.clearAllValueFromStorage();
-                        Preferences.clear();
-                        this.router.navigate(['']);
-                      }, 3000)
+                console.log(res)
+                if (res.result['status_code'] == 200) {
+                  console.log("SUCCESS CHECK")
+                  var fcm_token = res.result['status_desc'];
+                  this.getFCMToken().then(token => {
+                    console.log("TOKENNN", token)
+                    console.log("FCM TOKEN", fcm_token)
+                    if(token != fcm_token){
+                      console.log(this.platform.platforms(), this.platform.platforms().join(', '));
+                      
+                      const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
+                      console.log("Is Dekstop", isDesktop);
+                      
+                      if (isDesktop) {
+                        console.log("Your in desktop device", isDesktop);
+                      } else {
+                        this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
+                        console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
+                        setTimeout(()=>{
+                          this.closeSocket();
+                          this.storage.clearAllValueFromStorage();
+                          Preferences.clear();
+                          this.router.navigate(['']);
+                        }, 3000)
+                      }
+                    }else{
                     }
-                  }else{
-                  }
-                });
+                  });
+                } else {
+                  console.log("ERROR OVER HEY")
+                }
               },
               error => {
               }

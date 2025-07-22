@@ -265,7 +265,6 @@ export class FunctionMainService {
       if (result.value) {
         this.preference = jwtDecode(result.value);
         this.preference['access_token'] = result.value
-        console.log(this.preference['access_token'], "eufiohewfwoidwqodewifhewf")
         
         return this.preference;
       } else {

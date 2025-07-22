@@ -175,6 +175,7 @@ export class ClientMyProfilePage implements OnInit {
 
   profileEstate: Estate[] = [];
   loadEstate(email:string) {
+    this.isLoading = true
     this.mainResident.endpointProcess({
       email: email,
     }, 'get/estate').subscribe(
@@ -204,12 +205,13 @@ export class ClientMyProfilePage implements OnInit {
             }
           }
           this.profileEstate = listedEstate;
-          this.isLoading = false;
         } else {
           console.error('Error fetching Estate:', response);
         }
+        this.isLoading = false;
       },
       error => {
+        this.isLoading = false;
         console.error('HTTP Error:', error);
       }
     );

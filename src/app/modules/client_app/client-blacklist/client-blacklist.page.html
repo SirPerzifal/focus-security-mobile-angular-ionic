@@ -275,24 +275,22 @@
             <img [src]="ban_image" class="w-4/5">
           </div>
           <div class="flex flex-col justify-between w-full">
-            <div class="flex flex-row w-full justify-around">
+            <div class="flex w-full justify-around gap-4 flex-wrap mt-5">
               <!-- <button
                 class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-[90%] mt-5">
                 CALL MA
               </button> -->
               <button
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-[45%] mt-5" (click)="functionMain.callPolice()">
+                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5" (click)="functionMain.callPolice()">
                 Call Police
               </button>
               <button
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-[45%] mt-5"
-                (click)="callResident(blacklistDetail)">
-                Call {{ project_config.is_industrial ? 'Employee' : 'Resident'}}
+                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5"
+                (click)="callResident(blacklistDetail)" *ngIf="blacklistDetail.ban_requestor_id && blacklistDetail.ban_requestor_id.length > 0">
+                Call Requestor
               </button>
-            </div>
-            <div class="flex flex-row w-full justify-around">
               <button (click)="onLiftBan(blacklistDetail)"
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-[45%] mt-2">
+                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5">
                 Lift Ban
               </button>
             </div>

@@ -61,6 +61,7 @@ export class ClientMainAppPage implements OnInit {
         }
       }
     })
+    this.webRtcService.initializeSocket()
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
@@ -274,16 +275,11 @@ export class ClientMainAppPage implements OnInit {
     this.count = {}
     this.clientMainService.getApi({selected_project_id: this.project_id}, '/client/get/notification_count').subscribe({
       next: (results) => {
-        console.log(results)
         if (results.result.response_code === 200) {
           let counts = results.result.counts
-          console.log(counts)
           if (counts) {
             counts.forEach((count: any) => {
-              console.log(count)
               let index = this.menuItems.findIndex((item: any) => item.id == count.title)
-              console.log(index)
-              console.log(this.menuItems[index])
               this.menuItems[index].menu_count = count.counts
             })
           }

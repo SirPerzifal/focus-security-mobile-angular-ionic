@@ -67,10 +67,14 @@
           [(ngModel)]="submitForm.terms_and_conditions" name="client_facility_edit_terms">
           </textarea>
       </div>
-      <div class="w-full "  *ngIf="selectedRoomId">
+      <div class="w-full flex flex-col space-y-2"  *ngIf="selectedRoomId">
         <button (click)="onSubmit()"
           class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
           Save
+        </button>
+        <button (click)="onDelete()" *ngIf="selectedRoomId != 'create_new' && selectedRoomId"
+          class="bg-[#E3787E] text-black px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
+          Delete
         </button>
       </div>
     </div>

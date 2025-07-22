@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -11,7 +12,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class ClientFacilityDetailPage implements OnInit {
 
-  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService) { }
+  constructor(private router: Router, private clientMainService: ClientMainService, public functionMain: FunctionMainService, private alertController: AlertController) { }
 
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
@@ -103,8 +104,13 @@ export class ClientFacilityDetailPage implements OnInit {
           console.log(results)
           if (results.result.response_code == 200) {
             this.functionMain.presentToast(`Successfully update room!`, 'success');
-            this.onBack(true)
+            // this.facilityForm.room_ids = {...this.facilityForm.room_ids, ...results.result.new_room}
+            this.facilityForm.room_ids.push(results.result.new_room)
+            this.selectedRoomId = ''
+            this.selectedRoom = {}
+            // this.onBack(true)
           } else {
+            this.functionMain.presentToast('An error occurred while updating room!', 'danger');
           }
         },
         error: (error) => {
@@ -131,6 +137,53 @@ export class ClientFacilityDetailPage implements OnInit {
       hours_interval : 1,
     }
     this.submitForm = this.selectedRoom
+  }
+
+  async onDelete() {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: `Are you sure you want to delete ${this.selectedRoom.facility_name}?`,
+      message: '', 
+      buttons: [
+        {
+          text: 'Confirm',
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.deleteFacility(this.selectedRoomId)
+          }
+        },
+        {
+          text: 'Cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan
+          }
+        },
+      ]
+    });
+    await alertButtons.present();
+  }
+
+  async deleteFacility(facility_id: any) {
+    console.log(facility_id)
+    this.clientMainService.getApi({facility_id: facility_id}, '/client/post/remove_facility').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.functionMain.presentToast(`Successfully delete the facility room!`, 'success');
+          this.facilityForm.room_ids = this.facilityForm.room_ids.filter((item: any) => {console.log(this.selectedRoomId, item);return item.room_id != this.selectedRoomId})
+          this.selectedRoomId = ''
+          this.selectedRoom = {}
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to delete the facility room!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast(`An error occurred while trying to delete the facility room!`, 'danger');
+        console.error(error);
+      }
+    });
   }
 
 }

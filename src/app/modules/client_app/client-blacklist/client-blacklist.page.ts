@@ -549,11 +549,11 @@ export class ClientBlacklistPage implements OnInit {
 
   callResident(data: any){
     console.log(data)
-    if (this.project_config.is_industrial) {
-      this.webRtcService.createOffer(false, data.industrial_host_ids[0], false, false);
-    } else {
-      this.webRtcService.createOffer(false, false, data.unit_id[0], false);
-    }
+    // if (this.project_config.is_industrial) {
+      this.webRtcService.createOffer(false, data.ban_requestor_id[0], false, false);
+    // } else {
+    //   this.webRtcService.createOffer(false, false, data.unit_id[0], false);
+    // }
   }
 
   Host: any = []

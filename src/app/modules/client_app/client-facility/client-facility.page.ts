@@ -6,6 +6,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { NewBookingService } from 'src/app/service/resident/facility-bookings/new-booking/new-booking.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-client-facility',
@@ -20,6 +21,7 @@ export class ClientFacilityPage implements OnInit {
     public functionMain: FunctionMainService, 
     private route: ActivatedRoute,
     private facilityService: NewBookingService,
+    private alertController: AlertController,
   ) { }
 
   ngOnInit() {
@@ -294,6 +296,52 @@ export class ClientFacilityPage implements OnInit {
       }
     });
     
+  }
+
+  async onDeleteNewFacility() {
+    const alertButtons = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: `Are you sure you want to delete ${this.newFacilityForm.facility_name}?`,
+      message: '', 
+      buttons: [
+        {
+          text: 'Confirm',
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.deleteFacility(this.newFacilityForm.facility_id)
+          }
+        },
+        {
+          text: 'Cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Canceled');
+            // Logika pembatalan
+          }
+        },
+      ]
+    });
+    await alertButtons.present();
+  }
+
+  async deleteFacility(facility_id: any) {
+    console.log(facility_id)
+    this.clientMainService.getApi({facility_id: facility_id}, '/client/post/remove_facility').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code == 200) {
+          this.functionMain.presentToast(`Successfully delete the facility!`, 'success');
+          this.loadFacilities()
+          this.closeModal()
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to delete the facility!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast(`An error occurred while trying to delete the facility!`, 'danger');
+        console.error(error);
+      }
+    });
   }
 
   editFacility(facility: any) {
