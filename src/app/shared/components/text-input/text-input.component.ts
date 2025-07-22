@@ -114,13 +114,34 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   onDisplayInputClick(): void {
     if (this.type === 'date' && !this.isReadonly) {
       this.showDatePicker = true;
-      // Use setTimeout to ensure the DOM has updated
+          
+      // Gunakan delay yang lebih lama untuk iOS
       setTimeout(() => {
         const dateInput = document.getElementById(`${this.id}-date-picker`) as HTMLInputElement;
         if (dateInput) {
-          dateInput.showPicker();
+          // Pastikan element visible sementara
+          dateInput.style.position = 'fixed';
+          dateInput.style.top = '50%';
+          dateInput.style.left = '50%';
+          dateInput.style.opacity = '0.01'; // Hampir invisible tapi masih detectable
+          dateInput.style.pointerEvents = 'auto';
+          
+          try {
+            dateInput.focus();
+            dateInput.showPicker();
+          } catch (e) {
+            // Fallback: trigger click event
+            dateInput.click();
+          }
+          
+          // Kembalikan ke hidden setelah picker terbuka
+          setTimeout(() => {
+            dateInput.style.position = 'absolute';
+            dateInput.style.opacity = '0';
+            dateInput.style.pointerEvents = 'none';
+          }, 100);
         }
-      }, 0);
+      }, 100); // Delay lebih lama untuk iOS
     }
     if (this.type === 'time' && !this.isReadonly) {
       // Logic to open the time picker

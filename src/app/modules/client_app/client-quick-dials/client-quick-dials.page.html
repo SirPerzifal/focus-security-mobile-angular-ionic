@@ -1,5 +1,9 @@
 <ion-header>
-  <app-resident-header [is_client]="true"  [text]="'Quick Dials'" [text_second]="''" />
+  <app-resident-header
+    [is_client]="true"
+    [text]="'Quick Dials'"
+    [text_second]="''"
+  />
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher
@@ -17,18 +21,28 @@
     ></ion-refresher-content>
   </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-      (click)="onBack()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"
+    ></ion-icon>
   </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mx-4 mt-4" *ngIf="isMain" @fadeInOut>
     <div>
       <div
-        class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4">
+        class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
+      >
         <span class="text-lg font-bold">Quick Dials Settings</span>
-        <div class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2"
-          (click)="onSetting()">
-          <fa-icon [icon]="faSetting" class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
+        <div
+          class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2"
+          (click)="onSetting()"
+        >
+          <fa-icon
+            [icon]="faSetting"
+            class="flex flex-col justify-center items-center text-xl text-white"
+          ></fa-icon>
         </div>
       </div>
       <!-- <div class="flex flex-row w-full px-4 space-x-2">
@@ -43,26 +57,31 @@
           <label for="my_contact" class="ml-3 text-sm">My Contacts</label>
         </div>
       </div> -->
-
     </div>
     <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
       <ion-spinner name="dots"></ion-spinner>
     </div> -->
-    <app-modal-loading *ngIf="isLoading" class="mt-4"/>
+    <app-modal-loading *ngIf="isLoading" class="mt-4" />
     <div class="flex flex-col mt-3 mb-24" *ngIf="!isLoading">
       <div class="space-y-3" *ngIf="sortContact.length > 0; else noContact">
         <div class="flex flex-col" *ngFor="let header of sortContact">
-          <div class="text-base font-semibold text-gray-600 text-start ml-4">{{ header.name }}</div>
+          <div class="text-base font-semibold text-gray-600 text-start ml-4">
+            {{ header.name }}
+          </div>
           <div class="flex flex-col w-full space-y-2 mt-3">
             <div
               class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
-              *ngFor="let contact of header.data">
+              *ngFor="let contact of header.data"
+            >
               <span class="text-lg font-bold">{{ contact.name }}</span>
               <a (click)="onClickCallButton(contact)">
                 <div
-                  class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
-                  <fa-icon [icon]="faPhone"
-                    class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
+                  class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2"
+                >
+                  <fa-icon
+                    [icon]="faPhone"
+                    class="flex flex-col justify-center items-center text-xl text-white"
+                  ></fa-icon>
                 </div>
               </a>
             </div>
@@ -75,14 +94,18 @@
   <div class="flex flex-col relative mx-4 mt-2" *ngIf="isSetting" @fadeInOut>
     <div class="flex flex-row justify-center space-x-3 w-full">
       <div class="w-full">
-        <app-visitor-button [text]="'Edit My Contacts'"
+        <app-visitor-button
+          [text]="'Edit My Contacts'"
           [extraClass]="'w-full leading-none cw-4:text-sm ' + (isEdit ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
-          (click)="toggleShowEdit()"></app-visitor-button>
+          (click)="toggleShowEdit()"
+        ></app-visitor-button>
       </div>
       <div class="w-full">
-        <app-visitor-button [text]="'Add New Contact'"
+        <app-visitor-button
+          [text]="'Add New Contact'"
           [extraClass]="'w-full leading-none cw-4:text-sm ' + (!isEdit ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
-          (click)="toggleShowAdd()"></app-visitor-button>
+          (click)="toggleShowAdd()"
+        ></app-visitor-button>
       </div>
     </div>
     <div *ngIf="isEdit" @fadeInOut>
@@ -93,24 +116,41 @@
         <app-modal-loading />
       </div>
       <div *ngIf="!isLoading">
-        <div class="flex flex-col relative space-y-3 mt-6 mb-24" *ngIf="sortContact.length > 0; else noContact">
+        <div
+          class="flex flex-col relative space-y-3 mt-6 mb-24"
+          *ngIf="sortContact.length > 0; else noContact"
+        >
           <div class="flex flex-col" *ngFor="let header of sortContact">
-            <div class="text-base font-semibold text-gray-600 text-start ml-4">{{ header.name }}</div>
+            <div class="text-base font-semibold text-gray-600 text-start ml-4">
+              {{ header.name }}
+            </div>
             <div class="flex flex-col w-full space-y-2 mt-3">
               <div
                 class="flex flex-row w-full items-center h-16 rounded-full bg-[var(--ion-color-secondary)] justify-between px-6"
-                *ngFor="let contact of header.data">
-                <span class="text-lg font-bold w-[70%]">{{ contact.name }}</span>
-                <div class="flex flex-col justify-center items-center mr-3 w-[30%] space-y-1 ml-1">
-                  <button class="w-full rounded-md font-bold text-base text-white bg-[var(--ion-color-primary)]"
-                    (click)="onEditButton(contact)">Edit</button>
-                  <button class="w-full rounded-md font-bold text-base text-white bg-[var(--ion-color-danger)]"
-                    (click)="onDeleteClick(contact)">Delete</button>
+                *ngFor="let contact of header.data"
+              >
+                <span class="text-lg font-bold w-[70%]"
+                  >{{ contact.name }}</span
+                >
+                <div
+                  class="flex flex-col justify-center items-center mr-3 w-[30%] space-y-1 ml-1"
+                >
+                  <button
+                    class="w-full rounded-md font-bold text-base text-white bg-[var(--ion-color-primary)]"
+                    (click)="onEditButton(contact)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="w-full rounded-md font-bold text-base text-white bg-[var(--ion-color-danger)]"
+                    (click)="onDeleteClick(contact)"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-  
         </div>
       </div>
     </div>
@@ -118,28 +158,59 @@
     <div class="flex flex-col relative mx-4 mb-28" *ngIf="isAdd" @fadeInOut>
       <div class="flex flex-col justify-between mt-8 space-y-2 w-full">
         <div class="w-full flex flex-col justify-center items-center">
-          <input #fileInput type="file" class="hidden" (change)="onFileChange($event)" accept="image/*">
-          <div class="w-24 h-24 rounded-full flex flex-col justify-center items-center bg-[var(--ion-color-secondary)]"
-            (click)="onImageClick()">
-            <img *ngIf="!contactForm.image" src="assets/icon/exc-client/add_image.png" alt="Contact Picture"
-              class="w-12 h-12 object-cover rounded-2xl">
-            <img *ngIf="contactForm.image" [src]="functionMain.getImage(contactForm.image)" alt="Contact Picture"
-              class="w-24 h-24 object-cover rounded-full">
+          <input
+            #fileInput
+            type="file"
+            class="hidden"
+            (change)="onFileChange($event)"
+            accept="image/*"
+          />
+          <div
+            class="w-24 h-24 rounded-full flex flex-col justify-center items-center bg-[var(--ion-color-secondary)]"
+            (click)="onImageClick()"
+          >
+            <img
+              *ngIf="!contactForm.image"
+              src="assets/icon/exc-client/add_image.png"
+              alt="Contact Picture"
+              class="w-12 h-12 object-cover rounded-2xl"
+            />
+            <img
+              *ngIf="contactForm.image"
+              [src]="functionMain.getImage(contactForm.image)"
+              alt="Contact Picture"
+              class="w-24 h-24 object-cover rounded-full"
+            />
           </div>
-          <label class="text-xl font-bold mt-2" (click)="onImageClick()">Add Image</label>
+          <label class="text-xl font-bold mt-2" (click)="onImageClick()"
+            >Add Image</label
+          >
         </div>
         <div class="w-full">
-          <app-text-input [labelResidentText]="'Name'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-            [id]="'client_contact_add_name'" [placeholder]="'Lana Ray'" [customClasses]="{'w-full items-start': true}"
+          <app-text-input
+            [labelResidentText]="'Name'"
+            [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_contact_add_name'"
+            [placeholder]="'Lana Ray'"
+            [customClasses]="{'w-full items-start': true}"
             [type]="'text'"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-            [(ngModel)]="contactForm.name"></app-text-input>
+            [(ngModel)]="contactForm.name"
+          ></app-text-input>
         </div>
         <div class="flex flex-row justify start items-center">
-          <input id="client_contact_add_close" name="client_contact_add_close" type="checkbox"
-            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_add">
-          <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Add to Resident App Quick
-            Dials</label>
+          <input
+            id="client_contact_add_close"
+            name="client_contact_add_close"
+            type="checkbox"
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]"
+            [(ngModel)]="contactForm.is_add"
+          />
+          <label
+            class="text-base font-bold mt-1 ml-3"
+            for="client_contact_add_close"
+            >Add to Employee App Quick Dials</label
+          >
         </div>
         <div class="w-full">
           <div class="flex flex-row justify-start">
@@ -157,29 +228,72 @@
             <option value="both">Both</option>
           </select>
         </div>
-        <div class="flex flex-row justify start items-center" *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'">
-          <input id="client_contact_add_close" name="client_contact_add_close" type="checkbox"
-            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="is_show_code">
-          <label class="text-base font-bold mt-1 ml-3" for="client_contact_add_close">Show Country Code</label>
+        <div
+          class="flex flex-row justify start items-center"
+          *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'"
+        >
+          <input
+            id="client_contact_add_close"
+            name="client_contact_add_close"
+            type="checkbox"
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]"
+            [(ngModel)]="is_show_code"
+          />
+          <label
+            class="text-base font-bold mt-1 ml-3"
+            for="client_contact_add_close"
+            >Show Country Code</label
+          >
         </div>
-        <div class="w-full" *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both') && !is_show_code">
-          <app-text-input [labelResidentText]="'Mobile Number'" [labelResidentClass]="'text-base font-bold mb-[-2px]'"
-            [id]="'client_contact_add_name'" [placeholder]="'Lana Ray'" [customClasses]="{'w-full items-start': true}"
+        <div
+          class="w-full"
+          *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both') && !is_show_code"
+        >
+          <app-text-input
+            [labelResidentText]="'Mobile Number'"
+            [labelResidentClass]="'text-base font-bold mb-[-2px]'"
+            [id]="'client_contact_add_name'"
+            [placeholder]="'Lana Ray'"
+            [customClasses]="{'w-full items-start': true}"
             [type]="'number'"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-            [(ngModel)]="contactForm.contact_number"></app-text-input>
+            [(ngModel)]="contactForm.contact_number"
+          ></app-text-input>
         </div>
-        <div *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both')  && is_show_code" class="w-full">
-          <app-vms-contact-input [(value)]="contactForm.contact_number" [id]="'client_contact_add_contact_number'"
-            [vmsPage]="false" [contactLabel]="'Mobile Number'" [labelClass]="'text-base'"
-            [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"></app-vms-contact-input>
+        <div
+          *ngIf="(contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both')  && is_show_code"
+          class="w-full"
+        >
+          <app-vms-contact-input
+            [(value)]="contactForm.contact_number"
+            [id]="'client_contact_add_contact_number'"
+            [vmsPage]="false"
+            [contactLabel]="'Mobile Number'"
+            [labelClass]="'text-base'"
+            [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'"
+          ></app-vms-contact-input>
         </div>
-        <div *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'" class="flex flex-row justify start items-center">
-          <input id="client_contact_whatsapp" name="client_contact_whatsapp" type="checkbox"
-            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="contactForm.is_whatsapp">
-          <label class="text-base font-bold mt-1 ml-3" for="client_contact_whatsapp">Allow Whatsapp</label>
+        <div
+          *ngIf="contactForm.can_call_with === 'phone_dial' || contactForm.can_call_with === 'both'"
+          class="flex flex-row justify start items-center"
+        >
+          <input
+            id="client_contact_whatsapp"
+            name="client_contact_whatsapp"
+            type="checkbox"
+            class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]"
+            [(ngModel)]="contactForm.is_whatsapp"
+          />
+          <label
+            class="text-base font-bold mt-1 ml-3"
+            for="client_contact_whatsapp"
+            >Allow Whatsapp</label
+          >
         </div>
-        <div *ngIf="contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'" class="w-full">
+        <div
+          *ngIf="contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'"
+          class="w-full"
+        >
           <div class="flex flex-row justify-start">
             <p class="text-base font-bold">For What User?</p>
           </div>
@@ -194,18 +308,31 @@
             <option value="client_or_end_user">End User</option>
           </select>
         </div>
-        <div class="w-full" *ngIf="contactForm.for_what_user === 'client_or_end_user' && contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'">
-          <app-m2m-selection [Arrays]="Host" (outputValue)="onHostChange($event)" [placeholder]="''" [isOne]="true" [isVMS]="false" [divOuterClass]="'!outline-[#BDBDBD] !border-1 !border-black min-h-14'" [labelText]="'Related Account'" [Selected]="contactForm.related_account"></app-m2m-selection>
+        <div
+          class="w-full"
+          *ngIf="contactForm.for_what_user === 'client_or_end_user' && contactForm.can_call_with === 'in_app_call' || contactForm.can_call_with === 'both'"
+        >
+          <app-m2m-selection
+            [Arrays]="Host"
+            (outputValue)="onHostChange($event)"
+            [placeholder]="''"
+            [isOne]="true"
+            [isVMS]="false"
+            [divOuterClass]="'!outline-[#BDBDBD] !border-1 !border-black min-h-14'"
+            [labelText]="'Related Account'"
+            [Selected]="contactForm.related_account"
+          ></app-m2m-selection>
         </div>
-        <div class="w-full ">
-          <button (click)="onSubmit()"
-            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-4 h-14">
+        <div class="w-full">
+          <button
+            (click)="onSubmit()"
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-4 h-14"
+          >
             {{isCurrentEdit ? 'Edit Contact' : 'Add Contact'}}
           </button>
         </div>
       </div>
     </div>
-    
   </div>
   <!-- ############################### -->
   <ng-template #noContact>
@@ -214,7 +341,11 @@
     </div>
   </ng-template>
 
-  <ion-modal id="text-modal" [isOpen]="isModalDetailPhone" (didDismiss)="closeModal()">
+  <ion-modal
+    id="text-modal"
+    [isOpen]="isModalDetailPhone"
+    (didDismiss)="closeModal()"
+  >
     <ng-template>
       <div class="wrapper-green">
         <div class="w-full flex flex-col items-center justify-center">
@@ -225,25 +356,47 @@
             <p class="text-base">{{ dataSelect.contact_number }}</p>
           </div>
         </div>
-        <div *ngIf="dataSelect.can_call_with === 'both'" class="w-full flex flex-col justify-center items-center">
+        <div
+          *ngIf="dataSelect.can_call_with === 'both'"
+          class="w-full flex flex-col justify-center items-center"
+        >
           <div class="w-full flex flex-row space-x-2">
-            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10"
+              (click)="actionToPhoneDial(dataSelect.contact_number)"
+            >
               Phone Dial
             </button>
-            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10" (click)="actionToInAppCall(dataSelect.id)">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 text-base-lg rounded font-bold w-full mt-2 h-10"
+              (click)="actionToInAppCall(dataSelect.id)"
+            >
               In App Call
             </button>
           </div>
-          <button *ngIf="dataSelect.is_whatsapp" class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+          <button
+            *ngIf="dataSelect.is_whatsapp"
+            class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+            (click)="actionOpenWhatsapp(dataSelect.contact_number)"
+          >
             Whatsapp
           </button>
         </div>
-        <div *ngIf="dataSelect.can_call_with === 'phone_dial'" class="w-full flex flex-col justify-center items-center">
+        <div
+          *ngIf="dataSelect.can_call_with === 'phone_dial'"
+          class="w-full flex flex-col justify-center items-center"
+        >
           <div class="w-full flex flex-row space-x-2">
-            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+              (click)="actionToPhoneDial(dataSelect.contact_number)"
+            >
               Phone Dial
             </button>
-            <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+              (click)="actionOpenWhatsapp(dataSelect.contact_number)"
+            >
               Whatsapp
             </button>
           </div>
@@ -251,7 +404,6 @@
       </div>
     </ng-template>
   </ion-modal>
-
 </ion-content>
 
 <ion-footer>

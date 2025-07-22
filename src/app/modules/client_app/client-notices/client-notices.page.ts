@@ -211,12 +211,12 @@ export class ClientNoticesPage implements OnInit {
   onChangeStartDate(event: any) {
     this.startDate = event.target.value;
     this.newNoticeForm.start_time = new Date(this.startDate);
-    // console.log(event.target.value);
+    console.log(event.target.value);
   }
   onChangeEndDate(event: any) {
     this.endDate = event.target.value;
     this.newNoticeForm.end_time = new Date(this.endDate);
-    // console.log(event.target.value);
+    console.log(event.target.value);
   }
 
   @ViewChild('clientNoticeNewAttachment') fileInput!: ElementRef;
