@@ -146,7 +146,7 @@
                   </tr>
                   <tr *ngIf="isClosed">
                     <td class="font-bold">Winning Response</td>
-                    <td class="truncate">: {{ getResult(vd.options) }}</td>
+                    <td class="truncate">: {{ getResult(vd) }}</td>
                   </tr>
                   <tr>
                     <td class="font-bold">Voting Type</td>
@@ -232,7 +232,7 @@
             </tr>
             <tr>
               <td class="font-bold">Winning Response</td>
-              <td class="truncate">: {{ getResult(dataForGraph.optionsTemp) }}</td>
+              <td class="truncate">: {{ getResult(dataForGraph, false) }}</td>
             </tr>
             <tr>
               <td class="font-bold">Start On</td>

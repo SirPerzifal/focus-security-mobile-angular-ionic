@@ -171,7 +171,7 @@ export class PollingMainPage implements OnInit {
 
   loadPolling() {
     this.isLoading = true;
-    this.mainApi.endpointMainProcess({}, 'get/polling').subscribe((response: any) => {
+    this.mainApi.endpointMainProcess({is_active: true}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         const today = new Date();
         const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
@@ -179,13 +179,15 @@ export class PollingMainPage implements OnInit {
         
 
         this.voteData = response.result.result
-        .filter((polling: any) => {
-          const states = polling.states;
-          return states === 'open'; // Memfilter polling yang tidak dalam status 'closed'
-        }).filter((polling: any) => {
-          const pollingDate = new Date(polling.polling_start_date).toISOString().split('T')[0];
-          return pollingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
-        }).map((polling: any) => {
+        // .filter((polling: any) => {
+        //   const states = polling.states;
+        //   return states === 'open'; // Memfilter polling yang tidak dalam status 'closed'
+        // })
+        // .filter((polling: any) => {
+        //   const pollingDate = new Date(polling.polling_start_date).toISOString().split('T')[0];
+        //   return pollingDate <= todayString; // Memfilter polling yang dimulai setelah hari ini
+        // })
+        .map((polling: any) => {
           return {
             polling_name : polling.polling_name,
             polling_start_date : polling.polling_start_date,
@@ -281,21 +283,21 @@ export class PollingMainPage implements OnInit {
 
   loadUpcomingPolling() {
     this.isLoading = true;
-    this.mainApi.endpointMainProcess({}, 'get/polling').subscribe((response: any) => {
+    this.mainApi.endpointMainProcess({is_upcoming: true}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
         console.log(today);
         
 
         this.upcomingVoteData = response.result.result
-        .filter((polling: any) => {
-          const pollingDate = new Date(polling.polling_start_date).toISOString().split('T')[0];
-          return pollingDate > today; // Memfilter polling yang dimulai setelah hari ini
-        })
-        .filter((polling: any) => {
-          const states = polling.states;
-          return states !== 'closed'; // Memfilter polling yang tidak dalam status 'closed'
-        })
+        // .filter((polling: any) => {
+        //   const pollingDate = new Date(polling.polling_start_date).toISOString().split('T')[0];
+        //   return pollingDate > today; // Memfilter polling yang dimulai setelah hari ini
+        // })
+        // .filter((polling: any) => {
+        //   const states = polling.states;
+        //   return states !== 'closed'; // Memfilter polling yang tidak dalam status 'closed'
+        // })
         .map((polling: any) => {
           return {
             polling_name: polling.polling_name,
@@ -334,10 +336,10 @@ export class PollingMainPage implements OnInit {
     this.mainApi.endpointMainProcess({}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {  
         this.closedVoteData = response.result.result
-        .filter((polling: any) => {
-          const states = polling.states
-          return states === 'closed'; // Memfilter polling yang tidak dimulai pada tanggal yang diberikan
-        })
+        // .filter((polling: any) => {
+        //   const states = polling.states
+        //   return states === 'closed'; // Memfilter polling yang tidak dimulai pada tanggal yang diberikan
+        // })
         .map((polling: any) => {
           // Ambil labels dan data dari polling.options
           const labels = polling.options.map((option: any) => option.options);
@@ -381,6 +383,18 @@ export class PollingMainPage implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  getResult(vd: any, is_home: any = true) {
+    let options = is_home ? vd.options : vd.options
+    if (vd.states == 'closed' || vd.states == 'Closed') {
+      let highestVote = Math.max(...options.map((item: any) => item.vote_count));
+      let optionsName = options.filter((vote: any) => vote.vote_count == highestVote)
+      
+      return optionsName[0].vote_count == 0 ? (is_home ? 'No option win' : '-') : (is_home ? `Option ${optionsName[0].options} win` : optionsName[0].options)
+    } else {
+      return (is_home ? 'No option win' : '-')
+    }
   }
 
 }

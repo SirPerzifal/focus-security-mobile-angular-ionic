@@ -233,12 +233,12 @@
                     </tr>
                     <tr>
                       <td class="font-bold">Results</td>
-                      <td *ngIf="vd.winning_response" class="truncate">
-                        : Option <strong>{{ vd.winning_response }}</strong> win
+                      <td class="truncate">
+                        : {{ getResult(vd) }}
                       </td>
-                      <td *ngIf="!vd.winning_response" class="truncate">
+                      <!-- <td *ngIf="!vd.winning_response" class="truncate">
                         : No option win
-                      </td>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>
@@ -272,7 +272,7 @@
               </p>
               <p>
                 <strong>Winning Response:</strong> {{
-                dataForGraph.winning_response }}
+                getResult(dataForGraph, false) }}
               </p>
               <p>
                 <strong>Your option:</strong> {{

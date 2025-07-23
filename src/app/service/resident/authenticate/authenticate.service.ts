@@ -5,13 +5,16 @@ import { Observable, throwError, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import { Preferences } from '@capacitor/preferences';
+import { StorageService } from '../../storage/storage.service';
+import { WebRtcService } from '../../fs-web-rtc/web-rtc.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends ApiService{
 
-  constructor(http: HttpClient) { super(http) }
+  constructor(http: HttpClient, private storage: StorageService, private webRtcService: WebRtcService, private router: Router) { super(http) }
 
   postLoginAuthenticate(
     login: string, 
@@ -135,11 +138,13 @@ export class AuthService extends ApiService{
   jwtdecoded : any = {}
 
   refreshToken(): Observable<any> {
+    console.log("REFRESH TOKEN")
     return this.http.post<any>(`${this.baseUrl}/focus/post/refresh`, {}).pipe(
       map((response) => {
         console.log(response)
         if (response.result?.access_token) {
           this.jwtdecoded = jwtDecode(response.result.access_token)
+          console.log(this.jwtdecoded)
           if (this.jwtdecoded?.is_client){
             Preferences.set({
               key: 'USER_INFO',
@@ -161,10 +166,23 @@ export class AuthService extends ApiService{
           
           return response.result?.access_token;
         } else {
+          this.clearSet()
           throw new Error('Failed to refresh token');
         }
-      })
+      }),
+    catchError((error) => {
+      console.error('Error occurred while refreshing token:', error);
+      this.clearSet()
+      return throwError(() => error);
+    })
     );
+  }
+
+  clearSet() {
+    this.storage.clearAllValueFromStorage();
+    this.webRtcService.closeSocket();
+    Preferences.clear();
+    this.router.navigate(['/']);
   }
 
 }

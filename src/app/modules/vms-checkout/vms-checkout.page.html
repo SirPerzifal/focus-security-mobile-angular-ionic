@@ -54,11 +54,11 @@
               [(ngModel)]="checkoutForm.pass_number" [isReadonly]="false"></app-text-input>
           </div>
         </div> -->
-        <div class="w-full flex flex-col">
+        <!-- <div class="w-full flex flex-col">
           <app-visitor-button [text]="'SEARCH ALL'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
             (click)="searchData('is_all')"></app-visitor-button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div *ngIf="isLoading && !isSearch && !isMain" class="flex justify-center items-center h-20" @fadeInOut>

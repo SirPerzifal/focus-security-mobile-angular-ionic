@@ -54,14 +54,26 @@ export class ClientSettingsPage implements OnInit {
   };
 
   logout() {
-    this.clientMainService.getApi({}, '/resident/post/logout').subscribe((response: any) => {
-      if (response.result.status_code === 200) {
-        this.storage.clearAllValueFromStorage();
-        this.webRtcService.closeSocket();
-        Preferences.clear();
-        this.router.navigate(['/']);
+    this.clientMainService.getApi({}, '/resident/post/logout').subscribe({
+      next: (response) => {
+        if (response.result.status_code === 200) {
+          this.clearSet()
+        } else {
+          this.clearSet()
+        }
+      },
+      error: (error) => {
+        console.error(error);
+        this.clearSet()
       }
     })
+  }
+
+  clearSet() {
+    this.storage.clearAllValueFromStorage();
+    this.webRtcService.closeSocket();
+    Preferences.clear();
+    this.router.navigate(['/']);
   }
 
 }

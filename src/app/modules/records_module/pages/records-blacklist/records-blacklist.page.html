@@ -97,7 +97,7 @@
               </div>
             </div>
             <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'all') && project_config.is_industrial">
-              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'BAN REQUESTOR'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
+              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE REQUESTOR'" [isOne]="true" [isVMS]="true" [labelText]="'BAN REQUESTOR'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
             </div>
           </div>
         </div>

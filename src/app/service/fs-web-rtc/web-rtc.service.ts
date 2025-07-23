@@ -756,11 +756,8 @@ export class WebRtcService extends ApiService{
         res => {
           console.log(res)
           if (res.result['status_code'] == 200) {
-            console.log("SUCCESS CHECK")
             var fcm_token = res.result['status_desc'];
             this.getFCMToken().then(token => {
-              console.log("TOKENNN", token)
-              console.log("FCM TOKEN", fcm_token)
               if(token != fcm_token){
                 console.log(this.platform.platforms(), this.platform.platforms().join(', '));
                 

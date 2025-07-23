@@ -270,11 +270,16 @@ export class ClientPollingPage implements OnInit {
     return max
   }
 
-  getResult(vd: any) {
-    let highestVote = Math.max(...vd.map((item: any) => item.vote_count));
-    let optionsName = vd.filter((vote: any) => vote.vote_count == highestVote)
-
-    return optionsName[0].options
+  getResult(vd: any, is_home: any = true) {
+    let options = is_home ? vd.options : vd.optionsTemp
+    if (vd.states == 'closed' && vd.voted_count > 0) {
+      let highestVote = Math.max(...options.map((item: any) => item.vote_count));
+      let optionsName = options.filter((vote: any) => vote.vote_count == highestVote)
+  
+      return optionsName[0].options
+    } else {
+      return '-'
+    }
   }
 
   handleRefresh(event: any) {

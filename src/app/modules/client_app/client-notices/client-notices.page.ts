@@ -447,6 +447,9 @@ export class ClientNoticesPage implements OnInit {
     if (!this.endDate) {
       errMsg += "End date is required! \n"
     }
+    // if (!this.newNoticeForm.notice_attachment) {
+    //   errMsg += "Notice attachment is required! \n"
+    // }
     if (this.newNoticeForm.post_to == 'block' && this.newNoticeForm.block_ids.length == 0) {
       errMsg += "At least one block must be selected! \n"
     }
