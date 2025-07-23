@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
 import { App } from '@capacitor/app';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -148,7 +148,8 @@ export class ResidentHomePagePage implements OnInit {
     private storage: StorageService,
     public functionMain: FunctionMainService,
     private platform: Platform,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   handleRefresh(event: any) {
@@ -209,6 +210,18 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['reload']){
+          this.webRtcService.initializeSocket();
+          this.webRtcService.callActionStatus.subscribe(status => {
+            this.callActionStatus = status;
+          });
+        }
+      }
+    })
+    this.webRtcService.initializeSocket();
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
@@ -262,10 +275,14 @@ export class ResidentHomePagePage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result) {
+        console.log("HEY 1")
         this.isLoading = false;
         if (result.data !== 'gas ini dari client' && result.data !== 'gas ini dari resident') {
+          console.log("HEY 2")
           this.storage.decodeData(result.data).then((value: any) => {
+            console.log(value)
             if (value) {
+              console.log("END USER FORM MODAL")
               this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);

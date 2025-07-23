@@ -327,6 +327,7 @@ export class WebRtcService extends ApiService{
   // }
 
   async initializeSocket() {
+    console.log("RUN INITIAL SOCKET")
     try {
       let userInfo = {
         family_mobile_number: 'Public-User',
@@ -718,65 +719,78 @@ export class WebRtcService extends ApiService{
     }
   }
 
+  family_id: any = false
+  decoded: any = {}
   async handleKickUser(data:any) {
-    const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+    this.family_id = false
+    this.decoded = {}
     const clientData = (await Preferences.get({ key: 'USER_INFO' })).value;
-    if (storedValue || clientData) {
+    const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+    if (clientData) {
       try {
-        let decoded = ''
-        if (clientData) {
-          decoded = jwtDecode(clientData)
-        } else if (storedValue) {
-          decoded = await this.storage.decodeData(storedValue);
-        }
-        if (decoded) {
-          const parsedResident = clientData ? decoded : JSON.parse(decoded);
-          if (parsedResident.family_id) {
-            console.log(parsedResident)
-            this.http.post<any>(`${this.baseUrl}/get/fcm_token`, {jsonrpc: '2.0', params: {family_id: parsedResident.family_id}}).subscribe(
-              res => {
-                console.log(res)
-                if (res.result['status_code'] == 200) {
-                  console.log("SUCCESS CHECK")
-                  var fcm_token = res.result['status_desc'];
-                  this.getFCMToken().then(token => {
-                    console.log("TOKENNN", token)
-                    console.log("FCM TOKEN", fcm_token)
-                    if(token != fcm_token){
-                      console.log(this.platform.platforms(), this.platform.platforms().join(', '));
-                      
-                      const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
-                      console.log("Is Dekstop", isDesktop);
-                      
-                      if (isDesktop) {
-                        console.log("Your in desktop device", isDesktop);
-                      } else {
-                        this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
-                        console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
-                        setTimeout(()=>{
-                          this.closeSocket();
-                          this.storage.clearAllValueFromStorage();
-                          Preferences.clear();
-                          this.router.navigate(['']);
-                        }, 3000)
-                      }
-                    }else{
-                    }
-                  });
-                } else {
-                  console.log("ERROR OVER HEY")
-                }
-              },
-              error => {
-              }
-            )
-          }
-        }
+        console.log("THING 1")
+        this.decoded = jwtDecode(clientData)
+        this.family_id = this.decoded.family_id
+        console.log(this.decoded)
+      } catch (error) {
+        this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
+        console.log(this.decoded)
+        this.family_id = this.decoded.family_id
       }
-      catch {
+    } else if (storedValue) {
+      try {
+        this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
+        console.log(this.decoded)
+        this.family_id = this.decoded.family_id
+      } catch (error) {
+        console.log(error)
+        this.decoded ={}
+        this.family_id = false
       }
+    } else {
+      this.decoded ={}
+      this.family_id = false
     }
-    
+    if (this.family_id) {
+      this.http.post<any>(`${this.baseUrl}/get/fcm_token`, {jsonrpc: '2.0', params: {family_id: this.family_id}}).subscribe(
+        res => {
+          console.log(res)
+          if (res.result['status_code'] == 200) {
+            console.log("SUCCESS CHECK")
+            var fcm_token = res.result['status_desc'];
+            this.getFCMToken().then(token => {
+              console.log("TOKENNN", token)
+              console.log("FCM TOKEN", fcm_token)
+              if(token != fcm_token){
+                console.log(this.platform.platforms(), this.platform.platforms().join(', '));
+                
+                const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
+                console.log("Is Dekstop", isDesktop);
+                
+                // if (isDesktop) {
+                //   console.log("Your in desktop device", isDesktop);
+                // } else {
+                  this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
+                  console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
+                  setTimeout(()=>{
+                    this.closeSocket();
+                    this.storage.clearAllValueFromStorage();
+                    Preferences.clear();
+                    this.router.navigate(['']);
+                  }, 3000)
+                // }
+              }else{
+              }
+            });
+          } else {
+            console.log("ERROR OVER HEY")
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )          
+    }
   }
 
   async getFCMToken(): Promise<string | null> {

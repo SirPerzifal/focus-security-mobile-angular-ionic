@@ -55,6 +55,11 @@ export class ClientMainAppPage implements OnInit {
       console.log(params)
       if (params) {
         if (params['reload']){
+          console.log("FROM CLIENT")
+          this.webRtcService.initializeSocket()
+          this.webRtcService.callActionStatus.subscribe(status => {
+            this.callActionStatus = status;
+          });
           this.loadProject().then(()=>{
             this.loadNotificationCount()
           })
@@ -175,7 +180,7 @@ export class ClientMainAppPage implements OnInit {
           this.isLoading = true;
           this.loadEstate(this.userData.email);
         }
-
+        console.log("FROM CLIENT MODAL")
         this.webRtcService.initializeSocket()
       }
     });
@@ -293,5 +298,6 @@ export class ClientMainAppPage implements OnInit {
       }
     });
   }
+
 
 }
