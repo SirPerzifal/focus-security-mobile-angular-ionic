@@ -1,5 +1,9 @@
 <ion-header>
-  <app-resident-header [is_client]="true"  [text]="'Notices'" [text_second]="textSecond" />
+  <app-resident-header
+    [is_client]="true"
+    [text]="'Notices'"
+    [text_second]="textSecond"
+  />
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher
@@ -17,21 +21,31 @@
     ></ion-refresher-content>
   </ion-refresher>
   <div class="flex flex-col justify-between mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-      (click)="onBack()"></ion-icon>
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"
+    ></ion-icon>
   </div>
   <div class="flex flex-row relative mx-4 mb-24">
     <div class="flex flex-col w-full">
-      <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
+      <div
+        class="flex flex-row justify-start items-center w-full space-x-3 mt-2"
+      >
         <div class="w-full">
-          <app-visitor-button [text]="'Notice'"
+          <app-visitor-button
+            [text]="'Notice'"
             [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNotice ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
-            (click)="toggleShowNotice()"></app-visitor-button>
+            (click)="toggleShowNotice()"
+          ></app-visitor-button>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'New Notice'"
+          <app-visitor-button
+            [text]="'New Notice'"
             [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
-            (click)="toggleShowNew()"></app-visitor-button>
+            (click)="toggleShowNew()"
+          ></app-visitor-button>
         </div>
       </div>
       <!-- <div *ngIf="isLoading && isNotice" class="flex justify-center items-center w-full h-20">
@@ -59,31 +73,46 @@
           </div>
         </div>       
       </div> -->
-      <app-modal-loading *ngIf="isLoading && isNotice" class="mt-4"/>
+      <app-modal-loading *ngIf="isLoading && isNotice" class="mt-4" />
       <div *ngIf="isNotice && !isLoading">
         <div *ngIf="showNotice.length > 0; else noNotices">
-          <div *ngFor="let notice of showNotice; let i = index"
-            class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full">
+          <div
+            *ngFor="let notice of showNotice; let i = index"
+            class="bg-[var(--ion-color-tertiary)] rounded p-5 my-4 mt-4 w-full"
+          >
             <div class="flex flex-row justify-between text-base">
               <span class="font-bold">{{ notice.title }}</span>
-              <span>{{ functionMain.convertToDDMMYYYY(notice.notice_date) }}</span>
+              <span
+                >{{ functionMain.convertToDDMMYYYY(notice.notice_date) }}</span
+              >
             </div>
             <p class="text-base text-black mt-3">{{ notice.remark }}</p>
             <table class="w-full">
               <tr>
                 <td class="text-base text-black w-2/5">Start Date</td>
-                <td class="ml-2 text-base text-black">: {{ (functionMain.convertToDDMMYYYY(notice.start_time)) }}</td>
+                <td class="ml-2 text-base text-black">
+                  : {{ (functionMain.convertToDDMMYYYY(notice.start_time)) }}
+                </td>
               </tr>
               <tr>
                 <td class="text-base text-black w-2/5">End Date</td>
-                <td class="ml-2 text-base text-black">: {{ (functionMain.convertToDDMMYYYY(notice.end_time)) }}</td>
+                <td class="ml-2 text-base text-black">
+                  : {{ (functionMain.convertToDDMMYYYY(notice.end_time)) }}
+                </td>
               </tr>
             </table>
-            <img class="w-12 h-12 mt-3" src="assets/icon/exc-client/file_download.webp" alt="File Download"
-              (click)="downloadDocument(notice.notice_attachment, notice.title)" *ngIf="notice.notice_attachment" />
+            <img
+              class="w-12 h-12 mt-3"
+              src="assets/icon/exc-client/file_download.webp"
+              alt="File Download"
+              (click)="downloadDocument(notice.id, 'notice')"
+              *ngIf="notice.notice_attachment"
+            />
             <div class="flex mt-3 space-x-2 w-full">
-              <button (click)="deleteNotice(notice)"
-                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-[30%]">
+              <button
+                (click)="deleteNotice(notice)"
+                class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-[30%]"
+              >
                 Delete
               </button>
             </div>
@@ -96,36 +125,65 @@
         </ng-template>
       </div>
 
-      <div class="flex flex-col justify-between mt-4 space-y-2 w-full" *ngIf="isNew">
+      <div
+        class="flex flex-col justify-between mt-4 space-y-2 w-full"
+        *ngIf="isNew"
+      >
         <div class="w-full">
-          <app-text-input [labelResidentText]="'Title'" [labelResidentClass]="'text-base font-bold'"
-            [id]="'client_new_notice_name'" [placeholder]="'Renovation Alert'"
-            [customClasses]="{'w-full items-start': true}" [type]="'text'"
+          <app-text-input
+            [labelResidentText]="'Title'"
+            [labelResidentClass]="'text-base font-bold'"
+            [id]="'client_new_notice_name'"
+            [placeholder]="'Renovation Alert'"
+            [customClasses]="{'w-full items-start': true}"
+            [type]="'text'"
             [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
-            [(ngModel)]="newNoticeForm.notice_title"></app-text-input>
+            [(ngModel)]="newNoticeForm.notice_title"
+          ></app-text-input>
         </div>
         <div class="flex flex-col w-full">
           <div class="flex flex-row justify-start">
             <p class="text-base font-bold">Content</p>
           </div>
-          <textarea id="client_new_notice_summary" placeholder=""
-            class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base" type="text"
-            [(ngModel)]="newNoticeForm.notice_content" name="entryMessage">
+          <textarea
+            id="client_new_notice_summary"
+            placeholder=""
+            class="!border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-base"
+            type="text"
+            [(ngModel)]="newNoticeForm.notice_content"
+            name="entryMessage"
+          >
           </textarea>
         </div>
         <div class="flex flex-row justify-between space-x-1.5 w-full">
           <div class="w-1/2">
-            <app-text-input #startDateNotice [id]="'start_notice'" [placeholder]="'Start Date'" [(ngModel)]="startDate"
-              [customClasses]="{'w-full':true}" [type]="'date'" [min]="today"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
-              (change)="onChangeStartDate($event)">
+            <app-text-input
+              #startDateNotice
+              [id]="'start_notice'"
+              [placeholder]="'Start Date'"
+              [(ngModel)]="startDate"
+              [customClasses]="{'w-full':true}"
+              [type]="'date'"
+              [min]="today"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}"
+              [showPlaceholder]="true"
+              (change)="onChangeStartDate($event)"
+            >
             </app-text-input>
           </div>
           <div class="w-1/2">
-            <app-text-input #endDateNotice [id]="'end_notice'" [placeholder]="'End Date'" [(ngModel)]="endDate"
-              [customClasses]="{'w-full':true}" [type]="'date'" [min]="startDate || today"
-              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}" [showPlaceholder]="true"
-              (change)="onChangeEndDate($event)">
+            <app-text-input
+              #endDateNotice
+              [id]="'end_notice'"
+              [placeholder]="'End Date'"
+              [(ngModel)]="endDate"
+              [customClasses]="{'w-full':true}"
+              [type]="'date'"
+              [min]="startDate || today"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'h-14':true, 'text-base':true, 'cw-3:text-sm':true}"
+              [showPlaceholder]="true"
+              (change)="onChangeEndDate($event)"
+            >
             </app-text-input>
           </div>
         </div>
@@ -134,12 +192,22 @@
             <p class="text-base font-bold">Attachment</p>
           </div>
           <div class="w-full flex flex-row justify-between items-end">
-            <input placeholder="Choose a file" type="file" (change)="onFileSelected($event)" #clientNoticeNewAttachment
-              class="hidden" accept="application/pdf" />
+            <input
+              placeholder="Choose a file"
+              type="file"
+              (change)="onFileSelected($event)"
+              #clientNoticeNewAttachment
+              class="hidden"
+            />
             <div class="w-full">
-              <input placeholder="" type="input" (click)="openFileInput()" [(ngModel)]="fileName"
+              <input
+                placeholder=""
+                type="input"
+                (click)="openFileInput()"
+                [(ngModel)]="fileName"
                 class="!border border-[#6B7280] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280] text-left pl-[0.75rem] file:bg-transparent file:border-none file:text-transparent file:mr-4 file:cursor-pointer"
-                readonly />
+                readonly
+              />
             </div>
             <!-- <button id="client_ticket_new_upbload_attachment" (click)="uploadFile()"
               class="bg-[var(--ion-color-primary)] text-white w-[30%] h-14 text-base rounded font-bold">
@@ -153,41 +221,76 @@
           <div class="flex flex-row justify-start">
             <p class="text-base font-bold">Post To</p>
           </div>
-          <select id="post_to_selection"
+          <select
+            id="post_to_selection"
             class="border border-black w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
-            [(ngModel)]="newNoticeForm.post_to">
-            <option value="" selected disabled hidden>Select a posting option</option>
+            [(ngModel)]="newNoticeForm.post_to"
+          >
+            <option value="" selected disabled hidden>
+              Select a posting option
+            </option>
             <option value="all">All Users</option>
-            <option value="block" *ngIf="!project_config.is_industrial">To Certain Blocks</option>
-            <option value="unit" *ngIf="!project_config.is_industrial">To Certain Units</option>
-            <option value="host" *ngIf="project_config.is_industrial">To Certain Hosts</option>
+            <option value="block" *ngIf="!project_config.is_industrial">
+              To Certain Blocks
+            </option>
+            <option value="unit" *ngIf="!project_config.is_industrial">
+              To Certain Units
+            </option>
+            <option value="host" *ngIf="project_config.is_industrial">
+              To Certain Hosts
+            </option>
           </select>
         </div>
-        <div class="w-full" *ngIf="newNoticeForm.post_to === 'block' && !project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Block" (outputValue)="blockChange($event)" [placeholder]="'Select Blocks'" [divOuterClass]="'border-black min-h-14 text-base'"
-            [labelText]="'Block'"></app-m2m-selection>
+        <div
+          class="w-full"
+          *ngIf="newNoticeForm.post_to === 'block' && !project_config.is_industrial"
+        >
+          <app-m2m-selection
+            [Arrays]="Block"
+            (outputValue)="blockChange($event)"
+            [placeholder]="'Select Blocks'"
+            [divOuterClass]="'border-black min-h-14 text-base'"
+            [labelText]="'Block'"
+          ></app-m2m-selection>
         </div>
-        <div class="w-full" *ngIf="newNoticeForm.post_to === 'unit' && !project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Unit" (outputValue)="unitChange($event)" [placeholder]="'Select Units'" [divOuterClass]="'border-black min-h-14 text-base'"
-            [labelText]="'Unit'"></app-m2m-selection>
+        <div
+          class="w-full"
+          *ngIf="newNoticeForm.post_to === 'unit' && !project_config.is_industrial"
+        >
+          <app-m2m-selection
+            [Arrays]="Unit"
+            (outputValue)="unitChange($event)"
+            [placeholder]="'Select Units'"
+            [divOuterClass]="'border-black min-h-14 text-base'"
+            [labelText]="'Unit'"
+          ></app-m2m-selection>
         </div>
-        <div class="w-full" *ngIf="newNoticeForm.post_to === 'host' && project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Host" (outputValue)="hostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'border-black min-h-14 text-base'"
-            [labelText]="'Host'"></app-m2m-selection>
+        <div
+          class="w-full"
+          *ngIf="newNoticeForm.post_to === 'host' && project_config.is_industrial"
+        >
+          <app-m2m-selection
+            [Arrays]="Host"
+            (outputValue)="hostChange($event)"
+            [placeholder]="'Select Hosts'"
+            [divOuterClass]="'border-black min-h-14 text-base'"
+            [labelText]="'Host'"
+          ></app-m2m-selection>
         </div>
 
-        <div class="w-full ">
-          <button (click)="onSubmitPost()"
-            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14">
+        <div class="w-full">
+          <button
+            (click)="onSubmitPost()"
+            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded font-bold w-full mt-2 h-14"
+          >
             Post
           </button>
         </div>
       </div>
       <div class="h-24" *ngIf="screenExtend"></div>
-
     </div>
   </div>
-  </ion-content>
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

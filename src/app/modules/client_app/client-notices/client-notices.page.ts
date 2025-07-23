@@ -139,37 +139,44 @@ export class ClientNoticesPage implements OnInit {
     )
   }
 
-  async downloadDocument(base64Doc: string, title: string) {
-    try {
-      const byteCharacters = atob(base64Doc);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+  async downloadDocument(noticeId: any, type: string) {
+    console.log(noticeId);
+    this.clientMainService.getApi({
+      document_id: noticeId,
+      type_request: type
+    }, '/resident/get/download_document').subscribe(async (response: any) => {
+      console.log("download", response);
+      try {
+        const byteCharacters = atob(response.result.blob);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: response.result.type });
+  
+        if (Capacitor.isNativePlatform()) {
+          const base64 = await this.convertBlobToBase64(blob);
+          const saveFile = await Filesystem.writeFile({
+            path: `${response.result.title}`,
+            data: base64,
+            directory: Directory.Data
+          });
+          const path = saveFile.uri;
+          await FileOpener.open({
+            filePath: path,
+            contentType: blob.type
+          });
+          console.log('File is opened');
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          this.downloadFile(href, `${response.result.title}`);
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        // Optionally, show an error message to the user
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      if (Capacitor.isNativePlatform()) {
-        const base64 = await this.convertBlobToBase64(blob);
-        const saveFile = await Filesystem.writeFile({
-          path: `${title}.pdf`,
-          data: base64,
-          directory: Directory.Data
-        });
-        const path = saveFile.uri;
-        await FileOpener.open({
-          filePath: path,
-          contentType: blob.type
-        });
-        console.log('File is opened');
-      } else {
-        const href = window.URL.createObjectURL(blob);
-        this.downloadFile(href, `${title}.pdf`);
-      }
-    } catch (error) {
-      console.error('Error downloading document:', error);
-      // Optionally, show an error message to the user
-    }
+    })
   }
 
   convertBlobToBase64(blob: Blob) {
@@ -439,9 +446,6 @@ export class ClientNoticesPage implements OnInit {
     }
     if (!this.endDate) {
       errMsg += "End date is required! \n"
-    }
-    if (!this.newNoticeForm.notice_attachment) {
-      errMsg += "Notice attachment is required! \n"
     }
     if (this.newNoticeForm.post_to == 'block' && this.newNoticeForm.block_ids.length == 0) {
       errMsg += "At least one block must be selected! \n"

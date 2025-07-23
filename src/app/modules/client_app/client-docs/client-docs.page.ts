@@ -2,6 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { FileOpener } from '@capacitor-community/file-opener';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-client-docs',
@@ -116,10 +119,6 @@ export class ClientDocsPage implements OnInit {
     // console.log(this.previousParentIds)
     console.log(this.previousParentNames)
     this.loadNotices(id)
-  }
-
-  downloadFile(file: any) {
-    console.log(file)
   }
 
   isModalChoose = false
@@ -268,4 +267,70 @@ export class ClientDocsPage implements OnInit {
     this.loadNotices(parent_id).then(() => event.target.complete())
   }
 
+  async downloadDocument(docId: any, type: string) {
+    console.log(docId);
+    this.clientMainService.getApi({
+      document_id: docId,
+      type_request: type
+    }, '/resident/get/download_document').subscribe(async (response: any) => {
+      console.log("download", response);
+      try {
+        const byteCharacters = atob(response.result.blob);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: response.result.type });
+  
+        if (Capacitor.isNativePlatform()) {
+          const base64 = await this.convertBlobToBase64(blob);
+          const saveFile = await Filesystem.writeFile({
+            path: `${response.result.title}`,
+            data: base64,
+            directory: Directory.Data
+          });
+          const path = saveFile.uri;
+          await FileOpener.open({
+            filePath: path,
+            contentType: blob.type
+          });
+          console.log('File is opened');
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          this.downloadFile(href, `${response.result.title}`);
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        // Optionally, show an error message to the user
+      }
+    })
+  }
+
+  convertBlobToBase64(blob: Blob) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  downloadFile(href: string, filename: string) {
+    const link = document.createElement("a");
+    link.style.display = "none";
+    link.href = href;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        // Periksa apakah parentNode tidak null sebelum menghapus
+        if (link.parentNode) {
+            link.parentNode.removeChild(link);
+        }
+    }, 0);
+  }
 }
