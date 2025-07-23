@@ -767,9 +767,9 @@ export class WebRtcService extends ApiService{
                 const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
                 console.log("Is Dekstop", isDesktop);
                 
-                // if (isDesktop) {
-                //   console.log("Your in desktop device", isDesktop);
-                // } else {
+                if (isDesktop) {
+                  console.log("Your in desktop device", isDesktop);
+                } else {
                   this.presentToast('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
                   console.log('Your about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
                   setTimeout(()=>{
@@ -778,7 +778,7 @@ export class WebRtcService extends ApiService{
                     Preferences.clear();
                     this.router.navigate(['']);
                   }, 3000)
-                // }
+                }
               }else{
               }
             });
