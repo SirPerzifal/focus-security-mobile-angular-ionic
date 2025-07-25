@@ -320,7 +320,7 @@ export class ContractorInvitingFormPage implements OnInit {
       const givenName = contactName?.given || '';
 
       // Format the name as display_name(given_name)
-      const nameFromContact = `${displayName}(${givenName})`.trim();
+      const nameFromContact = `${displayName}`.trim();
       const phoneFromContact = result.contact.phones?.[0].number || '';
       const newPhoneNumber = phoneFromContact.replace(/\D/g, '')
 

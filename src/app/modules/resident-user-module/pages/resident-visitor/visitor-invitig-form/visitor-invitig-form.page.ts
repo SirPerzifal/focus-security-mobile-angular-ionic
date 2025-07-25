@@ -220,7 +220,7 @@ export class VisitorInvitigFormPage implements OnInit {
       const displayName = contactName?.display || '';
       const givenName = contactName?.given || '';
 
-      const nameFromContact = `${displayName}(${givenName})`.trim();
+      const nameFromContact = `${displayName}`.trim();
       const phoneFromContact = result.contact.phones?.[0].number || '';
       const newPhoneNumber = phoneFromContact.replace(/\D/g, '');
 
