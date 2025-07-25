@@ -243,9 +243,7 @@ export class VisitorInvitigFormPage implements OnInit {
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
         } else {
           processedNumber = newPhoneNumber;
-          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
-          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
-          selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
+          selectedCountryCode = '65';
         }
 
         // Buat nomor lengkap untuk pengecekan duplikasi
