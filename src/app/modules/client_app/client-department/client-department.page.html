@@ -1,5 +1,5 @@
 <ion-header>
-  <app-resident-header [is_client]="true" [text]="'Employees'" [text_second]="textSecond" />
+  <app-resident-header [is_client]="true" [text]="'Departments'" [text_second]="textSecond" />
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
@@ -28,7 +28,7 @@
         </div>
         <ng-template #noVisitor>
           <div class="w-full bg-transparent mt-8 text-center rounded-lg">
-            <p class="text-gray-600">There are no employees.....</p>
+            <p class="text-gray-600">There are no departments.....</p>
           </div>
         </ng-template>
       </div>

@@ -18,7 +18,6 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 export class HomePage implements OnInit {
 
   constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
-    webrtc.initializeSocket()
     this.checkScreenSize();
     this.initializeBackButtonHandling();
   }
@@ -28,6 +27,7 @@ export class HomePage implements OnInit {
   callActionStatus: string = '';
   private routerSubscription!: Subscription;
   ngOnInit() {
+    this.webrtc.initializeSocket()
     this.initializeBackButtonHandling();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

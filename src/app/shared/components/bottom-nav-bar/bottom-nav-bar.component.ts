@@ -48,6 +48,7 @@ export class BottomNavBarComponent implements OnInit {
 
   ngOnInit() {
     this.functionMain.vmsPreferences().then((value: any)=> {
+      console.log(value)
       this.is_client = value.is_client
     })
     this.router.events.subscribe(event => {
@@ -82,7 +83,7 @@ export class BottomNavBarComponent implements OnInit {
 
   callVms() {
     this.functionMain.vmsPreferences().then((value: any)=> {
-      const project_id = 'project-' + value.project_id.toString();
+      const project_id = 'Project-' + value.project_id.toString();
       this.webRtcService.createOffer(false, project_id, false, true);
     })
   }

@@ -374,7 +374,7 @@ export class WebRtcService extends ApiService{
             const parsedVMS = jwtDecode(result.value) as {project_name: string; project_id: number};
             if (parsedVMS.project_id && parsedVMS.project_name){
               userInfo.family_name = parsedVMS.project_name;
-              userInfo.family_id = 'project-' + parsedVMS.project_id.toString();
+              userInfo.family_id = 'Project-' + parsedVMS.project_id.toString();
             }
           }
         });

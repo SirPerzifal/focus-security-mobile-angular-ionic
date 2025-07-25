@@ -78,7 +78,6 @@ export class ClientEmployeesPage implements OnInit {
         console.error('Error converting to base64', error);
       });
     } else {
-      this.selectedImageName = ''; // Reset if no file is selected
     }
   }
 

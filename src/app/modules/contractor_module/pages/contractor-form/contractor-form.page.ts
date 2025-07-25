@@ -522,12 +522,22 @@ export class ContractorFormPage implements OnInit {
               } else {
                 console.log(value)
                 this.is_id_disabled = true
-                this.formData.contractor_name = data.contractor_name
-                this.formData.company_name = data.company_name
-                this.formData.contact_number = data.contact_number
-                this.selectedImage = data.visitor_image
-                if (this.showDrive) {
-                  this.formData.contractor_vehicle =  data.vehicle_number
+                if (this.isFromScan) {
+                  this.formData.contractor_name = this.formData.contractor_name ? this.formData.contractor_name : data.contractor_name
+                  this.formData.company_name = this.formData.company_name ? this.formData.company_name : data.company_name
+                  this.formData.contact_number = this.formData.contact_number ? this.formData.contact_number : data.contact_number
+                  this.selectedImage = data.visitor_image
+                  if (this.showDrive) {
+                    this.formData.contractor_vehicle = this.formData.contractor_vehicle ? this.formData.contractor_vehicle : data.vehicle_number
+                  }
+                } else {
+                  this.formData.contractor_name = data.contractor_name
+                  this.formData.company_name = data.company_name
+                  this.formData.contact_number = data.contact_number
+                  this.selectedImage = data.visitor_image
+                  if (this.showDrive) {
+                    this.formData.contractor_vehicle =  data.vehicle_number
+                  }
                 }
               } 
             } else {

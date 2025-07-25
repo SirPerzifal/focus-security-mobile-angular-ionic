@@ -693,6 +693,10 @@ const routes: Routes = [
     path: 'client-department',
     loadChildren: () => import('./modules/client_app/client-department/client-department.module').then( m => m.ClientDepartmentPageModule)
   },
+  {
+    path: 'client-delivery',
+    loadChildren: () => import('./modules/client_app/client-delivery/client-delivery.module').then( m => m.ClientDeliveryPageModule)
+  },
 ];
 
 @NgModule({

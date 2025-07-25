@@ -45,7 +45,7 @@ export class ClientDepartmentPage implements OnInit {
   onSubmit() {
     let errMsg = ''
     if (this.department_name == ''){
-      errMsg += 'Profile image is required \n'
+      errMsg += 'Names is required \n'
     }
         if (errMsg != '') {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -56,7 +56,7 @@ export class ClientDepartmentPage implements OnInit {
           if (results.result.response_code === 200) {
             this.loadDepartment()
             this.onBack()
-            this.functionMain.presentToast(`Successfully add new employee!`, 'success');
+            this.functionMain.presentToast(`Successfully add new department!`, 'success');
           } else {
             this.functionMain.presentToast(results.result.error_message, 'danger');
           }
