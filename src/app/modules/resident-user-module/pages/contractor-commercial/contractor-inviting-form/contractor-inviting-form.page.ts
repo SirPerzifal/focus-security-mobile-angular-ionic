@@ -235,7 +235,7 @@ export class ContractorInvitingFormPage implements OnInit {
         return invitee.type_of_work && invitee.type_of_work === 'Others' ? true : false;
       });
       this.inviteeFormList.forEach((invitee: any, index: number) => {
-        this.entryCheck[index] = (invitee.host_ids && invitee.host_ids.length > 1) ? "other_host" : "";
+        this.entryCheck[index] = (invitee.host_ids && invitee.host_ids.length > 1) ? "other_host" : ((invitee.host_ids && invitee.host_ids.length == 1) ? "myself" : "");
       });
 
       // Update selectedCountry berdasarkan contact_number
@@ -646,7 +646,13 @@ export class ContractorInvitingFormPage implements OnInit {
       } else if (response.result.status_code === 206) {
         this.functionMain.presentToast('Contractor has been banned!', 'danger');
       } else {
-        this.functionMain.presentToast('Failed Add Invite', 'danger');
+        if (response.result.response_description.startsWith('Duplicate Entry For')) {
+          const [separated, duplicate, entry, number] = response.result.response_description.split(' ');
+          // const numberDuplicate = 
+          this.functionMain.presentToast(`Duplicate invite for ${number}.`, 'danger');
+        } else {
+          this.functionMain.presentToast('Failed Add Invite', 'danger');
+        }
       }
     });
   }

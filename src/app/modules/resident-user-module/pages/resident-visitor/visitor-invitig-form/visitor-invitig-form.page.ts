@@ -532,7 +532,13 @@ export class VisitorInvitigFormPage implements OnInit {
           } else if (response.result.status_code === 206) {
             this.functionMain.presentToast('Visitor has been banned!', 'danger');
           } else {
-            this.functionMain.presentToast('Failed Add Invite', 'danger');
+            if (response.result.response_description.startsWith('Duplicate Entry For')) {
+              const [separated, duplicate, entry, number] = response.result.response_description.split(' ');
+              // const numberDuplicate = 
+              this.functionMain.presentToast(`Duplicate invite for ${number}.`, 'danger');
+            } else {
+              this.functionMain.presentToast('Failed Add Invite', 'danger');
+            }
           }
         })
       } catch (error) {
