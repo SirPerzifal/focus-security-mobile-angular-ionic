@@ -197,11 +197,13 @@ export class WebRtcService extends ApiService{
   // }
 
   async showIncomingCallModal(offer: any) {
-    await this.playRingtone();
-    return this.presentSingletonModal(IncomingCallPage, {
-      offer: offer,
-      callerName: this.callerName,
-    });
+    if (this.callerName) {
+      await this.playRingtone();
+      return this.presentSingletonModal(IncomingCallPage, {
+        offer: offer,
+        callerName: this.callerName,
+      });
+    }
   }
 
   async showOutgoingCallModal() {

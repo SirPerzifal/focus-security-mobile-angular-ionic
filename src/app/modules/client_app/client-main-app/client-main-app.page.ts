@@ -218,7 +218,7 @@ export class ClientMainAppPage implements OnInit {
       { src: "assets/icon/exc-client/burger.png", alt: "Icon for Deliveries", text: "Food Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_food_platform, menu_count: 0, id: 'delivery', params: {type: 'delivery'}},
       { src: "assets/icon/exc-client/package.png", alt: "Icon for Package Express", text: "Package Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_package_platform, menu_count: 0, id: 'package', params: {type: 'package'}},
       { src: "assets/icon/resident-icon/notification.png", alt: "Icon for Notifications", text: "Notifications", route: "/client-notification", permission: [true, true], menu_show: this.project_config.is_allow_client_notifications, menu_count: 0, id: 'notifications', params: {}},
-      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for User RFID List", text: "RFID User List", route: "/client-rfid-user-list", permission: [true, true], menu_show: this.project_config.is_allow_rfid_user_list, menu_count: 0, id: 'rfid', params: {}},
+      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for User RFID List", text: "RFID User List", route: "/client-rfid-user-list", permission: [false, false], menu_show: this.project_config.is_allow_rfid_user_list, menu_count: 0, id: 'rfid', params: {}},
     ];
     console.log(this.project_config);
     if (this.project_config.is_industrial) {
