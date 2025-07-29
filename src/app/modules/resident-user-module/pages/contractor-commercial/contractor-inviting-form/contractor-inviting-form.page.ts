@@ -182,7 +182,7 @@ export class ContractorInvitingFormPage implements OnInit {
     if (navigationState && navigationState['selectedInvitees']) {
       selectedInvitees = navigationState['selectedInvitees'];
       console.log(selectedInvitees);
-      
+
     } 
     // Jika tidak ada, cek params
     else if (params && params['selectedInvitees']) {
@@ -193,79 +193,132 @@ export class ContractorInvitingFormPage implements OnInit {
       }
     }
 
-    if (selectedInvitees && selectedInvitees.length > 0) {
-      this.showOther = []
-      this.entryCheck = {}
-      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
-        let contact_number = invitee.contact_number || '';
-        let phone_display = '';
-        let selected_code = '65';
-  
-        // Validasi untuk contact_number
-        if (contact_number.startsWith('6') && contact_number.length > 2) {
-          selected_code = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
-          phone_display = contact_number.substring(2); // Sisa nomor untuk display
-        } else {
-          phone_display = contact_number;
-        }
-
-        const value: any = {
-          contractor_name: invitee.contractor_name || '',
-          contact_number: contact_number,
-          phone_display: phone_display, // Field terpisah untuk display
-          vehicle_number: invitee.vehicle_number || '',
-          company_name: invitee.company_name || '',
-          type_of_work: invitee.type_of_work || '',
-          expected_number_of_visit: invitee.expected_number_of_visit || '',
-          host_ids: invitee.host_ids || []
-        }
-
-        // Perbaikan: gunakan assignment biasa, bukan append
-        if (invitee.other) {
-          value.other = invitee.other;
-        }
-  
-        return value;
-      });
-      console.log(this.inviteeFormList);
-      console.log(this.inviteeFormList.length);
-      console.log(this.showOther);
-      console.log(this.entryCheck);
-      this.showOther = this.inviteeFormList.map((invitee: any, index: number) => {
-        return invitee.type_of_work && invitee.type_of_work === 'Others' ? true : false;
-      });
-      this.inviteeFormList.forEach((invitee: any, index: number) => {
-        this.entryCheck[index] = (invitee.host_ids && invitee.host_ids.length > 1) ? "other_host" : ((invitee.host_ids && invitee.host_ids.length == 1) ? "myself" : "");
-      });
-
-      // Update selectedCountry berdasarkan contact_number
-      this.selectedCountry = selectedInvitees.map((invitee: any) => {
-        let contact_number = invitee.contact_number || '';
-        let selectedCountry = '65'; // default
-    
-        // Validasi untuk contact_number
-        if (contact_number.startsWith('6') && contact_number.length > 2) {
-          selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
-        }
-    
-        return {
-          selected_code: selectedCountry
-        };
-      });
-
+    if (selectedInvitees?.length > 0) {
+      this.initializeFormData();
+      this.processInviteeData(selectedInvitees);
       this.addInviteeText = 'Add More Invitees';
     }
     
-    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
+    // Pastikan selectedCountry memiliki ukuran yang sama dengan inviteeFormList
+    this.ensureSelectedCountrySync();
+    
+    if (this.inviteeFormList.length > 0) {
+      this.isFormVisible = true;
+    }
+
+    this.isFormInitialized = true;
+  }
+
+  private initializeFormData() {
+    this.showOther = [];
+    this.entryCheck = {};
+    this.inviteeFormList = [];
+  }
+
+  private processInviteeData(selectedInvitees: any[]) {
+    this.inviteeFormList = selectedInvitees.map((invitee: any) => {
+      const phoneData = this.parsePhoneNumber(invitee.contact_number || '');
+      
+      // Cara yang lebih clean dan readable
+      const standardPurposes = ['delivery', 'collection', 'meeting'];
+      const purposeLower = (invitee.purpose || '').toLowerCase();
+      const isStandardPurpose = standardPurposes.includes(purposeLower);
+      
+      const formData: any = {
+        contractor_name: invitee.contractor_name || '',
+        contact_number: invitee.contact_number || '',
+        phone_display: phoneData.display,
+        vehicle_number: invitee.vehicle_number || '',
+        company_name: invitee.company_name || '',
+        type_of_work: isStandardPurpose ? invitee.purpose : 'Others',
+        expected_number_of_visit: invitee.expected_number_of_visit || '',
+        host_ids: invitee.host_ids || []
+      };
+
+      // Tambahkan field other jika bukan standard purpose
+      if (!isStandardPurpose && invitee.purpose) {
+        formData.other = invitee.purpose;
+      }
+
+      return formData;
+    });
+
+    this.setupShowOtherFlags();
+    this.setupEntryChecks();
+    this.setupSelectedCountry(selectedInvitees);
+    
+    console.log('Processed invitee form list:', this.inviteeFormList);
+  }
+
+  private parsePhoneNumber(contactNumber: string): { display: string; countryCode: string } {
+    // Default values
+    let display = contactNumber;
+    let countryCode = '65';
+
+    // Improved phone number parsing
+    if (contactNumber) {
+      // Handle Singapore numbers (+65)
+      if (contactNumber.startsWith('65') && contactNumber.length > 4) {
+        countryCode = '65';
+        display = contactNumber.substring(2);
+      }
+      // Handle other country codes as needed
+      else if (contactNumber.startsWith('+')) {
+        // Handle international format
+        const withoutPlus = contactNumber.substring(1);
+        if (withoutPlus.startsWith('65')) {
+          countryCode = '65';
+          display = withoutPlus.substring(2);
+        }
+        // Add other country codes handling here
+      }
+    }
+
+    return { display, countryCode };
+  }
+
+  private setupShowOtherFlags() {
+    const standardPurposes = ['delivery', 'collection', 'meeting'];
+    
+    this.showOther = this.inviteeFormList.map((invitee: any) => {
+      const purpose = invitee.type_of_work?.toLowerCase() || '';
+      return purpose && !standardPurposes.includes(purpose);
+    });
+  }
+
+  private setupEntryChecks() {
+    this.inviteeFormList.forEach((invitee: any, index: number) => {
+      const hostIdsCount = invitee.host_ids?.length || 0;
+      
+      if (hostIdsCount > 1) {
+        this.entryCheck[index] = "other_host";
+      } else if (hostIdsCount === 1) {
+        this.entryCheck[index] = "myself";
+      } else {
+        this.entryCheck[index] = "";
+      }
+    });
+  }
+
+  private setupSelectedCountry(selectedInvitees: any[]) {
+    this.selectedCountry = selectedInvitees.map((invitee: any) => {
+      const phoneData = this.parsePhoneNumber(invitee.contact_number || '');
+      return {
+        selected_code: phoneData.countryCode
+      };
+    });
+  }
+
+  private ensureSelectedCountrySync() {
+    // Pastikan selectedCountry memiliki ukuran yang sama dengan inviteeFormList
     while (this.selectedCountry.length < this.inviteeFormList.length) {
       this.selectedCountry.push({ selected_code: '65' });
     }
     
-    if (this.inviteeFormList.length > 0) {
-      this.isFormVisible = true; // Show form if there are invitees
+    // Potong jika terlalu panjang
+    if (this.selectedCountry.length > this.inviteeFormList.length) {
+      this.selectedCountry = this.selectedCountry.slice(0, this.inviteeFormList.length);
     }
-
-    this.isFormInitialized = true;
   }
 
   // Perbaikan method changeHost
