@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
-import { RecordsAlertNextPage } from '../records-alert-next/records-alert-next.page';
 
 @Component({
   selector: 'app-records-warning-history',

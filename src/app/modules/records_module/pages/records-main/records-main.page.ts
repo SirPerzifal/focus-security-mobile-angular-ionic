@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { RecordsResidentsModalPage } from '../records-residents/records-residents-modal/records-residents-modal.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-records-main',
@@ -20,6 +21,14 @@ export class RecordsMainPage implements OnInit {
       this.loadRecords()
     })
   }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
 
   project_config: any = []
 
@@ -46,26 +55,29 @@ export class RecordsMainPage implements OnInit {
         project_config: this.project_config.is_allow_vms_record_logs,
         params: {
           type: 'visitor'
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'VEHICLE LOGS',
         icon: 'assets/icon-vms/records_menu/Vehicle_Logs.png',
         route: '/records-visitor',
-        needSize: true,
+        needSize: false,
         sizeClass: 'w-[130px] h-[90px] object-contain',
         project_config: this.project_config.is_allow_vms_record_logs,
         params: {
           type: 'vehicle'
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'FACILITY BOOKINGS',
         icon: 'assets/icon-vms/records_menu/Facility_Bookings.png',
         route: '/records-facility',
-        needSize: true,
+        needSize: false,
         sizeClass: 'w-[130px] h-[90px] object-contain',
         project_config: this.project_config.is_allow_vms_record_facility,
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: '1ST WARNING',
@@ -76,7 +88,8 @@ export class RecordsMainPage implements OnInit {
         project_config: this.project_config.is_allow_vms_record_offence,
         params: {
           type: 'first_warning'
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: '2ND WARNING',
@@ -87,7 +100,8 @@ export class RecordsMainPage implements OnInit {
         project_config: this.project_config.is_allow_vms_record_offence,
         params: {
           type: 'second_warning'
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'WHEEL CLAMPED',
@@ -98,7 +112,8 @@ export class RecordsMainPage implements OnInit {
         project_config: this.project_config.is_allow_vms_record_offence,
         params: {
           type: 'wheel_clamp'
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'CONTRACTOR LOGS',
@@ -107,6 +122,7 @@ export class RecordsMainPage implements OnInit {
         needSize: false,
         sizeClass: '',
         project_config: this.project_config.is_allow_vms_contractor,
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'BLACKLIST',
@@ -115,17 +131,19 @@ export class RecordsMainPage implements OnInit {
         needSize: false,
         sizeClass: '',
         project_config: this.project_config.is_allow_vms_record_blacklist,
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: this.project_config.is_industrial ? 'EMPLOYEES' :  'RESIDENTS',
         icon: 'assets/icon-vms/records_menu/Residents.png',
         route: '/records-residents',
-        needSize: true,
+        needSize: false,
         sizeClass: 'mt-[5px] w-[130px] h-[90px] object-contain',
-        project_config: this.project_config.is_allow_vms_record_resident,
+        project_config: this.project_config.is_industrial ? this.project_config.is_allow_vms_record_employee : this.project_config.is_allow_vms_record_resident,
         params: {
           newOpen: true
-        }
+        },
+        iconWrapper: "!h-[78px] mt-1",
       },
     ]
   }

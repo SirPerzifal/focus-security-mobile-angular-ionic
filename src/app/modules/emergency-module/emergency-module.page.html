@@ -9,22 +9,22 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true"
       [routerLink]="['/home-vms']"  [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row w-full flex-wrap">
+    <div class="flex mt-8 flex-row w-full flex-wrap mx-4">
       <app-button-icon [customImageIcon]="'assets/img/Singapore_Police.png'" [isActive]="showPoliceTrans || showPolice"
-        [extraParentClass]="'mr-1'"
+        [extraParentClass]="'mr-4'"
         [extraClass]="showPoliceTrans || showPolice ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [text]="'POLICE'" [disableClick]="true" (click)="toggleShowPolice()" />
       <app-button-icon [customImageIcon]="'assets/img/SCDF.png'" [isActive]="showSCDFTrans || showSCDF" 
-      [extraImageClass]="'w-[110px] h-[110px] object-contain'"
+      [extraImageClass]="'w-[99px] h-[110px] object-contain'"
         [extraClass]="showSCDFTrans || showSCDF ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
-        [extraParentClass]="'mr-1'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()" />
+        [extraParentClass]="'mr-4'" [text]="'SCDF'" [disableClick]="true" (click)="toggleShowSCDF()" />
       <app-button-icon [customImageIcon]="'assets/img/Ambulance.png'" [isActive]="showAmbulanceTrans || showAmbulance"
         [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
-        [extraParentClass]="'mr-1'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()" />
+        [extraParentClass]="'mr-4'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()" />
       <app-button-icon [customImageIcon]="'assets/img/Government.png'" [isActive]="showOthersTrans || showOthers"
         [extraClass]="showOthersTrans || showOthers ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [text]="'OTHER GOVT AGENCY'" [disableClick]="true" (click)="toggleShowOthers()" />

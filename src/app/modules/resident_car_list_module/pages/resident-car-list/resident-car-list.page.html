@@ -10,11 +10,11 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true"
         [routerLink]="['/home-vms']" />
     </div>
-    <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <app-button-icon [customNameIcon]="'faSearch'" [text]="'SEARCH BY VEHICLE NO'" [isActive]="showSearch"
         [disableClick]="true" />
 

@@ -270,7 +270,9 @@ export class RecordsBlacklistFormPage implements OnInit {
         this.formData.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
         this.formData.vehicle_no = contactData.vehicle_number ? contactData.vehicle_number  : ''
         if (this.project_config.is_industrial) {
+          setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        }, 300)
         } else {
           if (contactData.block_id) {
             this.formData.block_id = contactData.block_id

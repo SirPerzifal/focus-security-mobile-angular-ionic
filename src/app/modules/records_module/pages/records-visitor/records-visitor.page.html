@@ -10,15 +10,15 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/records-main'" [homeRoute]="true" />
     </div>
-    <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Visitor_Logs.png'" [text]="'VISITOR LOGS'"
+    <div class="flex flex-row mt-8 mx-4">
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Visitor_Logs.png'" [text]="'VISITOR LOGS'" [iconWrapper]="'!h-[78px] mt-1'"
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'visitor'" />
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Vehicle_Logs.png'" [text]="'VEHICLE LOGS'"
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Vehicle_Logs.png'" [text]="'VEHICLE LOGS'" [iconWrapper]="'!h-[78px] mt-1'"
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'vehicle'" />
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
-        <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
+      <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
+        <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true" 
           (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true" />
         <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"
           [isActive]="showHistoryTrans || showHistory" [disableClick]="true" />

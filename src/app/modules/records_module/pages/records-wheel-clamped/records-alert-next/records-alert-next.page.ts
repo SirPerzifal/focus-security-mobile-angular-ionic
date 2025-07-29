@@ -12,7 +12,6 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 export class RecordsAlertNextPage implements OnInit {
 
   constructor(
-    private blockUnitService: BlockUnitService,
     private functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private modalController: ModalController,
@@ -26,18 +25,18 @@ export class RecordsAlertNextPage implements OnInit {
     this.functionMain.vmsPreferences().then(value => {
       this.project_id = value.project_id
       this.project_config = value.config
-      if (this.project_config.is_industrial) {
-        this.loadHost()
-      } else {
-        this.loadBlock()
-        if (this.formData.block_id) {
-          this.loadUnit().then(() => {
-            if (this.formData.unit_id) {
-              this.formData.unit_id = this.navParams.get('vehicle').unit_id
-            }
-          })
-        }
-      }
+      // if (this.project_config.is_industrial) {
+      //   this.loadHost()
+      // } else {
+      //   this.loadBlock()
+      //   if (this.formData.block_id) {
+      //     this.loadUnit().then(() => {
+      //       if (this.formData.unit_id) {
+      //         this.formData.unit_id = this.navParams.get('vehicle').unit_id
+      //       }
+      //     })
+      //   }
+      // }
     })
 
 
@@ -71,85 +70,78 @@ export class RecordsAlertNextPage implements OnInit {
   contactUnit = ''
   contactHost = ''
 
-  loadBlock() {
-    this.blockUnitService.getBlock().subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Block = response.result.result;
-        } else {
-        }
-      },
-      error: (error) => {
-        this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
-        console.error('Error:', error);
-      }
-    });
-  }
+  // loadBlock() {
+  //   this.blockUnitService.getBlock().subscribe({
+  //     next: (response: any) => {
+  //       if (response.result.status_code === 200) {
+  //         this.Block = response.result.result;
+  //       } else {
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.functionMain.presentToast('An error occurred while loading block data!', 'danger');
+  //       console.error('Error:', error);
+  //     }
+  //   });
+  // }
 
-  async loadUnit() {
-    this.contactUnit = ''
-    this.blockUnitService.getUnit(this.formData.block_id).subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name})); 
-          console.log(this.Unit)
-        } else {
-          console.error('Error:', response.result);
-        }
-      },
-      error: (error) => {
-        this.functionMain.presentToast('An error occurred while loading unit data', 'danger');
-        console.error('Error:', error.result);
-      }
-    });
-  }
+  // async loadUnit() {
+  //   this.contactUnit = ''
+  //   this.blockUnitService.getUnit(this.formData.block_id).subscribe({
+  //     next: (response: any) => {
+  //       if (response.result.status_code === 200) {
+  //         this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name})); 
+  //         console.log(this.Unit)
+  //       } else {
+  //         console.error('Error:', response.result);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.functionMain.presentToast('An error occurred while loading unit data', 'danger');
+  //       console.error('Error:', error.result);
+  //     }
+  //   });
+  // }
 
-  loadHost() {
-    this.contactHost = ''
-    this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
-      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
-      if (this.formData.host_id) {
-        this.contactHost = this.formData.host_id
-      }
-    })
-  }
+  // loadHost() {
+  //   this.contactHost = ''
+  //   this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
+  //     this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+  //     if (this.formData.host_id) {
+  //       this.contactHost = this.formData.host_id
+  //     }
+  //   })
+  // }
 
-  onBlockChange(event: any) {
-    this.formData.block_id = event.target.value;
-    this.loadUnit(); // Panggil method load unit
-  }
+  // onBlockChange(event: any) {
+  //   this.formData.block_id = event.target.value;
+  //   this.loadUnit(); // Panggil method load unit
+  // }
 
-  onUnitChange(event: any) {
-    this.formData.unit_id = event[0];
-  }
+  // onUnitChange(event: any) {
+  //   this.formData.unit_id = event[0];
+  // }
 
-  onHostChange(event: any) {
-    this.formData.host_id = event[0];
-  }
+  // onHostChange(event: any) {
+  //   this.formData.host_id = event[0];
+  // }
 
   submitAlert() {
     console.log(this.alert, this.formData)
     let url = this.alert ? '/vms/post/alert_next_visit' : '/vms/post/alerted_to_offence' 
     let errMsg = ''
-    if (this.alert) {
-      if (!this.formData.reason) {
-        errMsg += 'Reason of issuance is required! \n'
-      }
-    } else {
-      if (!this.formData.visitor_name) {
-        errMsg += 'Visitor name is required! \n'
-      }
-      if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
-        errMsg += 'Block and unit is required! \n'
-      }
-      if ((!this.formData.host_id) && this.project_config.is_industrial) {
-        errMsg += 'Host is required! \n'
-      }
+    if (!this.formData.contact_number) {
+      errMsg += 'Contact number is required! \n'
     }
+    if (!this.formData.reason) {
+      errMsg += 'Reason of issuance is required! \n'
+    }
+    
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
+    console.log(this.formData)
     this.clientMainService.getApi({...this.formData, project_id: this.project_id}, url).subscribe({
       next: (results) => {
         console.log(results)

@@ -180,7 +180,9 @@ export class UnregisteredSimulationModulePage implements OnInit {
     if (contactData) {
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        setTimeout(() => {
+          this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        }, 300)
       } else {
         if (contactData.block_id) {
           this.formData.block_id = contactData.block_id

@@ -11,8 +11,8 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/records-main'" />
     </div>
-    <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Residents.png'"
+    <div class="flex flex-row mt-8 mx-4">
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Residents.png'" [iconWrapper]="'!h-[78px] mt-1'"
         [text]="project_config.is_industrial ? 'EMPLOYEES' : 'RESIDENTS'" [routerLink]="['/records-main']"
         [isActive]="true" [disableClick]="true" [extraImageClass]="'mt-[5px] w-[130px] h-[90px] object-contain'" />
     </div>

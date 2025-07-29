@@ -9,10 +9,12 @@
 
     <div class="w-full flex flex-col h-full items-center justify-between">
       <ng-container *ngIf="showIcon; else imageTemplate">
-        <fa-icon class="fsc-icon" [icon]="icon" [ngClass]="{'mirrored-icon': isMirrored}"></fa-icon>
+        <div class="" [ngClass]="iconWrapper + ' fsc-icon-wrapper'">
+          <fa-icon class="fsc-icon" [icon]="icon" [ngClass]="{'mirrored-icon': isMirrored}"></fa-icon>
+        </div>
       </ng-container>
       <ng-template #imageTemplate>
-        <div class="" [ngClass]="extraImageClass ? 'custom-icon-wrapper '+ extraImageClass : 'fsc-icon-wrapper'">
+        <div class="" [ngClass]="extraImageClass ? ('custom-icon-wrapper '+ extraImageClass) : (iconWrapper + ' fsc-icon-wrapper')">
           <img [src]="customImageIcon" class="fsc-icon " alt="icon">
         </div>
       </ng-template>

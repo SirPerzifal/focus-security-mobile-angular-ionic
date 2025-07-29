@@ -9,11 +9,11 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" [routerLink]="['/home-vms']" [isActive]="true"
         [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/FoodBar.webp'" [text]="'FOOD DELIVERY'"
         (click)="toggleFoodDeliveries()" [isActive]="buttonStates.foodDeliveries" [disableClick]="true" />
       <app-button-icon [customImageIcon]="'assets/icon/deliveries-icon/Package.webp'" [text]="'PACKAGE DELIVERIES'"
@@ -30,18 +30,18 @@
       <div class="justify-between items-center w-full mb-4" *ngIf="foodDeliveries" @fadeInOut>
         <div class="w-full">
           <!-- <div class="border-t border-black dark:border-white mt-7"></div> -->
-          <div class="flex flex-row space-x-1 overflow-x-auto w-full">
+          <div class="flex flex-row space-x-4 overflow-x-auto w-full mx-4">
             <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
               (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
             <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
               (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
           </div>
           <div class="flex flex-col" *ngIf="showForm" @fadeInOut>
-            <div class="flex flex-row w-full flex-wrap mt-6">
+            <div class="flex flex-row w-full flex-wrap mt-6 mx-4">
               <div *ngFor="let button of foodDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image ? button.image : ''" [text]="button.text"
                   [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)"
-                  [extraParentClass]="'mr-1'" />
+                  [extraParentClass]="'mr-4'" />
               </div>
             </div>
             <div class="flex flex-row mt-6" *ngIf="food_delivery_id" @fadeInOut>
@@ -128,17 +128,17 @@
 
       <div class="justify-between items-center mb-4 w-full" *ngIf="packageDeliveries" @fadeInOut>
         <div class="w-full" *ngIf="packageDeliveries" @fadeInOut>
-          <div class="flex flex-row space-x-1 overflow-x-auto w-full">
+          <div class="flex flex-row space-x-4 overflow-x-auto w-full mx-4">
             <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
               (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
             <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
               (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
           </div>
           <div class="flex flex-col mt-6" *ngIf="showForm" @fadeInOut>
-            <div class="flex flex-row w-full flex-wrap">
+            <div class="flex flex-row w-full flex-wrap mx-4">
               <div *ngFor="let button of packageDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
-                  [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-1'" />
+                  [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-4'" />
               </div>
             </div>
             <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
@@ -261,7 +261,7 @@
       </div>
 
       <div class="flex flex-col w-full space-y-5 mb-4" *ngIf="otherDeliveries" @fadeInOut>
-        <div class="flex flex-row space-x-1 overflow-x-auto w-full">
+        <div class="flex flex-row space-x-4 overflow-x-auto w-full mx-4">
           <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
             (click)="toggleShowWalk()" [isActive]="showWalkTrans || showWalk" [disableClick]="true" />
           <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"

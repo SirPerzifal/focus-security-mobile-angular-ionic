@@ -11,7 +11,7 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/move-home'" [params]="{type: scheduleType}"/>
     </div>
-    <div class="flex flex-row mt-8">    
+    <div class="flex flex-row mt-8 mx-4">    
       <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onBackHome()" [isActive]="true"
         [disableClick]="true" *ngIf="scheduleType == 'move_in'" />
         <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onBackHome()" [isActive]="true"

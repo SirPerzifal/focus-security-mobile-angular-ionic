@@ -415,7 +415,7 @@ export class ContractorFormPage implements OnInit {
       console.log(value)
       if (value) {
         this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number : ''
-        if (!is_click) {
+        if (!this.isFromScan) {
           this.formData.contact_number = value.contact_number ? value.contact_number : ''
           this.formData.contractor_name = value.visitor_name ? value.visitor_name  : ''
           this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
@@ -429,9 +429,11 @@ export class ContractorFormPage implements OnInit {
             if (value.industrial_host_ids.length > 0) {
               this.contactHost = value.industrial_host_ids ? value.industrial_host_ids : ''
             } else {
-              this.tempHost = value.industrial_host_id ? [value.industrial_host_id] : ''
+              if (this.isFromScan) {
+                this.tempHost = value.industrial_host_id ? [value.industrial_host_id] : ''
+              }
               setTimeout(() => {
-                this.contactHost = this.tempHost
+                this.contactHost = value.industrial_host_id ? [value.industrial_host_id] : ''
               }, 300)
               console.log(this.contactHost)
             }
@@ -463,7 +465,7 @@ export class ContractorFormPage implements OnInit {
   getContactInfo(contactData: any) {
     this.contactUnit = ''
     this.contactHost = ''
-    if (contactData) {
+    if (contactData && !this.isFromScan) {
       this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
@@ -479,10 +481,16 @@ export class ContractorFormPage implements OnInit {
       }
       if (this.project_config.is_industrial) {
         if (contactData.industrial_host_ids.lentgh > 0) {
-          this.contactHost = contactData.industrial_host_ids ? contactData.industrial_host_ids : ''
+          setTimeout(() => {
+            this.contactHost = contactData.industrial_host_ids ? contactData.industrial_host_ids : ''
+          }, 300)
         } else {
-          this.tempHost = contactData.industrial_host_id ? [contactData.industrial_host_id] : ''
-          this.contactHost = this.tempHost
+          if (this.isFromScan) {
+            this.tempHost = contactData.industrial_host_id ? [contactData.industrial_host_id] : ''
+          }
+          setTimeout(() => {
+            this.contactHost = contactData.industrial_host_id ? [contactData.industrial_host_id] : ''
+          }, 300)
         }
       } else {
         if (contactData.block_id) {
@@ -566,7 +574,7 @@ export class ContractorFormPage implements OnInit {
 
   Host: any[] = [];
   selectedHost: string = '';
-  contactHost = ''
+  contactHost: any = ''
   loadHost() {
     this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
@@ -637,9 +645,11 @@ export class ContractorFormPage implements OnInit {
       setTimeout(() => {
         this.showWalk = true;
         this.showWalkTrans = false
-        setTimeout(() => {
-          this.contactHost = this.tempHost
-        }, 300)
+        if (this.isFromScan) {
+          setTimeout(() => {
+            this.contactHost = this.tempHost
+          }, 300)
+        }
       }, 300)
     }
   }
@@ -659,9 +669,11 @@ export class ContractorFormPage implements OnInit {
       setTimeout(() => {
         this.showDrive = true;
         this.showDriveTrans = false
-        setTimeout(() => {
-          this.contactHost = this.tempHost
-        }, 300)
+        if (this.isFromScan) {
+          setTimeout(() => {
+            this.contactHost = this.tempHost
+          }, 300)
+        }
         if (!this.isFromScan) {
           this.refreshVehicle()
         }

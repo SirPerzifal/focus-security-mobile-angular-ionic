@@ -10,16 +10,16 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/records-main'" [homeRoute]="true"/>
     </div>
-    <div class="flex flex-row mt-8">
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Wheel_Clamped.png'" [text]="'WHEEL CLAMPED'"
+    <div class="flex flex-row mt-8 mx-4">
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Wheel_Clamped.png'" [text]="'WHEEL CLAMPED'" [iconWrapper]="'!h-[78px] mt-1'"
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'wheel_clamp'" />
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/First_Warning.png'" [text]="'1ST WARNING'"
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/First_Warning.png'" [text]="'1ST WARNING'" [iconWrapper]="'!h-[78px] mt-1'"
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'first_warning'" />
-      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Second_Warning.png'" [text]="'2ND WARNING'"
+      <app-button-icon [customImageIcon]="'assets/icon-vms/records_menu/Second_Warning.png'" [text]="'2ND WARNING'" [iconWrapper]="'!h-[78px] mt-1'"
         [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" *ngIf="pageType == 'second_warning'" />
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
+      <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
 
         <app-button-icon [textOnly]="true" [text]="'ACTIVE'" (click)="toggleSlide('active')"
           [isActive]="showActiveTrans || showActive" [disableClick]="true" />

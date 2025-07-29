@@ -10,7 +10,7 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon 
         [isHomeButton]="true"
         [text]="'RECORDS'" 
@@ -19,11 +19,11 @@
         [disableClick]="true" 
       />    
     </div>
-    <div class="flex flex-col mb-8">
-      <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-start items-center mt-8 space-y-4' : 'grid grid-cols-3 gap-4 justify-between mt-8'">
+    <div class="flex flex-col mb-8 mx-4">
+      <div [ngClass]="'flex flex-row flex-wrap justify-start items-center mt-8 space-y-4'">
         <div *ngFor="let records of recordsMenu" class="mt-4">
-          <app-button-icon [customImageIcon]="records.icon" [text]="records.text" [extraImageClass]="records.needSize ? records.sizeClass : ''" 
-          [isActive]="true" [disableClick]="true" (click)="toggleRecordsButton(records, records.params)" [extraParentClass]="'mr-1'" *ngIf="records.project_config"/>
+          <app-button-icon [customImageIcon]="records.icon" [text]="records.text" [extraImageClass]="records.needSize ? records.sizeClass : ''"  [iconWrapper]="records.iconWrapper"
+          [isActive]="true" [disableClick]="true" (click)="toggleRecordsButton(records, records.params)" [extraParentClass]="'mr-4'" *ngIf="records.project_config"/>
         </div>
       </div>
     </div>

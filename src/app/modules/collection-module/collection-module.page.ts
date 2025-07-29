@@ -474,7 +474,9 @@ export class CollectionModulePage implements OnInit {
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        setTimeout(() => {
+          this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        }, 300)
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
@@ -501,7 +503,9 @@ export class CollectionModulePage implements OnInit {
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
-        this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        setTimeout(() => {
+          this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
+        }, 300)
         this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true

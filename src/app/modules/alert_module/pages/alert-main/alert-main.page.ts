@@ -383,18 +383,20 @@ export class AlertMainPage implements OnInit {
         isWarning: this.overstayRedTotal,
         totalWarning: this.overstayTotal,
         type: 'overstay',
-        extraTextClass: ""
+        extraTextClass: "",
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'UNREGISTERED',
         icon: 'assets/icon-vms/records_menu/Vehicle_Logs.png',
         isActive: true,
         route: '/records-main',
-        needSize: true,
+        needSize: false,
         isWarning: this.unregisteredTotal,
         totalWarning: this.unregisteredTotal,
         type: 'unregistered',
-        extraTextClass: ''
+        extraTextClass: '',
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'TICKETS',
@@ -405,7 +407,8 @@ export class AlertMainPage implements OnInit {
         isWarning: this.ticketsRedTotal,
         totalWarning: this.ticketsTotal,
         type: 'tickets',
-        extraTextClass: ""
+        extraTextClass: "",
+        iconWrapper: "!h-[78px] mt-1",
       },
       {
         text: 'WARNING NOTICE 1',
@@ -417,6 +420,7 @@ export class AlertMainPage implements OnInit {
         totalWarning: this.firstWarningTotal,
         type: 'first_warning',
         extraTextClass: "",
+        iconWrapper: "!h-[70px] mt-1",
       },
       {
         text: 'WARNING NOTICE 2',
@@ -428,6 +432,7 @@ export class AlertMainPage implements OnInit {
         totalWarning: this.secondWarningTotal,
         type: 'second_warning',
         extraTextClass: "",
+        iconWrapper: "!h-[70px] mt-1",
       },
       {
         text: 'WHEEL CLAMPED',
@@ -439,6 +444,7 @@ export class AlertMainPage implements OnInit {
         totalWarning: this.wheelClampedTotal,
         type: 'wheel_clamp',
         extraTextClass: "",
+        iconWrapper: "!h-[70px] mt-1",
       },
     ]
     if (!this.main) {

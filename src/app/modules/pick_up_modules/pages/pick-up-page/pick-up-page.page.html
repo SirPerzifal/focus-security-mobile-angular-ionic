@@ -10,13 +10,13 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <div class="flex flex-col items-center">
         <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" [routerLink]="['/home-vms']"
           [isActive]="true" [disableClick]="true" />
       </div>
     </div>
-    <div id="entry_type" class="flex mt-8 flex-row space-x-1 overflow-x-auto">
+    <div id="entry_type" class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <app-button-icon [customImageIcon]="'assets/img/Pick_Up_Inner.png'" [text]="'PICK UP'" (click)="toggleShowPick()"
         [isActive]="showPick" [disableClick]="true" />
       <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DROP OFF'" (click)="toggleShowDrop()"
@@ -24,7 +24,7 @@
     </div>
     <div class="mt-8 flex flex-row mb-4">
       <div class="flex flex-col w-full" *ngIf="showForm" @fadeInOut>
-        <div id="vehicle_type" class="flex w-full flex-row space-x-1 overflow-x-auto">
+        <div id="vehicle_type" class="flex w-full flex-row space-x-4 overflow-x-auto mx-4">
           <app-button-icon [customNameIcon]="'faTaxi'" [text]="'Taxi'" (click)="useVehicle('taxi')"
             [isActive]="valTaxi" [disableClick]="true" />
           <app-button-icon [customImageIcon]="'assets/icon/pick_up-page/Grab_Outline.png'" [text]="'PHV CAR'"

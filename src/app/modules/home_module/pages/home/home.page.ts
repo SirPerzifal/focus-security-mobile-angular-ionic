@@ -188,7 +188,7 @@ export class HomePage implements OnInit {
   }
 
   checkScreenSize() {
-    this.isSmallScreen = window.innerWidth < 720;
+    this.isSmallScreen = window.innerWidth < 695;
   }
 
   handleRefresh(event: any) {

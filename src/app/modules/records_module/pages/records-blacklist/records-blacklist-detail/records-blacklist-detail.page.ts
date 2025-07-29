@@ -144,7 +144,7 @@ export class RecordsBlacklistDetailPage implements OnInit {
           console.log(results.result.result.family_id)
           this.webRtcService.createOffer(false, results.result.result.family_id, false, false)
         } else {
-          this.functionMain.presentToast('An error occurred while trying to call the management!', 'danger');
+          this.functionMain.presentToast(results.result.error, 'danger');
         }
       },
       error: (error) => {

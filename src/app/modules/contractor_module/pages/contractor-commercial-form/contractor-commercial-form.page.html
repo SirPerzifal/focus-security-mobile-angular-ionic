@@ -7,11 +7,11 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" [routerLink]="['/home-vms']" [isActive]="true"
         [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <app-button-icon [text]="'CHECK IN'" [customImageIcon]="'assets/icon-vms/door-check-in-icon-white.png'"
         (click)="toggleShowCheckIn()" [isActive]="showCheckInTrans || showCheckIn" [disableClick]="true" />
       <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'"

@@ -10,10 +10,10 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
-    <div class="flex flex-row mt-8">    
+    <div class="flex flex-row mt-8 mx-4">    
       <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onBackHome()" [isActive]="true" [disableClick]="true" />
     </div>
-    <div class="flex mt-8 flex-row space-x-1 overflow-x-auto" *ngIf="project_config.is_industrial">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4" *ngIf="project_config.is_industrial">
       <app-button-icon [customNameIcon]="'faQrcode'" [text]="'PRE REGISTERED'"
       (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true"/>
       <app-button-icon [customNameIcon]="'faPersonWalking'" [text]="'WALK IN'"
@@ -64,7 +64,7 @@
           </div>
           <!-- <div class="w-1/4 h-20 bg-[var(--ion-color-primary)] rounded flex justify-center items-center"> -->
             <div class="h-25 flex flex-col justify-end">
-              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle()"/>
             </div>
           <!-- </div> -->
         </div> 

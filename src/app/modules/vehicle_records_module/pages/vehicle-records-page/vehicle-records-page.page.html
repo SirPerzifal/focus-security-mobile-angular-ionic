@@ -7,14 +7,14 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <!-- <ion-button @fadeInOut *ngIf="!showSearch" fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
         VEHICLE RECORDS
       </ion-button> -->
       <app-button-icon [customNameIcon]="'facar'" [text]="'VEHICLE RECORDS'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       <!-- </ion-button> -->
     </div>
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <!-- <app-button-icon [textOnly]="true" [text]="'PRE REGISTERED'"
         (click)="toggleShowQr()" [isActive]="showQrTrans || showQr" [disableClick]="true" /> -->
       <!-- <app-visitor-button [text]="'PRE REGISTERED'"
@@ -34,7 +34,7 @@
       [isActive]="showSearch" [disableClick]="true" />
 
     </div>
-    <!-- <div class="flex flex-row mt-8">
+    <!-- <div class="flex flex-row mt-8 mx-4">
       <button @fadeInOut *ngIf="!showSearch" class="h-10 rounded-md text-center align-middle font-bold text-md" [ngClass]="show48Hrs ? 'bg-[var(--ion-color-primary)] text-white w-24 mx-5' : 'bg-[#D0D0D0] text-[#757575] w-24 mx-5'" (click)="toggleShow48Hrs()">
         48Hrs
       </button>

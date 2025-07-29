@@ -7,7 +7,7 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/home-vms'"/>
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [customNameIcon]="'faPersonWalkingLuggage'" [text]="'VISITOR RECORDS'"
         [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
       <!-- <ion-button fill="clear" class="fsh-double-button bg-[var(--ion-color-primary)] text-[var(--ion-color-medium-contrast)] rounded-md" [routerLink]="['/home-vms']">
@@ -15,7 +15,7 @@
       </ion-button> -->
       <!-- <app-button-icon @fadeInOut *ngIf="showSearch" [customNameIcon]="'facar'" [text]="'RESIDENT CAR LIST / Search Vehicle'" [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" /> -->
     </div>
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
       <app-button-icon [customImageIcon]="'assets/icon/home-icon/48_hours_white.png'" [text]="'48HRS'" *ngIf="!showSearch"
         @fadeInOut (click)="toggleShow48Hrs()" [isActive]="show48Hrs" [disableClick]="true" />
 

@@ -39,6 +39,7 @@ export class ButtonIconComponent implements OnInit {
   @Input() extraTextClass: string = '';
   @Input() extraImageClass: string = '';
   @Input() extraParentClass: string = '';
+  @Input() iconWrapper: string = '!w-[80px] !h-[90px]';
   @Input() customNameIcon: string = '';
   @Input() customImageIcon: string = '';
   @Input() params: string = '';

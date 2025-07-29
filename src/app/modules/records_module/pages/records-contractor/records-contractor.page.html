@@ -10,12 +10,12 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/records-main'" [homeRoute]="true" />
     </div>
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [customImageIcon]="'assets/icon-vms/Homepage/Contractors.png'" [text]="'CONTRACTOR LOGS'"
-        [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true"/>
+        [routerLink]="['/records-main']" [isActive]="true" [disableClick]="true" [iconWrapper]="'!h-[78px] mt-1'"/>
     </div>
     <div class="flex flex-col">
-      <div class="flex mt-8 flex-row space-x-1 overflow-x-auto">
+      <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
         <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
           (click)="toggleSlide('active')" [isActive]="showActiveTrans || showActive" [disableClick]="true" />
         <app-button-icon [textOnly]="true" [text]="'HISTORY'" (click)="toggleSlide('history')"

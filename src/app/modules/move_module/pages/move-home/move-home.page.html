@@ -12,7 +12,7 @@
       <app-vms-header [urlCustom]="'/home-vms'" />
     </div>
 
-    <div class="flex flex-row mt-8">
+    <div class="flex flex-row mt-8 mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" [routerLink]="['/home-vms']" [isActive]="true"
         [disableClick]="true" *ngIf="pageType == 'move_in'" />
       <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" [routerLink]="['/home-vms']" [isActive]="true"
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Move In / Out Section -->
-    <div class="flex mt-8 flex-row space-x-1">
+    <div class="flex mt-8 flex-row space-x-4 overflow-x-auto mx-4">
 
       <app-button-icon [textOnly]="true" [text]="todayDate" [secondText]="'TODAY'" [isDoubleText]="true"
         (click)="toggleSlide('day')" [isActive]="showDayTrans || showDay" [disableClick]="true" />

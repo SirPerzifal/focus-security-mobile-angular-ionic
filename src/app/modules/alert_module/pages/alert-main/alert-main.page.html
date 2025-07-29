@@ -21,29 +21,29 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col" *ngIf="main">
+    <div class="flex flex-col mx-4" *ngIf="main">
       <div class="flex flex-row mt-8">
         <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" (click)="backHome()" [isActive]="true"
           [disableClick]="true" [totalWarning]="issueTotal" [isWarning]="issueRedTotal" />
       </div>
       <div class="flex flex-col">
-        <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-start items-center mt-8 space-y-4' : 'grid grid-cols-3 gap-4 justify-between mt-8'">
+        <div [ngClass]="'flex flex-row flex-wrap justify-start items-center mt-8 space-y-4'">
           <div *ngFor="let records of recordsMenu" class="mt-4">
             <app-button-icon [customImageIcon]="records.icon" [text]="records.text"
-              [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''"
+              [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''" [iconWrapper]="records.iconWrapper"
               [extraTextClass]="records.extraTextClass" [isWarning]="records.isWarning" [totalWarning]="records.totalWarning" [isActive]="records.isActive"
-              (buttonClick)="toggleRecordsButton(records)" [extraParentClass]="''" />
+              (buttonClick)="toggleRecordsButton(records)" [extraParentClass]="'mr-4'" />
           </div>
         </div>
       </div>
     </div>
 
     <div class="flex flex-col" *ngIf="!main">
-      <div class="flex flex-col">
-        <div class="grid grid-cols-3 gap-4 justify-between mt-8">
+      <div class="flex flex-col mx-4">
+        <div class="flex flex-row flex-wrap justify-start items-center mt-8 space-y-4'">
           <div *ngFor="let records of selectedMenu">
             <app-button-icon [customImageIcon]="records.icon" [text]="records.text"
-              [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''"
+              [extraImageClass]="records.needSize ? 'w-[135px] h-[90px] object-contain' : ''" [iconWrapper]="records.iconWrapper"
               [extraTextClass]="records.extraTextClass" [isWarning]="records.isWarning" [isActive]="records.isActive" [totalWarning]="records.totalWarning"
               (buttonClick)="toggleRecordsButton(records)" [extraParentClass]="''" />
           </div>
