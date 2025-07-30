@@ -275,7 +275,8 @@ export class ContractorFormPage implements OnInit {
       is_pre_entry: this.isFromScan,
       entry_id: this.isFromScan ? this.entry_id : false,
       entry_type: this.isFromScan ? this.entry_type : '',
-      visitor_image: this.selectedImage
+      visitor_image: this.selectedImage,
+      is_bypass: this.isBypass,
     }
     
     try {
@@ -872,5 +873,7 @@ export class ContractorFormPage implements OnInit {
     
     this.isOpen = !(is_before_open || is_before_close)
   }
+
+  isBypass = false
   
 }

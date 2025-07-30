@@ -80,7 +80,7 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'VISITORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Visitors.png';
-          this.extraImageClass = 'w-[100px] h-[90px] object-contain mt-[5px]'
+          this.iconWrapper = '!w-[83px] !h-[90px]'
           break;
         case 'CONTRACTORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Contractors.png';
@@ -93,7 +93,7 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'DELIVERY':
           this.customImageIcon = 'assets/icon-vms/Homepage/Delivery.png';
-          this.extraImageClass = 'w-[70px] h-[90px] object-contain mt-[5px]'
+          this.iconWrapper = '!w-[62px] !h-[90px]'
           break;
         case 'COLLECTION':
           this.customImageIcon = 'assets/icon-vms/Homepage/Collection.png';
@@ -121,6 +121,7 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'OVERNIGHT PARKING':
           this.customImageIcon = 'assets/icon-vms/Homepage/Overnight_Parking.png';
+          this.iconWrapper = '!w-[67px] !h-[90px]'
           break;
         case 'SEARCH VEHICLE':
           this.showIcon = true

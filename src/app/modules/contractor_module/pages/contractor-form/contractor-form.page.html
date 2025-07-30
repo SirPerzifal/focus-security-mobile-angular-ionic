@@ -21,15 +21,19 @@
       <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
       (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
     </div>
+    <div class="w-full flex flex-col space-y-5 mt-5 mx-4" *ngIf="((showWalk || showDrive) && !isOpen) && !project_config.is_industrial">
+      <i class="text-2xl font-bold break-words whitespace-normal w-full text-left">*CONTRACTOR FORM IS LOCKED BECAUSE THE CURRENT TIME IS OUTSIDE THE OFFICE HOURS.</i>
+      <div class="flex flex-row justify-start space-x-5 items-center">
+        <input id="vms_contractor_bypass_hours" name="vms_contractor_bypass_hours" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="isBypass">
+         <label class="text-2xl font-bold mt-1" for="vms_contractor_bypass_hours">PROCEED ANYWAY</label>
+       </div>
+    </div>
     <div class="flex flex-row mx-4">
       <div class="mt-8 flex flex-col justify-start items-center h-[600px] w-full mx-4" *ngIf="showQr" @fadeInOut>
         <!-- <img alt="Loading" src="assets/img/qr.png" class="w-60 h-60 mb-4" (click)="startScanner()" *ngIf="!isHidden"/> -->
         <div id="reader" class="w-full mb-4"></div>
       </div>
-      <div class="w-full mt-5" *ngIf="((showWalk || showDrive) && !isOpen) && !project_config.is_industrial">
-        <i class="text-2xl font-bold break-words whitespace-normal w-full text-left">*CONTRACTOR FORM IS LOCKED BECAUSE THE CURRENT TIME IS OUTSIDE THE OFFICE HOURS.</i>
-      </div>
-      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4" *ngIf="(showWalk || showDrive) && isOpen" @fadeInOut>
+      <div class="flex flex-col w-full mt-8 space-y-5 items-center mb-4" *ngIf="(showWalk || showDrive) && (isOpen || isBypass)" @fadeInOut>
         <div class="w-full">
           <app-input-image-preview class="w-full h-25" [labelText]="'CONTRACTOR IMAGE'" [buttonText]="'UPLOAD'" 
             [extraButtonClass]="'rounded-md text-white h-20'" 

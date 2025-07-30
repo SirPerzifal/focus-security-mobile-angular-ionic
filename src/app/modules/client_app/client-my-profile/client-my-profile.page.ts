@@ -48,8 +48,6 @@ export class ClientMyProfilePage implements OnInit {
 
   constructor(
     private router: Router,
-    private getUserInfoService: GetUserInfoService,
-    private authService: AuthService,
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private storage: StorageService,
@@ -118,6 +116,7 @@ export class ClientMyProfilePage implements OnInit {
             })
           });
         } else {
+          this.functionMain.presentToast(results.result.error_message, 'danger');
         }
       },
       error: (error) => {

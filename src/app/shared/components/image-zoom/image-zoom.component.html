@@ -2,10 +2,15 @@
   <img [src]="imageZoom" (click)="clickImage()" [class]="imageClass">
 </div>
 <div class="flex flex-row space-x-2 overflow-x-auto" *ngIf="!imageZoom">
-    <img [src]="image.mimetype == 'pdf' ? 'assets/icon/pdf_download_black.png' : functionMain.getImage(image.datas)" (click)="clickImageArray(image)" [class]="imageClass" *ngFor="let image of imageArray; let i = index">
+  <img [src]="image.mimetype == 'pdf' ? 'assets/icon/pdf_download_black.png' : functionMain.getImage(image.datas)"
+    (click)="clickImageArray(image)" [class]="imageClass" *ngFor="let image of imageArray; let i = index">
 </div>
 <ion-modal id="text-modal" [isOpen]="isOpenModal" (didDismiss)="closeModal()">
   <ng-template>
+    <div [class]="'w-full flex flex-row justify-end items-start ' + bgColor" style="padding-right: 10px;">
+        <ion-icon name="close-circle" size="large" class="text-[var(--ion-color-danger)] size-12"
+          (click)="closeModal()"></ion-icon>
+    </div>
     <div [class]="'wrapper flex flex-col justify-center items-center ' + bgColor">
       <img [src]="openImage" class="w-full object-contain ">
     </div>

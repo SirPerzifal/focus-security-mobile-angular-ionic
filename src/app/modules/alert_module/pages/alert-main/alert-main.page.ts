@@ -83,8 +83,45 @@ export class AlertMainPage implements OnInit {
     this.onLoadCount()
   }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    if (this.intervalId) {
+      clearInterval(this.intervalId)
+    }
+
+  }
+  
+  ionViewDidEnter() {
+    this.attachUserActivityListeners();
+    this.loadInterval();
+  }
+  
+  ionViewWillLeave() {
+    this.detachUserActivityListeners();
+    clearInterval(this.intervalId);
+  }
+
+  resetHandler = () => {
+    console.log('User activity detected');
+    this.loadInterval();
+  };
+  
+  attachUserActivityListeners() {
+    window.addEventListener('click', this.resetHandler);
+    window.addEventListener('keydown', this.resetHandler);
+  }
+  
+  detachUserActivityListeners() {
+    window.removeEventListener('click', this.resetHandler);
+    window.removeEventListener('keydown', this.resetHandler);
+  }
+  
+
   result: any = {}
-  onLoadCount() {
+  async onLoadCount() {
     let params = {project_id: this.project_id}
     this.loadProjectName().then(()=>{
       this.clientMainService.getApi(params, '/vms/get/offenses_count').subscribe({
@@ -148,14 +185,7 @@ export class AlertMainPage implements OnInit {
 
   project_id = 0
   project_name = 0
-  project_config: any = {}
-
-  private routerSubscription!: Subscription;
-  ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
-  }
+  project_config: any = {} 
 
   actionTotalIssue() {
     this.issueTotal = this.unregisteredTotal + this.overstayTotal + this.wheelClampedTotal + this.ticketsTotal + this.firstWarningTotal + this.secondWarningTotal
@@ -490,6 +520,7 @@ export class AlertMainPage implements OnInit {
       } else {
         this.loadRecordsWheelClamp(this.active_type)
       }
+
     }
   }
 
@@ -502,6 +533,7 @@ export class AlertMainPage implements OnInit {
     this.currentPage = 1
     this.inputPage = 1
     this.main = !this.main
+
   }
 
   async presentToast(message: string, color: 'success' | 'danger' = 'success') {
@@ -693,7 +725,21 @@ export class AlertMainPage implements OnInit {
   }
 
   refreshClicked() {
-    this.onLoadCount()
+    if (this.main) {
+      this.onLoadCount()
+    } else {
+      this.onLoadCount().then(() => {
+        if (this.active_type == 'unregistered') {
+          this.loadUnregisteredCar()
+        } else if (this.active_type == 'overstay') {
+          this.loadOverstay()
+        } else if (this.active_type == 'tickets') {
+          this.loadTickets()
+        } else {
+          this.loadRecordsWheelClamp(this.active_type)
+        }
+      })
+    }
   }
 
   isSmallScreen = false;
@@ -708,23 +754,13 @@ export class AlertMainPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    if (this.main) {
-      this.onLoadCount()
-    } else {
-      if (this.active_type == 'unregistered') {
-        this.loadUnregisteredCar()
-      } else if (this.active_type == 'overstay') {
-        this.loadOverstay()
-      } else if (this.active_type == 'tickets') {
-        this.loadTickets()
-      } else {
-        this.loadRecordsWheelClamp(this.active_type)
-      }
-    }
+    this.refreshClicked()
     setTimeout(() => {
       event.target.complete()
     }, 1000)
   }
+
+  
 
   total_pages = 0
   inputPage = 1
@@ -754,6 +790,32 @@ export class AlertMainPage implements OnInit {
 
   addUnregistered() {
     this.router.navigate(['/unregistered-simulation-module'])
+  }
+  
+  intervalId: any = null
+  loadInterval() {
+    console.log((this.router.url).split('?')[0])
+    if ((this.router.url).split('?')[0] == '/alert-main') {
+      let i = 0
+      if (this.intervalId) {
+        console.log('RESET INTERVAL')
+        clearInterval(this.intervalId)
+        this.intervalId = null
+        console.log("CURRENT STOPPED INTERVAL", this.intervalId)
+      }
+      this.intervalId = setInterval(() => {
+        
+          this.refreshClicked()
+          console.log("INTERVAL WORK ", this.intervalId)
+          console.log("LOOP", i)
+          i += 1
+        
+      }, 60000)
+      console.log("INTERVAL START", this.intervalId)
+    } else {
+      clearInterval(this.intervalId)
+      this.intervalId = null
+    }
   }
 
 }

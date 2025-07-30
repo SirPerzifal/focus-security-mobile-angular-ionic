@@ -37,8 +37,8 @@ export class ClientAppIssuesPage implements OnInit {
 
   ngOnInit() {
     console.log("tes");
-    this.loadUserInfo()
     this.route.queryParams.subscribe(params => {
+      this.loadUserInfo()
       console.log(params)
       if (params) {
         if (params['close_id']){
@@ -47,6 +47,13 @@ export class ClientAppIssuesPage implements OnInit {
         }
       }
     })
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   userData = {
@@ -214,13 +221,6 @@ export class ClientAppIssuesPage implements OnInit {
 
   testAddMb(status: boolean = false) {
     this.extend_mb = status
-  }
-
-  private routerSubscription!: Subscription;
-  OnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
   }
 
   isReportApp: string = '1';

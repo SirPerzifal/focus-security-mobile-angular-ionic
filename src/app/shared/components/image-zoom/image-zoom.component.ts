@@ -24,24 +24,31 @@ export class ImageZoomComponent  implements OnInit {
   closeModal() {
     this.isOpenModal = false
     this.isClose.emit(false);
+
+    if (this.pushedModalState) {
+      this.pushedModalState = false;
+      history.back(); // simulate the back button
+    }
     console.log("HEY SOM HERE")
   }
-
   
 
   isOpenModal = false
+  pushedModalState = false;
   clickImage() {
     this.isOpenModal = true
     this.openImage = this.imageZoom
-  }
+    if (!this.pushedModalState) {
+      history.pushState(null, '', location.href);
+      this.pushedModalState = true;
+    }
 
-  layerBack() {
     const closeModalOnBack = () => {
-      this.closeModal()
+      this.pushedModalState = false
+      this.isOpenModal = false
       window.removeEventListener('popstate', closeModalOnBack);
     };
-    history.pushState({ modalOpen: true }, '');
-    window.addEventListener('popstate', closeModalOnBack)
+    window.addEventListener('popstate', closeModalOnBack);
   }
 
   clickImageArray( image: any) {

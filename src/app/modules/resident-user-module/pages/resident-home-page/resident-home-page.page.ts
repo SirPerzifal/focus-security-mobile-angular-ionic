@@ -16,7 +16,7 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 
 import { Estate } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
@@ -225,6 +225,13 @@ export class ResidentHomePagePage implements OnInit {
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   async loadEstate( email:string ) {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
@@ -40,6 +41,13 @@ export class LoginProcessPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
 
   initializeBackButtonHandling() {
     this.platform.backButton.subscribeWithPriority(10, () => {

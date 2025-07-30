@@ -27,7 +27,7 @@
           (click)="isLogoutModal = true"></ion-icon>
       </div>
     </div>
-    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around space-y-4 items-center mt-8 mb-8' : 'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
+    <div [ngClass]="'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
       <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry" class="mt-4"
         [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
 
@@ -44,7 +44,7 @@
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery" class="mt-4"
-        [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" [extraImageClass]="'w-24 h-24'" />
+        [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" *ngIf="project_config.is_allow_vms_collection" class="mt-4"
         [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />

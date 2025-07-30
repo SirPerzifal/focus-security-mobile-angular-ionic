@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/service/resident/authenticate/authenticate.
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Platform } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage/storage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-end-user',
@@ -41,6 +42,13 @@ export class LoginEndUserPage implements OnInit {
   ngOnInit() {
     this.waitingResponseLoginApi = false
     this.initializeBackButtonHandling();
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   showPassword: string = 'password'

@@ -343,7 +343,6 @@ export class WebRtcService extends ApiService{
       //   this.showSplashScreen();
       // }
       const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
-      console.log(storedValue)
       if (storedValue) {
         try {
           const decoded = await this.storage.decodeData(storedValue);
@@ -403,7 +402,6 @@ export class WebRtcService extends ApiService{
       this.socket = io('wss://ws.sgeede.com', {
         query: { uniqueId: userInfo.family_id || 'Public-User' },
       });
-      console.log('this.socketthis.socketthis.socket',this.socket);
   
       // Register event handlers
       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
@@ -730,19 +728,19 @@ export class WebRtcService extends ApiService{
     const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
     if (clientData) {
       try {
-        console.log("THING 1")
+        // console.log("THING 1")
         this.decoded = jwtDecode(clientData)
         this.family_id = this.decoded.family_id
-        console.log(this.decoded)
+        // console.log(this.decoded)
       } catch (error) {
         this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
-        console.log(this.decoded)
+        // console.log(this.decoded)
         this.family_id = this.decoded.family_id
       }
     } else if (storedValue) {
       try {
         this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
-        console.log(this.decoded)
+        // console.log(this.decoded)
         this.family_id = this.decoded.family_id
       } catch (error) {
         console.log(error)

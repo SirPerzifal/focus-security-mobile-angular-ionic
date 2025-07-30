@@ -170,6 +170,7 @@ export class PollingMainPage implements OnInit {
   }
 
   loadPolling() {
+    this.voteData = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({is_active: true}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {
@@ -282,6 +283,7 @@ export class PollingMainPage implements OnInit {
   }
 
   loadUpcomingPolling() {
+    this.voteData = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({is_upcoming: true}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {
@@ -333,6 +335,8 @@ export class PollingMainPage implements OnInit {
   };
 
   loadClosedPolling() {
+    this.isLoading = true;
+    this.voteData = []
     this.mainApi.endpointMainProcess({}, 'get/polling').subscribe((response: any) => {
       if (response.result.response_code === 200) {  
         this.closedVoteData = response.result.result

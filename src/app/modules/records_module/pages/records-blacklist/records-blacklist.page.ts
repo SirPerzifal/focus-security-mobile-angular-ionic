@@ -207,6 +207,9 @@ export class RecordsBlacklistPage implements OnInit {
     this.contactHost = ''
     this.selectedHost = ''
     console.log(event.target.value)
+    if (this.searchOption == 'image') {
+      this.loadBlacklistData(true)
+    }
   }
 
   startDateFilter = ''
@@ -253,7 +256,7 @@ export class RecordsBlacklistPage implements OnInit {
   }
 
   isLoading = false
-  async loadBlacklistData() {
+  async loadBlacklistData(is_image: boolean = false) {
     this.isLoading = true
     let params = {
       page: this.currentPage, 
@@ -265,6 +268,7 @@ export class RecordsBlacklistPage implements OnInit {
       block: this.filter.block,
       unit: this.filter.unit,
       host: this.selectedHost,
+      is_image: is_image,
     }
     this.visitorData = []
     this.vehicleData = []
