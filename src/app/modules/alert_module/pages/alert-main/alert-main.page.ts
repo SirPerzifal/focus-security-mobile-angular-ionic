@@ -112,11 +112,13 @@ export class AlertMainPage implements OnInit {
   attachUserActivityListeners() {
     window.addEventListener('click', this.resetHandler);
     window.addEventListener('keydown', this.resetHandler);
+    window.addEventListener('scroll', this.resetHandler);
   }
   
   detachUserActivityListeners() {
     window.removeEventListener('click', this.resetHandler);
     window.removeEventListener('keydown', this.resetHandler);
+    window.removeEventListener('scroll', this.resetHandler);
   }
   
 

@@ -48,7 +48,7 @@ export class BottomNavBarComponent implements OnInit {
 
   ngOnInit() {
     this.functionMain.vmsPreferences().then((value: any)=> {
-      console.log(value)
+      // console.log(value)
       this.is_client = value.is_client
     })
     this.router.events.subscribe(event => {

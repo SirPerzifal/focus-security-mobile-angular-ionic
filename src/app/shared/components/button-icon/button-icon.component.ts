@@ -77,6 +77,7 @@ export class ButtonIconComponent implements OnInit {
           this.isDoubleText = true
           this.text = 'PICK UP /'
           this.secondText = 'DROP OFF'
+          this.iconWrapper = '!w-[77px] !h-[90px]'
           break;
         case 'VISITORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Visitors.png';
@@ -84,12 +85,15 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'CONTRACTORS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Contractors.png';
+          this.iconWrapper = '!w-[79px] !h-[90px]'
           break;
         case 'MOVE IN / OUT':
           this.customImageIcon = 'assets/icon-vms/Homepage/Move_In.png';
+          this.iconWrapper = '!w-[79px] !h-[90px]'
           break;
         case 'RENOVATION':
           this.customImageIcon = 'assets/icon-vms/Homepage/Renovation.png';
+          this.iconWrapper = '!w-[79px] !h-[90px]'
           break;
         case 'DELIVERY':
           this.customImageIcon = 'assets/icon-vms/Homepage/Delivery.png';
@@ -100,9 +104,11 @@ export class ButtonIconComponent implements OnInit {
           break;
         case 'COACHES':
           this.customImageIcon = 'assets/icon-vms/Homepage/Coaches.png';
+          this.iconWrapper = '!w-[79px] !h-[90px]'
           break;
         case 'EMERGENCY VEHICLES':
           this.customImageIcon = 'assets/icon-vms/Homepage/Emergency_Vehicle.png';
+          this.iconWrapper = '!w-[77px] !h-[90px]'
           break
         case 'MA VISITOR':
           this.customImageIcon = 'assets/icon-vms/Homepage/MA_Visitor.png';
@@ -129,6 +135,7 @@ export class ButtonIconComponent implements OnInit {
           break
         case 'RECORDS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Records.png';
+          this.iconWrapper = '!w-[77px] !h-[90px]'
           break;
         case 'ALERTS':
           this.customImageIcon = 'assets/icon-vms/Homepage/Alerts.png';

@@ -299,10 +299,6 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   approveDetail(approval: any) {
-    if (this.project_config.is_industrial && this.approval_type == 'vehicle' && this.rfid_tag == '') {
-      this.functionMain.presentToast('RFID tag must be filled in!', 'warning')
-      return
-    }
     if (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5)) {
       this.functionMain.presentToast("RFID tags can only be 5 digits!", 'warning')
       return

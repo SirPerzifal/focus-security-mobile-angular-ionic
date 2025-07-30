@@ -51,7 +51,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   //   }
   // }
 
-  console.log('555555555555555555authGuardauthGuardauthGuard555555555555555555authGuardauthGuardauthGuard');
+  // console.log('555555555555555555authGuardauthGuardauthGuard555555555555555555authGuardauthGuardauthGuard');
   
 
   if(currentUrl=='/' || currentUrl=='/login-end-user'){

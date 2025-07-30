@@ -20,16 +20,16 @@
      New User Registration
     </h2>
     <div>
-      <app-text-input [(ngModel)]="formData.full_name" [id]="'full_name'" [placeholder]="'Full Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <app-text-input [(ngModel)]="formData.full_name" [id]="'full_name'" [placeholder]="'Full Name'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [showPlaceholder]="true"></app-text-input>
     </div> 
     <div class="mt-2">
-      <app-text-input [(ngModel)]="formData.nickname" [id]="'nickname'" [placeholder]="'Nickname'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <app-text-input [(ngModel)]="formData.nickname" [id]="'nickname'" [placeholder]="'Nickname'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [showPlaceholder]="true"></app-text-input>
     </div>
     <div class="mt-2">
-      <app-text-input [(ngModel)]="formData.email_address" [id]="'email'" [placeholder]="'Email Address'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <app-text-input [(ngModel)]="formData.email_address" [id]="'email'" [placeholder]="'Email Address'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [showPlaceholder]="true"></app-text-input>
     </div> 
     <div class="mt-2">
-      <app-text-input [(ngModel)]="formData.mobile_number" [id]="'phone'" [placeholder]="'Mobile No'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"></app-text-input>
+      <app-text-input [(ngModel)]="formData.mobile_number" [id]="'phone'" [placeholder]="'Mobile No'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}" [showPlaceholder]="true"></app-text-input>
     </div>
     <div class="mt-2">
       <select id="family_type" (change)="onFamilyTypeChange($event)" [(ngModel)]="formData.family_type" name="family_type"
