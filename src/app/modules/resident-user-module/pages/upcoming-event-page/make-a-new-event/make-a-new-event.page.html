@@ -341,7 +341,7 @@
                 <app-text-input
                   [id]="'start_date_event'"
                   [placeholder]="'Date event start'"
-                  [isReadonly]="true"
+                  [isReadonly]="userType === 'industrial'"
                   [customClasses]="{'w-full':true}"
                   [type]="'date'"
                   [(ngModel)]="selectedStartDate"
@@ -359,7 +359,11 @@
                     class="w-full text-sm"
                     [(ngModel)]="selectedStartTime"
                     #startTimeEventInput
-                    [readonly]="userType == 'industrial'"
+                    [disabled]="userType === 'industrial'"
+                    [readonly]="userType === 'industrial'"
+                    [style.pointer-events]="userType === 'industrial' ? 'none' : 'auto'"
+                    [style.user-select]="userType === 'industrial' ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="userType === 'industrial' ? 'none' : 'auto'"
                   />
                 </div>
               </div>
@@ -390,8 +394,12 @@
                     class="w-full text-sm"
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
-                    [readonly]="userType == 'industrial'"
                     #endTimeEventInput
+                    [disabled]="userType === 'industrial'"
+                    [readonly]="userType === 'industrial'"
+                    [style.pointer-events]="userType === 'industrial' ? 'none' : 'auto'"
+                    [style.user-select]="userType === 'industrial' ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="userType === 'industrial' ? 'none' : 'auto'"
                   />
                 </div>
               </div>

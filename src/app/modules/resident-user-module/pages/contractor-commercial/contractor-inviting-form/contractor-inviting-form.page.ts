@@ -221,8 +221,9 @@ export class ContractorInvitingFormPage implements OnInit {
       
       // Cara yang lebih clean dan readable
       const standardPurposes = ['delivery', 'collection', 'meeting'];
-      const purposeLower = (invitee.purpose || '').toLowerCase();
+      const purposeLower = (invitee.purpose || invitee.type_of_work).toLowerCase();
       const isStandardPurpose = standardPurposes.includes(purposeLower);
+      const type_of_work_value = isStandardPurpose ? (invitee.purpose || invitee.type_of_work)  : 'Others'
       
       const formData: any = {
         contractor_name: invitee.contractor_name || '',
@@ -230,10 +231,12 @@ export class ContractorInvitingFormPage implements OnInit {
         phone_display: phoneData.display,
         vehicle_number: invitee.vehicle_number || '',
         company_name: invitee.company_name || '',
-        type_of_work: isStandardPurpose ? invitee.purpose : 'Others',
+        type_of_work: type_of_work_value,
         expected_number_of_visit: invitee.expected_number_of_visit || '',
         host_ids: invitee.host_ids || []
       };
+
+      console.log(formData);
 
       // Tambahkan field other jika bukan standard purpose
       if (!isStandardPurpose && invitee.purpose) {
