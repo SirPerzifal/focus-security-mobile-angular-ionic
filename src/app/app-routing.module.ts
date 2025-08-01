@@ -697,6 +697,10 @@ const routes: Routes = [
     path: 'client-delivery',
     loadChildren: () => import('./modules/client_app/client-delivery/client-delivery.module').then( m => m.ClientDeliveryPageModule)
   },
+  {
+    path: 'vms-gate',
+    loadChildren: () => import('./modules/vms_app/vms-gate/vms-gate.module').then( m => m.VmsGatePageModule)
+  },
 ];
 
 @NgModule({
