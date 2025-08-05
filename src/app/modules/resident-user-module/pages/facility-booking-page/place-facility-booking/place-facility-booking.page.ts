@@ -76,7 +76,7 @@ export class PlaceFacilityBookingPage implements OnInit {
   onDateChange(event: any) {
     // Reset room selection saat tanggal diubah
     this.selectedRoom = 'default'; // Kembalikan ke opsi default
-    this.loadRoomSchedule(event)
+    this.loadRoomSchedule(event, 'date')
 
         // Tutup modal setelah tanggal dipilih
     if (this.chooseDateModal) {
@@ -101,11 +101,13 @@ export class PlaceFacilityBookingPage implements OnInit {
 
   isCloseForMaintenance: boolean = true;
 
-  loadRoomSchedule(event: any) {
+  loadRoomSchedule(event: any, from?: string) {
     this.isLoading = true
     // Jika event ada, ambil roomId dari event
-    if (event) {
+    if (event && !from) {
       this.roomId = event.target.value; // Set the roomId to the selected value
+      console.log(this.roomId);
+      
     }
 
     if (this.roomId) {

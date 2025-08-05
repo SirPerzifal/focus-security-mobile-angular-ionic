@@ -607,6 +607,8 @@ export class WebRtcService extends ApiService{
       unitId: unit_id,
       isResident: isResident
     });
+
+    return 'done'
   }
 
   async receiverConnected(){
@@ -660,10 +662,7 @@ export class WebRtcService extends ApiService{
     this.project_id = offer.project_id;
     await this.showIncomingCallModal(offer.offerObj);
   }
-
-
-
-
+  
   async handleAnswer(answer: any) {
     await this.stopRingtone();
     

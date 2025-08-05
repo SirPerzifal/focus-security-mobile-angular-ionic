@@ -708,7 +708,7 @@ export class ContractorInvitingFormPage implements OnInit {
         if (response.result.response_description.startsWith('Duplicate Entry For')) {
           const [separated, duplicate, entry, number] = response.result.response_description.split(' ');
           // const numberDuplicate = 
-          this.functionMain.presentToast(`Visitor with number ${number} has already been invited.`, 'danger');
+          this.functionMain.presentToast(`Contractor with number ${number} has already been invited.`, 'danger');
         } else {
           this.functionMain.presentToast('Failed Add Invite', 'danger');
         }

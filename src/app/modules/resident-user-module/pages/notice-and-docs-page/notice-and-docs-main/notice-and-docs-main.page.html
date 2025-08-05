@@ -173,39 +173,55 @@
           </div>
           <h2 class="font-bold">Back</h2>
         </div>
-        <div *ngFor="let file of files">
-          <div
-            *ngIf="file.document_type === '1_folder'; else otherFile"
-            class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded"
-            (click)="reqParent(file.id, file.name, file.parent_id)"
-          >
-            <img
-              class="w-10 h-10 my-2"
-              src="assets/icon/folder-enhance.png"
-              alt="Folder Image"
-            />
-            <span class="text-base font-bold">{{ file.name }}</span>
-          </div>
-          <ng-template #otherFile>
+        <div *ngIf="files.length > 0; else noFileToShow">
+          <div *ngFor="let file of files">
             <div
+              *ngIf="file.document_type === '1_folder'; else otherFile"
               class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded"
-              (click)="downloadAttachment(file.id, 'doc')"
+              (click)="reqParent(file.id, file.name, file.parent_id)"
             >
               <img
                 class="w-10 h-10 my-2"
-                src="assets/icon/text-icon.png"
+                src="assets/icon/folder-enhance.png"
                 alt="Folder Image"
               />
-              <div class="flex flex-col">
-                <span class="text-base font-bold"> {{ file.name }} </span>
-                <span class="text-sm">
-                  Published date: {{
-                  functionMainService.convertDateExtend(file.create_date) }}
-                </span>
-              </div>
+              <span class="text-base font-bold">{{ file.name }}</span>
             </div>
-          </ng-template>
+            <ng-template #otherFile>
+              <div
+                class="flex flex-row items-center w-full space-x-1.5 bg-[var(--ion-color-tertiary)] px-2.5 py-1.5 rounded"
+                (click)="downloadAttachment(file.id, 'doc')"
+              >
+                <img
+                  class="w-10 h-10 my-2"
+                  src="assets/icon/text-icon.png"
+                  alt="Folder Image"
+                />
+                <div class="flex flex-col">
+                  <span class="text-base font-bold"> {{ file.name }} </span>
+                  <span class="text-sm">
+                    Published date: {{
+                    functionMainService.convertDateExtend(file.create_date) }}
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+          </div>
         </div>
+        <ng-template #noFileToShow>
+          <div
+            *ngIf="!isLoading"
+            class="flex flex-col text-base items-center text-center justify-center mt-4"
+          >
+            <p class="text-gray-600">You have no docs yet.....</p>
+            <p class="text-gray-600">
+              Go to
+              <strong
+                ><a [routerLink]="['/resident-home-page']">Home Page</a></strong
+              >
+            </p>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

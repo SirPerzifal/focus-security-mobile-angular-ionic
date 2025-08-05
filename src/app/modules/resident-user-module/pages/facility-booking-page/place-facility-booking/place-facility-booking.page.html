@@ -28,6 +28,27 @@
             (click)="onBack()"
           ></ion-icon>
         </div>
+      </div>
+
+      <div class="px-4 flex flex-row justify-center space-x-3 w-full mb-3">
+        <select
+          id="ch_room"
+          [(ngModel)]="selectedRoom"
+          (change)="loadRoomSchedule($event)"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-8 cw-2:h-12 text-xs text-[#6B7280]"
+        >
+          <option [value]="'default'" disabled hidden>
+            Choose {{ facilityDetail?.facility_name || 'Room' }}
+          </option>
+          <option
+            *ngFor="let room of facilityDetail?.facility_detail"
+            [value]="room.room_id"
+          >
+            {{ room.is_close_for_maintenance ? room.room_name + ' (This court /
+            room is under maintenance)' : room.room_name }}
+          </option>
+        </select>
+
         <ion-datetime-button
           class="w-4/5 mt-0.5"
           datetime="datetime"
@@ -54,26 +75,6 @@
             ></ion-datetime>
           </ng-template>
         </ion-modal>
-      </div>
-
-      <div class="px-4 flex flex-row justify-center space-x-3 w-full mb-3">
-        <select
-          id="ch_room"
-          [(ngModel)]="selectedRoom"
-          (change)="loadRoomSchedule($event)"
-          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs text-[#6B7280] my-1"
-        >
-          <option [value]="'default'" disabled hidden>
-            Choose {{ facilityDetail?.facility_name || 'Room' }}
-          </option>
-          <option
-            *ngFor="let room of facilityDetail?.facility_detail"
-            [value]="room.room_id"
-          >
-            {{ room.is_close_for_maintenance ? room.room_name + ' (This court /
-            room is under maintenance)' : room.room_name }}
-          </option>
-        </select>
       </div>
 
       <div

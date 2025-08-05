@@ -7,6 +7,7 @@ import { Contacts } from '@capacitor-community/contacts';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FormData, Invitee } from 'src/models/resident/resident.model';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-visitor-invitig-form',
@@ -68,7 +69,8 @@ export class VisitorInvitigFormPage implements OnInit {
     private route: ActivatedRoute,
     private alertController: AlertController,
     private mainApiResidentService: MainApiResidentService,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private webRtcService: WebRtcService
   ) {
     this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
@@ -476,7 +478,12 @@ export class VisitorInvitigFormPage implements OnInit {
     });
   }
 
-  onSubmit() {
+  yserType: string = '';
+  onChangeTypeOfUser(event: any) {
+    this.yserType = event
+  }
+
+  onSubmit(from?: string) {
     const isValid = this.inviteeFormList.every((invitee: any) => 
       invitee.visitor_name.trim() !== '' && 
       invitee.contact_number.trim() !== ''
@@ -505,6 +512,7 @@ export class VisitorInvitigFormPage implements OnInit {
           invitees: submitData,
           hired_car: this.formData.hiredCar,
           facility_other: this.formData.facility_other,
+          from: from
         }, 'post/create_expected_visitors').subscribe((response: any) => {
           if (response.result.response_code == 200) {
             this.functionMain.presentToast('Success Add Invite', 'success');
@@ -528,7 +536,15 @@ export class VisitorInvitigFormPage implements OnInit {
               }
             });
           } else if (response.result.status_code === 206) {
-            this.functionMain.presentToast('Visitor has been banned!', 'danger');
+            if (this.yserType === 'resident') {
+              if (response.result.status === 'unit same') {
+                this.functionMain.presentToast('Visitor has been ban on this unit!', 'danger');
+              } else {
+                this.presentAlertForBannedVisitor(`${response.result.family_ban_name} (${response.result.unit_name})`, response.result.family_ban_id);
+              }
+            } else {
+              this.functionMain.presentToast('Visitor has been ban!', 'danger');
+            }
           } else {
             if (response.result.response_description.startsWith('Duplicate Entry For')) {
               const [separated, duplicate, entry, number] = response.result.response_description.split(' ');
@@ -550,5 +566,59 @@ export class VisitorInvitigFormPage implements OnInit {
 
   shouldShowForm(): boolean {
     return this.isFormVisible; // Use the new variable to control visibility
+  }
+
+  async presentAlertForBannedVisitor(residentName: string, residentId: number) {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      header: 'This visitor has been banned!',
+      message: `Kindly call ${residentName} to verify this ban,`, 
+      buttons: [
+        {
+          text: 'Call',
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.webRtcService.createOffer(false, residentId, false, false).then((result: any) => {
+              // console.log(result, "valuereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercalls");
+              
+              // if (result === 'reject' || result === 'cancel' || result.endsWith('is not logged on any devices')) {
+              //   console.log('suk sini atas');
+                
+              //   alert.dismiss();
+              // } else {
+              //   console.log('suk sini bawah');
+                
+                this.presentAlertForBannedVisitorAfterCall()
+              // }
+            });
+          }
+        },
+      ]
+    });
+  
+    await alert.present();
+  }
+
+  async presentAlertForBannedVisitorAfterCall() {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert-class-resident-visitors-page',
+      message: `Whats the decision?`, 
+      buttons: [
+        {
+          text: 'Proceed',
+          cssClass: 'confirm-button',
+          handler: () => {
+            this.onSubmit('proceed_anyway')
+          }
+        },{
+          text: 'Cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
   }
 }

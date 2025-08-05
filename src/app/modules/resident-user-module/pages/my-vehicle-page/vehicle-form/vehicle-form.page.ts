@@ -69,6 +69,7 @@ export class VehicleFormPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { maximumVehicle: boolean, maximumPrimary: boolean, vehicleId: number };
     if (state) {
+      console.log(state.maximumPrimary, state.maximumVehicle, state.vehicleId)
       // // console.log(state.from)
       this.maximumVehicle = state.maximumVehicle;
       this.MaximumPrimary = state.maximumPrimary
@@ -122,6 +123,57 @@ export class VehicleFormPage implements OnInit {
     } else {
       this.router.navigate(['my-vehicle-page-main']);
     }
+  }
+
+  ionViewWillEnter() {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { maximumVehicle: boolean, maximumPrimary: boolean, vehicleId: number };
+    if (state) {
+      console.log(state.maximumPrimary, state.maximumVehicle, state.vehicleId)
+      this.maximumVehicle = state.maximumVehicle;
+      this.MaximumPrimary = state.maximumPrimary
+      if (this.maximumVehicle) {
+        this.valueForSelect = [
+          {
+            value: 'temporary_vehicle',
+            text: 'Temporary Vehicle'
+          },
+        ]
+      }
+      if (state.vehicleId) {
+        this.fromWhere = 'update'
+        this.vehicleIdForUpdateAndJustUpdateNothingElse = state.vehicleId;
+        this.mainApi.endpointMainProcess({
+          vehicle_id: state.vehicleId
+        }, 'get/get_vehicle_detail').subscribe((response: any) => {
+          const vehicle = response.result.response_result;
+          this.vehicleForm = {
+            vehicleNumber: vehicle.vehicle_number,
+            iuNumber: vehicle.IU_number,
+            typeOfApplication: vehicle.type_of_application === 'Temporary Vehicle' ? 'temporary_vehicle' : 'owned_vehicle',
+            typeOfVehicle: vehicle.vehicle_type,
+            vehicleMake: vehicle.vehicle_make,
+            vehicleColour: vehicle.vehicle_color,
+            vehicleLog: vehicle.vehicle_log_exists,
+            isFirstVehicle: vehicle.is_first_vehicle,
+            primaryVehicle: 'false',
+            ownedBy: '',
+          }
+          this.selectedNameVehicleLog = `${vehicle.vehicle_number} Log`
+          this.selectedDate = String(this.functionMain.convertToDDMMYYYY(vehicle.end_date_for_temporary_pass)); // Update selectedDate with the chosen date in dd/mm/yyyy format
+          this.additionalTemporary = {
+            endDate: vehicle.end_date_for_temporary_pass,
+            temporaryCarRequest: vehicle.temporary_car_request
+          }
+          console.log(this.selectedDate, this.additionalTemporary, this.vehicleForm);
+          
+        }, (error) => {
+          // this.presentToast('Data fetched failed!', 'danger');
+          console.error('Error fetching vehicle details:', error);
+          console.error('Error fetching vehicle details result:', error);
+        })
+      }
+    } 
   }
 
   ngOnInit() {

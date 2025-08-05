@@ -189,8 +189,10 @@ export class MyVehicleMainPage implements OnInit {
         this.isLoading = false
       } else {
         // this.presentToast('Data fetched failed!', 'danger');
-        console.error('Error fetching vehicle details:', response);
-        console.error('Error fetching vehicle details result:', response.result);
+        this.vehicles = []
+        this.vehicles.pop()
+        this.MaximumPrimary = false
+        this.MaximumVehicle = false
         this.isLoading = false
       }
     }, (error) => {

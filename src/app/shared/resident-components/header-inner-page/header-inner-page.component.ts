@@ -62,7 +62,6 @@ export class HeaderInnerPageComponent  implements OnInit {
   }
 
   initializeBackButtonHandling() {
-    console.log("tes");
     this.platform.backButton.subscribeWithPriority(10, () => {
       history.back();
     });
@@ -82,18 +81,6 @@ export class HeaderInnerPageComponent  implements OnInit {
     this.isCordova = this.platform.is('cordova');
     this.isCapacitor = this.platform.is('capacitor');
     this.isElectron = this.platform.is('electron');
-    
-    console.log('Platform Information:', this.platformInfo);
-    console.log('Android:', this.isAndroid);
-    console.log('iOS:', this.isIOS);
-    console.log('Mobile:', this.isMobile);
-    console.log('Desktop:', this.isDesktop);
-    console.log('Tablet:', this.isTablet);
-  }
-
-  handleRefresh(event: any) {
-    console.log(event);
-    
   }
 
 }

@@ -56,7 +56,8 @@ export class FamilyFormPage implements OnInit {
       tenancy_aggrement: '',
       end_of_tenancy_aggrement: ''
     },
-    helper_work_permit: '' // Tambahkan ini
+    helper_work_permit: '', // Tambahkan ini
+    helper_work_permit_expiry_date: ''
   }
   fromWhere: string = '';
   familyId: number = 0;
@@ -66,7 +67,7 @@ export class FamilyFormPage implements OnInit {
   isModalAddFamilyMessageOpen: boolean = false; // Status modal
   selectedFamilyMemberId: number | undefined = 0; // Menyimpan ID anggota keluarga yang dipilih
   familyEditData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), helper_work_permit_expiry_date: new Date() }
   ];
 
   constructor(
@@ -77,8 +78,10 @@ export class FamilyFormPage implements OnInit {
     private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string };
+    const state = navigation?.extras.state as { for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string, helper_work_permit_expiry_date: Date };
     if (state) {
+      console.log(state);
+      
       this.familyId = state.id;
       this.pageName = 'Edit Member';
       this.pageForWhat = state.for;
@@ -89,8 +92,10 @@ export class FamilyFormPage implements OnInit {
       this.formData.nickname= state.nickname
       this.formData.email_address= state.email
       this.formData.tenancies.end_of_tenancy_aggrement = String(state.end_date)
+      this.formData.helper_work_permit_expiry_date = String(state.helper_work_permit_expiry_date)
       this.formData.image_family = state.profile_image
       this.formData.reject_reason = state.reject_reason
+      this.selectedDate = String(this.functionMain.convertToDDMMYYYY(new Date(state.helper_work_permit_expiry_date).toISOString().split('T')[0]));
       this.end_date = String(this.functionMain.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]));
       let str = state.mobile;
       let newStr = str.substring(2);
@@ -141,6 +146,7 @@ export class FamilyFormPage implements OnInit {
       } else if (event.target.value === 'tenants') {
         this.selectedNameHelperWorkPermit = '';
         this.formData.helper_work_permit = '';
+        this.formData.helper_work_permit_expiry_date = '';
         this.formData.type_of_residence = event.target.value;
       } else {
         this.formData.type_of_residence = event.target.value;
@@ -149,6 +155,10 @@ export class FamilyFormPage implements OnInit {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
       this.formData.tenancies.end_of_tenancy_aggrement = event;
+    } else if (from === 'helper_work_permit_expiry_date') {
+      const date = new Date(event);
+      this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
+      this.formData.helper_work_permit_expiry_date = event;
     }
   }
 
@@ -322,6 +332,9 @@ export class FamilyFormPage implements OnInit {
     if (this.formData.type_of_residence === 'helper' && !this.formData.helper_work_permit) {
       errMsg += "Please upload the helper work permit! \n";
     }
+    if (this.formData.type_of_residence === 'helper' && !this.formData.helper_work_permit_expiry_date) {
+      errMsg += "Please fill the helper work permit end date! \n";
+    }
     if (errMsg != '') {
       this.functionMain.presentToast(errMsg, 'danger')
 
@@ -337,7 +350,8 @@ export class FamilyFormPage implements OnInit {
             profile_image: this.formData.image_family,
             type_of_residence: this.formData.type_of_residence,
             tenancies: this.formData.tenancies,
-            helper_work_permit: this.formData.helper_work_permit // Tambahkan parameter ini
+            helper_work_permit: this.formData.helper_work_permit, // Tambahkan parameter ini
+            helper_work_permit_expiry_date: this.formData.helper_work_permit_expiry_date
           }, 'post/update_family').subscribe((response: any) => {
             console.log(response);
             if (edit) {
@@ -360,7 +374,8 @@ export class FamilyFormPage implements OnInit {
             profile_image: this.formData.image_family,
             type_of_residence: this.formData.type_of_residence,
             tenancies: this.formData.tenancies,
-            helper_work_permit: this.formData.helper_work_permit // Tambahkan parameter ini
+            helper_work_permit: this.formData.helper_work_permit, // Tambahkan parameter ini
+            helper_work_permit_expiry_date: this.formData.helper_work_permit_expiry_date
           }, 'post/post_family_detail').subscribe((response: any) => {
             console.log(response);
             if (response.result.response_code == 200) {
@@ -407,7 +422,8 @@ export class FamilyFormPage implements OnInit {
           head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
           end_date: item['end_of_tenancy_aggrement'],
           status: item['states'],
-          tenancy_agreement: item['tenancy_aggrement']
+          tenancy_agreement: item['tenancy_aggrement'],
+          helper_work_permit_expiry_date: item['helper_work_permit_expiry_date']
         });
       });
 
@@ -427,7 +443,7 @@ export class FamilyFormPage implements OnInit {
   async onDelete() {
     this.isModalFamilyEditOpen = false;
     this.familyEditData = [
-      { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date() }
+      { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), helper_work_permit_expiry_date: new Date() }
     ];
     // console.log(this.formData.unit_id)
     const alertButtons = await this.alertController.create({
@@ -489,7 +505,8 @@ export class FamilyFormPage implements OnInit {
       mobile_number: this.formData.mobile_number,
       type_of_residence: this.formData.type_of_residence,
       tenancies: this.formData.tenancies,
-      helper_work_permit: '',
+      helper_work_permit: this.formData.helper_work_permit, // Tambahkan parameter ini
+      helper_work_permit_expiry_date: this.formData.helper_work_permit_expiry_date,
       resubmit_id: this.familyId
     }, 'post/post_family_detail').subscribe((response: any) => {
       if (response.result.response_code == 200) {

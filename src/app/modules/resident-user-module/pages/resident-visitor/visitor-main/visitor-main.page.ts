@@ -147,7 +147,6 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.activeRoute.queryParams.subscribe(params => {
       console.log(params);
       if (params['reload']) {
-        console.log("go to hell");
         const navigation = this.route.getCurrentNavigation();
         const state = navigation?.extras.state as { formData: any };
         console.log(state)
@@ -175,8 +174,6 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           hiredCar: "",
         }
       } else if (params['reload']) {
-        console.log("fuck");
-        
         const navigation = this.route.getCurrentNavigation();
         const state = navigation?.extras.state as { formData: any };
         if (state) {
@@ -188,8 +185,6 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           }
         }
       } else {
-        console.log("fuck");
-        
         this.selectedDate = '';
         this.entryCheck = '';
         this.formData.entryTitle = '';

@@ -31,7 +31,7 @@
               width="128"
             />
             <ion-icon
-              *ngIf="userType !== 'industrial' && disabledInput"
+              *ngIf="userType !== 'industrial' && !disabledInput"
               class="absolute top-24 right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50 animate-shake"
               name="pencil"
               (click)="chooseWhereToChoose()"
@@ -135,7 +135,9 @@
               <div class="flex-1 px-2">
                 <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_name}}</p>
-                <p *ngIf="estate.record_type !== 'industrial' && !estate.user_id">
+                <p
+                  *ngIf="estate.record_type !== 'industrial' && !estate.user_id"
+                >
                   {{ estate.family_type }}
                 </p>
                 <p

@@ -7,13 +7,12 @@
     {{ labelChild1 }}
   </label>
   <div
+    *ngIf="disabled; else disbaledFalse"
     class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between h-12"
-    (click)="openDateTimePicker()"
   >
     <label
-      class="w-full text-start"
+      class="w-full text-start text-gray-400"
       [ngClass]="fontInBoxClass ? fontInBoxClass : ''"
-      [ngClass]="value ? 'text-black' : 'text-gray-400'"
     >
       {{ value }}
     </label>
@@ -22,6 +21,25 @@
       class="positioning-calendar-icon"
     ></ion-icon>
   </div>
+
+  <ng-template #disbaledFalse>
+    <div
+      class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between h-12"
+      (click)="openDateTimePicker()"
+    >
+      <label
+        class="w-full text-start"
+        [ngClass]="fontInBoxClass ? fontInBoxClass : ''"
+        [ngClass]="value ? 'text-black' : 'text-gray-400'"
+      >
+        {{ value }}
+      </label>
+      <ion-icon
+        name="calendar-clear-outline"
+        class="positioning-calendar-icon"
+      ></ion-icon>
+    </div>
+  </ng-template>
 
   <!-- Ion Modal approach for datetime -->
   <ion-modal

@@ -143,31 +143,39 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
     const today = new Date();
     const todayString = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
+    this.notices = []
+    this.notices.pop()
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/notice').subscribe((response: any) => {
-      this.notices = response.result.response_result
-        .filter((notice: any) => {
-          const noticeStartDate = new Date(notice.start_date).toISOString().split('T')[0];
-          const noticeEndDate = new Date(notice.end_date).toISOString().split('T')[0];
-          
-          // Filter untuk notice yang sedang aktif (start_date <= today <= end_date)
-          return noticeStartDate <= todayString && noticeEndDate >= todayString;
-        })
-        .map((notice: any) => ({
-          id: notice.id,
-          name: notice.name,
-          notice_title: notice.notice_title,
-          notice_content: notice.notice_content,
-          start_date: notice.start_date,
-          end_date: notice.end_date,
-          create_date: notice.create_date,
-          is_prioritize: notice.is_prioritize
-        }))
-        .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0));
-
-      this.originalNotices = [...this.notices];
-      if (this.originalNotices) {
+      if (response.result.response_code === 400) {
+        this.notices = []
+        this.notices.pop()
         this.isLoading = false;
+      } else {
+        this.notices = response.result.response_result
+          .filter((notice: any) => {
+            const noticeStartDate = new Date(notice.start_date).toISOString().split('T')[0];
+            const noticeEndDate = new Date(notice.end_date).toISOString().split('T')[0];
+            
+            // Filter untuk notice yang sedang aktif (start_date <= today <= end_date)
+            return noticeStartDate <= todayString && noticeEndDate >= todayString;
+          })
+          .map((notice: any) => ({
+            id: notice.id,
+            name: notice.name,
+            notice_title: notice.notice_title,
+            notice_content: notice.notice_content,
+            start_date: notice.start_date,
+            end_date: notice.end_date,
+            create_date: notice.create_date,
+            is_prioritize: notice.is_prioritize
+          }))
+          .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0));
+  
+        this.originalNotices = [...this.notices];
+        if (this.originalNotices) {
+          this.isLoading = false;
+        }
       }
     });
   }
@@ -197,47 +205,63 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
   }
 
   loadFile() {
+    this.files.pop()
+    this.files = []
     this.isLoading = true;
     this.mainApi.endpointMainProcess({}, 'get/docs').subscribe((response: any) => {
       console.log("load", response)
-      this.files = response.result.result.map((file: any) => ({
-        id : file.id,
-        parent_id: file.parent_id,
-        is_root : file.is_root,
-        name : file.name,
-        document : file.document,
-        document_type : file.document_type,
-        path : file.path,
-        create_date: file.create_date,
-        has_document: file.has_document || false,
-        file_size: file.file_size || 0,
-        file_size_mb: file.file_size_mb || 0,
-        download_url: file.download_url || '',
-      }));
-      this.isLoading = false;
+      if (response.result.result.length > 0) {
+        this.files = response.result.result.map((file: any) => ({
+          id : file.id,
+          parent_id: file.parent_id,
+          is_root : file.is_root,
+          name : file.name,
+          document : file.document,
+          document_type : file.document_type,
+          path : file.path,
+          create_date: file.create_date,
+          has_document: file.has_document || false,
+          file_size: file.file_size || 0,
+          file_size_mb: file.file_size_mb || 0,
+          download_url: file.download_url || '',
+        }));
+        this.isLoading = false
+      } else {
+        this.files.pop()
+        this.files = []
+        this.isLoading = false
+      }
     })
   }
 
   private loadDocuments(parentId?: number) {
+    this.files.pop()
+    this.files = []
     this.mainApi.endpointMainProcess({
       parent_id: parentId
     }, 'get/docs').subscribe((response: any) => {
       console.log("load", response)
-      this.files = response.result.result.map((file: any) => ({
-        id : file.id,
-        parent_id: file.parent_id,
-        is_root : file.is_root,
-        name : file.name,
-        document : file.document,
-        document_type : file.document_type,
-        path : file.path,
-        create_date: file.create_date,
-        has_document: file.has_document || false,
-        file_size: file.file_size || 0,
-        file_size_mb: file.file_size_mb || 0,
-        download_url: file.download_url || '',
-      }));
-      this.isLoading = false
+      if (response.result.result.length > 0) {
+        this.files = response.result.result.map((file: any) => ({
+          id : file.id,
+          parent_id: file.parent_id,
+          is_root : file.is_root,
+          name : file.name,
+          document : file.document,
+          document_type : file.document_type,
+          path : file.path,
+          create_date: file.create_date,
+          has_document: file.has_document || false,
+          file_size: file.file_size || 0,
+          file_size_mb: file.file_size_mb || 0,
+          download_url: file.download_url || '',
+        }));
+        this.isLoading = false
+      } else {
+        this.files.pop()
+        this.files = []
+        this.isLoading = false
+      }
       // if (this.files.is_root = true) {
       //   this.previousParentId = 0;
       // } 

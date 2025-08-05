@@ -30,9 +30,10 @@
           width="50"
         />
         <ion-icon
+          *ngIf="!disableForm"
           class="absolute top-[5.5rem] right-4 drop-shadow-xl text-2xl bg-white rounded-full p-1 z-50"
           name="pencil"
-          (click)="ableChangeInput()"
+          (click)="chooseWhereToChoose()"
         >
         </ion-icon>
         <!-- <ion-icon
@@ -192,6 +193,20 @@
           {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
           'Upload Helper Work Permit' }}
         </label>
+      </div>
+      <div class="mt-1.5">
+        <app-input-component
+          [id]="'helper_work_permit_expiry_date'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'Helper Work Permit Expiry Date'"
+          [labelChild2]="''"
+          (eventEmitter)="onValueChange($event, 'helper_work_permit_expiry_date')"
+          [value]="selectedDate"
+          [disabled]="disableForm"
+          [minDate]="minDate"
+        ></app-input-component>
       </div>
     </div>
 
