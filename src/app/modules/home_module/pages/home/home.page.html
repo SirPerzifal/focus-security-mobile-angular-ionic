@@ -27,7 +27,7 @@
           (click)="isLogoutModal = true"></ion-icon>
       </div>
     </div>
-    <div [ngClass]="'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
+    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around space-y-4 items-center mt-8 mb-8' : 'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
       <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry" class="mt-4"
         [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
 
@@ -79,7 +79,7 @@
       <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial" class="mt-4"
         [routerLink]="['/vms-checkout']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="!project_config.is_industrial" class="mt-4"
+      <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="!project_config.is_industrial && Camera.length > 0" class="mt-4"
         [routerLink]="['/vms-gate']" [isActive]="true" [disableClick]="true" />
 
     </div>

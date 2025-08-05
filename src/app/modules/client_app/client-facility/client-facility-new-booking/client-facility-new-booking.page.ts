@@ -67,8 +67,9 @@ export class ClientFacilityNewBookingPage implements OnInit {
 
   onDateChange(event: any) {
     // Reset room selection saat tanggal diubah
-    this.selectedRoom = ''; // Kembalikan ke opsi default
-    this.loadRoomSchedule(event)
+    this.selectedDate = event.target.value
+    console.log(this.selectedDate)
+    this.loadRoomSchedule()
 
     // Tutup modal setelah tanggal dipilih
     if (this.chooseDateModal) {
@@ -105,16 +106,13 @@ export class ClientFacilityNewBookingPage implements OnInit {
 
   isCloseForMaintenance: boolean = true;
 
-  loadRoomSchedule(event: any) {
-    this.isLoading = true
+  loadRoomSchedule() {
     // Jika event ada, ambil roomId dari event
-    if (event) {
-      this.selectedRoom = event.target.value; // Set the selectedRoom to the selected value
-    }
     console.log(this.selectedRoom)
     let facility = this.Rooms.filter((item: any) => item.room_id == this.selectedRoom)
     console.log(facility)
     if (this.selectedRoom) {
+      this.isLoading = true
       this.termsAndCOndition = facility.terms_and_conditions;
       const formattedDate = this.selectedDate.split('T')[0]; 
 
@@ -132,6 +130,7 @@ export class ClientFacilityNewBookingPage implements OnInit {
           error: (error) => {
             this.errorMessage = 'Failed to load room schedule';
             console.error('Error loading room schedule', error);
+            this.isLoading = false;
           }
         });
       }
@@ -164,19 +163,24 @@ export class ClientFacilityNewBookingPage implements OnInit {
       });
       // Tandai slot waktu yang dipilih
       timeSlot.isSelected = true;
-      // // console.log('Selected Time Slot:', this.selectedTimeSlot);
+      // console.log('Selected Time Slot:', this.selectedTimeSlot);
     }
   }
 
   uploadFacilityBooking() {
+    let errMsg = ''
+    console.log(this.selectedTimeSlot)
     if (!this.selectedTimeSlot) {
       // Tampilkan pesan error jika tidak ada slot yang dipilih
-      this.errorMessage = 'Please select a time slot';
-      return;
+      errMsg += 'Please select a time slot';
     }
 
     if (!this.isTermsAccepted) {
-      this.functionMain.presentToast('Please click "I have read and agree to the Terms and Conditions for using this facility"', 'danger');
+      errMsg += 'Please click "I have read and agree to the Terms and Conditions for using this facility"'
+    }  
+
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger');
       return;
     }  
 

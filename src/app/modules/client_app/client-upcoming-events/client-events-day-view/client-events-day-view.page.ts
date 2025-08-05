@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { CustomEventTitleFormatter } from 'src/utils/custom-event-title-formatte
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonModal } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 
 @Component({
@@ -96,6 +96,18 @@ export class ClientEventsDayViewPage implements OnInit {
     this._selectedDate = value;
     this.ViewDate = new Date(value); // Update ViewDate saat selectedDate berubah
     
+  }
+
+  @ViewChild('chooseDateEventModal', { static: false }) chooseDateModal!: IonModal;
+  onDateChange(event: any) {
+    // Reset room selection saat tanggal diubah
+    this.selectedDate = event.target.value
+    console.log(this.selectedDate)
+    this.loadBook()
+
+    if (this.chooseDateModal) {
+      this.chooseDateModal.dismiss();
+    }
   }
 
   addTask() {
@@ -630,6 +642,7 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.loadBook()
     this.loadUpcomingEvents().then(() => event.target.complete())
   }
 

@@ -61,6 +61,7 @@ export class HomePage implements OnInit {
       this.project_name = value.project_name.toUpperCase()
       this.project_id = value.project_id
       this.project_config = value.config
+      this.Camera = value.config.lpr
       this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
     })
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
@@ -73,6 +74,8 @@ export class HomePage implements OnInit {
       } 
     })
   }
+
+  Camera: any = {}
 
   showImage = `assets/img/focus_logo-removebg.png`
   async onLoadBackground() {
@@ -188,7 +191,7 @@ export class HomePage implements OnInit {
   }
 
   checkScreenSize() {
-    this.isSmallScreen = window.innerWidth < 695;
+    this.isSmallScreen = window.innerWidth < 530;
   }
 
   handleRefresh(event: any) {

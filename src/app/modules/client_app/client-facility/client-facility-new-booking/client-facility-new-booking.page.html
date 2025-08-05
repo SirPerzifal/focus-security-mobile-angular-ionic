@@ -56,7 +56,7 @@
       <label class="text-base"><b>Room</b></label>
       <select id="client_new_booking_room"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base text-[#6B7280]"
-        [(ngModel)]="selectedRoom" (change)="loadRoomSchedule($event)"
+        [(ngModel)]="selectedRoom" (change)="loadRoomSchedule()"
         [disabled]="false">
         <option value="" selected disabled hidden>{{selectedFacility ? (Rooms.length == 0 ? 'There Is No Room Found' : 'Choose Room') : 'Choose The Facility First'}}</option>
         <option *ngFor="let room of Rooms" [value]="room.room_id">{{ room.room_name }}</option>

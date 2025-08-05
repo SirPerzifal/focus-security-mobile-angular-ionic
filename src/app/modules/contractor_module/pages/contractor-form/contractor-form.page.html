@@ -40,6 +40,12 @@
             [(cameraSelected)]="selectedImage">
           </app-input-image-preview>
         </div>
+        <div class="w-full" *ngIf="!project_config.is_industrial">
+          <app-input-image-preview class="w-full h-25" [labelText]="'CONTRACTOR ID Card'" [buttonText]="'UPLOAD'" 
+            [extraButtonClass]="'rounded-md text-white h-20'" 
+            [(cameraSelected)]="selectedCard">
+          </app-input-image-preview>
+        </div>
         <div class="w-full">
           <app-nric-fin-selection [isReadonly]="is_id_disabled" (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" />
         </div>

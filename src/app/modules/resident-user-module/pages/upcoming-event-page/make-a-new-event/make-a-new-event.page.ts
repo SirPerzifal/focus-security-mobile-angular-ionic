@@ -515,15 +515,21 @@ export class MakeANewEventPage implements OnInit {
     this.EventsForm.facility_id = this.coachData.facility_id
     this.EventsForm.contact_number = this.coachData.contact_number
     this.EventsForm.vehicle_number = this.coachData.vehicle_number
-    console.log(this.Facilities)
-    console.log(this.EventsForm.facility_id)
-    if (this.EventsForm.facility_id){
-      this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
-    }
-    // console.log(this.coachData)
     if (this.selectedStartTime) {
       this.formatEnd(this.selectedStartTime)
     }
+    console.log(this.Facilities)
+    console.log(this.EventsForm.facility_id)
+    if (this.EventsForm.facility_id){
+      if (this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id).length > 0) {
+        this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+      } else {
+        this.EventsForm.facility_id = ''
+        this.EventsForm.facility_name = ''
+        this.Rooms = []
+      }
+    }
+    // console.log(this.coachData)
   }
 
   openNewModal() {

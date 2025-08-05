@@ -148,7 +148,7 @@
               <td class="w-[5%]">: </td>
               <td class="text-base text-black w-3/5">{{ functionMain.returnNone(booking.booked_by) }}</td>
             </tr>
-            <tr class="w-full" *ngIf="!project_config.is_industrial">
+            <tr class="w-full" *ngIf="!project_config.is_industrial && booking.unit_name">
               <td class="w-2/5">Unit</td>
               <td class="w-[5%]">: </td>
               <td class="text-base text-black w-3/5">{{ functionMain.returnNone(booking.unit_name) }}</td>

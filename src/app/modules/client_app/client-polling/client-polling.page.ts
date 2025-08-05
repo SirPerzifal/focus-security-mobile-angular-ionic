@@ -171,7 +171,6 @@ export class ClientPollingPage implements OnInit {
         console.log(results)
         if (results.result.response_code == 200) {
           this.functionMain.presentToast('Successfully created a new polling!')
-          this.loadPolling()
           this.toggleActive()
           this.resetForm()
         } else {

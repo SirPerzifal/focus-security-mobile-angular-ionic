@@ -133,6 +133,11 @@ export class VmsContactInputComponent  implements OnInit {
 
   getContactInformation(){
     if (!this.isReadonly && !this.disableButton){
+      console.log(this.contactValue)
+      if (!this.contactValue) {
+        this.functionMain.presentToast('The contact number field is required!', 'danger')
+        return
+      }
       this.functionMain.vmsPreferences().then((value) => {
         let params = {
           contact_number: this.combinedValue,

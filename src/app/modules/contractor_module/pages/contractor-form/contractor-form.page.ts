@@ -189,6 +189,9 @@ export class ContractorFormPage implements OnInit {
     if (!this.selectedImage) {
       errMsg += 'Contractor image is required! \n'
     }
+    if (!this.selectedCard && !this.project_config.is_industrial) {
+      errMsg += 'Contractor ID Card is required! \n'
+    }
     if (!contractorName) {
       errMsg += 'Contractor name is required! \n'
     }
@@ -276,6 +279,7 @@ export class ContractorFormPage implements OnInit {
       entry_id: this.isFromScan ? this.entry_id : false,
       entry_type: this.isFromScan ? this.entry_type : '',
       visitor_image: this.selectedImage,
+      contractor_card: this.selectedCard,
       is_bypass: this.isBypass,
     }
     
@@ -356,6 +360,7 @@ export class ContractorFormPage implements OnInit {
     this.contractor_entry_date = ''
 
     this.selectedImage = ''
+    this.selectedCard = ''
     this.is_id_disabled = false
   }
 
@@ -421,6 +426,7 @@ export class ContractorFormPage implements OnInit {
           this.formData.contractor_name = value.visitor_name ? value.visitor_name  : ''
           this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
           this.selectedImage = value.visitor_image
+          this.selectedCard = value.contractor_card
           this.identificationType = value.identification_type ? value.identification_type : ''
           this.temp_type = this.identificationType
           this.nric_value = value.identification_number ? value.identification_number : '' 
@@ -470,6 +476,7 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
+      this.selectedCard = contactData.contractor_card
       this.nric_value = contactData.identification_number
       if (contactData.identification_type && contactData. identification_number) {
         this.is_id_disabled = true
@@ -536,6 +543,7 @@ export class ContractorFormPage implements OnInit {
                   this.formData.company_name = this.formData.company_name ? this.formData.company_name : data.company_name
                   this.formData.contact_number = this.formData.contact_number ? this.formData.contact_number : data.contact_number
                   this.selectedImage = data.visitor_image
+                  this.selectedCard = data.contractor_card
                   if (this.showDrive) {
                     this.formData.contractor_vehicle = this.formData.contractor_vehicle ? this.formData.contractor_vehicle : data.vehicle_number
                   }
@@ -544,6 +552,7 @@ export class ContractorFormPage implements OnInit {
                   this.formData.company_name = data.company_name
                   this.formData.contact_number = data.contact_number
                   this.selectedImage = data.visitor_image
+                  this.selectedCard = data.contractor_card
                   if (this.showDrive) {
                     this.formData.contractor_vehicle =  data.vehicle_number
                   }
@@ -777,6 +786,7 @@ export class ContractorFormPage implements OnInit {
           this.contractor_entry_purpose = this.searchData.type_of_work
           this.identificationType = this.searchData.identification_type
           this.selectedImage = this.searchData.visitor_image
+          this.selectedCard = this.searchData.contractor_card
           this.nric_value= this.searchData.identification_number
           if (this.searchData.identification_type && this.searchData.identification_number) {
             this.is_id_disabled = true
@@ -831,6 +841,7 @@ export class ContractorFormPage implements OnInit {
   }
 
   selectedImage = ''
+  selectedCard = ''
 
   handleRefresh(event: any) {
     if (this.project_config.is_industrial) {

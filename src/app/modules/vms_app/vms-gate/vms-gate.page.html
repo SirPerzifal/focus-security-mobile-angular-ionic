@@ -1,13 +1,44 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>vms-gate</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">vms-gate</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="vms-body">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
+  <div class="absolute inset-0 flex justify-center items-center opacity-20">
+    <app-vms-background />
+  </div>
+  <div class="flex flex-col relative mt-2 mx-4">
+    <div class="w-full">
+      <app-vms-header [urlCustom]="'/home-vms'" [params]="{unregistered: true}"/>
+    </div>
+    <div class="flex flex-row mt-8 mx-4">
+      <div class="flex flex-col items-center">
+        <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" class="mt-4"
+        [routerLink]="['/home-vms']" [isActive]="true" [disableClick]="true" />
+      </div>
+    </div>
+    <div class="flex flex-row">
+      <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4">
+        <div class="w-full">
+          <app-m2m-selection [Arrays]="Camera" (outputValue)="onCameraChange($event)" [placeholder]="Camera.length > 0 ? 'CHOOSE GATE' : 'NO GATE FOUND'" [isOne]="true" [isVMS]="true"
+            [labelText]="'GATE'"></app-m2m-selection>
+        </div>
+        <!-- <div class="w-full" *ngFor="let camera of Camera; let i = index">
+          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" 
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
+            (click)="onSubmit(true, camera.CamSentId)"></app-visitor-button>
+        </div> -->
+        <div class="w-full">
+          <app-visitor-button [text]="'OPEN GATE'" 
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
+            (click)="openGate()"></app-visitor-button>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'CLOSE GATE'" 
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
+            (click)="openGate(true)"></app-visitor-button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
 </ion-content>
