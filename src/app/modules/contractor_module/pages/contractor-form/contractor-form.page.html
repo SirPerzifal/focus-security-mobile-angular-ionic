@@ -21,6 +21,9 @@
       <app-button-icon [customNameIcon]="'faCarSide'" [text]="'DRIVE IN'"
       (click)="toggleShowDrive()" [isActive]="showDriveTrans || showDrive" [disableClick]="true" />
     </div>
+    <div class="w-full flex flex-col space-y-5 mt-5 mx-4" *ngIf="((showWalk || showDrive)) && !project_config.is_industrial && project_config.office_opening_hours && project_config.office_closing_hours">
+      <i class="text-2xl font-bold break-words whitespace-normal w-full text-left">WORK HOURS: {{project_config.office_opening_hours}} - {{project_config.office_closing_hours}}</i>
+    </div>
     <div class="w-full flex flex-col space-y-5 mt-5 mx-4" *ngIf="((showWalk || showDrive) && !isOpen) && !project_config.is_industrial">
       <i class="text-2xl font-bold break-words whitespace-normal w-full text-left">*CONTRACTOR FORM IS LOCKED BECAUSE THE CURRENT TIME IS OUTSIDE THE OFFICE HOURS.</i>
       <div class="flex flex-row justify-start space-x-5 items-center">
@@ -41,7 +44,7 @@
           </app-input-image-preview>
         </div>
         <div class="w-full" *ngIf="!project_config.is_industrial">
-          <app-input-image-preview class="w-full h-25" [labelText]="'CONTRACTOR ID Card'" [buttonText]="'UPLOAD'" 
+          <app-input-image-preview class="w-full h-25" [labelText]="'CONTRACTOR ID CARD'" [buttonText]="'UPLOAD'" 
             [extraButtonClass]="'rounded-md text-white h-20'" 
             [(cameraSelected)]="selectedCard">
           </app-input-image-preview>

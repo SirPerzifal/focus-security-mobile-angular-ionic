@@ -67,6 +67,9 @@ export class ClientRegisterVisitorPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
+    if (!this.formData.selection_type){
+      errMsg += 'Visitor type is required!'
+    }
     if (this.formData.vehicle_number == '' && this.formData.selection_type == 'drive_in'){
       errMsg += 'Vehicle number is required!'
     }
