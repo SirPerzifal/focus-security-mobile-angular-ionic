@@ -109,7 +109,18 @@
         <option *ngFor="let fm of vehicleTypes" [value]="fm.id">
           {{ fm.name }}
         </option>
+        <option value="other">Other</option>
       </select>
+    </div>
+
+    <div *ngIf="showOtherTypeOfVehicle" class="mt-1">
+      <app-input-component
+        [id]="'other_type_vehicle'"
+        [type]="'text'"
+        [value]="vehicleForm.otherTypeOfVehicle"
+        [labelChild1]="'Other Type of Vehicle'"
+        (eventEmitter)="onValueChange($event, 'other_type_vehicle')"
+      ></app-input-component>
     </div>
 
     <div class="w-full mt-1">
@@ -125,7 +136,18 @@
         <option *ngFor="let fm of vehicleMakes" [value]="fm.id">
           {{ fm.name }}
         </option>
+        <option value="other">Other</option>
       </select>
+    </div>
+
+    <div *ngIf="showOtherVehicleMake" class="mt-1">
+      <app-input-component
+        [id]="'other_make_vehicle'"
+        [type]="'text'"
+        [value]="vehicleForm.otherVehicleMake"
+        [labelChild1]="'Other Vehicle Make'"
+        (eventEmitter)="onValueChange($event, 'other_make_vehicle')"
+      ></app-input-component>
     </div>
 
     <div class="mt-1">

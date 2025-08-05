@@ -348,6 +348,9 @@ export class FormForCoachRegistrationPage implements OnInit {
       if (this.formSent.coachingRegNumber === "") {
         errMsg += 'Please provide the reg number of coach.\n';
       }
+      if (this.formSent.nationality) {
+        errMsg += 'Please select or type the nationality.\n';
+      }
 
       if (errMsg === '') {
         this.formStatus = {
@@ -533,6 +536,25 @@ export class FormForCoachRegistrationPage implements OnInit {
         this.expectedCoach = [];
       }
     );
+  }
+
+  async viewDetail(coach: any) {
+    const alert = await this.alertController.create({
+      header: 'Detail Transaksi',
+      message: `
+        <strong>Nama Coach:</strong> ${coach.name}<br>
+        <strong>Contact Number:</strong> ${coach.contact_number}<br>
+        <strong>Duration Per Session:</strong> ${coach.duration_per_session} Minute<br>
+      `,
+      buttons: [
+        {
+          text: 'Tutup',
+          role: 'cancel'
+        },
+      ]
+    });
+
+    await alert.present();
   }
 
   public async showAlertButtons(headerName: string, className: string, coachId: number) {

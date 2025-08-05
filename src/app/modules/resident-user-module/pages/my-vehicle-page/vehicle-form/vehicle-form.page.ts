@@ -44,7 +44,9 @@ export class VehicleFormPage implements OnInit {
     iuNumber: '',
     typeOfApplication: '',
     typeOfVehicle: '',
+    otherTypeOfVehicle: '',
     vehicleMake: '',
+    otherVehicleMake: '',
     vehicleColour: '',
     vehicleLog: '',
     isFirstVehicle: false,
@@ -55,6 +57,9 @@ export class VehicleFormPage implements OnInit {
     temporaryCarRequest: '',
     endDate: '',
   }
+
+  showOtherTypeOfVehicle: boolean = false;
+  showOtherVehicleMake: boolean = false;
 
   vehicleIdForUpdateAndJustUpdateNothingElse: number = 0;
 
@@ -93,12 +98,20 @@ export class VehicleFormPage implements OnInit {
             iuNumber: vehicle.IU_number,
             typeOfApplication: vehicle.type_of_application === 'Temporary Vehicle' ? 'temporary_vehicle' : 'owned_vehicle',
             typeOfVehicle: vehicle.vehicle_type,
+            otherTypeOfVehicle: vehicle.other_vehicle_type,
             vehicleMake: vehicle.vehicle_make,
+            otherVehicleMake: vehicle.other_vehicle_make,
             vehicleColour: vehicle.vehicle_color,
             vehicleLog: vehicle.vehicle_log_exists,
             isFirstVehicle: vehicle.is_first_vehicle,
             primaryVehicle: 'false',
             ownedBy: '',
+          }
+          if (this.vehicleForm.typeOfVehicle === 'other') {
+            this.showOtherTypeOfVehicle = true; // Show input for other type of vehicle
+          }
+          if (this.vehicleForm.vehicleMake === 'other') {
+            this.showOtherVehicleMake = true; // Show input for other vehicle make
           }
           this.selectedNameVehicleLog = `${vehicle.vehicle_number} Log`
           this.selectedDate = String(this.functionMain.convertToDDMMYYYY(vehicle.end_date_for_temporary_pass)); // Update selectedDate with the chosen date in dd/mm/yyyy format
@@ -152,7 +165,9 @@ export class VehicleFormPage implements OnInit {
             iuNumber: vehicle.IU_number,
             typeOfApplication: vehicle.type_of_application === 'Temporary Vehicle' ? 'temporary_vehicle' : 'owned_vehicle',
             typeOfVehicle: vehicle.vehicle_type,
+            otherTypeOfVehicle: vehicle.other_vehicle_type,
             vehicleMake: vehicle.vehicle_make,
+            otherVehicleMake: vehicle.other_vehicle_make,
             vehicleColour: vehicle.vehicle_color,
             vehicleLog: vehicle.vehicle_log_exists,
             isFirstVehicle: vehicle.is_first_vehicle,
@@ -219,8 +234,16 @@ export class VehicleFormPage implements OnInit {
     } else if (type === 'iu_number') {
       this.vehicleForm.iuNumber = event
     } else if (type === 'type_vehicle') {
+      const value = event.target.value;
+      if (value === 'other') {
+        this.showOtherTypeOfVehicle = true; // Show input for other type of vehicle
+      }
       this.vehicleForm.typeOfVehicle = event.target.value;
     } else if (type === 'make_vehicle') {
+      const value = event.target.value;
+      if (value === 'other') {
+        this.showOtherVehicleMake = true; // Show input for other vehicle make
+      }
       this.vehicleForm.vehicleMake = event.target.value;
     } else if (type === 'vehicle_colour') {
       this.vehicleForm.vehicleColour = event;
@@ -246,6 +269,11 @@ export class VehicleFormPage implements OnInit {
       this.additionalTemporary.endDate = event;
     } else if (type === 'primary_vehicle') {
       this.vehicleForm.isFirstVehicle = !this.vehicleForm.isFirstVehicle
+    } else if (type === 'other_type_vehicle') {
+      this.vehicleForm.otherTypeOfVehicle = event;
+    }
+    else if (type === 'other_make_vehicle') {
+      this.vehicleForm.otherVehicleMake = event;
     }
   }
 
@@ -300,8 +328,14 @@ export class VehicleFormPage implements OnInit {
     if (this.vehicleForm.typeOfVehicle == "") {
       errMsg.push("Please fill type of vehicle!");
     }
+    if (this.vehicleForm.typeOfVehicle == "other" && this.vehicleForm.otherTypeOfVehicle == "") {
+      errMsg.push("Please fill other type of vehicle!");
+    }
     if (this.vehicleForm.vehicleMake == "") {
       errMsg.push("Please fill vehicle make!");
+    }
+    if (this.vehicleForm.vehicleMake == "other" && this.vehicleForm.otherVehicleMake == "") {
+      errMsg.push("Please fill other vehicle make!");
     }
     if (this.vehicleForm.vehicleColour == "") {
       errMsg.push("Please fill vehicle color!");
@@ -327,7 +361,9 @@ export class VehicleFormPage implements OnInit {
         IU_number: this.vehicleForm.iuNumber,
         type_of_application: this.vehicleForm.typeOfApplication,
         vehicle_type: this.vehicleForm.typeOfVehicle,
+        other_vehicle_type: this.vehicleForm.otherTypeOfVehicle,
         vehicle_make: this.vehicleForm.vehicleMake,
+        other_vehicle_make: this.vehicleForm.otherVehicleMake,
         vehicle_color: this.vehicleForm.vehicleColour,
         vehicle_log_filename: this.selectedNameVehicleLog,
         vehicle_log: this.vehicleForm.vehicleLog,
@@ -343,7 +379,9 @@ export class VehicleFormPage implements OnInit {
               iuNumber: '',
               typeOfApplication: '',
               typeOfVehicle: '',
+              otherTypeOfVehicle: '',
               vehicleMake: '',
+              otherVehicleMake: '',
               vehicleColour: '',
               vehicleLog: '',
               isFirstVehicle: false,
@@ -369,7 +407,9 @@ export class VehicleFormPage implements OnInit {
                 iuNumber: '',
                 typeOfApplication: '',
                 typeOfVehicle: '',
+                otherTypeOfVehicle: '',
                 vehicleMake: '',
+                otherVehicleMake: '',
                 vehicleColour: '',
                 vehicleLog: '',
                 isFirstVehicle: false,

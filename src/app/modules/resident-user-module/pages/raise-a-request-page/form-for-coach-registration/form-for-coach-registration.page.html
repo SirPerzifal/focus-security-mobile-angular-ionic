@@ -290,41 +290,54 @@
       <div class="flex flex-col mt-2">
         <table
           *ngIf="expectedCoach.length > 0"
-          class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
+          class="table-auto border-collapse border border-gray-300 w-full text-sm text-center bg-white"
         >
           <thead>
             <tr class="bg-gray-200 text-gray-700">
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              <th class="border border-gray-300 py-2 cw-3:text-[11px]">
                 Coach Name
               </th>
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              <th class="border border-gray-300 py-2 cw-3:text-[11px]">
                 Coach Type
               </th>
-              <th class="border border-gray-300 px-4 py-2 cw-3:text-[11px]">
+              <th class="border border-gray-300 py-2 cw-3:text-[11px]">
                 Deactive
               </th>
+              <th class="border border-gray-300 py-2 cw-3:text-[11px]">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let coach of expectedCoach">
               <td
-                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                class="border border-gray-300 py-2 text-gray-700 cw-3:text-[11px] truncate"
               >
                 {{ coach.name }}
               </td>
               <td
-                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                class="border border-gray-300 py-2 text-gray-700 cw-3:text-[11px] truncate"
               >
                 {{ coach.coach_type }}
               </td>
               <td
-                class="border border-gray-300 px-4 py-2 text-gray-700 cw-3:text-[11px]"
+                class="border border-gray-300 py-2 text-gray-700 cw-3:text-[11px]"
               >
                 <u
                   class="text-red-500"
                   (click)="showAlertButtons('Are you sure to deactive this coach?', 'history-alert alert-banned', coach.id)"
                   >Deactive</u
                 >
+              </td>
+              <td
+                class="border border-gray-300 py-2 text-gray-700 cw-3:text-[11px]"
+              >
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  (click)="viewDetail(coach)"
+                  class="text-[#6A101C]"
+                >
+                  <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+                </ion-button>
               </td>
             </tr>
           </tbody>
