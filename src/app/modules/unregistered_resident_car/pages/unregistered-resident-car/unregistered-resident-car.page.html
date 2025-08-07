@@ -23,7 +23,7 @@
           <app-text-input [id]="'name'" [labelText]="'NAME'" [placeholder]="'EG. MARCO ZHABIN'" [customClasses]="{'w-full':true}" [type]="'text'"  [(ngModel)]="formData.name"[customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
         </div> 
         <div class="w-full" *ngIf="project_config.is_industrial">
-          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'EMPLOYEE NAME'" [Selected]="contactHost"></app-m2m-selection>
+          <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE EMPLOYEE'" [isOne]="true" [isVMS]="true" [labelText]="'EMPLOYEE NAME'" [Selected]="contactHost"></app-m2m-selection>
         </div>
         <div class="w-full"  *ngIf="!project_config.is_industrial">
           <app-vms-contact-input [(value)]="formData.contact_number" [id]="'unregistered_contact_number'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>

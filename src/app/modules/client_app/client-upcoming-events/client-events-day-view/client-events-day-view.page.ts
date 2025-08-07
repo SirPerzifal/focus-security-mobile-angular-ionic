@@ -50,6 +50,7 @@ export class ClientEventsDayViewPage implements OnInit {
     unit_ids: [],
     host_ids: [],
     color: [] as string[],
+    booking_id: 0
   }
 
   selectedImage: string = '';
@@ -103,7 +104,9 @@ export class ClientEventsDayViewPage implements OnInit {
     // Reset room selection saat tanggal diubah
     this.selectedDate = event.target.value
     console.log(this.selectedDate)
-    this.loadBook()
+    if (this.project_config.is_industrial) {
+      this.loadBook()
+    }
 
     if (this.chooseDateModal) {
       this.chooseDateModal.dismiss();
@@ -302,8 +305,9 @@ export class ClientEventsDayViewPage implements OnInit {
       unit_ids: event.event.unit_ids,
       host_ids: event.event.host_ids,
       color: [] as string[],
+      booking_id: event.event.booking_id
     }
-    this.selectedBookId = 0
+    this.selectedBookId = event.event.booking_id ? event.event.booking_id : 0
     this.selectedBook = {}
     this.selectedHost = event.event.host_ids
     this.selectedBlock = event.event.block_ids
@@ -413,7 +417,7 @@ export class ClientEventsDayViewPage implements OnInit {
     if (!this.EventsForm.event_title) {
       errMsg += 'Title is required! \n'
     }
-    if (this.selectedBookId == 0) {
+    if (this.selectedBookId == 0 && this.project_config.is_industrial) {
       errMsg += 'Booking is required! \n'
     }
     if (this.EventsForm.facility_id == '') {
@@ -447,7 +451,7 @@ export class ClientEventsDayViewPage implements OnInit {
     console.log(this.EventsForm);
     
     if (errMsg == ''){
-      this.clientMainService.getApi(this.EventsForm, '/client/post/client_upcoming_event').subscribe({
+      this.clientMainService.getApi({...this.EventsForm, booking_ref_id: this.selectedBookId}, '/client/post/client_upcoming_event').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.response_code == 200) {
@@ -457,6 +461,8 @@ export class ClientEventsDayViewPage implements OnInit {
             this.EventsForm.event_title = ''
             this.EventsForm.event_description = ''
             this.EventsForm.color = []
+          } else if (results.result.response_code == 401) {
+            this.functionMain.presentToast(results.result.response_description, 'danger');
           } else {
             this.functionMain.presentToast(`An error occurred while trying to create new event!`, 'danger');
           }
@@ -497,6 +503,7 @@ export class ClientEventsDayViewPage implements OnInit {
             block_ids: result.block_ids,
             unit_ids: result.unit_ids,
             host_ids: result.host_ids,
+            booking_id: result.booking_id,
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
               beforeStart: false,
@@ -543,6 +550,7 @@ export class ClientEventsDayViewPage implements OnInit {
       block_ids: [],
       unit_ids: [],
       host_ids: [],
+      booking_id: 0,
     }
     this.selectedHost = []
     this.selectedBlock = []
@@ -575,6 +583,7 @@ export class ClientEventsDayViewPage implements OnInit {
       block_ids: [],
       unit_ids: [],
       host_ids: [],
+      booking_id: 0,
     }
     this.selectedBookId = 0
     this.selectedBook = {}
@@ -642,7 +651,9 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.loadBook()
+    if (this.project_config.is_industrial) {
+      this.loadBook()
+    }
     this.loadUpcomingEvents().then(() => event.target.complete())
   }
 
@@ -655,6 +666,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
     this.EventsForm.room_id = this.selectedBook.room_id
     console.log(this.selectedBook)
+    console.log(this.selectedBookId)
   }
   
   BookingResult: any = []

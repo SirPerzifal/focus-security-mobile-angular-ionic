@@ -72,12 +72,10 @@
           </tr> -->
         </table>
         <div class="flex flex-col justify-around w-full">
-          <div class="flex flex-row w-full justify-around" *ngIf="!record.is_upcoming && record.is_need_check">
+          <div class="flex w-full justify-around gap-4 flex-wrap" *ngIf="!record.is_upcoming && record.is_need_check">
             <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_in')" *ngIf="record.is_history || (!record.resident_check_in || !record.officer_check_in)">CHECK IN</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')" *ngIf="record.is_history || (record.is_form_check_in && (!record.resident_check_out || !record.officer_check_out))">CHECK OUT</button>
-          </div>
-          <div class="flex flex-row w-full justify-around mb-4" *ngIf="!record.is_history && (!record.resident_check_out || !record.officer_check_out)">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident(record)">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="onCheckOut(record, 'check_out')" *ngIf="record.is_history || ((record.resident_check_in || record.officer_check_in) && (!record.resident_check_out || !record.officer_check_out))">CHECK OUT</button>
+            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 h-14" (click)="callResident(record)"  *ngIf="record.is_history || !((record.resident_check_in && record.officer_check_in) && (record.resident_check_out && record.officer_check_out))">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
           </div>
         </div>
       </div>

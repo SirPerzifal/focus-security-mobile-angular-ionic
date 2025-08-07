@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -6,7 +6,7 @@ import {
   CalendarEventTimesChangedEvent,
 } from 'angular-calendar';
 import { CalendarEventTitleFormatter } from 'angular-calendar';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonModal } from '@ionic/angular';
 
 import { CustomEventTitleFormatter } from 'src/utils/custom-event-title-formatter.providers';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -52,6 +52,7 @@ export class MakeANewEventPage implements OnInit {
     host_ids: [],
     color: ['#3b82f6', '#1d4ed8'] as string[],
     is_update: false,
+    booking_id: 0,
   }
 
   isAddEventClick: boolean = false; // Menyimpan status modal
@@ -188,9 +189,10 @@ export class MakeANewEventPage implements OnInit {
       room_name: event.event.room_name,
       room_id: '',
       is_update: false,
+      booking_id: event.event.booking_id,
     }
     this.selectedBook = {}
-    this.selectedBookId = 0
+    this.selectedBookId = event.event.booking_id
     // this.BookingResult = []
     this.selectedHost = event.event.host_ids
     console.log(this.Facilities)
@@ -403,7 +405,7 @@ export class MakeANewEventPage implements OnInit {
   createEvent() {
     console.log(this.EventsForm)
     this.mainApi.endpointMainProcess(
-      {...this.EventsForm, event_title: this.event_title}
+      {...this.EventsForm, event_title: this.event_title, booking_ref_id: this.selectedBookId}
     , 'post/upcoming_event').subscribe((response: any) => {
       console.log(response)
       if (response.result.response_code == 200) {
@@ -414,6 +416,8 @@ export class MakeANewEventPage implements OnInit {
         this.EventsForm.event_description = ''
         this.EventsForm.registered_coach_id = 0
         this.EventsForm.color = ['#3b82f6', '#1d4ed8']
+      } else if (response.result.response_code == 401) {
+        this.functionMain.presentToast(response.result.response_description, 'danger');
       } else {
         this.functionMain.presentToast(`Failed!`, 'danger');
       }
@@ -444,6 +448,7 @@ export class MakeANewEventPage implements OnInit {
           block_ids: result.block_ids,
           unit_ids: result.unit_ids,
           host_ids: result.host_ids,
+          booking_id: result.booking_id,
           color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
           resizable: {
             beforeStart: false,
@@ -557,6 +562,7 @@ export class MakeANewEventPage implements OnInit {
       host_ids: [],
       color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
+      booking_id: 0,
     }
     this.selectedHost = [this.userData.family_id]
     this.selectedEndTime = ''
@@ -591,6 +597,7 @@ export class MakeANewEventPage implements OnInit {
       host_ids: [],
       color: ['#3b82f6', '#1d4ed8'] as string[],
       is_update: false,
+      booking_id: 0,
     }
     this.selectedHost = []
     this.isRead = false
@@ -742,6 +749,20 @@ export class MakeANewEventPage implements OnInit {
       this.EventsForm.room_id = this.selectedBook.room_id
     }
     console.log(this.selectedBook)
+  }
+
+  @ViewChild('chooseDateResidentEventModal', { static: false }) chooseDateModal!: IonModal;
+  onDateChange(event: any) {
+    // Reset room selection saat tanggal diubah
+    this.selectedDate = event.target.value
+    console.log(this.selectedDate)
+    if (this.userType == 'industrial') {
+      this.loadBook()
+    }
+
+    if (this.chooseDateModal) {
+      this.chooseDateModal.dismiss();
+    }
   }
 
 

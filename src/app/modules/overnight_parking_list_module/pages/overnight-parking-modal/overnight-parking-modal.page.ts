@@ -183,8 +183,8 @@ export class OvernightParkingModalPage implements OnInit {
         params = {
           vehicle_number: this.vehicle.vehicle_numbers ? this.vehicle.vehicle_numbers : this.vehicle.vehicle_number, 
           visitor_name: this.vehicle.visitor_name, 
-          block_id: this.search || this.no_nric ? this.vehicle.block_id[0] : this.vehicle.block_id, 
-          unit_id: this.search || this.no_nric ? this.vehicle.unit_id[0] : this.vehicle.unit_id, 
+          block_id: this.search || this.no_nric ? (Array.isArray(this.vehicle.block_id[0]) ? this.vehicle.block_id[0] : this.vehicle.block_id) : this.vehicle.block_id, 
+          unit_id: this.search || this.no_nric ? (Array.isArray(this.vehicle.unit_id[0]) ? this.vehicle.unit_id[0] : this.vehicle.unit_id) : this.vehicle.unit_id, 
           host: this.search || this.no_nric ? this.vehicle.industrial_host_id[0] : this.vehicle.industrial_host_id, 
           host_ids: this.vehicle.industrial_host_ids, 
           contact_number: this.vehicle.contact_number,
