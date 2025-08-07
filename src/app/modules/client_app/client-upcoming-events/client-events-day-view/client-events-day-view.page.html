@@ -137,7 +137,7 @@
                             [(ngModel)]="EventsForm.event_title">
                         </app-text-input>
                     </div>
-                    <div class="w-full flex flex-col mb-2" *ngIf="!isRead && project_config.is_industrial">
+                    <div class="w-full flex flex-col mb-2" *ngIf="project_config.is_industrial">
                         <label class="block text-black font-bold mb-1 text-base">Booking</label>
                         <select
                             id="event_form_coach"
@@ -146,13 +146,13 @@
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="selectedBookId"
                         >
-                        <option value="0" selected disabled hidden>{{ BookingResult.length > 0 ? 'Choose Booking' : 'No Bookings Found Today'}}</option>
+                        <option value="0" selected disabled hidden>{{ BookingResult.length > 0 ? 'Choose Booking' : 'No Bookings Found For This Day'}}</option>
                         <option *ngFor="let book of BookingResult" [value]="book.id">{{ book.name }} ({{ functionMain.convertDateExtend(book.start_datetime) }} - {{functionMain.convertDateExtend(book.stop_datetime) }})</option>
                         </select>
                     </div>
                     <div class="w-full flex flex-col mb-2">
                         <label class="block text-black font-bold mb-1 text-base">Facility</label>
-                        <select id="event_form_coach" [disabled]="project_config.is_industrial" (change)="onFacilityChange($event)"
+                        <select id="event_form_coach" [disabled]="project_config.is_industrial || isRead" (change)="onFacilityChange($event)"
                             class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
                             [(ngModel)]="EventsForm.facility_id">
                             <option value="" selected disabled hidden>{{Facilities.length > 0 ? 'Choose Facility' : 'No Facility Found'}}</option>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="w-full mb-2" *ngIf="project_config.is_industrial && isAddEventClick">
                         <app-m2m-selection [Arrays]="Host" (outputValue)="hostChange($event)" [placeholder]="'Select Hosts'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'" [customTextClass]="'p-0 text-sm'" [Selected]="selectedHost" [isReadonly]="isRead"
-                            [labelText]="'Host'"></app-m2m-selection>
+                            [labelText]="'Invitees'"></app-m2m-selection>
                     </div>
                     <div class="w-full mb-2" *ngIf="EventsForm.post_to === 'block' && !project_config.is_industrial">
                         <app-m2m-selection [Arrays]="Block" (outputValue)="blockChange($event)" [placeholder]="'Select Blocks'" [divOuterClass]="'min-h-12 text-sm rounded-lg border-black'" [customTextClass]="'p-0 text-sm'" [Selected]="selectedBlock" [isReadonly]="isRead"
@@ -238,10 +238,10 @@
                                     (change)="onStartDateChange($event)" [(ngModel)]="selectedEndDate">
                                 </app-text-input>
                                 <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
+                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'">
                                     <input id="startTimeEventInput" type="time" (change)="onStartTimeChange($event)"
                                         class="w-[95%] text-sm" [(ngModel)]="selectedStartTime" #startTimeEventInput
-                                        [readonly]="true">
+                                        [readonly]="project_config.is_industrial || isRead">
                                 </div>
                             </div>
                         </div>
@@ -255,10 +255,10 @@
                                     (change)="onEndDateChange($event)" [min]="selectedStartDate">
                                 </app-text-input>
                                 <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
+                                    <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'">
                                     <input id="endTimeEventInput" type="time" (change)="onEndTimeChange($event)"
                                         class="w-[95%] text-sm" [min]="selectedStartTime" [(ngModel)]="selectedEndTime"
-                                        [readonly]="true" #endTimeEventInput>
+                                        [readonly]="project_config.is_industrial || isRead" #endTimeEventInput>
                                 </div>
                             </div>
                         </div>

@@ -37,12 +37,14 @@ export class ClientSettingsPage implements OnInit {
         designation: value.designation ? value.designation : '',
         image_profile: '',
       }
+      this.project_id = value.project_id
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
         this.userData.image_profile = value.image_profile
       })
     })
   }
 
+  project_id: any = ''
   userData = {
     id: '',
     name: '',

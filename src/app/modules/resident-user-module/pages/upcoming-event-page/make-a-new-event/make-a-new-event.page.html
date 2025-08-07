@@ -33,19 +33,20 @@
     </ion-datetime-button>
     <div class="w-1/6 flex items-start ml-4 mt-2"></div>
   </div>
-  <ion-modal keep-contents-mounted="true">
+  <ion-modal keep-contents-mounted="true" #chooseDateResidentEventModal>
     <ng-template>
       <ion-datetime
         id="datetime"
         presentation="date"
         [(ngModel)]="selectedDate"
         [formatOptions]="{
-			date: {
-			day: '2-digit',
-			weekday: 'short',
-			month: 'long',
-			},
-			}"
+          date: {
+          day: '2-digit',
+          weekday: 'short',
+          month: 'long',
+          },
+          }"
+        (ionChange)="onDateChange($event)"
       >
       </ion-datetime>
     </ng-template>
@@ -144,7 +145,7 @@
           </div>
           <div
             class="w-full flex flex-col mb-2"
-            *ngIf="!isRead && userType == 'industrial'"
+            *ngIf="userType == 'industrial'"
           >
             <label class="block text-black font-bold mb-1 text-base"
               >Booking</label
@@ -158,7 +159,7 @@
             >
               <option value="0" selected disabled hidden>
                 {{ BookingResult.length > 0 ? 'Choose Booking' : 'No Bookings
-                Found Today'}}
+                Found This Day'}}
               </option>
               <option *ngFor="let book of BookingResult" [value]="book.id">
                 {{ book.name }} ({{
@@ -341,7 +342,7 @@
                 <app-text-input
                   [id]="'start_date_event'"
                   [placeholder]="'Date event start'"
-                  [isReadonly]="userType === 'industrial'"
+                  [isReadonly]="true"
                   [customClasses]="{'w-full':true}"
                   [type]="'date'"
                   [(ngModel)]="selectedStartDate"
@@ -351,7 +352,7 @@
                 >
                 </app-text-input>
                 <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
+                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'">
                   <input
                     id="startTimeEventInput"
                     type="time"
@@ -359,11 +360,11 @@
                     class="w-full text-sm"
                     [(ngModel)]="selectedStartTime"
                     #startTimeEventInput
-                    [disabled]="userType === 'industrial'"
-                    [readonly]="userType === 'industrial'"
-                    [style.pointer-events]="userType === 'industrial' ? 'none' : 'auto'"
-                    [style.user-select]="userType === 'industrial' ? 'none' : 'auto'"
-                    [style.-webkit-user-select]="userType === 'industrial' ? 'none' : 'auto'"
+                    [disabled]="userType === 'industrial' || isRead"
+                    [readonly]="userType === 'industrial' || isRead"
+                    [style.pointer-events]="userType === 'industrial' || isRead ? 'none' : 'auto'"
+                    [style.user-select]="userType === 'industrial' || isRead ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="userType === 'industrial' || isRead ? 'none' : 'auto'"
                   />
                 </div>
               </div>
@@ -386,7 +387,7 @@
                 >
                 </app-text-input>
                 <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="'input-custom-readonly'">
+                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'">
                   <input
                     id="endTimeEventInput"
                     type="time"
@@ -395,11 +396,11 @@
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
                     #endTimeEventInput
-                    [disabled]="userType === 'industrial'"
-                    [readonly]="userType === 'industrial'"
-                    [style.pointer-events]="userType === 'industrial' ? 'none' : 'auto'"
-                    [style.user-select]="userType === 'industrial' ? 'none' : 'auto'"
-                    [style.-webkit-user-select]="userType === 'industrial' ? 'none' : 'auto'"
+                    [disabled]="userType === 'industrial' || isRead"
+                    [readonly]="userType === 'industrial' || isRead"
+                    [style.pointer-events]="userType === 'industrial' || isRead ? 'none' : 'auto'"
+                    [style.user-select]="userType === 'industrial' || isRead ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="userType === 'industrial' || isRead ? 'none' : 'auto'"
                   />
                 </div>
               </div>

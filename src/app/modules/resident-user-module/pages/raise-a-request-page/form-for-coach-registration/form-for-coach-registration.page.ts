@@ -324,6 +324,7 @@ export class FormForCoachRegistrationPage implements OnInit {
   }
 
   onClick(type: string) {
+    console.log(this.formSent)
     if (type === 'submit') {
       // Validate required fields
       let errMsg = this.validateForm();
@@ -348,7 +349,7 @@ export class FormForCoachRegistrationPage implements OnInit {
       if (this.formSent.coachingRegNumber === "") {
         errMsg += 'Please provide the reg number of coach.\n';
       }
-      if (this.formSent.nationality) {
+      if (!this.formSent.nationality) {
         errMsg += 'Please select or type the nationality.\n';
       }
 
