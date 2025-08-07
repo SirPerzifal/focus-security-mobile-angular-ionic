@@ -72,6 +72,7 @@ export class ClientApprovalsPage implements OnInit {
 
   menuItems: any = [
     { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], },
+    { src: 'assets/icon/resident-icon/deals/Money Bag.webp', alt: 'Refund Deposits Icon', route: 'refund_deposits', text: 'Refund Deposits', permission: [true, false], },
     { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], },
     { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], },
     { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], },

@@ -354,6 +354,11 @@ export class FunctionMainService {
     return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
   }
 
+  formatDateDDMMYYYY(date: string): string {
+    const [day, month, year] = date.split('-');
+    return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
+  }
+
 
   convertBase64ToBlob(base64: string) {
     const byteCharacters = atob(base64);

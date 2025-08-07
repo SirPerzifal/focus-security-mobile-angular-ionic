@@ -5,6 +5,9 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 interface ActiveDeposit {
+  requestRefundReasonRejected?: string,
+  userRequestForRefund: boolean,
+  requestRefundStatus: string,
   depositAmount: number,
   depositDate: string,
   eventDate: string,
@@ -14,6 +17,9 @@ interface ActiveDeposit {
 }
 
 interface ActiveDepositResponse {
+  reason_for_rejected?: string,
+  user_request_for_refund: boolean,
+  request_refund_status: string,
   deposit_amount: number,
   deposit_date: string,
   event_date: string,
@@ -65,6 +71,7 @@ export class DepositsPagePage implements OnInit {
   showMainContentTrans = false;
   showDepositHistoryTrans = false;
 
+  isCanRefund: boolean = false;
   activeDeposit: ActiveDeposit[] = []
   totalCurrentDeposit: number = 0;
 
@@ -77,6 +84,8 @@ export class DepositsPagePage implements OnInit {
   endDateFilter = '';
   showDate = ''
   dateFilter = ''
+
+  isLoading: boolean = true;
 
   constructor(
     private mainApiresident: MainApiResidentService,
@@ -101,6 +110,23 @@ export class DepositsPagePage implements OnInit {
     }
   }
 
+  handleRefresh(event: any) {
+    this.isLoading = true;
+    if (this.showMainContent) {
+      setTimeout(() => {
+        this.loadActiveDeposit();
+        this.isLoading = false;
+        event.target.complete();
+      }, 1000)
+    } else if (this.showDepositHistory) {
+      setTimeout(() => {
+        this.loadHistoryDeposit();
+        this.isLoading = false;
+        event.target.complete();
+      }, 1000)
+    }
+  }
+
   // Metode untuk kembali ke halaman utama deposits
   backToMainDeposits() {
     this.activeDeposit = [];
@@ -116,38 +142,65 @@ export class DepositsPagePage implements OnInit {
   }
 
   loadActiveDeposit() {
+    this.activeDeposit = [];
+    this.isCanRefund = false;
+    this.totalCurrentDeposit = 0;
     this.mainApiresident.endpointMainProcess({}, 'get/active_deposit').subscribe((response: any) => {
-      // console.log('active', response.result);
-      this.activeDeposit = response.result.response_result.map((activeDeposit: ActiveDepositResponse) => {
-        this.totalCurrentDeposit += activeDeposit.deposit_amount;
-        return {
-          depositAmount: activeDeposit.deposit_amount,
-          depositDate: activeDeposit.deposit_date,
-          eventDate: activeDeposit.event_date,
-          expectedReturnDepositDate: activeDeposit.expected_return_deposit_date, 
-          facility: activeDeposit.facility,
-          id: activeDeposit.id
-        }
-      })
-      // console.log(this.activeDeposit, this.totalCurrentDeposit);
+      if (response.result.response_code === 200) {
+        this.isCanRefund = response.result.user_can_request_refund_deposit;
+        // console.log('active', response.result);
+        this.activeDeposit = response.result.response_result.map((activeDeposit: ActiveDepositResponse) => {
+          this.totalCurrentDeposit += activeDeposit.deposit_amount;
+          return {
+            requestRefundReasonRejected: activeDeposit.reason_for_rejected,
+            userRequestForRefund: activeDeposit.user_request_for_refund,
+            requestRefundStatus: activeDeposit.request_refund_status,
+            depositAmount: activeDeposit.deposit_amount,
+            depositDate: activeDeposit.deposit_date,
+            eventDate: activeDeposit.event_date,
+            expectedReturnDepositDate: activeDeposit.expected_return_deposit_date, 
+            facility: activeDeposit.facility,
+            id: activeDeposit.id
+          }
+        })
+        this.isLoading = false
+        // console.log(this.activeDeposit, this.totalCurrentDeposit);
+      } else {
+        this.isLoading = false;
+        this.activeDeposit = [];
+        this.totalCurrentDeposit = 0;
+        this.isCanRefund = false;
+      }
     })
   }
 
   loadHistoryDeposit() {
+    this.totalCurrentDeposit = 0;
+    this.totalRefundedDeposit = 0;
+    this.historyDeposit = [];
+    this.filteredData = [];
     this.mainApiresident.endpointMainProcess({}, 'get/deposit_history').subscribe((response: any) => {
-      // console.log('history', response.result);
-      this.historyDeposit = response.result.response_result.map((historyDeposit: HistoryDepositResponse) => {
-        this.totalRefundedDeposit += historyDeposit.deposit_amount;
-        return {
-          depositAmount: historyDeposit.deposit_amount,
-          depositDate: historyDeposit.deposit_date,
-          eventDate: historyDeposit.event_date,
-          returnDepositDate: historyDeposit.return_deposit_date, 
-          facility: historyDeposit.facility,
-          id: historyDeposit.id
-        }
-      })
-      this.filteredData = [...this.historyDeposit];
+      if (response.result.response_code === 200) {
+        // console.log('history', response.result);
+        this.historyDeposit = response.result.response_result.map((historyDeposit: HistoryDepositResponse) => {
+          this.totalRefundedDeposit += historyDeposit.deposit_amount;
+          return {
+            depositAmount: historyDeposit.deposit_amount,
+            depositDate: historyDeposit.deposit_date,
+            eventDate: historyDeposit.event_date,
+            returnDepositDate: historyDeposit.return_deposit_date, 
+            facility: historyDeposit.facility,
+            id: historyDeposit.id
+          }
+        })
+        this.filteredData = [...this.historyDeposit];
+        this.isLoading = false;
+      } else {
+        this.isLoading = false;
+        this.historyDeposit = [];
+        this.totalRefundedDeposit = 0;
+        this.filteredData = [];
+      }
       // console.log(this.historyDeposit, this.totalRefundedDeposit);
     })
   }
@@ -196,6 +249,19 @@ export class DepositsPagePage implements OnInit {
       const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
   
       return dateMatches;
+    });
+  }
+
+  requestRefund(activeDeposit: any) {
+    this.mainApiresident.endpointMainProcess({
+      deposit_id: activeDeposit.id
+    }, 'post/request_refund').subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        this.functionMain.presentToast('Success Request Refund Deposit', 'success');
+        this.loadActiveDeposit();
+      } else {
+        this.functionMain.presentToast('Failed Request Refund Deposit', 'danger');
+      }
     });
   }
 }

@@ -362,7 +362,7 @@ export class BillsAndFinesPagePage implements OnInit {
     }, {});
   }
 
-  async payNow(paymentId: number) {
+  async payNow(paymentId: number, model: string) {
     const modal = await this.modalController.create({
       component: ModalComponent,
       cssClass: 'choose-pay-modal',
@@ -373,7 +373,7 @@ export class BillsAndFinesPagePage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        this.processPayment(result.data)
+        this.processPayment(result.data, model, paymentId)
       } else {
         return
       }
@@ -382,38 +382,53 @@ export class BillsAndFinesPagePage implements OnInit {
     return await modal.present();
   }
 
-  processPayment(result: any) {
+  processPayment(result: any, model: string, paymentId: number) {
     if (result[1] === 'electronic') {
-      this.electricPay(result[0])
+      this.electricPay(result[0], model, paymentId);
     } else {
       this.manualPay(result[2])
     }
   }
 
-  electricPay(stripe: any) {
-    this.mainApiResidentService.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+  electricPay(stripe: any, model: string, paymentId: number) {
+    // console.log(this.showBills ? this.billsLoaded.find(bill => bill.id === paymentId)?.total : this.fines.find(fine => fine.id === paymentId)?.total_bill);
+    this.mainApiResidentService.endpointCustomProcess({
+      id: paymentId,
+      model: model,
+      amount_total_field: this.showBills ? 'bill_total' : 'total_bill',
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'bills-and-fines-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        // console.log(result)
+        const message = this.showBills ? 'Bill' : 'Fine';
+        this.functionMain.presentToast(`Success Pay the ${message}.`, 'success');
+        if (this.showBills) {
+          this.loadBills();
+        } else if (this.showFines) {
+          this.loadFinesData();
+        }
       } else {
-        return
+        return;
       }
     });
 

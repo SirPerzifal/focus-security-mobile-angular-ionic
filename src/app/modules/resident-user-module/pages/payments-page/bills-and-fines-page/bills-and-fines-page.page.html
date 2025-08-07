@@ -87,7 +87,7 @@
                         <div>S${{ payment.total.toFixed(2) }}</div>
                         <button
                           class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full"
-                          (click)="payNow(payment.id)"
+                          (click)="payNow(payment.id, 'fs.residential.bills')"
                         >
                           Pay Now
                         </button>
@@ -154,7 +154,7 @@
                         <div>S${{ fine.total_bill.toFixed(2) }}</div>
                         <button
                           class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full"
-                          (click)="payNow(fine.id)"
+                          (click)="payNow(fine.id, 'fs.residential.fines.payment')"
                         >
                           Pay Now
                         </button>
