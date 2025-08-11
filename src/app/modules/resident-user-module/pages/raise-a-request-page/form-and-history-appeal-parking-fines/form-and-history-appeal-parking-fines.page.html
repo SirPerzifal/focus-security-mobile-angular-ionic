@@ -39,7 +39,10 @@
     class="px-4"
     @fadeInOut
   >
-    <div id="visitor" class="w-full mt-2 overflow-x-auto pb-1">
+    <div
+      *ngIf="appealData.length > 0;else noData"
+      class="w-full mt-2 overflow-x-auto pb-1"
+    >
       <div
         *ngFor="let ad of appealData"
         [ngClass]="{
@@ -118,6 +121,11 @@
         </div>
       </div>
     </div>
+    <ng-template #noData>
+      <div class="w-full mt-2 text-center">
+        <p class="text-gray-500">No parking to appeal now</p>
+      </div>
+    </ng-template>
   </div>
   <div
     *ngIf="subPageName === 'Appeal Form'"

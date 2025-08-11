@@ -234,21 +234,25 @@ export class PlaceFacilityBookingPage implements OnInit {
         end_time: endTimeString,
       }, 'post/facility_book').subscribe(
         (response: any) => {
-          this.router.navigate(['/facility-process-to-payment'], {
-            state: {
-              type: 'FromPlaceBooking',
-              amount_deposit: response.result.booking_detail.amount_deposit,
-              amount_taxed: response.result.booking_detail.amount_taxed,
-              amount_total: response.result.booking_detail.amount_total,
-              amount_untaxed: response.result.booking_detail.amount_untaxed,
-              booked_by: response.result.booking_detail.booked_by,
-              booking_date: response.result.booking_detail.booking_date,
-              bookingId: response.result.booking_detail.booking_id,
-              facility_name: response.result.booking_detail.facility_name,
-              start_datetime: response.result.booking_detail.start_datetime,
-              stop_datettime: response.result.booking_detail.stop_datettime,
-            }
-          })
+          if (response.result.success === false) {
+            this.presentToast(response.result.message, 'danger');
+          } else {
+            this.router.navigate(['/facility-process-to-payment'], {
+              state: {
+                type: 'FromPlaceBooking',
+                amount_deposit: response.result.booking_detail.amount_deposit,
+                amount_taxed: response.result.booking_detail.amount_taxed,
+                amount_total: response.result.booking_detail.amount_total,
+                amount_untaxed: response.result.booking_detail.amount_untaxed,
+                booked_by: response.result.booking_detail.booked_by,
+                booking_date: response.result.booking_detail.booking_date,
+                bookingId: response.result.booking_detail.booking_id,
+                facility_name: response.result.booking_detail.facility_name,
+                start_datetime: response.result.booking_detail.start_datetime,
+                stop_datettime: response.result.booking_detail.stop_datettime,
+              }
+            })
+          }
         }
       )
     } else {

@@ -706,6 +706,68 @@
             ')[0] : '-' }}
           </p>
         </div>
+        <div
+          class="table-row"
+          *ngIf="['refund_deposits'].includes(approval_type)"
+        >
+          <p class="ml-2 table-cell text-base text-black font-bold">
+            S${{
+            functionMain.returnNone(selectedApproval.deposit_amount).toFixed(2)
+            }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['refund_deposits'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Requestor
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{
+            functionMain.returnNone(selectedApproval.who_request_for_refund.name)
+            }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['refund_deposits'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Facility Name
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{
+            functionMain.returnNone(selectedApproval.booking_id.facility_name)
+            }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['refund_deposits'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Deposited Date
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ selectedApproval.deposit_date ?
+            functionMain.formatDateDDMMYYYY(selectedApproval.deposit_date) : '-'
+            }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['refund_deposits'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Expected Refund Date
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ selectedApproval.expected_return_deposit_date ?
+            functionMain.formatDateDDMMYYYY(selectedApproval.expected_return_deposit_date)
+            : '-' }}
+          </p>
+        </div>
         <div class="table-row" *ngIf="['access_card'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Family Name
@@ -1329,64 +1391,6 @@
           [bgColor]="getBgClass()"
           *ngIf="selectedApproval.attachment_mimetype.includes('image')"
         ></app-image-zoom>
-      </div>
-      <div
-        class="table-row"
-        *ngIf="['refund_deposits'].includes(approval_type)"
-      >
-        <p class="ml-2 table-cell text-base text-black font-bold">
-          S${{
-          functionMain.returnNone(selectedApproval.deposit_amount).toFixed(2) }}
-        </p>
-      </div>
-      <div
-        class="table-row"
-        *ngIf="['refund_deposits'].includes(approval_type)"
-      >
-        <p class="font-bold table-cell w-1/2 text-base text-black">Requestor</p>
-        <p class="ml-2 table-cell text-base text-black">
-          : {{
-          functionMain.returnNone(selectedApproval.who_request_for_refund.name)
-          }}
-        </p>
-      </div>
-      <div
-        class="table-row"
-        *ngIf="['refund_deposits'].includes(approval_type)"
-      >
-        <p class="font-bold table-cell w-1/2 text-base text-black">
-          Facility Name
-        </p>
-        <p class="ml-2 table-cell text-base text-black">
-          : {{
-          functionMain.returnNone(selectedApproval.booking_id.facility_name) }}
-        </p>
-      </div>
-      <div
-        class="table-row"
-        *ngIf="['refund_deposits'].includes(approval_type)"
-      >
-        <p class="font-bold table-cell w-1/2 text-base text-black">
-          Deposited Date
-        </p>
-        <p class="ml-2 table-cell text-base text-black">
-          : {{ selectedApproval.deposit_date ?
-          functionMain.formatDateDDMMYYYY(selectedApproval.deposit_date) : '-'
-          }}
-        </p>
-      </div>
-      <div
-        class="table-row"
-        *ngIf="['refund_deposits'].includes(approval_type)"
-      >
-        <p class="font-bold table-cell w-1/2 text-base text-black">
-          Expected Refund Date
-        </p>
-        <p class="ml-2 table-cell text-base text-black">
-          : {{ selectedApproval.expected_return_deposit_date ?
-          functionMain.formatDateDDMMYYYY(selectedApproval.expected_return_deposit_date)
-          : '-' }}
-        </p>
       </div>
       <div
         class="flex flex-col mt-4 space-y-2"

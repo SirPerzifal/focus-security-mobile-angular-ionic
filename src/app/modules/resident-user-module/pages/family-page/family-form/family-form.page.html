@@ -278,6 +278,13 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants' && !formData.reject_reason"
     >
       <app-submit-button
+        *ngIf="!disableForm"
+        [text]="'Cancel Edit'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="justCancelEdit()"
+      >
+      </app-submit-button>
+      <app-submit-button
         [text]="buttonNameEdit"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="processEdit()"

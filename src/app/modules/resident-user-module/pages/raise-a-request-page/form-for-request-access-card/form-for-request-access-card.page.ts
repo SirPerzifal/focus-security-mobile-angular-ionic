@@ -254,6 +254,8 @@ export class FormForRequestAccessCardPage implements OnInit {
     });
 
     modal.onDidDismiss().then((result) => {
+      console.log(result.data);
+      
       if (result.data) {
         this.formSent.paymentReceipt = result.data;
         if (this.formSent.paymentReceipt === result.data) {
@@ -263,7 +265,7 @@ export class FormForRequestAccessCardPage implements OnInit {
             card_replacement_ids: this.formSent.previousCardId,
             reason_for_replacement: this.formSent.reasonForReplacement
           }, 'post/request_access_card').subscribe((response: any) => {
-            if (response.result.response_code === 200) {
+            if (response.result.status === 'success') {
               this.functionMain.presentToast('Successfully added card access', 'success');
               this.router.navigate(['/raise-a-request-page']);
             } else if (response.result.response_code === 400) {
@@ -272,7 +274,7 @@ export class FormForRequestAccessCardPage implements OnInit {
           })
         }
       } else {
-        return
+        this.functionMain.presentToast('Please upload payment receipt', 'danger');
       }
     });
 
@@ -281,21 +283,31 @@ export class FormForRequestAccessCardPage implements OnInit {
 
   onSubmitNext() {
     if (this.amountType.isRequirePayment) {
-      this.payNow(0);
+      if (this.formSent.typeSubmit === 'replacement' && this.formSent.previousCardId.length === 0) {
+        this.functionMain.presentToast('Please select a previous card to replace', 'danger');
+        return;
+      } else {
+        this.payNow(0);
+      }
     } else {
-      this.mainApi.endpointMainProcess({
-        family_ids: this.formSent.familyToAsign,
-        card_replacement_ids: this.formSent.previousCardId,
-        reason_for_replacement: this.formSent.reasonForReplacement,
-        payment_receipt: this.formSent.paymentReceipt,
-      }, 'post/request_access_card').subscribe((response: any) => {
-        if (response.result.response_code === 200) {
-          this.functionMain.presentToast('Successfully added card access', 'success');
-          this.router.navigate(['/raise-a-request-page']);
-        } else if (response.result.response_code === 400) {
-          this.functionMain.presentToast('Failed added card access', 'danger');
-        }
-      })
+      if (this.formSent.typeSubmit === 'replacement' && !this.formSent.previousCardId) {
+        this.functionMain.presentToast('Please select a previous card to replace', 'danger');
+        return;
+      } else {
+        this.mainApi.endpointMainProcess({
+          family_ids: this.formSent.familyToAsign,
+          card_replacement_ids: this.formSent.previousCardId,
+          reason_for_replacement: this.formSent.reasonForReplacement,
+          payment_receipt: this.formSent.paymentReceipt,
+        }, 'post/request_access_card').subscribe((response: any) => {
+          if (response.result.response_code === 200) {
+            this.functionMain.presentToast('Successfully added card access', 'success');
+            this.router.navigate(['/raise-a-request-page']);
+          } else if (response.result.response_code === 400) {
+            this.functionMain.presentToast('Failed added card access', 'danger');
+          }
+        })
+      }
     }
   }
 

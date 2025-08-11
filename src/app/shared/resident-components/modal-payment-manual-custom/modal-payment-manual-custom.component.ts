@@ -105,6 +105,8 @@ export class ModalPaymentManualCustomComponent  implements OnInit {
   }
 
   didmissToProcess() {
+    console.log(this.base64Receipt);
+    
     if (!this.base64Receipt) {
       this.functionMain.presentToast('Please upload payment receipt', 'danger');
       return;

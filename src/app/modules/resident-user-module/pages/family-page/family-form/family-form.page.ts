@@ -171,14 +171,8 @@ export class FamilyFormPage implements OnInit {
   onChange: (value: string) => void = () => {};
   
   onKeyUp(event: KeyboardEvent): void {
-    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].digit
     const inputValue = (event.target as HTMLInputElement).value;
-    if (inputValue.length > code) {
-      this.contactValue = inputValue.slice(0, code)
-      this.functionMain.presentToast(`Contact number must not be more than ${code} digits`, 'danger')
-    } else {
-      this.contactValue = inputValue;
-    }
+    this.contactValue = inputValue;
     this.formData.mobile_number = this.combinedValue;
     this.onChange(this.combinedValue);
   }
@@ -557,6 +551,12 @@ export class FamilyFormPage implements OnInit {
     }
     this.buttonNameEdit = 'Save Edit Change';
     this.functionMain.presentToast('You can change your profile data now', 'success');
+  }
+
+  justCancelEdit() {
+    this.disableForm = !this.disableForm;
+    this.buttonNameEdit = 'Click To Edit';
+    this.functionMain.presentToast('You can not change your profile data', 'danger');
   }
 
 }
