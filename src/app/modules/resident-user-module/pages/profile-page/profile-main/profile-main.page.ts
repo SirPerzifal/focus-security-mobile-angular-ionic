@@ -1150,6 +1150,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             banned: item['is_banned'],
             id: item['visitor_id']
           });
+          console.log(this.historyData.length);
+          
           this.isLoading = false;
         });
       }
