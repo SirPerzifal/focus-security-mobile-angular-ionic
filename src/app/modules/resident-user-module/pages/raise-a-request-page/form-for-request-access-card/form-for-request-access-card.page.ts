@@ -8,7 +8,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
@@ -34,6 +34,7 @@ export class FormForRequestAccessCardPage implements OnInit {
     mobile_number: '',
     applicant_state: ''
   }
+  projectId: number = 0;
   agreementChecked: boolean = false;
 
   expectedCards: any = [];
@@ -67,8 +68,9 @@ export class FormForRequestAccessCardPage implements OnInit {
               block_name: estate.block_name,
               unit_name: estate.unit_name,
               mobile_number: estate.family_mobile_number,
-              applicant_state: estate.family_type
+              applicant_state: estate.family_type,
             }
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -219,26 +221,48 @@ export class FormForRequestAccessCardPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.family.access.card',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainApi.endpointMainProcess({
+          family_ids: this.formSent.familyToAsign,
+          card_replacement_ids: this.formSent.previousCardId,
+          reason_for_replacement: this.formSent.reasonForReplacement,
+          payment_receipt: result.data[1] || '', // Use receipt URL if available
+          stripe_id: this.stripeId,
+        }, 'post/request_access_card').subscribe((response: any) => {
+          if (response.result.status === 'success') {
+            this.functionMain.presentToast('Successfully added card access', 'success');
+            this.router.navigate(['/raise-a-request-page']);
+          } else if (response.result.response_code === 400) {
+            this.functionMain.presentToast('Failed added card access', 'danger');
+          }
+        })
       } else {
         return
       }
@@ -248,7 +272,7 @@ export class FormForRequestAccessCardPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });
@@ -286,12 +310,18 @@ export class FormForRequestAccessCardPage implements OnInit {
       if (this.formSent.typeSubmit === 'replacement' && this.formSent.previousCardId.length === 0) {
         this.functionMain.presentToast('Please select a previous card to replace', 'danger');
         return;
+      } else if (this.formSent.typeSubmit === 'new_application' && this.formSent.familyToAsign.length === 0) {
+        this.functionMain.presentToast('Please select a family member to assign', 'danger');
+        return;
       } else {
         this.payNow(0);
       }
     } else {
-      if (this.formSent.typeSubmit === 'replacement' && !this.formSent.previousCardId) {
+      if (this.formSent.typeSubmit === 'replacement' && this.formSent.previousCardId.length === 0) {
         this.functionMain.presentToast('Please select a previous card to replace', 'danger');
+        return;
+      } else if (this.formSent.typeSubmit === 'new_application' && this.formSent.familyToAsign.length === 0) {
+        this.functionMain.presentToast('Please select a family member to assign', 'danger');
         return;
       } else {
         this.mainApi.endpointMainProcess({

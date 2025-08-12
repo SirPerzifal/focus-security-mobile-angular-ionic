@@ -8,8 +8,8 @@
     (change)="onChange($event)"
     [checked]="checkedText"
   />
-  <label for="{{ id }}" class="cw-4:text-sm text-sm">
-    <b class="cw-4:text-sm text-sm">
+  <label for="{{ id }}" class="text-base cw-3:text-sm">
+    <b class="text-base cw-3:text-sm">
       {{ text }}
     </b>
   </label>
@@ -25,7 +25,9 @@
       [checked]="check"
       class="mr-1 accent-black text-[var(--ion-color-primary)] rounded"
     />
-    <label for="provide_unit_number" class="classForLabelCheck text-sm"
+    <label
+      for="provide_unit_number"
+      class="classForLabelCheck text-base cw-3:text-sm"
       ><b>{{ text }}</b></label
     >
   </div>

@@ -73,7 +73,11 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
       stripe_id: this.stripeId,
     }, '/get-stripe-payment-info').subscribe((response: any) => {
       console.log('Payment processed successfully:', response);
-      this.modalController.dismiss(response.result.Intent.id);
+      if (response.result.receipt_url) {
+        this.modalController.dismiss([response.result.Intent.id, response.result.receipt_url]);
+      } else {
+        this.modalController.dismiss(response.result.Intent.id);
+      }
       // this.router.navigate([this.from], {
       //   state: {
       //     restart: true,

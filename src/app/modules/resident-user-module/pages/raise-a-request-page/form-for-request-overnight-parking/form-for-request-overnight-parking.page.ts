@@ -9,7 +9,7 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 import { RaiseARequestService } from 'src/app/service/resident/raise-a-request/raise-a-request.service';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Router } from '@angular/router';
 
@@ -46,6 +46,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
     unit_name: '',
     mobile_number: ''
   }
+  projectId: number = 0;
 
   formSent = {
     typeSubmit: '',
@@ -96,6 +97,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
               unit_name: estate.unit_name,
               mobile_number: estate.family_mobile_number
             }
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -259,26 +261,47 @@ export class FormForRequestOvernightParkingPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.vms.overnight.parking.list',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainApi.endpointMainProcess({
+          visitor_id: this.formSent.visitorId,
+          applicant_type: this.formSent.typeSubmit,
+          request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+          vehicle_number: this.formSent.vehicleNumber,
+          rental_agreement: this.formSent.rentalAgreement,
+          purpose: this.formSent.purpose,
+          payment_receipt: result.data[1] || '', // Use receipt URL if available
+          stripe_id: this.stripeId,
+        }, 'post/overnight_parking_application').subscribe((response: any) => {
+          this.functionMain.presentToast('Successfully added overnight request.', 'success');
+          this.router.navigate(['/raise-a-request-page']);
+        })
       } else {
         return
       }
@@ -288,7 +311,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });
@@ -311,6 +334,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
           })
         }
       } else {
+        this.functionMain.presentToast('Please upload payment receipt', 'danger');
         return
       }
     });
@@ -319,21 +343,59 @@ export class FormForRequestOvernightParkingPage implements OnInit {
   }
 
   onSubmitNext() {
-    if (this.amountType.isRequirePayment) {
-      this.payNow(0);
-    } else {
-      this.mainApi.endpointMainProcess({
-        visitor_id: this.formSent.visitorId,
-        applicant_type: this.formSent.typeSubmit,
-        request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
-        vehicle_number: this.formSent.vehicleNumber,
-        rental_agreement: this.formSent.rentalAgreement,
-        purpose: this.formSent.purpose,
-        payment_receipt: this.formSent.payment_receipt
-      }, 'post/overnight_parking_application').subscribe((response: any) => {
-        this.functionMain.presentToast('Successfully added overnight request.', 'success');
-        this.router.navigate(['/raise-a-request-page'])
-      })
+    if (this.formSent.typeSubmit == 'myself') {
+      if (!this.formSent.requestDate) {
+        this.functionMain.presentToast('Please select a request date', 'danger');
+        return;
+      } else if (!this.formSent.vehicleNumber) {
+        this.functionMain.presentToast('Please enter vehicle number', 'danger');
+        return;
+      } else if (!this.formSent.purpose) {
+        this.functionMain.presentToast('Please enter purpose', 'danger');
+        return;
+      } else if (!this.formSent.rentalAgreement) {
+        this.functionMain.presentToast('Please upload rental agreement', 'danger');
+        return;
+      } else {
+        if (this.amountType.isRequirePayment) {
+          this.payNow(0);
+        } else {
+          this.mainApi.endpointMainProcess({
+            visitor_id: this.formSent.visitorId,
+            applicant_type: this.formSent.typeSubmit,
+            request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+            vehicle_number: this.formSent.vehicleNumber,
+            rental_agreement: this.formSent.rentalAgreement,
+            purpose: this.formSent.purpose,
+            payment_receipt: this.formSent.payment_receipt
+          }, 'post/overnight_parking_application').subscribe((response: any) => {
+            this.functionMain.presentToast('Successfully added overnight request.', 'success');
+            this.router.navigate(['/raise-a-request-page'])
+          })
+        }
+      }
+    } else if (this.formSent.typeSubmit == 'visitor') {
+      if (!this.formSent.visitorId) {
+        this.functionMain.presentToast('Please select a visitor', 'danger');
+        return;
+      } else {
+        if (this.amountType.isRequirePayment) {
+          this.payNow(0);
+        } else {
+          this.mainApi.endpointMainProcess({
+            visitor_id: this.formSent.visitorId,
+            applicant_type: this.formSent.typeSubmit,
+            request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+            vehicle_number: this.formSent.vehicleNumber,
+            rental_agreement: this.formSent.rentalAgreement,
+            purpose: this.formSent.purpose,
+            payment_receipt: this.formSent.payment_receipt
+          }, 'post/overnight_parking_application').subscribe((response: any) => {
+            this.functionMain.presentToast('Successfully added overnight request.', 'success');
+            this.router.navigate(['/raise-a-request-page'])
+          })
+        }
+      }
     }
   }
 

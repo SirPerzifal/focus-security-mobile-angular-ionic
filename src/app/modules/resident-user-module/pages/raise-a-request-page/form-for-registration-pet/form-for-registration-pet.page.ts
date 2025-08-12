@@ -6,7 +6,9 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-form-for-registration-pet',
@@ -34,16 +36,28 @@ export class FormForRegistrationPetPage implements OnInit {
     notesForManagement: '',
     paymentReceipt: ''
   }
+  projectId: number = 0;
 
   constructor(
     private modalController: ModalController,
     private mainApi: MainApiResidentService,
     private functionMain: FunctionMainService,
-    private router: Router
+    private router: Router,
+    private storage: StorageService
   ) { }
 
   ngOnInit() {
     this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = estate.project_id;
+          }
+        })
+      }
+    })
   }
 
   loadAmount() {
@@ -170,26 +184,46 @@ export class FormForRegistrationPetPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.family.access.card',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainApi.endpointMainProcess({
+          type_of_pet: this.formSent.typeOfPet,
+          pet_breed: this.formSent.typeOfBreed,
+          pet_license: this.formSent.licencePet,
+          pet_image: this.formSent.imagePet,
+          notes: this.formSent.notesForManagement,
+          payment_receipt: result.data[1],
+          stripe_id: this.stripeId
+        }, 'post/request_pet_registration').subscribe((response: any) => {
+          this.router.navigate(['raise-a-request-page'])
+          this.functionMain.presentToast('Successfully added pet.', 'success')
+        })
       } else {
         return
       }
@@ -199,7 +233,7 @@ export class FormForRegistrationPetPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });

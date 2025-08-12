@@ -10,7 +10,7 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 
 @Component({
   selector: 'app-form-for-request-move-in-out-permit',
@@ -66,6 +66,7 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
     contractorVehicleNumber: '',
     paymentReceipt: '',
   }
+  projectId: number = 0;
 
   constructor(
     private storage: StorageService,
@@ -90,6 +91,7 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
               unit_name: estate.unit_name,
               mobile_number: estate.family_mobile_number
             }
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -306,26 +308,51 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.request.schedule',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
-        this.presentModal(clientSecret, stripe)
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
+        this.presentModal(clientSecret, stripe);
       }
-    })
+    });
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainApi.endpointMainProcess({
+          schedule_date: this.formSent.requestDate,
+          schedule_type: this.formSent.typeSubmit,
+          contact_person_id: this.formSent.personAssign,
+          contractor_contact_person: this.formSent.contractorContactPerson, 
+          contractor_contact_number: this.formSent.contractorContactNumber,
+          contractor_company_name: this.formSent.contractorCompanyName,
+          contractor_vehicle_number: this.formSent.contractorVehicleNumber,
+          payment_receipt: this.formSent.paymentReceipt,
+        }, 'post/request_schedule_permit').subscribe((response: any) => {
+          if (response.result.response_code === 200) {
+            this.functionMain.presentToast('Successfully added add schedule.', 'success');
+            this.router.navigate(['/raise-a-request-page']);
+          } else if (response.result.response_code === 400) {
+            this.functionMain.presentToast('Failed added add schedule.', 'danger');
+          }
+        })
       } else {
         return
       }
@@ -335,7 +362,7 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });

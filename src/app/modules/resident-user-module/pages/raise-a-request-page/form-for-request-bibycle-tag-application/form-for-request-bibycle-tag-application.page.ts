@@ -8,7 +8,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
@@ -24,6 +24,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
     unit_name: '',
     mobile_number: ''
   }
+  projectId: number = 0;
 
   expectedBicycle: any = [];
 
@@ -67,7 +68,8 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
               block_name: estate.block_name,
               unit_name: estate.unit_name,
               mobile_number: estate.family_mobile_number
-            }
+            };
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -208,26 +210,45 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainAPi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainAPi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.bicycle.tag',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe)
       }
     })
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainAPi.endpointMainProcess({
+          payment_receipt: result.data[1] || '', // Use receipt URL if available
+          bicycle_brand: this.formSent.bicycleBrand,
+          bicycle_colour: this.formSent.bicycleColour,
+          bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
+          bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
+          stripe_id: this.stripeId, // Include the Stripe ID for the payment
+        }, 'post/request_bicycle_tag').subscribe((response: any) => {
+          this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+          this.router.navigate(['raise-a-request-page'])
+        })
       } else {
         return
       }
@@ -237,7 +258,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });
@@ -247,7 +268,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
         this.formSent.paymentReceipt = result.data;
         if (this.formSent.paymentReceipt === result.data) {
           this.mainAPi.endpointMainProcess({
-            paymentReceipt: this.formSent.paymentReceipt,
+            payment_receipt: this.formSent.paymentReceipt,
             bicycle_brand: this.formSent.bicycleBrand,
             bicycle_colour: this.formSent.bicycleColour,
             bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
@@ -266,19 +287,44 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
   }
 
   onSubmitNext() {
-    if (this.amountType.isRequirePayment) {
-      this.payNow(0);
+    if (this.formSent.typeSubmit === 'replacement' && this.formSent.cardId.length === 0) {
+      this.functionMain.presentToast('Please provide a card ID for replacement requests.', 'warning');
+      return;
+    } else if (this.formSent.typeSubmit === 'new_application') {
+      if (!this.formSent.bicycleBrand || !this.formSent.bicycleColour || !this.formSent.bicycleImage) {
+        this.functionMain.presentToast('Please fill in all required fields for new applications.', 'warning');
+        return;
+      } else {
+        if (this.amountType.isRequirePayment) {
+          this.payNow(0);
+        } else {
+          this.mainAPi.endpointMainProcess({
+            payment_receipt: this.formSent.paymentReceipt,
+            bicycle_brand: this.formSent.bicycleBrand,
+            bicycle_colour: this.formSent.bicycleColour,
+            bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
+            bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
+          }, 'post/request_bicycle_tag').subscribe((response: any) => {
+            this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+            this.router.navigate(['raise-a-request-page'])
+          })
+        }
+      }
     } else {
-      this.mainAPi.endpointMainProcess({
-        paymentReceipt: this.formSent.paymentReceipt,
-        bicycle_brand: this.formSent.bicycleBrand,
-        bicycle_colour: this.formSent.bicycleColour,
-        bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
-        bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
-      }, 'post/request_bicycle_tag').subscribe((response: any) => {
-        this.functionMain.presentToast('Successfully added bicycle card.', 'success')
-        this.router.navigate(['raise-a-request-page'])
-      })
+      if (this.amountType.isRequirePayment) {
+        this.payNow(0);
+      } else {
+        this.mainAPi.endpointMainProcess({
+          payment_receipt: this.formSent.paymentReceipt,
+          bicycle_brand: this.formSent.bicycleBrand,
+          bicycle_colour: this.formSent.bicycleColour,
+          bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
+          bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
+        }, 'post/request_bicycle_tag').subscribe((response: any) => {
+          this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+          this.router.navigate(['raise-a-request-page'])
+        })
+      }
     }
   }
 

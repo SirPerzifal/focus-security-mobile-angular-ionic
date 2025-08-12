@@ -189,6 +189,8 @@ export class RaiseARequestMainPage implements OnInit {
     this.subPageName = `${event[1]}`;
 
     if (this.subPageName === 'History Request') {
+      this.selectedApplicationType = 'All'
+      this.selectedScheduleType = 'All'
       this.loadHistoryRequests();
     }
 
@@ -220,8 +222,25 @@ export class RaiseARequestMainPage implements OnInit {
   }
 
   loadHistoryRequests(type?: string, page?: number) {
+    this.isLoading = true;
+    this.accessCard = [];
+    this.overnight = [];
+    this.bicycle = [];
+    this.coach = [];
+    this.schedule = [];
+    this.pet = [];
+    this.appeal = [];
+    this.allDatas = [];
+    this.filteredDatas = [];
+    this.pagination = {
+      current_page: 0,
+      per_page: 0,
+      total_page: 0,
+      total_records: 0
+    }
     this.mainApi.endpointMainProcess({
-      page: page
+      page: page,
+      type: type
     }, 'get/raise_a_request_status').subscribe(      
       (response: any) => {
         console.log("Response data:", JSON.stringify(response));
@@ -270,32 +289,8 @@ export class RaiseARequestMainPage implements OnInit {
 
   selectedScheduleType: string = ''; // Variabel untuk menyimpan tipe jadwal yang dipilih
   onApplicationTypeChange() {
-    // Handle Move In / Move Out or Renovation selections
-    if (this.selectedApplicationType === 'Move In / Move Out' || this.selectedApplicationType === 'Renovation') {
-      this.selectedScheduleType = this.selectedApplicationType;
-      
-      // Filter from all schedules based on type
-      if (this.selectedApplicationType === 'Move In / Move Out') {
-        const moveInItems = this.allDatas.filter((item: any) => 
-          item.application_title === 'Request schedules Application.' && 
-          item.schedule_type === 'Move In');
-        
-        const moveOutItems = this.allDatas.filter((item: any) => 
-          item.application_title === 'Request schedules Application.' && 
-          item.schedule_type === 'Move Out');
-        
-        this.filteredDatas = [...moveInItems, ...moveOutItems];
-      } else {
-        // For Renovation
-        this.filteredDatas = this.allDatas.filter((item: any) => 
-          item.application_title === 'Request schedules Application.' && 
-          item.schedule_type === 'Renovation');
-      }
-    } else {
-      // For other application types, filter directly by application_title
-      this.filteredDatas = this.allDatas.filter((item: any) => 
-        item.application_title === this.selectedApplicationType);
-    }
+    this.selectedScheduleType = this.selectedApplicationType;
+    this.loadHistoryRequests(this.selectedScheduleType)
   }
 
   isAccessCard(data: AllData): data is AccessCard {

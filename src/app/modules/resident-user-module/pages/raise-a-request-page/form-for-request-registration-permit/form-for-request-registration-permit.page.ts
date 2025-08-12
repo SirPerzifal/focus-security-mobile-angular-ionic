@@ -10,7 +10,7 @@ import { SignaturePadComponent } from 'src/app/shared/components/signature-pad/s
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 import { TermsConditionModalComponent } from 'src/app/shared/resident-components/terms-condition-modal/terms-condition-modal.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
@@ -60,6 +60,7 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
     paymentReceipt: '',
     renovationSigned: ''
   }
+  projectId: number = 0;
   renovationSigned: string = '';
   isRenovationSigned = false
 
@@ -86,6 +87,7 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
               mobile_number: estate.family_mobile_number,
               family_id: estate.family_id
             }
+            this.projectId = estate.project_id;
           }
         })
       }
@@ -311,21 +313,29 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
   }
 
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.request.schedule',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent').subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret; // Adjust based on your API response structure
       if (clientSecret) {
-        this.presentModal(clientSecret, stripe)
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
+        this.presentModal(clientSecret, stripe);
       }
-    })
+    });
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
@@ -340,7 +350,7 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });

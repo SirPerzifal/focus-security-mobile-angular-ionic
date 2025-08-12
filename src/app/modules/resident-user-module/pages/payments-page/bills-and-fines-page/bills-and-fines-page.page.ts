@@ -6,7 +6,7 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 
 interface payment {
   id: number,
@@ -437,7 +437,7 @@ export class BillsAndFinesPagePage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });
@@ -460,6 +460,7 @@ export class BillsAndFinesPagePage implements OnInit {
           })
         }
       } else {
+        this.functionMain.presentToast('Please upload payment receipt', 'danger');
         return
       }
     });

@@ -227,7 +227,7 @@
     <div
       *ngIf="formSent.typeSubmit === 'move_in' || formSent.typeSubmit === 'move_out'"
     >
-      <div class="w-full">
+      <div class="w-full mt-1">
         <app-input-component
           [id]="'contact_person_contractor'"
           [type]="'text'"
@@ -236,7 +236,7 @@
           (eventEmitter)="onValueChange($event, 'contact_person_contractor')"
         ></app-input-component>
       </div>
-      <div class="w-full">
+      <div class="w-full mt-1">
         <app-input-component
           [id]="'contact_number_contractor'"
           [type]="'text'"
@@ -245,7 +245,7 @@
           (eventEmitter)="onValueChange($event, 'contact_number_contractor')"
         ></app-input-component>
       </div>
-      <div class="w-full">
+      <div class="w-full mt-1">
         <app-input-component
           [id]="'company_name_contractor'"
           [type]="'text'"
@@ -254,7 +254,7 @@
           (eventEmitter)="onValueChange($event, 'company_name_contractor')"
         ></app-input-component>
       </div>
-      <div class="w-full">
+      <div class="w-full mt-1">
         <app-input-component
           [id]="'vehicle_number_contractor'"
           [type]="'text'"

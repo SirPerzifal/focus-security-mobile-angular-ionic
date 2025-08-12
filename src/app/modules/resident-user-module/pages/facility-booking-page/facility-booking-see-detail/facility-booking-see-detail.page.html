@@ -49,38 +49,39 @@
         </tr>
       </table>
 
-      <div class="mt-4" *ngIf="typeOfUser !== 'industrial'">
-        <p class="underline underline-offset-1 font-bold">Payment Breakdown</p>
-        <div class="flex justify-between">
-          <p>Booking Fee</p>
-          <p>
-            S${{ bookingData.bookingFee ? bookingData.bookingFee.toFixed(2) :
-            '0.00' }}
+      <div *ngIf="bookingData.bookingFee !== 0">
+        <div class="mt-4" *ngIf="typeOfUser  !== 'industrial'">
+          <p class="underline underline-offset-1 font-bold">
+            Payment Breakdown
           </p>
-        </div>
-        <div class="flex justify-between">
-          <p>Deposit</p>
-          <p>
-            S${{ bookingData.amountDeposit ?
-            bookingData.amountDeposit.toFixed(2) :
-            bookingData.deposit.toFixed(2) || '0.00' }}
-          </p>
-        </div>
-        <hr class="my-2" />
-        <div class="flex justify-between font-bold">
-          <p>Grand Total</p>
-          <p>S${{ calculateTotal() ? calculateTotal().toFixed(2) : '0.00' }}</p>
+          <div class="flex justify-between">
+            <p>Booking Fee</p>
+            <p>S${{ (bookingData.bookingFee || 0).toFixed(2) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Deposit</p>
+            <p>S${{ (bookingData.amountDeposit || 0).toFixed(2) }}</p>
+          </div>
+          <hr class="my-2" />
+          <div class="flex justify-between font-bold">
+            <p>Grand Total</p>
+            <p>
+              S${{ calculateTotal() ? calculateTotal().toFixed(2) : '0.00' }}
+            </p>
+          </div>
         </div>
       </div>
 
-      <!-- Tombol Proceed to Payment -->
-      <div *ngIf="bookingData.status === 'Approved'" class="text-center">
-        <app-submit-button
-          [text]="'Email Receipt'"
-          [extraClass]="'bg-[#10421d] text-[white] w-full mt-4'"
-          (click)="proceedToEmail()"
-        >
-        </app-submit-button>
+      <div *ngIf="bookingData.bookingFee !== 0">
+        <!-- Tombol Proceed to Payment -->
+        <div *ngIf="bookingData.status === 'Approved'" class="text-center">
+          <app-submit-button
+            [text]="'Email Receipt'"
+            [extraClass]="'bg-[#10421d] text-[white] w-full mt-4'"
+            (click)="proceedToEmail()"
+          >
+          </app-submit-button>
+        </div>
       </div>
       <div
         class="text-center mb-4"

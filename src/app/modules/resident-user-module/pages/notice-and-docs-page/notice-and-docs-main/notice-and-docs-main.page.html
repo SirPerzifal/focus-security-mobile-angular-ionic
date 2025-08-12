@@ -173,7 +173,7 @@
           </div>
           <h2 class="font-bold">Back</h2>
         </div>
-        <div *ngIf="files.length > 0; else noFileToShow">
+        <div *ngIf="files.length > 0; else noFileToShow" class="space-y-2">
           <div *ngFor="let file of files">
             <div
               *ngIf="file.document_type === '1_folder'; else otherFile"

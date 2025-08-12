@@ -63,6 +63,7 @@
             (change)="onApplicationTypeChange()"
           >
             <option disabled hidden value="">Type of Application</option>
+            <option value="All">All</option>
             <option value="Access cards Application.">
               Access Card Application
             </option>
@@ -343,7 +344,7 @@
                         :
                       </td>
                       <td class="text-start cw-5:text-[12px] cw-3:text-[11px]">
-                        {{ getRequestValue(allData, field) }}
+                        {{ getRequestValue(allData, field) ? getRequestValue(allData, field) : '-' }}
                       </td>
                     </tr>
                   </ng-container>

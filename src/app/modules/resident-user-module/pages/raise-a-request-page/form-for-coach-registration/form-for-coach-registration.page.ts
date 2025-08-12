@@ -7,8 +7,10 @@ import { TermsConditionModalComponent } from 'src/app/shared/resident-components
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ModalComponent } from 'src/app/shared/resident-components/choose-payment-methode/modal/modal.component';
 import { ModalPaymentCustomComponent } from 'src/app/shared/resident-components/modal-payment-custom/modal-payment-custom.component';
-import { UploadReceiptModalComponent } from 'src/app/shared/resident-components/upload-receipt-modal/upload-receipt-modal.component';
+import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-components/modal-payment-manual-custom/modal-payment-manual-custom.component';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-form-for-coach-registration',
@@ -33,12 +35,23 @@ export class FormForCoachRegistrationPage implements OnInit {
     private functionMain: FunctionMainService,
     private mainApi: MainApiResidentService,
     private alertController: AlertController,
+    private storage: StorageService,
     private router: Router
   ) { }
 
   ngOnInit() {
     this.getTodayDate();
     this.loadAmount();
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if ( value ) {
+        this.storage.decodeData(value).then((value: any) => {
+          if ( value ) {
+            const estate = JSON.parse(value) as Estate;
+            this.projectId = estate.project_id;
+          }
+        })
+      }
+    })
   }
 
   amountPayable: string = '';
@@ -216,28 +229,40 @@ export class FormForCoachRegistrationPage implements OnInit {
     }
   }
 
+  projectId: number | null = null;
   electricPay(stripe: any) {
-    this.mainApi.endpointCustomProcess({}, '/create-payment-intent').subscribe((response: any) => {
+    this.mainApi.endpointCustomProcess({
+      project_id: this.projectId,
+      model: 'fs.residential.registered.coaches',
+      from: 'raise-a-request-page'
+    }, '/create-payment-intent'
+    ).subscribe((response: any) => {
       const clientSecret = response.result.Intent.client_secret;
       if (clientSecret) {
+        this.stripeId = response.result.Intent.id; // Simpan ID pembayaran
         this.presentModal(clientSecret, stripe);
       }
     });
   }
 
+  stripeId: string = ''; // Replace with your actual publishable key
   async presentModal(clientSecret: string, stripe: any) {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
       componentProps: {
         stripe: stripe,
-        clientSecret: clientSecret
+        clientSecret: clientSecret,
+        stripeId: this.stripeId,
+        from: 'raise-a-request-page',
       }
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         // Handle payment success
+        this.formSent.paymentReceipt = result.data[1];
+        this.submitCoachRegistration(this.stripeId);
       } else {
         return;
       }
@@ -247,7 +272,7 @@ export class FormForCoachRegistrationPage implements OnInit {
 
   async manualPay(paymentId: number) {
     const modal = await this.modalController.create({
-      component: UploadReceiptModalComponent,
+      component: ModalPaymentManualCustomComponent,
       cssClass: 'upload-receipt-manual-pay',
       componentProps: {}
     });
@@ -293,7 +318,7 @@ export class FormForCoachRegistrationPage implements OnInit {
   }
 
   // Method terpisah untuk submit coach registration
-  private submitCoachRegistration() {
+  private submitCoachRegistration(stripeId?: string) {
     const facilityData = this.prepareFacilityData();
     
     const payload = {
@@ -309,7 +334,12 @@ export class FormForCoachRegistrationPage implements OnInit {
       expected_start_date: this.formSent.expectedStartDate,
       duration_per_session: this.formSent.durationPerSession,
       payment_receipt: this.formSent.paymentReceipt,
+      stripe_id: ''
     };
+
+    if (stripeId) {
+      payload['stripe_id'] = stripeId;
+    }
 
     this.mainApi.endpointMainProcess(payload, 'post/request_register_coach').subscribe(
       (response: any) => {
@@ -541,7 +571,7 @@ export class FormForCoachRegistrationPage implements OnInit {
 
   async viewDetail(coach: any) {
     const alert = await this.alertController.create({
-      header: 'Detail Transaksi',
+      header: 'Coach Details',
       message: `
         <strong>Nama Coach:</strong> ${coach.name}<br>
         <strong>Contact Number:</strong> ${coach.contact_number}<br>

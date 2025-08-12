@@ -34,8 +34,10 @@
           ></app-input-component>
         </div>
 
-        <div class="w-full flex flex-col">
-          <label class="text-sm"><b>Contact Number of Coach</b></label>
+        <div class="w-full flex flex-col mt-1">
+          <label class="text-base cw-3:text-sm"
+            ><b>Contact Number of Coach</b></label
+          >
           <div class="w-full flex flex-row justify-start space-x-2">
             <div class="w-[35%]">
               <select
@@ -66,8 +68,10 @@
           </div>
         </div>
 
-        <div class="w-full mt-[-3px]">
-          <label class="text-base cw-3:text-sm font-bold">Sex of Coach</label>
+        <div class="w-full mt-1">
+          <label class="text-base cw-3:text-sm font-bold mt-1"
+            >Sex of Coach</label
+          >
           <select
             id="sex_of_coach"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -81,8 +85,10 @@
           </select>
         </div>
 
-        <div class="w-full mt-[-3px]">
-          <label class="text-base cw-3:text-sm font-bold">Nationality</label>
+        <div class="w-full mt-1">
+          <label class="text-base cw-3:text-sm font-bold mt-1"
+            >Nationality</label
+          >
           <select
             id="nationality"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -95,7 +101,7 @@
           </select>
         </div>
 
-        <div *ngIf="nationality.other" class="w-full">
+        <div *ngIf="nationality.other" class="w-full mt-1">
           <app-input-component
             [id]="'nationality_other'"
             [type]="'text'"
@@ -104,7 +110,7 @@
           ></app-input-component>
         </div>
 
-        <div class="w-full">
+        <div class="w-full mt-1">
           <app-input-component
             [id]="'organization_affiliate_with'"
             [type]="'text'"
@@ -114,7 +120,7 @@
           ></app-input-component>
         </div>
 
-        <div class="w-full">
+        <div class="w-full mt-1">
           <app-input-component
             [id]="'coaching_reg_number'"
             [type]="'text'"
@@ -165,7 +171,7 @@
             </select>
           </div>
 
-          <div *ngIf="typeOfCoaching.other" class="w-full">
+          <div *ngIf="typeOfCoaching.other" class="w-full mt-1">
             <app-input-component
               [id]="'type_of_coaching_other'"
               [type]="'text'"
@@ -174,7 +180,7 @@
             ></app-input-component>
           </div>
 
-          <div class="w-full mt-[-3px]">
+          <div class="w-full mt-1">
             <label class="text-base cw-3:text-sm font-bold"
               >Facility Required</label
             >
@@ -195,7 +201,7 @@
             </select>
           </div>
 
-          <div *ngIf="facility.other" class="w-full">
+          <div *ngIf="facility.other" class="w-full mt-1">
             <app-input-component
               [id]="'facility_other'"
               [type]="'text'"
@@ -204,7 +210,7 @@
             ></app-input-component>
           </div>
 
-          <div class="w-full">
+          <div class="w-full mt-1">
             <app-input-component
               [id]="'expected_start_date'"
               [type]="'date'"
@@ -215,7 +221,7 @@
             ></app-input-component>
           </div>
 
-          <div class="w-full">
+          <div class="w-full mt-1">
             <app-input-component
               [id]="'duration_per_session'"
               [type]="'number'"
@@ -303,7 +309,9 @@
               <th class="border border-gray-300 py-2 cw-3:text-[11px]">
                 Deactive
               </th>
-              <th class="border border-gray-300 py-2 cw-3:text-[11px]">Aksi</th>
+              <th class="border border-gray-300 py-2 cw-3:text-[11px]">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>

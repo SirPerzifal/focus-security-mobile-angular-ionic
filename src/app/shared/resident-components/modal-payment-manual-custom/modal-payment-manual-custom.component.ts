@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
+import { Capacitor } from '@capacitor/core';
+import { FileOpener } from '@capacitor-community/file-opener';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -13,9 +16,9 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 export class ModalPaymentManualCustomComponent  implements OnInit {
   selectedPaymentReceipt: string = '';
   base64Receipt: string = '';
-  projectId: number = 0;
   amountPayable: string = '';
   qrCodeImage: string = '';
+  qrCodeMime: string = '';
   amountType = {
     amountUntaxed: '',
     amountTaxed: '',
@@ -26,46 +29,81 @@ export class ModalPaymentManualCustomComponent  implements OnInit {
   constructor(private modalController: ModalController, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService) { }
 
   ngOnInit() {
-    Preferences.get({key: 'USESTATE_DATA'}).then(async (value) => {
-      if (value?.value) {
-        const parseValue = JSON.parse(value.value);
-        this.projectId = Number(parseValue.project_id);
-        this.loadQRCode();
-        this.loadAmount();
-      }
-    })
+    this.loadQRCode();
+    this.loadAmount();
   }
 
   loadQRCode() {
-    this.mainApiResidentService.endpointProcess({
-      project_id: this.projectId
-    }, 'get/payment_qr_code').subscribe((result: any) => {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/payment_qr_code').subscribe((result: any) => {
+      console.log(result);
+      
       this.qrCodeImage = result.result.qr_code;
+      this.qrCodeMime = result.result.qr_code_mime;
     })
   }
 
-  donwloadQris() {
-    if (!this.qrCodeImage) {
-      return;
+  async donwloadQris() {
+    try {
+      const byteCharacters = atob(this.qrCodeImage);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: this.qrCodeMime });
+
+      if (Capacitor.isNativePlatform()) {
+        const base64 = await this.convertBlobToBase64(blob);
+        const saveFile = await Filesystem.writeFile({
+          path: `QR-Code-.png`,
+          data: base64,
+          directory: Directory.Data
+        });
+        const path = saveFile.uri;
+        await FileOpener.open({
+          filePath: path,
+          contentType: blob.type
+        });
+        // console.log('File is opened');
+      } else {
+        const href = window.URL.createObjectURL(blob);
+        this.downloadFile(href, `QR-Code-.png`);
+      }
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      // Optionally, show an error message to the user
     }
-  
-    // Membuat elemen <a> untuk mendownload gambar
-    const link = document.createElement('a');
-    link.href = this.qrCodeImage; // Mengatur href ke base64 image
-    link.download = 'qr_code.png'; // Menentukan nama file yang akan diunduh
-  
-    // Menambahkan elemen ke body dan memicu klik
+  }
+
+  convertBlobToBase64(blob: Blob) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  downloadFile(href: string, filename: string) {
+    const link = document.createElement("a");
+    link.style.display = "none";
+    link.href = href;
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
-  
-    // Menghapus elemen setelah klik
-    document.body.removeChild(link);
+    setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        // Periksa apakah parentNode tidak null sebelum menghapus
+        if (link.parentNode) {
+            link.parentNode.removeChild(link);
+        }
+    }, 0);
   }
 
   loadAmount() {
-    this.mainApiResidentService.endpointProcess({
-      project_id: this.projectId
-    }, 'get/raise_a_request_charge').subscribe((result: any) => {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/raise_a_request_charge').subscribe((result: any) => {
       this.amountType = {
         amountUntaxed: result.result.result.amount_untaxed,
         amountTaxed: result.result.result.amount_taxed,
