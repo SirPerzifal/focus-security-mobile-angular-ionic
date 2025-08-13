@@ -109,16 +109,18 @@
           </div>
         </div>
 
-        <div
-          *ngIf="ad.appeal_status === 'Issued'"
-          class="button-card-facility flex items-center font-bold w-1/2 mt-2 mb-2"
-        >
-          <button
-            class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold"
-            (click)="appealNow(ad)"
+        <div *ngIf="!ad.is_appeal">
+          <div
+            *ngIf="ad.appeal_status === 'Issued'"
+            class="button-card-facility flex items-center font-bold w-1/2 mt-2 mb-2"
           >
-            Appeal Now
-          </button>
+            <button
+              class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold"
+              (click)="appealNow(ad)"
+            >
+              Appeal Now
+            </button>
+          </div>
         </div>
       </div>
     </div>

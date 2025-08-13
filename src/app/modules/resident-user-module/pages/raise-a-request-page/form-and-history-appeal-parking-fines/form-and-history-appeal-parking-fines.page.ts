@@ -38,6 +38,7 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
     unit_name : '',
     issue_time : '',
     appeal_status : '',
+    is_appeal: false,
     reason_for_appeal: ''
   }
 
@@ -70,6 +71,23 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
 
   loadOffence() {
     this.isLoading = true;
+    this.appealData = []
+    this.appealData.pop()
+    this.appealNowFromData = {
+      id : '',
+      name : '',
+      contact_number : '',
+      offender_name : '',
+      vehicle_number : '',
+      block_id : '',
+      block_name : '',
+      unit_id : '',
+      unit_name : '',
+      issue_time : '',
+      appeal_status : '',
+      is_appeal: false,
+      reason_for_appeal: ''
+    }
     this.mainApi.endpointMainProcess({}, 'get/offenses').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         // console.log(response);
@@ -85,7 +103,8 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
             'unit_id' : appeal_data.unit_id,
             'unit_name' : appeal_data.unit_name,
             'issue_time' : this.ambil_tanggal(appeal_data.issue_time),
-            'appeal_status' : appeal_data.appeal_status
+            'appeal_status' : appeal_data.appeal_status,
+            'is_appeal' : appeal_data.is_appeal
           }
         })
         console.log(this.appealData);
@@ -111,7 +130,8 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
       unit_name : appealData.unit_name,
       issue_time : appealData.issue_time,
       appeal_status : appealData.appeal_status,
-      reason_for_appeal: ''
+      reason_for_appeal: '',
+      is_appeal: true
     };
   }
 
@@ -123,7 +143,8 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
       // console.log(Response);
       if (Response.result.response_code === 200) {
         this.functionMain.presentToast('Appeal data has been successfully saved!', 'success');
-      this.subPageName = 'Appeal Parking Fines';
+        this.subPageName = 'Appeal Parking Fines';
+        this.loadOffence();
       } else {
         this.functionMain.presentToast('Failed to save appeal data!', 'danger');
       }

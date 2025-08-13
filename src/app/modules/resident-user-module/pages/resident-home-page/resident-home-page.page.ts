@@ -401,11 +401,9 @@ export class ResidentHomePagePage implements OnInit {
       
       if (image && image.webPath) {
         this.isModalChooseUpload = !this.isModalChooseUpload;
-        if (this.selectedProfile.startsWith('file://')) {
-          const response = await fetch(this.selectedProfile);
-          const blob = await response.blob();
-          this.selectedProfile = await this.blobToBase64(blob);
-        }
+        const response = await fetch(this.selectedProfile);
+        const blob = await response.blob();
+        this.selectedProfile = await this.blobToBase64(blob);
         this.showingProfile = image.webPath;
         this.functionMain.presentToast('Photo captured successfully', 'success');
       }
@@ -432,6 +430,8 @@ export class ResidentHomePagePage implements OnInit {
       new_image_profile: this.selectedProfile,
       family_nickname: this.useName
     }, 'post/change_update_profile_image').subscribe((response: any) => {
+      this.showingProfile = '';
+      this.selectedProfile = '';
       const estateString = JSON.stringify(response.result.new_estate);
       console.log(estateString);
       // Melakukan encoding ke Base64

@@ -273,7 +273,9 @@ export class FunctionMainService {
     });
   }
 
-  async downloadDocument(base64Doc: string, title: string) {
+  async downloadDocument(base64Doc: string, title: string, type?: string) {
+    console.log(type ? type : 'application/pdf');
+    
     try {
       const byteCharacters = atob(base64Doc);
       const byteNumbers = new Array(byteCharacters.length);
@@ -281,12 +283,12 @@ export class FunctionMainService {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const blob = new Blob([byteArray], { type: type ? type : 'application/pdf' });
 
       if (Capacitor.isNativePlatform()) {
         const base64 = await this.convertBlobToBase64(blob);
         const saveFile = await Filesystem.writeFile({
-          path: `${title}.pdf`,
+          path: `${title}`,
           data: base64,
           directory: Directory.Data
         });
@@ -298,7 +300,7 @@ export class FunctionMainService {
         console.log('File is opened');
       } else {
         const href = window.URL.createObjectURL(blob);
-        this.downloadFile(href, `${title}.pdf`);
+        this.downloadFile(href, `${title}`);
       }
     } catch (error) {
       console.error('Error downloading document:', error);

@@ -190,6 +190,7 @@
         </div>
         <div class="flex flex-row mt-1">
           <table
+            *ngIf="expectedCards.length > 0"
             class="table-auto border-collapse border border-gray-300 w-full text-sm text-left bg-white"
           >
             <thead>
@@ -224,6 +225,12 @@
               </tr>
             </tbody>
           </table>
+          <ng-container *ngIf="expectedCards.length === 0">
+            <p class="text-gray-700">
+              You have been submitted all family members to apply card wait
+              until approve
+            </p>
+          </ng-container>
         </div>
       </div>
     </div>

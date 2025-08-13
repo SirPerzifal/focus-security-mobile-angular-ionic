@@ -210,13 +210,6 @@
                 </ng-container>
               </div>
               <h2
-                [ngClass]="{
-                'text-green-500': allData.states === 'Approved' || allData.appeal_status === 'Approved',
-                'text-red-700': allData.states === 'Rejected' || allData.states === 'Cancelled' || allData.appeal_status === 'Rejected',
-                'text-yellow-400': allData.states === 'requested' || allData.states === 'Requested' || 
-                                  allData.states === 'Pending Approval' || allData.states === 'Pending Payment' || 
-                                  allData.appeal_status === 'Issued',
-              }"
                 class="flex flex-col text-base font-bold mb-2 items-start text-start"
               >
                 {{ allData.application_title }}
