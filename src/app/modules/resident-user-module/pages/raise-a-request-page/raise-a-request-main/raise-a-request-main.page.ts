@@ -123,41 +123,48 @@ export class RaiseARequestMainPage implements OnInit {
       'Create Date',
       'States',
       'Access Card Status',
-      'Access Card End Date'
+      'Access Card End Date',
+      'Reason for Rejection'
     ],
     'Overnight parking records Application.': [
       'Create Date',
       'States',
       'Vehicle Number',
-      'Approved End Date'
+      'Approved End Date',
+      'Reason for Rejection'
     ],
     'Bicycle tags Application.': [
       'Create Date',
       'States',
       'Bicycle Tag',
-      'Bicycle Brand'
+      'Bicycle Brand',
+      'Reason for Rejection'
     ],
     'Registered coaches Application.': [
       'Create Date',
       'States',
       'Coach Name',
-      'Expected Start Date'
+      'Expected Start Date',
+      'Reason for Rejection'
     ],
     'Request schedules Application.': [
       'Create Date',
       'States',
       'Schedule Type',
-      'Schedule Date'
+      'Schedule Date',
+      'Reason for Rejection'
     ],
     'Pets Application.': [
       'Create Date',
       'States',
       'Type Of Pet',
-      'Pet Breed'
+      'Pet Breed',
+      'Reason for Rejection'
     ],
     'Offences Application.': [
       'Appeal Status',
-      'Reason For Appeal'
+      'Reason For Appeal',
+      'Reason for Rejection'
     ]
   };
 

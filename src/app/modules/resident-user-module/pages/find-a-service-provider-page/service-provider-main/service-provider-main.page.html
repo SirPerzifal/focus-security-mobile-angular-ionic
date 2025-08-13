@@ -18,6 +18,12 @@
       <app-loading-animation *ngIf="isLoading"></app-loading-animation>
     </div>
     <div *ngIf="!isLoading">
+      <div
+        *ngIf="!quickDials || quickDials.length === 0"
+        class="text-center text-gray-500"
+      >
+        No service provider available.
+      </div>
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3">
         <div *ngFor="let dial of quickDials" class="w-full h-full relative">
           <ion-button

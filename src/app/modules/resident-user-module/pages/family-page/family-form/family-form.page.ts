@@ -95,7 +95,9 @@ export class FamilyFormPage implements OnInit {
       this.formData.helper_work_permit_expiry_date = String(state.helper_work_permit_expiry_date)
       this.formData.image_family = state.profile_image
       this.formData.reject_reason = state.reject_reason
-      this.selectedDate = String(this.functionMain.convertToDDMMYYYY(new Date(state.helper_work_permit_expiry_date).toISOString().split('T')[0]));
+      if (state.helper_work_permit_expiry_date) {
+        this.selectedDate = String(this.functionMain.convertToDDMMYYYY(new Date(state.helper_work_permit_expiry_date).toISOString().split('T')[0]));
+      }
       this.end_date = String(this.functionMain.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]));
       let str = state.mobile;
       let newStr = str.substring(2);

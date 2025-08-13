@@ -330,7 +330,7 @@ export class FormForRequestAccessCardPage implements OnInit {
           reason_for_replacement: this.formSent.reasonForReplacement,
           payment_receipt: this.formSent.paymentReceipt,
         }, 'post/request_access_card').subscribe((response: any) => {
-          if (response.result.response_code === 200) {
+          if (response.result.status === 'success') {
             this.functionMain.presentToast('Successfully added card access', 'success');
             this.router.navigate(['/raise-a-request-page']);
           } else if (response.result.response_code === 400) {

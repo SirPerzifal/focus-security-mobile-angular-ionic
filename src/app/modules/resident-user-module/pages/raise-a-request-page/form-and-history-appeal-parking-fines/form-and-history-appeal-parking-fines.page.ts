@@ -88,6 +88,8 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
             'appeal_status' : appeal_data.appeal_status
           }
         })
+        console.log(this.appealData);
+        
         if (this.appealData) {
           this.isLoading = false;
         }

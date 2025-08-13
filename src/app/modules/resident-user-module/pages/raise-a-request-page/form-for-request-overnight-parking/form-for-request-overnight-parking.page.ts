@@ -51,6 +51,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
   formSent = {
     typeSubmit: '',
     requestDate: '',
+    timeParking: '',
     vehicleNumber: '',
     visitorId: 0,
     purpose: '',
@@ -167,7 +168,8 @@ export class FormForRequestOvernightParkingPage implements OnInit {
       visitorId: 0,
       purpose: '',
       rentalAgreement: '',
-      payment_receipt: ''
+      payment_receipt: '',
+      timeParking: ''
     }
   }
 
@@ -179,6 +181,10 @@ export class FormForRequestOvernightParkingPage implements OnInit {
     } else {
       this.selectedDate = ''
     }
+  }
+
+  onValueChange(event: any) {
+    this.formSent.timeParking = event; // Update the form control for timeParking
   }
 
   selectedScreenshot: string = '';
@@ -293,6 +299,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
           visitor_id: this.formSent.visitorId,
           applicant_type: this.formSent.typeSubmit,
           request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+          time_parking: this.formSent.timeParking,
           vehicle_number: this.formSent.vehicleNumber,
           rental_agreement: this.formSent.rentalAgreement,
           purpose: this.formSent.purpose,
@@ -327,7 +334,8 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             vehicle_number: this.formSent.vehicleNumber,
             rental_agreement: this.formSent.rentalAgreement,
             purpose: this.formSent.purpose,
-            payment_receipt: this.formSent.payment_receipt
+            payment_receipt: this.formSent.payment_receipt,
+            time_parking: this.formSent.timeParking
           }, 'post/overnight_parking_application').subscribe((response: any) => {
             this.functionMain.presentToast('Successfully added overnight request.', 'success');
             this.router.navigate(['/raise-a-request-page']);
@@ -364,6 +372,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             visitor_id: this.formSent.visitorId,
             applicant_type: this.formSent.typeSubmit,
             request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+            time_parking: this.formSent.timeParking,
             vehicle_number: this.formSent.vehicleNumber,
             rental_agreement: this.formSent.rentalAgreement,
             purpose: this.formSent.purpose,
@@ -386,6 +395,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             visitor_id: this.formSent.visitorId,
             applicant_type: this.formSent.typeSubmit,
             request_date: this.functionMain.convertDateToYYYYMMDDHMS(this.formSent.requestDate),
+            time_parking: this.formSent.timeParking,
             vehicle_number: this.formSent.vehicleNumber,
             rental_agreement: this.formSent.rentalAgreement,
             purpose: this.formSent.purpose,

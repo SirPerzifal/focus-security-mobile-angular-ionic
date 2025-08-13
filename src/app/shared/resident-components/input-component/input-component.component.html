@@ -24,7 +24,7 @@
 
   <ng-template #disbaledFalse>
     <div
-      class="bg-white p-3 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-between h-12"
+      class="bg-white p-3 rounded border border-black w-full flex flex-row text-start items-center justify-between h-12"
       (click)="openDateTimePicker()"
     >
       <label
@@ -78,7 +78,7 @@
     [type]="type"
     [value]="value"
     [ngClass]="disabled ? 'text-gray-500' : ''"
-    class="bg-white p-3 rounded border h-12 border-gray-500 w-full"
+    class="bg-white p-3 rounded border h-12 !border-black w-full"
     style="border: 1px solid #6b7280"
     placeholder="{{ typeAction + ' ' + labelChild2 }}"
     [disabled]="disabled"
