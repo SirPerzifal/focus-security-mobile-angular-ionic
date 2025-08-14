@@ -56,9 +56,9 @@ export class FormForCoachRegistrationPage implements OnInit {
 
   amountPayable: string = '';
   amountType = {
-    amountUntaxed: '',
-    amountTaxed: '',
-    amountTotal: '',
+    amountUntaxed: 0,
+    amountTaxed: 0,
+    amountTotal: 0,
     isIncludeGST: false,
     isRequirePayment: false,
   }
@@ -151,7 +151,7 @@ export class FormForCoachRegistrationPage implements OnInit {
         isRequirePayment: result.result.result.is_raise_a_request_payment
       };
 
-      this.amountPayable = this.amountType.amountTotal;
+      this.amountPayable = String(this.amountType.amountTotal);
       
       if (this.amountPayable) {
         const amountTotalStr = this.amountType.amountTotal.toString();
@@ -579,7 +579,7 @@ export class FormForCoachRegistrationPage implements OnInit {
       `,
       buttons: [
         {
-          text: 'Tutup',
+          text: 'Close',
           role: 'cancel'
         },
       ]

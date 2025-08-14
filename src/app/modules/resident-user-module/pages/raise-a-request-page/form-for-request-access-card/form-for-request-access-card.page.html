@@ -235,20 +235,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row mt-1.5 text-base cw-3:text-[13px]">
-      <label class="mr-1 rounded font-bold flex items-center">
-        <input
-          type="checkbox"
-          disabled
-          [checked]="amountType.isIncludeGST"
-          [(ngModel)]="amountType.isIncludeGST"
-          class="text-[var(--ion-color-primary)] rounded mr-1.5"
-        />
-        <p class="text-base cw-3:text-sm text-start">Is Include GST</p>
-      </label>
-    </div>
-
-    <div class="w-full mt-1">
+    <div *ngIf="amountType.amountTotal !== 0" class="w-full mt-1">
       <app-input-component
         [id]="'amount_total'"
         [type]="'text'"

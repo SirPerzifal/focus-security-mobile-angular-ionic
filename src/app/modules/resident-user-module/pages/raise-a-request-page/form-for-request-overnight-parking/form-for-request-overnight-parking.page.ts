@@ -61,9 +61,9 @@ export class FormForRequestOvernightParkingPage implements OnInit {
 
   amountPayable: string = '';
   amountType = {
-    amountUntaxed: '',
-    amountTaxed: '',
-    amountTotal: '',
+    amountUntaxed: 0,
+    amountTaxed: 0,
+    amountTotal: 0,
     isIncludeGST: false,
     isRequirePayment: false,
   }
@@ -124,7 +124,8 @@ export class FormForRequestOvernightParkingPage implements OnInit {
         isIncludeGST: result.result.result.is_include_gst,
         isRequirePayment: result.result.result.is_raise_a_request_payment
       };
-      this.amountPayable = this.amountType.amountTotal;
+
+      this.amountPayable = String(this.amountType.amountTotal);
       
       if (this.amountPayable) {
         const amountTotalStr = this.amountType.amountTotal.toString();

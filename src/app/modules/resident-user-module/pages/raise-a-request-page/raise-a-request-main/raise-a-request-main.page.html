@@ -11,10 +11,14 @@
       name="arrow-back-circle"
       size="large"
       class="text-[var(--ion-color-primary)] size-12"
-      [routerLink]="['/resident-home-page']"
+      (click)="backButton()"
     ></ion-icon>
   </div>
-  <div class="px-4 pb-4 pt-1.5 space-y-2">
+  <div
+    *ngIf="!openDetailRenovation"
+    class="px-4 pb-4 pt-1.5 space-y-2"
+    @fadeInOut
+  >
     <div id="nav_tabs_main">
       <app-nav-tabs
         [buttons]="navButtonsMain"
@@ -386,12 +390,190 @@
                     </tr>
                   </ng-container>
                 </table>
+                <div
+                  *ngIf="allData.application_title === 'Request schedules Application.'"
+                  class="flex flex-row mt-2 text-[13px] w-full"
+                >
+                  <div class="w-full">
+                    <app-submit-button
+                      [text]="'View Detail Renovation'"
+                      [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+                      (click)="viewDetailRenovation(allData)"
+                    >
+                    </app-submit-button>
+                  </div>
+                </div>
               </div>
             </div>
           </ng-container>
         </div>
       </div>
     </div>
+  </div>
+  <div
+    *ngIf="openDetailRenovation"
+    class="px-4 pb-4 pt-1.5 space-y-2"
+    @fadeInOut
+  >
+    <div
+      [ngClass]="{
+      'bg-[var(--ion-color-tertiary)]': renovationDetail.states === 'approved' || renovationDetail.states === 'Approved',
+      'bg-[#F8F1BA]': renovationDetail.states === 'requested' || renovationDetail.states === 'Requested' || renovationDetail.states === 'pending_approval' || renovationDetail.states === 'Pending Approval',
+      'bg-[#E3787E]': renovationDetail.states === 'Rejected' || renovationDetail.states === 'rejected',
+      }"
+      class="bg-[var(--ion-color-tertiary)] p-3 rounded-2xl w-full"
+    >
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center">
+          <ng-container
+            *ngIf="renovationDetail.states === 'approved' || renovationDetail.states === 'Approved'"
+          >
+            <ion-icon
+              name="checkmark"
+              class="bg-[var(--ion-color-primary)] mr-1 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-[var(--ion-color-primary)] font-bold text-base">
+              Approved
+            </p>
+          </ng-container>
+          <ng-container
+            *ngIf="renovationDetail.states === 'requested' || renovationDetail.states === 'Requested'"
+          >
+            <ion-icon
+              name="alert-circle-outline"
+              class="bg-yellow-500 mr-1 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-yellow-500 font-bold text-base">Requested</p>
+          </ng-container>
+          <ng-container
+            *ngIf="renovationDetail.states === 'pending_approval' || renovationDetail.states === 'Pending Approval'"
+          >
+            <ion-icon
+              name="alert-circle-outline"
+              class="bg-yellow-500 mr-1 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-yellow-500 font-bold text-base">Pending Approval</p>
+          </ng-container>
+          <ng-container
+            *ngIf="renovationDetail.states === 'rejected' || renovationDetail.states === 'Rejected'"
+          >
+            <ion-icon
+              name="close"
+              class="bg-red-700 mr-1 p-1 rounded-full text-white text-[18px]"
+            ></ion-icon>
+            <p class="text-red-700 font-bold text-base">Rejected</p>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Contractor Name</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.contractor_contact_person ?
+          renovationDetail.contractor_contact_person : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Contractor Contact Number</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.contractor_contact_number ?
+          renovationDetail.contractor_contact_number : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Name of Company</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.contractor_company_name ?
+          renovationDetail.contractor_company_name : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Company Address</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.contractor_company_address ?
+          renovationDetail.contractor_company_address : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Person in Charge Name</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.person_in_charge_name ?
+          renovationDetail.person_in_charge_name : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Person in Charge Contact</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.person_in_charge_contact ?
+          renovationDetail.person_in_charge_contact : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Is Acknowledge Date</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.is_acknowledge_date ?
+          renovationDetail.is_acknowledge_date : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Commencement Date</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.commencement_date ?
+          renovationDetail.commencement_date : '-' }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <p class="text-base !font-bold text-black">Expected End Date</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.expected_end_date ?
+          renovationDetail.expected_end_date : '-' }}
+        </p>
+      </div>
+      <div
+        *ngIf="renovationDetail.states === 'Rejected' || renovationDetail.states === 'rejected'"
+        class="flex flex-col"
+      >
+        <p class="text-base !font-bold text-black">Reason for Rejection</p>
+        <p class="text-base !font-light">
+          {{ renovationDetail.reason_for_rejection }}
+        </p>
+      </div>
+      <div
+        *ngIf="renovationDetail.renovation_propposal_file"
+        class="flex flex-col"
+      >
+        <p class="text-base text-black !font-bold">
+          <b>Renovation Proposal</b>
+        </p>
+        <img
+          class="w-16 h-16 mt-[5px]"
+          src="assets/icon/exc-client/file_download.webp"
+          alt="File Download"
+          (click)="downloadAttachment(renovationDetail.id, 'proposal')"
+        />
+      </div>
+      <div
+        *ngIf="renovationDetail.signature_of_contractor"
+        class="flex flex-col"
+      >
+        <p class="text-base text-black !font-bold">
+          <b>Contractor Signature</b>
+        </p>
+        <img
+          class="w-16 h-16 mt-[5px]"
+          src="assets/icon/exc-client/file_download.webp"
+          alt="File Download"
+          (click)="downloadAttachment(renovationDetail.id, 'signature')"
+        />
+      </div>
+    </div>
+    <button
+      *ngIf="!renovationDetail.is_acknowledged"
+      class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-10 font-bold"
+      (click)="acknowledgeReceipt(renovationDetail.id)"
+    >
+      Acknowledge
+    </button>
   </div>
 </ion-content>
 

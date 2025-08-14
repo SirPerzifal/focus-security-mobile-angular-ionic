@@ -390,7 +390,7 @@ export class ResidentHomePagePage implements OnInit {
       
       const image = await Camera.getPhoto({
         quality: 50,
-        resultType: CameraResultType.Uri, // Ubah ke Uri
+        resultType: CameraResultType.Base64, // Ubah ke Base64
         source: CameraSource.Camera,
         width: 500,
         height: 500,
@@ -399,12 +399,14 @@ export class ResidentHomePagePage implements OnInit {
         promptLabelPhoto: 'Take Photo',
       });
       
-      if (image && image.webPath) {
+      if (image && image.base64String) {  
         this.isModalChooseUpload = !this.isModalChooseUpload;
-        const response = await fetch(this.selectedProfile);
-        const blob = await response.blob();
-        this.selectedProfile = await this.blobToBase64(blob);
-        this.showingProfile = image.webPath;
+        // Update the form data with the base64 image
+        this.selectedProfile = image.base64String;
+        
+        this.showingProfile = image.base64String;
+        
+        // Display success message
         this.functionMain.presentToast('Photo captured successfully', 'success');
       }
     } catch (error) {

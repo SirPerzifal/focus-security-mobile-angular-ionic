@@ -5,6 +5,9 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { AllData, AccessCard, OvernightParking, BicycleTag, RegisteredCoach, RequestSchedule, PetRegistration, Appeal } from 'src/models/resident/raiseRequestModel.model';
 import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { FileOpener } from '@capacitor-community/file-opener';
 
 @Component({
   selector: 'app-raise-a-request-main',
@@ -187,7 +190,7 @@ export class RaiseARequestMainPage implements OnInit {
   handleRefresh(event: any) {
     this.isLoading = true;
     setTimeout(() => {
-      this.loadHistoryRequests();
+      this.loadHistoryRequests(this.selectedScheduleType);
       event.target.complete();
     }, 1000)
   }
@@ -371,4 +374,183 @@ getRequestValue(allData: any, field: string): string {
     }
   }
 
+  backButton() {
+    if (this.openDetailRenovation) {
+      this.openDetailRenovation = false;
+      this.renovationDetail = {
+        id: 0,
+        create_date: '',
+        schedule_type: '',
+        states: '',
+        schedule_date: '',
+        reason_for_rejection: false,
+        person_in_charge_name: '',
+        person_in_charge_contact: '',
+        contractor_company_name: '',
+        contractor_company_address: false,
+        contractor_contact_person: '',
+        contractor_contact_number: '',
+        vehicle_number: '',
+        renovation_propposal_file: false,
+        signature_of_contractor: false,
+        is_acknowledged: false,
+        is_acknowledge_date: '',
+        commencement_date: '',
+        expected_end_date: ''
+      }
+    } else if (this.subPageName === 'History Request') {
+      this.navButtonsMain.forEach(button => {
+        button.active = false;
+      });
+
+      // Aktifkan tombol yang sesuai
+      const selectedButton = this.navButtonsMain.find(button => button.text === 'New Request');
+      if (selectedButton) {
+        selectedButton.active = true;
+      }
+      this.subPageName = 'New Request';
+    } else {
+      this.router.navigate(['/resident-home-page']);
+    }
+  }
+
+  openDetailRenovation: boolean = false;
+  renovationDetail = {
+    id: 0,
+    create_date: '',
+    schedule_type: '',
+    states: '',
+    schedule_date: '',
+    reason_for_rejection: false,
+    person_in_charge_name: '',
+    person_in_charge_contact: '',
+    contractor_company_name: '',
+    contractor_company_address: false,
+    contractor_contact_person: '',
+    contractor_contact_number: '',
+    vehicle_number: '',
+    renovation_propposal_file: false,
+    signature_of_contractor: false,
+    is_acknowledged: false,
+    is_acknowledge_date: '',
+    commencement_date: '',
+    expected_end_date: ''
+  }
+  viewDetailRenovation(allData: any) {
+    this.mainApi.endpointMainProcess({
+      request_schedule_id: allData.id
+    }, 'get/renovation_details').subscribe((response: any) => {
+      if (response.result.success) {
+        // this.renovationDetail = response.result.data;
+        this.renovationDetail = {
+          id: response.result.data.id || 0,
+          create_date: response.result.data.create_date || '',
+          schedule_type: response.result.data.schedule_type || '',
+          states: response.result.data.states || '',
+          schedule_date: response.result.data.schedule_date || '',
+          reason_for_rejection: response.result.data.reason_for_rejection || false,
+          person_in_charge_name: response.result.person_in_charge || '',
+          person_in_charge_contact: response.result.person_in_charge_contact_number || '',
+          contractor_company_name: response.result.data.contractor_company_name || '',
+          contractor_company_address: response.result.data.contractor_company_address || false,
+          contractor_contact_person: response.result.data.contractor_contact_person || '',
+          contractor_contact_number: response.result.data.contractor_contact_number || '',
+          vehicle_number: response.result.data.vehicle_number || '',
+          renovation_propposal_file: response.result.renovation_proposal || false,
+          signature_of_contractor: response.result.signature_of_contractor || false,
+          is_acknowledged: response.result.data.is_acknowledge || false,
+          is_acknowledge_date: response.result.data.is_acknowledge_date_submit || '',
+          commencement_date: response.result.data.commencement_date || '',
+          expected_end_date: response.result.data.expected_end_date || ''
+        };
+        if (this.renovationDetail) {
+          this.openDetailRenovation = true;
+        }
+      } else {
+        this.functionMain.presentToast('Failed to load renovation details', 'danger');
+      }
+    })
+  }
+
+  acknowledgeReceipt(request_schedule_id: number) {
+    // Logic to acknowledge receipt of the renovation request
+    this.mainApi.endpointMainProcess({
+      request_schedule_id: request_schedule_id,
+      is_acknowledge_date_submit: new Date()
+    }, 'post/acknowledge_renovation').subscribe((response: any) => {
+      if (response.result.success) {
+        this.functionMain.presentToast('Acknowledged successfully', 'success');
+        this.backButton();
+      } else {
+        this.functionMain.presentToast('Failed to acknowledge receipt', 'danger');
+      }
+    });
+  }
+
+  async downloadAttachment(idDocument: number, doc_type: string) {
+    this.mainApi.endpointMainProcess({
+      document_id: idDocument,
+      type_request: 'request_schedule',
+      schedule_doc_type: doc_type
+    }, 'get/download_document').subscribe(async (response: any) => {
+      console.log("download", response);
+      try {
+        const byteCharacters = atob(response.result.blob);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: response.result.type });
+  
+        if (Capacitor.isNativePlatform()) {
+          const base64 = await this.convertBlobToBase64(blob);
+          const saveFile = await Filesystem.writeFile({
+            path: `${response.result.title}`,
+            data: base64,
+            directory: Directory.Data
+          });
+          const path = saveFile.uri;
+          await FileOpener.open({
+            filePath: path,
+            contentType: blob.type
+          });
+          // console.log('File is opened');
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          this.downloadFile(href, `${response.result.title}`);
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        // Optionally, show an error message to the user
+      }
+    });
+  }
+
+  convertBlobToBase64(blob: Blob) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  downloadFile(href: string, filename: string) {
+    const link = document.createElement("a");
+    link.style.display = "none";
+    link.href = href;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        // Periksa apakah parentNode tidak null sebelum menghapus
+        if (link.parentNode) {
+            link.parentNode.removeChild(link);
+        }
+    }, 0);
+  }
 }
