@@ -41,29 +41,39 @@ export class WebRtcService extends ApiService{
   // private iceServers: RTCIceServer[] = [
   //   { urls: 'stun:stun.l.google.com:19302'},
   // ];
+  // private iceServers: RTCIceServer[] = [
+  //   {
+  //     urls: ['stun:fastturn.pro:3478']
+  //   },
+  //   {
+  //     urls: 'turn:fastturn.pro:3478?transport=udp',
+  //     username: 'Dendy',
+  //     credential: 'Kepulauan_2504',
+  //   },
+  //   {
+  //     urls: 'turn:fastturn.pro:3478?transport=tcp',
+  //     username: 'Dendy',
+  //     credential: 'Kepulauan_2504',
+  //   },
+  //   {
+  //     urls: 'turns:fastturn.pro:5349?transport=tcp',
+  //     username: 'Dendy',
+  //     credential: 'Kepulauan_2504',
+  //   }
+  //   // { urls: 'stun:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+  //   // { urls: 'stun:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+  //   // { urls: 'turn:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
+  //   // { urls: 'turns:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' }
+  // ];
   private iceServers: RTCIceServer[] = [
     {
-      urls: ['stun:fastturn.pro:3478']
+        "urls": "stun:global.expressturn.com:3478"
     },
     {
-      urls: 'turn:fastturn.pro:3478?transport=udp',
-      username: 'Dendy',
-      credential: 'Kepulauan_2504',
-    },
-    {
-      urls: 'turn:fastturn.pro:3478?transport=tcp',
-      username: 'Dendy',
-      credential: 'Kepulauan_2504',
-    },
-    {
-      urls: 'turns:fastturn.pro:5349?transport=tcp',
-      username: 'Dendy',
-      credential: 'Kepulauan_2504',
+        "urls": "turn:global.expressturn.com:3478?transport=tcp",
+        "username": "000000002069735707",
+        "credential": "XPhTaFvw/tTqebCxbtUdV5Tsfgw="
     }
-    // { urls: 'stun:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
-    // { urls: 'stun:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
-    // { urls: 'turn:fastturn.pro:3478', 'username': 'Dendy', 'credential': 'Kepulauan_2504' },
-    // { urls: 'turns:fastturn.pro:5349', 'username': 'Dendy', 'credential': 'Kepulauan_2504' }
   ];
   private activeModal: HTMLIonModalElement | null = null;
   private callerName: string = '';

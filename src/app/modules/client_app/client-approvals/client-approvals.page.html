@@ -253,11 +253,18 @@
               </div>
               <div class="table-row" *ngIf="['pet'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">
-                  Type and Breed
+                  Type
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.type_of_pet) + ' | ' +
-                  functionMain.returnNone(approval.pet_breed) }}
+                  : {{ functionMain.returnNone(approval.type_of_pet) }}
+                </p>
+              </div>
+              <div class="table-row" *ngIf="['pet'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Breed
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ functionMain.returnNone(approval.pet_breed) }}
                 </p>
               </div>
               <div
@@ -265,11 +272,21 @@
                 *ngIf="['bicycle'].includes(approval_type)"
               >
                 <p class="font-bold table-cell w-1/2 text-base text-black">
-                  Brand and Color
+                  Brand
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.bicycle_brand) + ' | ' +
-                  functionMain.returnNone(approval.bicycle_color) }}
+                  : {{ functionMain.returnNone(approval.bicycle_brand) }}
+                </p>
+              </div>
+              <div
+                class="table-row"
+                *ngIf="['bicycle'].includes(approval_type)"
+              >
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Color
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ functionMain.returnNone(approval.bicycle_color) }}
                 </p>
               </div>
               <div
@@ -778,20 +795,34 @@
         </div>
         <div class="table-row" *ngIf="['pet'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
-            Type and Breed
+            Type 
           </p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.type_of_pet) + ' | ' +
-            functionMain.returnNone(selectedApproval.pet_breed) }}
+            : {{ functionMain.returnNone(selectedApproval.type_of_pet) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['pet'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Breed
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.pet_breed) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['bicycle'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
-            Brand and Color
+            Brand
           </p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.bicycle_brand) + ' | '
-            + functionMain.returnNone(selectedApproval.bicycle_color) }}
+            : {{ functionMain.returnNone(selectedApproval.bicycle_brand) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['bicycle'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Color
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.bicycle_color) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['coach'].includes(approval_type)">
@@ -867,11 +898,18 @@
             Contact Person
           </p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{
-            functionMain.returnNone(selectedApproval.contact_person_id.name) }}
-            | {{
-            functionMain.returnNone(selectedApproval.contact_person_id.family_mobile_number)
-            }}
+            : {{ functionMain.returnNone(selectedApproval.contact_person_id.name) }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['move_permit', 'renovation'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Contact Person Number
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            :  {{ functionMain.returnNone(selectedApproval.contact_person_id.family_mobile_number) }}
           </p>
         </div>
         <div
@@ -1184,6 +1222,17 @@
           </p>
           <p class="ml-2 table-cell text-base text-black">
             : {{ functionMain.returnNone(selectedApproval.requestor.name ) }}
+          </p>
+        </div>
+        <div
+          class="table-row"
+          *ngIf="['overnight'].includes(approval_type)"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Purpose
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.purpose ) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['vehicle'].includes(approval_type)">

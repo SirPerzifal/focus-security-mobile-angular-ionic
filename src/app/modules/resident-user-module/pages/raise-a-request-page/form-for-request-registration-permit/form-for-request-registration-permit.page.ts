@@ -281,6 +281,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
           this.router.navigate(['/raise-a-request-page']);
         } else if (response.result.response_code === 400) {
           this.functionMain.presentToast('Failed added add schedule.', 'danger');
+        } else if (response.result.status === "error") {
+          this.functionMain.presentToast(response.result.message, 'danger');
         }
       })
     }
@@ -341,6 +343,26 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
+        this.mainApi.endpointMainProcess({
+          schedule_date: this.formSent.requestDate,
+          schedule_type: 'renovation',
+          contact_person_id: this.formSent.personAssign,
+          contractor_contact_person: this.formSent.contractorContactPerson, 
+          contractor_contact_number: this.formSent.contractorContactNumber,
+          contractor_company_name: this.formSent.contractorCompanyName,
+          contractor_vehicle_number: this.formSent.contractorVehicleNumber,
+          payment_receipt: result.data[1] || '',
+          requestor_signature: this.formSent.renovationSigned
+        }, 'post/request_schedule_permit').subscribe((response: any) => {
+          if (response.result.response_code === 200) {
+            this.functionMain.presentToast('Successfully added add schedule.', 'success');
+            this.router.navigate(['/raise-a-request-page']);
+          } else if (response.result.response_code === 400) {
+            this.functionMain.presentToast('Failed added add schedule.', 'danger');
+          } else if (response.result.status === "error") {
+            this.functionMain.presentToast(response.result.message, 'danger');
+          }
+        })
       } else {
         return
       }
@@ -375,6 +397,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
               this.router.navigate(['/raise-a-request-page']);
             } else if (response.result.response_code === 400) {
               this.functionMain.presentToast('Failed added add schedule.', 'danger');
+            } else if (response.result.status === "error") {
+              this.functionMain.presentToast(response.result.message, 'danger');
             }
           })
         }

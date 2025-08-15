@@ -52,6 +52,27 @@ export class FunctionMainService {
     }
   }
 
+  convertToDDMMYYYYHHMMDD(dateString: string | undefined): string | undefined {
+    if (!dateString) return '-'
+    // Memisahkan string berdasarkan "-"
+    const parts = dateString?.split(' ');
+
+    console.log(parts);
+    
+    
+    // Memastikan bahwa kita memiliki 3 bagian (tahun, bulan, hari)
+    if (parts?.length === 2) {
+      const [date, time] = parts; // Pisahkan menjadi tahun, bulan, dan hari
+      console.log(date, time);
+      
+      const partsDate = date?.split('-');
+      const [year, month, day] = partsDate; // Pisahkan menjadi tahun, bulan, dan hari
+      return `${day}/${month}/${year} ${time}`; // Gabungkan dalam format dd/mm/yyyy
+    } else {
+      return dateString; // Kembalikan string asli jika format tidak sesuai
+    }
+  }
+
   returnNone(params: any) {
     return params ? params : '-'
   }

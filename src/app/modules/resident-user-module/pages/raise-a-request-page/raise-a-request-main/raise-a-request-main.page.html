@@ -518,25 +518,25 @@
           renovationDetail.person_in_charge_contact : '-' }}
         </p>
       </div>
-      <div class="flex flex-col">
-        <p class="text-base !font-bold text-black">Is Acknowledge Date</p>
+      <div *ngIf="renovationDetail.is_acknowledged" class="flex flex-col">
+        <p class="text-base !font-bold text-black">Acknowledge Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.is_acknowledge_date ?
-          renovationDetail.is_acknowledge_date : '-' }}
+          functionMain.convertToDDMMYYYYHHMMDD(renovationDetail.is_acknowledge_date) : '-' }}
         </p>
       </div>
-      <div class="flex flex-col">
+      <div *ngIf="renovationDetail.is_acknowledged" class="flex flex-col">
         <p class="text-base !font-bold text-black">Commencement Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.commencement_date ?
-          renovationDetail.commencement_date : '-' }}
+          functionMain.convertToDDMMYYYY(renovationDetail.commencement_date) : '-' }}
         </p>
       </div>
-      <div class="flex flex-col">
+      <div *ngIf="renovationDetail.is_acknowledged" class="flex flex-col">
         <p class="text-base !font-bold text-black">Expected End Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.expected_end_date ?
-          renovationDetail.expected_end_date : '-' }}
+          functionMain.convertToDDMMYYYY(renovationDetail.expected_end_date) : '-' }}
         </p>
       </div>
       <div
@@ -578,7 +578,7 @@
       </div> -->
     </div>
     <button
-      *ngIf="!renovationDetail.is_acknowledged"
+      *ngIf="!renovationDetail.is_acknowledged && renovationDetail.renovation_propposal_file"
       class="bg-[var(--ion-color-primary)] text-white mt-4 w-full text-base rounded h-10 font-bold"
       (click)="acknowledgeReceipt(renovationDetail.id)"
     >

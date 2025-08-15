@@ -276,6 +276,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
           this.router.navigate(['/raise-a-request-page']);
         } else if (response.result.response_code === 400) {
           this.functionMain.presentToast('Failed added add schedule.', 'danger');
+        } else if (response.result.status === "error") {
+          this.functionMain.presentToast(response.result.message, 'danger');
         }
       })
     }
@@ -351,6 +353,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
             this.router.navigate(['/raise-a-request-page']);
           } else if (response.result.response_code === 400) {
             this.functionMain.presentToast('Failed added add schedule.', 'danger');
+          } else if (response.result.status === "error") {
+            this.functionMain.presentToast(response.result.message, 'danger');
           }
         })
       } else {
@@ -386,6 +390,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
               this.router.navigate(['/raise-a-request-page']);
             } else if (response.result.response_code === 400) {
               this.functionMain.presentToast('Failed added add schedule.', 'danger');
+            } else if (response.result.status === "error") {
+              this.functionMain.presentToast(response.result.message, 'danger');
             }
           })
         }
