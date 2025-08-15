@@ -181,7 +181,7 @@ export class RaiseARequestMainPage implements OnInit {
   constructor(
     private mainApi: MainApiResidentService,
     private router: Router,
-    private functionMain: FunctionMainService
+    public functionMain: FunctionMainService
   ) { }
 
   ngOnInit() {
@@ -392,7 +392,7 @@ getRequestValue(allData: any, field: string): string {
         contractor_contact_number: '',
         vehicle_number: '',
         renovation_propposal_file: false,
-        signature_of_contractor: false,
+        signature_of_contractor: '',
         is_acknowledged: false,
         is_acknowledge_date: '',
         commencement_date: '',
@@ -430,7 +430,7 @@ getRequestValue(allData: any, field: string): string {
     contractor_contact_number: '',
     vehicle_number: '',
     renovation_propposal_file: false,
-    signature_of_contractor: false,
+    signature_of_contractor: '',
     is_acknowledged: false,
     is_acknowledge_date: '',
     commencement_date: '',
@@ -457,7 +457,7 @@ getRequestValue(allData: any, field: string): string {
           contractor_contact_number: response.result.data.contractor_contact_number || '',
           vehicle_number: response.result.data.vehicle_number || '',
           renovation_propposal_file: response.result.renovation_proposal || false,
-          signature_of_contractor: response.result.signature_of_contractor || false,
+          signature_of_contractor: response.result.signature_of_contractor || '',
           is_acknowledged: response.result.data.is_acknowledge || false,
           is_acknowledge_date: response.result.data.is_acknowledge_date_submit || '',
           commencement_date: response.result.data.commencement_date || '',
