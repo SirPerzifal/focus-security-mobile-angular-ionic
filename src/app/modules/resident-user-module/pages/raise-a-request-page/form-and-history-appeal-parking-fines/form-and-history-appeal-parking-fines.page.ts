@@ -23,7 +23,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class FormAndHistoryAppealParkingFinesPage implements OnInit {
 
-  subPageName: string = 'Appeal Parking Fines';
+  subPageName: string = 'Appeal Parking Fees';
   isLoading: boolean = true;
   appealData: any = [];
   appealNowFromData = {
@@ -63,7 +63,7 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
 
   backButtonClickFunc() {
     if (this.subPageName === 'Appeal Form') {
-      this.subPageName = 'Appeal Parking Fines';
+      this.subPageName = 'Appeal Parking Fees';
     } else {
       this.router.navigate(['raise-a-request-page'])
     }
@@ -143,7 +143,7 @@ export class FormAndHistoryAppealParkingFinesPage implements OnInit {
       // console.log(Response);
       if (Response.result.response_code === 200) {
         this.functionMain.presentToast('Appeal data has been successfully saved!', 'success');
-        this.subPageName = 'Appeal Parking Fines';
+        this.subPageName = 'Appeal Parking Fees';
         this.loadOffence();
       } else {
         this.functionMain.presentToast('Failed to save appeal data!', 'danger');

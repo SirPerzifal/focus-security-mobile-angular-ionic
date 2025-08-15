@@ -103,7 +103,7 @@ export class BillsAndFinesPagePage implements OnInit {
       action: 'click',
     },
     {
-      text: 'Fines',
+      text: 'Fees',
       active: false,
       action: 'click',
     },
@@ -179,7 +179,7 @@ export class BillsAndFinesPagePage implements OnInit {
       this.showHistory = false;
       this.showBills = true;
       this.loadBills();
-    } else if (event[1] === 'Fines') {
+    } else if (event[1] === 'Fees') {
       this.isLoading = true;
       this.showHistory = false;
       this.showBills = false;

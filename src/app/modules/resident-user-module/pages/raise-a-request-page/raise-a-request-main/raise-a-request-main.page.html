@@ -466,6 +466,16 @@
         </div>
       </div>
 
+      <div
+        class="w-full flex flex-col justify-center items-center my-2"
+        *ngIf="renovationDetail.signature_of_contractor"
+      >
+        <img
+          [src]="functionMain.getImage(renovationDetail.signature_of_contractor)"
+          class="h-40"
+        />
+      </div>
+
       <div class="flex flex-col">
         <p class="text-base !font-bold text-black">Contractor Name</p>
         <p class="text-base !font-light">
@@ -552,7 +562,7 @@
           (click)="downloadAttachment(renovationDetail.id, 'proposal')"
         />
       </div>
-      <div
+      <!-- <div
         *ngIf="renovationDetail.signature_of_contractor"
         class="flex flex-col"
       >
@@ -565,7 +575,7 @@
           alt="File Download"
           (click)="downloadAttachment(renovationDetail.id, 'signature')"
         />
-      </div>
+      </div> -->
     </div>
     <button
       *ngIf="!renovationDetail.is_acknowledged"

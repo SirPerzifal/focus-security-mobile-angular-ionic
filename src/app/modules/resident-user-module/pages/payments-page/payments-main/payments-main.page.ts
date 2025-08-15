@@ -10,7 +10,7 @@ export class PaymentsMainPage implements OnInit {
   longButtondata: any[] = [
     {
       id: 1,
-      name: 'My Bills & Fines',
+      name: 'My Bills & Fees',
       src: 'assets/icon/resident-icon/payment-bills.png',
       routeLinkTo: '/bills-and-fines-page',
     },
