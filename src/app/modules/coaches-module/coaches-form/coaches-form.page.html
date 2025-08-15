@@ -9,7 +9,7 @@
     <div class="w-full">
       <app-vms-header [urlCustom]="'/move-home'" [params]="{type: 'coach'}"/>
     </div>
-    <div class="flex mt-8 self-start">
+    <div class="flex mt-8 self-start mx-4">
       <app-button-icon [isHomeButton]="true" [text]="'COACHES'"
         [routerLink]="['/coaches-module']" [isActive]="true" [disableClick]="true" (click)="onBackMove()"/>
     </div>
@@ -23,7 +23,7 @@
 
     <div class="flex flex-row w-full ">
       <div class="mt-8 flex flex-col items-center w-full space-y-5 mx-4 mb-4">
-        <div class="w-full">
+        <div class="w-full" *ngIf="project_config.is_industrial">
           <app-input-image-preview class="w-full h-25" [labelText]="'COACH IMAGE'" [buttonText]="'UPLOAD'" 
             [extraButtonClass]="'rounded-md text-white h-20'" 
             [(cameraSelected)]="selectedImage">
@@ -45,12 +45,6 @@
             </div>
         </div>
         <div class="w-full" *ngIf="!project_config.is_industrial">
-          <!-- <label class="text-2xl"><u><b>BLOCK</b></u></label>
-          <select id="walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="schedule.block_id"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" disabled>
-            <option [value]="''" selected disabled hidden >CHOOSE BLOCK</option>
-            <option *ngFor="let block of Block" [value]="block.id">{{ block.block_name }}</option>
-          </select> -->
           <app-text-input 
               #textInput
               [id]="'block'" 
@@ -63,12 +57,6 @@
             </app-text-input>
         </div>
         <div class="w-full" *ngIf="!project_config.is_industrial">
-          <!-- <label class="text-2xl"><u><b>UNIT</b></u></label>
-          <select id="walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="schedule.unit_id"
-            class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black" disabled>
-            <option value="" selected disabled hidden>{{ isLoadingUnit ? 'LOADING UNIT' : 'CHOOSE UNIT' }}</option>
-            <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-          </select> -->
           <app-text-input 
               #textInput
               [id]="'unit'" 
@@ -87,6 +75,11 @@
             <option value="" selected disabled hidden>SELECT COACH TYPE</option>
             <option *ngFor="let coach of Coach" [value]="coach.id">{{ coach.name }}</option>
           </select>
+        </div>
+        <div class="w-full flex flex-col">
+          <app-text-input [id]="'coaches_form_remarks'" [name]="'coaches_form_remarks'" [labelText]="'REMARKS'" [rows]="4"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="true"
+            [(ngModel)]="remarks"></app-text-input>
         </div>
         <div class="w-full" *ngIf="showDrive && Camera.length > 0">
           <div class="w-full space-y-5" *ngFor="let camera of Camera; let i = index">

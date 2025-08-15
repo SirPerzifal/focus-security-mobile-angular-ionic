@@ -61,7 +61,7 @@ export class MoveFormPage implements OnInit {
   ngOnInit() {
     // Ambil parameter dari route
     this.loadProjectName().then(() => {
-      this.refreshVehicle()
+      // this.refreshVehicle()
     })
     this.route.queryParams.subscribe(params => {
       console.log(params)
@@ -171,9 +171,10 @@ export class MoveFormPage implements OnInit {
   contact_number = ''
   contractor_name = ''
   company_name = ''
+  remarks = ''
 
   // Fungsi submit umum
-  submitForm(openBarrier: boolean = false, camera_id: string = '') {
+  submitForm(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     let errMsg = ''
     if (!this.block_id || !this.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
@@ -201,8 +202,11 @@ export class MoveFormPage implements OnInit {
     if (!this.getInputValue('contractor_company_name')) {
       errMsg += 'Company name is required! \n'
     }
-    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+    if (!this.pass_number && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
+    }
+    if (!this.remarks) {
+      errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
@@ -237,6 +241,8 @@ export class MoveFormPage implements OnInit {
       camera_id: camera_id,
       visitor_image: this.selectedImage,
       pass_number: this.pass_number,
+      remarks: this.remarks,
+      bypass_ban: bypass_ban,
     }    
     this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {
@@ -260,7 +266,11 @@ export class MoveFormPage implements OnInit {
           this.presentToast(response.result.status_description, 'danger');
           this.router.navigate(['move-home'], {queryParams: {type: this.scheduleType}})
         } else if (response.result.status_code === 206) {
-          this.functionMain.banAlert(response.result.status_description, this.unit_id, false)
+          this.functionMain.banAlert(response.result.status_description, this.unit_id, false).then((value: any) => {
+            if (value) {
+              this.submitForm(openBarrier, camera_id, true)
+            }
+          })
         } else {
           this.presentToast(response.result.status_description, 'danger');
         }

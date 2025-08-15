@@ -1,12 +1,12 @@
 <div [class]="'flex flex-col ' + getFilteredClasses(customClasses)">
   <label class="text-2xl" [class]="labelResidentClass" *ngIf="labelText"
     ><b
-      ><u>{{ labelText }}</u></b
+      ><u>{{ labelText }}</u>{{isMandatory ? '*' : ''}}</b
     ></label
   >
   <label [class]="labelResidentClass" *ngIf="labelResidentText">{{
     labelResidentText
-  }}</label>
+  }}{{isMandatory ? '*' : ''}}</label>
 
   <!-- Displayed Input -->
   <div class="flex flex-row items-center w-full">

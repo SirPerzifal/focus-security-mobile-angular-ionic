@@ -359,8 +359,9 @@ export class ClientEventsDayViewPage implements OnInit {
   onStartTimeChange(event: any): void {
     const [hours, minutes] = event.target.value.split(':');
     this.selectedStartTime = event.target.value;
-    this.selectedEndTime = event.target.value;
-    console.log(this.selectedStartTime)
+    if (this.selectedStartTime > this.selectedEndTime) {
+      this.selectedEndTime = event.target.value;
+    }
     // setTimeout(() => {}, 0);
   }
 

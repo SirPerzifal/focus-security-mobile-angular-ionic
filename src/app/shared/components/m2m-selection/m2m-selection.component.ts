@@ -55,6 +55,7 @@ export class M2mSelectionComponent implements OnInit {
   @Input() showButton: boolean = false
   @Input() isReadonly: boolean = false
   @Input() customTopDiv: string = 'mt-1'
+  @Input() isMandatory: boolean = false;
 
   @Output() outputValue = new EventEmitter<any>();
 

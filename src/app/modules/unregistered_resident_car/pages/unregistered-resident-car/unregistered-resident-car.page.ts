@@ -20,8 +20,14 @@ export class UnregisteredResidentCarPage implements OnInit {
     private functionMain: FunctionMainService
   ) { }
 
+  module_field = 'unregistered_car'
+  module_config: any = {}
   ngOnInit() {
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         this.loadHost()
       } else {
@@ -35,12 +41,14 @@ export class UnregisteredResidentCarPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.formData.project_id = value.project_id
       this.project_config = value.config
+      this.project_id = value.project_id
       console.log(this.project_config)
       this.Camera = value.config.lpr
     })
   }
 
   Camera: any = []
+  project_id = 0
   project_config: any = []
   formData = {
     name: '',
@@ -55,35 +63,29 @@ export class UnregisteredResidentCarPage implements OnInit {
   }
 
   submitLoading = false
-  onSubmit(isOpenBarrier: boolean = false, camera_id: string = '') {
+  onSubmit(isOpenBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     let errMsg = ''
-    if (!this.formData.name && !this.project_config.is_industrial) {
+    if ((!this.formData.name && this.module_config.visitor_name) && !this.project_config.is_industrial) {
       errMsg += 'Name is missing! \n'
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
-    if (!this.formData.contact_number && !this.project_config.is_industrial) {
+    if ((!this.formData.contact_number  && this.module_config.contact_number) && !this.project_config.is_industrial) {
       errMsg += 'Contact number is missing! \n'
     }
-    if (this.formData.contact_number && !this.project_config.is_industrial) {
+    if ((this.formData.contact_number && this.module_config.contact_number) && !this.project_config.is_industrial) {
       if (this.formData.contact_number.length <= 2 ) {
         errMsg += 'Contact number is missing! \n'
       }
     }
-    if (!this.formData.vehicle_number) {
+    if (!this.formData.vehicle_number && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
     }
-    // if (this.project_config.is_industrial && !this.formData.identification_type) {
-    //   errMsg += 'Identification type is required! \n'
-    // }
-    // if (this.project_config.is_industrial && !this.formData.identification_number) {
-    //   errMsg += 'Identification number is required! \n'
-    // }
-    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
+    if (((!this.formData.block_id && this.module_config.block) || (!this.formData.unit_id && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if (!this.formData.reason) {
+    if (!this.formData.reason && this.module_config.reason) {
       errMsg += 'Reason must be filled! \n'
     }
     if (errMsg) {
@@ -94,7 +96,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       } else {
         console.log("BARRIER NOT OPENED");
       }
-      let params = {...this.formData, camera_id: camera_id, host: this.selectedHost}
+      let params = {...this.formData, camera_id: camera_id, host: this.selectedHost, bypass_ban: bypass_ban,}
       console.log(params)
       this.submitLoading = true
       this.clientMainService.getApi(params, '/vms/post/unregistered_resident_car').subscribe({
@@ -116,7 +118,11 @@ export class UnregisteredResidentCarPage implements OnInit {
           } else if (results.result.response_code === 407) {
             this.functionMain.presentToast(results.result.status_description, 'danger');
           } else if (results.result.response_code === 206) {
-            this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost)
+            this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmit(isOpenBarrier, camera_id, true)
+              }
+            })
           } else {
             this.presentToast('An error occurred while submitting unregistered car!', 'danger');
           }
@@ -285,6 +291,10 @@ export class UnregisteredResidentCarPage implements OnInit {
   selectedNric: any = ''
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

@@ -1,8 +1,8 @@
 <div class="flex flex-col w-full">
   <div class="flex flex-row justify-start">
-    <p class="font-bold" *ngIf="!isVMS">{{ labelText }}</p>
+    <p class="font-bold" *ngIf="!isVMS">{{ labelText }}{{isMandatory ? '*' : ''}}</p>
     <p class="text-2xl font-bold" *ngIf="isVMS">
-      <u>{{ labelText }}</u>
+      <u>{{ labelText }}</u>{{isMandatory ? '*' : ''}}
     </p>
   </div>
   <div [class]="'flex flex-row w-full justify-between space-x-2 ' + customTopDiv">

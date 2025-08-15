@@ -11,6 +11,7 @@ export class NricFinSelectionComponent  implements OnInit {
   @Input() isReadonly: boolean = false
   @Input() includePassport: boolean = false
   @Output() selectedIdentificationChange = new EventEmitter<string>();
+  @Input() isMandatory: boolean = false;
 
   onSelectionChange(event: any) {
     this.selectedIdentificationChange.emit(event.target.value);

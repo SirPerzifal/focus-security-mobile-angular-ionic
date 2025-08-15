@@ -51,7 +51,7 @@ export class ClientRegisterVisitorPage implements OnInit {
     vehicle_number: '',
   }
 
-  onSubmit() {
+  onSubmit(bypass_ban: boolean = false) {
     let errMsg = ''
     if (this.formData.name == ''){
       errMsg += 'Name is required!'
@@ -77,14 +77,18 @@ export class ClientRegisterVisitorPage implements OnInit {
     if (errMsg != '') {
       this.functionMain.presentToast(errMsg, 'danger')
     } else {
-      this.clientMainService.getApi(this.formData, '/client/post/add_ma_visitor').subscribe({
+      this.clientMainService.getApi({...this.formData, bypass_ban: bypass_ban}, '/client/post/add_ma_visitor').subscribe({
         next: (results) => {
           console.log(results)
           if (results.result.status_code === 200) {
             this.toggleShowActive()
             // this.functionMain.presentToast(`Success!`, 'success');
           } else if (results.result.status_code === 206) {
-            this.functionMain.banAlert(results.result.status_description, false, false, true)
+            this.functionMain.banAlert(results.result.status_description, false, false, true).then((value: any) => {
+              if (value) {
+                this.onSubmit(true)
+              }
+            })
           } else {
             this.functionMain.presentToast(`An error occurred while trying to register new visitor!`, 'danger');
           }

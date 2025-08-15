@@ -29,6 +29,7 @@ export class InputImagePreviewComponent implements OnInit {
   @Input() disableUpload: boolean = false;
   @Input() labelText: string = '';
   @Input() labelNonUnderline: string = '';
+  @Input() isMandatory: boolean = false;
 
   @Input() isCustomName: boolean = false
   @Input() fileName: string = ''

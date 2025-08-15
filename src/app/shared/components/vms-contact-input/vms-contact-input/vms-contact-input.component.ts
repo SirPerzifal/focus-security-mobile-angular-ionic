@@ -29,6 +29,7 @@ export class VmsContactInputComponent  implements OnInit {
   @Input() disableButton: boolean = false
   @Input() showButton: boolean = true
   @Input() isModal: boolean = false
+  @Input() isMandatory: boolean = false;
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();

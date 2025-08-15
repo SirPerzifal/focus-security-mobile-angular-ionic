@@ -14,7 +14,7 @@
       style="border: 1px solid #6B7280;" /> -->
   </div>
   <div class="w-[78%] flex flex-col justify-start">
-    <label class="text-2xl"><b><u>CONTACT NUMBER</u></b></label>
+    <label class="text-2xl"><b><u>CONTACT NUMBER</u>{{isMandatory ? '*' : ''}}</b></label>
     <div class="flex flex-row justify-between">
       <input [id]="id" class="border rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl" type="number" [ngClass]="showButton ? 'w-[58%]' : 'w-full' "
       [placeholder]="''" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
@@ -43,7 +43,7 @@
     </select>
   </div>
   <div class="w-[65%] flex flex-col justify-start">
-    <label [class]="labelClass"><b>{{ contactLabel }}</b></label>
+    <label [class]="labelClass"><b>{{ contactLabel }}{{isMandatory ? '*' : ''}}</b></label>
     <input [id]="id" [class]="inputClass" type="number"
       [placeholder]="''" [(ngModel)]="contactValue" (keyup)="onKeyUp($event)" [name]="name" [readonly]="isReadonly"
       style="border: 1px solid #6B7280;" />

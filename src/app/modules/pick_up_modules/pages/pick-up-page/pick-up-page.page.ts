@@ -34,9 +34,14 @@ export class PickUpPagePage implements OnInit {
     private clientMainService: ClientMainService,
   ) { }
 
+  module_field = 'pickup_dropoff'
+  module_config: any = {}
   ngOnInit() {
-    // this.loadBlock()
     this.loadProjectId().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         this.loadHost()
       } else {
@@ -188,7 +193,7 @@ export class PickUpPagePage implements OnInit {
     console.log('Vehicle Number:', this.blkLocation); // Untuk debugging
   }
 
-  async saveRecord(openBarrier: boolean = false, cameraId: string = '') {
+  async saveRecord(openBarrier: boolean = false, cameraId: string = '', bypass_ban: boolean = false) {
     const vehicleNumber = this.vehicleNumber
     const location = this.blkLocation;
     let errMsg = ''
@@ -201,14 +206,14 @@ export class PickUpPagePage implements OnInit {
     // if (this.project_config.is_industrial && !this.nric_value) {
     //   errMsg += 'Identification number is required! \n'
     // }
-    if (!vehicleNumber) {
+    if (!vehicleNumber && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is required! \n'
       console.log(this.vehicleNumberInput.value)
     }
-    if (!location && !this.project_config.is_industrial) {
+    if ((!location && this.module_config.location) && !this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
-    if (!this.industrial_location && this.project_config.is_industrial) {
+    if ((!this.industrial_location && this.module_config.location) && this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
     // if (!this.selectedHost && this.project_config.is_industrial) {
@@ -235,6 +240,7 @@ export class PickUpPagePage implements OnInit {
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
+        bypass_ban: bypass_ban,
       }
       this.clientMainService.getApi(params, '/vms/post/add_entry').subscribe({
         next: (response) => {
@@ -266,7 +272,11 @@ export class PickUpPagePage implements OnInit {
           } else if (response.result.status_code === 407) {
             this.functionMain.presentToast(response.result.status_description, 'danger');
           } else if (response.result.status_code === 206) {
-            this.functionMain.banAlert(response.result.status_description, false, this.selectedHost)
+            this.functionMain.banAlert(response.result.status_description, false, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.saveRecord(openBarrier, cameraId, true)
+              }
+            })
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save the data!', 'danger');
           }
@@ -353,6 +363,10 @@ export class PickUpPagePage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

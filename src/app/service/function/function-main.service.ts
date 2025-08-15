@@ -499,37 +499,81 @@ export class FunctionMainService {
     });
   }
 
-  async banAlert(message: string, unit_id: any = false, host_id: any = false, is_client: any = false) {
-    console.log(unit_id, host_id)
-    let buttonArray: any = []
-    if (!is_client) {
-      if (message[1]) {
-        buttonArray.push({
-          text: 'Call',
-          role: 'confirm',
-          handler: () => {
-            console.log(message[1])
-            this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false);
-          },
-        })
+  async banAlert(
+    message: string,
+    unit_id: any = false,
+    host_id: any = false,
+    is_client: any = false
+  ): Promise<any> {
+    console.log(unit_id, host_id);
+  
+    return new Promise(async (resolve) => {
+      let buttonArray: any = [];
+  
+      if (!is_client) {
+        if (message[1]) {
+          buttonArray.push({
+            text: 'Call',
+            role: 'confirm',
+            handler: () => {
+              console.log(message[1]);
+              this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false).then(async (result: any) => {
+                // console.log(result, "valuereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercalls");
+              
+                // if (result === 'reject' || result === 'cancel' || result.endsWith('is not logged on any devices')) {
+                //   console.log('suk sini atas');
+                  
+                  alertButtons.dismiss()
+                // } else {
+                  console.log('suk sini bawah');
+                  const alertProceed = await this.alertController.create({
+                    cssClass: is_client ? 'custom-alert-class-resident-visitors-page' : 'checkout-alert',
+                    header: `Proceed Anyway?`, 
+                    buttons: [
+                      {
+                        text: 'Proceed',
+                        cssClass: 'confirm',
+                        handler: () => {
+                          resolve(true)
+                        }
+                      },{
+                        text: 'Cancel',
+                        cssClass: 'cancel-button',
+                        handler: () => {
+                          resolve(false)
+                        }
+                      }
+                    ]
+                  });
+                  
+                  await alertProceed.present();
+                // }
+              });
+              return false; 
+            },
+          });
+        }
       }
-    }
-    buttonArray.push({
-      text: 'Close',
-      role: 'cancel',
-      cssClass: 'cancel-button',
-      handler: () => {
-      },
-    },)
-
-    const alertButtons = await this.alertController.create({
-      cssClass: is_client ? 'custom-alert-class-resident-visitors-page' : 'checkout-alert',
-      header: `${message[0]} ${message[1] ? 'Please kindly contact the ban requestor.' : ''}`,
-      buttons: buttonArray
-    }
-    )
-    await alertButtons.present();
+  
+      buttonArray.push({
+        text: 'Close',
+        role: 'cancel',
+        cssClass: 'cancel-button',
+        handler: () => {
+          resolve(false); // ✅ Resolve with false on close
+        },
+      });
+  
+      const alertButtons = await this.alertController.create({
+        cssClass: is_client ? 'custom-alert-class-resident-visitors-page' : 'checkout-alert',
+        header: `${message[0]} ${message[1] ? 'Please kindly contact the ban requestor.' : ''}`,
+        buttons: buttonArray,
+      });
+  
+      await alertButtons.present();
+    });
   }
+  
   
   public readonly limitHistory = 15
 
@@ -580,6 +624,27 @@ export class FunctionMainService {
     const weekday = new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date); // 'Mon'
 
     return `${day} ${month} (${weekday})`;
+  }
+
+  async getModuleField(project_id: number, module: string) {
+    try {
+      const results = await this.mainVmsService.getApi({project_id: project_id, module: module}, '/vms/get/field_configuration').toPromise();
+      console.log(results);
+
+      if (results.result.response_code === 200) {
+        return results.result.result;
+      } else if (results.result.response_code === 401) {
+        // this.presentToast(results.result.response_description, 'warning');
+        return [];
+      } else {
+        this.presentToast('An error occurred while trying to get field configuration!', 'danger');
+        return [];
+      }
+    } catch (error) {
+      this.presentToast('An error occurred while trying to get field configuration!', 'danger');
+      console.error(error);
+      return [];
+    }
   }
 
 }

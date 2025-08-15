@@ -51,8 +51,11 @@ export class WalkInPage implements OnInit {
       this.formData.visitor_name = this.maForm.name
       this.formData.visitor_contact_no = this.maForm.contact_no
 
-    }  }
+    }  
+  }
   
+  module_field = 'visitor'
+  module_config: any = {}
   ngOnInit() {
     this.paramsActiveFromCoaches.queryParams.subscribe(params => {
       if (params['showDrive']) { 
@@ -60,6 +63,10 @@ export class WalkInPage implements OnInit {
       }
     });
     this.loadProjectId().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         this.loadHost()
       } else {
@@ -76,7 +83,7 @@ export class WalkInPage implements OnInit {
     block: '',
     unit: '',
     family_id: '',
-    purpose: ''
+    remarks: ''
   };
 
   maForm: any = false
@@ -121,55 +128,54 @@ export class WalkInPage implements OnInit {
     this.formData.visitor_type = ''
     this.formData.visitor_vehicle = ''
     this.formData.block = ''
-    this.formData.purpose = ''
+    this.formData.remarks = ''
     this.formData.unit = ''
     this.contactUnit = ''
     this.selectedHost = ''
     this.contactHost = ''
     this.selectedNric = ''
     this.pass_number = ''
-    this.purpose = ''
     this.selectedImage = ''
   }
 
-  onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '') {
+  onSubmitDriveIn(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     console.log(this.formData)
     console.log(this.selectedHost)
     let errMsg = ""
-    if (!this.selectedImage) {
+    if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.formData.visitor_name) {
+    if (!this.formData.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Visitor name is required!\n';
     }
-    if (!this.formData.visitor_contact_no) {
+    if (!this.formData.visitor_contact_no && this.module_config.contact_number) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.formData.visitor_contact_no) {
+    if (this.formData.visitor_contact_no && this.module_config.contact_number) {
       if (this.formData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.formData.visitor_vehicle) {
+    if (!this.formData.visitor_vehicle && this.module_config.vehicle_number && this.showDrive) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
+    if (((!this.formData.block && this.module_config.block) || (!this.formData.unit && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
-      errMsg += 'Pass number is required! \n'
-    }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if ((!this.formData.purpose) && this.project_config.is_industrial) {
-      errMsg += 'Purpose is required!\n';
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
+      errMsg += 'Pass number is required! \n'
+    }
+    if ((!this.formData.remarks && this.module_config.remarks)) {
+      errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
       this.presentToast(errMsg, 'danger')
@@ -179,8 +185,8 @@ export class WalkInPage implements OnInit {
       let params = {
         visitor_name: this.formData.visitor_name,
         visitor_contact_no: this.formData.visitor_contact_no,
-        visitor_type: 'drive_in',
-        visitor_vehicle: this.formData.visitor_vehicle,
+        visitor_type: this.showDrive ? 'drive_in' : 'walk_in',
+        visitor_vehicle: this.showDrive ? this.formData.visitor_vehicle : '',
         block: this.formData.block,
         unit: this.formData.unit,
         family_id: this.formData.family_id,
@@ -190,13 +196,14 @@ export class WalkInPage implements OnInit {
         entry_id: this.isFromScan ? this.searchData.id : '',
         entry_type: this.isFromScan ? this.searchData.entry_type : '',
         host: this.selectedHost,
-        purpose: this.formData.purpose,
+        remarks: this.formData.remarks,
         identification_type: this.identificationType,
         identification_number: this.nric_value,
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         ma_id: this.maId,
         ma_form: this.maForm,
+        bypass_ban: bypass_ban,
       }
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
@@ -204,9 +211,9 @@ export class WalkInPage implements OnInit {
           if (res.result.status_code == 200) {
             if (openBarrier){
               console.log("Barrier Opened")
-              this.presentToast('Drive in data has been successfully saved, and the barrier is now open!', 'success');
+              this.presentToast('This visitor data has been successfully saved, and the barrier is now open!', 'success');
             } else {
-              this.presentToast('Drive in data has been successfully saved to the system!', 'success');
+              this.presentToast('This visitor data has been successfully saved to the system!', 'success');
             }
             
             this.routeAfterSubmit()
@@ -226,9 +233,13 @@ export class WalkInPage implements OnInit {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
             // this.functionMain.presentToast(res.result.status_description, 'danger');
-            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
+            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmitDriveIn(openBarrier, camera_id, true)
+              }
+            })
           } else {
-            this.presentToast('An error occurred while attempting to save drive in data', 'danger');
+            this.presentToast('An error occurred while attempting to save this visitor data', 'danger');
           }
 
         },
@@ -244,116 +255,111 @@ export class WalkInPage implements OnInit {
 
   }
 
-  purposeInput(event: any) {
-    this.formData.purpose = event.target.value
-  }
+  // onSubmitWalkIn(openBarrier: boolean = false) {
+  //   console.log(this.formData)
+  //   console.log(this.pass_number)
+  //   let errMsg = ""
+  //   if (!this.selectedImage) {
+  //     errMsg += 'Visitor image is required!\n';
+  //   }
+  //   if ((!this.identificationType) && this.project_config.is_industrial) {
+  //     errMsg += 'Identification type is required!\n';
+  //   }
+  //   if ((!this.nric_value) && this.project_config.is_industrial) {
+  //     errMsg += 'Identification number is required!\n';
+  //   }
+  //   if (!this.formData.visitor_name) {
+  //     errMsg += 'Visitor is required!\n';
+  //   }
+  //   if (!this.formData.visitor_contact_no) {
+  //     errMsg += 'Contact number is required!\n';
+  //   }
+  //   if (this.formData.visitor_contact_no) {
+  //     if (this.formData.visitor_contact_no.length <= 2 ) {
+  //       errMsg += 'Contact number is required! \n'
+  //     }
+  //   }
+  //   if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
+  //     errMsg += 'Block and unit must be selected!\n';
+  //   }
+  //   if (!this.pass_number && (this.project_config.is_industrial)) {
+  //     errMsg += 'Pass number is required! \n'
+  //   }
+  //   if ((!this.selectedHost) && this.project_config.is_industrial) {
+  //     errMsg += 'Host must be selected!\n';
+  //   }
+  //   if ((!this.formData.remarks) && this.project_config.is_industrial) {
+  //     errMsg += 'remarks is required!\n';
+  //   }
+  //   if (errMsg != "") {
+  //     this.presentToast(errMsg, 'danger')
+  //     return
+  //   }
+  //   console.log(this.formData)
+  //   try {
+  //     let params = {
+  //       visitor_name: this.formData.visitor_name,
+  //       visitor_contact_no: this.formData.visitor_contact_no,
+  //       visitor_type: 'walk_in',
+  //       visitor_vehicle: '',
+  //       block: this.formData.block,
+  //       unit: this.formData.unit,
+  //       family_id: this.formData.family_id,
+  //       project_id: this.project_id,
+  //       camera_id: '',
+  //       is_pre_entry: this.isFromScan,
+  //       entry_id: this.isFromScan ? this.searchData.id : '',
+  //       entry_type: this.isFromScan ? this.searchData.entry_type : '',
+  //       host: this.selectedHost,
+  //       remarks: this.formData.remarks,
+  //       identification_type: this.identificationType,
+  //       identification_number: this.nric_value,
+  //       pass_number: this.pass_number,
+  //       visitor_image: this.selectedImage,
+  //       ma_id: this.maId,
+  //       ma_form: this.maForm,
+  //     }
+  //     this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
+  //       res => {
+  //         console.log(res);
+  //         if (res.result.status_code == 200) {
+  //           if (openBarrier){
+  //             console.log("Barrier Opened")
+  //             this.presentToast('Walk in data has been successfully saved, and the barrier is now open!', 'success');
+  //           }else {
+  //             this.presentToast('Walk in data has been successfully saved to the system!', 'success');
+  //           }
+  //           this.resetPage()
+  //           this.routeAfterSubmit()
+  //         } else if (res.result.status_code === 205) {
+  //           if (openBarrier) {
+  //             this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
+  //           } else {
+  //             this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
+  //           }
+  //           this.resetPage()
+  //           this.routeAfterSubmit()
+  //         } else if (res.result.status_code === 405) {
+  //           this.presentToast(res.result.status_description, 'danger');
+  //           this.routeAfterSubmit()
+  //         } else if (res.result.status_code === 407) {
+  //           this.functionMain.presentToast(res.result.status_description, 'danger');
+  //         } else if (res.result.status_code === 206) {
+  //           this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
+  //         } else {
+  //           this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
+  //         }
+  //       },
+  //       error => {
+  //         console.error('Error:', error);
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error('Unexpected error:', error);
+  //     this.presentToast('An unexpected error has occurred!', 'danger');
+  //   }
 
-  purpose = ''
-  onSubmitWalkIn(openBarrier: boolean = false) {
-    console.log(this.formData)
-    console.log(this.pass_number)
-    let errMsg = ""
-    if (!this.selectedImage) {
-      errMsg += 'Visitor image is required!\n';
-    }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
-    if (!this.formData.visitor_name) {
-      errMsg += 'Visitor is required!\n';
-    }
-    if (!this.formData.visitor_contact_no) {
-      errMsg += 'Contact number is required!\n';
-    }
-    if (this.formData.visitor_contact_no) {
-      if (this.formData.visitor_contact_no.length <= 2 ) {
-        errMsg += 'Contact number is required! \n'
-      }
-    }
-    if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
-      errMsg += 'Block and unit must be selected!\n';
-    }
-    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
-      errMsg += 'Pass number is required! \n'
-    }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected!\n';
-    }
-    if ((!this.formData.purpose) && this.project_config.is_industrial) {
-      errMsg += 'Purpose is required!\n';
-    }
-    if (errMsg != "") {
-      this.presentToast(errMsg, 'danger')
-      return
-    }
-    console.log(this.formData)
-    try {
-      let params = {
-        visitor_name: this.formData.visitor_name,
-        visitor_contact_no: this.formData.visitor_contact_no,
-        visitor_type: 'walk_in',
-        visitor_vehicle: '',
-        block: this.formData.block,
-        unit: this.formData.unit,
-        family_id: this.formData.family_id,
-        project_id: this.project_id,
-        camera_id: '',
-        is_pre_entry: this.isFromScan,
-        entry_id: this.isFromScan ? this.searchData.id : '',
-        entry_type: this.isFromScan ? this.searchData.entry_type : '',
-        host: this.selectedHost,
-        purpose: this.formData.purpose,
-        identification_type: this.identificationType,
-        identification_number: this.nric_value,
-        pass_number: this.pass_number,
-        visitor_image: this.selectedImage,
-        ma_id: this.maId,
-        ma_form: this.maForm,
-      }
-      this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
-        res => {
-          console.log(res);
-          if (res.result.status_code == 200) {
-            if (openBarrier){
-              console.log("Barrier Opened")
-              this.presentToast('Walk in data has been successfully saved, and the barrier is now open!', 'success');
-            }else {
-              this.presentToast('Walk in data has been successfully saved to the system!', 'success');
-            }
-            this.resetPage()
-            this.routeAfterSubmit()
-          } else if (res.result.status_code === 205) {
-            if (openBarrier) {
-              this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
-            } else {
-              this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
-            }
-            this.resetPage()
-            this.routeAfterSubmit()
-          } else if (res.result.status_code === 405) {
-            this.presentToast(res.result.status_description, 'danger');
-            this.routeAfterSubmit()
-          } else if (res.result.status_code === 407) {
-            this.functionMain.presentToast(res.result.status_description, 'danger');
-          } else if (res.result.status_code === 206) {
-            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
-          } else {
-            this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
-          }
-        },
-        error => {
-          console.error('Error:', error);
-        }
-      );
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      this.presentToast('An unexpected error has occurred!', 'danger');
-    }
-
-  }
+  // }
 
   showWalk = false;
   showDrive = false;
@@ -751,6 +757,9 @@ export class WalkInPage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

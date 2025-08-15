@@ -1,7 +1,7 @@
 <div [class]="'w-full flex flex-col ' + parentClass ">
   <div class="w-full" *ngIf="showSelection">
     <div class="w-full">
-      <label class="text-2xl"><b><u>IDENTIFICATION</u></b></label>
+      <label class="text-2xl"><b><u>IDENTIFICATION</u>{{isMandatory ? '*' : ''}}</b></label>
       <select id="contractor_block"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280] bg-white"
         [(ngModel)]="selectedIdentification" (change)="onSelectionChange($event)" [disabled]="isReadonly">
@@ -14,7 +14,7 @@
   </div>
   <div class="w-full flex flex-row justify-between space-x-2">
     <div class="w-full flex flex-col" *ngIf="selectedIdentification != 'passport'">
-      <label class="text-2xl"><b><u>NRIC / FIN</u></b></label>
+      <label class="text-2xl"><b><u>NRIC / FIN</u>{{isMandatory ? '*' : ''}}</b></label>
       <div class="w-full flex flex-row justify-between items-end space-x-2">
         <div class="w-[90%]">
           <input #contractorIdentificationNumberInput id="nric_scan_input_field" [placeholder]="''"
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="w-full flex flex-col" *ngIf="selectedIdentification == 'passport'">
-      <label class="text-2xl"><b><u>PASSPORT</u></b></label>
+      <label class="text-2xl"><b><u>PASSPORT</u>{{isMandatory ? '*' : ''}}</b></label>
         <input #contractorIdentificationNumberInputPassport id="nric_scan_input_field_passport" [placeholder]="''"
         type="text" [class]="'!border  w-full rounded  py-2  px-3  outline-[#BDBDBD] h-20  text-2xl bg-white'"
         [(ngModel)]="nric_value" (change)="onPassportChange($event)">

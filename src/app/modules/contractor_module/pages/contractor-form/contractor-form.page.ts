@@ -38,8 +38,14 @@ export class ContractorFormPage implements OnInit {
     private clientMainService: ClientMainService,
   ) { }
 
+  module_field = 'contractor'
+  module_config: any = {}
   ngOnInit() {
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         this.loadHost()
         this.showDrive = false
@@ -176,7 +182,7 @@ export class ContractorFormPage implements OnInit {
     this.selectedUnit = event[0]
   }
 
-  async saveRecord(openBarrier: boolean = false, camera_id: string = '') {  
+  async saveRecord(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {  
     let errMsg = ''
     // Validasi input
     const contractorName = this.formData.contractor_name;
@@ -186,60 +192,60 @@ export class ContractorFormPage implements OnInit {
     const companyName = this.formData.company_name;
     const remarks = this.remarksValue;
 
-    if (!this.selectedImage) {
+    if (!this.selectedImage && this.module_config.contractor_image) {
       errMsg += 'Contractor image is required! \n'
     }
-    if (!this.selectedCard && !this.project_config.is_industrial) {
+    if (!this.selectedCard && !this.project_config.is_industrial && this.module_config.contractor_card) {
       errMsg += 'Contractor ID Card is required! \n'
     }
-    if (!contractorName) {
+    if (!contractorName && this.module_config.contractor_name) {
       errMsg += 'Contractor name is required! \n'
     }
-    if (!contractorContactNo) {
+    if (!contractorContactNo && this.module_config.contact_number) {
       errMsg += 'Contact number is required! \n'
     }
-    if (contractorContactNo) {
+    if (contractorContactNo && this.module_config.contact_number) {
       if (contractorContactNo.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.identificationType) {
+    if (!this.identificationType && this.module_config.identification) {
       errMsg += 'Identification type must be selected! \n'
     }
-    if (!identificationNumber) {
+    if (!identificationNumber && this.module_config.identification) {
       errMsg += 'Identification number is required! \n'
     }
-    if (!contractorVehicle && this.showDrive) {
+    if (!contractorVehicle && this.showDrive && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is required! \n'
     }
-    if (!companyName) {
+    if (!companyName && this.module_config.company_name) {
       errMsg += 'Company name is required! \n'
     }
-    if ((!this.selectedBlock || !this.selectedUnit) && !this.project_config.is_industrial) {
+    if (((!this.selectedBlock && this.module_config.block) || (!this.selectedUnit && this.module_config.unit_id)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
-    }
-    if (!this.contractor_total_package && this.project_config.is_industrial) {
+    if ((!this.contractor_total_package && this.module_config.total_package) && this.project_config.is_industrial) {
       errMsg += 'Total package is required! \n'
     }
-    if (!this.contractor_entry_purpose && this.project_config.is_industrial) {
+    if ((!this.contractor_entry_purpose && this.module_config.purpose) && this.project_config.is_industrial) {
       errMsg += 'Entry purpose is required! \n'
     }
-    if (!this.contractor_expired_date && this.project_config.is_industrial) {
+    if ((!this.contractor_expired_date && this.module_config.sic_expiry_date) && this.project_config.is_industrial) {
       errMsg += 'SIC expiry date is required! \n'
     }
-    if (!this.contractor_gate_pass_number && this.project_config.is_industrial) {
+    if ((!this.contractor_gate_pass_number && this.module_config.gate_pass_number) && this.project_config.is_industrial) {
       errMsg += 'Gate pass number is required! \n'
     }
-    if (!this.contractor_pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+    if ((!this.contractor_pass_number && this.module_config.pass_number) && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
-    if (this.checkPaxData()) {
+    if (!this.remarksValue && this.module_config.remarks) {
+      errMsg += 'Remarks is required! \n'
+    }
+    if (this.checkPaxData() && this.module_config.number_of_pax) {
       errMsg += "All names and NRICs of contractor members must be filled in!!"
     }
     if (errMsg) {
@@ -281,6 +287,7 @@ export class ContractorFormPage implements OnInit {
       visitor_image: this.selectedImage,
       contractor_card: this.selectedCard,
       is_bypass: this.isBypass,
+      bypass_ban: bypass_ban,
     }
     
     try {
@@ -307,7 +314,11 @@ export class ContractorFormPage implements OnInit {
           } else if (response.result.status_code === 407) {
             this.functionMain.presentToast(response.result.status_description, 'danger');
           } else if (response.result.status_code === 206) {
-            this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost[0])
+            this.functionMain.banAlert(response.result.status_description, this.selectedUnit, this.selectedHost[0]).then((value: any) => {
+              if (value) {
+                this.saveRecord(openBarrier, camera_id, true)
+              }
+            })
           } else {
             this.functionMain.presentToast('An error occurred while attempting to save contractor data', 'danger');
           }
@@ -844,6 +855,10 @@ export class ContractorFormPage implements OnInit {
   selectedCard = ''
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

@@ -30,29 +30,26 @@
       </div>
       <div class="justify-between items-center w-full" *ngIf="showWalk" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5 mb-4">
-          <div class="w-full">
+          <div class="w-full" *ngIf="project_config.is_industrial">
             <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
               [extraButtonClass]="'rounded-md text-white h-20'" 
+              [isMandatory]="module_config.visitor_image"
               [(cameraSelected)]="selectedImage">
             </app-input-image-preview>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' />
+            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [isMandatory]="module_config.identification" />
           </div>
           <div class="w-full flex flex-col">
             <app-text-input #visitorWalkInName [id]="'walk_in_name'" [labelText]="'NAME'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.visitor_name"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_name"></app-text-input>
-            <!-- <label class="text-2xl"><b><u>NAME</u></b></label>
-            <input id="walk_in_name" placeholder="" type="text"
-              class="border-[1px] w-full rounded py-2 px-3 text-2xl h-20" style="border: 1px solid #6B7280;"
-              [(ngModel)]="formData.visitor_name" name="visitor_name"> -->
           </div>
           <div class="w-full">
-            <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan"></app-vms-contact-input>
+            <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
           </div>
           <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
-            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <label class="text-2xl"><b><u>BLOCK</u>{{module_config.block ? '*' : ''}}</b></label>
             <select id="visitor_walk_in_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="visitor_walk_in_block"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected disabled hidden>CHOOSE BLOCK</option>
@@ -60,58 +57,44 @@
             </select>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true" [isMandatory]="module_config.unit"
               [labelText]="textUnit" [Selected]="contactUnit" [showButton]="project_config.is_industrial"></app-m2m-selection>
           </div>
-          <div class="w-full flex flex-col space-y-5">
-            <div class="w-full" *ngIf="project_config.is_industrial">
-              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial"></app-m2m-selection>
-            </div>
-            <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
-              <app-text-input #visitorWalkInUpPass [id]="'visitor_walk_in_pass_number'" [labelText]="'PASS NUMBER'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
-            </div>
-            <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-              <!-- <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-              <textarea id="walk_in_purpose" rows="4" (change)="purposeInput($event)"
-                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
-                placeholder=""></textarea> -->
-              <app-text-input [id]="'walk_in_purpose'" [name]="'walk_in_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
-                [(ngModel)]="formData.purpose"></app-text-input>
-            </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial" [isMandatory]="module_config.host"></app-m2m-selection>
           </div>
-          <!-- <div class="w-full flex flex-col">
-            <label class="text-2xl"><b><u>UNIT</u></b></label>
-            <select id="visitor_walk_in_unit" (change)="onUnitChange($event)" [(ngModel)]="formData.unit" name="visitor_walk_in_unit"
-              class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
-              <option value="" selected disabled hidden>CHOOSE UNIT</option>
-              <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
-            </select>
-          </div> -->
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-text-input #visitorWalkInUpPass [id]="'visitor_walk_in_pass_number'" [labelText]="'PASS NUMBER'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number" [isMandatory]="module_config.pass_number"></app-text-input>
+          </div>
+          <div class="w-full flex flex-col">
+            <app-text-input [id]="'walk_in_remarks'" [name]="'walk_in_remarks'" [labelText]="'REMARKS'" [rows]="4"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
+              [(ngModel)]="formData.remarks"></app-text-input>
+          </div>
           <div class="w-full">
             <app-visitor-button [text]="'SAVE RECORD'"
               [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
-              (click)="onSubmitWalkIn()"></app-visitor-button>
+              (click)="onSubmitDriveIn()"></app-visitor-button>
           </div>
         </div>
       </div>
 
       <div class="justify-between items-center w-full" *ngIf="showDrive" @fadeInOut>
         <div class="mt-8 flex flex-col justify-between items-center w-full space-y-5  mb-4">
-          <div class="w-full">
+          <div class="w-full" *ngIf="project_config.is_industrial">
             <app-input-image-preview class="w-full h-25" [labelText]="'VISITOR IMAGE'" [buttonText]="'UPLOAD'" 
-              [extraButtonClass]="'rounded-md text-white h-20'" 
+              [extraButtonClass]="'rounded-md text-white h-20'" [isMandatory]="module_config.visitor_image"
               [(cameraSelected)]="selectedImage">
             </app-input-image-preview>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' />
+            <app-nric-scan-input [isReadonly]="is_id_disabled" [parentClass]="'space-y-5'" [showSelection]="true" [includePassport]="true" (outputScan)="setFromScan($event)" [Selected]='selectedNric' [Selected]='selectedNric' [isMandatory]="module_config.identification" />
           </div>
           <div class="w-full flex flex-col">
             <app-text-input #visitorDriveInName [id]="'drive_in_name'" [labelText]="'NAME'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.visitor_name"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_name"></app-text-input>
             <!-- <label class="text-2xl"><b><u>NAME</u></b></label>
             <input id="drive_in_name" placeholder="" type="text"
@@ -119,12 +102,12 @@
               [(ngModel)]="formData.visitor_name" name="visitor_name"> -->
           </div>
           <div class="w-full">
-            <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'drive_in_contact'" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan"></app-vms-contact-input>
+            <app-vms-contact-input [(value)]="formData.visitor_contact_no" [valueExist]="formData.visitor_contact_no" [id]="'drive_in_contact'" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
           </div>
           <div class="w-full flex flex-row justify-between">
             <div class="w-[90%] flex flex-col">
               <app-text-input #visitorDriveInVehcile [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.vehicle_number"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.visitor_vehicle"></app-text-input>
               <!-- <label class="text-2xl"><b><u>VEHICLE NUMBER</u></b></label>
               <input id="drive_in_vehicle" placeholder="" type="text"
@@ -136,7 +119,7 @@
             </div>
           </div>
           <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
-            <label class="text-2xl"><b><u>BLOCK</u></b></label>
+            <label class="text-2xl"><b><u>BLOCK</u>{{module_config.block ? '*' : ''}}</b></label>
             <select id="visitor_drive_in_block" (change)="onBlockChange($event)" [(ngModel)]="formData.block" name="visitor_drive_in_block"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]">
               <option value="" selected disabled hidden>CHOOSE BLOCK</option>
@@ -144,7 +127,7 @@
             </select>
           </div>
           <div class="w-full" *ngIf="!project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true"
+            <app-m2m-selection [Arrays]="Unit" (outputValue)="onUnitChange($event)" [placeholder]="'CHOOSE UNIT'" [isOne]="true" [isVMS]="true" [isMandatory]="module_config.unit"
               [labelText]="textUnit" [Selected]="contactUnit"></app-m2m-selection>
           </div>
           <!-- <div class="w-full flex flex-col">
@@ -155,24 +138,18 @@
               <option *ngFor="let unit of Unit" [value]="unit.id">{{ unit.unit_name }}</option>
             </select>
           </div> -->
-          <div class="w-full flex flex-col space-y-5">
-            <div class="w-full" *ngIf="project_config.is_industrial">
-              <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost"></app-m2m-selection>
-            </div>
-            <div class="w-full" *ngIf="project_config.is_industrial || project_config.is_allow_pass_number_resident">
-              <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
-                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
-            </div>
-            <div class="w-full flex flex-col" *ngIf="project_config.is_industrial">
-              <!-- <label class="text-2xl"><u><b>PURPOSE</b></u></label>
-              <textarea id="purpose" rows="4" (change)="purposeInput($event)"
-                class="bg-white border border-[#6B7280] text-gray-900 text-2xl rounded "
-                placeholder=""></textarea> -->
-              <app-text-input [id]="'drive_in_purpose'" [name]="'drive_in_purpose'" [labelText]="'PURPOSE'" [rows]="4"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'"
-                [(ngModel)]="formData.purpose"></app-text-input>
-            </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isMandatory]="module_config.host"></app-m2m-selection>
+          </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
+          </div>
+          <div class="w-full flex flex-col">
+            <app-text-input [id]="'drive_in_remarks'" [name]="'drive_in_remarks'" [labelText]="'REMARKS'" [rows]="4"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
+              [(ngModel)]="formData.remarks"></app-text-input>
           </div>
           <div class="w-full" *ngFor="let camera of Camera; let i = index">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID"

@@ -114,7 +114,7 @@
         <div class="w-full" *ngIf="(searchOption == 'host' || searchOption == 'both') && project_config.is_industrial">
           <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
         </div>
-        <div class="flex flex-row w-full justify-end mt-5" *ngIf="((choosenBlock || selectedHost || startDateFilter || endDateFilter || vehicleNumberFilter || selectedHost) || isRadioClicked)">
+        <div class="flex flex-row w-full justify-end mt-5" *ngIf="((choosenBlock || selectedHost || startDateFilter || endDateFilter || submittedVehicleFilter || selectedHost) || isRadioClicked)">
           <div class="flex flex-row space-x-5 items-center">
             <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
             <input type="number" class="w-20 bg-white rounded text-2xl" style="border: 1px solid #6B7280;" [(ngModel)]="inputPage" (change)="changePage(inputPage)">
@@ -125,7 +125,7 @@
       </div>
 
       <div class="flex flex-col w-full space-y-5"
-        *ngIf="showHistory && (choosenBlock || selectedHost || startDateFilter || endDateFilter || vehicleNumberFilter) && !isRadioClicked">
+        *ngIf="showHistory && (choosenBlock || selectedHost || startDateFilter || endDateFilter || submittedVehicleFilter) && !isRadioClicked">
         <div *ngIf="isLoading" class="flex justify-center items-center h-20">
           <!-- <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner> -->
           <app-modal-loading />

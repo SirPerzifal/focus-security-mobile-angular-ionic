@@ -43,7 +43,7 @@
               <app-text-input #vehicleNumberInput [id]="'pick_up_vhcnum'" [placeholder]="'EG. SBA 8892 A'"
                 [labelText]="'VEHICLE NUMBER'" [customClasses]="{'w-full':true}" [type]="'text'"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl': true}"
-                [(ngModel)]="vehicleNumber"></app-text-input>
+                [(ngModel)]="vehicleNumber" [isMandatory]="module_config.vehicle_number"></app-text-input>
             </div>
             <div class="h-25 flex flex-col justify-end">
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
@@ -60,12 +60,12 @@
             </div> -->
             <div class="w-full">
               <app-text-input #entryPickUpPass [id]="'entry_pick_up_pass_industrial_location'" [labelText]="'LOCATION'"
-                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.location"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="industrial_location"></app-text-input>
             </div>
           </div>
           <div class="w-full flex flex-col" *ngIf="!project_config.is_industrial">
-            <label class="text-2xl"><b><u>LOCATION</u></b></label>
+            <label class="text-2xl"><b><u>LOCATION</u>{{module_config.location ? '*' : ''}}</b></label>
             <select id="pick_up_location"
               class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-[#6B7280]"
               (change)="onBlockChange($event)" [(ngModel)]="blkLocation">

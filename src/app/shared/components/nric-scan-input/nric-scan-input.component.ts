@@ -32,6 +32,7 @@ export class NricScanInputComponent  implements OnInit {
   @Input() showSelection: boolean = false;
   @Input() isScan: boolean = true
   @Input() isSearchButton: boolean = false
+  @Input() isMandatory: boolean = false;
 
   onSelectionChange(event: any) {
     this.selectedIdentification = event.target.value

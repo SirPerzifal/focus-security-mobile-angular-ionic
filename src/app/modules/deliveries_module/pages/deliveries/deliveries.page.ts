@@ -96,14 +96,14 @@ export class DeliveriesPage implements OnInit {
           result.forEach((item: any) => {
             const base64Image = item['icon'];
             const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/FoodBar.webp'; 
-            this.foodDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
+            this.foodDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: this.food_delivery_id == item['id'], id: item['id']});
           });
         } 
-        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 'other'});
+        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: this.food_delivery_id == 'other', id: 'other'});
       },
       error => {
         console.log(error)
-        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: false, id: 'other'});
+        this.foodDeliveryButtons.push({image: 'assets/icon/deliveries-icon/FoodBar.webp', text: 'OTHERS', isActive: this.food_delivery_id == 'other', id: 'other'});
       }
     )
   }
@@ -119,15 +119,15 @@ export class DeliveriesPage implements OnInit {
             const base64Image = item['icon'];
             const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp'; 
             console.log(formattedImage)
-            this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: false, id: item['id']});
+            this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: this.package_delivery_id == item['id'], id: item['id']});
             console.log(item)
           });
         }
-        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 'other'});
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: this.package_delivery_id == 'other', id: 'other'});
       },
       error => {
         console.log(error)
-        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: false, id: 'other'});
+        this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: this.package_delivery_id == 'other', id: 'other'});
       }
     )
   }
@@ -141,7 +141,7 @@ export class DeliveriesPage implements OnInit {
     toast.present();
   }
 
-  onSubmitFood(openBarrier: boolean = false, camera_id: string = '') {
+  onSubmitFood(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     console.log(openBarrier)
     console.log(this.formData)
     let errMsg = ""
@@ -151,34 +151,37 @@ export class DeliveriesPage implements OnInit {
     if (!this.showDrive && !this.showWalk){
       errMsg += 'Please select a delivery type!\n';
     }
-    if (!this.selectedImage) {
+    if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.formData.contact_number){
+    if (!this.formData.contact_number && this.module_config.contact_number){
       errMsg += 'Please insert a contact number!\n';
     }
-    if (this.formData.contact_number) {
+    if (this.formData.contact_number && this.module_config.contact_number) {
       if (this.formData.contact_number.length <= 2 ) {
         errMsg += 'Please insert a contact number! \n'
       }
     }
-    if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number){
+    if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number && this.module_config.vehicle_number){
       errMsg += 'Please insert a vehicle number!\n';
     }
-    if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial){
+    if (((!this.formData.block && this.module_config.block) || (!this.formData.unit && this.module_config.unit)) && !this.project_config.is_industrial){
       errMsg += 'Please insert a block and unit!\n';
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial){
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial){
       errMsg += 'Please insert a host!\n';
     }
-    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
+    }
+    if (!this.formData.remarks && (this.module_config.remarks)){
+      errMsg += 'Please insert a remarks!\n';
     }
     if(errMsg != ""){
       this.functionMain.presentToast(errMsg, 'danger')
@@ -195,6 +198,7 @@ export class DeliveriesPage implements OnInit {
           delivery_option: this.showDrive ? 'drive_in' : 'walk_in',
         },
         package_delivery: {},
+        remarks: this.formData.remarks,
         block: this.formData.block,
         unit: this.formData.unit,
         multiple_unit: {},
@@ -205,6 +209,7 @@ export class DeliveriesPage implements OnInit {
         identification_number: this.nric_value,
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
+        bypass_ban: bypass_ban,
       }
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
         res => {
@@ -229,7 +234,11 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
-            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
+            this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmitFood(openBarrier, camera_id, true)
+              }
+            })
           } else {
             this.functionMain.presentToast('Failed To Saved Food Delivery Record', 'danger');
           }
@@ -323,7 +332,7 @@ export class DeliveriesPage implements OnInit {
     this.is_id_disabled = false
   }
 
-  onSubmitPackage(openBarrier: boolean = false, camera_id: string = '') {
+  onSubmitPackage(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     console.log(openBarrier)
     let mutiple_unit = {
       pax: '0',
@@ -337,39 +346,42 @@ export class DeliveriesPage implements OnInit {
     if (!this.showDrive && !this.showWalk){
       errMsg += 'Please select a delivery type!\n';
     }
-    if (!this.selectedImage) {
+    if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if (!this.formData.contact_number){
+    if (!this.formData.contact_number && this.module_config.contact_number){
       errMsg += 'Please insert visitor contact number!\n';
     }
-    if (this.formData.contact_number) {
+    if (this.formData.contact_number && this.module_config.contact_number) {
       if (this.formData.contact_number.length <= 2 ) {
         errMsg += 'Please insert a contact number! \n'
       }
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.formData.vehicle_number && this.showDrive){
+    if ((!this.formData.vehicle_number && this.module_config.vehicle_number) && this.showDrive){
       errMsg += 'Please insert visitor vehicle number!\n';
     }
-    if (!this.pass_number && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
+    }
+    if (!this.formData.remarks && this.module_config.remarks){
+      errMsg += 'Please insert a remarks!\n';
     }
     if (!this.package_delivery_type){
       errMsg += 'Please select a delivery option!\n';
     }
-    if (this.package_delivery_type == "single" && (!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial){
+    if (this.package_delivery_type == "single" && ((!this.formData.block && this.module_config.block) || (!this.formData.unit && this.module_config.unit)) && !this.project_config.is_industrial){
       errMsg += 'Please insert visitor block and unit!\n';
     }
-    if (this.package_delivery_type == "single" && (!this.selectedHost) && this.project_config.is_industrial){
+    if (this.package_delivery_type == "single" && (!this.selectedHost && this.module_config.host) && this.project_config.is_industrial){
       errMsg += 'Please insert a visitor host!\n';
     }
-    if (this.package_delivery_type == "multiple" && this.formData.pax == "0"){
+    if (this.package_delivery_type == "multiple" && this.formData.pax == "0" && this.module_config.number_of_pax){
       errMsg += 'Please insert number of Pax!\n';
     }
     if(errMsg != ""){
@@ -390,6 +402,7 @@ export class DeliveriesPage implements OnInit {
         },
         block: this.package_delivery_type === 'multiple' ? '' : this.formData.block,
         unit: this.package_delivery_type === 'multiple' ? '' : this.formData.unit,
+        remarks: this.formData.remarks,
         multiple_unit: {
           pax: this.formData.pax,
           remarks: this.formData.remarks
@@ -401,6 +414,7 @@ export class DeliveriesPage implements OnInit {
         identification_number: this.nric_value,
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
+        bypass_ban: bypass_ban,
       }
       
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
@@ -427,7 +441,11 @@ export class DeliveriesPage implements OnInit {
           } else if (res.result.status_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else if (res.result.status_code === 206) {
-            this.functionMain.banAlert(res.result.status_description, this.package_delivery_type === 'multiple' ? false : this.formData.unit, this.selectedHost)
+            this.functionMain.banAlert(res.result.status_description, this.package_delivery_type === 'multiple' ? false : this.formData.unit, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmitPackage(openBarrier, camera_id, true)
+              }
+            })
           } else {
             this.functionMain.presentToast('Failed To Saved Package Delivery Record', 'danger');
           }
@@ -618,6 +636,10 @@ export class DeliveriesPage implements OnInit {
 
     selectedButton.isActive = !selectedButton.isActive;
 
+    if (this.showDrive) {
+      this.refreshVehicle()
+    }
+
     // Handle any additional logic needed for the button click
     console.log(`Button clicked: ${String(selectedButton.id)}, Active: ${selectedButton.isActive}`);
     
@@ -653,6 +675,7 @@ export class DeliveriesPage implements OnInit {
       setTimeout(() => {
         this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
       }, 300)
+      console.log(this.food_delivery_type)
     }
     
     console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
@@ -704,6 +727,8 @@ export class DeliveriesPage implements OnInit {
     });
   }
 
+  module_field = 'delivery'
+  module_config: any = {}
   ngOnInit() {
     // Semua tombol tidak aktif pada awalnya
     this.buttonStates = {
@@ -713,6 +738,10 @@ export class DeliveriesPage implements OnInit {
       OthersDeliveries: false,
     };
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
       this.packageDeliveryButtons.forEach(button => button.isActive = false);
       if (this.project_config.is_industrial) {
@@ -895,12 +924,12 @@ export class DeliveriesPage implements OnInit {
     remarks: '',
   };
 
-  onSubmitOther(openBarrier: boolean = true, camera_id: string = ''){
+  onSubmitOther(openBarrier: boolean = true, camera_id: string = '', bypass_ban: boolean = false){
     let errMsg = ""
     if (this.showWalk) {
       this.otherDeliveryForm.visitor_vehicle = ''
     }
-    if (!this.selectedImage) {
+    if (!this.selectedImage && this.module_config.visitor_image) {
       errMsg += 'Visitor image is required!\n';
     }
     // if ((!this.identificationType) && this.project_config.is_industrial) {
@@ -909,30 +938,30 @@ export class DeliveriesPage implements OnInit {
     // if ((!this.nric_value) && this.project_config.is_industrial) {
     //   errMsg += 'Identification number is required!\n';
     // }
-    if (!this.otherDeliveryForm.visitor_name) {
-      errMsg += 'Visitor is required!\n';
+    if (!this.otherDeliveryForm.visitor_name && this.module_config.visitor_name) {
+      errMsg += 'Name is required!\n';
     }
-    if (!this.otherDeliveryForm.visitor_contact_no) {
+    if (!this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.otherDeliveryForm.visitor_contact_no) {
+    if (this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number) {
       if (this.otherDeliveryForm.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive) {
+    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if ((!this.otherDeliveryForm.company_name) && this.project_config.is_industrial) {
+    if ((!this.otherDeliveryForm.company_name && this.module_config.company_name) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if (!this.pass_number && this.module_config.pass_number && this.project_config.is_industrial) {
       errMsg += 'Pass number is required! \n'
     }
-    if ((!this.otherDeliveryForm.remarks) && this.project_config.is_industrial) {
+    if ((!this.otherDeliveryForm.remarks && this.module_config.remarks) && this.project_config.is_industrial) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
@@ -945,7 +974,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
@@ -970,7 +999,11 @@ export class DeliveriesPage implements OnInit {
         } else if (res.result.status_code === 407) {
           this.functionMain.presentToast(res.result.status_description, 'danger');
         } else if (res.result.status_code === 206) {
-          this.functionMain.banAlert(res.result.status_description, false, this.selectedHost)
+          this.functionMain.banAlert(res.result.status_description, false, this.selectedHost).then((value: any) => {
+            if (value) {
+              this.onSubmitOther(openBarrier, camera_id, true)
+            }
+          })
         } else {
           this.functionMain.presentToast('An error occurred while creating new delivery data!', 'danger');
         }
@@ -1054,6 +1087,10 @@ export class DeliveriesPage implements OnInit {
   selectedImage: any = ''
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

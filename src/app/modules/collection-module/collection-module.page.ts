@@ -127,12 +127,12 @@ export class CollectionModulePage implements OnInit {
 
   toggleShowDrive() {
     if (!this.showWalkTrans){
+      this.showDriveTrans = true
+      this.showWalk = false;
       if(!this.showDrive){
         this.resetForm()
         this.refreshVehicle()
       }
-      this.showDriveTrans = true
-      this.showWalk = false;
       setTimeout(()=>{
         this.showDrive = true;
         this.showDriveTrans = false
@@ -183,7 +183,7 @@ export class CollectionModulePage implements OnInit {
 
   isLoadingUnit = false
   async loadUnit() {
-    var blockUnittoGet = this.showWalk ? this.walkInFormData.block : this.showDrive ? this.driveInFormData.block : "0"
+    var blockUnittoGet = this.showWalk ? this.walkInFormData.block : (this.showDrive || this.showDriveTrans ? this.driveInFormData.block : "0")
     this.blockUnitService.getUnit(blockUnittoGet).subscribe({
       next: (response: any) => {
         if (response.result.status_code === 200) {
@@ -228,41 +228,41 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
-  onSubmitWalkIn(){
+  onSubmitWalkIn(bypass_ban: boolean = false){
     let errMsg = ""
-    if (!this.selectedImage) {
+    if (!this.selectedImage && (this.module_config.visitor_name && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.walkInFormData.visitor_name) {
+    if (!this.walkInFormData.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
-    if (!this.walkInFormData.visitor_contact_no) {
+    if (!this.walkInFormData.visitor_contact_no && this.module_config.contact_number) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.walkInFormData.visitor_contact_no) {
+    if (this.walkInFormData.visitor_contact_no && this.module_config.contact_number) {
       if (this.walkInFormData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if ((!this.walkInFormData.block || !this.walkInFormData.unit) && !this.project_config.is_industrial) {
+    if (((!this.walkInFormData.block && this.module_config.block) || (!this.walkInFormData.unit && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if ((!this.walkInFormData.company_name) && this.project_config.is_industrial) {
+    if ((!this.walkInFormData.company_name && this.module_config.company_name) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
-    if ((!this.walkInFormData.remarks) && this.project_config.is_industrial) {
+    if ((!this.walkInFormData.remarks && this.module_config.remarks)) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
@@ -286,6 +286,7 @@ export class CollectionModulePage implements OnInit {
         identification_type: this.identificationType,
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
+        bypass_ban: bypass_ban,
       }
       this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
@@ -294,7 +295,11 @@ export class CollectionModulePage implements OnInit {
             this.functionMain.presentToast('Walk in data has been successfully saved to the system!', 'success');
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 206) {
-            this.functionMain.banAlert(res.result.status_description, this.walkInFormData.unit, this.selectedHost)
+            this.functionMain.banAlert(res.result.status_description, this.walkInFormData.unit, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmitWalkIn(true)
+              }
+            })
           } else if (res.result.response_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
@@ -313,44 +318,44 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
-  onSubmitDriveIn(openBarrier: boolean = true, camera_id: string = ''){
+  onSubmitDriveIn(openBarrier: boolean = true, camera_id: string = '', bypass_ban: boolean = false){
     let errMsg = ""
-    if (!this.selectedImage) {
+    if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType) && this.project_config.is_industrial) {
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
-    if ((!this.nric_value) && this.project_config.is_industrial) {
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
-    if (!this.driveInFormData.visitor_name) {
+    if (!this.driveInFormData.visitor_name && (this.module_config.visitor_name && this.project_config.is_industrial)) {
       errMsg += 'Visitor is required!\n';
     }
-    if (!this.driveInFormData.visitor_contact_no) {
+    if (!this.driveInFormData.visitor_contact_no && this.module_config.contact_number) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.driveInFormData.visitor_contact_no) {
+    if (this.driveInFormData.visitor_contact_no && this.module_config.contact_number) {
       if (this.driveInFormData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.driveInFormData.visitor_vehicle) {
+    if (!this.driveInFormData.visitor_vehicle && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if ((!this.driveInFormData.block || !this.driveInFormData.unit) && !this.project_config.is_industrial) {
+    if (((!this.driveInFormData.block && this.module_config.block) || (!this.driveInFormData.unit && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if ((!this.driveInFormData.company_name) && this.project_config.is_industrial) {
+    if ((!this.driveInFormData.company_name && this.module_config.company_name) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if (!this.pass_number && this.project_config.is_industrial) {
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
-    if ((!this.driveInFormData.remarks) && this.project_config.is_industrial) {
+    if ((!this.driveInFormData.remarks && this.module_config.remarks)) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
@@ -379,6 +384,7 @@ export class CollectionModulePage implements OnInit {
         identification_type: this.identificationType,
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
+        bypass_ban: bypass_ban,
       }
       this.clientMainService.getApi(params, '/vms/post/add_collection').subscribe(
         res => {
@@ -403,7 +409,11 @@ export class CollectionModulePage implements OnInit {
             this.functionMain.presentToast(res.result.status_description, 'danger');
             this.router.navigate(['home-vms'])
           } else if (res.result.response_code === 206) {
-            this.functionMain.banAlert(res.result.status_description, this.driveInFormData.unit, this.selectedHost)
+            this.functionMain.banAlert(res.result.status_description, this.driveInFormData.unit, this.selectedHost).then((value: any) => {
+              if (value) {
+                this.onSubmitDriveIn(openBarrier, camera_id, true)
+              }
+            })
           } else if (res.result.response_code === 407) {
             this.functionMain.presentToast(res.result.status_description, 'danger');
           } else {
@@ -422,8 +432,14 @@ export class CollectionModulePage implements OnInit {
     }
   }
 
+  module_field = 'collection'
+  module_config: any = {}
   ngOnInit() {
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         this.loadHost()
       } else {
@@ -578,6 +594,10 @@ export class CollectionModulePage implements OnInit {
   selectedImage: any = ''
 
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       this.loadHost()
     } else {

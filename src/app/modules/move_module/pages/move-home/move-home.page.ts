@@ -97,7 +97,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       page: this.currentPage, 
       project_id: this.project_id,
       block: this.choosenBlock,
-      vehicle_number: this.vehicleNumberFilter,
+      vehicle_number: this.submittedVehicleFilter,
       unit: this.choosenUnit,
       host: this.selectedHost,
       issue_date: this.startDateFilter,
@@ -408,6 +408,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
   choosenUnit = ''
   contactUnit = ''
   vehicleNumberFilter = ''
+  submittedVehicleFilter = ''
 
   toggleSlide(type: string) {
     if (!this.showHistoryTrans && !this.showDayTrans) {
@@ -419,6 +420,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
         this.endDateFilter = ''
         this.choosenBlock = ''
         this.vehicleNumberFilter = ''
+        this.submittedVehicleFilter = ''
         this.selectedRadio = ''
         this.isRadioClicked = false
         this.showDayTrans = true
@@ -534,7 +536,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     this.vehicleNumberFilter = ''
     this.contactUnit = ''
     this.choosenUnit = ''
-    this.vehicleNumberFilter = ''
+    this.submittedVehicleFilter = ''
     console.log(event.target.value)
   }
 
@@ -562,6 +564,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
   resetFilter() {
     this.choosenBlock = ''
     this.vehicleNumberFilter = ''
+    this.submittedVehicleFilter = ''
     this.choosenUnit = ''
     this.contactUnit = ''
     this.selectedHost = ''
@@ -653,6 +656,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
 
   onVehicleFilterChange(event: any) {
     this.vehicleNumberFilter = event.target.value
+    this.submittedVehicleFilter = this.vehicleNumberFilter
     this.applyFilters()
   }
 }

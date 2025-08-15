@@ -65,6 +65,7 @@ export class CoachesFormPage implements OnInit {
   schedule: any = []
   contactNumber = ''
   selectedBlock = ''
+  remarks = ''
 
   ngOnInit() {
     this.loadProjectName().then(() => {
@@ -244,9 +245,9 @@ export class CoachesFormPage implements OnInit {
     toast.present();
   }
 
-  onSubmitRecord(isOpenBarrier: boolean = false, camera_id: string = '') {
+  onSubmitRecord(isOpenBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     let errMsg = ''
-    if (!this.selectedImage) {
+    if (!this.selectedImage && this.project_config.is_industrial) {
       errMsg += 'Coach image is required!\n';
     }
     if (!this.schedule.coach_name){
@@ -265,6 +266,9 @@ export class CoachesFormPage implements OnInit {
     }
     if (!this.schedule.block_id || !this.schedule.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
+    }
+    if (!this.remarks) {
+      errMsg += 'Remarks is required! \n'
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger');
@@ -285,7 +289,9 @@ export class CoachesFormPage implements OnInit {
         vehicle_number: this.showDrive ? this.schedule.vehicle_number : '' ,
         project_id: this.project_id,
         camera_id: camera_id,
-        visitor_image: this.selectedImage,
+        visitor_image: this.project_config.is_industrial ? this.selectedImage : false,
+        remarks: this.remarks,
+        bypass_ban: bypass_ban,
       }
       console.log(params)
       this.clientMainService.getApi(params, '/vms/post/add_coaches' ).subscribe({
@@ -305,7 +311,11 @@ export class CoachesFormPage implements OnInit {
             this.functionMain.presentToast(results.result.status_description, 'danger');
             this.onBackMove()
           } else if (results.result.response_code === 206) {
-            this.functionMain.banAlert(results.result.status_description, this.schedule.unit, false)
+            this.functionMain.banAlert(results.result.status_description, this.schedule.unit, false).then((value: any) => {
+              if (value) {
+                this.onSubmitRecord(isOpenBarrier, camera_id, true)
+              }
+            })
           } else {
             this.functionMain.presentToast('An error occurred while submitting coach data!', 'danger');
           }

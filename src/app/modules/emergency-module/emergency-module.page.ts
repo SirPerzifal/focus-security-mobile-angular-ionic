@@ -173,8 +173,14 @@ export class EmergencyModulePage implements OnInit {
     })
   }
 
+  module_field = 'emergency_vehicle'
+  module_config: any = {}
   ngOnInit() {
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+        console.log(result)
+        this.module_config = result
+      })
       if (this.project_config.is_industrial) {
         // this.loadHost()
       } else {
@@ -266,14 +272,14 @@ export class EmergencyModulePage implements OnInit {
     });
   }
   
-  onSubmit(isOpenBarrier: boolean = false, camera_id: string = ''){
+  onSubmit(isOpenBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false){
     let errMsg = ''
     console.log(this.formData)
-    if (!this.formData.officer_name && (this.showPolice)) {
+    if ((!this.formData.officer_name && this.module_config.rank_name) && (this.showPolice)) {
       errMsg += "Rank and name is required! \n"
     }
-    if (!this.formData.officer_name && (this.showOthers)) {
-      errMsg += "Govt agency name is required! \n"
+    if ((!this.formData.officer_name && this.module_config.rank_name) && (this.showOthers)) {
+      errMsg += "Name is required! \n"
     }
     // if (!this.formData.contact_number && (this.showOthers || this.showPolice)) {
     //   errMsg += "Contact number is required! \n"
@@ -283,29 +289,32 @@ export class EmergencyModulePage implements OnInit {
     //     errMsg += "Contact number is required! \n"
     //   }
     // }
-    if (!this.formData.station_devision && (this.showPolice || this.showSCDF || this.showAmbulance)) {
+    if ((!this.formData.station_devision && this.module_config.station_division) && (this.showPolice || this.showSCDF || this.showAmbulance)) {
       errMsg += "Station & division is required! \n"
     }
-    if (!this.formData.station_devision && (this.showOthers)) {
+    if ((!this.formData.station_devision && this.module_config.govt_agency_name) && (this.showOthers)) {
       errMsg += "Govt agency name is required! \n"
     }
-    if (!this.formData.vehicle_number) {
+    if (!this.formData.vehicle_number && this.module_config.vehicle_number) {
       errMsg += "Vehicle number is required! \n"
     }
-    if ((!this.formData.block_id || !this.formData.unit_id) && !this.project_config.is_industrial) {
+    if (((!this.formData.block_id && this.module_config.block) || (!this.formData.unit_id && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += "Block and unit is required! \n"
     }
     // if ((!this.selectedHost) && this.project_config.is_industrial) {
     //   errMsg += "Host is required! \n"
     // }
-    if (!this.pass_number && this.project_config.is_industrial && this.showOthers) {
+    if ((!this.pass_number && this.module_config.pass_number) && this.project_config.is_industrial && this.showOthers) {
       errMsg += 'Pass number is required! \n'
+    }
+    if (!this.formData.purpose && this.module_config.purpose) {
+      errMsg += "Purpose is required! \n"
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
       return
     }
-    let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost, pass_number: this.pass_number };
+    let params = { ...this.formData, camera_id: camera_id, host: this.selectedHost, pass_number: this.pass_number, bypass_ban: bypass_ban, };
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/emergency_vehicle').subscribe({
       next: (results) => {
@@ -330,7 +339,11 @@ export class EmergencyModulePage implements OnInit {
           this.functionMain.presentToast(results.result.status_description, 'danger');
           this.router.navigate(['home-vms'])
         } else if (results.result.response_code === 206) {
-          this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost)
+          this.functionMain.banAlert(results.result.status_description, this.formData.unit_id, this.selectedHost).then((value: any) => {
+            if (value) {
+              this.onSubmit(isOpenBarrier, camera_id, true)
+            }
+          })
         } else {
           this.functionMain.presentToast('An error occurred while attempting to save emergecny vehicle data!', 'danger');
         }
@@ -363,6 +376,10 @@ export class EmergencyModulePage implements OnInit {
   pass_number = ''
   
   handleRefresh(event: any) {
+    this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
+      console.log(result)
+      this.module_config = result
+    })
     if (this.project_config.is_industrial) {
       // this.loadHost()
     } else {
