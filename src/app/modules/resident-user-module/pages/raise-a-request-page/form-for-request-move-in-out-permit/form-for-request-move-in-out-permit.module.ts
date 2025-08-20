@@ -8,6 +8,7 @@ import { FormForRequestMoveInOutPermitPageRoutingModule } from './form-for-reque
 
 import { FormForRequestMoveInOutPermitPage } from './form-for-request-move-in-out-permit.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ComponentsModule } from 'src/app/shared/components/component.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     FormForRequestMoveInOutPermitPageRoutingModule,
-    SharedModule
+    SharedModule,
+    ComponentsModule,
   ],
   declarations: [FormForRequestMoveInOutPermitPage]
 })

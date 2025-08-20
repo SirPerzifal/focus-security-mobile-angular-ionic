@@ -199,7 +199,7 @@
       ></app-input-component>
     </div>
 
-    <div class="w-full mt-1">
+    <!-- <div class="w-full mt-1">
       <app-input-component
         [id]="'contact_number_contractor'"
         [type]="'text'"
@@ -207,6 +207,12 @@
         [value]="formSent.contractorContactNumber"
         (eventEmitter)="onValueChange($event, 'contact_number_contractor')"
       ></app-input-component>
+    </div> -->
+
+    <div class="w-full mt-1">
+      <app-vms-contact-input [(value)]="formSent.contractorContactNumber" [id]="'contact_number_contractor'"
+        [vmsPage]="false" [contactLabel]="'Number (Contractor)'" [labelClass]="'text-base cw-3:text-sm'"
+        [inputClass]="'border !border-black w-full rounded py-2 px-3 outline-black h-12 text-base'"></app-vms-contact-input>
     </div>
 
     <div class="w-full mt-1">
