@@ -47,7 +47,7 @@ export class ClientUpcomingEventsPage implements OnInit {
   viewDateForDatet: string = this.viewDate.toISOString().split('T')[0]; // Tanggal yang akan ditampilkan dalam
 
   isDatePickerOpen: boolean = false; // Menyimpan status modal
-  
+
   isDayClick: boolean = false; // Menyimpan status modal
   viewDateForDay: Date = new Date();
   showDate: string = '';

@@ -352,12 +352,14 @@
                 >
                 </app-text-input>
                 <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'">
+                  <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'"> -->
+                <div class="w-2/5">
                   <input
                     id="startTimeEventInput"
                     type="time"
                     (change)="onStartTimeChange($event)"
-                    class="w-full text-sm"
+                    class="w-full text-sm py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                    [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'"
                     [(ngModel)]="selectedStartTime"
                     #startTimeEventInput
                     [disabled]="userType === 'industrial' || isRead"
@@ -387,12 +389,14 @@
                 >
                 </app-text-input>
                 <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
-                  <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'">
+                <!-- <div class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'"> -->
+                <div class="w-2/5">
                   <input
                     id="endTimeEventInput"
                     type="time"
                     (change)="onEndTimeChange($event)"
-                    class="w-full text-sm"
+                    class="w-full text-sm py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                    [ngClass]="userType === 'industrial' || isRead ? 'input-custom-readonly' : 'input-custom'"
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
                     #endTimeEventInput
