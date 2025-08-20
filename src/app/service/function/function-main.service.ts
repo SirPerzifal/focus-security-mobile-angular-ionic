@@ -668,4 +668,26 @@ export class FunctionMainService {
     }
   }
 
+  checkDateLimit(start_date: any, end_date: any) {
+    let today = new Date().setHours(0, 0, 0, 0)
+    start_date = start_date ? new Date(start_date).setHours(0, 0, 0, 0) : false
+    end_date = end_date ? new Date(end_date).setHours(0, 0, 0, 0) : false
+    console.log(today, start_date, end_date)
+    let errMsg = ''
+    if (start_date) {
+      if (start_date < today) {
+        errMsg += "Start date can't be less than today! \n"
+      }
+      if (end_date && (end_date < start_date)) {
+        errMsg += "Start date can't be higher than end date! \n"
+      }
+    }
+    if (end_date) {
+      if (end_date < today) {
+        errMsg += "End date can't be less than today! \n"
+      }
+    }
+    return errMsg
+  }
+
 }

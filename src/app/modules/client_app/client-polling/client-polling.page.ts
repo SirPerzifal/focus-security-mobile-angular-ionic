@@ -151,6 +151,7 @@ export class ClientPollingPage implements OnInit {
     if(!this.newPollingEndDate) {
       errMsg += 'Polling end date is required! \n'
     }
+    errMsg += this.functionMain.checkDateLimit(this.newPollingStartDate, this.newPollingEndDate)
     if (this.newPollingOptions.filter((polling: any) => polling.name !== '').length < 2) {
       errMsg += 'At least there are two options exist! \n'
     }

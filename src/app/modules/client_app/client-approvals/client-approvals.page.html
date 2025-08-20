@@ -511,8 +511,7 @@
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
                   : {{ approval.request_date ?
-                  functionMain.convertNewDateTZ(approval.request_date).split('
-                  ')[0] : '-' }}
+                  functionMain.convertDateExtend(approval.request_date) : '-' }}
                 </p>
               </div>
               <div
@@ -1151,8 +1150,7 @@
           </p>
           <p class="ml-2 table-cell text-base text-black">
             : {{ selectedApproval.request_date ?
-            functionMain.convertNewDateTZ(selectedApproval.request_date).split('
-            ')[0] : '-' }}
+            functionMain.convertDateExtend(selectedApproval.request_date).split(' ')[0] : '-' }}
           </p>
         </div>
         <div

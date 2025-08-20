@@ -447,6 +447,7 @@ export class ClientNoticesPage implements OnInit {
     if (!this.endDate) {
       errMsg += "End date is required! \n"
     }
+    errMsg += this.functionMain.checkDateLimit(this.startDate, this.endDate)
     // if (!this.newNoticeForm.notice_attachment) {
     //   errMsg += "Notice attachment is required! \n"
     // }
