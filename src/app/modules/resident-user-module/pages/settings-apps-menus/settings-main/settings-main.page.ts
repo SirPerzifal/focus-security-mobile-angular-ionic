@@ -359,9 +359,7 @@ export class SettingsMainPage implements OnInit {
   }
 
   logout() {
-    this.mainApi.endpointProcess({
-      family_id: this.familyId
-    }, 'post/logout').subscribe({
+    this.mainApi.endpointMainProcess({}, 'post/logout').subscribe({
       next: (response) => {
         if (response.result.status_code === 200) {
           this.clearSet()

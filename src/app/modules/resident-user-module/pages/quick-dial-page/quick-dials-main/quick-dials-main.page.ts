@@ -60,7 +60,7 @@ export class QuickDialsMainPage implements OnInit {
   }
 
  loadQuickDials() {
-  this.mainApiResidentService.endpointProcess({project_id: String(this.projectId)}, 'get/contact_list').subscribe((result: any) => {
+  this.mainApiResidentService.endpointMainProcess({}, 'get/contact_list').subscribe((result: any) => {
     // // console.log(result);
     this.quickDials = result.result.response_result
     if (this.quickDials) {

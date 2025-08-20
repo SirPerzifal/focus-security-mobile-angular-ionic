@@ -445,14 +445,14 @@ export class BillsAndFinesPagePage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         if (this.showBills) {
-          this.mainApiResidentService.endpointProcess({
+          this.mainApiResidentService.endpointMainProcess({
             bills_id: paymentId,
             payment_proof: result.data
           }, 'post/manual_pay_bills').subscribe((response: any) => {
             this.loadBills();
           })
         } else if (this.showFines) {
-          this.mainApiResidentService.endpointProcess({
+          this.mainApiResidentService.endpointMainProcess({
             fines_id: paymentId,
             payment_proof: result.data
           }, 'post/manual_pay_fines').subscribe((response: any) => {

@@ -86,7 +86,7 @@ export class PaymentFormVehiclePage implements OnInit {
   }
 
   loadVehicleDetail(vehicleId: number) {
-    this.mainApiResident.endpointProcess({
+    this.mainApiResident.endpointMainProcess({
       vehicle_id: vehicleId
     }, 'get/get_vehicle_detail').subscribe(
       (response: any) => {
@@ -181,7 +181,7 @@ export class PaymentFormVehiclePage implements OnInit {
       this.functionMainService.presentToast("Please upload payment receipt", 'danger');
       return;
     }
-    this.mainApiResident.endpointProcess({
+    this.mainApiResident.endpointMainProcess({
       vehicle_id: this.vehicleData?.vehicleId,
       payment_receipt: this.paymentReceipt
     }, 'post/post_vehicle_receipt').subscribe((response: any) => {

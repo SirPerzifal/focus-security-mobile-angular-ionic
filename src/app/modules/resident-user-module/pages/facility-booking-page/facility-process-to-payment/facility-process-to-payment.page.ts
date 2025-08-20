@@ -262,7 +262,7 @@ export class FacilityProcessToPaymentPage implements OnInit {
         return;
       }
 
-      this.mainApiResidentService.endpointProcess({
+      this.mainApiResidentService.endpointMainProcess({
         booking_id: bookingId,
         payment_receipt: this.paymentReceipt
       }, 'post/facility_book_payment').subscribe((response: any) => {

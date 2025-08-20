@@ -380,7 +380,7 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
 
   confirmCancel(invite: any) {
     try{
-      this.mainApiResidentService.endpointProcess(
+      this.mainApiResidentService.endpointMainProcess(
         {
           entry_id: !invite.is_entry ? false : invite.invite_id, 
           visitor_id: false,

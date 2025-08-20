@@ -103,14 +103,17 @@ export class FormForCoachRegistrationPage implements OnInit {
     first: true,
     second: false,
   }
+  nationalityDisplay: string = '';
   nationality = {
     singaporean: true,
     other: false
   }
+  typeOfCoachingDisplay: string = '';
   typeOfCoaching = {
     typeFromBack: true,
     other: false
   }
+  facilityDisplay: string = '';
   facility = {
     facilityFromBack: true,
     other: false
@@ -369,6 +372,8 @@ export class FormForCoachRegistrationPage implements OnInit {
         this.submitCoachRegistration();
       }
     } else if (type === 'next') {
+      console.log(this.formSent);
+
       let errMsg = '';
       if (this.formSent.nameCoach === "") {
         errMsg += 'Please provide the name of coach.\n';
@@ -472,11 +477,14 @@ export class FormForCoachRegistrationPage implements OnInit {
     if (type === 'nationality') {
       this.formSent.nationality = event.target.value;
       if (this.formSent.nationality === 'other') {
+        this.formSent.nationality = '';
+        this.nationalityDisplay = 'other';
         this.nationality = {
           singaporean: false,
           other: true
         };
       } else {
+        this.nationalityDisplay = event.target.value;
         this.nationality = {
           singaporean: true,
           other: false
@@ -523,11 +531,14 @@ export class FormForCoachRegistrationPage implements OnInit {
     } else if (type === 'type_of_coaching') {
       this.formSent.typeOfCoaching = event.target.value;
       if (this.formSent.typeOfCoaching === 'other') {
+        this.formSent.typeOfCoaching = '';
+        this.typeOfCoachingDisplay = 'other';
         this.typeOfCoaching = {
           typeFromBack: false,
           other: true
         };
       } else {
+        this.typeOfCoachingDisplay = event.target.value;
         this.typeOfCoaching = {
           typeFromBack: true,
           other: false
@@ -536,11 +547,14 @@ export class FormForCoachRegistrationPage implements OnInit {
     } else if (type === 'facility_require') {
       this.formSent.facilityRequired = event.target.value;
       if (this.formSent.facilityRequired === 'other') {
+        this.formSent.facilityRequired = '';
+        this.facilityDisplay = 'other';
         this.facility = {
           facilityFromBack: false,
           other: true
         };
       } else {
+        this.facilityDisplay = event.target.value;
         this.facility = {
           facilityFromBack: true,
           other: false

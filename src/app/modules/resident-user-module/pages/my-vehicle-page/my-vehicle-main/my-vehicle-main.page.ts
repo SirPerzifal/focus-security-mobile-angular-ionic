@@ -305,7 +305,7 @@ export class MyVehicleMainPage implements OnInit {
   submitRequest() {
     this.isExtensionRequestModal = false;
     const dateInput = this.formData.dateForExtensionRequest; // Ambil nilai dari input tanggal
-    this.mainApi.endpointProcess({
+    this.mainApi.endpointMainProcess({
       vehicle_id: this.formData.vehicleId,
       extension_date: this.formData.dateForExtensionRequest || dateInput
     }, 'post/vehicle_request_for_extension').subscribe((response: any) => {

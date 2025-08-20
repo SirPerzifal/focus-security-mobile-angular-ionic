@@ -337,7 +337,7 @@ export class FamilyFormPage implements OnInit {
     } else {
       try {
         if (this.pageForWhat === 'editData') {
-          this.mainApi.endpointProcess({
+          this.mainApi.endpointMainProcess({
             family_id_for_update: this.familyId,
             full_name: this.formData.full_name,
             nickname: this.formData.nickname,
