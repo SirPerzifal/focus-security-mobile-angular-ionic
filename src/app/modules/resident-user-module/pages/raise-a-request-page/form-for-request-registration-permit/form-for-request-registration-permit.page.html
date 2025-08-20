@@ -113,7 +113,7 @@
     </div>
 
     <div class="w-full mt-1">
-      <h2 class="font-bold mb-1 text-base cw-3:text-sm">Person Assigned</h2>
+      <h2 class="font-bold mb-1 text-base cw-3:text-sm">Contact Person</h2>
       <div class="flex flex-row space-x-2 items-start w-full">
         <app-radio-check-input-case
           [type]="'radio'"
@@ -193,7 +193,7 @@
       <app-input-component
         [id]="'contact_person_contractor'"
         [type]="'text'"
-        [labelChild1]="'Contact Person Contractor'"
+        [labelChild1]="'Contact Person (Contractor)'"
         [value]="formSent.contractorContactPerson"
         (eventEmitter)="onValueChange($event, 'contact_person_contractor')"
       ></app-input-component>
@@ -203,7 +203,7 @@
       <app-input-component
         [id]="'contact_number_contractor'"
         [type]="'text'"
-        [labelChild1]="'Contact Number Contractor'"
+        [labelChild1]="'Contact Number (Contractor)'"
         [value]="formSent.contractorContactNumber"
         (eventEmitter)="onValueChange($event, 'contact_number_contractor')"
       ></app-input-component>
@@ -213,7 +213,7 @@
       <app-input-component
         [id]="'company_name_contractor'"
         [type]="'text'"
-        [labelChild1]="'Company Name Contractor'"
+        [labelChild1]="'Company Name (Contractor)'"
         [value]="formSent.contractorCompanyName"
         (eventEmitter)="onValueChange($event, 'company_name_contractor')"
       ></app-input-component>
@@ -223,7 +223,7 @@
       <app-input-component
         [id]="'vehicle_number_contractor'"
         [type]="'text'"
-        [labelChild1]="'Vehicle Number Contractor'"
+        [labelChild1]="'Vehicle Number (Contractor)'"
         [value]="formSent.contractorVehicleNumber"
         (eventEmitter)="onValueChange($event, 'vehicle_number_contractor')"
       ></app-input-component>

@@ -91,26 +91,6 @@
       ></app-input-component>
     </div>
 
-    <div class="w-full mt-1 mb-1" *ngIf="formSent.typeSubmit">
-      <div class="flex flex-row justify-start">
-        <p class="text-base cw-3:text-sm font-bold">Time</p>
-      </div>
-      <div class="w-full flex items-center justify-between">
-        <div class="flex flex-row items w-full">
-          <div class="w-full">
-            <div class="w-full">
-              <app-input-component
-                [id]="'time_move'"
-                [type]="'time'"
-                [value]="formSent.timeParking"
-                (eventEmitter)="onValueChange($event)"
-              ></app-input-component>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div
       *ngIf="formSent.typeSubmit === 'visitor'"
       id="tabel_for_visitor"

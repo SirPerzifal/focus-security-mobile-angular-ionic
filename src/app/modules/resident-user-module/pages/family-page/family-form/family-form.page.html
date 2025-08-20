@@ -139,7 +139,10 @@
       </div>
     </div>
 
-    <div class="w-full mt-1">
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'primary_contact'"
+      class="w-full mt-1"
+    >
       <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
       <select
         id="type_of_residence"
@@ -149,7 +152,23 @@
         name="type_of_residence"
         [disabled]="disableForm"
       >
-        <option [value]="'primary_contact'">Family, Primary Contact</option>
+        <option [value]="'secondary_contact'">Family, Secondary Contact</option>
+        <option [value]="'member'">Family, Member</option>
+        <option [value]="'helper'">Family, Helper</option>
+        <option [value]="'tenants'">Tenant</option>
+      </select>
+    </div>
+
+    <div *ngIf="pageForWhat !== 'editData'" class="w-full mt-1">
+      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <select
+        id="type_of_residence"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+        (change)="onValueChange($event, 'select_type_resident')"
+        [(ngModel)]="formData.type_of_residence"
+        name="type_of_residence"
+        [disabled]="disableForm"
+      >
         <option [value]="'secondary_contact'">Family, Secondary Contact</option>
         <option [value]="'member'">Family, Member</option>
         <option [value]="'helper'">Family, Helper</option>
@@ -275,7 +294,7 @@
     </div>
 
     <div
-      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants' && !formData.reject_reason"
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants' && formData.type_of_residence !== 'primary_contact' && !formData.reject_reason"
     >
       <app-submit-button
         *ngIf="!disableForm"
@@ -297,6 +316,7 @@
       >
       </app-submit-button>
       <app-submit-button
+        *ngIf="formData.type_of_residence !== 'primary_contact'"
         [text]="'Delete Family Member'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="onDelete()"

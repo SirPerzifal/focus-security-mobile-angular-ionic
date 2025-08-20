@@ -29,7 +29,6 @@ import { ModalPaymentManualCustomComponent } from 'src/app/shared/resident-compo
   ]
 })
 export class FormForRequestMoveInOutPermitPage implements OnInit {
-  isModalInfoTimeOpen: boolean = false;
   expectedFamilyMember: any = [];
   agreementChecked: boolean = false;
 
@@ -50,14 +49,16 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
     mobile_number: ''
   }
   minDate: string = '';
-  selectedDate: string = '';
+  endMoveMinDate: string = '';
+  selectedStartDate: string = '';
+  selectedEndDate: string = '';
   contactPerson = {
     sameAsAbove: false,
     appointAnotherFamily: false
   }
   formSent = {
-    requestDate: '',
-    timeMove: '',
+    startDate: '',
+    endDate: '',
     typeSubmit: '',
     personAssign: 0,
     contractorContactPerson: '',
@@ -166,10 +167,6 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
     this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
   }
 
-  showTimeInfo() {
-    this.isModalInfoTimeOpen = true; // Membuka modal
-  }
-
   navigateToEditFamily(data: any) {
     this.router.navigate(['/family-form'], {
       state: {
@@ -193,13 +190,27 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
     });
   }
 
-  onDateChange(event: any) {
+  onDateChange(event: any, type: string) {
     if (event) {
       const date = new Date(event);
-      this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
-      this.formSent.requestDate = event;
+      if (type === 'choose_start_date_move') {
+        this.selectedStartDate = this.functionMain.formatDate(date);
+        this.formSent.startDate = event;
+        const string = date.toString;
+        const final = String(date);
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+        const yyyy = date.getFullYear();
+        this.endMoveMinDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+      } else if (type === 'choose_end_date_move') {
+        this.selectedEndDate = this.functionMain.formatDate(date);
+        this.formSent.endDate = event;
+      }
     } else {
-      this.selectedDate = ''
+      this.selectedStartDate = '';
+      this.formSent.startDate = '';
+      this.selectedEndDate = '';
+      this.formSent.endDate = '';
     }
   }
 
@@ -243,9 +254,7 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
   }
 
   onValueChange(event: any, type: string) {
-    if (type === 'time_move') {
-      this.formSent.timeMove = event;
-    } else if (type === 'contact_person_contractor') {
+    if (type === 'contact_person_contractor') {
       this.formSent.contractorContactPerson = event;
     } else if (type === 'contact_number_contractor') {
       this.formSent.contractorContactNumber = event;
@@ -262,7 +271,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
       this.payNow(0);
     } else {
       this.mainApi.endpointMainProcess({
-        schedule_date: this.formSent.requestDate,
+        schedule_start_date: this.formSent.startDate,
+        schedule_end_date: this.formSent.endDate,
         schedule_type: this.formSent.typeSubmit,
         contact_person_id: this.formSent.personAssign,
         contractor_contact_person: this.formSent.contractorContactPerson, 
@@ -339,7 +349,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         this.mainApi.endpointMainProcess({
-          schedule_date: this.formSent.requestDate,
+          schedule_start_date: this.formSent.startDate,
+          schedule_end_date: this.formSent.endDate,
           schedule_type: this.formSent.typeSubmit,
           contact_person_id: this.formSent.personAssign,
           contractor_contact_person: this.formSent.contractorContactPerson, 
@@ -376,7 +387,8 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
         this.formSent.paymentReceipt = result.data;
         if (this.formSent.paymentReceipt === result.data) {
           this.mainApi.endpointMainProcess({
-            schedule_date: this.formSent.requestDate,
+            schedule_start_date: this.formSent.startDate,
+            schedule_end_date: this.formSent.endDate,
             schedule_type: this.formSent.typeSubmit,
             contact_person_id: this.formSent.personAssign,
             contractor_contact_person: this.formSent.contractorContactPerson, 

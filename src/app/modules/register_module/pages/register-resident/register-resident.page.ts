@@ -39,29 +39,6 @@ export class RegisterResidentPage implements OnInit {
   Unit: any[] = [];
   project_id: number = 0;
 
-  selectionFamilyType: any[] = [
-    {
-      id: 'primary_contact',
-      value: 'primary_contact',
-      label: 'Primary Contact'
-    },
-    {
-      id: 'secondary_contact',
-      value: 'secondary_contact',
-      label: 'Secondary Contact'
-    },
-    {
-      id: 'famili_member',
-      value: 'member',
-      label: 'Family Member'
-    },
-    {
-      id: 'tenant',
-      value: 'tenant',
-      label: 'Tenant'
-    }
-  ] 
-
   formData = {
     full_name: '',
     nickname: '',
@@ -133,9 +110,6 @@ export class RegisterResidentPage implements OnInit {
     }
     if (!this.formData.block || !this.formData.unit) {
       errMsg += 'Block and unit must be selected!\n';
-    }
-    if (!this.formData.family_type) {
-      errMsg += 'Family Type is required!\n';
     }
     if (errMsg != "") {
       this.functionMain.presentToast(errMsg, 'danger')
