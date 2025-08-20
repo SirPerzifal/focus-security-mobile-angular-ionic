@@ -51,7 +51,11 @@
     </div>
 
     <!-- Overlay and Modal -->
-    <ion-modal id="text-modal" [isOpen]="isModalDetailPhone" (didDismiss)="closeModal()">
+    <ion-modal
+      id="text-modal"
+      [isOpen]="isModalDetailPhone"
+      (didDismiss)="closeModal()"
+    >
       <ng-template>
         <div class="wrapper-green">
           <div class="w-full flex flex-col items-center justify-center">
@@ -62,25 +66,47 @@
               <p class="text-base">{{ dataSelect.contact_number }}</p>
             </div>
           </div>
-          <div *ngIf="dataSelect.can_call_with === 'both'" class="w-full flex flex-col justify-center items-center">
+          <div
+            *ngIf="dataSelect.can_call_with === 'both'"
+            class="w-full flex flex-col justify-center items-center"
+          >
             <div class="w-full flex flex-row space-x-2">
-              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+                (click)="actionToPhoneDial(dataSelect.contact_number)"
+              >
                 Phone Dial
               </button>
-              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToInAppCall(dataSelect.id)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+                (click)="actionToInAppCall(dataSelect.related_account)"
+              >
                 In App Call
               </button>
             </div>
-            <button *ngIf="dataSelect.is_whatsapp" class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+            <button
+              *ngIf="dataSelect.is_whatsapp"
+              class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+              (click)="actionOpenWhatsapp(dataSelect.contact_number)"
+            >
               Whatsapp
             </button>
           </div>
-          <div *ngIf="dataSelect.can_call_with === 'phone_dial'" class="w-full flex flex-col justify-center items-center">
+          <div
+            *ngIf="dataSelect.can_call_with === 'phone_dial'"
+            class="w-full flex flex-col justify-center items-center"
+          >
             <div class="w-full flex flex-row space-x-2">
-              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionToPhoneDial(dataSelect.contact_number)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+                (click)="actionToPhoneDial(dataSelect.contact_number)"
+              >
                 Phone Dial
               </button>
-              <button class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10" (click)="actionOpenWhatsapp(dataSelect.contact_number)">
+              <button
+                class="bg-[var(--ion-color-primary)] text-white px-3 text-base rounded-lg font-bold w-full mt-2 h-10"
+                (click)="actionOpenWhatsapp(dataSelect.contact_number)"
+              >
                 Whatsapp
               </button>
             </div>

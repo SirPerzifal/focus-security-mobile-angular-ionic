@@ -152,6 +152,8 @@ export class QuickDialsMainPage implements OnInit {
     if (this.isModalDetailPhone === true) {
       this.closeModal();
     }
+    console.log(id, typeof id);
+    
     if (typeof id === 'string') {
       await this.webRtcService.createOffer(false, id, false, true);
     } else if (typeof id === 'number') {
