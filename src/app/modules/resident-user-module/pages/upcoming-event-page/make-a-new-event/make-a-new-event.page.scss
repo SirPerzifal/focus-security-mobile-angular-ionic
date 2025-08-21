@@ -152,3 +152,12 @@ ion-toolbar {
   /* You might also need to adjust margin if present */
   margin: 0;
 }
+
+  ion-header {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  /* You might also need to adjust margin if present */
+  margin: 0;
+}
