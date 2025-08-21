@@ -113,6 +113,8 @@ export class FormForRequestAccessCardPage implements OnInit {
       (response) => {
         if (response) {
           if (response.result) {
+            console.log(response.result.family_data_with_no_ac);
+            
             this.expectedFamily = response.result.family_data_with_no_ac.map((family_with_no_ac: any) => {
               return {
                 family_id: family_with_no_ac.id,
@@ -120,6 +122,7 @@ export class FormForRequestAccessCardPage implements OnInit {
                 member_type: family_with_no_ac.member_type
               }
             })
+            console.log(this.expectedFamily, this.expectedFamily.length);
           }
           // Flatten the access cards from family members
           this.expectedCards = response.result.family_data.flatMap((member: any) => 
