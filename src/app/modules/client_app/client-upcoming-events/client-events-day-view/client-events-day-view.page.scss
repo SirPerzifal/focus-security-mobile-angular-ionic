@@ -104,7 +104,7 @@
   input:read-only {
     background-color: #F5F5F5;
     color: #7F8592;
-    border-color: #6B7280;
+    border-color: 1px #6B7280 !important;
   }
 
   .input-custom-readonly {

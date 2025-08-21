@@ -396,8 +396,24 @@
                 </app-text-input>
                 <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
                 <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"> -->
-                <div class="w-2/5">
+                <div
+                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                  [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"
+                >
                   <input
+                    id="startTimeEventInput"
+                    type="time"
+                    (change)="onStartTimeChange($event)"
+                    class="w-full text-sm h-12 rounded-lg !border-black !bg-transparent"
+                    [(ngModel)]="selectedStartTime"
+                    #startTimeEventInput
+                    [disabled]="project_config.is_industrial || isRead"
+                    [readonly]="project_config.is_industrial || isRead"
+                    [style.pointer-events]="project_config.is_industrial || isRead ? 'none' : 'auto'"
+                    [style.user-select]="project_config.is_industrial || isRead ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="project_config.is_industrial || isRead ? 'none' : 'auto'"
+                  />
+                  <!-- <input
                     id="startTimeEventInput"
                     type="time"
                     (change)="onStartTimeChange($event)"
@@ -406,7 +422,7 @@
                     #startTimeEventInput
                     [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"
                     [readonly]="project_config.is_industrial || isRead"
-                  />
+                  /> -->
                 </div>
               </div>
             </div>
@@ -429,17 +445,23 @@
                 </app-text-input>
                 <!-- <div class="w-2/5  py-3 h-12 rounded-lg  flex flex-row text-start items-center justify-center cw-3:text-xs" [ngClass]="isRead ? 'input-custom-readonly' : 'border border-gray-500 bg-white'"> -->
                 <!-- <div class="w-2/5" [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"> -->
-                <div class="w-2/5">
+                <div
+                  class="w-2/5 py-3 h-12 rounded-lg flex flex-row text-start items-center justify-center cw-3:text-xs"
+                  [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"
+                >
                   <input
                     id="endTimeEventInput"
                     type="time"
                     (change)="onEndTimeChange($event)"
-                    class="py-3 flex flex-row text-start items-center justify-center cw-3:text-xs w-full text-sm h-12 rounded-lg !border-black !bg-transparent"
+                    class="w-full text-sm h-12 rounded-lg !border-black !bg-transparent"
                     [min]="selectedStartTime"
                     [(ngModel)]="selectedEndTime"
-                    [ngClass]="project_config.is_industrial || isRead ? 'input-custom-readonly' : 'input-custom'"
-                    [readonly]="project_config.is_industrial || isRead"
                     #endTimeEventInput
+                    [disabled]="project_config.is_industrial || isRead"
+                    [readonly]="project_config.is_industrial || isRead"
+                    [style.pointer-events]="project_config.is_industrial || isRead ? 'none' : 'auto'"
+                    [style.user-select]="project_config.is_industrial || isRead ? 'none' : 'auto'"
+                    [style.-webkit-user-select]="project_config.is_industrial || isRead ? 'none' : 'auto'"
                   />
                 </div>
               </div>
