@@ -26,6 +26,7 @@
         [extraClass]="showAmbulanceTrans || showAmbulance ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [extraParentClass]="'mr-4'" [text]="'AMBULANCE'" [disableClick]="true" (click)="toggleShowAmbulance()" />
       <app-button-icon [customImageIcon]="'assets/img/Government.png'" [isActive]="showOthersTrans || showOthers"
+        [extraParentClass]="'mr-4'"
         [extraClass]="showOthersTrans || showOthers ? 'bg-[var(--ion-color-primary)] text-white w-24' : 'bg-[#D0D0D0] text-[#757575] w-24'"
         [text]="'OTHER GOVT AGENCY'" [disableClick]="true" (click)="toggleShowOthers()" />
     </div>

@@ -245,8 +245,8 @@ export class ContractorFormPage implements OnInit {
     if (!this.remarksValue && this.module_config.remarks) {
       errMsg += 'Remarks is required! \n'
     }
-    if (this.checkPaxData() && this.module_config.number_of_pax) {
-      errMsg += "All names and NRICs of contractor members must be filled in!!"
+    if (this.checkPaxData()) {
+      errMsg += "All names and ICs of contractor members must be filled in!!"
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')

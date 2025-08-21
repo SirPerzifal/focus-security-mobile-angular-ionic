@@ -292,7 +292,7 @@ export class ClientApprovalsPage implements OnInit {
   isDetail = false
 
   approveData(approval: any) {
-    if (this.project_config.is_industrial && this.approval_type == 'vehicle') {
+    if (this.approval_type == 'vehicle') {
       this.openApprovalModal()
     } else {
       this.approveDetail(approval)

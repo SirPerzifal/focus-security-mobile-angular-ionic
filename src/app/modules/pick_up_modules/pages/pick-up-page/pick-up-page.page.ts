@@ -234,6 +234,7 @@ export class PickUpPagePage implements OnInit {
         vehicle_type: this.selectedVehicleType,
         vehicle_number: vehicleNumber,
         block: location,
+        location: this.industrial_location,
         project_id: this.project_id,
         camera_id: cameraId ? cameraId : '',
         host: this.selectedHost,
