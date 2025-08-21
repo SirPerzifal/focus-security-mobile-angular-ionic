@@ -143,3 +143,12 @@ input::file-selector-button {
   background-color: #FFFFFF !important;
   border: #6B7280 1px solid;
 }
+
+ion-toolbar {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  /* You might also need to adjust margin if present */
+  margin: 0;
+}
