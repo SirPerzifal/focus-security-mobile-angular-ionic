@@ -69,14 +69,14 @@
     </div>
     <div class="flex flex-row mt-8 mb-4" *ngIf="!main && !isLoading">
       <div class="w-full mx-4" *ngIf="(showIssues.length > 0 && showIssues[0].data.length > 0); else noAlerts">
-        <div class="w-full space-y-5" *ngIf="active_type != 'tickets'">
+        <div class="w-full space-y-5" *ngIf="!['facility', 'tickets'].includes(active_type)">
           <div *ngFor="let alert of showIssues[0].data"
-            class="w-full p-4 rounded-lg flex justify-between items-center " [ngClass]="alert.is_overminute ? 'bg-[var(--ion-color-vms-alert)]' : ( active_type === 'wheel_clamp' ? 'bg-[var(--ion-color-vms-alert)]' :'bg-[var(--ion-color-primary)]')">
+            class="w-full p-4 rounded-lg flex justify-between items-center " [ngClass]="alert.is_overminute ? 'bg-[var(--ion-color-vms-alert)]' : ( ['wheel_clamp'].includes(active_type) ? 'bg-[var(--ion-color-vms-alert)]' :'bg-[var(--ion-color-primary)]')">
             <div class="flex flex-col w-4/5">
               <span class="text-2xl font-bold text-white">
-                {{alert.vehicle_number ? alert.vehicle_number : '-'}}
+                {{ alert.vehicle_number ? alert.vehicle_number : '-' }}
               </span>
-              <span class="text-xl font-bold text-white">
+              <span class="text-xl font-bold text-white" *ngIf="active_type != 'facility'">
                 {{ ['unregistered', 'overstay'].includes(active_type) ? 'ENTRY' : 'ISSUED'}} DATE & TIME: {{ functionMain.convertNewDateTZ(alert.issue_time)}} 
               </span>
               <!-- <span class="text-xl font-bold text-white"
@@ -124,16 +124,33 @@
             </div>
           </div>
         </div>
-        <div class="w-full space-y-5" *ngIf="active_type == 'tickets'">
-          <div *ngFor="let alert of showIssues[0].data" (click)="ticketDetail(alert.ticket_id)" [ngClass]="alert.message_count == 0 ? 'bg-[var(--ion-color-vms-alert)]' : 'bg-[var(--ion-color-primary)]'"
+        <div class="w-full space-y-5" *ngIf="['facility', 'tickets'].includes(active_type)">
+          <div *ngFor="let alert of showIssues[0].data" (click)="viewDetail(alert)" [ngClass]="(alert.message_count == 0 || active_type == 'facility') ? 'bg-[var(--ion-color-vms-alert)]' : 'bg-[var(--ion-color-primary)]'"z
             class="w-full  p-4 rounded-lg flex justify-between items-center ">
-            <div class="flex flex-col w-4/5">
+            <div class="flex flex-col w-4/5" *ngIf="active_type == 'tickets'">
               <span class="text-2xl font-bold text-white">
                 {{ functionMain.returnNone(alert.ticket_name) }} ({{ functionMain.returnNone(alert.type_os_issue) }})
               </span>
               <span class="text-xl font-bold text-white">
                 REQUESTED BY: {{ functionMain.returnNone(alert.requested_by) }}
               </span>
+            </div>
+            <div class="flex flex-col w-4/5" *ngIf="active_type == 'facility'">
+              <div class="flex flex-col w-4/5">
+                <span class="text-2xl font-bold text-white">
+                  {{ functionMain.returnNone(alert.facility) }}
+                </span>
+                <span class="text-xl font-bold text-white">
+                  START DATE: {{ functionMain.convertDateExtend(alert.start_datetime).split(' ')[0] }}
+                </span>
+                <span class="text-xl font-bold text-white">
+                  BOOKING TIME: {{ functionMain.convertDateExtend(alert.start_datetime).split(' ')[1] }} - {{ functionMain.convertDateExtend(alert.stop_datettime).split(' ')[1] }}
+                </span>
+                <!-- <span class="text-xl font-bold text-white"
+                  *ngIf="active_type == 'overstay'">
+                  ENTRY TYPE: {{ alert.entry_type ? alert.entry_type : '-' }}
+                </span> -->
+              </div>
             </div>
             <div class="w-1/3 flex flex-col justify-center items-end">
               <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" ></ion-icon>

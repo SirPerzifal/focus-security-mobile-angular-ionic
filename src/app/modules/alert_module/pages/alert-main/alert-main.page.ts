@@ -48,6 +48,7 @@ export class AlertMainPage implements OnInit {
   ticketsTotal = 0
   firstWarningTotal = 0
   secondWarningTotal = 0
+  facilityTotal = 0
   issueTotal = 0
 
   unregisteredRedTotal = 0
@@ -60,6 +61,7 @@ export class AlertMainPage implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+      console.log(params)
       if (params ) {
         if (params['alert']){
           this.loadProjectName().then(() => {
@@ -74,6 +76,11 @@ export class AlertMainPage implements OnInit {
         if (params['unregistered']){
           this.loadProjectName().then(() => {
             this.loadUnregisteredCar()
+          })
+        }
+        if (params['facility']){
+          this.loadProjectName().then(() => {
+            this.loadFacility()
           })
         }
       }
@@ -142,6 +149,7 @@ export class AlertMainPage implements OnInit {
             this.secondWarningTotal = this.result.total_second_warning_offences
             this.secondWarningRedTotal = this.result.total_second_warning_offences_red
             this.wheelClampedTotal = this.result.total_wheel_clamp_offences
+            this.facilityTotal = this.result.total_facility
           } else {
             this.overstayRedTotal = 0
             this.overstayTotal = 0
@@ -153,6 +161,7 @@ export class AlertMainPage implements OnInit {
             this.secondWarningTotal = 0
             this.secondWarningRedTotal = 0
             this.wheelClampedTotal = 0
+            this.facilityTotal = 0
           }
           console.log(this.overstayRedTotal,this.overstayTotal,this.unregisteredTotal,this.ticketsTotal,this.ticketsRedTotal,this.firstWarningTotal,this.firstWarningRedTotal,this.secondWarningTotal,this.secondWarningRedTotal,this.wheelClampedTotal)
           this.actionTotalIssue()
@@ -403,6 +412,51 @@ export class AlertMainPage implements OnInit {
     });
   }
 
+  loadFacility(){
+    if (!this.main) {
+      this.isLoading = true
+    }
+    this.alertsIssues = this.alertsIssues.filter((item: any) => item.type !== 'facility');
+    this.clientMainService.getApi({project_id: this.project_id,  limit: this.functionMain.limitHistory, page: this.currentPage, is_alert: true}, '/vms/get/booking_history').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.alertsIssues.push({ type: 'facility', data: results.result.response_result, total_pages: results.result.pagination.total_pages })
+          this.facilityTotal = results.result.pagination.total_records
+          this.facilityTotal = results.result.pagination.total_records
+          this.total_pages = results.result.pagination.total_pages
+          console.log(this.facilityTotal)
+        } else {
+          this.alertsIssues.push({ type: 'facility', data: [], total_pages: 0 })
+          this.facilityTotal = 0
+          this.facilityTotal = 0
+          this.total_pages = 0
+        }
+        this.recordAction();
+        this.actionTotalIssue()
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while loading facility car data!', 'danger');
+        console.error(error);
+        this.alertsIssues.push({ type: 'facility', data: [], total_pages: 0 })
+        this.facilityTotal = 0
+        this.facilityTotal = 0
+        this.isLoading = false
+        if (!this.main) {
+          this.showIssues = this.alertsIssues.filter((item: any) => item.type === this.active_type)
+        }
+        this.total_pages = 0
+        this.recordAction();
+        this.actionTotalIssue()
+        this.isLoading = false
+      }
+    });
+  }
+
   recordsMenu: any = []
   recordAction() {
     this.recordsMenu = [
@@ -478,6 +532,18 @@ export class AlertMainPage implements OnInit {
         extraTextClass: "",
         iconWrapper: "!h-[70px] mt-1",
       },
+      {
+        text: 'FACILITY',
+        icon: 'assets/icon-vms/records_menu/Facility_Bookings.png',
+        isActive: true,
+        route: '/records-main',
+        needSize: false,
+        isWarning: this.facilityTotal,
+        totalWarning: this.facilityTotal, 
+        type: 'facility',
+        extraTextClass: "",
+        iconWrapper: "!h-[70px] mt-1",
+      },
     ]
     if (!this.main) {
       this.selectedMenu = this.recordsMenu.filter((item: any) => item.type === this.active_type)
@@ -517,6 +583,8 @@ export class AlertMainPage implements OnInit {
         this.loadUnregisteredCar()
       } else if (this.active_type == 'overstay') {
         this.loadOverstay()
+      } else if (this.active_type == 'facility') {
+        this.loadFacility()
       } else if (this.active_type == 'tickets') {
         this.loadTickets()
       } else {
@@ -718,11 +786,10 @@ export class AlertMainPage implements OnInit {
     return await modal.present();
   }
 
-  ticketDetail(ticket_id: any) {
-    this.router.navigate(['/alert-ticket-detail'], {
-      state: {
-        ticket_id: ticket_id
-      }
+  viewDetail(alert: any) {
+     let state = this.active_type == 'tickets' ? {ticket_id: alert.ticket_id} : {record: alert, is_alert: true}
+    this.router.navigate([this.active_type == 'tickets' ? '/alert-ticket-detail' : '/records-facility-detail'], {
+      state: state
     })
   }
 
@@ -735,6 +802,8 @@ export class AlertMainPage implements OnInit {
           this.loadUnregisteredCar()
         } else if (this.active_type == 'overstay') {
           this.loadOverstay()
+        } else if (this.active_type == 'facility') {
+          this.loadFacility()
         } else if (this.active_type == 'tickets') {
           this.loadTickets()
         } else {
@@ -762,7 +831,7 @@ export class AlertMainPage implements OnInit {
     }, 1000)
   }
 
-  
+
 
   total_pages = 0
   inputPage = 1
@@ -778,6 +847,8 @@ export class AlertMainPage implements OnInit {
         this.loadUnregisteredCar()
       } else if (this.active_type == 'overstay') {
         this.loadOverstay()
+      } else if (this.active_type == 'facility') {
+        this.loadFacility()
       } else if (this.active_type == 'tickets') {
         this.loadTickets()
       } else {
@@ -793,7 +864,7 @@ export class AlertMainPage implements OnInit {
   addUnregistered() {
     this.router.navigate(['/unregistered-simulation-module'])
   }
-  
+
   intervalId: any = null
   loadInterval() {
     console.log((this.router.url).split('?')[0])
@@ -806,12 +877,12 @@ export class AlertMainPage implements OnInit {
         console.log("CURRENT STOPPED INTERVAL", this.intervalId)
       }
       this.intervalId = setInterval(() => {
-        
+
           this.refreshClicked()
           console.log("INTERVAL WORK ", this.intervalId)
           console.log("LOOP", i)
           i += 1
-        
+
       }, 60000)
       console.log("INTERVAL START", this.intervalId)
     } else {

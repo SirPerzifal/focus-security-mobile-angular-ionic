@@ -18,9 +18,10 @@ export class RecordsFacilityDetailPage implements OnInit {
     private modalController: ModalController,
     private webrtcservice: WebRtcService) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { record: any };
+    const state = navigation?.extras.state as { record: any, is_alert: boolean };
     if (state) {
       this.record = state.record
+      this.is_alert = state.is_alert
       console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     }
@@ -29,6 +30,20 @@ export class RecordsFacilityDetailPage implements OnInit {
   ngOnInit() {
     this.loadProjectName()
   }
+
+  onBack() {
+    if (this.is_alert) {
+      this.router.navigate(['/alert-main'], {queryParams: {facility: true}})
+    } else {
+      this.router.navigate(['/records-facility'], {})
+    }
+  }
+
+  onHomeClick() {
+    this.router.navigate(['/home-vms'])
+  }
+
+  is_alert = false
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then((value) => {

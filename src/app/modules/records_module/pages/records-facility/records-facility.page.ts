@@ -156,9 +156,9 @@ export class RecordsFacilityPage implements OnInit {
       this.clientMainService.getApi({project_id: this.project_id, limit: this.functionMain.limitHistory, page: this.currentPage, host: this.selectedHost, room: this.choosenFacility, block: this.choosenBlock, unit: this.choosenUnit}, '/vms/get/booking_history' ).subscribe({
         next: (results) => {
           console.log(results)
-          if (results.result.success) {
+          if (results.result.response_code == 200) {
             // this.presentToast('!', 'success');
-            this.facilityRecords = results.result.booking
+            this.facilityRecords = results.result.response_result
             this.historySchedules = this.facilityRecords
             this.filteredHistorySchedules = this.historySchedules
             this.pagination = results.result.pagination

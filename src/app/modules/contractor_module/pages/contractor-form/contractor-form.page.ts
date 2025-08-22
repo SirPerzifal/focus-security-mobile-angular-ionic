@@ -277,7 +277,7 @@ export class ContractorFormPage implements OnInit {
       camera_id: camera_id,
       host: this.selectedHost,
       total_package: this.contractor_total_package,
-      expired_date: this.contractor_expired_date,
+      expired_date: this.contractor_expired_date ? this.contractor_expired_date : false,
       purpose: this.contractor_entry_purpose,
       gate_pass: this.contractor_gate_pass_number,
       pass_number: this.contractor_pass_number,

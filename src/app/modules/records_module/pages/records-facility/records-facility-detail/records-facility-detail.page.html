@@ -4,8 +4,21 @@
     <app-vms-background />
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
-    <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-facility'" [homeRoute]="true"/>
+     <div class="w-full">
+      <div class="flex flex-col items-center justify-center text-center mt-4">
+        <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{ project_name}}</b></span>
+        <span
+          class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] flex flex-row items-center text-[var(--ion-color-primary)]"><b>iFS360
+            VISITOR MANAGEMENT SYSTEM</b></span>
+        <div class="w-full flex flex-row justify-start mt-4 items-center">
+          <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-20 ml-3"
+            (click)="onBack()"></ion-icon>
+          <div 
+            class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-[50%] flex flex-row items-center justify-center">
+            <ion-icon name="home-outline" size="large" class="text-white size-10" (click)="onHomeClick()"></ion-icon>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- <div class="flex flex-row mt-8 mx-4">
       <app-button-icon 
