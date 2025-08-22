@@ -167,6 +167,10 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     this.formData.entry_type = 'drop_off'
   }
 
+  onChangeTypeOfUser(event: any) {
+    this.userType = event
+  }
+
   onDateChange(event: any) {
     if (event) {
       const date = new Date(event);
@@ -217,7 +221,17 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
                 openActive: true,
               }
             });
-          } else {
+          } else if (response.result.status_code === 206) {
+            if (this.userType === 'resident') {
+              if (response.result.status === 'unit same') {
+                this.functionMain.presentToast('Visitor has been ban on this unit!', 'danger');
+              } else {
+                // this.presentAlertForBannedVisitor(`${response.result.family_ban_name} (${response.result.unit_name})`, response.result.family_ban_id);
+              }
+            } else {
+              this.functionMain.presentToast('Visitor has been ban!', 'danger');
+            }
+          }  else {
             this.functionMain.presentToast('Failed Add Record', 'danger');
           }
         })
