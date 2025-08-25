@@ -162,7 +162,7 @@
 
     <div class="w-full mt-1">
       <div class="flex flex-row justify-start">
-        <p class="text-sm font-bold">Vehicle Log</p>
+        <p class="text-base cw-3:text-sm font-bold">Vehicle Log</p>
       </div>
       <div
         (click)="chooseWhereToChoose()"
@@ -235,7 +235,7 @@
           id="temporary_car_reason"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
           (change)="onValueChange($event, 'temporary_reason')"
-          [(ngModel)]="additionalTemporary.temporaryCarRequest"
+          [(ngModel)]="temporaryDisplay"
           name="temporary_car_reason"
         >
           <option value="car_at_workshop">Car at Workshop</option>
@@ -243,6 +243,16 @@
           <option value="work_vehicle">Work Vehicle</option>
           <option value="other">Other</option>
         </select>
+      </div>
+
+      <div *ngIf="temporaryDisplay === 'other'" class="mt-1">
+        <app-input-component
+          [id]="'other_temporary_reason_vehicle'"
+          [type]="'text'"
+          [value]="additionalTemporary.temporaryCarRequest"
+          [labelChild1]="'Other Temporary Reason'"
+          (eventEmitter)="onValueChange($event, 'other_temporary_reason_vehicle')"
+        ></app-input-component>
       </div>
 
       <div class="mt-1">

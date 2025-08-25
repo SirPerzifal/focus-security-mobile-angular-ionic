@@ -266,7 +266,36 @@ export class FormForRequestMoveInOutPermitPage implements OnInit {
   }
 
   onClick(type: string) {
-    console.log('type', type, this.formSent);
+    if (!this.formSent.startDate) {
+      this.functionMain.presentToast('Please select start date.', 'danger');
+      return;
+    }
+    if (!this.formSent.endDate) {
+      this.functionMain.presentToast('Please select end date.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorContactPerson) {
+      this.functionMain.presentToast('Please enter contractor contact person.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorContactNumber) {
+      this.functionMain.presentToast('Please enter contractor contact number.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorCompanyName) {
+      this.functionMain.presentToast('Please enter contractor company name.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorVehicleNumber) {
+      this.functionMain.presentToast('Please enter contractor vehicle number.', 'danger');
+      return;
+    }
+    if (this.contactPerson.appointAnotherFamily && this.formSent.personAssign === 0) {
+      this.functionMain.presentToast('Please select contact person.', 'danger');
+      return;
+    }
+
+    // console.log('type', type, this.formSent);
     if (this.amountType.isRequirePayment) {
       this.payNow(0);
     } else {

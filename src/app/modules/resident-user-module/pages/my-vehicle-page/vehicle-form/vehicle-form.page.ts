@@ -39,6 +39,7 @@ export class VehicleFormPage implements OnInit {
   vehicleMakes: any[] = [];
   vehicleTypes: any[] = [];
 
+  temporaryDisplay: string = '';
   vehicleForm = {
     vehicleNumber: '',
     iuNumber: '',
@@ -262,7 +263,16 @@ export class VehicleFormPage implements OnInit {
         this.selectedNameVehicleLog = ''; // Reset if no file is selected
       }
     } else if (type === 'temporary_reason') {
-      this.additionalTemporary.temporaryCarRequest = event.target.value;
+      const value = event.target.value;
+      if (value === 'other') {
+        this.temporaryDisplay = 'other';
+        this.additionalTemporary.temporaryCarRequest = '';
+      } else {
+        this.temporaryDisplay = event.target.value;
+        this.additionalTemporary.temporaryCarRequest = event.target.value;
+      }
+    } if (type === 'other_temporary_reason_vehicle') {
+      this.additionalTemporary.temporaryCarRequest = event;
     } else if (type === 'temporary_vehicle_end_date') {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
