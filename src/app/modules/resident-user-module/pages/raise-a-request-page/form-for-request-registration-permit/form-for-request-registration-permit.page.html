@@ -56,16 +56,27 @@
 
     <div class="w-full mb-1">
       <app-input-component
-        [id]="'choose_date_move'"
+        [id]="'choose_start_date_move'"
         [type]="'date'"
-        [labelChild1]="'Date Move'"
-        (eventEmitter)="onDateChange($event)"
-        [value]="selectedDate"
+        [labelChild1]="'Move Start Date'"
+        (eventEmitter)="onDateChange($event, 'choose_start_date_move')"
+        [value]="selectedStartDate"
         [minDate]="minDate"
       ></app-input-component>
     </div>
 
-    <div class="w-full">
+    <div class="w-full mb-1">
+      <app-input-component
+        [id]="'choose_end_date_move'"
+        [type]="'date'"
+        [labelChild1]="'Move End Date'"
+        (eventEmitter)="onDateChange($event, 'choose_end_date_move')"
+        [value]="selectedEndDate"
+        [minDate]="endMoveMinDate"
+      ></app-input-component>
+    </div>
+
+    <!-- <div class="w-full">
       <div class="flex flex-row justify-start mb-1">
         <p class="text-base cw-3:text-sm font-bold">Time</p>
         <a
@@ -110,7 +121,7 @@
           </div>
         </ng-template>
       </ion-modal>
-    </div>
+    </div> -->
 
     <div class="w-full mt-1">
       <h2 class="font-bold mb-1 text-base cw-3:text-sm">Contact Person</h2>
@@ -210,9 +221,14 @@
     </div> -->
 
     <div class="w-full mt-1">
-      <app-vms-contact-input [(value)]="formSent.contractorContactNumber" [id]="'contact_number_contractor'"
-        [vmsPage]="false" [contactLabel]="'Number (Contractor)'" [labelClass]="'text-base cw-3:text-sm'"
-        [inputClass]="'border !border-black w-full rounded py-2 px-3 outline-black h-12 text-base'"></app-vms-contact-input>
+      <app-vms-contact-input
+        [(value)]="formSent.contractorContactNumber"
+        [id]="'contact_number_contractor'"
+        [vmsPage]="false"
+        [contactLabel]="'Number (Contractor)'"
+        [labelClass]="'text-base cw-3:text-sm'"
+        [inputClass]="'border !border-black w-full rounded py-2 px-3 outline-black h-12 text-base'"
+      ></app-vms-contact-input>
     </div>
 
     <div class="w-full mt-1">

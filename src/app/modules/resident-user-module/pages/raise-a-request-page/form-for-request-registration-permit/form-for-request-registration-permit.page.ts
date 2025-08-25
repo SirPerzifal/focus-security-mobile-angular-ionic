@@ -44,14 +44,16 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
   }
 
   minDate: string = '';
-  selectedDate: string = '';
+  endMoveMinDate: string = '';
+  selectedStartDate: string = '';
+  selectedEndDate: string = '';
   contactPerson = {
     sameAsAbove: false,
     appointAnotherFamily: false
   }
   formSent = {
-    requestDate: '',
-    timeMove: '',
+    startDate: '',
+    endDate: '',
     contractorContactPerson: '',
     contractorContactNumber: '',
     contractorCompanyName: '',
@@ -132,13 +134,27 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
     });
   }
 
-  onDateChange(event: any) {
+  onDateChange(event: any, type: string) {
     if (event) {
       const date = new Date(event);
-      this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
-      this.formSent.requestDate = event;
+      if (type === 'choose_start_date_move') {
+        this.selectedStartDate = this.functionMain.formatDate(date);
+        this.formSent.startDate = event;
+        const string = date.toString;
+        const final = String(date);
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+        const yyyy = date.getFullYear();
+        this.endMoveMinDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
+      } else if (type === 'choose_end_date_move') {
+        this.selectedEndDate = this.functionMain.formatDate(date);
+        this.formSent.endDate = event;
+      }
     } else {
-      this.selectedDate = ''
+      this.selectedStartDate = '';
+      this.formSent.startDate = '';
+      this.selectedEndDate = '';
+      this.formSent.endDate = '';
     }
   }
 
@@ -147,9 +163,7 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
   }
 
   onValueChange(event: any, type: string) {
-    if (type === 'time_move') {
-      this.formSent.timeMove = event;
-    } else if (type === 'contact_person_contractor') {
+    if (type === 'contact_person_contractor') {
       this.formSent.contractorContactPerson = event;
     } else if (type === 'contact_number_contractor') {
       this.formSent.contractorContactNumber = event;
@@ -266,7 +280,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
       this.payNow(0);
     } else {
       this.mainApi.endpointMainProcess({
-        schedule_date: this.formSent.requestDate,
+        schedule_start_date: this.formSent.startDate,
+        schedule_end_date: this.formSent.endDate,
         contact_person_id: this.formSent.personAssign,
         schedule_type: 'renovation',
         contractor_contact_person: this.formSent.contractorContactPerson, 
@@ -344,7 +359,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         this.mainApi.endpointMainProcess({
-          schedule_date: this.formSent.requestDate,
+        schedule_start_date: this.formSent.startDate,
+        schedule_end_date: this.formSent.endDate,
           schedule_type: 'renovation',
           contact_person_id: this.formSent.personAssign,
           contractor_contact_person: this.formSent.contractorContactPerson, 
@@ -382,7 +398,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
         this.formSent.paymentReceipt = result.data;
         if (this.formSent.paymentReceipt === result.data) {
           this.mainApi.endpointMainProcess({
-            schedule_date: this.formSent.requestDate,
+        schedule_start_date: this.formSent.startDate,
+        schedule_end_date: this.formSent.endDate,
             schedule_type: 'renovation',
             contact_person_id: this.formSent.personAssign,
             contractor_contact_person: this.formSent.contractorContactPerson, 
