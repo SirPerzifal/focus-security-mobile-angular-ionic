@@ -45,6 +45,7 @@ export class HistoryInContractorPage implements OnInit {
     point_of_entry: string;
     mobile_number: string;
     banned: boolean;
+    reason_for_banning: string;
     id: number;
     identification_number: string;
     identification_type: string;
@@ -155,6 +156,7 @@ export class HistoryInContractorPage implements OnInit {
             visitor_exit_time: item['exit_time'],
             point_of_entry: item['point_of_entry'],
             banned: item['is_banned'],
+            reason_for_banning: item['reason_for_banning'],
             sub_contractor_ids: item['sub_contractor_ids']
           });
           
