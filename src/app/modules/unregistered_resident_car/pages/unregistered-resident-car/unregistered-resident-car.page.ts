@@ -69,7 +69,7 @@ export class UnregisteredResidentCarPage implements OnInit {
       errMsg += 'Name is missing! \n'
     }
     if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
-      errMsg += 'Host must be selected! \n'
+      errMsg += 'Employee must be selected! \n'
     }
     if ((!this.formData.contact_number  && this.module_config.contact_number) && !this.project_config.is_industrial) {
       errMsg += 'Contact number is missing! \n'

@@ -54,7 +54,7 @@
               <!-- <option [value]="'date'">DATE</option> -->
               <option [value]="'name'" *ngIf="isVisitor">Name</option>
               <option [value]="'vehicle'" *ngIf="isVehicle">Vehicle Number</option>
-              <option [value]="'contact'">Contact no</option>
+              <option [value]="'contact'">Contact Number</option>
               <option [value]="'all'">All</option>
             </select>
           </div>
@@ -75,12 +75,16 @@
               </app-text-input>
             </div>
             <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
-              <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelResidentText]="'Contact'"
+              <!-- <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelResidentText]="'Contact'"
                 [labelResidentClass]="'text-base font-bold'" [placeholder]="'+65 7827 323'"
                 [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.contact"
                 (change)="onContactFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
-              </app-text-input>
+              </app-text-input> -->
+               <app-vms-contact-input #blacklistContactNumberInput [vmsPage]="false"
+                [id]="'blacklist_contact_number'" [labelClass]="'text-base'"
+                [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'" (change)="onContactFilterChange($event)"
+                [contactLabel]="'Contact Number'" [isReadonly]="false"></app-vms-contact-input>
             </div>
           </div>
 
@@ -233,14 +237,26 @@
             <tr>
               <td class="font-bold w-[45%]">Banned Date</td>
               <td class="w-[5%]">:</td>
-              <td>{{ blacklistDetail.create_date ? functionMain.convertNewDateTZ(blacklistDetail.create_date) : '-' }}
+              <td>{{ blacklistDetail.create_date ? functionMain.convertNewDateTZ(blacklistDetail.create_date).split(' ')[0] : '-' }}
               </td>
             </tr>
             <tr>
-              <td class="font-bold w-[45%]">Last Entry Date Time</td>
+              <td class="font-bold w-[45%]">Banned Time</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ blacklistDetail.create_date ? functionMain.convertNewDateTZ(blacklistDetail.create_date).split(' ')[1] : '-' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold w-[45%]">Last Entry Date</td>
               <td class="w-[5%]">:</td>
               <td>{{ blacklistDetail.last_entry_date_time ?
-                functionMain.convertNewDateTZ(blacklistDetail.last_entry_date_time) : '-' }}</td>
+                functionMain.convertNewDateTZ(blacklistDetail.last_entry_date_time).split(' ')[0] : '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-bold w-[45%]">Last Entry Time</td>
+              <td class="w-[5%]">:</td>
+              <td>{{ blacklistDetail.last_entry_date_time ?
+                functionMain.convertNewDateTZ(blacklistDetail.last_entry_date_time).split(' ')[1] : '-' }}</td>
             </tr>
             <!-- <tr>
               <td class="font-bold w-[45%]">TYPE OF ENTRY</td>
@@ -281,16 +297,16 @@
                 CALL MA
               </button> -->
               <button
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5" (click)="functionMain.callPolice()">
+                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5" (click)="functionMain.callPolice()">
                 Call Police
               </button>
               <button
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5"
+                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5"
                 (click)="callResident(blacklistDetail)" *ngIf="blacklistDetail.ban_requestor_id && blacklistDetail.ban_requestor_id.length > 0">
                 Call Requestor
               </button>
               <button (click)="onLiftBan(blacklistDetail)"
-                class="cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 text-base rounded-md font-bold w-2/5">
+                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5">
                 Lift Ban
               </button>
             </div>

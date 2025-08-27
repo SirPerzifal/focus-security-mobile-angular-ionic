@@ -636,7 +636,7 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_name = this.searchData.visitor_name
           this.formData.visitor_contact_no = this.searchData.contact_number
           this.formData.visitor_type = this.searchData.visitor_type
-          this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : '' 
+          this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
           this.formData.family_id = this.searchData.family_id
           this.selectedImage = this.searchData.visitor_image
           this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
@@ -646,13 +646,15 @@ export class WalkInPage implements OnInit {
             this.is_id_disabled = false
           }
           this.contactUnit = ''
-          if (this.project_config.is_industrial) {
-            this.contactHost = this.searchData.industrial_host_id[0]
-          } else {
-            this.formData.block = this.searchData.block_id[0]
-            this.loadUnit().then(() => {
-              this.contactUnit = this.searchData.unit_id[0]
-            })
+          if (!this.searchData.is_ma) {
+            if (this.project_config.is_industrial) {
+              this.contactHost = this.searchData.industrial_host_id[0]
+            } else {
+              this.formData.block = this.searchData.block_id[0]
+              this.loadUnit().then(() => {
+                this.contactUnit = this.searchData.unit_id[0]
+              })
+            }
           }
           if (this.formData.visitor_type == 'walk_in') {
             console.log("SHOW WALK HEY")

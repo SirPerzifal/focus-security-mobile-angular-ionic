@@ -88,7 +88,7 @@
       </div>
       <div class="flex flex-col justify-between mt-4" *ngIf="isClosed">
         <div class="text-base font-bold flex flex-row justify-between">
-          <u class="text-base font-bold">Request Date</u>
+          <u class="text-base font-bold">Request Date Filter</u>
           <u class="text-base font-bold" (click)="resetFilter()"
             >Clear Filter</u
           >
@@ -98,7 +98,7 @@
             <app-text-input
               #clientApprovalFilterStartDateInput
               [id]="'client_approval_filter_start_date_input'"
-              [placeholder]="'Start Filter Date'"
+              [placeholder]="'Start Date'"
               [customClasses]="{'w-full':true}"
               [type]="'date'"
               [showPlaceholder]="true"
@@ -111,7 +111,7 @@
             <app-text-input
               #clientApprovalFilterEndDateInput
               [id]="'client_approval_filter_end_date_input'"
-              [placeholder]="'End Filter Date'"
+              [placeholder]="'End Date'"
               [customClasses]="{'w-full':true}"
               [type]="'date'"
               [showPlaceholder]="true"

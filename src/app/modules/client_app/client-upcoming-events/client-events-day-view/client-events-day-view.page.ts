@@ -134,10 +134,8 @@ export class ClientEventsDayViewPage implements OnInit {
       // console.log(value);
       console.log(value)
       // NOTE THIS SEMI HARD CODE
-      this.EventsForm.block_id = value.block != null ? value.block : 1;
       this.EventsForm.project_id = value.project_id;
-      this.EventsForm.unit_id = value.unit != null ? value.unit : 1
-      this.project_id = value.project_id != null ? value.project_id : 1;
+      this.project_id = value.project_id != null ? value.project_id : false;
       this.project_config = value.config
       this.family_id = value.family_id
       this.loadFacilityList()

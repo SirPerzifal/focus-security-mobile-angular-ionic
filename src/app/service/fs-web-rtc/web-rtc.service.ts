@@ -901,6 +901,7 @@ export class WebRtcService extends ApiService{
       this.rejectCall();
     // }else if(this.callAction === 'openDialogCall'){
     }else {
+      if (!this.callerName) return
       await this.startLocalStream();
       if (!this.peerConnection) {
         this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
@@ -936,7 +937,6 @@ export class WebRtcService extends ApiService{
           }
         };
       }
-
       await this.showIncomingCallModal(this.nativeOffer);
     }
   }

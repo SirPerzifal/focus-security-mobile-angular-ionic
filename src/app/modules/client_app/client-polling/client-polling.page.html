@@ -25,22 +25,22 @@
     <div class="flex flex-row justify-between space-x-1">
       <div class="w-1/4">
         <app-visitor-button [text]="'Active'"
-          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-[15px] w-full cw-4:text-[13px] '  + (isActive ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleActive()"></app-visitor-button>
       </div>
       <div class="w-1/4">
         <app-visitor-button [text]="'Upcoming'"
-          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isUpcoming ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-[15px] w-full cw-4:text-[13px] '  + (isUpcoming ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleUpcoming()"></app-visitor-button>
       </div>
       <div class="w-1/4">
         <app-visitor-button [text]="'Closed'"
-          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-[15px] w-full cw-4:text-[13px] '  + (isClosed ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleClosed()"></app-visitor-button>
       </div>
       <div class="w-1/4">
         <app-visitor-button [text]="'New Poll'"
-          [extraClass]="'text-base w-full cw-2:text-[13px] '  + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+          [extraClass]="'text-[15px] w-full cw-4:text-[13px] '  + (isNew ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
           (click)="toggleNew()"></app-visitor-button>
       </div>
     </div>
