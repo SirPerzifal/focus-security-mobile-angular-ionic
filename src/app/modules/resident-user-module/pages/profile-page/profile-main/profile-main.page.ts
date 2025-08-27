@@ -158,6 +158,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     delivery_type: string;
     vehicle_type: string;
     banned: boolean;
+    reason_for_banning: string;
     id: number;
   }> = [];
 
@@ -175,6 +176,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     delivery_type: string;
     vehicle_type: string;
     banned: boolean;
+    reason_for_banning: string;
     id: number;
   }> = [];
 
@@ -1115,6 +1117,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   getHistoryList() {
     this.isLoading = true;
+    this.historyData = [];
     this.historyData.pop();
     this.mainResident.endpointMainProcess({}, 'get/visitor_history').subscribe((response) => {
       var result = response.result['response_result']
@@ -1148,6 +1151,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             delivery_type: item['delivery_type'],
             vehicle_type: item['vehicle_type'],
             banned: item['is_banned'],
+            reason_for_banning: item['reason_for_banning'],
             id: item['visitor_id']
           });
           console.log(this.historyData.length);
@@ -1209,6 +1213,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   getHistoryContrctorList() {
     this.isLoading = true;
+    this.filteredData = [];
     this.filteredData.pop();
     this.mainResident.endpointMainProcess({}, 'get/contractor_history').subscribe((response) => {
       this.isLoading = true; // Set loading to true at the start
@@ -1244,6 +1249,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             delivery_type: item['delivery_type'],
             vehicle_type: item['vehicle_type'],
             banned: item['is_banned'],
+            reason_for_banning: item['reason_for_banning'],
             id: item['contractor_id']
           });
         });

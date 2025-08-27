@@ -132,6 +132,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
             delivery_type: item['delivery_type'],
             vehicle_type: item['vehicle_type'],
             banned: item['is_banned'],
+            reason_for_banning: item['reason_for_banning'],
           });
         });
         this.pagination = {

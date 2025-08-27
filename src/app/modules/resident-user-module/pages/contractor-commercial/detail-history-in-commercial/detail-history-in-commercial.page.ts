@@ -45,6 +45,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     point_of_entry: string;
     mobile_number: string;
     banned: boolean;
+    reason_for_banning: string;
     id: number;
     identification_number: string;
     identification_type: string;

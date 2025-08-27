@@ -222,6 +222,14 @@
                           </td>
                           <!-- Menggunakan metode formatDate -->
                         </tr>
+                        <tr *ngIf="data.banned" class="h-6">
+                          <td>Ban Reason</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="font-light">
+                            {{ data.reason_for_banning || '-' }}
+                          </td>
+                          <!-- Menggunakan metode formatDate -->
+                        </tr>
                       </table>
                     </div>
                     <div class="flex flex-row space-x-1 w-full">
@@ -271,6 +279,14 @@
                           <td class="font-light">
                             {{ functionMain.convertToDDMMYYYY(data.visitor_date)
                             }}
+                          </td>
+                          <!-- Menggunakan metode formatDate -->
+                        </tr>
+                        <tr *ngIf="data.banned" class="h-6">
+                          <td>Ban Reason</td>
+                          <td class="w-[5%]">:</td>
+                          <td class="font-light">
+                            {{ data.reason_for_banning || '-' }}
                           </td>
                           <!-- Menggunakan metode formatDate -->
                         </tr>

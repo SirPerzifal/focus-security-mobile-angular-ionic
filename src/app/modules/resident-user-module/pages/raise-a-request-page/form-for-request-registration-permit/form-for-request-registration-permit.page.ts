@@ -275,7 +275,39 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
   }
 
   onClick(type: string) {
-    console.log('type', type, this.formSent);
+    // console.log('type', type, this.formSent);
+    if (!this.formSent.startDate) {
+      this.functionMain.presentToast('Please select start date.', 'danger');
+      return;
+    }
+    if (!this.formSent.endDate) {
+      this.functionMain.presentToast('Please select end date.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorContactPerson) {
+      this.functionMain.presentToast('Please enter contractor contact person.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorContactNumber) {
+      this.functionMain.presentToast('Please enter contractor contact number.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorCompanyName) {
+      this.functionMain.presentToast('Please enter contractor company name.', 'danger');
+      return;
+    }
+    if (!this.formSent.contractorVehicleNumber) {
+      this.functionMain.presentToast('Please enter contractor vehicle number.', 'danger');
+      return;
+    }
+    if (this.contactPerson.appointAnotherFamily && this.formSent.personAssign === 0) {
+      this.functionMain.presentToast('Please select contact person.', 'danger');
+      return;
+    }
+    if (!this.formSent.renovationSigned) {
+      this.functionMain.presentToast('Please provide your signature.', 'danger');
+      return;
+    }
     if (this.amountType.isRequirePayment) {
       this.payNow(0);
     } else {
@@ -398,8 +430,8 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
         this.formSent.paymentReceipt = result.data;
         if (this.formSent.paymentReceipt === result.data) {
           this.mainApi.endpointMainProcess({
-        schedule_start_date: this.formSent.startDate,
-        schedule_end_date: this.formSent.endDate,
+            schedule_start_date: this.formSent.startDate,
+            schedule_end_date: this.formSent.endDate,
             schedule_type: 'renovation',
             contact_person_id: this.formSent.personAssign,
             contractor_contact_person: this.formSent.contractorContactPerson, 
