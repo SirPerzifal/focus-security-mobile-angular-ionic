@@ -701,6 +701,10 @@ const routes: Routes = [
     path: 'vms-gate',
     loadChildren: () => import('./modules/vms_app/vms-gate/vms-gate.module').then( m => m.VmsGatePageModule)
   },
+  {
+    path: 'vms-intercom',
+    loadChildren: () => import('./modules/vms_app/vms-intercom/vms-intercom.module').then( m => m.VmsIntercomPageModule)
+  },
 ];
 
 @NgModule({

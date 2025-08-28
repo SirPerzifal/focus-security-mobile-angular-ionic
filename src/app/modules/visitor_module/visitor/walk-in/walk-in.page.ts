@@ -655,6 +655,10 @@ export class WalkInPage implements OnInit {
                 this.contactUnit = this.searchData.unit_id[0]
               })
             }
+          } else {
+            this.maId = this.searchData.id
+            this.maForm = {company_name: this.searchData.company_name}
+            this.formData.visitor_name = this.searchData.name
           }
           if (this.formData.visitor_type == 'walk_in') {
             console.log("SHOW WALK HEY")

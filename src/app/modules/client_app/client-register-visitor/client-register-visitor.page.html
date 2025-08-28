@@ -81,7 +81,7 @@
               </div>
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black w-2/5">Entry Time</p>
-                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ functionMain.convertNewDateTZ(visitor.entry_date) }}</p>
+                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ functionMain.convertNewDateTZ(visitor.entry_date).split(' ')[1] }}</p>
               </div>
               <div class="table-row">
                 <p class="font-bold table-cell text-base text-black w-2/5">Type</p>

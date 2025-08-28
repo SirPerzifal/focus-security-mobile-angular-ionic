@@ -170,7 +170,8 @@ export class DetailHistoryInVisitorPage implements OnInit {
       contact_no: this.formData.contact_no,
       vehicle_no: this.formData.vehicle_no,
       visitor_name: this.formData.visitor_name,
-      last_entry_date_time: this.formData.last_entry_date_time, 
+      last_entry_date_time: this.formData.last_entry_date_time,
+      is_resident: true,
       image: this.formData.image,
     }, 'post/ban_visitor').subscribe((response) => {
       this.router.navigate(['history-in-visitor']);

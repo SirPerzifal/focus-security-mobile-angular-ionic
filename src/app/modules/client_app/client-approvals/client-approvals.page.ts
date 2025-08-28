@@ -42,6 +42,7 @@ export class ClientApprovalsPage implements OnInit {
         this.loadProjectTax()
       }
       this.loadMenu()
+      this.loadNotificationCount()
     })
     console.log("ahoy")
   }
@@ -71,22 +72,22 @@ export class ClientApprovalsPage implements OnInit {
   project_id = 0
 
   menuItems: any = [
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/deals/Money Bag.webp', alt: 'Refund Deposits Icon', route: 'refund_deposits', text: 'Refund Deposits', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], },
-    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], },
-    // { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], },
-    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], },
-    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: 'employee', text: 'Employees', permission: [false, false], },
-    // { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: 'events', text: 'Events', permission: [false, true], },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/deals/Money Bag.webp', alt: 'Refund Deposits Icon', route: 'refund_deposits', text: 'Refund Deposits', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], menu_count: 0},
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], menu_count: 0},
+    // { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], menu_count: 0},
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Employees', route: 'employee', text: 'Employees', permission: [false, false], menu_count: 0},
+    // { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: 'events', text: 'Events', permission: [false, true], menu_count: 0},
   ];
 
   onClickMenu(menu: any) {
@@ -308,6 +309,8 @@ export class ClientApprovalsPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.success) {
+          let index = this.menuItems.findIndex((item: any) => item.route == this.approval_type)
+          this.menuItems[index].menu_count = this.menuItems[index].menu_count - 1
           this.selectedApproval.states = 'approved'
           this.loadApproval()
           this.onBack()
@@ -333,6 +336,8 @@ export class ClientApprovalsPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.success) {
+          let index = this.menuItems.findIndex((item: any) => item.route == this.approval_type)
+          this.menuItems[index].menu_count = this.menuItems[index].menu_count - 1
           this.selectedApproval.states = 'rejected'
           this.isRejectModal = false
           this.reject_reason = ''
@@ -478,6 +483,7 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.loadNotificationCount()
     if (this.isHome) {
       this.loadMenu()
     } else {
@@ -498,5 +504,29 @@ export class ClientApprovalsPage implements OnInit {
     this.currentPage = page
     this.inputPage = page
     this.loadApproval()
+  }
+
+  loadNotificationCount() {
+    this.clientMainService.getApi({selected_project_id: this.project_id, menu_name: 'approval'}, '/client/get/notification_count').subscribe({
+      next: (results) => {
+        if (results.result.response_code === 200) {
+          let counts = results.result.counts[0]
+          if (counts) {
+            console.log(counts)
+            this.menuItems.forEach((count: any) => {
+              let index = this.menuItems.findIndex((item: any) => item.route == count.route)
+              this.menuItems[index].menu_count = counts.detail[count.route]
+              console.log(this.menuItems[index])
+            })
+          }
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to get notifications!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get notifications!', 'danger');
+        console.error(error);
+      }
+    });
   }
 }

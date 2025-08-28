@@ -81,6 +81,9 @@
 
       <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="!project_config.is_industrial && Camera.length > 0" class="mt-4"
         [routerLink]="['/vms-gate']" [isActive]="true" [disableClick]="true" />
+      
+      <app-button-icon [text]="'INTERCOM'" [customImageIcon]="'assets/icon-vms/intercom_white.png'" *ngIf="Intercom.length > 0" class="mt-4"
+          [routerLink]="['/vms-intercom']" [isActive]="true" [disableClick]="true" />
 
     </div>
     <div *ngIf="isLoading" class="flex justify-center items-center h-20 mt-20">

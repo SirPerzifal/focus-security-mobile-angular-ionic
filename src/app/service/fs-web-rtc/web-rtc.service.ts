@@ -425,6 +425,8 @@ export class WebRtcService extends ApiService{
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
       this.socket.on('kick-user', (data:any)=> this.handleKickUser(data));
+      this.socket.on('intercom-open-gate', (data:any)=> this.handleOpenGate(data));
+      this.socket.on('intercom-close-gate', (data:any)=> this.handleCloseGate(data));
   
       // Listen for native events
       this.listenForNativeEvents();
@@ -432,6 +434,23 @@ export class WebRtcService extends ApiService{
     } catch (error) {
       console.error('Error during socket initialization:', error);
     }
+  }
+  async handleOpenGate(data:any){
+
+  }
+
+  async handleCloseGate(data:any){
+    
+  }
+
+  async openGate(intercom_id:any){
+    console.log("EMITTED")
+    this.socket.emit('intercom-open-gate', {intercom_id:intercom_id});
+  }
+
+  async closeGate(intercom_id:any){
+    console.log("EMITTED")
+    this.socket.emit('intercom-close-gate', {intercom_id:intercom_id});
   }
 
   closeSocket(){

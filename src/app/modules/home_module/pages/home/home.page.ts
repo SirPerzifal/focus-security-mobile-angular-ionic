@@ -62,6 +62,7 @@ export class HomePage implements OnInit {
       this.project_id = value.project_id
       this.project_config = value.config
       this.Camera = value.config.lpr
+      this.Intercom = value.config.intercom
       this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
     })
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
@@ -76,6 +77,7 @@ export class HomePage implements OnInit {
   }
 
   Camera: any = {}
+  Intercom: any = {}
 
   showImage = `assets/img/focus_logo-removebg.png`
   async onLoadBackground() {
