@@ -37,12 +37,17 @@ export class ClientEventsDayViewPage implements OnInit {
     id: 0,
     event_title: '',
     event_description: '',
+    registered_coach_id: 0,
     unit_id: '',
     block_id: '',
     start_date: '',
     end_date: '',
     project_id: '',
     facility_id: '',
+    facility_name: '',
+    coach_type: '',
+    contact_number: '',
+    vehicle_number: '',
     room_id: '',
     room_name: '',
     post_to: 'all',
@@ -69,6 +74,7 @@ export class ClientEventsDayViewPage implements OnInit {
   snapDraggedEvents = true;
 
   isRead = false
+  isCoachData = false
 
   constructor(
     private router: Router, 
@@ -134,10 +140,14 @@ export class ClientEventsDayViewPage implements OnInit {
       // console.log(value);
       console.log(value)
       // NOTE THIS SEMI HARD CODE
+      // this.EventsForm.block_id = value.block != null ? value.block : 1;
       this.EventsForm.project_id = value.project_id;
-      this.project_id = value.project_id != null ? value.project_id : false;
+      // this.unit_id = value.unit != null ? value.unit : 1
+      // this.EventsForm.unit_id = value.unit != null ? value.unit : 1
+      this.project_id = value.project_id != null ? value.project_id : 1;
       this.project_config = value.config
       this.family_id = value.family_id
+      this.loadRegisteredCoach()
       this.loadFacilityList()
       this.loadUpcomingEvents()
       if (this.project_config.is_industrial) {
@@ -221,6 +231,70 @@ export class ClientEventsDayViewPage implements OnInit {
     });
   }
 
+  Coach: any[] = []
+  selectedCoach = 0
+  coachData: any
+  loadRegisteredCoach() {
+    console.log('tes');
+    
+    if (this.project_config.is_industrial) return
+    this.clientMainService.getApi({}, '/client/get/all_registered_coaches').subscribe((response: any) => {
+      // console.log(results)
+      if (response.result.response_code == 200) {
+        if (response.result.response_result.length > 0) {
+          this.Coach = response.result.response_result
+        } else {
+        }
+        // this.functionMain.presentToast(`Success!`, 'success');
+      } else {
+        this.functionMain.presentToast(`An error occurred while loading coach data!`, 'danger');
+      }
+    })
+  }
+
+  formatEnd(time: string) {
+    if (this.coachData) {
+      const [hours, minutes] = time.split(':');
+      const totalMinutes = parseInt(hours) * 60 + parseInt(minutes) + parseInt(this.coachData.duration_per_session);
+      const endHours = Math.floor(totalMinutes / 60) % 24;
+      const endMinutes = totalMinutes % 60;
+
+      // Simpan dalam format "HH:mm" untuk kompatibilitas dengan input[type="time"]
+      this.selectedEndTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+
+      // console.log(this.selectedStartTime)
+      // console.log(hours, minutes)
+      // console.log(this.coachData.duration_per_session)
+      // console.log(totalMinutes, endHours, endMinutes, this.selectedEndTime)
+    }
+  }
+
+  onCoachChange(event: any) {
+    this.EventsForm.registered_coach_id = event.target.value;
+    this.coachData = this.Coach.filter((coach: any) => coach.id == this.selectedCoach)
+    this.coachData = this.coachData[0]
+    this.EventsForm.facility_name = this.coachData.facility_name
+    this.EventsForm.coach_type = this.coachData.coach_type
+    this.EventsForm.facility_id = this.coachData.facility_id
+    this.EventsForm.contact_number = this.coachData.contact_number
+    this.EventsForm.vehicle_number = this.coachData.vehicle_number
+    if (this.selectedStartTime) {
+      this.formatEnd(this.selectedStartTime)
+    }
+    console.log(this.Facilities)
+    console.log(this.EventsForm.facility_id)
+    if (this.EventsForm.facility_id){
+      if (this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id).length > 0) {
+        this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
+      } else {
+        this.EventsForm.facility_id = ''
+        this.EventsForm.facility_name = ''
+        this.Rooms = []
+      }
+    }
+    // console.log(this.coachData)
+  }
+
   onFacilityChange(event: any) {
     this.EventsForm.facility_id = event.target.value
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.target.value)[0].room_ids
@@ -289,6 +363,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.EventsForm = {
       id: event.event.id,
       event_title: event.event.title,
+      registered_coach_id: event.event.registered_coach_id ? event.event.registered_coach_id : 0,
       event_description: event.event.description,
       unit_id: this.EventsForm.unit_id,
       block_id: this.EventsForm.block_id,
@@ -296,6 +371,10 @@ export class ClientEventsDayViewPage implements OnInit {
       end_date: this.selectedDate,
       project_id: this.EventsForm.project_id,
       facility_id: event.event.facility_id,
+      facility_name: event.event.facility_name,
+      coach_type: event.event.coach_type,
+      contact_number: event.event.contact_number,
+      vehicle_number: event.event.vehicle_number,
       room_id: event.event.room_id,
       room_name: event.event.room_name,
       post_to: event.event.post_to,
@@ -312,6 +391,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.selectedUnit = event.event.unit_ids
     this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.event.facility_id)[0].room_ids
     this.EventsForm.room_id = event.event.room_id
+    this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
 
     this.selectedStartDate = event.event.start
     this.selectedEndDate = event.event.end
@@ -321,6 +401,7 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
   clickedDate(date: any): void {
+    this.isCoachData = true
     this.selectedStartDate = this.selectedDate;
     this.selectedEndDate = this.selectedDate;
     const dateString = date.toString();
@@ -457,6 +538,7 @@ export class ClientEventsDayViewPage implements OnInit {
             this.functionMain.presentToast(`Successfully add events!`, 'success');
             this.isAddEventClick = false
             this.loadUpcomingEvents()
+            this.loadRegisteredCoach()
             this.EventsForm.event_title = ''
             this.EventsForm.event_description = ''
             this.EventsForm.color = []
@@ -496,6 +578,7 @@ export class ClientEventsDayViewPage implements OnInit {
             title: result.event_title ? result.event_title : result.registered_coach_facility_name + ' - ' +  result.room_name,
             description: result.event_description,
             facility_id: result.registered_coach_facility_id,
+            registered_coach_id: result.registered_coach_id ? result.registered_coach_id : 0,
             room_id: result.room_id,
             room_name: result.room_name,
             post_to: result.post_to,
@@ -532,10 +615,12 @@ export class ClientEventsDayViewPage implements OnInit {
     this.Rooms = []
     this.isAddEventClick = true
     this.isRead = false
+    this.isCoachData = true
     this.EventsForm = {
       id: 0,
       event_title: '',
       event_description: '',
+      registered_coach_id: 0,
       unit_id: this.EventsForm.unit_id,
       block_id: this.EventsForm.block_id,
       start_date: '',
@@ -543,6 +628,10 @@ export class ClientEventsDayViewPage implements OnInit {
       project_id: this.EventsForm.project_id,
       color: [] as string[],
       facility_id: '',
+      facility_name: '',
+      coach_type: '',
+      contact_number: '',
+      vehicle_number: '',
       room_id: '',
       room_name: '',
       post_to: 'all',
@@ -568,6 +657,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.EventsForm = {
       id: 0,
       event_title: '',
+      registered_coach_id: 0,
       event_description: '',
       unit_id: this.EventsForm.unit_id,
       block_id: this.EventsForm.block_id,
@@ -576,6 +666,10 @@ export class ClientEventsDayViewPage implements OnInit {
       project_id: this.EventsForm.project_id,
       color: [] as string[],
       facility_id: '',
+      facility_name: '',
+      coach_type: '',
+      contact_number: '',
+      vehicle_number: '',
       room_id: '',
       room_name: '',
       post_to: 'all',
@@ -650,6 +744,7 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
   handleRefresh(event: any) {
+    this.loadRegisteredCoach()
     if (this.project_config.is_industrial) {
       this.loadBook()
     }
@@ -699,3 +794,4 @@ export class ClientEventsDayViewPage implements OnInit {
   }
 
 }
+

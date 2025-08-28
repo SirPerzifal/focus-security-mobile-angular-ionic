@@ -238,12 +238,18 @@ export class VehicleFormPage implements OnInit {
       const value = event.target.value;
       if (value === 'other') {
         this.showOtherTypeOfVehicle = true; // Show input for other type of vehicle
+      } else {
+        this.showOtherTypeOfVehicle = false; // Hide input for other type of vehicle
+        this.vehicleForm.otherTypeOfVehicle = '';
       }
       this.vehicleForm.typeOfVehicle = event.target.value;
     } else if (type === 'make_vehicle') {
       const value = event.target.value;
       if (value === 'other') {
         this.showOtherVehicleMake = true; // Show input for other vehicle make
+      } else {
+        this.showOtherVehicleMake = false; // Hide input for other vehicle make
+        this.vehicleForm.otherVehicleMake = '';
       }
       this.vehicleForm.vehicleMake = event.target.value;
     } else if (type === 'vehicle_colour') {

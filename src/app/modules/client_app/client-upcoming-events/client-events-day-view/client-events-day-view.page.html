@@ -201,6 +201,27 @@
           </div>
           <div
             class="w-full flex flex-col mb-2"
+            *ngIf="isCoachData && !project_config.is_industrial"
+          >
+            <label class="block text-black font-bold mb-1 text-base"
+              >Coach</label
+            >
+            <select
+              id="event_form_coach"
+              [disabled]="isRead"
+              class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
+              (change)="onCoachChange($event)"
+              [(ngModel)]="selectedCoach"
+              [(ngModel)]="EventsForm.registered_coach_id"
+            >
+              <option value="0" selected disabled hidden>Choose Coach</option>
+              <option *ngFor="let coach of Coach" [value]="coach.id">
+                {{ coach.name }}
+              </option>
+            </select>
+          </div>
+          <div
+            class="w-full flex flex-col mb-2"
             *ngIf="project_config.is_industrial"
           >
             <label class="block text-black font-bold mb-1 text-base"

@@ -68,6 +68,16 @@
           </div>
         </div>
 
+        <div class="mt-1">
+          <app-input-component
+            [id]="'vehicle_number'"
+            [type]="'text'"
+            [value]="formSent.vehicleNumber"
+            [labelChild1]="'Vehicle Number of Coach'"
+            (eventEmitter)="onValueChange($event, 'vehicle_number')"
+          ></app-input-component>
+        </div>
+
         <div class="w-full mt-1">
           <label class="text-base cw-3:text-sm font-bold mt-1"
             >Sex of Coach</label

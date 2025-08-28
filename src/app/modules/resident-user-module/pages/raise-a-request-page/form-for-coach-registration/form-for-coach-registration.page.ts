@@ -125,6 +125,7 @@ export class FormForCoachRegistrationPage implements OnInit {
   formSent = {
     nameCoach: '',
     contactNumberCoach: '',
+    vehicleNumber: '',
     sex: '',
     nationality: '',
     organizationAffiliateWith: '',
@@ -327,6 +328,7 @@ export class FormForCoachRegistrationPage implements OnInit {
     const payload = {
       coach_name: this.formSent.nameCoach,
       contact_number: this.formSent.contactNumberCoach,
+      vehicle_number: this.formSent.vehicleNumber,
       coach_sex: this.formSent.sex,
       nationality: this.formSent.nationality,
       affliated_organization: this.formSent.organizationAffiliateWith,
@@ -381,6 +383,9 @@ export class FormForCoachRegistrationPage implements OnInit {
       if (this.formSent.contactNumberCoach === "") {
         errMsg += 'Please provide the contact number of coach.\n';
       }
+      if (this.formSent.vehicleNumber === "") {
+        errMsg += 'Please provide the vehicle number of coach.\n';
+      }
       if (this.formSent.coachingRegNumber === "") {
         errMsg += 'Please provide the reg number of coach.\n';
       }
@@ -415,6 +420,9 @@ export class FormForCoachRegistrationPage implements OnInit {
     }
     if (!this.formSent.contactNumberCoach) {
       errMsg += 'Please provide the contact number of coach.\n';
+    }
+    if (!this.formSent.vehicleNumber) {
+      errMsg += 'Please provide the vehicle number of coach.\n';
     }
     if (!this.formSent.sex) {
       errMsg += 'Please select the sex of coach.\n';
@@ -508,6 +516,8 @@ export class FormForCoachRegistrationPage implements OnInit {
           this.functionMain.presentToast(`Number cannot be more than ${minMaxValue} digits`, 'danger');
         }
       }
+    } else if (type === 'vehicle_number') {
+      this.formSent.vehicleNumber = event;
     } else if (type === 'organization_affiliate_with') {
       this.formSent.organizationAffiliateWith = event;
     } else if (type === 'coaching_reg_number') {
@@ -587,9 +597,11 @@ export class FormForCoachRegistrationPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Coach Details',
       message: `
-        <strong>Nama Coach:</strong> ${coach.name}<br>
-        <strong>Contact Number:</strong> ${coach.contact_number}<br>
-        <strong>Duration Per Session:</strong> ${coach.duration_per_session} Minute<br>
+        <strong>Coach Name:</strong> ${coach.name}<br>
+        <strong>Contact Number:</strong> ${coach.contact_number ? coach.contact_number : '-'}<br>
+        <strong>Vehicle Number:</strong> ${coach.vehicle_number ? coach.vehicle_number : '-'}<br>
+        <strong>Facility Name:</strong> ${coach.facility_name_other ? coach.facility_name_other : coach.facility_name}<br>
+        <strong>Duration Per Session:</strong> ${coach.duration_per_session} (Minute)<br>
       `,
       buttons: [
         {
