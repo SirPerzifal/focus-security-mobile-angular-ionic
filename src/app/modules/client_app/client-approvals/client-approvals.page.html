@@ -605,7 +605,7 @@
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
                   : {{ approval.deposit_date ?
-                  functionMain.formatDateDDMMYYYY(approval.deposit_date) : '-'
+                  functionMain.convertToDDMMYYYY(approval.deposit_date) : '-'
                   }}
                 </p>
               </div>
@@ -801,7 +801,7 @@
           </p>
           <p class="ml-2 table-cell text-base text-black">
             : {{ selectedApproval.deposit_date ?
-            functionMain.formatDateDDMMYYYY(selectedApproval.deposit_date) : '-'
+            functionMain.convertToDDMMYYYY(selectedApproval.deposit_date) : '-'
             }}
           </p>
         </div>
