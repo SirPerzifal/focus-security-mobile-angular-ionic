@@ -155,6 +155,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     vehicle_number: string;
     point_of_entry: string;
     mobile_number: string;
+    visitor_type: string;
     delivery_type: string;
     vehicle_type: string;
     banned: boolean;
@@ -1145,6 +1146,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             visitor_entry_time: item['entry_time'],
             visitor_exit_time: exitTime,
             mode_of_entry: item['mode_of_entry'],
+            visitor_type: item['visitor_type'],
             vehicle_number: item['vehicle_number'],
             point_of_entry: item['point_of_entry'],
             mobile_number: item['contact_number'],
@@ -1154,7 +1156,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             reason_for_banning: item['reason_for_banning'],
             id: item['visitor_id']
           });
-          console.log(this.historyData.length);
+          console.log(this.historyData);
           
           this.isLoading = false;
         });

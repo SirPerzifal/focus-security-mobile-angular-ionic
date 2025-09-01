@@ -974,7 +974,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({

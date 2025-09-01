@@ -79,7 +79,7 @@
       <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial" class="mt-4"
         [routerLink]="['/vms-checkout']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="!project_config.is_industrial && Camera.length > 0" class="mt-4"
+      <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="Camera.length > 0" class="mt-4"
         [routerLink]="['/vms-gate']" [isActive]="true" [disableClick]="true" />
       
       <app-button-icon [text]="'INTERCOM'" [customImageIcon]="'assets/icon-vms/intercom_white.png'" *ngIf="Intercom.length > 0" class="mt-4"

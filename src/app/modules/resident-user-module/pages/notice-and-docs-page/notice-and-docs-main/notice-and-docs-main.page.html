@@ -73,9 +73,9 @@
                 </td>
               </tr>
             </table>
-            <div class="flex justify-between items-center">
-              <button
-                class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm"
+            <div [class]="notice.doc_type ? 'flex flex-row justify-between items-center' : 'flex flex-row justify-end items-center'">
+              <button *ngIf="notice.doc_type"
+                class="bg-[var(--ion-color-primary)] text-white font-bold px-3 py-2 rounded text-sm"
                 (click)="downloadAttachment(notice.id, 'notice')"
               >
                 Download Attachment
@@ -201,7 +201,7 @@
                   <span class="text-base font-bold"> {{ file.name }} </span>
                   <span class="text-sm">
                     Published date: {{
-                    functionMainService.convertDateExtend(file.create_date) }}
+                    functionMainService.convertNewDateTZ(file.create_date) }}
                   </span>
                 </div>
               </div>

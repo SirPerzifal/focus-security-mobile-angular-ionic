@@ -145,16 +145,6 @@ export class MoveFormPage implements OnInit {
     return false
   }
 
-  // Fungsi submit untuk SAVE RECORD & OPEN BARRIER
-  saveRecordAndOpenBarrier() {
-    this.submitForm(true);
-  }
-
-  // Fungsi submit untuk save record only
-  saveRecordOnly() {
-    this.submitForm(false);
-  }
-
   onIdentificationTypeChange(event: any) {
     this.identificationType = event.target.value;
     if ((this.identificationType == 'nric' || this.identificationType == 'fin') && this.temp_type == 'passport') {

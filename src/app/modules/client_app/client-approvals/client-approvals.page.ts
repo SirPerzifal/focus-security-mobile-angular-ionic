@@ -301,11 +301,18 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   approveDetail(approval: any) {
-    if (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5)) {
-      this.functionMain.presentToast("RFID tags can only be 5 digits!", 'warning')
+    let errMsg = ''
+    if (!this.rfid_tag || (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5))) {
+      errMsg += "RFID tags can only be 5 digits! \n"
+    }
+    if (!this.side_code) {
+      errMsg += "Side code is required! \n"
+    }
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'warning')
       return
     }
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag}, '/client/post/approve').subscribe({
+    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag, side_code: this.side_code}, '/client/post/approve').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
@@ -379,14 +386,17 @@ export class ClientApprovalsPage implements OnInit {
 
   isApproveVehicleModal = false
   rfid_tag = ''
+  side_code = ''
   closeApprovalModal() {
     this.isApproveVehicleModal = false
     this.rfid_tag = ''
+    this.side_code = ''
   }
 
   openApprovalModal() {
     this.isApproveVehicleModal = true
     this.rfid_tag = ''
+    this.side_code = ''
   }
 
   limitRfid(event: any) {

@@ -58,15 +58,15 @@
               <option [value]="'all'">All</option>
             </select>
           </div>
-          <div class="w-full flex flex-row space-x-2 justify-between">
-            <div class="w-full" *ngIf="pageType == 'visitor' && (searchOption == 'name' || searchOption == 'all')">
+          <div class="w-full flex flex-col">
+            <div class="w-full mt-1" *ngIf="pageType == 'visitor' && (searchOption == 'name' || searchOption == 'all')">
               <app-text-input #blacklistNameFilter [id]="'blacklist_name_filter'" [labelResidentText]="'Name'"
                 [labelResidentClass]="'text-base font-bold'" [placeholder]="'Vhasya'" [customClasses]="{'w-full ':true}"
                 [type]="'text'" [(ngModel)]="filter.name" (change)="onNameFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
               </app-text-input>
             </div>
-            <div class="w-full" *ngIf="pageType == 'vehicle' && (searchOption == 'vehicle' || searchOption == 'all')">
+            <div class="w-full mt-1" *ngIf="pageType == 'vehicle' && (searchOption == 'vehicle' || searchOption == 'all')">
               <app-text-input #blacklistNameFilter [id]="'blacklist_vehicle_filter'"
                 [labelResidentText]="'Vehicle Number'" [labelResidentClass]="'text-base font-bold'"
                 [placeholder]="'SBB 5352 B'" [customClasses]="{'w-full ':true}" [type]="'text'"
@@ -74,7 +74,7 @@
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-12':true, 'text-base':true}">
               </app-text-input>
             </div>
-            <div class="w-full" *ngIf="searchOption == 'contact' || searchOption == 'all'">
+            <div class="w-full mt-1" *ngIf="searchOption == 'contact' || searchOption == 'all'">
               <!-- <app-text-input #blacklistContactFilter [id]="'blacklist_contact_filter'" [labelResidentText]="'Contact'"
                 [labelResidentClass]="'text-base font-bold'" [placeholder]="'+65 7827 323'"
                 [customClasses]="{'w-full ':true}" [type]="'text'" [(ngModel)]="filter.contact"
@@ -83,7 +83,7 @@
               </app-text-input> -->
                <app-vms-contact-input #blacklistContactNumberInput [vmsPage]="false"
                 [id]="'blacklist_contact_number'" [labelClass]="'text-base'"
-                [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-14 text-base'" (change)="onContactFilterChange($event)"
+                [inputClass]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base'" (change)="onContactFilterChange($event)"
                 [contactLabel]="'Contact Number'" [isReadonly]="false"></app-vms-contact-input>
             </div>
           </div>
@@ -297,16 +297,16 @@
                 CALL MA
               </button> -->
               <button
-                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5" (click)="functionMain.callPolice()">
+                class="text-sm cw-6:text-[11px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5" (click)="functionMain.callPolice()">
                 Call Police
               </button>
               <button
-                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5"
+                class="text-sm cw-6:text-[11px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5"
                 (click)="callResident(blacklistDetail)" *ngIf="blacklistDetail.ban_requestor_id && blacklistDetail.ban_requestor_id.length > 0">
                 Call Requestor
               </button>
               <button (click)="onLiftBan(blacklistDetail)"
-                class="text-sm cw-2:text-[11px] cw-1:text-[12px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5">
+                class="text-sm cw-6:text-[11px] bg-[var(--ion-color-primary)] text-white h-10 px-3 py-2 rounded-md font-bold w-2/5">
                 Lift Ban
               </button>
             </div>

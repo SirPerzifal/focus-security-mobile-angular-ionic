@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class VmsGatePage implements OnInit {
   constructor(
     private router: Router,
     public functionMain: FunctionMainService,
+    private clientMainService: ClientMainService,
   ) { }
 
   ngOnInit() {
@@ -35,6 +37,7 @@ export class VmsGatePage implements OnInit {
       this.project_id = value.project_id
       this.project_config = value.config
       console.log(this.project_config)
+      console.log(value.config.lpr)
       this.Camera = value.config.lpr.map((item: any) => {
         return {
           'id': item.CamSentId,
@@ -56,6 +59,20 @@ export class VmsGatePage implements OnInit {
       this.functionMain.presentToast('Please select the gate first!', 'danger')
       return
     }
+    this.clientMainService.getApi({camera_id: this.selectedCamera, is_close: is_close}, '/vms/post/open_barrier').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.functionMain.presentToast(`Successfully to ${is_close ? 'close' : 'open'} the barrier!`, 'success');
+        } else {
+          this.functionMain.presentToast(`Failed to ${is_close ? 'close' : 'open'} the barrier!`, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast(`An error occurred while trying to ${is_close ? 'close' : 'open'} the barrier!`, 'danger');
+        console.error(error);
+      }
+    });
   }
 
   handleRefresh(event: any) {

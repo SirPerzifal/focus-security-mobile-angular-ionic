@@ -191,7 +191,7 @@ export class WalkInPage implements OnInit {
         unit: this.formData.unit,
         family_id: this.formData.family_id,
         project_id: this.project_id,
-        camera_id: '',
+        camera_id: camera_id ? camera_id : '',
         is_pre_entry: this.isFromScan,
         entry_id: this.isFromScan ? this.searchData.id : '',
         entry_type: this.isFromScan ? this.searchData.entry_type : '',
@@ -254,112 +254,6 @@ export class WalkInPage implements OnInit {
     }
 
   }
-
-  // onSubmitWalkIn(openBarrier: boolean = false) {
-  //   console.log(this.formData)
-  //   console.log(this.pass_number)
-  //   let errMsg = ""
-  //   if (!this.selectedImage) {
-  //     errMsg += 'Visitor image is required!\n';
-  //   }
-  //   if ((!this.identificationType) && this.project_config.is_industrial) {
-  //     errMsg += 'Identification type is required!\n';
-  //   }
-  //   if ((!this.nric_value) && this.project_config.is_industrial) {
-  //     errMsg += 'Identification number is required!\n';
-  //   }
-  //   if (!this.formData.visitor_name) {
-  //     errMsg += 'Visitor is required!\n';
-  //   }
-  //   if (!this.formData.visitor_contact_no) {
-  //     errMsg += 'Contact number is required!\n';
-  //   }
-  //   if (this.formData.visitor_contact_no) {
-  //     if (this.formData.visitor_contact_no.length <= 2 ) {
-  //       errMsg += 'Contact number is required! \n'
-  //     }
-  //   }
-  //   if ((!this.formData.block || !this.formData.unit) && !this.project_config.is_industrial) {
-  //     errMsg += 'Block and unit must be selected!\n';
-  //   }
-  //   if (!this.pass_number && (this.project_config.is_industrial)) {
-  //     errMsg += 'Pass number is required! \n'
-  //   }
-  //   if ((!this.selectedHost) && this.project_config.is_industrial) {
-  //     errMsg += 'Host must be selected!\n';
-  //   }
-  //   if ((!this.formData.remarks) && this.project_config.is_industrial) {
-  //     errMsg += 'remarks is required!\n';
-  //   }
-  //   if (errMsg != "") {
-  //     this.presentToast(errMsg, 'danger')
-  //     return
-  //   }
-  //   console.log(this.formData)
-  //   try {
-  //     let params = {
-  //       visitor_name: this.formData.visitor_name,
-  //       visitor_contact_no: this.formData.visitor_contact_no,
-  //       visitor_type: 'walk_in',
-  //       visitor_vehicle: '',
-  //       block: this.formData.block,
-  //       unit: this.formData.unit,
-  //       family_id: this.formData.family_id,
-  //       project_id: this.project_id,
-  //       camera_id: '',
-  //       is_pre_entry: this.isFromScan,
-  //       entry_id: this.isFromScan ? this.searchData.id : '',
-  //       entry_type: this.isFromScan ? this.searchData.entry_type : '',
-  //       host: this.selectedHost,
-  //       remarks: this.formData.remarks,
-  //       identification_type: this.identificationType,
-  //       identification_number: this.nric_value,
-  //       pass_number: this.pass_number,
-  //       visitor_image: this.selectedImage,
-  //       ma_id: this.maId,
-  //       ma_form: this.maForm,
-  //     }
-  //     this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
-  //       res => {
-  //         console.log(res);
-  //         if (res.result.status_code == 200) {
-  //           if (openBarrier){
-  //             console.log("Barrier Opened")
-  //             this.presentToast('Walk in data has been successfully saved, and the barrier is now open!', 'success');
-  //           }else {
-  //             this.presentToast('Walk in data has been successfully saved to the system!', 'success');
-  //           }
-  //           this.resetPage()
-  //           this.routeAfterSubmit()
-  //         } else if (res.result.status_code === 205) {
-  //           if (openBarrier) {
-  //             this.presentToast('This data has been alerted on previous value and offence data automatically added. The barrier is now open!', 'success');
-  //           } else {
-  //             this.presentToast('This data has been alerted on previous value and offence data automatically added!', 'success');
-  //           }
-  //           this.resetPage()
-  //           this.routeAfterSubmit()
-  //         } else if (res.result.status_code === 405) {
-  //           this.presentToast(res.result.status_description, 'danger');
-  //           this.routeAfterSubmit()
-  //         } else if (res.result.status_code === 407) {
-  //           this.functionMain.presentToast(res.result.status_description, 'danger');
-  //         } else if (res.result.status_code === 206) {
-  //           this.functionMain.banAlert(res.result.status_description, this.formData.unit, this.selectedHost)
-  //         } else {
-  //           this.presentToast('An error occurred while attempting to save walk in data!', 'danger');
-  //         }
-  //       },
-  //       error => {
-  //         console.error('Error:', error);
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error('Unexpected error:', error);
-  //     this.presentToast('An unexpected error has occurred!', 'danger');
-  //   }
-
-  // }
 
   showWalk = false;
   showDrive = false;
@@ -635,7 +529,7 @@ export class WalkInPage implements OnInit {
           this.searchData = results.result.result[0]
           this.formData.visitor_name = this.searchData.visitor_name
           this.formData.visitor_contact_no = this.searchData.contact_number
-          this.formData.visitor_type = this.searchData.visitor_type
+          this.formData.visitor_type = this.searchData.is_ma ? this.searchData.selection_type : this.searchData.visitor_type
           this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
           this.formData.family_id = this.searchData.family_id
           this.selectedImage = this.searchData.visitor_image

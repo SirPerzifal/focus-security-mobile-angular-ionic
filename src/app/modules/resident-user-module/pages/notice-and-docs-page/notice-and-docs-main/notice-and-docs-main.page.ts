@@ -168,7 +168,8 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
             start_date: notice.start_date,
             end_date: notice.end_date,
             create_date: notice.create_date,
-            is_prioritize: notice.is_prioritize
+            is_prioritize: notice.is_prioritize,
+            doc_type: notice.doc_type
           }))
           .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0));
   

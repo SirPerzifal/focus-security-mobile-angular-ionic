@@ -1328,6 +1328,17 @@
             : {{ functionMain.returnNone(selectedApproval.rfid_tag) }}
           </p>
         </div>
+        <div
+          class="table-row"
+          *ngIf="selectedApproval.states === 'approved' && ['vehicle'].includes(approval_type) && project_config.is_industrial"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Side Code
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.side_code) }}
+          </p>
+        </div>
         <div class="table-row" *ngIf="['pet'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">Notes</p>
           <p class="ml-2 table-cell text-base text-black">
@@ -1535,12 +1546,26 @@
             <p class="text-base font-bold">RFID Tag Number</p>
           </div>
           <textarea
-            id="reason_ban_entry_message"
+            id="rfidTag"
             placeholder=""
             class="!border-none w-full rounded py-2 px-3 h-20 text-base"
             [(ngModel)]="rfid_tag"
             type="text"
-            name="reasonForbanning"
+            name="rfidTag"
+          >
+          </textarea>
+        </div>
+        <div class="w-full">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Side Code</p>
+          </div>
+          <textarea
+            id="sideCode"
+            placeholder=""
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
+            [(ngModel)]="side_code"
+            type="text"
+            name="sideCode"
           >
           </textarea>
         </div>
