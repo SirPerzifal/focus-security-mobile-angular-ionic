@@ -319,6 +319,11 @@ export class FacilityBookingMainPage implements OnInit {
     })
   }
 
+  userRole: string = '';
+  onChangeTypeOfUser(event: any) {
+    this.userRole = event;
+  }
+
   cancelBooking(bookingId: number) {
     this.presentCustomAlert(
       'Cancel Booking', 

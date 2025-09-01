@@ -2,6 +2,7 @@
   <app-header-inner-page
     [text]="'Facility Bookings'"
     [text_second]="subPageName"
+    (typeOfUser)="onChangeTypeOfUser($event)"
   ></app-header-inner-page>
 </ion-header>
 
@@ -455,7 +456,7 @@
                   <td class="w-[5%]">:</td>
                   <td>{{ booking.bookedBy }}</td>
                 </tr>
-                <tr class="h-1">
+                <tr *ngIf="userRole !== 'industrial'" class="h-1">
                   <td class="font-bold">Deposit Status</td>
                   <td class="w-[5%]">:</td>
                   <td>
