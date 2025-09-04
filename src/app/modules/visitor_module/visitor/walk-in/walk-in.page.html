@@ -64,6 +64,11 @@
             <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial" [isMandatory]="module_config.host"></app-m2m-selection>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-text-input #visitorWalkInUpCompanyName [id]="'visitor_walk_in_company_name'" [labelText]="'COMPANY NAME'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="company_name" [isMandatory]="module_config.company_name"></app-text-input>
+          </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
             <app-text-input #visitorWalkInUpPass [id]="'visitor_walk_in_pass_number'" [labelText]="'PASS NUMBER'"
               [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number" [isMandatory]="module_config.pass_number"></app-text-input>
@@ -140,6 +145,11 @@
           </div> -->
           <div class="w-full" *ngIf="project_config.is_industrial">
             <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isMandatory]="module_config.host"></app-m2m-selection>
+          </div>
+          <div class="w-full" *ngIf="project_config.is_industrial">
+            <app-text-input #visitorDriveInUpCompanyName [id]="'visitor_drive_in_company_name'" [labelText]="'COMPANY NAME'"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+              [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="company_name" [isMandatory]="module_config.company_name"></app-text-input>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
             <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"

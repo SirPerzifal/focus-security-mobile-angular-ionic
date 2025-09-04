@@ -41,16 +41,7 @@ export class WalkInPage implements OnInit {
       this.fromMa = true
       this.maForm = state
       this.maId = this.maForm.id
-      if (this.maForm.selection_type == 'drive_in') {
-        this.toggleShowDrive()
-        this.formData.visitor_vehicle = this.maForm.vehicle_number
-      } else {
-        this.toggleShowWalk()
-      }
-      this.formData.visitor_name = this.maForm.name
-      this.formData.visitor_name = this.maForm.name
-      this.formData.visitor_contact_no = this.maForm.contact_no
-
+      this.toggleShowQr()
     }  
   }
   
@@ -135,6 +126,7 @@ export class WalkInPage implements OnInit {
     this.contactHost = ''
     this.selectedNric = ''
     this.pass_number = ''
+    this.company_name = ''
     this.selectedImage = ''
   }
 
@@ -170,6 +162,9 @@ export class WalkInPage implements OnInit {
     }
     if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
+    }
+    if ((!this.company_name && this.module_config.company_name) && (this.project_config.is_industrial)) {
+      errMsg += 'Company name is required! \n'
     }
     if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
@@ -270,8 +265,6 @@ export class WalkInPage implements OnInit {
         this.isFromScan = false
       }
       this.showQrTrans = true
-      this.maId = false
-      this.maForm = false
       this.showDrive = false;
       this.showWalk = false;
       this.isHidden = true
@@ -519,11 +512,10 @@ export class WalkInPage implements OnInit {
   isProcess = false
   checkResult(){
     this.isProcess = true
-    this.clientMainService.getApi({id: this.scanResult}, '/vms/get/search_expected_visitor').subscribe({
+    this.clientMainService.getApi({id: this.scanResult, ma_id: this.maId}, '/vms/get/search_expected_visitor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.fromMa = false
           this.isFromScan = true
           this.stopScanner()
           this.searchData = results.result.result[0]
@@ -531,6 +523,7 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_contact_no = this.searchData.contact_number
           this.formData.visitor_type = this.searchData.is_ma ? this.searchData.selection_type : this.searchData.visitor_type
           this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
+          this.company_name = this.searchData.company_name ? this.searchData.company_name : ''
           this.formData.family_id = this.searchData.family_id
           this.selectedImage = this.searchData.visitor_image
           this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
@@ -646,6 +639,7 @@ export class WalkInPage implements OnInit {
   nric_value = ''
   selectedNric: any = ''
   pass_number = ''
+  company_name = ''
 
   selectedImage: any = ''
 

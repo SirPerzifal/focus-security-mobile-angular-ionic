@@ -384,6 +384,7 @@ export class ClientEventsDayViewPage implements OnInit {
       color: [] as string[],
       booking_id: event.event.booking_id
     }
+    this.booking_selected_name = event.event.booking_name
     this.selectedBookId = event.event.booking_id ? event.event.booking_id : 0
     this.selectedBook = {}
     this.selectedHost = event.event.host_ids
@@ -404,6 +405,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.isCoachData = true
     this.selectedStartDate = this.selectedDate;
     this.selectedEndDate = this.selectedDate;
+    this.EventsForm.color = ['#3b82f6', '#1d4ed8']
     const dateString = date.toString();
     // Buat objek Date dari string
     const dateObj = new Date(dateString);
@@ -586,16 +588,17 @@ export class ClientEventsDayViewPage implements OnInit {
             unit_ids: result.unit_ids,
             host_ids: result.host_ids,
             booking_id: result.booking_id,
+            booking_name: result.booking_name + ' (' + this.functionMain.convertDateExtend(result.booking_start_datetime) + ' - ' + this.functionMain.convertDateExtend(result.booking_stop_datetime) + ')',
             color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
             resizable: {
               beforeStart: false,
               afterEnd: false,
             },
           }));
-  
+
           // Ganti array Events dengan referensi baru agar Angular mendeteksi perubahan
           this.Events = [...newEvents];
-  
+
           console.log(this.Events);
         } else if (results.result.response_code == 402)  {
         } else {
@@ -686,6 +689,7 @@ export class ClientEventsDayViewPage implements OnInit {
     this.isRead = false
     this.selectedEndTime = ''
     this.selectedStartTime = ''
+    this.booking_selected_name = ''
   }
 
   async onCancel() {
@@ -792,6 +796,7 @@ export class ClientEventsDayViewPage implements OnInit {
       }
     });
   }
+  booking_selected_name = ''
 
 }
 

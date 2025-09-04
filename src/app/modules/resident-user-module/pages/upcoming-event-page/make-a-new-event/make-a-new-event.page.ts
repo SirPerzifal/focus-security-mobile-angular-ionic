@@ -165,6 +165,7 @@ export class MakeANewEventPage implements OnInit {
     });
   }
 
+  booking_selected_name = ''
   eventClicked(event: any): void {
     this.isAddEventClick = true
     this.isRead = true
@@ -191,6 +192,7 @@ export class MakeANewEventPage implements OnInit {
       is_update: false,
       booking_id: event.event.booking_id,
     }
+    this.booking_selected_name = event.event.booking_name
     this.selectedBook = {}
     this.selectedBookId = event.event.booking_id
     // this.BookingResult = []
@@ -449,6 +451,7 @@ export class MakeANewEventPage implements OnInit {
           unit_ids: result.unit_ids,
           host_ids: result.host_ids,
           booking_id: result.booking_id,
+          booking_name: result.booking_name + ' (' + this.functionMain.convertDateExtend(result.booking_start_datetime) + ' - ' + this.functionMain.convertDateExtend(result.booking_stop_datetime) + ')',
           color: { primary: result.secondary_color_hex_code, secondary: result.primary_color_hex_code },
           resizable: {
             beforeStart: false,
@@ -599,6 +602,7 @@ export class MakeANewEventPage implements OnInit {
       is_update: false,
       booking_id: 0,
     }
+    this.booking_selected_name = ''
     this.selectedHost = []
     this.isRead = false
     this.event_title = ''

@@ -5,6 +5,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
+// import { BarcodeScanner, BarcodeFormat, LensFacing } from '@capacitor-mlkit/barcode-scanning'
 
 @Component({
   selector: 'app-contractor-nric-scan',
@@ -18,6 +19,7 @@ export class ContractorNricScanPage implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.openScanner()
+      // this.mlkitOpenScanner()
     })
     this.loadProjectName()
   }
@@ -180,5 +182,21 @@ export class ContractorNricScanPage implements OnInit {
     console.log(event.target.value)
     this.modalController.dismiss({data: this.scanResult, min_digit: this.min_digit, max_digit: this.max_digit})
   }
+
+  // mlkitScan = ''
+  // async mlkitOpenScanner() {
+  //   this.mlkitScan = 'barcode-scanner-active'
+
+  //   const listener = await BarcodeScanner.addListener(
+  //     'barcodeScanned',
+  //     async result => {
+  //       console.log(result.barcode);
+  //     },
+  //   );
+
+  //   // Start the barcode scanner
+  //   await BarcodeScanner.startScan();
+
+  // }
 
 }

@@ -300,12 +300,12 @@ export class ClientApprovalsPage implements OnInit {
     }
   }
 
-  approveDetail(approval: any) {
+  approveDetail(approval: any, is_vehicle: any = false) {
     let errMsg = ''
-    if (!this.rfid_tag || (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5))) {
+    if (is_vehicle && (!this.rfid_tag || (this.rfid_tag != '' && (this.rfid_tag.length > 5 || this.rfid_tag.length < 5)))) {
       errMsg += "RFID tags can only be 5 digits! \n"
     }
-    if (!this.side_code) {
+    if (is_vehicle && !this.side_code) {
       errMsg += "Side code is required! \n"
     }
     if (errMsg) {

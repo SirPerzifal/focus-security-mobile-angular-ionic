@@ -144,7 +144,7 @@
           </div>
           <div
             class="w-full flex flex-col mb-2"
-            *ngIf="userType == 'industrial'"
+            *ngIf="userType == 'industrial' && !isRead"
           >
             <label class="block text-black font-bold mb-1 text-base"
               >Booking</label
@@ -166,6 +166,21 @@
                 functionMain.convertDateExtend(book.stop_datetime) }})
               </option>
             </select>
+          </div>
+          <div class="mb-2" *ngIf="userType == 'industrial' && isRead">
+            <label class="block text-black font-bold mb-1 text-base"
+              >Booking</label
+            >
+            <app-text-input
+              [id]="'new_event_title'"
+              [placeholder]="'Type your event title'"
+              [customClasses]="{'w-full':true}"
+              [type]="'text'"
+              [isReadonly]="true"
+              [customInputClasses]="{'w-full':true,'rounded-lg':true, 'py-2':true, 'px-3':true, 'h-12':true, 'outline-[#BDBDBD]':true, 'h-10':true, 'text-sm': true, 'border': false, 'cw-3:text-xs':true}"
+              [(ngModel)]="booking_selected_name"
+            >
+            </app-text-input>
           </div>
           <div class="w-full flex flex-col mb-2" *ngIf="isCoachData">
             <label class="block text-black font-bold mb-1 text-base"
