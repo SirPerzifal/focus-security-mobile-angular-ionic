@@ -109,7 +109,8 @@ export class VisitorInvitigFormPage implements OnInit {
       visitor_name: '', 
       contact_number: '', 
       contact_number_display: '', // Tambahkan field untuk display
-      vehicle_number: '' 
+      vehicle_number: '',
+      company_name: ''
     };
 
     const selectedCode: any = { 
@@ -164,6 +165,7 @@ export class VisitorInvitigFormPage implements OnInit {
           contact_number: contact_number, // Full number dengan country code
           contact_number_display: contact_number_display, // Number tanpa country code untuk display
           vehicle_number: invitee.vehicle_number || '',
+          company_name: invitee.company_name || ''
         };
       });
 
@@ -319,11 +321,12 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   addInvitee() {
-    const newInvitee: any = { 
+    const newInvitee: Invitee = { 
       visitor_name: '', 
       contact_number: '65', // Default dengan country code
       contact_number_display: '', // Kosong untuk display
-      vehicle_number: '' 
+      vehicle_number: '',
+      company_name: ''
     };
     
     // Tambahkan invitee baru ke list
@@ -499,7 +502,8 @@ export class VisitorInvitigFormPage implements OnInit {
         const submitData = this.inviteeFormList.map((invitee: any) => ({
           visitor_name: invitee.visitor_name,
           contact_number: invitee.contact_number,
-          vehicle_number: invitee.vehicle_number
+          vehicle_number: invitee.vehicle_number,
+          company_name: invitee.company_name
         }));
 
         this.mainApiResidentService.endpointMainProcess({

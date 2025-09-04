@@ -110,6 +110,21 @@
                 required
               />
             </div>
+            <div *ngIf="yserType === 'industrial'" class="w-full">
+              <div class="flex flex-row justify-start mt-2">
+                <p class="text-base font-bold cw-3:text-sm">
+                  Entry Company Name
+                </p>
+              </div>
+              <input
+                [id]="'invf_company_name_' + i"
+                name="company_name_{{i}}"
+                placeholder=""
+                class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 mt-1 text-base"
+                [(ngModel)]="inviteeFormList[i].company_name"
+                required
+              />
+            </div>
           </div>
         </div>
       </div>

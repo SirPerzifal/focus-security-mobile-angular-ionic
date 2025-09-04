@@ -56,4 +56,5 @@ export interface Invitee {
   vehicle_number: string;
   contact_number: string;
   contact_number_display: string;
+  company_name: string;
 }

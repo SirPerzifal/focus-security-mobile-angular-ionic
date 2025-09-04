@@ -39,7 +39,8 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
           this.historyData.some(history => 
             history.visitor_name === existing.visitor_name && 
             history.contact_number === existing.contact_number && 
-            history.vehicle_number === existing.vehicle_number
+            history.vehicle_number === existing.vehicle_number && 
+            history.company_name === existing.company_name
           )
         );
         this.existingInvitees = existingInvitees; // Tandai invitee yang sudah ada di form sebelumnya
@@ -79,13 +80,15 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
     console.log(this.existingInvitees.some(existingInvitee => 
       existingInvitee.visitor_name === invitee.visitor_name &&
       existingInvitee.contact_number === invitee.contact_number &&
-      existingInvitee.vehicle_number === invitee.vehicle_number
+      existingInvitee.vehicle_number === invitee.vehicle_number &&
+      existingInvitee.company_name === invitee.company_name
     ));
     
     return this.existingInvitees.some(existingInvitee => 
       existingInvitee.visitor_name === invitee.visitor_name &&
       existingInvitee.contact_number === invitee.contact_number &&
-      existingInvitee.vehicle_number === invitee.vehicle_number
+      existingInvitee.vehicle_number === invitee.vehicle_number &&
+      existingInvitee.company_name === invitee.company_name
     );
   }
 
@@ -123,7 +126,8 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
       selected => 
         selected.visitor_name === invitee.visitor_name && 
         selected.contact_number === invitee.contact_number && 
-        selected.vehicle_number === invitee.vehicle_number
+        selected.vehicle_number === invitee.vehicle_number &&
+        selected.company_name === invitee.company_name
     );
   
     // Cek apakah invitee ada di existingInvitees
@@ -131,7 +135,8 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
       existing => 
         existing.visitor_name === invitee.visitor_name && 
         existing.contact_number === invitee.contact_number && 
-        existing.vehicle_number === invitee.vehicle_number
+        existing.vehicle_number === invitee.vehicle_number &&
+        existing.company_name === invitee.company_name
     );
   
     if (index > -1) {
@@ -161,7 +166,8 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
           const testExisting = this.existingInvitees.some(existingInvitee => 
             existingInvitee.visitor_name === invitee.visitor_name &&
             existingInvitee.contact_number === invitee.contact_number &&
-            existingInvitee.vehicle_number === invitee.vehicle_number
+            existingInvitee.vehicle_number === invitee.vehicle_number &&
+            existingInvitee.company_name === invitee.company_name
           );
           if (testExisting) {
             console.log('testExisting', testExisting);
