@@ -255,7 +255,9 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
                 entryType: item['entry_type'],
                 invite_id: item['invite_id'],
                 is_entry: item['is_entry'],
-                expectedDays: item['expected_days_of_visit']
+                expectedDays: item['expected_days_of_visit'],
+                state: item['states'],
+                reason_for_rejection: item['reason_for_rejection'] || null
               });
               this.isLoading = false
             });
@@ -273,6 +275,19 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
       );
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  
+  getBookingStatusLabel(status: string): string {
+    switch(status) {
+      case 'approved': return 'Approved';
+      case 'requested': return 'Requested';
+      case 'pending_approval': return 'Pending Approval';
+      case 'pending_payment': return 'Pending Payment';
+      case 'rejected': return 'Rejected';
+      case 'cancel': return 'Cancelled';
+      default: return status;
     }
   }
 
