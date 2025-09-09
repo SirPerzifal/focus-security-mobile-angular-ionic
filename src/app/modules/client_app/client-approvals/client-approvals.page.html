@@ -196,6 +196,14 @@
                   ')[0] : '-' }}
                 </p>
               </div>
+              <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Entry Date
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ functionMain.convertNewDateTZ(approval.entry_date).split(' ')[0]}}
+                </p>
+              </div>
               <div class="table-row" *ngIf="['move_permit', 'renovation'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">
                   Start Date
@@ -359,21 +367,27 @@
                   : {{ functionMain.returnNone(approval.schedule_type) }}
                 </p>
               </div>
-              <div
-                class="table-row"
-                *ngIf="['move_permit', 'renovation'].includes(approval_type)"
-              >
+              <div class="table-row"
+                *ngIf="['contractor'].includes(approval_type)">
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Name
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ functionMain.returnNone(approval.contractor_name) }}
+                </p>
+              </div>
+              <div class="table-row"
+                *ngIf="['move_permit', 'renovation', 'contractor'].includes(approval_type)">
                 <p class="font-bold table-cell w-1/2 text-base text-black">
                   Company Name
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.contractor_company_name)
-                  }}
+                  : {{ functionMain.returnNone(approval.contractor_company_name) }}
                 </p>
               </div>
               <div
                 class="table-row"
-                *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension'].includes(approval_type)"
+                *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension', 'contractor'].includes(approval_type)"
               >
                 <p class="font-bold table-cell w-1/2 text-base text-black">
                   Vehicle Number
@@ -464,13 +478,24 @@
               </div>
               <div
                 class="table-row"
-                *ngIf="['employee'].includes(approval_type)"
+                *ngIf="['employee', 'contractor'].includes(approval_type)"
               >
                 <p class="font-bold table-cell w-1/2 text-base text-black">
                   Contact Number
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
                   : {{ functionMain.returnNone(approval.family_mobile_number) }}
+                </p>
+              </div>
+              <div
+                class="table-row"
+                *ngIf="['contractor'].includes(approval_type)"
+              >
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Total Visit Day
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ functionMain.returnNone(approval.expected_number_of_visit) }}
                 </p>
               </div>
               <div class="table-row" *ngIf="['events'].includes(approval_type)">
@@ -694,6 +719,14 @@
             ')[0] : '-' }}
           </p>
         </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Entry Date
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.convertNewDateTZ(selectedApproval.entry_date).split(' ')[0]}}
+          </p>
+        </div>
         <div class="table-row" *ngIf="['move_permit', 'renovation'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Start Date
@@ -712,6 +745,15 @@
             : {{ selectedApproval.schedule_end_date ?
             functionMain.convertNewDateTZ(selectedApproval.schedule_end_date).split('
             ')[0] : '-' }}
+          </p>
+        </div>
+        <div class="table-row"
+          *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Name
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.contractor_name) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
@@ -876,7 +918,7 @@
         </div>
         <div
           class="table-row"
-          *ngIf="['move_permit', 'renovation'].includes(approval_type)"
+          *ngIf="['move_permit', 'renovation', 'contractor'].includes(approval_type)"
         >
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Company Name
@@ -914,7 +956,7 @@
         </div>
         <div
           class="table-row"
-          *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension', 'move_permit', 'renovation'].includes(approval_type)"
+          *ngIf="['overnight', 'vehicle', 'parking', 'vehicle_extension', 'move_permit', 'renovation', 'contractor'].includes(approval_type)"
         >
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Vehicle Number
@@ -983,7 +1025,7 @@
         </div> -->
         <div
           class="table-row"
-          *ngIf="['family', 'employee', 'overnight', 'coach'].includes(approval_type)"
+          *ngIf="['family', 'employee', 'overnight', 'coach', 'contractor'].includes(approval_type)"
         >
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Contact Number
@@ -1098,6 +1140,54 @@
           <p class="ml-2 table-cell text-base text-black">
             : {{
             functionMain.returnNone(selectedApproval.employee_card_number)}}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Total Visit Day
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.expected_number_of_visit) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Entry Title
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.entry_detail_title) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Entry Message
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.entry_detail_message) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Entry Type
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.entry_type) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Type Of Work
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.type_of_work) }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="['contractor'].includes(approval_type)">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Host
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ functionMain.returnNone(selectedApproval.host.name) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['events'].includes(approval_type)">
