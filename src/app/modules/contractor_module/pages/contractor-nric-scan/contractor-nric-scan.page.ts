@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Html5Qrcode } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Preferences } from '@capacitor/preferences';
@@ -61,6 +61,18 @@ export class ContractorNricScanPage implements OnInit {
   scannerId = 'reader'
   scanResult = ''
   openScanner() {
+    const config = {
+      fps: 10,
+      qrbox: {
+        width: 450,
+        height: 150,
+      },
+      formatsToSupport: [
+        Html5QrcodeSupportedFormats.CODE_39,
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.QR_CODE,
+      ]
+    }
     setTimeout(() => {
       this.htmlScanner = new Html5Qrcode(this.scannerId);
       console.log("Scanner Initialized:", this.htmlScanner);
@@ -69,13 +81,7 @@ export class ContractorNricScanPage implements OnInit {
         {
           facingMode: "environment"
         },
-        {
-          fps: 10,
-          qrbox: {
-            width: 300,
-            height: 300,
-          }
-        },
+        config,
         (decodedText) => {
           if (this.isOpen) {
             this.scanResult = decodedText

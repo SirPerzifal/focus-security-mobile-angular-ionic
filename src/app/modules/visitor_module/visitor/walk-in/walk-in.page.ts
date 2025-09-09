@@ -179,6 +179,7 @@ export class WalkInPage implements OnInit {
     try {
       let params = {
         visitor_name: this.formData.visitor_name,
+        company_name: this.company_name,
         visitor_contact_no: this.formData.visitor_contact_no,
         visitor_type: this.showDrive ? 'drive_in' : 'walk_in',
         visitor_vehicle: this.showDrive ? this.formData.visitor_vehicle : '',
