@@ -125,6 +125,47 @@
                 required
               />
             </div>
+            <div *ngIf="yserType === 'industrial'" class="w-full flex flex-col">
+              <div class="flex flex-row justify-start mt-2">
+                <p class="text-base cw-3:text-sm font-bold">Host</p>
+              </div>
+              <div
+                class="flex flex-row space-x-2 items-start my-2 w-full !text-base !cw-3:text-sm"
+              >
+                <app-radio-check-input-case
+                  [type]="'radio'"
+                  [id]="'myself' + i"
+                  [name]="'entry' + i"
+                  [checkedText]="entryCheck[i] === 'myself'"
+                  [value]="'myself'"
+                  [text]="'Myself'"
+                  (valueEmit)="changeHost($event, i)"
+                ></app-radio-check-input-case>
+                <app-radio-check-input-case
+                  [type]="'radio'"
+                  [id]="'multiple_host' + i"
+                  [name]="'entry' + i"
+                  [checkedText]="entryCheck[i] === 'other_host'"
+                  [value]="'other_host'"
+                  [text]="'Other Host'"
+                  (valueEmit)="changeHost($event, i)"
+                ></app-radio-check-input-case>
+              </div>
+              <div
+                *ngIf="entryCheck[i] === 'other_host'"
+                class="w-full mb-2 text-base cw-3:text-sm"
+              >
+                <app-m2m-selection
+                  [Arrays]="Host"
+                  (outputValue)="hostChange($event, i)"
+                  [divOuterClass]="'min-h-12 text-sm rounded border-black'"
+                  [customTextClass]="'p-0 text-sm'"
+                  [Selected]="inviteeFormList[i].host_ids"
+                  [labelText]="'Host'"
+                >
+                </app-m2m-selection>
+              </div>
+            </div>
           </div>
         </div>
       </div>

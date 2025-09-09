@@ -57,4 +57,5 @@ export interface Invitee {
   contact_number: string;
   contact_number_display: string;
   company_name: string;
+  host_ids: [] // Pastikan ini array kosong
 }

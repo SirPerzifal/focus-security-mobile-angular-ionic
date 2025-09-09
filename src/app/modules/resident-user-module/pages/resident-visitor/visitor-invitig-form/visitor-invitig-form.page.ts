@@ -6,8 +6,9 @@ import { Contacts } from '@capacitor-community/contacts';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
-import { FormData, Invitee } from 'src/models/resident/resident.model';
+import { Estate, FormData, Invitee } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
 
 @Component({
   selector: 'app-visitor-invitig-form',
@@ -70,7 +71,8 @@ export class VisitorInvitigFormPage implements OnInit {
     private alertController: AlertController,
     private mainApiResidentService: MainApiResidentService,
     public functionMain: FunctionMainService,
-    private webRtcService: WebRtcService
+    private webRtcService: WebRtcService,
+    private storage: StorageService
   ) {
     this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
@@ -110,7 +112,8 @@ export class VisitorInvitigFormPage implements OnInit {
       contact_number: '', 
       contact_number_display: '', // Tambahkan field untuk display
       vehicle_number: '',
-      company_name: ''
+      company_name: '',
+      host_ids: [] // Pastikan ini array kosong
     };
 
     const selectedCode: any = { 
@@ -121,82 +124,6 @@ export class VisitorInvitigFormPage implements OnInit {
     this.selectedCountry.push(selectedCode)
     this.isFormVisible = true; // Show form since we have at least one invitee
     this.addInviteeText = 'Add More Invitees'; // Update button text
-  }
-
-  initializeInviteeForm(params?: any) {
-    // Cek state dari navigasi saat ini
-    const navigation = this.router.getCurrentNavigation();
-    const navigationState = navigation?.extras.state;
-  
-    // Cek state dari route
-    let selectedInvitees: any[] = [];
-  
-    // Prioritaskan state dari navigasi
-    if (navigationState && navigationState['selectedInvitees']) {
-      selectedInvitees = navigationState['selectedInvitees'];
-      console.log(selectedInvitees);
-    } 
-    // Jika tidak ada, cek params
-    else if (params && params['selectedInvitees']) {
-      try {
-        selectedInvitees = JSON.parse(params['selectedInvitees']);
-      } catch (error) {
-        console.error('Error parsing selectedInvitees', error);
-      }
-    }
-  
-    // Proses data invitee
-    if (selectedInvitees && selectedInvitees.length > 0) {
-      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
-        let contact_number = invitee.contact_number || '';
-        let contact_number_display = '';
-        let country_code = '65';
-  
-        // Validasi untuk contact_number
-        if (contact_number.startsWith('6') && contact_number.length > 2) {
-          country_code = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
-          contact_number_display = contact_number.substring(2); // Sisa untuk display
-        } else {
-          contact_number_display = contact_number;
-        }
-  
-        return {
-          visitor_name: invitee.visitor_name || '',
-          contact_number: contact_number, // Full number dengan country code
-          contact_number_display: contact_number_display, // Number tanpa country code untuk display
-          vehicle_number: invitee.vehicle_number || '',
-          company_name: invitee.company_name || ''
-        };
-      });
-
-      // Set selectedCountry berdasarkan contact number
-      this.selectedCountry = selectedInvitees.map((invitee: any) => {
-        let contact_number = invitee.contact_number || '';
-        let selectedCountry = '65'; // default
-  
-        // Validasi untuk contact_number
-        if (contact_number.startsWith('6') && contact_number.length > 2) {
-          selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
-        }
-  
-        return {
-          selected_code: selectedCountry
-        };
-      });
-      
-      this.addInviteeText = 'Add More Invitees';
-    }
-    
-    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
-    while (this.selectedCountry.length < this.inviteeFormList.length) {
-      this.selectedCountry.push({ selected_code: '65' });
-    }
-  
-    if (this.inviteeFormList.length > 0) {
-      this.isFormVisible = true; // Show form if there are invitees
-    }
-  
-    this.isFormInitialized = true;
   }
 
   backToVisitors() {
@@ -326,7 +253,8 @@ export class VisitorInvitigFormPage implements OnInit {
       contact_number: '65', // Default dengan country code
       contact_number_display: '', // Kosong untuk display
       vehicle_number: '',
-      company_name: ''
+      company_name: '',
+      host_ids: [] // Pastikan ini array kosong
     };
     
     // Tambahkan invitee baru ke list
@@ -482,8 +410,36 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   yserType: string = '';
-  onChangeTypeOfUser(event: any) {
-    this.yserType = event
+
+  familyId: number = 0;
+
+  entryCheck: { [key: number]: string } = {}; // Ubah jadi object untuk tracking per index
+  Host: any = []
+  selectedHost: any = []
+
+  loadHost() {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/family').subscribe((value: any) => {
+      console.log(value)
+      this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+    })
+  }
+
+  changeHost(event: any, index: number) {
+    const selectedValue = event.value;
+    this.entryCheck[index] = selectedValue;
+
+    if (selectedValue === 'myself') {
+      // Set host_ids hanya berisi familyId
+      this.inviteeFormList[index].host_ids = [this.familyId];
+    } else if (selectedValue === 'other_host') {
+      // Reset host_ids untuk memungkinkan pemilihan host lain
+      this.inviteeFormList[index].host_ids = [];
+    }
+  }
+
+  hostChange(event: any, index: number) {
+    // Set host_ids dengan nilai yang dipilih dari m2m-selection
+    this.inviteeFormList[index].host_ids = event;
   }
 
   onSubmit(from?: string) {
@@ -503,7 +459,8 @@ export class VisitorInvitigFormPage implements OnInit {
           visitor_name: invitee.visitor_name,
           contact_number: invitee.contact_number,
           vehicle_number: invitee.vehicle_number,
-          company_name: invitee.company_name
+          company_name: invitee.company_name,
+          host_ids: invitee.host_ids
         }));
 
         this.mainApiResidentService.endpointMainProcess({
@@ -624,5 +581,141 @@ export class VisitorInvitigFormPage implements OnInit {
     });
   
     await alert.present();
+  }
+
+  // UPDATE COMPLETE method initializeInviteeForm():
+  initializeInviteeForm(params?: any) {
+    // Cek state dari navigasi saat ini
+    const navigation = this.router.getCurrentNavigation();
+    const navigationState = navigation?.extras.state;
+
+    // Cek state dari route
+    let selectedInvitees: any[] = [];
+
+    // Prioritaskan state dari navigasi
+    if (navigationState && navigationState['selectedInvitees']) {
+      selectedInvitees = navigationState['selectedInvitees'];
+      console.log(selectedInvitees);
+    } 
+    // Jika tidak ada, cek params
+    else if (params && params['selectedInvitees']) {
+      try {
+        selectedInvitees = JSON.parse(params['selectedInvitees']);
+      } catch (error) {
+        console.error('Error parsing selectedInvitees', error);
+      }
+    }
+
+    // Proses data invitee
+    if (selectedInvitees && selectedInvitees.length > 0) {
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
+        console.log(invitee);
+        
+        let contact_number = invitee.contact_number || '';
+        let contact_number_display = '';
+        let country_code = '65';
+
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          country_code = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+          contact_number_display = contact_number.substring(2); // Sisa untuk display
+        } else {
+          contact_number_display = contact_number;
+        }
+
+        return {
+          visitor_name: invitee.visitor_name || '',
+          contact_number: contact_number, // Full number dengan country code
+          contact_number_display: contact_number_display, // Number tanpa country code untuk display
+          vehicle_number: invitee.vehicle_number || '',
+          company_name: invitee.company_name || '',
+          host_ids: invitee.host_ids || [] // PERBAIKAN: Pertahankan data asli, jangan paksa array kosong
+        };
+      });
+
+      // Set selectedCountry berdasarkan contact number
+      this.selectedCountry = selectedInvitees.map((invitee: any) => {
+        let contact_number = invitee.contact_number || '';
+        let selectedCountry = '65'; // default
+
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+        }
+
+        return {
+          selected_code: selectedCountry
+        };
+      });
+      
+      this.addInviteeText = 'Add More Invitees';
+    }
+    
+    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
+    while (this.selectedCountry.length < this.inviteeFormList.length) {
+      this.selectedCountry.push({ selected_code: '65' });
+    }
+
+    if (this.inviteeFormList.length > 0) {
+      this.isFormVisible = true; // Show form if there are invitees
+    }
+
+    this.isFormInitialized = true;
+    
+    // PERBAIKAN: Setup entryCheck setelah semua data dimuat dan familyId tersedia
+    setTimeout(() => {
+      this.setupEntryChecks();
+    }, 500); // Increase timeout to ensure familyId is loaded
+  }
+
+  // Perbaiki method setupEntryChecks() untuk handle case ketika yserType belum diset:
+  private setupEntryChecks() {
+    this.inviteeFormList.forEach((invitee: any, index: number) => {
+      const hostIdsCount = invitee.host_ids?.length || 0;
+      
+      if (hostIdsCount > 1) {
+        this.entryCheck[index] = "other_host";
+      } else if (hostIdsCount === 1 && invitee.host_ids[0] === this.familyId) {
+        this.entryCheck[index] = "myself";
+      } else if (hostIdsCount === 1 && invitee.host_ids[0] !== this.familyId) {
+        this.entryCheck[index] = "other_host";
+      } else {
+        this.entryCheck[index] = "";
+      }
+    });
+  }
+
+  // Tambahkan method untuk re-setup entryChecks saat yserType berubah:
+  onChangeTypeOfUser(event: any) {
+    this.yserType = event;
+    
+    if (this.yserType === 'industrial') {
+      this.loadHost();
+      this.loadFamilyId();
+      
+      // Re-setup entryChecks setelah familyId dimuat
+      setTimeout(() => {
+        this.setupEntryChecks();
+      }, 500);
+    }
+  }
+
+  // Perbaiki method loadFamilyId() untuk langsung setup entryChecks:
+  loadFamilyId() {
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if (value) {
+        this.storage.decodeData(value).then((value: any) => {
+          if (value) {
+            const estate = JSON.parse(value) as Estate;
+            this.familyId = estate.family_id;
+            
+            // Setup entryChecks setelah familyId dimuat
+            if (this.inviteeFormList.length > 0) {
+              this.setupEntryChecks();
+            }
+          }
+        });
+      }
+    });
   }
 }
