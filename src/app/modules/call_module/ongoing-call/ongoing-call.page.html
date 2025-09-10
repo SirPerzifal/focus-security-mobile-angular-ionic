@@ -1,12 +1,18 @@
-<ion-content>
+<ion-content class="h-full">
 
-  <div class="relative d-flex w-100 h-full bg-black">
+  <video id="remote-video" autoplay class="h-full w-full object-cover hidden"></video>
+  <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden" ></video>
+  <div class="relative d-flex w-100 h-full bg-white" *ngIf="!showMinimize">
     <!-- Local video -->
-    <video id="remote-video" autoplay class="h-full w-full object-cover hidden"></video>
-    <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden" ></video>
     <div class="h-full w-full bg-white pt-4 pb-48">
       <div class="flex flex-col h-full justify-between items-center">
-        <div class="flex flex-col justify-center items-center">
+        <div class="flex flex-col justify-center w-full items-center">
+          <div class="w-full flex flex-row justify-start">
+            <svg width="30px" height="30px" viewBox="0 0 24 24" class="ml-4" fill="#121212" xmlns="http://www.w3.org/2000/svg" (click)="actionMinimize()">
+              <path d="M20.8571 9.75C21.2714 9.75 21.6071 9.41421 21.6071 9C21.6071 8.58579 21.2714 8.25 20.8571 8.25H16.8107L22.5303 2.53033C22.8232 2.23744 22.8232 1.76256 22.5303 1.46967C22.2374 1.17678 21.7626 1.17678 21.4697 1.46967L15.75 7.18934V3.14286C15.75 2.72864 15.4142 2.39286 15 2.39286C14.5858 2.39286 14.25 2.72864 14.25 3.14286V9C14.25 9.41421 14.5858 9.75 15 9.75H20.8571Z" fill="#1C274C"/>
+              <path d="M3.14286 14.25C2.72864 14.25 2.39286 14.5858 2.39286 15C2.39286 15.4142 2.72864 15.75 3.14286 15.75H7.18934L1.46967 21.4697C1.17678 21.7626 1.17678 22.2374 1.46967 22.5303C1.76256 22.8232 2.23744 22.8232 2.53033 22.5303L8.25 16.8107V20.8571C8.25 21.2714 8.58579 21.6071 9 21.6071C9.41421 21.6071 9.75 21.2714 9.75 20.8571V15C9.75 14.5858 9.41421 14.25 9 14.25H3.14286Z" fill="#1C274C"/>
+            </svg>
+          </div>
           <span *ngIf="isReceiver" class="font-bold text-black mt-4">{{ getCallerName() }}</span>
           <span *ngIf="!isReceiver" class="font-bold text-black mt-4">{{ getReceiverName() }}</span>
           <ng-container *ngIf="audioStatus | async as status">
@@ -63,5 +69,31 @@
         </div>
       </div>
     </div>
+
+    
   </div>
+
+  <div class="w-full h-full flex flex-row justify-between items-center" *ngIf="showMinimize">
+      <div class="w-1/3 flex flex-row justify-center">
+        <div class="rounded-full w-14 h-14 bg-[#d3d3d3] flex items-center justify-center" (click)="actionMinimize()">
+          <svg width="30px" height="30px" viewBox="0 0 24 24" fill="#d3d3d3" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.1429 1.25C15.7286 1.25 15.3929 1.58579 15.3929 2C15.3929 2.41421 15.7286 2.75 16.1429 2.75H20.1893L14.4697 8.46967C14.1768 8.76256 14.1768 9.23744 14.4697 9.53033C14.7626 9.82322 15.2374 9.82322 15.5303 9.53033L21.25 3.81066V7.85714C21.25 8.27136 21.5858 8.60714 22 8.60714C22.4142 8.60714 22.75 8.27136 22.75 7.85714V2C22.75 1.58579 22.4142 1.25 22 1.25H16.1429Z" fill="#1C274C"/>
+            <path d="M7.85714 22.75C8.27136 22.75 8.60714 22.4142 8.60714 22C8.60714 21.5858 8.27136 21.25 7.85714 21.25H3.81066L9.53033 15.5303C9.82322 15.2374 9.82322 14.7626 9.53033 14.4697C9.23744 14.1768 8.76256 14.1768 8.46967 14.4697L2.75 20.1893V16.1429C2.75 15.7286 2.41421 15.3929 2 15.3929C1.58579 15.3929 1.25 15.7286 1.25 16.1429V22C1.25 22.4142 1.58579 22.75 2 22.75H7.85714Z" fill="#1C274C"/>
+            </svg>
+        </div>
+      </div>
+      <div class="w-1/3 flex flex-col justify-center items-center">
+        <span *ngIf="isReceiver" class="font-bold text-black w-full truncate text-center">{{ getCallerName() }}</span>
+        <span *ngIf="!isReceiver" class="font-bold text-black w-full truncate text-center">{{ getReceiverName() }}</span>
+        <ng-container *ngIf="audioStatus | async as status">
+          <span *ngIf="status !== 'Audio connected'" class="text-black mt-2 w-full truncate text-center">{{ status }}</span>
+          <span *ngIf="status === 'Audio connected'" class="text-black font-bold mt-2 w-full truncate text-center">{{ formattedTime }}</span>
+        </ng-container>
+      </div>
+      <div class="w-1/3 flex flex-row justify-center">
+        <div class="rounded-full w-14 h-14 bg-[#D32F2F] flex items-center justify-center" (click)="endCall()">
+          <svg fill="#d3d3d3" width="30px" height="30px" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 28.0235 17.6055 C 17.8751 17.6055 8.3361 19.7383 3.5783 24.4961 C 1.4454 26.6524 .3439 29.2539 .4845 32.3945 C .5782 34.2929 1.1642 35.9805 2.2657 37.0820 C 3.1095 37.9258 4.2345 38.3945 5.5704 38.1836 L 14.2657 36.7070 C 15.5783 36.4961 16.4923 36.0976 17.0783 35.4883 C 17.8517 34.7383 18.0861 33.6133 18.0861 32.1367 L 18.1095 29.7695 C 18.1095 29.3945 18.2735 29.1133 18.4845 28.8789 C 18.7188 28.5976 19.0704 28.4805 19.3283 28.4102 C 20.9220 28.0351 24.1798 27.6836 28.0235 27.6836 C 31.8908 27.6836 35.1251 27.9648 36.7188 28.4336 C 36.9532 28.5039 37.2814 28.6445 37.5392 28.8789 C 37.7735 29.1133 37.9142 29.3711 37.9142 29.7461 L 37.9376 32.1367 C 37.9610 33.6133 38.1954 34.7383 38.9454 35.4883 C 39.5548 36.0976 40.4688 36.4961 41.7814 36.7070 L 50.3593 38.1602 C 51.7422 38.3945 52.9144 37.9024 53.8283 37.0117 C 54.9299 35.9336 55.5390 34.2695 55.5861 32.3711 C 55.6561 29.2070 54.4609 26.6055 52.3518 24.4961 C 47.5705 19.7383 38.1720 17.6055 28.0235 17.6055 Z"/></svg>
+        </div>
+      </div>
+    </div>
 </ion-content>

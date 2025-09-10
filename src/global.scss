@@ -609,3 +609,28 @@ ion-content#resident-content {
   font-weight: 700;
   font-size: 14px;
 }
+
+.non-blocking-modal {
+  pointer-events: none; // biar modal container tidak intercept event
+
+  ion-modal ion-backdrop {
+    pointer-events: none !important; 
+    opacity: 0 !important;
+  
+  }
+}
+
+.non-blocking-modal .modal-wrapper {
+  pointer-events: auto; // tapi komponen modal tetap bisa di klik
+}
+
+.minimize-call-modal {
+  --height: 10%;
+  --border-radius: 4px;
+  --padding: 20px;
+  --max-width: 80%;
+
+  align-items: flex-start; /* posisi di atas */
+  justify-content: center; 
+  margin-top: 20px;
+}

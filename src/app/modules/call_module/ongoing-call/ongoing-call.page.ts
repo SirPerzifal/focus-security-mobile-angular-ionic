@@ -33,6 +33,7 @@ export class OngoingCallPage implements OnInit {
     // this.webrtc.startLocalStream();
     this.webrtc.regenerateVideo();
     this.startTimer();
+
   }
 
   toggleCam(){
@@ -101,5 +102,16 @@ export class OngoingCallPage implements OnInit {
       clearInterval(this.intervalId);
     }
   }
+
+  showMinimize = false
+
+  actionMinimize() {
+    this.showMinimize = !this.showMinimize
+    if (this.showMinimize) {
+      this.webrtc.actionMinimize()
+    } else {
+      this.webrtc.actionMaximize()
+    }
+  }  
 
 }

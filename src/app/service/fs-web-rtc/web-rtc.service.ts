@@ -140,13 +140,21 @@ export class WebRtcService extends ApiService{
         component,
         componentProps,
         backdropDismiss: false,
+        showBackdrop: false, // backdrop hilang
+        cssClass: 'non-blocking-modal',
       });
 
       modal.onDidDismiss().then(() => {
         this.modalLock = false;
       });
-
-      await modal.present();
+      
+      await modal.present().then(() => {
+        setTimeout(() => {
+          const outerDiv = document.querySelector('ion-modal.non-blocking-modal');
+          const backdrop = outerDiv?.shadowRoot?.querySelector('ion-backdrop')
+          backdrop?.remove()
+        }, 1000)
+      });;
     } catch (e) {
       console.error('Gagal membuka modal:', e);
       this.modalLock = false;
@@ -1133,6 +1141,16 @@ export class WebRtcService extends ApiService{
 
   updateAudioStatus(status: string) {
     this.audioStatus.next(status);
+  }
+
+  actionMinimize() {
+    const outerDiv = document.querySelector('ion-modal.non-blocking-modal');
+    outerDiv?.classList.add('minimize-call-modal')
+  }
+
+  actionMaximize() {
+    const outerDiv = document.querySelector('ion-modal.non-blocking-modal');
+    outerDiv?.classList.remove('minimize-call-modal')
   }
   
 }
