@@ -89,6 +89,11 @@
             <td class="w-[5%]">:</td>
             <td>{{ record.schedule_date ? functionMain.convertNewDateTZ(record.schedule_date).split(' ')[1] : '-' }}</td>
           </tr>
+          <tr *ngIf="['ma_visitor'].includes(pageType) && record.is_bypass">
+            <td class="font-bold w-2/5">BYPASS REMARKS</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.bypass_remarks) }}</td>
+          </tr>
           <!-- <tr *ngIf="['move_in', 'renov'].includes(pageType)">
             <td class="font-bold w-2/5">EXIT DATE & TIME</td>
             <td class="w-[5%]">:</td>

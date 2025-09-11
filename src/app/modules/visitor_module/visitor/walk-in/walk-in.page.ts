@@ -40,7 +40,7 @@ export class WalkInPage implements OnInit {
       console.log(state)
       this.fromMa = true
       this.maForm = state
-      this.maId = this.maForm.id
+      this.maOgId = this.maForm.id
       this.toggleShowQr()
     }  
   }
@@ -78,6 +78,7 @@ export class WalkInPage implements OnInit {
   };
 
   maForm: any = false
+  maOgId: any = false
   maId: any = false
   fromMa = false
 
@@ -200,7 +201,10 @@ export class WalkInPage implements OnInit {
         ma_id: this.maId,
         ma_form: this.maForm,
         bypass_ban: bypass_ban,
+        is_bypass: this.is_bypass,
+        bypass_remarks: this.bypass_remarks,
       }
+      console.log(params)
       this.clientMainService.getApi(params, '/vms/post/add_visitor').subscribe(
         res => {
           console.log(res);
@@ -279,10 +283,10 @@ export class WalkInPage implements OnInit {
 
   toggleShowWalk() {
     if (!this.showQrTrans && !this.showDriveTrans) {
-      if ((this.showDrive && !this.isFromScan) && !this.maId) {
+      if ((this.showDrive && !this.isFromScan) && !this.maOgId) {
         this.resetForm() 
       }
-      if ((this.showQr && this.showClose) && !this.maId) {
+      if ((this.showQr && this.showClose) && !this.maOgId) {
         this.stopScanner()
       }
       this.showWalkTrans = true
@@ -298,13 +302,13 @@ export class WalkInPage implements OnInit {
   toggleShowDrive() {
     if (!this.showQrTrans && !this.showWalkTrans) {
       console.log(this.isFromScan)
-      console.log(this.maId)
-      if ((!this.showDrive && !this.isFromScan) && !this.maId) {
+      console.log(this.maOgId)
+      if ((!this.showDrive && !this.isFromScan) && !this.maOgId) {
         this.resetForm() 
         this.refreshVehicle()
       }
       if (this.showQr && this.showClose) {
-        if (!this.isFromScan && !this.maId){
+        if (!this.isFromScan && !this.maOgId){
           this.refreshVehicle()
         }
         this.stopScanner()
@@ -513,47 +517,15 @@ export class WalkInPage implements OnInit {
   isProcess = false
   checkResult(){
     this.isProcess = true
-    this.clientMainService.getApi({id: this.scanResult, ma_id: this.maId}, '/vms/get/search_expected_visitor').subscribe({
+    this.clientMainService.getApi({id: this.scanResult, ma_id: this.maOgId}, '/vms/get/search_expected_visitor').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.isFromScan = true
-          this.stopScanner()
           this.searchData = results.result.result[0]
-          this.formData.visitor_name = this.searchData.visitor_name
-          this.formData.visitor_contact_no = this.searchData.contact_number
-          this.formData.visitor_type = this.searchData.is_ma ? this.searchData.selection_type : this.searchData.visitor_type
-          this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
-          this.company_name = this.searchData.company_name ? this.searchData.company_name : ''
-          this.formData.family_id = this.searchData.family_id
-          this.selectedImage = this.searchData.visitor_image
-          this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
-          if (this.searchData.identification_type && this.searchData.identification_number) {
-            this.is_id_disabled = true
+          if (!this.searchData.id_check && this.searchData.is_ma) {
+            this.openModal()
           } else {
-            this.is_id_disabled = false
-          }
-          this.contactUnit = ''
-          if (!this.searchData.is_ma) {
-            if (this.project_config.is_industrial) {
-              this.contactHost = this.searchData.industrial_host_ids ? this.searchData.industrial_host_ids : (this.searchData.industrial_host_id ? this.searchData.industrial_host_id[0] : false)
-            } else {
-              this.formData.block = this.searchData.block_id[0]
-              this.loadUnit().then(() => {
-                this.contactUnit = this.searchData.unit_id[0]
-              })
-            }
-          } else {
-            this.maId = this.searchData.id
-            this.maForm = {company_name: this.searchData.company_name}
-            this.formData.visitor_name = this.searchData.name
-          }
-          if (this.formData.visitor_type == 'walk_in') {
-            console.log("SHOW WALK HEY")
-            this.toggleShowWalk()
-          } else {
-            console.log("SHOW WALK HEY 222")
-            this.toggleShowDrive()
+            this.successScan()
           }
         } else {
           this.functionMain.presentToast(results.result.error, 'danger');
@@ -570,6 +542,47 @@ export class WalkInPage implements OnInit {
     });
   }
 
+  successScan() {
+    console.log("HEY CHECK HERE SUCCESS")
+    this.stopScanner()
+    this.isFromScan = true
+    this.formData.visitor_name = this.searchData.visitor_name
+    this.formData.visitor_contact_no = this.searchData.contact_number
+    this.formData.visitor_type = this.searchData.is_ma ? this.searchData.selection_type : this.searchData.visitor_type
+    this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
+    this.company_name = this.searchData.company_name ? this.searchData.company_name : ''
+    this.formData.family_id = this.searchData.family_id
+    this.selectedImage = this.searchData.visitor_image
+    this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
+    if (this.searchData.identification_type && this.searchData.identification_number) {
+      this.is_id_disabled = true
+    } else {
+      this.is_id_disabled = false
+    }
+    this.contactUnit = ''
+    if (!this.searchData.is_ma) {
+      if (this.project_config.is_industrial) {
+        this.contactHost = this.searchData.industrial_host_ids ? this.searchData.industrial_host_ids : (this.searchData.industrial_host_id ? this.searchData.industrial_host_id[0] : false)
+      } else {
+        this.formData.block = this.searchData.block_id[0]
+        this.loadUnit().then(() => {
+          this.contactUnit = this.searchData.unit_id[0]
+        })
+      }
+    } else {
+      this.maId = this.searchData.id
+      this.maForm = {company_name: this.searchData.company_name}
+      this.formData.visitor_name = this.searchData.name
+    }
+    console.log(this.formData)
+    if (this.formData.visitor_type == 'walk_in') {
+      console.log("SHOW WALK HEY")
+      this.toggleShowWalk()
+    } else {
+      console.log("SHOW WALK HEY 222")
+      this.toggleShowDrive()
+    }
+  }
   onBackHome() {
     let back_url = 'home-vms'
     let params = {}
@@ -663,5 +676,32 @@ export class WalkInPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  isOpenModal = false
+  is_bypass = false
+  bypass_remarks = ''
+  bypassId() {
+    if (!this.is_bypass) {
+      this.functionMain.presentToast('The proceed anyway must be checked', 'warning')
+      return
+    }
+    this.closeModal().then(() => {
+      this.successScan()
+      console.log(this.is_bypass, this.bypass_remarks)
+    })
+  }
+
+  openModal() {
+    console.log("OPEN HEY")
+    this.stopScanner()
+    this.isOpenModal = true
+    this.is_bypass = false
+    this.bypass_remarks = ''
+  }
+
+  async closeModal(reset: boolean = true) {
+    this.startScanner()
+    this.isOpenModal = false
   }
 }

@@ -177,4 +177,26 @@
 
   </div>
 
+  <ion-modal id="text-modal" [isOpen]="isOpenModal" (didDismiss)="closeModal()">
+    <ng-template class="w-full">
+      <div class="flex flex-col justify-center space-y-5 m-10">
+        <b class="text-2xl font-bold break-words whitespace-normal w-full text-left">THE SCANNED DATA AND PREVIOUSLY SELECTED DATA DO NOT MATCH.</b>
+        <div class="flex flex-row justify-start space-x-5 items-center">
+          <input id="visitor_bypass_ma" name="visitor_bypass_ma" type="checkbox" class="rounded w-7 h-7 mt-1 text-[var(--ion-color-primary)]" [(ngModel)]="is_bypass">
+          <label class="text-2xl font-bold mt-1" for="visitor_bypass_ma">PROCEED ANYWAY*</label>
+        </div>
+        <div class="flex flex-row justify-start space-x-2 w-full">
+          <div class="w-full">
+            <app-text-input #textInput [id]="'bypass_remarks'" [placeholder]="'BYPASS REMARKS'" [customClasses]="{'w-full ':true}"
+              [type]="'text'" [(ngModel)]="bypass_remarks" [autoComplete]="'off'" [showPlaceholder]="true"
+              [customInputClasses]="{'w-3/5': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+            </app-text-input>
+          </div>
+          <button class="h-20 w-2/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white"
+            (click)="bypassId()">BYPASS</button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
 </ion-content>
