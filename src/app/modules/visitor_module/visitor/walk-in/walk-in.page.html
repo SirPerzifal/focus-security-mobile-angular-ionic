@@ -61,7 +61,7 @@
               [labelText]="textUnit" [Selected]="contactUnit" [showButton]="project_config.is_industrial"></app-m2m-selection>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial" [isMandatory]="module_config.host"></app-m2m-selection>
+            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="false" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [showButton]="project_config.is_industrial" [isMandatory]="module_config.host"></app-m2m-selection>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
             <app-text-input #visitorWalkInUpCompanyName [id]="'visitor_walk_in_company_name'" [labelText]="'COMPANY NAME'"
@@ -144,7 +144,7 @@
             </select>
           </div> -->
           <div class="w-full" *ngIf="project_config.is_industrial">
-            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isMandatory]="module_config.host"></app-m2m-selection>
+            <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="false" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [isMandatory]="module_config.host"></app-m2m-selection>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial">
             <app-text-input #visitorDriveInUpCompanyName [id]="'visitor_drive_in_company_name'" [labelText]="'COMPANY NAME'"

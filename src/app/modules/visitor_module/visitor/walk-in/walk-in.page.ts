@@ -122,7 +122,7 @@ export class WalkInPage implements OnInit {
     this.formData.remarks = ''
     this.formData.unit = ''
     this.contactUnit = ''
-    this.selectedHost = ''
+    this.selectedHost = false
     this.contactHost = ''
     this.selectedNric = ''
     this.pass_number = ''
@@ -536,7 +536,7 @@ export class WalkInPage implements OnInit {
           this.contactUnit = ''
           if (!this.searchData.is_ma) {
             if (this.project_config.is_industrial) {
-              this.contactHost = this.searchData.industrial_host_id[0]
+              this.contactHost = this.searchData.industrial_host_ids ? this.searchData.industrial_host_ids : (this.searchData.industrial_host_id ? this.searchData.industrial_host_id[0] : false)
             } else {
               this.formData.block = this.searchData.block_id[0]
               this.loadUnit().then(() => {
@@ -601,7 +601,7 @@ export class WalkInPage implements OnInit {
   }
 
   Host: any[] = [];
-  selectedHost: string = '';
+  selectedHost: any = '';
   contactHost = ''
   loadHost() {
     this.contactHost = ''
@@ -614,7 +614,7 @@ export class WalkInPage implements OnInit {
   }
 
   onHostChange(event: any) {
-    this.selectedHost = event[0]
+    this.selectedHost = event
   }
 
   setFromScan(event: any) {
