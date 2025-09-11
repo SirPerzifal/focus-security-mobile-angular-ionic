@@ -28,22 +28,26 @@ export class VisitorInvitigFormPage implements OnInit {
     {
       country: 'SG',
       code: '65',
-      digit: 8,
+      minDigit: 8, 
+      maxDigit: 8,
     },
     {
       country: 'ID',
       code: '62',
-      digit: 12,
+      minDigit: 9,
+      maxDigit: 13,
     },
     {
-      country: 'MY',
+      country: 'MY', 
       code: '60',
-      digit: 9,
+      minDigit: 10,
+      maxDigit: 11, 
     },
     {
       country: 'IN',
       code: '91',
-      digit: 9,
+      minDigit: 10,
+      maxDigit: 10,
     },
   ]
 
@@ -328,10 +332,25 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   async onChangePhoneNumber(event: any, index: any) {
+    const proceedSelectedCountryCode = this.selectedCountry[index]?.selected_code;
     const inputValue = event.target.value;
-    
-    if (inputValue.length < 4) {
-      this.functionMain.presentToast('Phone is not minimum character', 'danger');
+
+    // Find the selected country code object from the countryCodes array
+    const selectedCountry = this.countryCodes.find(country => country.code === proceedSelectedCountryCode);
+
+    if (selectedCountry) {
+      const min = selectedCountry.minDigit;
+      const max = selectedCountry.maxDigit;
+
+      if (inputValue.length < min) { 
+        this.functionMain.presentToast('Phone is not minimum character', 'danger');
+        return;
+      } else if (inputValue.length > max) { 
+        this.functionMain.presentToast('Phone is reach maximum character', 'danger'); 
+        return;
+      }
+    } else {
+      this.functionMain.presentToast('Invalid country code selected', 'danger');
       return;
     }
 
@@ -382,7 +401,7 @@ export class VisitorInvitigFormPage implements OnInit {
     // Cek jika ada nomor kosong
     const hasEmptyNumbers = phoneNumbers.some((num: any) => !num || num.length <= 2);
     if (hasEmptyNumbers) {
-      this.functionMain.presentToast('Please fill all phone numbers', 'danger');
+      // this.functionMain.presentToast('Please fill all phone numbers', 'danger');
       return false;
     }
     
@@ -443,6 +462,22 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   onSubmit(from?: string) {
+    let errMsg = '';
+    this.inviteeFormList.forEach((invitee: any, index: number) => {
+      if (invitee.visitor_name.trim() === '') {
+        errMsg += `Form ${index + 1}: Please fill visitor Name!\n`;
+      }
+      if (invitee.contact_number.trim() === '') {
+        errMsg += `Form ${index + 1}: Please fill contact number!\n`;
+      }
+      if (!invitee.host_ids || invitee.host_ids.length === 0 && this.yserType === 'industrial') {
+        errMsg += `Form ${index + 1}: Please choose host!\n`;
+      }
+    });
+    if (errMsg !== '') {
+      this.functionMain.presentToast(errMsg, 'danger');
+      return;
+    }
     const isValid = this.inviteeFormList.every((invitee: any) => 
       invitee.visitor_name.trim() !== '' && 
       invitee.contact_number.trim() !== ''
@@ -520,8 +555,6 @@ export class VisitorInvitigFormPage implements OnInit {
         console.error('Unexpected error:', error);
         this.functionMain.presentToast(String(error), 'danger');
       }
-    } else if (!isValid) {
-      this.functionMain.presentToast('Please fill all needed field.', 'danger');
     }
   }
 

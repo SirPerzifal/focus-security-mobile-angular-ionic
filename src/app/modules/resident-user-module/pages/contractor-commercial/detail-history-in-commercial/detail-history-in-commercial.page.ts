@@ -27,6 +27,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     date_of_visit: '',
     entry_type: '',
     entry_title: '',
+    entry_continous_number_of_days: '',
     entry_message: '',
     // is_provide_unit: false,
   }
@@ -214,6 +215,10 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
     this.dataForReinvite.entry_title = value;
   }
 
+  entryContinousNumberOfDaysChange(value: string) {
+    this.dataForReinvite.entry_continous_number_of_days = value;
+  }
+
   onSubmitNext() {
     let errMsg = '';
     if (this.dataForReinvite.date_of_visit == '') {
@@ -233,6 +238,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
         date_of_visit: this.dataForReinvite.date_of_visit,
         entry_type: this.dataForReinvite.entry_type,
         entry_title: this.dataForReinvite.entry_title,
+        continous_number_of_days: this.dataForReinvite.entry_continous_number_of_days ? Number(this.dataForReinvite.entry_continous_number_of_days) : 0,
         entry_message: this.dataForReinvite.entry_message,
         // is_provide_unit: this.dataForReinvite.is_provide_unit,
       }, 'post/contractor_reinvite_visitor').subscribe((response) => {
@@ -245,6 +251,7 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
             date_of_visit: '',
             entry_type: '',
             entry_title: '',
+            entry_continous_number_of_days: '',
             entry_message: '',
             // is_provide_unit: false,
           }
