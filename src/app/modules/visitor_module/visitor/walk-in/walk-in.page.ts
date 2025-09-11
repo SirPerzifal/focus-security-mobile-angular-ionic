@@ -25,10 +25,10 @@ import { Html5Qrcode } from "html5-qrcode";
   ]
 })
 export class WalkInPage implements OnInit {
-  
+
   constructor(
-    private paramsActiveFromCoaches: ActivatedRoute, 
-    private toastController: ToastController, 
+    private paramsActiveFromCoaches: ActivatedRoute,
+    private toastController: ToastController,
     private router: Router,
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
@@ -41,16 +41,17 @@ export class WalkInPage implements OnInit {
       this.fromMa = true
       this.maForm = state
       this.maOgId = this.maForm.id
+      this.loadClientHost()
       this.toggleShowQr()
-    }  
+    }
   }
-  
+
   module_field = 'visitor'
   module_config: any = {}
   ngOnInit() {
     this.paramsActiveFromCoaches.queryParams.subscribe(params => {
-      if (params['showDrive']) { 
-        this.showDrive = true; 
+      if (params['showDrive']) {
+        this.showDrive = true;
       }
     });
     this.loadProjectId().then(() => {
@@ -563,6 +564,7 @@ export class WalkInPage implements OnInit {
     if (!this.searchData.is_ma) {
       if (this.project_config.is_industrial) {
         this.contactHost = this.searchData.industrial_host_ids ? this.searchData.industrial_host_ids : (this.searchData.industrial_host_id ? this.searchData.industrial_host_id[0] : false)
+        console.log(this.contactHost)
       } else {
         this.formData.block = this.searchData.block_id[0]
         this.loadUnit().then(() => {
@@ -572,6 +574,7 @@ export class WalkInPage implements OnInit {
     } else {
       this.maId = this.searchData.id
       this.maForm = {company_name: this.searchData.company_name}
+      this.contactHost = this.searchData.industrial_host_id ? this.searchData.industrial_host_id[0] : false
       this.formData.visitor_name = this.searchData.name
     }
     console.log(this.formData)
@@ -614,12 +617,23 @@ export class WalkInPage implements OnInit {
   }
 
   Host: any[] = [];
+  clientHost: any[] = []
   selectedHost: any = '';
   contactHost = ''
   loadHost() {
     this.contactHost = ''
     this.clientMainService.getApi({ project_id: this.project_id }, '/industrial/get/family').subscribe((value: any) => {
       this.Host = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
+      if (this.selectedHost) {
+        this.contactHost = this.selectedHost
+      }
+    })
+  }
+
+  loadClientHost() {
+    this.contactHost = ''
+    this.clientMainService.getApi({ project_id: this.project_id, is_only_client: true }, '/industrial/get/family').subscribe((value: any) => {
+      this.clientHost = value.result.result.map((item: any) => ({ id: item.id, name: item.host_name }));
       if (this.selectedHost) {
         this.contactHost = this.selectedHost
       }
@@ -668,10 +682,14 @@ export class WalkInPage implements OnInit {
     this.functionMain.getModuleField(this.project_id, this.module_field).then((result) => {
       this.module_config = result
     })
-    if (this.project_config.is_industrial) {
-      this.loadHost()
+    if (this.maOgId) {
+      this.loadClientHost()
     } else {
-      this.loadBlock()
+      if (this.project_config.is_industrial) {
+        this.loadHost()
+      } else {
+        this.loadBlock()
+      }
     }
     setTimeout(() => {
       event.target.complete()
