@@ -106,6 +106,15 @@
                   <td>{{ historyData.reason_for_banning || '-' }}</td>
                   <!-- Menampilkan '-' jika reason_for_banning kosong -->
                 </tr>
+                <tr
+                  class="h-6"
+                  *ngIf="historyData.company_name && userType === 'industrial'"
+                >
+                  <td class="w-[60%] font-bold">Company Name</td>
+                  <td class="w-[10%]">:</td>
+                  <td>{{ historyData.company_name || '-' }}</td>
+                  <!-- Menampilkan '-' jika company_name kosong -->
+                </tr>
               </table>
             </div>
             <div

@@ -132,7 +132,7 @@
           placeholder=""
           [disabled]="pageForWhat === 'editData' && !formData.reject_reason && disableForm"
           [(ngModel)]="contactValue"
-          (keyup)="onKeyUp($event)"
+          (change)="onKeyUp($event)"
           name="contry_code"
           style="border: 1px solid #6b7280"
         />

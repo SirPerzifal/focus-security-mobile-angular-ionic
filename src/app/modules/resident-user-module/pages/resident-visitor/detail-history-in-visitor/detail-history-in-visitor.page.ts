@@ -47,7 +47,8 @@ export class DetailHistoryInVisitorPage implements OnInit {
     delivery_type: string,
     vehicle_type: string,
     banned: boolean,
-    reason_for_banning: string
+    reason_for_banning: string,
+    company_name: string,
   };
 
   formData = {

@@ -171,6 +171,7 @@ export class ResidentHomePagePage implements OnInit {
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
             this.loadMenusConfig();
+            this.uploadNewProfile();
             this.getNotificationPermission(estate.family_id);
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
@@ -344,10 +345,10 @@ export class ResidentHomePagePage implements OnInit {
       if (result.result.response_code === 200) {
         this.isLoading = false
         this.longButtondata = result.result.result.long_button_data.filter((longButton: any) => {
-          return longButton.active === true; // Memfilter polling yang dimulai setelah hari ini
+          return longButton.active === true;
         });
         this.squareButton = result.result.result.square_button.filter((squareButton: any) => {
-          return squareButton.active === true; // Memfilter polling yang dimulai setelah hari ini
+          return squareButton.active === true;
         });
         console.log(this.squareButton);
         
@@ -416,16 +417,16 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   private blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = (reader.result as string).split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 
   uploadNewProfile() {
     this.mainApiResident.endpointMainProcess({

@@ -28,22 +28,26 @@ export class ContractorInvitingFormPage implements OnInit {
     {
       country: 'SG',
       code: '65',
-      digit: 8,
+      minDigit: 8, 
+      maxDigit: 8,
     },
     {
       country: 'ID',
       code: '62',
-      digit: 12,
+      minDigit: 9,
+      maxDigit: 13,
     },
     {
-      country: 'MY',
+      country: 'MY', 
       code: '60',
-      digit: 9,
+      minDigit: 10,
+      maxDigit: 11, 
     },
     {
       country: 'IN',
       code: '91',
-      digit: 9,
+      minDigit: 10,
+      maxDigit: 10,
     },
   ]
 
@@ -518,10 +522,25 @@ export class ContractorInvitingFormPage implements OnInit {
   }
 
   async onChangePhoneNumber(event: any, index: any) {
+    const proceedSelectedCountryCode = this.selectedCountry[index]?.selected_code;
     const phoneValue = event.target.value;
-    
-    if (phoneValue.length < 4) {
-      this.functionMain.presentToast('Phone is not minimum character', 'danger');
+
+    // Find the selected country code object from the countryCodes array
+    const selectedCountry = this.countryCodes.find(country => country.code === proceedSelectedCountryCode);
+
+    if (selectedCountry) {
+      const min = selectedCountry.minDigit;
+      const max = selectedCountry.maxDigit;
+
+      if (phoneValue.length < min) { 
+        this.functionMain.presentToast('Phone is not minimum character', 'danger');
+        return;
+      } else if (phoneValue.length > max) { 
+        this.functionMain.presentToast('Phone is reach maximum character', 'danger'); 
+        return;
+      }
+    } else {
+      this.functionMain.presentToast('Invalid country code selected', 'danger');
       return;
     }
 

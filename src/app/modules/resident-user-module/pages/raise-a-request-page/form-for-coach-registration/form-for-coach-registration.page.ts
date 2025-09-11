@@ -80,18 +80,27 @@ export class FormForCoachRegistrationPage implements OnInit {
   countryCodes: any[] = [
     {
       country: 'SG',
-      code: 65,
-      digit: 8,
+      code: '65',
+      minDigit: 8, 
+      maxDigit: 8,
     },
     {
       country: 'ID',
-      code: 62,
-      digit: 12,
+      code: '62',
+      minDigit: 9,
+      maxDigit: 13,
     },
     {
-      country: 'MY',
-      code: 60,
-      digit: 9,
+      country: 'MY', 
+      code: '60',
+      minDigit: 10,
+      maxDigit: 11, 
+    },
+    {
+      country: 'IN',
+      code: '91',
+      minDigit: 10,
+      maxDigit: 10,
     },
   ]
   coachingType: any = [];
@@ -120,7 +129,7 @@ export class FormForCoachRegistrationPage implements OnInit {
   }
   selectedDate: string = '';
   minDate: string = '';
-  contactNumberDefault: string | null = null;
+  contactNumberDefault: string = 'null';
   countryCode: number = 65;
   formSent = {
     nameCoach: '',
@@ -505,7 +514,29 @@ export class FormForCoachRegistrationPage implements OnInit {
     } else if (type === 'name') {
       this.formSent.nameCoach = event;
     } else if (type === 'contact_number') {
+      console.log(this.countryCode);
+      
+      const proceedSelectedCountryCode = this.countryCode;
       this.contactNumberDefault = event.target.value;
+
+      // Find the selected country code object from the countryCodes array
+      const selectedCountry = this.countryCodes.find(country => country.code === String(proceedSelectedCountryCode));
+
+      if (selectedCountry) {
+        const min = selectedCountry.minDigit;
+        const max = selectedCountry.maxDigit;
+
+        if (this.contactNumberDefault.length < min) {
+          this.functionMain.presentToast('Phone is not minimum character', 'danger');
+          return;
+        } else if (this.contactNumberDefault.length > max) {
+          this.functionMain.presentToast('Phone is reach maximum character', 'danger');
+          return;
+        }
+      } else {
+        this.functionMain.presentToast('Invalid country code selected', 'danger');
+        return;
+      }
       if (this.countryCode && this.contactNumberDefault !== null) {
         const countryData = this.countryCodes.find((code: any) => code.code === this.countryCode);
         const minMaxValue = countryData ? countryData.digit : 8;

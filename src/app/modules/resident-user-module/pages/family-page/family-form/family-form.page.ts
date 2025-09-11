@@ -26,17 +26,26 @@ export class FamilyFormPage implements OnInit {
     {
       country: 'SG',
       code: '65',
-      digit: 8,
+      minDigit: 8, 
+      maxDigit: 8,
     },
     {
       country: 'ID',
       code: '62',
-      digit: 12,
+      minDigit: 9,
+      maxDigit: 13,
     },
     {
-      country: 'MY',
+      country: 'MY', 
       code: '60',
-      digit: 9,
+      minDigit: 10,
+      maxDigit: 11, 
+    },
+    {
+      country: 'IN',
+      code: '91',
+      minDigit: 10,
+      maxDigit: 10,
     },
   ]
 
@@ -172,8 +181,28 @@ export class FamilyFormPage implements OnInit {
   }
   onChange: (value: string) => void = () => {};
   
-  onKeyUp(event: KeyboardEvent): void {
-    const inputValue = (event.target as HTMLInputElement).value;
+  onKeyUp(event: any): void {
+    const inputValue = event.target.value;
+    const proceedSelectedCountryCode = this.selectedCode;
+
+    // Find the selected country code object from the countryCodes array
+    const selectedCountry = this.countryCodes.find(country => country.code === proceedSelectedCountryCode);
+
+    if (selectedCountry) {
+      const min = selectedCountry.minDigit;
+      const max = selectedCountry.maxDigit;
+
+      if (inputValue.length < min) { 
+        this.functionMain.presentToast('Phone is not minimum character', 'danger');
+        return;
+      } else if (inputValue.length > max) { 
+        this.functionMain.presentToast('Phone is reach maximum character', 'danger'); 
+        return;
+      }
+    } else {
+      this.functionMain.presentToast('Invalid country code selected', 'danger');
+      return;
+    }
     this.contactValue = inputValue;
     this.formData.mobile_number = this.combinedValue;
     this.onChange(this.combinedValue);
