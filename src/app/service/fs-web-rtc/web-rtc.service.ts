@@ -235,7 +235,9 @@ export class WebRtcService extends ApiService {
     });
   }
 
+  isReceiver = false
   async showOngoingCallModal(isReceiver: boolean) {
+    this.isReceiver = isReceiver
     const topModal = await this.modalController.getTop();
     if (topModal) {
       try {
@@ -457,9 +459,21 @@ export class WebRtcService extends ApiService {
 
   }
 
-  async openGate(intercom_id: any) {
-    console.log("EMITTED")
-    this.socket.emit('intercom-open-gate', { intercom_id: intercom_id });
+  async openGate(intercom_id: any, is_from_call: any = false) {
+    console.log(this.receiverId, this.callerId)
+    console.log(this.isReceiver ? this.callerId : this.receiverId)
+    console.log('receiver:', this.receiverSocketId, 'caller', this.callerSocketId)
+    if (is_from_call) {
+      console.log(this.callerId)
+      this.socket.emit('intercom-open-gate', { intercom_id: this.isReceiver ? this.callerId : this.receiverId });
+      // this.socket.emit('end-call', {
+      //   receiverSocketId: this.receiverSocketId,
+      //   callerSocketId: this.callerSocketId
+      // });
+    } else {
+      console.log("EMITTED")
+      this.socket.emit('intercom-open-gate', { intercom_id: intercom_id });
+    }
   }
 
   async closeGate(intercom_id: any) {
@@ -641,6 +655,7 @@ export class WebRtcService extends ApiService {
 
     this.callerName = this.userName;
     this.callerId = this.userId;
+    console.log(receiverId)
     this.socket.emit('offer', {
       offerObj: offer,
       receiverPhone: receiverPhone,
@@ -659,6 +674,7 @@ export class WebRtcService extends ApiService {
   }
 
   async handleOffer(offer: any) {
+    console.log(offer)
     await this.startLocalStream();
     if (!this.peerConnection) {
       this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
@@ -755,6 +771,7 @@ export class WebRtcService extends ApiService {
   async handleSenderPendingCall(data: any) {
     this.receiverSocketId = data.receiverSocketId;
     this.receiverId = data.receiverId;
+    console.log('pending', this.receiverId)
 
     for (const candidate of this.callerpendingCandidates) {
       this.socket.emit('ice-candidate', candidate);
@@ -1027,6 +1044,8 @@ export class WebRtcService extends ApiService {
     }
 
     if (this.socket) {
+      console.log(this.receiverId, this.callerId)
+      console.log('receiver:', this.receiverSocketId, 'caller', this.callerSocketId)
       this.socket.emit('end-call', {
         receiverSocketId: this.receiverSocketId,
         callerSocketId: this.callerSocketId
@@ -1089,6 +1108,16 @@ export class WebRtcService extends ApiService {
     }
   }
 
+  getLocalCam() {
+    console.log('local cam', this.localStream.getVideoTracks(), (this.localStream.getVideoTracks().length > 0 ? this.localStream.getVideoTracks()[0].enabled : false))
+    return this.localStream.getVideoTracks().length > 0 ? this.localStream.getVideoTracks()[0].enabled : false
+  }
+
+  getRemoteCam() {
+    console.log('remote cam', this.remoteStream.getVideoTracks(), (this.remoteStream.getVideoTracks().length > 0 ? this.remoteStream.getVideoTracks()[0].enabled : false))
+    return this.remoteStream.getVideoTracks().length > 0 ? this.remoteStream.getVideoTracks()[0].enabled : false
+  }
+
   muteRemoteSpeaker() {
     const videoElement: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
     if (videoElement) {
@@ -1097,6 +1126,7 @@ export class WebRtcService extends ApiService {
   }
 
   async handleReceiverInfo(data: any) {
+    console.log('handle receiver', data)
     this.callerId = data.callerId;
     this.receiverId = data.receiverId;
     this.callerName = data.callerName;
@@ -1142,10 +1172,18 @@ export class WebRtcService extends ApiService {
   }
 
   getSenderProfilePic() {
-    return `${this.baseUrl}/web/image/fs.residential.family/${this.callerId}/image_profile`;
+    if (this.callerId.toString().includes('Intercom')) {
+      return `${this.baseUrl}/web/image/fs.residential.family/${0}/image_profile`;
+    } else {
+      return `${this.baseUrl}/web/image/fs.residential.family/${this.callerId}/image_profile`;
+    }
   }
   getReceiverProfilePic() {
-    return `${this.baseUrl}/web/image/fs.residential.family/${this.receiverId}/image_profile`;
+    if (this.receiverId.toString().includes('Intercom')) {
+      return `${this.baseUrl}/web/image/fs.residential.family/${0}/image_profile`;
+    } else {
+      return `${this.baseUrl}/web/image/fs.residential.family/${this.receiverId}/image_profile`;
+    }
   }
 
   updateAudioStatus(status: string) {
@@ -1278,6 +1316,11 @@ export class WebRtcService extends ApiService {
     console.log(this.callerId, this.receiverId)
     this.mediaRecorder
     this.mediaRecorder.stop();
+  }
+
+  getIsFromIntercom() {
+    let id = this.isReceiver ? this.callerId : this.receiverId
+    return id ? id.toString().includes('Intercom') : false
   }
 
 }

@@ -1,12 +1,12 @@
 <ion-content class="h-full ">
 
-  <video id="remote-video" autoplay class="h-full w-full object-cover hidden"></video>
-  <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden" ></video>
-  <div class="relative d-flex w-100 h-full bg-white" *ngIf="!showMinimize">
+  <video id="remote-video" autoplay class="h-full w-full object-cover" [ngClass]="getRemoteCam() && !showMinimize ? '' : 'hidden'"></video>
+  <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden"></video>
+  <div class="relative d-flex w-100 bg-white" [ngClass]="getRemoteCam() ? '' : 'h-full'" *ngIf="!showMinimize">
     <!-- Local video -->
-    <div class="h-full w-full bg-white pt-4 pb-48">
+    <div class="h-full w-full bg-white" [ngClass]="getRemoteCam() ? '' : 'pt-4 pb-48'">
       <div class="flex flex-col h-full justify-between items-center">
-        <div class="flex flex-col justify-center w-full items-center">
+        <div class="flex flex-col justify-center w-full items-center" [ngClass]="getRemoteCam() ? 'fixed top-0 z[999] mt-5' : ''">
           <div class="w-full flex flex-row justify-start">
             <svg width="30px" height="30px" viewBox="0 0 24 24" class="ml-4" fill="#121212" xmlns="http://www.w3.org/2000/svg" (click)="actionMinimize()">
               <path d="M20.8571 9.75C21.2714 9.75 21.6071 9.41421 21.6071 9C21.6071 8.58579 21.2714 8.25 20.8571 8.25H16.8107L22.5303 2.53033C22.8232 2.23744 22.8232 1.76256 22.5303 1.46967C22.2374 1.17678 21.7626 1.17678 21.4697 1.46967L15.75 7.18934V3.14286C15.75 2.72864 15.4142 2.39286 15 2.39286C14.5858 2.39286 14.25 2.72864 14.25 3.14286V9C14.25 9.41421 14.5858 9.75 15 9.75H20.8571Z" fill="#1C274C"/>
@@ -24,8 +24,10 @@
           <img [src]="getSenderProfilePic()" class="w-full h-full" *ngIf="isReceiver">
           <img [src]="getReceiverProfilePic()" class="w-full h-full" *ngIf="!isReceiver">
         </div> -->
+        <div class="w-full flex flex-row justify-center" *ngIf="!getRemoteCam()">
           <img [src]="getSenderProfilePic()" class="max-w-1/2 max-h-40" *ngIf="isReceiver">
           <img [src]="getReceiverProfilePic()" class="max-w-1/2 max-h-40" *ngIf="!isReceiver">
+        </div>
         <div></div>
       </div>
     </div>
@@ -62,6 +64,11 @@
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68219 5.56134C10.0533 4.64576 10.9513 4 12 4C13.3807 4 14.5 5.11929 14.5 6.5V10.3792L9.68219 5.56134ZM12.7605 12.8822L9.5 9.62179V10.5C9.5 11.8807 10.6193 13 12 13C12.2651 13 12.5207 12.9587 12.7605 12.8822Z" fill="#D32F2F"/>
             <path d="M9.68219 5.56134L8.97509 6.26845L8.50647 5.79984L8.75544 5.18566L9.68219 5.56134ZM14.5 10.3792H15.5V12.7934L13.7929 11.0863L14.5 10.3792ZM12.7605 12.8822L13.4676 12.1751L14.6285 13.3361L13.0643 13.835L12.7605 12.8822ZM9.5 9.62179H8.5V7.20758L10.2071 8.91469L9.5 9.62179ZM8.75544 5.18566C9.27431 3.90569 10.5302 3 12 3V5C11.3723 5 10.8324 5.38583 10.6089 5.93702L8.75544 5.18566ZM12 3C13.933 3 15.5 4.567 15.5 6.5H13.5C13.5 5.67157 12.8284 5 12 5V3ZM15.5 6.5V10.3792H13.5V6.5H15.5ZM10.3893 4.85424L15.2071 9.67204L13.7929 11.0863L8.97509 6.26845L10.3893 4.85424ZM12.0533 13.5893L8.79289 10.3289L10.2071 8.91469L13.4676 12.1751L12.0533 13.5893ZM8.5 10.5V9.62179H10.5V10.5H8.5ZM12 14C10.067 14 8.5 12.433 8.5 10.5H10.5C10.5 11.3284 11.1716 12 12 12V14ZM13.0643 13.835C12.7274 13.9424 12.3695 14 12 14V12C12.1608 12 12.3139 11.975 12.4566 11.9295L13.0643 13.835Z" fill="#D32F2F"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M8.46291 13.7293C8.31338 13.1976 7.76117 12.8878 7.22951 13.0373C6.69785 13.1869 6.38808 13.7391 6.5376 14.2707C7.17394 16.5333 8.82364 18.063 11.0003 18.42V21C11.0003 21.5523 11.448 22 12.0003 22C12.5525 22 13.0003 21.5523 13.0003 21V18.42C13.7841 18.2914 14.4996 18.0108 15.124 17.5986L13.6608 16.1355C13.1713 16.3753 12.6119 16.5 12.0003 16.5C10.2727 16.5 8.9625 15.5056 8.46291 13.7293ZM15.7806 13.3054C16.0279 13.0495 16.4044 12.9342 16.771 13.0373C17.3027 13.1869 17.6124 13.7391 17.4629 14.2707C17.4108 14.456 17.3519 14.6363 17.2865 14.8114L15.7806 13.3054Z" fill="#D32F2F"/>
+          </svg>
+        </div>
+        <div class="rounded-full w-14 h-14 bg-[#d3d3d3] flex items-center justify-center" (click)="openIntercomGate()" *ngIf="getIsFromIntercom()">
+          <svg width="30px" height="30px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 0L3 2V14H1V16H15V14H13V2H11V14H9V0ZM6.75 9C7.16421 9 7.5 8.55229 7.5 8C7.5 7.44772 7.16421 7 6.75 7C6.33579 7 6 7.44772 6 8C6 8.55229 6.33579 9 6.75 9Z" fill="#000000"/>
           </svg>
         </div>
         <div class="rounded-full w-14 h-14 bg-[#D32F2F] flex items-center justify-center" (click)="endCall()">

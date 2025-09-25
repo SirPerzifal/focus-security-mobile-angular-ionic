@@ -88,6 +88,12 @@ export class OngoingCallPage implements OnInit {
   getReceiverName(){
     return this.webrtc.getReceiverName();
   }
+  getIsFromIntercom() {
+    return this.webrtc.getIsFromIntercom()
+  }
+  openIntercomGate() {
+    this.webrtc.openGate(false, true)
+  }
 
   getSenderProfilePic(){
     return this.webrtc.getSenderProfilePic();
@@ -112,6 +118,13 @@ export class OngoingCallPage implements OnInit {
     } else {
       this.webrtc.actionMaximize()
     }
+  }
+
+  getRemoteCam(){
+    return this.webrtc.getRemoteCam();
+  }
+  getLocalCam(){
+    return this.webrtc.getLocalCam();
   }
 
 }

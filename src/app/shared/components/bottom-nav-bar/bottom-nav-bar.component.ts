@@ -84,7 +84,7 @@ export class BottomNavBarComponent implements OnInit {
   callVms() {
     this.functionMain.vmsPreferences().then((value: any)=> {
       const project_id = 'Project-' + value.project_id.toString();
-      // const project_id = 'Intercom-1'
+      // const project_id = 'Intercom-3'
       this.webRtcService.createOffer(false, project_id, false, true);
     })
   }
