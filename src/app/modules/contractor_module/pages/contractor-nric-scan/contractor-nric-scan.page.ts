@@ -5,7 +5,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
-// import { BarcodeScanner, BarcodeFormat, LensFacing } from '@capacitor-mlkit/barcode-scanning'
+import { IScannerControls, BrowserMultiFormatReader } from '@zxing/browser'
 
 @Component({
   selector: 'app-contractor-nric-scan',
@@ -19,7 +19,7 @@ export class ContractorNricScanPage implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.openScanner()
-      // this.mlkitOpenScanner()
+      // this.zxingStartScan()
     })
     this.loadProjectName()
   }
@@ -39,6 +39,7 @@ export class ContractorNricScanPage implements OnInit {
   ngOnDestroy() {
     this.isListening = false;
     this.htmlScanner.stop().catch(err => console.log(err))
+    this.zxingStopScan()
   }
 
   // async getMinMaxNric() {
@@ -61,6 +62,7 @@ export class ContractorNricScanPage implements OnInit {
   scannerId = 'reader'
   scanResult = ''
   openScanner() {
+    console.log("RUN DEFAULT")
     const config = {
       fps: 10,
       qrbox: {
@@ -106,16 +108,21 @@ export class ContractorNricScanPage implements OnInit {
   }
 
   stopScanner() {
-    try {
-      this.isOpen = false
-      this.isListening = false
-      this.htmlScanner.stop().catch(err => {
+    if (this.scannerLibrary == 'default') {
+      try {
+        this.isOpen = false
+        this.isListening = false
+        this.htmlScanner.stop().catch(err => {
+          this.modalController.dismiss({ data: false })
+          console.log(err)
+        })
         this.modalController.dismiss({ data: false })
-        console.log(err)
-      })
-      this.modalController.dismiss({ data: false })
-    } catch (error) {
-      console.log(error )
+      } catch (error) {
+        console.log(error )
+        this.modalController.dismiss({ data: false })
+      }
+    } else {
+      this.zxingStopScan()
       this.modalController.dismiss({ data: false })
     }
   }
@@ -189,20 +196,76 @@ export class ContractorNricScanPage implements OnInit {
     this.modalController.dismiss({data: this.scanResult, min_digit: this.min_digit, max_digit: this.max_digit})
   }
 
-  // mlkitScan = ''
-  // async mlkitOpenScanner() {
-  //   this.mlkitScan = 'barcode-scanner-active'
+  @ViewChild('videoZxing') zxingElement!: ElementRef;
 
-  //   const listener = await BarcodeScanner.addListener(
-  //     'barcodeScanned',
-  //     async result => {
-  //       console.log(result.barcode);
-  //     },
-  //   );
+  scannerLibrary = 'default'
+  onSelectionChange(event: any) {
+    // if (this.scannerLibrary == event.target.value) return
+    this.scannerLibrary = event.target.value
+    console.log(this.scannerLibrary)
+    if (this.scannerLibrary == 'zxing') {
+      this.htmlScanner.stop().catch(err => {
+        this.modalController.dismiss({ data: false })
+        console.log(err)
+      })
+      setTimeout(() => {
+        this.zxingStartScan()
+      }), 300
+    } else {
+      this.zxingStopScan()
+      setTimeout(() => {
+        this.openScanner()
+      }, 300)
+    }
+  }
 
-  //   // Start the barcode scanner
-  //   await BarcodeScanner.startScan();
+  codeReader = new BrowserMultiFormatReader;
+  private controls: IScannerControls | null = null;
+  zxingScannedResult: string | null = null;
 
-  // }
+  async zxingStartScan() {
+    console.log("RUN ZXING")
+    try {
+      const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+      if (devices.length === 0) {
+        throw new Error('No camera devices found.');
+      }
+
+      // pick back camera if exists
+      const backCamera =
+        devices.find(d => d.label.toLowerCase().includes('back')) || devices[0];
+
+      this.zxingScannedResult = null;
+
+      this.controls = await this.codeReader.decodeFromVideoDevice(
+        backCamera.deviceId,
+        this.zxingElement.nativeElement,
+        (res, err, controls) => {
+          if (res) {
+            if (this.isOpen) {
+              this.zxingScannedResult = res.getText();
+              controls.stop();
+              this.isListening = false
+              
+              console.log(this.zxingScannedResult)
+              console.log({data: this.nric_value, min_digit: this.min_digit, max_digit: this.max_digit})
+
+              this.modalController.dismiss({data: this.zxingScannedResult, min_digit: this.min_digit, max_digit: this.max_digit})
+            }
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  zxingStopScan() {
+    if (this.controls) {
+      this.controls.stop(); // <--- this is the correct way
+      this.controls = null;
+    }
+  }
+
 
 }

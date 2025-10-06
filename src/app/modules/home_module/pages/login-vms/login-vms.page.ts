@@ -22,9 +22,7 @@ export class LoginVmsPage implements OnInit {
     private clientMainService: ClientMainService, 
     public functionMain: FunctionMainService,
     private storage: StorageService,
-  ) {
-    
-   }
+  ) {}
 
   ngOnInit() {
     this.initializeBackButtonHandling()

@@ -932,12 +932,12 @@ export class DeliveriesPage implements OnInit {
     if (!this.selectedImage && this.module_config.visitor_image) {
       errMsg += 'Visitor image is required!\n';
     }
-    // if ((!this.identificationType) && this.project_config.is_industrial) {
-    //   errMsg += 'Identification type is required!\n';
-    // }
-    // if ((!this.nric_value) && this.project_config.is_industrial) {
-    //   errMsg += 'Identification number is required!\n';
-    // }
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.otherDeliveryForm.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Name is required!\n';
     }
@@ -974,7 +974,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: '', nric_value: '', host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: this.identificationType, nric_value: this.nric_value, host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({

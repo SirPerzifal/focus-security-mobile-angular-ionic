@@ -79,6 +79,8 @@
       *ngIf="type === 'textarea'"
       [rows]="rows"
       [class]="textAreaClass"
+      [readonly]="isReadonly"
+      [(ngModel)]="value"
       [placeholder]="showPlaceholder ? placeholder : ''"
       (keyup)="onKeyUp($event)"
     ></textarea>

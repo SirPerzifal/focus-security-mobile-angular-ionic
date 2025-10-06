@@ -546,11 +546,13 @@ export class WalkInPage implements OnInit {
   successScan() {
     console.log("HEY CHECK HERE SUCCESS")
     this.stopScanner()
+    console.log(this.searchData)
     this.isFromScan = true
     this.formData.visitor_name = this.searchData.visitor_name
     this.formData.visitor_contact_no = this.searchData.contact_number
     this.formData.visitor_type = this.searchData.is_ma ? this.searchData.selection_type : this.searchData.visitor_type
     this.formData.visitor_vehicle = this.searchData.vehicle_number ? this.searchData.vehicle_number : ''
+    this.formData.remarks = this.searchData.entry_detail_message ? this.searchData.entry_detail_message : ''
     this.company_name = this.searchData.company_name ? this.searchData.company_name : ''
     this.formData.family_id = this.searchData.family_id
     this.selectedImage = this.searchData.visitor_image

@@ -164,6 +164,12 @@ export class FunctionMainService {
       let nric_clear = nric.replace(/([A-Za-z]\d+)([A-Za-z])\d+/, '$1$2');
       console.log(nric, nric_clear, nric_clear.length)
       console.log(min_digit, max_digit)
+      // const alertButtons = await this.alertController.create({
+      //   cssClass: 'checkout-alert',
+      //   header: `nric: ${nric}, nric_clear: ${nric_clear}, nric_clear.length: ${nric_clear.length}, min_digit: ${min_digit}, max_digit: ${max_digit},`,
+      // });
+  
+      // await alertButtons.present();
       if (nric_clear.length > max_digit) {
         this.presentToast(`NRIC / FIN cannot be more than ${max_digit} digits.`, 'danger');
         return ''
