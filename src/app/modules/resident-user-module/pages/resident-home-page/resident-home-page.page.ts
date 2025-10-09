@@ -287,13 +287,13 @@ export class ResidentHomePagePage implements OnInit {
     });
 
     modal.onDidDismiss().then((result) => {
+      console.log(result)
       if (result) {
         console.log("HEY 1")
         this.isLoading = false;
         if (result.data !== 'gas ini dari client' && result.data !== 'gas ini dari resident') {
           console.log("HEY 2")
           this.storage.decodeData(result.data).then((value: any) => {
-            console.log(value)
             if (value) {
               console.log("END USER FORM MODAL")
               this.webRtcService.initializeSocket();
@@ -308,9 +308,7 @@ export class ResidentHomePagePage implements OnInit {
             }
           })
         } else if (result.data === 'gas ini dari resident') {
-          setTimeout(() => {
-            this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
-          }, 500)
+          this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
         } else {
           Preferences.get({key: 'USER_INFO'}).then(async (value) => {
             if(value?.value){

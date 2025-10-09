@@ -92,25 +92,29 @@ export class ClientMainAppPage implements OnInit {
   project_id: any = ''
 
   async loadProject() {
+    console.log("LOAD PROJECT")
     await this.functionMain.vmsPreferences().then((value) => {
       // Force check saat masuk halaman ini
       this.appVersionCheck.checkVersion(true);
       console.log(value)
-      this.project_config = value.config
-      this.user_id = value.user_id
-      this.project_id = value.project_id
-      this.initMenu()
-      this.userData = {
-        name: value.name,
-        name_condo: value.project_name,
-        type: value.type_family,
-        block: value.block_name,
-        unit: value.unit_name,
-        email: value.email,
-        contact: value.contact_number,
-        image_profile: '',
+      if (value) {
+        this.project_config = value.config
+        this.user_id = value.user_id
+        this.project_id = value.project_id
+        this.initMenu()
+        this.userData = {
+          name: value.name,
+          name_condo: value.project_name,
+          type: value.type_family,
+          block: value.block_name,
+          unit: value.unit_name,
+          email: value.email,
+          contact: value.contact_number,
+          image_profile: '',
+        }
       }
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
+        console.log(value)
         if ( value ) {
           // this.webRtcService.initializeSocket()
           this.userData.image_profile = value.image_profile
@@ -178,7 +182,7 @@ export class ClientMainAppPage implements OnInit {
           }
           this.storage.setValueToStorage('USESATE_DATA', storageData)
           this.loadConfig();
-        } else if (result.data === 'gas ini dari client') {
+        } else if (result.data === 'gas ini dari resident') {
           this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
         } else {
           this.isLoading = true;

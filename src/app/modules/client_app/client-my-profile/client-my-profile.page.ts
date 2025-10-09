@@ -219,7 +219,7 @@ export class ClientMyProfilePage implements OnInit {
 
   async getAccessToken(familyId: number, client?: string) {
     this.mainResident.endpointCustomProcess({
-      previous_family_id: this.userData.id,
+      previous_family_id: this.userData.family_id,
       family_id: familyId,
     }, '/get/access_token').subscribe({
       next: (response: any) => {
@@ -296,7 +296,7 @@ export class ClientMyProfilePage implements OnInit {
             
           // ✅ Send token to backend
           this.mainResident.endpointCustomProcess({
-            previous_family_id: this.userData.id,
+            previous_family_id: this.userData.family_id,
             family_id: familyId,
             fcm_token: token.value,
             device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
@@ -344,15 +344,16 @@ export class ClientMyProfilePage implements OnInit {
       }
       this.storage.clearAllValueFromStorage();
       this.storage.setValueToStorage('USESATE_DATA', storageData)
-      this.getNotificationPermission(estate.family_id);
-      this.getAccessToken(estate.family_id, 'client');
+      await this.getNotificationPermission(estate.family_id).then(() => {
+        this.getAccessToken(estate.family_id, 'client');
+      });
       // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       return;
     } else {
       // Mengubah estate menjadi string JSON
       const estateString = JSON.stringify(estate);
-      this.getNotificationPermission(estate.family_id);
-      this.getAccessToken(estate.family_id);
+      await this.getNotificationPermission(estate.family_id);
+      await this.getAccessToken(estate.family_id);
       // Melakukan encoding ke Base64
       const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
