@@ -20,13 +20,16 @@ export class UpdateAppInformationComponent {
     // Redirect ke store
     // Android: package name, iOS: app id
     let storeUrl = '';
+
+    console.log('Platform is', this.platform.platforms());
+    
     
     if (this.platform.is('android')) {
       // Ganti dengan package name Android kamu
-      storeUrl = 'https://play.google.com/store/apps/details?id=com.yourcompany.yourapp';
+      storeUrl = 'https://play.google.com/store/apps/details?id=com.sgeede.focus.security';
     } else if (this.platform.is('ios')) {
       // Ganti dengan App ID iOS kamu
-      storeUrl = 'https://apps.apple.com/id/app/your-app-name/id1234567890';
+      storeUrl = 'https://apps.apple.com/us/app/ifs360/id6746474771';
     }
     
     if (storeUrl) {
