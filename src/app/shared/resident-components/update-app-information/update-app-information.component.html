@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Update Available</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="update-content">
+    <ion-icon name="cloud-download-outline" class="update-icon"></ion-icon>
+
+    <h2>New Version Available!</h2>
+
+    <p>
+      The latest version <strong>{{ newVersion }}</strong> is now available.
+    </p>
+    <p class="date">Released: {{ updateDate | date : "dd MMM yyyy, HH:mm" }}</p>
+
+    <p class="description">
+      Update the app to get the latest features and bug fixes.
+    </p>
+
+    <!-- Tombol Update di Content (Primary Action) -->
+    <ion-button
+      expand="block"
+      color="primary"
+      size="large"
+      class="update-button !mt-[21px] !text-base !capitalize"
+      (click)="updateNow()"
+    >
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Update
+    </ion-button>
+  </div>
+</ion-content>
+
+<!-- <ion-footer>
+  <ion-toolbar class="footer-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="remindLater()" fill="clear" size="small">
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        Later
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button
+        (click)="dontShowToday()"
+        fill="clear"
+        size="small"
+        color="medium"
+      >
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        Don't Show Today
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer> -->

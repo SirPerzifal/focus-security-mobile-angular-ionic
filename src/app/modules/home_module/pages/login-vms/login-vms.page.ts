@@ -8,6 +8,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
 
 @Component({
   selector: 'app-login-vms',
@@ -22,6 +23,7 @@ export class LoginVmsPage implements OnInit {
     private clientMainService: ClientMainService, 
     public functionMain: FunctionMainService,
     private storage: StorageService,
+    private appVersionCheck: CheckAppVersionService
   ) {}
 
   ngOnInit() {
@@ -182,6 +184,8 @@ export class LoginVmsPage implements OnInit {
   project_key = ''
 
   initializeBackButtonHandling() {
+    // Force check saat masuk halaman ini
+    this.appVersionCheck.checkVersion(true);
     console.log("tes");
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/'])

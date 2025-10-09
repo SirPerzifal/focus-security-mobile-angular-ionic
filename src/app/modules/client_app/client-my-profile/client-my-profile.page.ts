@@ -187,6 +187,7 @@ export class ClientMyProfilePage implements OnInit {
                 user_id: response.result.response[key]?.user_id,
                 family_id: response.result.response[key]?.family_id,
                 family_name: response.result.response[key]?.family_name || '',
+                employee_extension_number: response.result.response[key]?.employee_extension_number || '',
                 family_nickname: response.result.response[key]?.family_nickname || '',
                 image_profile: response.result.response[key]?.image_profile || '',
                 family_email: response.result.response[key]?.family_email || '',

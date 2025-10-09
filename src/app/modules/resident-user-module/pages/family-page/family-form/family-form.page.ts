@@ -66,7 +66,8 @@ export class FamilyFormPage implements OnInit {
       end_of_tenancy_aggrement: ''
     },
     helper_work_permit: '', // Tambahkan ini
-    helper_work_permit_expiry_date: ''
+    helper_work_permit_expiry_date: '',
+    status: ''
   }
   fromWhere: string = '';
   familyId: number = 0;
@@ -87,7 +88,7 @@ export class FamilyFormPage implements OnInit {
     private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string, helper_work_permit_expiry_date: Date };
+    const state = navigation?.extras.state as { status: string, for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string, helper_work_permit_expiry_date: Date };
     if (state) {
       console.log(state);
       
@@ -104,6 +105,7 @@ export class FamilyFormPage implements OnInit {
       this.formData.helper_work_permit_expiry_date = String(state.helper_work_permit_expiry_date)
       this.formData.image_family = state.profile_image
       this.formData.reject_reason = state.reject_reason
+      this.formData.status = state.status
       if (state.helper_work_permit_expiry_date) {
         this.selectedDate = String(this.functionMain.convertToDDMMYYYY(new Date(state.helper_work_permit_expiry_date).toISOString().split('T')[0]));
       }

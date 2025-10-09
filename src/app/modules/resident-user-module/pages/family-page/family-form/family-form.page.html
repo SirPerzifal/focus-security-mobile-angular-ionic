@@ -327,6 +327,7 @@
       >
       </app-submit-button>
       <app-submit-button
+        *ngIf="formData.status !== 'Pending Approval'"
         [text]="'Change Password'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="changePassDirect()"
@@ -345,6 +346,7 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
     >
       <app-submit-button
+        *ngIf="formData.status !== 'Pending Approval'"
         [text]="'Change Password'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="changePassDirect()"

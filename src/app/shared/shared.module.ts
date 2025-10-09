@@ -33,6 +33,8 @@ import { ModalComponent } from './resident-components/choose-payment-methode/mod
 import { UploadReceiptModalComponent } from './resident-components/upload-receipt-modal/upload-receipt-modal.component';
 import { LoadingAnimationComponent } from './resident-components/loading-animation/loading-animation.component';
 import { RefresherPageComponent } from './resident-components/refresher-page/refresher-page.component';
+import { ModalShowQRAccessDoorComponent } from './resident-components/modal-show-qr-access-door/modal-show-qr-access-door.component';
+import { UpdateAppInformationComponent } from './resident-components/update-app-information/update-app-information.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { RefresherPageComponent } from './resident-components/refresher-page/ref
     UploadReceiptModalComponent,
     LoadingAnimationComponent,
     RefresherPageComponent,
+    ModalShowQRAccessDoorComponent,
+    UpdateAppInformationComponent
   ],
   imports: [
     CommonModule,
@@ -99,7 +103,9 @@ import { RefresherPageComponent } from './resident-components/refresher-page/ref
     ModalComponent,
     UploadReceiptModalComponent,
     LoadingAnimationComponent,
-    RefresherPageComponent
+    RefresherPageComponent,
+    ModalShowQRAccessDoorComponent,
+    UpdateAppInformationComponent
   ]
 })
 export class SharedModule { }

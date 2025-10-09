@@ -1,76 +1,53 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'Door Access'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'Door Access'"
+    (typeOfUser)="onChangeTypeOfUser($event)"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content id="resident-content" [fullscreen]="true">
-  <div class="p-5 text-center mb-20">
-    <div class="w-1/6 flex items-start mr-10 mb-2">
-      <ion-icon
-        name="arrow-back-circle"
-        size="large"
-        class="text-[var(--ion-color-primary)] size-12"
-        [routerLink]="['/resident-home-page']"
-      ></ion-icon>
-    </div>
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="none"
+    ></ion-refresher-content>
+  </ion-refresher>
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onClickNav([true, 'home-page'])"
+    ></ion-icon>
+  </div>
+
+  <div class="px-4 pb-4 space-y-2 pt-2">
     <div
-      *ngIf="isLoading === true"
-      class="flex flex-col items-center justify-center h-full"
+      *ngFor="let door of intercomDoorAccessList"
+      class="w-full bg-[#D8ECCF] p-4 rounded-lg flex flex-col items-start"
+      (click)="onClickDoor(door)"
     >
-      <h2 class="text-lg cw-3:text-base">Still searching your location.....</h2>
-      <video autoplay loop muted playsinline width="300" height="300">
-        <source
-          src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1746599476/searching-for-location-animation-download-in-lottie-json-gif-static-svg-file-formats--find-mark-locating-you-fun-empty-states-pack-people-animations-4323096.mp4_1746599335880_l7ddl6.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
+      <div class="flex flex-col items-start">
+        <h2 class="text-lg font-bold text-gray-800">
+          <p class="capitalize">{{ door.name }}</p>
+        </h2>
+        <p>{{ door.position }}</p>
+      </div>
     </div>
-    <div *ngIf="isLoading === false">
-      <h2 *ngIf="isLoading === false" class="text-lg cw-3:text-base">
-        Choose door below to open.
-      </h2>
-    </div>
-    <!-- <ion-item>
-      <ion-label>Bluetooth Status</ion-label>
-      <ion-badge slot="end" [color]="isBluetoothEnabled ? 'success' : 'danger'">
-        {{ isBluetoothEnabled ? 'ON' : 'OFF' }}
-      </ion-badge>
-    </ion-item> -->
+  </div>
 
-    <!-- <ion-button expand="block" (click)="searchDeviceFromBluetooth()" [disabled]="isScanning">
-      {{ isScanning ? 'Scanning...' : (isBluetoothEnabled ? 'Scan for Devices' : 'Enable Bluetooth & Scan') }}
-    </ion-button> -->
-
-    <ion-list>
-      <!-- <ion-item
-        *ngFor="let device of devicesFromScan"
-        (click)="connectToDevice(device)"
-      >
-        <ion-label>
-          <h2>{{ device.name || 'Unknown Device' }}</h2>
-          <p>ID: {{ device.deviceId }}</p>
-        </ion-label>
-      </ion-item> -->
-
-      <ion-item *ngFor="let device of devicesToClick" button>
-        <ion-label id="device.id" (click)="deviceClick(device)">
-          <h2>{{ device.name || 'Unknown Device' }}</h2>
-          <p>Bluetooth Name: {{ device.bluetoothName }}</p>
-        </ion-label>
-      </ion-item>
-
-      <ion-item
-        *ngIf="devicesFromBackend.length === 0 && !isScanning && isBluetoothEnabled"
-      >
-        <ion-label>No devices found</ion-label>
-      </ion-item>
-
-      <!-- <ion-item *ngIf="!isBluetoothEnabled && !isScanning">
-        <ion-label color="danger"
-          >Please enable Bluetooth to scan for devices</ion-label
-        >
-      </ion-item> -->
-    </ion-list>
+  <div
+    *ngIf="isLoading"
+    class="flex justify-center items-center h-full !mt-[150px]"
+  >
+    <app-loading-animation *ngIf="isLoading"></app-loading-animation>
   </div>
 </ion-content>
 

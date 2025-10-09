@@ -441,6 +441,7 @@ export class WebRtcService extends ApiService {
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
       this.socket.on('kick-user', (data: any) => this.handleKickUser(data));
+      this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
       this.socket.on('intercom-close-gate', (data: any) => this.handleCloseGate(data));
 

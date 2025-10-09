@@ -22,6 +22,7 @@ export interface Estate {
     user_id: number;
     family_id: number;
     family_name: string;
+    employee_extension_number: string;
     family_nickname: string;
     image_profile: string;
     family_email: string;

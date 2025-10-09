@@ -22,6 +22,7 @@ import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
 import { App } from '@capacitor/app';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -150,6 +151,7 @@ export class ResidentHomePagePage implements OnInit {
     private platform: Platform,
     private router: Router,
     private route: ActivatedRoute,
+    private appVersionCheck: CheckAppVersionService
   ) {}
 
   handleRefresh(event: any) {
@@ -163,8 +165,10 @@ export class ResidentHomePagePage implements OnInit {
   ionViewWillEnter() {
     this.initializeBackButtonHandling()
     this.fetchContacts();
-    this.initBluetooth();
+    // this.initBluetooth();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      // Force check saat masuk halaman ini
+      this.appVersionCheck.checkVersion(true);
       if ( value ) {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
@@ -181,7 +185,7 @@ export class ResidentHomePagePage implements OnInit {
       } else {
         Preferences.get({key: 'USER_INFO'}).then(async (value) => {
           if(value?.value){
-            console.log(value.value)
+            // console.log(value.value)
             const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
             this.isLoading = true;
             // Mengubah string JSON menjadi objek JavaScript
@@ -247,6 +251,7 @@ export class ResidentHomePagePage implements OnInit {
               user_id: result.result.response[key]?.user_id,
               family_id: result.result.response[key]?.family_id,
               family_name: result.result.response[key]?.family_name || '',
+              employee_extension_number: result.result.response[key]?.employee_extension_number || '',
               family_nickname: result.result.response[key]?.family_nickname || '',
               image_profile: result.result.response[key]?.image_profile || '',
               family_email: result.result.response[key]?.family_email || '',
@@ -436,10 +441,10 @@ export class ResidentHomePagePage implements OnInit {
       this.showingProfile = '';
       this.selectedProfile = '';
       const estateString = JSON.stringify(response.result.new_estate);
-      console.log(estateString);
+      // console.log(estateString);
       // Melakukan encoding ke Base64
       const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
-      console.log(encodedEstate);
+      // console.log(encodedEstate);
       this.setData(response.result.new_estate, response.result.new_estate.image_profile);
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
         this.isModalUpdateProfile = false;

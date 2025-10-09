@@ -1,0 +1,25 @@
+<div class="w-full h-full">
+  <div class="flex flex-col mt-[10px] overflow-y-auto p-3 h-full">
+    <div class="w-full flex flex-col items-center">
+      <img [src]="functionMain.getImage(QRResult)" class="w-3/4 h-auto" />
+      <p class="text-sm text-center mt-2">
+        Scan this QR code to access the door.
+      </p>
+      <p
+        *ngIf="countdown > 0; else noCountdown"
+        class="text-sm text-center mt-2"
+      >
+        Expiry in {{ countdown }} seconds.
+      </p>
+      <ng-template #noCountdown>
+        <p class="text-sm text-center mt-2">The QR code can't be expired.</p>
+      </ng-template>
+      <button
+        (click)="closeModal()"
+        class="w-full bg-[var(--ion-color-primary)] text-white py-2 rounded-lg mt-4"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -53,6 +53,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
       user_id: estate[key]?.user_id,
       family_id: estate[key]?.family_id,
       family_name: estate[key]?.family_name || '',
+      employee_extension_number: estate[key]?.employee_extension_number || '',
       family_nickname: estate[key]?.family_nickname || '',
       image_profile: estate[key]?.image_profile || '',
       family_email: estate[key]?.family_email || '',

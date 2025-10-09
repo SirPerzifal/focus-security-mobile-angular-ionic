@@ -17,6 +17,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 interface InputForm {
   familyNickname: string,
+  employeeExtensionNumber: string,
   nameCondominium: string;
   statusOwner: string;
   blockName: string;
@@ -78,6 +79,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     unitName: '',
     email: '',
     phone: '',
+    employeeExtensionNumber: '',
   }
 
   inputData: InputData[] = [
@@ -219,8 +221,6 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      console.log(value);
-      
       this.storage.decodeData(value).then((value: any) => {
         if ( value ) {
           const estate = JSON.parse(value) as Estate;
@@ -236,6 +236,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 name: 'Nickname',
                 disabledInput: true
               },    {
+                id: 'employee_extension_number',
+                formParams: 'employeeExtensionNumber',
+                name: 'Employee Extension Number',
+                disabledInput: this.disabledInput
+              },    {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
                 name: 'Project Name',
@@ -250,7 +255,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 formParams: 'phone',
                 name: 'Contact',
                 disabledInput: this.disabledInput
-              }
+              },
             ]
             this.inputForm = {
               familyNickname: estate.family_nickname,
@@ -260,6 +265,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               unitName: estate.unit_name,
               email: estate.family_email,
               phone: estate.family_mobile_number,
+              employeeExtensionNumber: estate.employee_extension_number,
             }
           } else {
             this.inputData = [
@@ -308,6 +314,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               unitName: estate.unit_name,
               email: estate.family_email,
               phone: estate.family_mobile_number,
+              employeeExtensionNumber: estate.employee_extension_number,
             }
           }
           if (estate.unit_id) {
@@ -393,6 +400,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   name: 'Nickname',
                   disabledInput: true
                 },    {
+                  id: 'employee_extension_number',
+                  formParams: 'employeeExtensionNumber',
+                  name: 'Employee Extension Number',
+                  disabledInput: this.disabledInput
+                },    {
                   id: 'condominium_name',
                   formParams: 'nameCondominium',
                   name: 'Project Name',
@@ -417,6 +429,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 unitName: estate.unit_name,
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
+                employeeExtensionNumber: estate.employee_extension_number,
               }
               this.squareButton = [
                 {
@@ -477,6 +490,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 unitName: estate.unit_name,
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
+                employeeExtensionNumber: estate.employee_extension_number,
               }
               this.squareButton = [
                 {
@@ -641,6 +655,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     name: 'Nickname',
                     disabledInput: true
                   },    {
+                    id: 'employee_extension_number',
+                    formParams: 'employeeExtensionNumber',
+                    name: 'Employee Extension Number',
+                    disabledInput: this.disabledInput
+                  },    {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Project Name',
@@ -665,6 +684,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   unitName: estate.unit_name,
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
+                  employeeExtensionNumber: estate.employee_extension_number,
                 }
               } else {
                 this.inputData = [
@@ -713,6 +733,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   unitName: estate.unit_name,
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
+                  employeeExtensionNumber: estate.employee_extension_number,
                 }
               }
               if (estate.unit_id) {
@@ -798,6 +819,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 user_id: response.result.response[key]?.user_id,
                 family_id: response.result.response[key]?.family_id,
                 family_name: response.result.response[key]?.family_name || '',
+                employee_extension_number: response.result.response[key]?.employee_extension_number || '',
                 family_nickname: response.result.response[key]?.family_nickname || '',
                 image_profile: response.result.response[key]?.image_profile || '',
                 family_email: response.result.response[key]?.family_email || '',
@@ -894,6 +916,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     name: 'Nickname',
                     disabledInput: true
                   },    {
+                    id: 'employee_extension_number',
+                    formParams: 'employeeExtensionNumber',
+                    name: 'Employee Extension Number',
+                    disabledInput: this.disabledInput
+                  },    {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Project Name',
@@ -918,6 +945,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   unitName: estate.unit_name,
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
+                  employeeExtensionNumber: estate.employee_extension_number,
                 }
                 this.squareButton = [
                   {
@@ -978,6 +1006,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   unitName: estate.unit_name,
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
+                  employeeExtensionNumber: estate.employee_extension_number,
                 }
                 this.squareButton = [
                   {

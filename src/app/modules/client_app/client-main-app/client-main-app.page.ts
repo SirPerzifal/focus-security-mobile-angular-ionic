@@ -12,6 +12,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
+import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
 
 @Component({
   selector: 'app-client-main-app',
@@ -45,6 +46,7 @@ export class ClientMainAppPage implements OnInit {
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private modalController: ModalController,
+    private appVersionCheck: CheckAppVersionService
   ) {
       this.initializeBackButtonHandling();
     }
@@ -91,6 +93,8 @@ export class ClientMainAppPage implements OnInit {
 
   async loadProject() {
     await this.functionMain.vmsPreferences().then((value) => {
+      // Force check saat masuk halaman ini
+      this.appVersionCheck.checkVersion(true);
       console.log(value)
       this.project_config = value.config
       this.user_id = value.user_id

@@ -1,0 +1,20 @@
+.update-content {
+  text-align: center;
+  padding: 2rem 0;
+  
+  .update-icon {
+    font-size: 80px;
+    color: var(--ion-color-primary);
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .date {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+}
