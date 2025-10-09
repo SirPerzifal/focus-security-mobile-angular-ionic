@@ -102,6 +102,8 @@ export class ContractorNricScanPage implements OnInit {
 
   }
 
+  showSelection = false;
+
   isOpen = false
   startScanner() {
     this.isOpen = true

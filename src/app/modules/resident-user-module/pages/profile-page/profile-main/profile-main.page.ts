@@ -887,15 +887,20 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       }
       this.storage.clearAllValueFromStorage();
       this.storage.setValueToStorage('USESATE_DATA', storageData)
-      this.getNotificationPermission(estate.family_id);
-      this.getAccessToken(estate.family_id, 'client');
+      await this.getNotificationPermission(estate.family_id).then(() => {
+        this.getAccessToken(estate.family_id, 'client');
+      });
       // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       return;
     } else {
       // Mengubah estate menjadi string JSON
       const estateString = JSON.stringify(estate);
-      this.getNotificationPermission(estate.family_id);
-      this.getAccessToken(estate.family_id);
+      await this.getNotificationPermission(estate.family_id);
+      console.log("YO PING 1")
+
+      await this.getAccessToken(estate.family_id);
+      console.log("YO PING 2")
+
       // Melakukan encoding ke Base64
       const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {

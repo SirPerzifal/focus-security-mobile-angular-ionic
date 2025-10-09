@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { Preferences } from '@capacitor/preferences';
 
+import { lastValueFrom } from 'rxjs';
+
 @Component({
   selector: 'app-modal-estate-homepage',
   templateUrl: './modal-estate-homepage.component.html',
@@ -72,23 +74,31 @@ export class ModalEstateHomepageComponent  implements OnInit {
     this.isLoading = false;
   }
 
+  isClickProcess = false
+  isSuccess = false
   async chooseEstateClick(estate: any) {
+    if (this.isClickProcess) return
+    this.isClickProcess = true
     if (estate.user_id) {
       if (!this.client) {
-        this.modalController.dismiss('gas ini dari resident');
         let storageData = {
           'image_profile': estate.image_profile
         }
         this.storage.clearAllValueFromStorage();
         this.storage.setValueToStorage('USESATE_DATA', storageData)
-        this.getNotificationPermission(estate.family_id);
-        await this.getAccessToken(estate.family_id);
+        await this.getNotificationPermission(estate.family_id)
+        await this.getAccessToken(estate.family_id)
+        if (this.isSuccess) {
+          this.modalController.dismiss('gas ini dari resident');
+        }
         // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
         return;
       } else {
-        this.modalController.dismiss(estate);
-        this.getNotificationPermission(estate.family_id);
+        await this.getNotificationPermission(estate.family_id);
         await this.getAccessToken(estate.family_id);
+        if (this.isSuccess) {
+          this.modalController.dismiss(estate);
+        }
         return;
       }
     } else {
@@ -97,11 +107,13 @@ export class ModalEstateHomepageComponent  implements OnInit {
         // Melakukan encoding ke Base64
         const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
         this.storage.clearAllValueFromStorage();
-        this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
-          this.modalController.dismiss('gas ini dari client');
-          this.getNotificationPermission(estate.family_id);
-          this.getAccessToken(estate.family_id);
-          // this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
+        this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then(async (response: any) => {
+          await this.getNotificationPermission(estate.family_id);
+          await this.getAccessToken(estate.family_id)
+          if (this.isSuccess) {
+            this.modalController.dismiss('gas ini dari resident');
+          }
+        // this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
         })
         return;
       } else {
@@ -109,10 +121,12 @@ export class ModalEstateHomepageComponent  implements OnInit {
         // Melakukan encoding ke Base64
         const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
         this.storage.clearAllValueFromStorage();
-        this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
-          this.modalController.dismiss(encodedEstate);
-          this.getNotificationPermission(estate.family_id);
-          this.getAccessToken(estate.family_id);
+        this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then(async (response: any) => {
+          await this.getNotificationPermission(estate.family_id);
+          await this.getAccessToken(estate.family_id);
+          if (this.isSuccess) {
+            this.modalController.dismiss(encodedEstate);
+          }
         })
         return;
       }
@@ -121,34 +135,44 @@ export class ModalEstateHomepageComponent  implements OnInit {
   }
 
   async getAccessToken(familyId: number) {
-    this.mainApiResident.endpointCustomProcess({
+    this.isClickProcess = true
+    const observable = this.mainApiResident.endpointCustomProcess({
       family_id: familyId,
-    }, '/get/access_token').subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          Preferences.clear();
-          if (response.result.email) {
-            const userCredentials = {
-              emailOrPhone: response.result.email,
-              access_token: response.result.access_token
-            }
-            Preferences.set({
-              key: 'USER_INFO',
-              value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
-            })
-          } else {
-            Preferences.set({
-              key: 'USER_INFO',
-              value: response.result.access_token,
-            })
-          }
+    }, '/get/access_token');
+  
+    try {
+      const response: any = await lastValueFrom(observable);
+      console.log(response);
+      if (response.result.status_code === 200) {
+        await Preferences.clear();
+  
+        if (response.result.email) {
+          const userCredentials = {
+            emailOrPhone: response.result.email,
+            access_token: response.result.access_token,
+          };
+          await Preferences.set({
+            key: 'USER_INFO',
+            value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
+          });
+        } else {
+          await Preferences.set({
+            key: 'USER_INFO',
+            value: response.result.access_token,
+          });
         }
-      },
-      error: (error) => {
-        console.error('Failed to get access token:', error);
+        this.isClickProcess = false
+        this.isSuccess = true
       }
-    });
+    } catch (error) {
+      console.error('Failed to get access token:', error);
+      this.functionMain.presentToast('Server not response well', 'danger');
+      await Preferences.clear()
+      this.isClickProcess = false
+      this.isSuccess = false
+    }
   }
+  
   
   async getNotificationPermission(familyId: number): Promise<string> {
       try {
@@ -187,24 +211,27 @@ export class ModalEstateHomepageComponent  implements OnInit {
           resolve('');
         }, TIMEOUT_MS);
   
-        const onRegistration = (token: Token) => {
+        const onRegistration = async (token: Token) => {
           this.cleanupTokenListeners();
           if (token.value) {
             this.fcmToken = token.value;
             console.log('FCM Token received:', token.value);
               
             // ✅ Send token to backend
-            this.mainApiResident.endpointCustomProcess({
+            this.isClickProcess = true
+            await this.mainApiResident.endpointCustomProcess({
               family_id: familyId,
               fcm_token: token.value,
               device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
             }, '/set/fcm_token').subscribe({
               next: (response: any) => {
                 console.log('FCM token sent to backend successfully:', response);
+                this.isClickProcess = false
                 resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
               },
               error: (error) => {
                 console.error('Failed to send FCM token to backend:', error);
+                this.isClickProcess = false
                 resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
               }
             });
