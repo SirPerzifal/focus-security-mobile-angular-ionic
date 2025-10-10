@@ -164,6 +164,7 @@ export class ClientMainAppPage implements OnInit {
   async presentModal(estate: any) {
     const modal = await this.modalController.create({
       component: ModalEstateHomepageComponent,
+      backdropDismiss: false,
       cssClass: 'record-modal',
       componentProps: {
         estate: estate,

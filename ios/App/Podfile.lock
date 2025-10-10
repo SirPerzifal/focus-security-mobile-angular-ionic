@@ -3,6 +3,8 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (6.0.1):
     - Capacitor
+  - CapacitorBrowser (6.0.5):
+    - Capacitor
   - CapacitorCamera (6.1.2):
     - Capacitor
   - CapacitorCommunityBluetoothLe (6.0.1):
@@ -147,6 +149,7 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
   - "CapacitorCommunityBluetoothLe (from `../../node_modules/@capacitor-community/bluetooth-le`)"
   - "CapacitorCommunityContacts (from `../../node_modules/@capacitor-community/contacts`)"
@@ -186,6 +189,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorBrowser:
+    :path: "../../node_modules/@capacitor/browser"
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
   CapacitorCommunityBluetoothLe:
@@ -212,6 +217,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 69c7f687aabb8d85e543497411e40638b5cc08c0
   CapacitorApp: f51c08c64df914fc934239fd1b3fc809d62a02f6
+  CapacitorBrowser: b468ac2db928e594b4d319727f3874743f9bcf96
   CapacitorCamera: 9bc7b005d0e6f1d5f525b8137045b60cffffce79
   CapacitorCommunityBluetoothLe: b554daec38aeffc3441662f890e333381797b162
   CapacitorCommunityContacts: 9cde99c2cd212f6594677aae542436e2174c4ef2
@@ -239,6 +245,6 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: a0e89295a58f0d6d7d662e23bd6de6f6dfbd1592
+PODFILE CHECKSUM: 5b90cbaebace6d462919bfce2546256c5be9b3ac
 
 COCOAPODS: 1.16.2

@@ -281,6 +281,7 @@ export class ResidentHomePagePage implements OnInit {
     const modal = await this.modalController.create({
       component: ModalEstateHomepageComponent,
       cssClass: 'record-modal',
+      backdropDismiss: false,
       componentProps: {
         estate: estate
       }
