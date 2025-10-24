@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
       this.callActionStatus = status;
     });
     // this.onLoadCount()
+    document.addEventListener('click', this.handleClickOutside, true);
   }
 
   initializeBackButtonHandling() {
@@ -64,6 +65,7 @@ export class HomePage implements OnInit {
       this.Camera = value.config.lpr
       this.Intercom = value.config.intercom
       this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
+      this.vms_family_id = value.vms_family_id
     })
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
       if (value) {
@@ -94,12 +96,14 @@ export class HomePage implements OnInit {
   project_name = ''
   project_id = 0
   project_config: any = []
+  vms_family_id: any = false
   fcm_token_id: any = false
 
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+    document.removeEventListener('click', this.handleClickOutside, true);
   }
 
   pingSound = new Audio('assets/sound/Ping Alert.mp3');
@@ -222,6 +226,7 @@ export class HomePage implements OnInit {
             }
             this.storage.setValueToStorage('USESATE_DATA', storageData)
             this.loadProjectName()
+            this.webrtc.initializeSocket()
           });
           this.isLoading = false
         } else {
@@ -236,5 +241,64 @@ export class HomePage implements OnInit {
       }
     });
   }
+
+  isAway(is_reverse: boolean = false) {
+    const value = is_reverse ? !String(this.vms_family_id).includes('Away') : String(this.vms_family_id).includes('Away')
+    if (value) {
+      return {
+        away: true,
+        string: 'Away',
+        color: 'bg-[var(--ion-color-danger)]'
+      }
+    } else {
+      return {
+        away: false,
+        string: 'Available',
+        color: 'bg-[var(--ion-color-primary)]'
+      }
+    }
+  }
+
+  isShow = false
+  isStateClicked = false
+  clickState() {
+    this.isStateClicked = true
+    this.isShow = true
+    setTimeout(() => {
+      this.isStateClicked = false
+    }, 500)
+  }
+  
+  changeState() {
+    const is_away = !this.isAway().away
+    console.log(is_away)
+    this.isShow = false
+    this.clientMainService.getApi({state: is_away, fcm_token_id: this.fcm_token_id}, '/vms/post/change_device_state').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.status_code === 200) {
+          this.loadConfig()
+        } else {
+          this.functionMain.presentToast("An error occurred while trying to change this device's states!", 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast("An error occurred while trying to change this device's states!", 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  @ViewChild('stateComponent') stateComponent!: ElementRef;
+  handleClickOutside = (event: MouseEvent) => {
+    if (!this.isStateClicked && this.isShow) {
+      const clickedInside = this.stateComponent.nativeElement.contains(event.target);
+      if (!clickedInside) {
+        this.isShow = false;
+      }
+    }
+  };
+
+
 
 }

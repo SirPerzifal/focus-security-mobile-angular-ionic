@@ -398,10 +398,11 @@ export class WebRtcService extends ApiService {
       if (!userInfo.family_id) {
         const vmsData = await Preferences.get({ key: 'USER_INFO' }).then((result) => {
           if (result.value) {
-            const parsedVMS = jwtDecode(result.value) as { project_name: string; project_id: number };
+            const parsedVMS = jwtDecode(result.value) as { project_name: string; project_id: number, vms_family_id: string };
+            console.log(parsedVMS)
             if (parsedVMS.project_id && parsedVMS.project_name) {
               userInfo.family_name = 'Security';
-              userInfo.family_id = 'Project-' + parsedVMS.project_id.toString();
+              userInfo.family_id = parsedVMS.vms_family_id;
             }
           }
         });

@@ -346,8 +346,8 @@ export class ClientMyProfilePage implements OnInit {
       this.storage.setValueToStorage('USESATE_DATA', storageData)
       await this.getNotificationPermission(estate.family_id).then(() => {
         this.getAccessToken(estate.family_id, 'client');
+        this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       });
-      // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
       return;
     } else {
       // Mengubah estate menjadi string JSON

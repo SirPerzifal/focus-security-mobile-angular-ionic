@@ -12,11 +12,24 @@
     </div>
   </div>
   <div class="flex flex-col relative mt-3">
+    <div class="flex flex-row justify-end text-center mx-4 relative">
+      <div class="flex flex-row items-center space-x-4 relative" (click)="clickState()">
+        <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway().string }}</span>
+        <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color ">
+        </div>
+      </div>
+      <div #stateComponent class="h-[60px] flex flex-row justify-center items-center bg-white rounded-lg text-xl border border-black absolute top-11 z-10" *ngIf="isShow" (click)="changeState()">
+        <div class="flex flex-row items-center space-x-4 px-4">
+          <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway(true).string }}</span>
+          <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway(true).color ">
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="flex flex-row justify-between items-center text-center mx-4">
       <div class="w-[66px]"></div>
       <div class="flex flex-col">
-        <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{
-            project_name }}</b></span>
+        <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{ project_name }}</b></span>
         <span
           class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] flex flex-row items-center text-[var(--ion-color-primary)]"><b>iFS360
             VISITOR MANAGEMENT SYSTEM</b></span>
