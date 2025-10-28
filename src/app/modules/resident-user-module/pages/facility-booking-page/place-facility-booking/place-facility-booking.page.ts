@@ -113,50 +113,37 @@ export class PlaceFacilityBookingPage implements OnInit {
     if (this.roomId) {
       // Pastikan facilityDetail dan facility_detail ada
       if (this.facilityDetail && Array.isArray(this.facilityDetail.facility_detail)) {
-          // Mengonversi this.roomId ke number
-          const roomIdAsNumber = Number(this.roomId);
-          
-          // Mencari objek yang sesuai dengan roomIdAsNumber
-          const facility = this.facilityDetail.facility_detail.find((facility: any) => {
-              return facility.room_id === roomIdAsNumber;
-          });
+        // Mengonversi this.roomId ke number
+        const roomIdAsNumber = Number(this.roomId);
+        
+        // Mencari objek yang sesuai dengan roomIdAsNumber
+        const facility = this.facilityDetail.facility_detail.find((facility: any) => {
+            return facility.room_id === roomIdAsNumber;
+        });
 
-          const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
-  
-          if (facility || formattedDate) {
-            console.log(facility);
+        const formattedDate = this.selectedDate.split('T')[0]; // Ambil tanggal saja
+
+        if (facility || formattedDate) {
+          console.log(facility);
+          
+          if (facility) {
+            this.termsAndCOndition = facility.terms_and_conditions;
+            // // console.log(this.termsAndCOndition);
             
-            if (facility) {
-              this.termsAndCOndition = facility.terms_and_conditions;
-              // // console.log(this.termsAndCOndition);
-              
-              // Jika ditemukan, ambil is_close_for_maintenance
-              const isCloseForMaintenance = facility.is_close_for_maintenance;
-              if (isCloseForMaintenance) {
-                this.isCloseForMaintenance = true;
-                // console.log(isCloseForMaintenance, "tes");
-                this.roomSchedule = [];
-                this.isRequirePayment = facility.is_require_payment;
-                this.isLoading = false;
-              } else {
-                this.isCloseForMaintenance = false;
-                this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
-                  next: (response) => {
-                    this.roomSchedule = response.result.schedule;
-                    this.isRequirePayment = facility.is_require_payment;
-                    this.isLoading = false;
-                  },
-                  error: (error) => {
-                    this.errorMessage = 'Failed to load room schedule';
-                    console.error('Error loading room schedule', error);
-                  }
-                });
-              }
+            // Jika ditemukan, ambil is_close_for_maintenance
+            const isCloseForMaintenance = facility.is_close_for_maintenance;
+            if (isCloseForMaintenance) {
+              this.isCloseForMaintenance = true;
+              // console.log(isCloseForMaintenance, "tes");
+              this.roomSchedule = [];
+              this.isRequirePayment = facility.is_require_payment;
+              this.isLoading = false;
             } else {
+              this.isCloseForMaintenance = false;
               this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
                 next: (response) => {
                   this.roomSchedule = response.result.schedule;
-                  this.isRequirePayment = false;
+                  this.isRequirePayment = facility.is_require_payment;
                   this.isLoading = false;
                 },
                 error: (error) => {
@@ -166,9 +153,22 @@ export class PlaceFacilityBookingPage implements OnInit {
               });
             }
           } else {
-              // console.log(this.facilityDetail.facility_detail); // Menampilkan seluruh array facility_detail
-              // console.log('Room not found');
+            this.facilityService.getRoomById(this.roomId, formattedDate).subscribe({
+              next: (response) => {
+                this.roomSchedule = response.result.schedule;
+                this.isRequirePayment = false;
+                this.isLoading = false;
+              },
+              error: (error) => {
+                this.errorMessage = 'Failed to load room schedule';
+                console.error('Error loading room schedule', error);
+              }
+            });
           }
+        } else {
+            // console.log(this.facilityDetail.facility_detail); // Menampilkan seluruh array facility_detail
+            // console.log('Room not found');
+        }
       } else {
           console.error('facility_detail is not an array or facilityDetail is undefined:', this.facilityDetail);
       }
