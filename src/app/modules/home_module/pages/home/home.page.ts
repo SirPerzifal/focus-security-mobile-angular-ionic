@@ -43,12 +43,25 @@ export class HomePage implements OnInit {
     this.loadProjectName().then(() => {
       this.onLoadCount()
     })
+    this.getRGGData()
     this.webrtc.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
     // this.onLoadCount()
     document.addEventListener('click', this.handleClickOutside, true);
   }
+
+  getRGGData() {
+    this.storage.getValueFromStorage('RGG_CALL_DATA').then(value => {
+      console.log(value)
+      if ( value ) {
+        this.rggData = value
+      } else {
+        this.rggData = false
+      }
+    })
+  }
+  rggData: any = false
 
   initializeBackButtonHandling() {
     this.platform.backButton.subscribeWithPriority(10, () => {
@@ -209,7 +222,8 @@ export class HomePage implements OnInit {
   }
 
   isLoading = false
-  loadConfig() {
+  async loadConfig() {
+    let rggStorage: any = false
     this.isLoading = true
     this.clientMainService.getApi({project_id: this.project_id, fcm_token_id: this.fcm_token_id}, '/vms/get/current_config').subscribe({
       next: (results) => {
@@ -220,13 +234,18 @@ export class HomePage implements OnInit {
             key: 'USER_INFO',
             value: results.result.response_status.access_token,
           }).then(()=>{
-            this.storage.clearAllValueFromStorage()
-            let storageData = {
-              'background': results.result.response_status.background
-            }
-            this.storage.setValueToStorage('USESATE_DATA', storageData)
-            this.loadProjectName()
-            this.webrtc.initializeSocket()
+
+              this.storage.clearAllValueFromStorage()
+              let storageData = {
+                'background': results.result.response_status.background
+              }
+              this.storage.setValueToStorage('USESATE_DATA', storageData)
+
+              if (this.rggData) { 
+                this.storage.setValueToStorage('RGG_CALL_DATA', this.rggData)
+              }
+              this.loadProjectName()
+              this.webrtc.initializeSocket()
           });
           this.isLoading = false
         } else {

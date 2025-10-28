@@ -29,6 +29,9 @@ export class FunctionMainService {
     private alertController: AlertController
   ) { }
 
+  public readonly limitHistory = 15
+  public readonly rggAuth = '/vms/get/check_rgg_auth'
+
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' | 'dark' = 'success') {
     const toast = await this.toastController.create({
       message: message,
@@ -600,9 +603,6 @@ export class FunctionMainService {
       await alertButtons.present();
     });
   }
-  
-  
-  public readonly limitHistory = 15
 
   getTodayYYYYMMDD() {
     const today = new Date();

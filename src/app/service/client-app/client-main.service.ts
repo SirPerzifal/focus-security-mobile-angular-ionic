@@ -1,25 +1,34 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
-import { catchError, Observable, throwError, from, mergeMap, tap, timeout, TimeoutError } from 'rxjs';
+import { catchError, Observable, throwError, from, mergeMap, tap, timeout, TimeoutError, finalize } from 'rxjs';
 import { FunctionMainService } from '../function/function-main.service';
 import { ModalController } from '@ionic/angular';
 import { ModalLoadingComponent } from 'src/app/shared/components/modal-loading/modal-loading.component';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientMainService extends ApiService {
 
-  constructor(http: HttpClient, private functionMain: FunctionMainService, private modalController: ModalController) { super(http) }
+  constructor(http: HttpClient, private functionMain: FunctionMainService, private modalController: ModalController, private storage: StorageService) { super(http) }
 
   async loadProjectName() {
-    await this.functionMain.vmsPreferences().then((value) => {
+    await this.functionMain.vmsPreferences().then(async (value) => {
       this.project = value
+      await this.storage.getValueFromStorage('RGG_CALL_DATA').then((value) => {
+        if (value) {
+          this.rggData = value
+        } else {
+          this.rggData = false
+        }
+      })
     })
   }
 
   project: any = []
+  rggData: any = false
 
 
   getApi(params: any, apiUrl: string): Observable<any> {
@@ -42,6 +51,11 @@ export class ClientMainService extends ApiService {
         if (!params.family_id) {
           params.family_id = this.project.family_id;
         }
+
+        if (this.rggData) {
+          params.rgg_unique_user_id = this.rggData.user_id
+          params.rgg_unique_call_id = this.rggData.call_id
+        }
   
         const urlSegments = apiUrl.split('/');
         if (urlSegments.length > 2 && urlSegments[2] === 'post') {
@@ -55,7 +69,7 @@ export class ClientMainService extends ApiService {
           });
           await modalRef.present();
         }
-  
+        
         return this.http.post(this.baseUrl + apiUrl, {
           jsonrpc: '2.0',
           params: params,
@@ -65,6 +79,11 @@ export class ClientMainService extends ApiService {
         
       )),
       tap(() => {
+        if (modalRef) {
+          modalRef.dismiss();
+        }
+      }),
+      finalize(() => {
         if (modalRef) {
           modalRef.dismiss();
         }

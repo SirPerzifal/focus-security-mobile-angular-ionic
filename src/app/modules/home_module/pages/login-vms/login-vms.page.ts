@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Platform } from '@ionic/angular';
@@ -9,6 +9,8 @@ import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
+import { CalendarUtils } from 'angular-calendar';
+import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 
 @Component({
   selector: 'app-login-vms',
@@ -23,11 +25,28 @@ export class LoginVmsPage implements OnInit {
     private clientMainService: ClientMainService, 
     public functionMain: FunctionMainService,
     private storage: StorageService,
-    private appVersionCheck: CheckAppVersionService
+    private appVersionCheck: CheckAppVersionService,
+    private route: ActivatedRoute,
+    private webrtc: WebRtcService,
   ) {}
 
   ngOnInit() {
     this.initializeBackButtonHandling()
+    this.route.queryParams.subscribe(params => {
+      console.log(params)
+      if (params) {
+        if (params['user_id']){
+          this.direct_user_id = params['user_id']
+        }
+        if (params['call_id']){
+          this.direct_call_id = params['call_id']
+        }
+        if (params['project_id']){
+          console.log("EYYOYOOOO", params['project_id'])
+          this.searchBarcode('', params['project_id'])
+        }
+      }
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -37,144 +56,81 @@ export class LoginVmsPage implements OnInit {
     }
   }
 
-  onClick() {
-    // this.router.navigate(['/home-vms'])
-    this.scanResult = ''
-    this.isQrModal = true
-    this.isListening = true
-    this.startScanner()
-  }
+  direct_user_id: any = 0
+  direct_call_id: any = 0
 
   onBack() {
     this.router.navigate([''])
-    this.isListening = false
   }
 
-  isQrModal = false
-  closeModal() {
-    this.stopScanner()
-    this.isQrModal = false
-    this.isListening = false
-  }
-  
-
-  htmlScanner!: Html5Qrcode
-  scannerId = 'reader'
-  scanResult: string = ''
-  startScanner(){
-
-    const closeModalOnBack = () => {
-        this.closeModal()
-        window.removeEventListener('popstate', closeModalOnBack);
-    };
-    history.pushState({ modalOpen: true }, '');
-    window.addEventListener('popstate', closeModalOnBack)
-
-    console.log("HAI")
-    this.scanResult = ''
-    setTimeout(() => {
-      this.htmlScanner = new Html5Qrcode(this.scannerId);
-      console.log("Scanner Initialized:", this.htmlScanner);
-      console.log("WORK")
-      this.htmlScanner.start(
-        { 
-          facingMode: "environment"
-        },
-        {
-          fps: 10,
-          qrbox: {
-            width: 400,
-            height: 400,
-          }
-        },
-        (decodedText) => {
-          this.scanResult = decodedText
-          this.closeModal()
-          this.searchBarcode(this.scanResult)
-          this.scanResult = ''
-        },
-        (errorMessage) => {
-          console.log(errorMessage)
-        }
-        
-      ).catch(err => console.log(err));
-    }, 0)
-    
+  async getPreference() {
+    return this.functionMain.vmsPreferences().then((value) => {
+      return value ? value : false
+    })
   }
 
-  stopScanner() {
-    this.htmlScanner.stop().catch( err => console.log(err))
-  }
-
-  isListening = false;
-
-  lastKeypressTime: number = 0;
-  scanThreshold: number = 50;
-  ignored_string = ''
-  @HostListener('document:keydown', ['$event'])
-  handleScannerInput(event: KeyboardEvent) {
-    if (!this.isListening) return
-
-    const currentTime = new Date().getTime();
-    const timeDiff = currentTime - this.lastKeypressTime;
-    this.lastKeypressTime = currentTime;
-
-    if (event.key === 'Shift') {
-      return;
-    } else if (event.key === 'Enter') {
-      console.log(this.scanResult)
-      this.closeModal()
-      this.searchBarcode(this.scanResult)
-      this.scanResult = '';
-    } else {
-      if (timeDiff < this.scanThreshold) {
-        this.scanResult += this.ignored_string
-        this.scanResult += event.key;
-        this.ignored_string = ''
-      } else {
-        this.ignored_string = event.key
-        console.log('Ignored human typing:', event.key);
-      }
-    }
-
-  }
-
-  async searchBarcode(barcode: string){
-    console.log(barcode)
-    console.log("HOY OVER HER WORK")
-    if (barcode) {
+  async searchBarcode(barcode: string, direct_project_id: any = false){
+    if (barcode || direct_project_id) {
       try {
         await this.getNotificationPermission();
       } catch (notificationError) {
           console.error('Failed to get notification permission:', notificationError);
       }
-      this.clientMainService.getApi({barcode: barcode, fcm_token: this.fcmToken}, '/vms/post/vms_login').subscribe({
-        next: (results) => {
-          console.log(results.result)
-          if (results.result.status_code === 200) {
-            this.project_key = ''
-            Preferences.set({
-              key: 'USER_INFO',
-              value: results.result.response_status.access_token,
-            }).then(()=>{
-              this.storage.clearAllValueFromStorage()
-              let storageData = {
-                'background': results.result.response_status.background
-              }
-              this.storage.setValueToStorage('USESATE_DATA', storageData)
-              setTimeout(() => {
-                this.router.navigate(['/home-vms']);
-              }, 300)
-            });
-          } else {
-            this.functionMain.presentToast('Project code not found!', 'danger');
+      let callStorage: any = false
+      if (direct_project_id) {
+        if (this.direct_call_id && this.direct_user_id) {
+          callStorage = {
+            'user_id': this.direct_user_id,
+            'call_id': this.direct_call_id,
           }
-        },
-        error: (error) => {
-          this.functionMain.presentToast('An error occurred while logging into VMS!', 'danger');
-          console.error(error);
+        } else {
+          this.functionMain.presentToast("Invalid URL.", 'danger')
         }
-      });
+      }
+      console.log("HI")
+      this.getPreference().then((value: any) => {
+        console.log(value)
+        let params = {
+          barcode: barcode, 
+          fcm_token: this.fcmToken, 
+          direct_project_id: direct_project_id, 
+          direct_user_id: this.direct_user_id, 
+          direct_call_id: this.direct_call_id, 
+          fcm_token_id: (value ? value.fcm_token_id : false)
+        }
+        console.log(params)
+        this.clientMainService.getApi(params, '/vms/post/vms_login').subscribe({
+          next: (results) => {
+            console.log(results.result)
+            if (results.result.status_code === 200) {
+              this.project_key = ''
+              this.functionMain.logout()
+              Preferences.set({
+                key: 'USER_INFO',
+                value: results.result.response_status.access_token,
+              }).then(()=>{
+                this.storage.clearAllValueFromStorage()
+                let storageData = {
+                  'background': results.result.response_status.background
+                }
+                this.storage.setValueToStorage('USESATE_DATA', storageData)
+                if (callStorage) {
+                  this.storage.setValueToStorage('RGG_CALL_DATA', callStorage)
+                }
+                setTimeout(() => {
+                  this.router.navigate(['/home-vms']);
+                }, 300)
+              });
+            } else {
+              this.functionMain.presentToast(results.result.status_description, 'danger');
+            }
+          },
+          error: (error) => {
+            this.functionMain.presentToast('An error occurred while logging into VMS!', 'danger');
+            console.error(error);
+          }
+        });
+      })
     } else {
       this.functionMain.presentToast('Project code is required!', 'warning')
     }

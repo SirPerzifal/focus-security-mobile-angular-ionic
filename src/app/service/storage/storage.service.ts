@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
-type key = 'USESATE_DATA' | 'STAY_LOGGED_IN';
+type key = 'USESATE_DATA' | 'STAY_LOGGED_IN' | 'RGG_CALL_DATA';
 
 @Injectable({
   providedIn: 'root'

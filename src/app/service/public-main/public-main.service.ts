@@ -7,26 +7,31 @@ import {
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import { from, Observable, throwError } from 'rxjs';
+import { EMPTY, from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../resident/authenticate/authenticate.service';
 import { FunctionMainService } from '../function/function-main.service';
+import { ClientMainService } from '../client-app/client-main.service';
+import { StorageService } from '../storage/storage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublicMainService implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private functionMain: FunctionMainService) { }
+  constructor(private authService: AuthService, private functionMain: FunctionMainService, private clientMain: ClientMainService, private storage: StorageService, private router: Router) { }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // console.log("PING IS LOG ON HERE")
     return from(this.authService.getToken()).pipe(
       switchMap((token) => {
-        // console.log(`Token Received: ${token}`);
+        if (req.url.includes(this.functionMain.rggAuth)) {
+          return next.handle(req);
+        }
+
         if (token) {
           req = req.clone({
             setHeaders: {
@@ -34,55 +39,78 @@ export class PublicMainService implements HttpInterceptor {
             },
           });
         }
-        return next.handle(req).pipe(
-          tap((res) => {
-            if (res instanceof HttpResponse) {
-              // console.log('Response received:', res);
-              if (res.body?.result?.status_code === 403) {
-                // console.log('Token expired, refreshing token...');
-                throw new HttpErrorResponse({ status: 401, error: 'Token expired' });
-              }
-              if (res.body?.result?.status_code === 408) {
-                // console.log('Token expired, refreshing token...');
-                this.functionMain.logout()
-                throw new HttpErrorResponse({ status: 401, error: 'Token expired' });
-              }
-            }
-          }),
-          catchError((error: HttpErrorResponse) => {
-            // console.log('Catched Error...', error)
-            if (error.status === 401) {
-              // return throwError(error)
-              return this.authService.refreshToken().pipe(
-                switchMap((newToken) => {
-                  if (newToken) {
-                    // console.log("tge bew= tijeb", newToken)
-                    req = req.clone({
-                      setHeaders: {
-                        Authorization: `Bearer ${newToken}`,
-                      },
-                    });
-                    return next.handle(req);
-                  } else {
-                    // console.log('Token not received in Interceptor')
+
+        return from(this.storage.getValueFromStorage('RGG_CALL_DATA')).pipe(
+          switchMap((value) => {
+            if (value) {
+              return this.clientMain.getApi({}, this.functionMain.rggAuth).pipe(
+                switchMap((results: any) => {
+                  if (results.result.status_code === 401) {
+                    this.functionMain.presentToast("Invalid session.", "danger");
                     this.functionMain.logout();
-                    return throwError(error);
+                    this.router.navigate(['/login-vms']);
+                    return EMPTY;
                   }
+                  return this.handleRequestWithErrorHandling(req, next);
                 }),
-                catchError(refreshError => {
-                  // console.log('Refresh token failed, logging out.');
-                  this.functionMain.logout();
-                  return throwError(refreshError);
+                catchError((error) => {
+                  console.error('rggAuth API error:', error);
+                  return EMPTY
                 })
               );
             } else {
-              return throwError(error);
+              return this.handleRequestWithErrorHandling(req, next);
             }
           })
         );
       })
     );
   }
+
+  private handleRequestWithErrorHandling(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    return next.handle(req).pipe(
+      tap((res) => {
+        if (res instanceof HttpResponse) {
+          if (res.body?.result?.status_code === 403) {
+            throw new HttpErrorResponse({ status: 401, error: 'Token expired' });
+          }
+          if (res.body?.result?.status_code === 408) {
+            this.functionMain.logout();
+            throw new HttpErrorResponse({ status: 401, error: 'Token expired' });
+          }
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return this.authService.refreshToken().pipe(
+            switchMap((newToken) => {
+              if (newToken) {
+                req = req.clone({
+                  setHeaders: {
+                    Authorization: `Bearer ${newToken}`,
+                  },
+                });
+                return next.handle(req);
+              } else {
+                this.functionMain.logout();
+                return throwError(() => error);
+              }
+            }),
+            catchError((refreshError) => {
+              this.functionMain.logout();
+              return throwError(() => refreshError);
+            })
+          );
+        } else {
+          return throwError(() => error);
+        }
+      })
+    );
+  }
+  
 
 
 }

@@ -23,20 +23,10 @@
           [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
         </app-text-input>
         <button class="h-20 w-1/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white" (click)="searchBarcode(project_key)">LOGIN</button>
-      <!-- <img alt="Loading" src="assets/img/qr_2.png" class="w-48 h-48" (click)="onClick()" /> -->
     </div>
   </div>
   <div class="h-[5%]">
 
   </div>
-  <ion-modal id="text-modal" [isOpen]="isQrModal" (didDismiss)="closeModal()">
-    <ng-template>
-      <div class="wrapper">
-        <div class="w-full">
-          <div id="reader" class="w-full mb-4"></div>
-        </div>
-      </div>
-    </ng-template>
-  </ion-modal>
 
 </ion-content>

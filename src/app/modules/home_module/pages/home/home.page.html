@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="flex flex-col relative mt-3">
-    <div class="flex flex-row justify-end text-center mx-4 relative">
+    <div class="flex flex-row justify-end text-center mx-4 relative" *ngIf="!rggData">
       <div class="flex flex-row items-center space-x-4 relative" (click)="clickState()">
         <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway().string }}</span>
         <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color ">
