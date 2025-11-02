@@ -316,6 +316,25 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               phone: estate.family_mobile_number,
               employeeExtensionNumber: estate.employee_extension_number,
             }
+
+            console.log(this.inputForm.statusOwner);
+            
+            if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
+              console.log("tesj sw");
+              this.squareButton = [
+                { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' }
+              ]; // kosong
+            } else {
+              console.log("tesj seerw");
+              this.squareButton = [
+                { name: 'Family', src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp' },
+                { name: 'Employee', src: 'assets/icon/resident-icon/profile/Furniture.webp' },
+                { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' },
+                { name: 'Ban', src: 'assets/icon/resident-icon/profile/No User.webp' },
+                { name: 'Pets', src: 'assets/icon/resident-icon/profile/Pets.webp' },
+                { name: 'Vehicles', src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp' },
+              ];
+            }
           }
           if (estate.unit_id) {
             this.activeUnit = estate.unit_id;
@@ -492,27 +511,24 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 phone: estate.family_mobile_number,
                 employeeExtensionNumber: estate.employee_extension_number,
               }
-              this.squareButton = [
-                {
-                  name: 'Family',
-                  src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
-                },    {
-                  name: 'Employee',
-                  src: 'assets/icon/resident-icon/profile/Furniture.webp',
-                },    {
-                  name: 'Estate',
-                  src: 'assets/icon/resident-icon/profile/Home.png',
-                },    {
-                  name: 'Ban',
-                  src: 'assets/icon/resident-icon/profile/No User.webp',
-                },    {
-                  name: 'Pets',
-                  src: 'assets/icon/resident-icon/profile/Pets.webp',
-                },    {
-                  name: 'Vehicles',
-                  src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
-                }
-              ];
+              console.log(this.inputForm.statusOwner);
+              
+              if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
+                console.log("tesj sw");
+                this.squareButton = [
+                  { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' }
+                ]; // kosong
+              } else {
+                console.log("tesj seerw");
+                this.squareButton = [
+                  { name: 'Family', src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp' },
+                  { name: 'Employee', src: 'assets/icon/resident-icon/profile/Furniture.webp' },
+                  { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' },
+                  { name: 'Ban', src: 'assets/icon/resident-icon/profile/No User.webp' },
+                  { name: 'Pets', src: 'assets/icon/resident-icon/profile/Pets.webp' },
+                  { name: 'Vehicles', src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp' },
+                ];
+              }
             }
             if (estate.unit_id) {
               this.activeUnit = estate.unit_id;
@@ -1013,27 +1029,24 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   phone: estate.family_mobile_number,
                   employeeExtensionNumber: estate.employee_extension_number,
                 }
-                this.squareButton = [
-                  {
-                    name: 'Family',
-                    src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
-                  },    {
-                    name: 'Employee',
-                    src: 'assets/icon/resident-icon/profile/Furniture.webp',
-                  },    {
-                    name: 'Estate',
-                    src: 'assets/icon/resident-icon/profile/Home.png',
-                  },    {
-                    name: 'Ban',
-                    src: 'assets/icon/resident-icon/profile/No User.webp',
-                  },    {
-                    name: 'Pets',
-                    src: 'assets/icon/resident-icon/profile/Pets.webp',
-                  },    {
-                    name: 'Vehicles',
-                    src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
-                  }
-                ];
+                console.log(this.inputForm.statusOwner);
+                
+                if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
+                  console.log("tesj sw");
+                  this.squareButton = [
+                    { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' }
+                  ]; // kosong
+                } else {
+                  console.log("tesj seerw");
+                  this.squareButton = [
+                    { name: 'Family', src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp' },
+                    { name: 'Employee', src: 'assets/icon/resident-icon/profile/Furniture.webp' },
+                    { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' },
+                    { name: 'Ban', src: 'assets/icon/resident-icon/profile/No User.webp' },
+                    { name: 'Pets', src: 'assets/icon/resident-icon/profile/Pets.webp' },
+                    { name: 'Vehicles', src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp' },
+                  ];
+                }
               }
               if (estate.unit_id) {
                 this.activeUnit = estate.unit_id;

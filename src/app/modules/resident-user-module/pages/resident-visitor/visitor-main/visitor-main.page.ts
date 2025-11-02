@@ -101,7 +101,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       vehicleNo: '',
       entryType: '',
       invite_id: '',
-      is_entry: false
+      is_entry: false,
+      contactNumber: ''
     }
   ]
 
@@ -300,7 +301,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
                 entryType: item['entry_type'],
                 invite_id: item['invite_id'],
                 is_entry: item['is_entry'],
-                facility: item['facility']
+                facility: item['facility'],
+                contactNumber: item['contact_number']
               });
             });
             this.pagination = {

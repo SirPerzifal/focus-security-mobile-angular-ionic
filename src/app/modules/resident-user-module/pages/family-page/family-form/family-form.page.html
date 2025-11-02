@@ -101,7 +101,7 @@
           [ngClass]="(selectedNameProfileFamily) ? 'text-black' : 'text-white'"
         >
           {{ selectedNameProfileFamily ? selectedNameProfileFamily : 'Upload
-          Helper Work Permit' }}
+          Profile Picture' }}
         </label>
       </div>
     </div>
@@ -157,7 +157,41 @@
     </div>
 
     <div
-      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'primary_contact'"
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'helper'"
+      class="w-full mt-1"
+    >
+      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <select
+        id="type_of_residence"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+        (change)="onValueChange($event, 'select_type_resident')"
+        [(ngModel)]="formData.type_of_residence"
+        name="type_of_residence"
+        [disabled]="disableForm"
+      >
+        <option [value]="'helper'">Family, Helper</option>
+      </select>
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
+      class="w-full mt-1"
+    >
+      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <select
+        id="type_of_residence"
+        class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
+        (change)="onValueChange($event, 'select_type_resident')"
+        [(ngModel)]="formData.type_of_residence"
+        name="type_of_residence"
+        [disabled]="disableForm"
+      >
+        <option [value]="'tenants'">Tenant</option>
+      </select>
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'primary_contact' && formData.type_of_residence !== 'helper' && formData.type_of_residence !== 'tenants'"
       class="w-full mt-1"
     >
       <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
@@ -171,8 +205,6 @@
       >
         <option [value]="'secondary_contact'">Family, Secondary Contact</option>
         <option [value]="'member'">Family, Member</option>
-        <option [value]="'helper'">Family, Helper</option>
-        <option [value]="'tenants'">Tenant</option>
       </select>
     </div>
 
@@ -211,7 +243,40 @@
       <div class="flex flex-row justify-start">
         <p class="text-sm font-bold">Helper Work Permit File</p>
       </div>
+      <div *ngIf="pageForWhat === 'editData'">
+        <div
+          *ngIf="disableForm"
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
+            >Work Permit File Exist</label
+          >
+        </div>
+        <div
+          *ngIf="!disableForm"
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="helper_work_permit"
+            (change)="onUploadHelperWorkPermit($event)"
+            id="helper_work_permit"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
+            for="helper_work_permit"
+          >
+            {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
+            'Change Helper Work Permit' }}
+          </label>
+        </div>
+      </div>
       <div
+        *ngIf="pageForWhat !== 'editData'"
         class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
       >
         <input

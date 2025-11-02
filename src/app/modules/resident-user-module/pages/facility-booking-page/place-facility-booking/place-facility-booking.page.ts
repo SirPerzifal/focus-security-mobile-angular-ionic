@@ -278,7 +278,11 @@ export class PlaceFacilityBookingPage implements OnInit {
         end_time: endTimeString,
       }, 'post/facility_book').subscribe(
         (response: any) => {
-          this.router.navigate(['/facility-booking-main'])
+          if (response.result.success === false) {
+            this.presentToast(response.result.message, 'danger');
+          } else {
+            this.router.navigate(['/facility-booking-main'])
+          }
         }
       )
     }

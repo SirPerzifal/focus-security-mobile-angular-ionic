@@ -1,0 +1,251 @@
+country_name,dial_code,country_code,min_digit,max_digit
+Aruba,+297,AW,7,15
+Afghanistan,+93,AF,7,15
+Angola,+244,AO,7,15
+Anguilla,+1-264,AI,7,15
+Åland Islands,+358,AX,7,15
+Albania,+355,AL,7,15
+Andorra,+376,AD,7,15
+United Arab Emirates,+971,AE,7,15
+Argentina,+54,AR,7,15
+Armenia,+374,AM,7,15
+American Samoa,+1-684,AS,7,15
+Antarctica,+672,AQ,7,15
+French Southern Territories,,TF,7,15
+Antigua and Barbuda,+1-268,AG,7,15
+Australia,+61,AU,7,15
+Austria,+43,AT,7,15
+Azerbaijan,+994,AZ,7,15
+Burundi,+257,BI,7,15
+Belgium,+32,BE,7,15
+Benin,+229,BJ,7,15
+Bonaire, Sint Eustatius and Saba,,BQ,7,15
+Burkina Faso,+226,BF,7,15
+Bangladesh,+880,BD,7,15
+Bulgaria,+359,BG,7,15
+Bahrain,+973,BH,7,15
+Bahamas,+1-242,BS,7,15
+Bosnia and Herzegovina,+387,BA,7,15
+Saint Barthélemy,,BL,7,15
+Belarus,+375,BY,7,15
+Belize,+501,BZ,7,15
+Bermuda,+1-441,BM,7,15
+Bolivia, Plurinational State of,+591,BO,7,15
+Brazil,+55,BR,7,15
+Barbados,+1-246,BB,7,15
+Brunei Darussalam,+673,BN,7,15
+Bhutan,+975,BT,7,15
+Bouvet Island,,BV,7,15
+Botswana,+267,BW,7,15
+Central African Republic,+236,CF,7,15
+Canada,+1,CA,7,15
+Cocos (Keeling) Islands,,CC,7,15
+Switzerland,+41,CH,7,15
+Chile,+56,CL,7,15
+China,+86,CN,7,15
+Côte d'Ivoire,,CI,7,15
+Cameroon,+237,CM,7,15
+Congo, The Democratic Republic of the,+243,CD,7,15
+Congo,+242,CG,7,15
+Cook Islands,,CK,7,15
+Colombia,+57,CO,7,15
+Comoros,+269,KM,7,15
+Cabo Verde,+238,CV,7,15
+Costa Rica,+506,CR,7,15
+Cuba,+53,CU,7,15
+Curaçao,,CW,7,15
+Christmas Island,,CX,7,15
+Cayman Islands,+1-345,KY,7,15
+Cyprus,+357,CY,7,15
+Czechia,+420,CZ,7,15
+Germany,+49,DE,7,15
+Djibouti,+253,DJ,7,15
+Dominica,+1-767,DM,7,15
+Denmark,+45,DK,7,15
+Dominican Republic,+1-809,DO,7,15
+Algeria,+213,DZ,7,15
+Ecuador,+593,EC,7,15
+Egypt,+20,EG,7,15
+Eritrea,+291,ER,7,15
+Western Sahara,,EH,7,15
+Spain,+34,ES,7,15
+Estonia,+372,EE,7,15
+Ethiopia,+251,ET,7,15
+Finland,+358,FI,7,15
+Fiji,+679,FJ,7,15
+Falkland Islands (Malvinas),,FK,7,15
+France,+33,FR,7,15
+Faroe Islands,,FO,7,15
+Micronesia, Federated States of,+691,FM,7,15
+Gabon,+241,GA,7,15
+United Kingdom,+44,GB,7,15
+Georgia,+995,GE,7,15
+Guernsey,,GG,7,15
+Ghana,+233,GH,7,15
+Gibraltar,,GI,7,15
+Guinea,+224,GN,7,15
+Guadeloupe,,GP,7,15
+Gambia,+220,GM,7,15
+Guinea-Bissau,+245,GW,7,15
+Equatorial Guinea,+240,GQ,7,15
+Greece,+30,GR,7,15
+Grenada,+1-473,GD,7,15
+Greenland,,GL,7,15
+Guatemala,+502,GT,7,15
+French Guiana,,GF,7,15
+Guam,+1-671,GU,7,15
+Guyana,+592,GY,7,15
+Hong Kong,+852,HK,7,15
+Heard Island and McDonald Islands,,HM,7,15
+Honduras,+504,HN,7,15
+Croatia,+385,HR,7,15
+Haiti,+509,HT,7,15
+Hungary,+36,HU,7,15
+Indonesia,+62,ID,7,15
+Isle of Man,,IM,7,15
+India,+91,IN,7,15
+British Indian Ocean Territory,,IO,7,15
+Ireland,+353,IE,7,15
+Iran, Islamic Republic of,+98,IR,7,15
+Iraq,+964,IQ,7,15
+Iceland,+354,IS,7,15
+Israel,+972,IL,7,15
+Italy,+39,IT,7,15
+Jamaica,+1-876,JM,7,15
+Jersey,,JE,7,15
+Jordan,+962,JO,7,15
+Japan,+81,JP,7,15
+Kazakhstan,+7,KZ,7,15
+Kenya,+254,KE,7,15
+Kyrgyzstan,+996,KG,7,15
+Cambodia,+855,KH,7,15
+Kiribati,+686,KI,7,15
+Saint Kitts and Nevis,,KN,7,15
+Korea, Republic of,+82,KR,7,15
+Kuwait,+965,KW,7,15
+Lao People's Democratic Republic,+856,LA,7,15
+Lebanon,+961,LB,7,15
+Liberia,+231,LR,7,15
+Libya,+218,LY,7,15
+Saint Lucia,,LC,7,15
+Liechtenstein,+423,LI,7,15
+Sri Lanka,+94,LK,7,15
+Lesotho,+266,LS,7,15
+Lithuania,+370,LT,7,15
+Luxembourg,+352,LU,7,15
+Latvia,+371,LV,7,15
+Macao,+853,MO,7,15
+Saint Martin (French part),,MF,7,15
+Morocco,+212,MA,7,15
+Monaco,+377,MC,7,15
+Moldova, Republic of,+373,MD,7,15
+Madagascar,+261,MG,7,15
+Maldives,+960,MV,7,15
+Mexico,+52,MX,7,15
+Marshall Islands,+692,MH,7,15
+North Macedonia,,MK,7,15
+Mali,+223,ML,7,15
+Malta,+356,MT,7,15
+Myanmar,+95,MM,7,15
+Montenegro,+382,ME,7,15
+Mongolia,+976,MN,7,15
+Northern Mariana Islands,,MP,7,15
+Mozambique,+258,MZ,7,15
+Mauritania,+222,MR,7,15
+Montserrat,,MS,7,15
+Martinique,,MQ,7,15
+Mauritius,+230,MU,7,15
+Malawi,+265,MW,7,15
+Malaysia,+60,MY,7,15
+Mayotte,,YT,7,15
+Namibia,+264,NA,7,15
+New Caledonia,,NC,7,15
+Niger,+227,NE,7,15
+Norfolk Island,,NF,7,15
+Nigeria,+234,NG,7,15
+Nicaragua,+505,NI,7,15
+Niue,,NU,7,15
+Netherlands,+31,NL,7,15
+Norway,+47,NO,7,15
+Nepal,+977,NP,7,15
+Nauru,+674,NR,7,15
+New Zealand,+64,NZ,7,15
+Oman,+968,OM,7,15
+Pakistan,+92,PK,7,15
+Panama,+507,PA,7,15
+Pitcairn,,PN,7,15
+Peru,+51,PE,7,15
+Philippines,+63,PH,7,15
+Palau,+680,PW,7,15
+Papua New Guinea,+675,PG,7,15
+Poland,+48,PL,7,15
+Puerto Rico,+1-787,PR,7,15
+Korea, Democratic People's Republic of,+850,KP,7,15
+Portugal,+351,PT,7,15
+Paraguay,+595,PY,7,15
+Palestine, State of,,PS,7,15
+French Polynesia,,PF,7,15
+Qatar,+974,QA,7,15
+Réunion,,RE,7,15
+Romania,+40,RO,7,15
+Russian Federation,+7,RU,7,15
+Rwanda,+250,RW,7,15
+Saudi Arabia,+966,SA,7,15
+Sudan,+249,SD,7,15
+Senegal,+221,SN,7,15
+Singapore,+65,SG,7,15
+South Georgia and the South Sandwich Islands,,GS,7,15
+Saint Helena, Ascension and Tristan da Cunha,,SH,7,15
+Svalbard and Jan Mayen,,SJ,7,15
+Solomon Islands,+677,SB,7,15
+Sierra Leone,+232,SL,7,15
+El Salvador,+503,SV,7,15
+San Marino,,SM,7,15
+Somalia,+252,SO,7,15
+Saint Pierre and Miquelon,,PM,7,15
+Serbia,+381,RS,7,15
+South Sudan,,SS,7,15
+Sao Tome and Principe,,ST,7,15
+Suriname,+597,SR,7,15
+Slovakia,+421,SK,7,15
+Slovenia,+386,SI,7,15
+Sweden,+46,SE,7,15
+Eswatini,+268,SZ,7,15
+Sint Maarten (Dutch part),,SX,7,15
+Seychelles,+248,SC,7,15
+Syrian Arab Republic,+963,SY,7,15
+Turks and Caicos Islands,,TC,7,15
+Chad,+235,TD,7,15
+Togo,+228,TG,7,15
+Thailand,+66,TH,7,15
+Tajikistan,+992,TJ,7,15
+Tokelau,,TK,7,15
+Turkmenistan,+993,TM,7,15
+Timor-Leste,+670,TL,7,15
+Tonga,+676,TO,7,15
+Trinidad and Tobago,+1-868,TT,7,15
+Tunisia,+216,TN,7,15
+Turkey,+90,TR,7,15
+Tuvalu,,TV,7,15
+Taiwan, Province of China,+886,TW,7,15
+Tanzania, United Republic of,+255,TZ,7,15
+Uganda,+256,UG,7,15
+Ukraine,+380,UA,7,15
+United States Minor Outlying Islands,,UM,7,15
+Uruguay,+598,UY,7,15
+United States,+1,US,7,15
+Uzbekistan,+998,UZ,7,15
+Holy See (Vatican City State),+379,VA,7,15
+Saint Vincent and the Grenadines,,VC,7,15
+Venezuela, Bolivarian Republic of,+58,VE,7,15
+Virgin Islands, British,,VG,7,15
+Virgin Islands, U.S.,,VI,7,15
+Viet Nam,+84,VN,7,15
+Vanuatu,+678,VU,7,15
+Wallis and Futuna,,WF,7,15
+Samoa,,WS,7,15
+Yemen,+967,YE,7,15
+South Africa,+27,ZA,7,15
+Zambia,+260,ZM,7,15
+Zimbabwe,+263,ZW,7,15
+Laos,+856,LAOS,7,15

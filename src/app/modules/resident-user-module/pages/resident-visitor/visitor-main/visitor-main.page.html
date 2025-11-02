@@ -246,6 +246,13 @@
                     <td>{{invite.dateOfInvite}}</td>
                   </tr>
                   <tr class="text-base cw-2:text-sm text-gray-800 h-1">
+                    <td class="font-bold">Contact No</td>
+                    <td>:</td>
+                    <td>
+                      {{invite.contactNumber ? invite.contactNumber : '-'}}
+                    </td>
+                  </tr>
+                  <tr class="text-base cw-2:text-sm text-gray-800 h-1">
                     <td class="font-bold">Vehicle No</td>
                     <td>:</td>
                     <td>{{invite.vehicleNo ? invite.vehicleNo : '-'}}</td>
