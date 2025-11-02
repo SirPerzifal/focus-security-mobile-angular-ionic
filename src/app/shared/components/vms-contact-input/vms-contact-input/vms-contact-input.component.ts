@@ -51,7 +51,18 @@ export class VmsContactInputComponent  implements OnInit {
     this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
       console.log(value)
       if (value && value.length > 0) {
-        this.countryCodes = value
+        this.countryCodes =  value.result.country_code_data.map((value: any) => {
+          return {
+            country: value.country,
+            code: value.code,
+            minDigit: value.min_digit,
+            maxDigit: value.max_digit,
+          }
+        }).sort((a: any, b: any) => {
+          if (a.country === 'SG') return -1;
+          if (b.country === 'SG') return 1;
+          return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
+        });
         this.cdr.detectChanges()
       }
       console.log(this.countryCodes)

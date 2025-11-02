@@ -24,32 +24,7 @@ export class VisitorInvitigFormPage implements OnInit {
   isModalOpen: boolean = false; // Status modal
   isFormInitialized: boolean = false;
   isFormVisible: boolean = false; // New variable to control form visibility
-  countryCodes: any[] = [
-    {
-      country: 'SG',
-      code: '65',
-      minDigit: 8, 
-      maxDigit: 8,
-    },
-    {
-      country: 'ID',
-      code: '62',
-      minDigit: 9,
-      maxDigit: 13,
-    },
-    {
-      country: 'MY', 
-      code: '60',
-      minDigit: 10,
-      maxDigit: 11, 
-    },
-    {
-      country: 'IN',
-      code: '91',
-      minDigit: 10,
-      maxDigit: 10,
-    },
-  ]
+  countryCodes: any[] = []
 
   formData = {
     dateOfInvite: new Date(),
@@ -108,6 +83,24 @@ export class VisitorInvitigFormPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
     });
+    this.mainApiResidentService.endpointCustomProcess({}, '/fs-get-country-code').subscribe((value: any) => {
+      console.log(value)
+      if (value && value.result.country_code_data.length > 0) {
+        this.countryCodes = value.result.country_code_data.map((value: any) => {
+          return {
+            country: value.country,
+            code: value.code,
+            minDigit: value.min_digit,
+            maxDigit: value.max_digit,
+          }
+        }).sort((a: any, b: any) => {
+          if (a.country === 'SG') return -1;
+          if (b.country === 'SG') return 1;
+          return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
+        });
+        console.log(JSON.stringify(this.countryCodes));
+      }
+    })
   }
 
   addInitialInvitee() {
@@ -343,10 +336,10 @@ export class VisitorInvitigFormPage implements OnInit {
       const max = selectedCountry.maxDigit;
 
       if (inputValue.length < min) { 
-        this.functionMain.presentToast('Phone is not minimum character', 'danger');
+        this.functionMain.presentToast(`Phone is not minimum character ${min}`, 'danger');
         return;
       } else if (inputValue.length > max) { 
-        this.functionMain.presentToast('Phone is reach maximum character', 'danger'); 
+        this.functionMain.presentToast(`Phone is reach maximum character ${max}`, 'danger'); 
         return;
       }
     } else {

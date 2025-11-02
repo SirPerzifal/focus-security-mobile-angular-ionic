@@ -155,6 +155,12 @@ export class ModalEstateHomepageComponent  implements OnInit {
             key: 'USER_INFO',
             value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
           });
+          let countryCodeData = response.result.country_codes.country_code_data
+          // this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData).then((value: any) => {
+          //   this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
+          //     console.log(value, "ineciewncienwcwicniwenwin");
+          //   })
+          // })
         } else {
           await Preferences.set({
             key: 'USER_INFO',
@@ -162,6 +168,9 @@ export class ModalEstateHomepageComponent  implements OnInit {
           });
           let countryCodeData = response.result.country_codes.country_code_data
           this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData)
+          this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
+            console.log(value, "ineciewncienwcwicniwenwin");
+          })
         }
         this.isClickProcess = false
         this.isSuccess = true

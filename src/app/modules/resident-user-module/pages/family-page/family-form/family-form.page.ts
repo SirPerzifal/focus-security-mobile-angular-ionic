@@ -22,32 +22,7 @@ export class FamilyFormPage implements OnInit {
   disableForm: boolean = false;
   minDate: string = ''; // Set tanggal minimum saat inisialisasi
   contactValue: string = '';
-  countryCodes: any[] = [
-    {
-      country: 'SG',
-      code: '65',
-      minDigit: 8, 
-      maxDigit: 8,
-    },
-    {
-      country: 'ID',
-      code: '62',
-      minDigit: 9,
-      maxDigit: 13,
-    },
-    {
-      country: 'MY', 
-      code: '60',
-      minDigit: 10,
-      maxDigit: 11, 
-    },
-    {
-      country: 'IN',
-      code: '91',
-      minDigit: 10,
-      maxDigit: 10,
-    },
-  ]
+  countryCodes: any[] = []
 
   selectedNameProfileFamily: string = '';
   selectedNameHelperWorkPermit: string = '';
@@ -121,6 +96,24 @@ export class FamilyFormPage implements OnInit {
 
   ngOnInit() {
     this.getTodayDate();
+    this.mainApi.endpointCustomProcess({}, '/fs-get-country-code').subscribe((value: any) => {
+      console.log(value)
+      if (value && value.result.country_code_data.length > 0) {
+        this.countryCodes = value.result.country_code_data.map((value: any) => {
+          return {
+            country: value.country,
+            code: value.code,
+            minDigit: value.min_digit,
+            maxDigit: value.max_digit,
+          }
+        }).sort((a: any, b: any) => {
+          if (a.country === 'SG') return -1;
+          if (b.country === 'SG') return 1;
+          return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
+        });
+        console.log(JSON.stringify(this.countryCodes));
+      }
+    })
   }
 
   directTo() {
