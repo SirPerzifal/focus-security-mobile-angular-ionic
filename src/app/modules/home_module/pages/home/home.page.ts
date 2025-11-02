@@ -240,7 +240,8 @@ export class HomePage implements OnInit {
                 'background': results.result.response_status.background
               }
               this.storage.setValueToStorage('USESATE_DATA', storageData)
-
+              let countryCodeData = results.result.response_status.country_codes.country_code_data
+              this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData)
               if (this.rggData) { 
                 this.storage.setValueToStorage('RGG_CALL_DATA', this.rggData)
               }

@@ -535,8 +535,6 @@ export class FunctionMainService {
     host_id: any = false,
     is_client: any = false
   ): Promise<any> {
-    console.log(unit_id, host_id);
-  
     return new Promise(async (resolve) => {
       let buttonArray: any = [];
   
@@ -546,8 +544,7 @@ export class FunctionMainService {
             text: 'Call',
             role: 'confirm',
             handler: () => {
-              console.log(message[1]);
-              this.webRtcService.createOffer(false, host_id ? message[1] : false, unit_id ? message[1] : false, false).then(async (result: any) => {
+              this.webRtcService.createOffer(false, message[1], false, false).then(async (result: any) => {
                 // console.log(result, "valuereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercalls");
               
                 // if (result === 'reject' || result === 'cancel' || result.endsWith('is not logged on any devices')) {
@@ -696,4 +693,37 @@ export class FunctionMainService {
     return errMsg
   }
 
+  async checkOpenTime() {
+  const value = await this.vmsPreferences()
+  if (value) {
+    const project_config = value.config
+    if (project_config.is_industrial) return false
+
+    const today_date = new Date()
+    const current_hour = today_date.getHours()
+    const current_minute = today_date.getMinutes()
+    let is_before_open = false
+    let is_before_close = false
+
+    if (project_config.office_opening_hours) {
+      const [open_hour, open_minute] = project_config.office_opening_hours.split(':').map(Number)
+      if ((current_hour < open_hour) || (current_hour === open_hour && current_minute < open_minute)) {
+        is_before_open = true
+      }
+    }
+
+    if (project_config.office_closing_hours) {
+      const [close_hour, close_minute] = project_config.office_closing_hours.split(':').map(Number)
+      if ((current_hour > close_hour) || (current_hour === close_hour && current_minute > close_minute)) {
+        is_before_close = true
+      }
+    }
+
+    return !(is_before_open || is_before_close)
+  }
+  return false
 }
+
+}
+
+

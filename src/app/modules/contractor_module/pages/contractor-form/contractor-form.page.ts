@@ -870,34 +870,8 @@ export class ContractorFormPage implements OnInit {
   }
 
   isOpen = true
-  checkOpenTime() {
-    if (this.project_config.is_industrial) return
-    let today_date = new Date()
-    let current_hour = today_date.getHours()
-    let current_minute = today_date.getMinutes()
-    let is_before_open = false
-    let is_before_close = false
-    console.log(current_hour, current_minute)
-    if (this.project_config.office_opening_hours) {
-      let open_hour = parseInt(this.project_config.office_opening_hours.split(':')[0])
-      let open_minute = parseInt(this.project_config.office_opening_hours.split(':')[1])
-      console.log(open_hour, open_minute)
-      if ((current_hour < open_hour) || (current_hour == open_hour && current_minute < open_minute) ) {
-        is_before_open = true
-      }
-      console.log(is_before_open)
-    }
-    if (this.project_config.office_closing_hours) {
-      let close_hour = parseInt(this.project_config.office_closing_hours.split(':')[0])
-      let close_minute = parseInt(this.project_config.office_closing_hours.split(':')[1])
-      console.log(close_hour, close_minute)
-      if ((current_hour > close_hour) || (current_hour == close_hour && current_minute > close_minute) ) {
-        is_before_close = true
-      }
-      console.log(is_before_close)
-    }
-    
-    this.isOpen = !(is_before_open || is_before_close)
+  async checkOpenTime() {
+    this.isOpen = await this.functionMain.checkOpenTime()
   }
 
   isBypass = false

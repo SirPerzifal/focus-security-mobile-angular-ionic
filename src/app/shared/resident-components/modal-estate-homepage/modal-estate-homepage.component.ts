@@ -77,6 +77,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
   isClickProcess = false
   isSuccess = false
   async chooseEstateClick(estate: any) {
+    console.log(estate)
     if (this.isClickProcess) return
     this.isClickProcess = true
     if (estate.user_id) {
@@ -142,7 +143,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
   
     try {
       const response: any = await lastValueFrom(observable);
-      console.log(response);
       if (response.result.status_code === 200) {
         await Preferences.clear();
   
@@ -160,6 +160,8 @@ export class ModalEstateHomepageComponent  implements OnInit {
             key: 'USER_INFO',
             value: response.result.access_token,
           });
+          let countryCodeData = response.result.country_codes.country_code_data
+          this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData)
         }
         this.isClickProcess = false
         this.isSuccess = true

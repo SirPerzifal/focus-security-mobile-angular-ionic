@@ -1,8 +1,7 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { ToastController } from '@ionic/angular';
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
@@ -12,7 +11,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class VmsContactInputComponent  implements OnInit {
 
-  constructor(private mainVmsService: MainVmsService, private toastController: ToastController, private functionMain: FunctionMainService) { }
+  constructor(private mainVmsService: MainVmsService, private functionMain: FunctionMainService, private storage: StorageService, private cdr: ChangeDetectorRef) { }
 
   @Input() placeholder: string = '821 7263 112';
   @Input() labelText: string = '';
@@ -34,33 +33,73 @@ export class VmsContactInputComponent  implements OnInit {
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
   @Output() contactInfo = new EventEmitter<any>();
+  @Output() codeMinDigit = new EventEmitter<any>();
 
+  initialSelection = '65'
+
+  setDefaultCode(value: any) {
+    let tepmSelect = value.substring(0, 2);
+    if (this.countryCodes.filter((item: any) => item.code.toString() == tepmSelect.toString()).length > 0) {
+      this.selectedCode = tepmSelect
+    } else {
+      this.selectedCode = value.substring(0, 3);
+    }
+    this.contactValue = value.substring(this.selectedCode.length);
+  }
+  
   getCode() {
-    this.countryCodes = [
-      {
-        country: 'SG',
-        code: '65',
-        digit: 8,
-      },
-      {
-        country: 'ID',
-        code: '62',
-        digit: 12,
-      },
-      {
-        country: 'MY',
-        code: '60',
-        digit: 9,
-      },
-      {
-        country: 'IN',
-        code: '91',
-        digit: 10,
-      },
-    ]
+    this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
+      console.log(value)
+      if (value && value.length > 0) {
+        this.countryCodes = value
+        this.cdr.detectChanges()
+      }
+      console.log(this.countryCodes)
+      setTimeout(() => {
+        if (this.valueExist) {
+          const cleanedValue = this.valueExist.replace(/\+/g, '');
+          if (this.valueExist[0] == '0') {
+            this.selectedCode = '65';
+            this.contactValue = cleanedValue.substring(1);
+          } else {
+            this.setDefaultCode(cleanedValue)
+          }
+          
+          this.onChange(this.combinedValue);
+          this.valueChange.emit(this.combinedValue);
+        }
+        this.codeMinDigit.emit(this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0].min_digit)
+      
+      }, 0);
+    })
   }
 
-  countryCodes: any = []
+  countryCodes: any = [
+    {
+      country: 'SG',
+      code: '65',
+      max_digit: 8,
+      min_digit: 7,
+    },
+    {
+      country: 'ID',
+      code: '62',
+      max_digit: 12,
+      min_digit: 7,
+    },
+    {
+      country: 'MY',
+      code: '60',
+      max_digit: 9,
+      min_digit: 7,
+    },
+    {
+      country: 'IN',
+      code: '91',
+      max_digit: 10,
+      min_digit: 7,
+    },
+  ]
 
   @Input()
   set value(val: string) {
@@ -70,8 +109,7 @@ export class VmsContactInputComponent  implements OnInit {
         this.selectedCode = '65';
         this.contactValue = cleanedValue.substring(1);
       } else {
-        this.selectedCode = cleanedValue.substring(0, 2);
-        this.contactValue = cleanedValue.substring(2);
+        this.setDefaultCode(cleanedValue)
       }
       this.onChange(this.combinedValue);
       this.valueChange.emit(this.combinedValue);
@@ -91,29 +129,13 @@ export class VmsContactInputComponent  implements OnInit {
   ngOnInit() {
     this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 570);
     this.getCode()
-    setTimeout(() => {
-      if (this.valueExist) {
-        const cleanedValue = this.valueExist.replace(/\+/g, '');
-        if (this.valueExist[0] == '0') {
-          this.selectedCode = '65';
-          this.contactValue = cleanedValue.substring(1);
-        } else {
-          this.selectedCode = cleanedValue.substring(0, 2);
-          this.contactValue = cleanedValue.substring(2);
-        }
-        
-        this.onChange(this.combinedValue);
-        this.valueChange.emit(this.combinedValue);
-      }
-    
-    }, 0);
   }
 
   onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
 
   onKeyUp(event: KeyboardEvent): void {
-    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].digit
+    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].max_digit
     const inputValue = (event.target as HTMLInputElement).value;
     if (inputValue.length > code) {
       this.contactValue = inputValue.slice(0, code)
@@ -128,6 +150,7 @@ export class VmsContactInputComponent  implements OnInit {
 
   onCountryCodeChange(event: Event): void {
     this.selectedCode = (event.target as HTMLSelectElement).value;
+    let selected = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0]
     this.valueChange.emit(this.combinedValue);
     this.onChange(this.combinedValue);
   }
@@ -163,7 +186,7 @@ export class VmsContactInputComponent  implements OnInit {
     }
   }
 
-   faQuestion = faQuestionCircle
+  faQuestion = faQuestionCircle
 
   showMessage() {
     this.functionMain.presentToast("Press field below code text to choose country extension code!", 'dark');
@@ -177,6 +200,11 @@ export class VmsContactInputComponent  implements OnInit {
   isSmallScreen = false
   checkScreenSize() {
     this.isSmallScreen = window.innerWidth < (this.isModal ? 800 : 750);
+  }
+
+  getSelected() {
+    let selected = this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0]
+    return `${selected.country} +${selected.code}`
   }
 
 }

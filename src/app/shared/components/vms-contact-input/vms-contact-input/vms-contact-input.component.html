@@ -6,7 +6,7 @@
     </div>
     <select [id]="id" [class]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" [disabled]="isReadonly">
-      <option hidden selected disabled value="+65">SG +65</option>
+      <option hidden selected disabled [value]="initialSelection">{{ getSelected() }}</option>
       <option *ngFor="let code of countryCodes" [value]="code.code">{{ isSmallScreen ? '' : code.country }} +{{ code.code }}</option>
     </select>
     <!-- <input [id]="id" [class]="'border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl'" [type]="'number'"
@@ -38,7 +38,7 @@
     <select [id]="id" [class]="inputClass + ' resident-selection'" [(ngModel)]="selectedCode"
       [name]="name" style="border: 1px solid #6B7280;" (change)="onCountryCodeChange($event)" >
       <!-- <option selected disabled value="">No Code</option> -->
-      <option hidden selected disabled value="+65">SG +65</option>
+      <option hidden selected disabled [value]="initialSelection">{{ getSelected() }}</option>
       <option *ngFor="let code of countryCodes" [value]="code.code">{{ code.country }} +{{ code.code }}</option>
     </select>
   </div>

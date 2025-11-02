@@ -268,6 +268,8 @@ export class ClientMainAppPage implements OnInit {
               'image_profile': results.result.image_profile
             }
             this.storage.setValueToStorage('USESATE_DATA', storageData)
+            let countryCodeData = results.result.country_codes.country_code_data
+            this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData)
             this.loadProject().then(() => {
               this.loadNotificationCount()
               this.isLoading = false

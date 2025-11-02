@@ -620,7 +620,8 @@ export class AlertMainPage implements OnInit {
       offence_id: id,
       is_checkout: type == 'checkout',
       is_release: type != 'checkout',
-      is_unregistered: this.active_type == 'unregistered' || this.active_type == 'overstay',
+      is_unregistered: this.active_type == 'unregistered',
+      is_overstay: this.active_type == 'overstay',
     }
     if (true) {
       this.clientMainService.getApi(params, '/vms/post/checkout_or_release_offence').subscribe({

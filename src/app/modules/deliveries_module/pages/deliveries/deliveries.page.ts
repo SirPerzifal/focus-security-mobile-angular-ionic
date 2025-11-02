@@ -55,6 +55,7 @@ export class DeliveriesPage implements OnInit {
   Unit: any[] = [];
 
   formData = {
+    name: '',
     contact_number: '', 
     vehicle_number: '', 
     delivery_type: '', 
@@ -79,6 +80,7 @@ export class DeliveriesPage implements OnInit {
       this.project_id = value.project_id
       this.Camera = value.config.lpr
       this.project_config = value.config
+      this.checkOpenTime()
     })
   }
   
@@ -113,14 +115,11 @@ export class DeliveriesPage implements OnInit {
     this.foodPlatform.getPackagePlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
-        console.log(result)
         if (result) {
           result.forEach((item: any) => {
             const base64Image = item['icon'];
-            const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp'; 
-            console.log(formattedImage)
+            const formattedImage = base64Image ? `data:image/png;base64,${base64Image}` : 'assets/icon/deliveries-icon/Package.webp';
             this.packageDeliveryButtons.push({image: formattedImage, text: item['name'], isActive: this.package_delivery_id == item['id'], id: item['id']});
-            console.log(item)
           });
         }
         this.packageDeliveryButtons.push({image: 'assets/icon/deliveries-icon/Package.webp', text: 'OTHERS', isActive: this.package_delivery_id == 'other', id: 'other'});
@@ -157,6 +156,9 @@ export class DeliveriesPage implements OnInit {
     if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification type is required!\n';
     }
+    if (!this.formData.name && this.module_config.visitor_name) {
+      errMsg += 'Please insert visitor name!\n';
+    }
     if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
       errMsg += 'Identification number is required!\n';
     }
@@ -189,6 +191,7 @@ export class DeliveriesPage implements OnInit {
     }
     try {
       let params = {
+        visitor_name: this.formData.name,
         contact_number: this.formData.contact_number,
         vehicle_number: this.showDrive ? this.formData.vehicle_number : '',
         delivery_type: 'food',
@@ -210,6 +213,7 @@ export class DeliveriesPage implements OnInit {
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
+        is_bypass_worktime: this.isBypass,
       }
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
         res => {
@@ -257,6 +261,7 @@ export class DeliveriesPage implements OnInit {
 
   resetForm() {
     this.formData = {
+      name: '',
       contact_number: '', 
       vehicle_number: '', 
       delivery_type: '', 
@@ -293,6 +298,8 @@ export class DeliveriesPage implements OnInit {
       visitor_contact_no: '',
       visitor_vehicle: '',
       company_name: '',
+      block: '',
+      unit: '',
       remarks: '',
     };
     this.pass_number = ''
@@ -302,6 +309,7 @@ export class DeliveriesPage implements OnInit {
 
   resetFormFood() {
     this.formData = {
+      name: '',
       contact_number: '', 
       vehicle_number: '', 
       delivery_type: '', 
@@ -349,6 +357,12 @@ export class DeliveriesPage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
+    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+      errMsg += 'Identification type is required!\n';
+    }
+    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+      errMsg += 'Identification number is required!\n';
+    }
     if (!this.formData.contact_number && this.module_config.contact_number){
       errMsg += 'Please insert visitor contact number!\n';
     }
@@ -357,11 +371,8 @@ export class DeliveriesPage implements OnInit {
         errMsg += 'Please insert a contact number! \n'
       }
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
+    if (!this.formData.name && this.module_config.visitor_name) {
+      errMsg += 'Please insert visitor name!\n';
     }
     if ((!this.formData.vehicle_number && this.module_config.vehicle_number) && this.showDrive){
       errMsg += 'Please insert visitor vehicle number!\n';
@@ -390,6 +401,7 @@ export class DeliveriesPage implements OnInit {
     }
     try{
       let params = {
+        visitor_name: this.formData.name,
         contact_number: this.formData.contact_number,
         vehicle_number: this.showDrive ? this.formData.vehicle_number : '',
         delivery_type: 'package',
@@ -415,6 +427,7 @@ export class DeliveriesPage implements OnInit {
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
+        is_bypass_worktime: this.isBypass,
       }
       
       this.clientMainService.getApi(params, '/vms/post/add_deliveries').subscribe(
@@ -688,7 +701,11 @@ export class DeliveriesPage implements OnInit {
   }
 
   onUnitChange(event: any) {
-    this.formData.unit = event[0];
+    if (this.bulkyItemDeliveries) {
+      this.otherDeliveryForm.unit = event[0]
+    } else {
+      this.formData.unit = event[0];
+    }
   }
 
   loadBlock() {
@@ -795,7 +812,6 @@ export class DeliveriesPage implements OnInit {
         this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
         if (!is_click) {
           if (this.otherDeliveries) {
-            console.log("SHOW OTHER")
             this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
             this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
             this.selectedImage = value.visitor_image
@@ -806,7 +822,7 @@ export class DeliveriesPage implements OnInit {
               this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
             }
           } else {
-            console.log("SHOW PACKAGE")
+            this.formData.name = value.visitor_name ? value.visitor_name : ''
             this.formData.contact_number = value.contact_number ? value.contact_number : ''
             this.selectedImage = value.visitor_image
             this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
@@ -842,6 +858,7 @@ export class DeliveriesPage implements OnInit {
         this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
         this.otherDeliveryForm.company_name = contactData.company_name
       }
+      this.formData.name = contactData.visitor_name ? contactData.visitor_name : ''
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
       if (this.project_config.is_industrial) {
         setTimeout(() => {
@@ -867,7 +884,7 @@ export class DeliveriesPage implements OnInit {
   }
 
   Host: any[] = [];
-  selectedHost: string = '';
+  selectedHost: any = false;
   contactHost = ''
   loadHost() {
     this.contactHost = ''
@@ -894,6 +911,7 @@ export class DeliveriesPage implements OnInit {
       if (this.project_config.is_industrial) {
         this.contactHost = event.data.industrial_host_id ? event.data.industrial_host_id : ''
       }
+      this.formData.name = event.data.visitor_name ? event.data.visitor_name : ''
       this.formData.contact_number = event.data.contact_number ? event.data.contact_number : ''
       if (this.food_delivery_type == 'drive_in' || this.packageDeliveries) {
         this.formData.vehicle_number = event.data.vehicle_number ? event.data.vehicle_number : ''
@@ -922,9 +940,11 @@ export class DeliveriesPage implements OnInit {
     visitor_vehicle: '',
     company_name: '',
     remarks: '',
+    block: '',
+    unit: '',
   };
 
-  onSubmitOther(openBarrier: boolean = true, camera_id: string = '', bypass_ban: boolean = false){
+  onSubmitOther(openBarrier: boolean = true, isBulky: boolean = false, camera_id: string = '', bypass_ban: boolean = false){
     let errMsg = ""
     if (this.showWalk) {
       this.otherDeliveryForm.visitor_vehicle = ''
@@ -949,8 +969,11 @@ export class DeliveriesPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number) {
+    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number && !isBulky) {
       errMsg += 'Vehicle number is required!\n';
+    }
+    if (((!this.otherDeliveryForm.block && this.module_config.block) || (!this.otherDeliveryForm.unit && this.module_config.unit)) && !this.project_config.is_industrial){
+      errMsg += 'Please insert a block and unit!\n';
     }
     if ((!this.otherDeliveryForm.company_name && this.module_config.company_name) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
@@ -974,7 +997,7 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: this.identificationType, nric_value: this.nric_value, host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: this.identificationType, nric_value: this.nric_value, host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id, is_bulky: isBulky, is_bypass_worktime: this.isBypass,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
@@ -1001,7 +1024,7 @@ export class DeliveriesPage implements OnInit {
         } else if (res.result.status_code === 206) {
           this.functionMain.banAlert(res.result.status_description, false, this.selectedHost).then((value: any) => {
             if (value) {
-              this.onSubmitOther(openBarrier, camera_id, true)
+              this.onSubmitOther(openBarrier, isBulky, camera_id, true)
             }
           })
         } else {
@@ -1105,5 +1128,12 @@ export class DeliveriesPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  isBypass = false
+  isOpen = true
+
+  async checkOpenTime() {
+    this.isOpen = await this.functionMain.checkOpenTime()
   }
 }
