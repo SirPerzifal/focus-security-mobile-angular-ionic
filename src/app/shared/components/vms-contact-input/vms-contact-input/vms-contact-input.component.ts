@@ -49,9 +49,8 @@ export class VmsContactInputComponent  implements OnInit {
   
   getCode() {
     this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
-      console.log(value)
       if (value && value.length > 0) {
-        this.countryCodes =  value.result.country_code_data.map((value: any) => {
+        this.countryCodes =  value.map((value: any) => {
           return {
             country: value.country,
             code: value.code,
@@ -59,13 +58,12 @@ export class VmsContactInputComponent  implements OnInit {
             maxDigit: value.max_digit,
           }
         }).sort((a: any, b: any) => {
-          if (a.country === 'SG') return -1;
-          if (b.country === 'SG') return 1;
+          // if (a.country === 'SG') return -1;
+          // if (b.country === 'SG') return 1;
           return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
         });
         this.cdr.detectChanges()
       }
-      console.log(this.countryCodes)
       setTimeout(() => {
         if (this.valueExist) {
           const cleanedValue = this.valueExist.replace(/\+/g, '');
@@ -79,7 +77,7 @@ export class VmsContactInputComponent  implements OnInit {
           this.onChange(this.combinedValue);
           this.valueChange.emit(this.combinedValue);
         }
-        this.codeMinDigit.emit(this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0].min_digit)
+        this.codeMinDigit.emit(this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0].minDigit)
       
       }, 0);
     })
@@ -89,26 +87,26 @@ export class VmsContactInputComponent  implements OnInit {
     {
       country: 'SG',
       code: '65',
-      max_digit: 8,
-      min_digit: 7,
+      maxDigit: 8,
+      minDigit: 7,
     },
     {
       country: 'ID',
       code: '62',
-      max_digit: 12,
-      min_digit: 7,
+      maxDigit: 12,
+      minDigit: 7,
     },
     {
       country: 'MY',
       code: '60',
-      max_digit: 9,
-      min_digit: 7,
+      maxDigit: 9,
+      minDigit: 7,
     },
     {
       country: 'IN',
       code: '91',
-      max_digit: 10,
-      min_digit: 7,
+      maxDigit: 10,
+      minDigit: 7,
     },
   ]
 
@@ -146,7 +144,7 @@ export class VmsContactInputComponent  implements OnInit {
   onTouched: () => void = () => {};
 
   onKeyUp(event: KeyboardEvent): void {
-    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].max_digit
+    let code = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0].maxDigit
     const inputValue = (event.target as HTMLInputElement).value;
     if (inputValue.length > code) {
       this.contactValue = inputValue.slice(0, code)

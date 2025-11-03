@@ -697,7 +697,7 @@ export class FunctionMainService {
   const value = await this.vmsPreferences()
   if (value) {
     const project_config = value.config
-    if (project_config.is_industrial) return false
+    if (project_config.is_industrial) return true
 
     const today_date = new Date()
     const current_hour = today_date.getHours()
