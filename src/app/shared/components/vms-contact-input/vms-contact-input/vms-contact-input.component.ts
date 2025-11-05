@@ -233,7 +233,7 @@ export class VmsContactInputComponent  implements OnInit {
 
   getSelected() {
     let selected = this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0]
-    return `${selected.country} +${selected.code}`
+    return `${this.isSmallScreen ? '' : selected.country} +${selected.code}`
   }
 
 }
