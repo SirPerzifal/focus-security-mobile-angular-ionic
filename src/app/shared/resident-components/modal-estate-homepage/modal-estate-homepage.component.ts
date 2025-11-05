@@ -69,6 +69,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
       project_name: estate[key]?.project_name || '',
       project_image: estate[key]?.project_image || '',
       record_type: estate[key]?.record_type || '',
+      intercom_code: estate[key]?.intercom_code || ''
     }));
   
     this.isLoading = false;

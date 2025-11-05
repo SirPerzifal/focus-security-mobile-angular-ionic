@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TenantExtendPagePageRoutingModule } from './tenant-extend-page-routing.module';
+import { ExtensionAgreementForHelperTenantsPageRoutingModule } from './extension-agreement-for-helper-tenants-routing.module';
 
-import { TenantExtendPagePage } from './tenant-extend-page.page';
+import { ExtensionAgreementForHelperTenantsPage } from './extension-agreement-for-helper-tenants.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ComponentsModule } from 'src/app/shared/components/component.module';
 
@@ -15,10 +15,10 @@ import { ComponentsModule } from 'src/app/shared/components/component.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    TenantExtendPagePageRoutingModule,
+    ExtensionAgreementForHelperTenantsPageRoutingModule,
     SharedModule,
     ComponentsModule
   ],
-  declarations: [TenantExtendPagePage]
+  declarations: [ExtensionAgreementForHelperTenantsPage]
 })
-export class TenantExtendPagePageModule {}
+export class ExtensionAgreementForHelperTenantsPageModule {}

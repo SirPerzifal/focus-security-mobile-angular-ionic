@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import {jwtDecode} from 'jwt-decode';
 import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
 import { StorageService } from '../storage/storage.service';
+import { MainApiResidentService } from '../resident/main/main-api-resident.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class FunctionMainService {
     private router: Router,
     private webRtcService: WebRtcService,
     private storage: StorageService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private mainApi: MainApiResidentService
   ) { }
 
   public readonly limitHistory = 15
@@ -299,6 +301,45 @@ export class FunctionMainService {
         return this.preference;
       } else {
         return false;
+      }
+    });
+  }
+
+  async downloadAttachment(idDocument: number, type: string = '') {
+    this.mainApi.endpointMainProcess({
+      document_id: idDocument,
+      type_request: type
+    }, 'get/download_document').subscribe(async (response: any) => {
+      console.log("download", response);
+      try {
+        const byteCharacters = atob(response.result.blob);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: response.result.type });
+  
+        if (Capacitor.isNativePlatform()) {
+          const base64 = await this.convertBlobToBase64(blob);
+          const saveFile = await Filesystem.writeFile({
+            path: `${response.result.title}`,
+            data: base64,
+            directory: Directory.Data
+          });
+          const path = saveFile.uri;
+          await FileOpener.open({
+            filePath: path,
+            contentType: blob.type
+          });
+          // console.log('File is opened');
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          this.downloadFile(href, `${response.result.title}`);
+        }
+      } catch (error) {
+        console.error('Error downloading document:', error);
+        // Optionally, show an error message to the user
       }
     });
   }

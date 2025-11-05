@@ -121,36 +121,35 @@
                   </div>
                 </div>
                 <div
-                  *ngIf="data.type !== 'Tenants'; else buttonForTenant"
-                  fill="clear"
                   class="button-card-facility flex items-center font-bold w-full mt-2"
+                  [ngClass]="{'space-x-1.5': data.type === 'Tenants' || data.type === 'Helper'}"
                 >
+                  <!-- Tombol View Details (selalu tampil) -->
                   <button
                     class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
                     (click)="openDetails(data)"
                   >
                     View Details
                   </button>
-                </div>
-                <ng-template #buttonForTenant>
-                  <div
-                    fill="clear"
-                    class="button-card-facility flex items-center font-bold w-full mt-2 space-x-1.5"
+
+                  <!-- Tombol Tenancies (hanya untuk Tenants) -->
+                  <button
+                    *ngIf="data.type === 'Tenants' && (data.status === 'approved' || data.status === 'Approved')"
+                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                    (click)="openExtend(data)"
                   >
-                    <button
-                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
-                      (click)="openDetails(data)"
-                    >
-                      View Details
-                    </button>
-                    <button
-                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
-                      (click)="openExtend(data)"
-                    >
-                      Tenancies
-                    </button>
-                  </div>
-                </ng-template>
+                    Tenancies
+                  </button>
+
+                  <!-- Tombol Helper's (hanya untuk Helper) -->
+                  <button
+                    *ngIf="data.type === 'Helper' && (data.status === 'approved' || data.status === 'Approved')"
+                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                    (click)="openExtend(data)"
+                  >
+                    Helper's
+                  </button>
+                </div>
               </div>
             </div>
           </div>

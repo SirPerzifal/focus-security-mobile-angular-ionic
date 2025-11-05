@@ -36,6 +36,7 @@ export interface Estate {
     project_name: string;
     project_image: string;
     record_type: string;
+    intercom_code: string
 }
 
 // visitor

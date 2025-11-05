@@ -618,10 +618,6 @@ const routes: Routes = [
     loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/vehicle-form/vehicle-form.module').then( m => m.VehicleFormPageModule)
   },
   {
-    path: 'tenant-extend-page',
-    loadChildren: () => import('./modules/resident-user-module/pages/family-page/tenant-extend-page/tenant-extend-page.module').then( m => m.TenantExtendPagePageModule)
-  },
-  {
     path: 'payment-form-vehicle',
     loadChildren: () => import('./modules/resident-user-module/pages/my-vehicle-page/payment-form-vehicle/payment-form-vehicle.module').then( m => m.PaymentFormVehiclePageModule)
   },
@@ -704,6 +700,10 @@ const routes: Routes = [
   {
     path: 'vms-intercom',
     loadChildren: () => import('./modules/vms_app/vms-intercom/vms-intercom.module').then( m => m.VmsIntercomPageModule)
+  },
+  {
+    path: 'extension-agreement-for-helper-tenants',
+    loadChildren: () => import('./modules/resident-user-module/pages/family-page/extension-agreement-for-helper-tenants/extension-agreement-for-helper-tenants.module').then( m => m.ExtensionAgreementForHelperTenantsPageModule)
   },
 ];
 

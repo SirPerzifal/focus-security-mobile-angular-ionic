@@ -23,6 +23,7 @@ import { BleClient } from '@capacitor-community/bluetooth-le';
 import { App } from '@capacitor/app';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
+import { NotifyEndOfAgreementAndPermitService } from 'src/app/service/notify-end-of-agreement-and-permit/notify-end-of-agreement-and-permit.service';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -151,7 +152,8 @@ export class ResidentHomePagePage implements OnInit {
     private platform: Platform,
     private router: Router,
     private route: ActivatedRoute,
-    private appVersionCheck: CheckAppVersionService
+    private appVersionCheck: CheckAppVersionService,
+    private notifyEndAgreement: NotifyEndOfAgreementAndPermitService
   ) {}
 
   handleRefresh(event: any) {
@@ -172,6 +174,7 @@ export class ResidentHomePagePage implements OnInit {
       if ( value ) {
         this.storage.decodeData(value).then((value: any) => {
           if ( value ) {
+            this.notifyEndAgreement.checkExpiryDateAccount(true);
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
             this.loadMenusConfig();
@@ -265,6 +268,7 @@ export class ResidentHomePagePage implements OnInit {
               project_name: result.result.response[key]?.project_name || '',
               project_image: result.result.response[key]?.project_image || '',
               record_type: result.result.response[key]?.record_type || '',
+              intercom_code: result.result.response[key]?.intercom_code || ''
             })
           }
         }
@@ -296,6 +300,8 @@ export class ResidentHomePagePage implements OnInit {
           console.log("HEY 2")
           this.storage.decodeData(result.data).then((value: any) => {
             if (value) {
+
+              this.notifyEndAgreement.checkExpiryDateAccount(true);
               console.log("END USER FORM MODAL")
               this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;

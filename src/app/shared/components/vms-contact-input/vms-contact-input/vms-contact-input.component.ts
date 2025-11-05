@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
@@ -11,7 +12,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class VmsContactInputComponent  implements OnInit {
 
-  constructor(private mainVmsService: MainVmsService, private functionMain: FunctionMainService, private storage: StorageService, private cdr: ChangeDetectorRef) { }
+  constructor(private mainVmsService: MainVmsService, private functionMain: FunctionMainService, private storage: StorageService, private cdr: ChangeDetectorRef, private mainApiResidentService: MainApiResidentService) { }
 
   @Input() placeholder: string = '821 7263 112';
   @Input() labelText: string = '';
@@ -63,6 +64,25 @@ export class VmsContactInputComponent  implements OnInit {
           return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
         });
         this.cdr.detectChanges()
+      } else {
+        this.mainApiResidentService.endpointCustomProcess({}, '/fs-get-country-code').subscribe((value: any) => {
+          console.log(value)
+          if (value && value.result.country_code_data.length > 0) {
+            this.countryCodes = value.result.country_code_data.map((value: any) => {
+              return {
+                country: value.country,
+                code: value.code,
+                minDigit: value.min_digit,
+                maxDigit: value.max_digit,
+              }
+            }).sort((a: any, b: any) => {
+              // if (a.country === 'SG') return -1;
+              // if (b.country === 'SG') return 1;
+              return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
+            });
+            this.cdr.detectChanges()
+          }
+        })
       }
       setTimeout(() => {
         if (this.valueExist) {

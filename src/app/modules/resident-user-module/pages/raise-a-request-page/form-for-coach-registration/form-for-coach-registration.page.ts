@@ -392,9 +392,9 @@ export class FormForCoachRegistrationPage implements OnInit {
       if (this.formSent.coachingRegNumber === "") {
         errMsg += 'Please provide the reg number of coach.\n';
       }
-      if (!this.formSent.nationality) {
-        errMsg += 'Please select or type the nationality.\n';
-      }
+      // if (!this.formSent.nationality) {
+      //   errMsg += 'Please select or type the nationality.\n';
+      // }
 
       if (errMsg === '') {
         this.formStatus = {
@@ -427,12 +427,12 @@ export class FormForCoachRegistrationPage implements OnInit {
     if (!this.formSent.vehicleNumber) {
       errMsg += 'Please provide the vehicle number of coach.\n';
     }
-    if (!this.formSent.sex) {
-      errMsg += 'Please select the sex of coach.\n';
-    }
-    if (!this.formSent.nationality) {
-      errMsg += 'Please select the nationality.\n';
-    }
+    // if (!this.formSent.sex) {
+    //   errMsg += 'Please select the sex of coach.\n';
+    // }
+    // if (!this.formSent.nationality) {
+    //   errMsg += 'Please select the nationality.\n';
+    // }
     if (!this.formSent.coachingRegNumber) {
       errMsg += 'Please provide the coaching registration number.\n';
     }

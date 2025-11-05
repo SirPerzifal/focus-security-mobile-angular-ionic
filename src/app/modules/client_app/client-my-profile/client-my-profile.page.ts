@@ -202,7 +202,8 @@ export class ClientMyProfilePage implements OnInit {
                 project_id: response.result.response[key]?.project_id,
                 project_name: response.result.response[key]?.project_name || '',
                 project_image: response.result.response[key]?.project_image || '',
-                record_type: response.result.response[key]?.record_type || ''
+                record_type: response.result.response[key]?.record_type || '',
+                intercom_code: response.result.response[key]?.intercom_code || ''
               })
             }
           }

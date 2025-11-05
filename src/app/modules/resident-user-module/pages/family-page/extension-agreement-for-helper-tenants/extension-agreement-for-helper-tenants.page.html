@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <app-header-inner-page
     [text]="'My Family'"
-    [text_second]="'Request Extension Tenants'"
+    [text_second]="'Request Extension ' + headType"
   ></app-header-inner-page>
 </ion-header>
 
@@ -16,13 +16,29 @@
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2 mb-28">
     <div class="flex flex-col justify-between">
-      <div class="w-full text-base">
-        Name of Tenant: {{this.formData.full_name}}
+      <div class="flex flex-row justify-between">
+        <div>
+          <div class="w-full text-base">
+            Name of {{ headType }}: {{this.formData.full_name}}
+          </div>
+          <div class="w-full text-base">
+            Current End Date: {{this.end_date}}
+          </div>
+        </div>
+        <img
+          class="w-12 h-12"
+          src="assets/icon/exc-client/file_download.webp"
+          alt="File Download"
+          (click)="downloadFile(formData.type_of_residence)"
+        />
       </div>
-      <div class="w-full text-base">Current End Date: {{this.end_date}}</div>
+
       <div class="w-full mt-2">
         <div class="flex flex-row justify-start mb-1">
-          <p class="text-sm font-bold">Tenant Agreement File</p>
+          <p class="text-sm font-bold">
+            {{ headType === 'Tenants' ? 'Tenancy agreement file' : 'Work permit
+            file' }}
+          </p>
         </div>
         <div
           class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
@@ -51,7 +67,7 @@
           [type]="'date'"
           [typeAction]="''"
           [labelParent]="''"
-          [labelChild1]="'Tenancy agreement end date'"
+          [labelChild1]="headType === 'Tenants' ? 'Tenancy agreement end date' : 'Work permit end date'"
           [labelChild2]="''"
           (eventEmitter)="onDateChange($event)"
           [value]="selectedDate"

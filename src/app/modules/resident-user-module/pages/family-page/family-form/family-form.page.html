@@ -245,16 +245,16 @@
       </div>
       <div *ngIf="pageForWhat === 'editData'">
         <div
-          *ngIf="disableForm"
-          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+          (click)="downloadFile('helper')"
+          class="bg-[#F5F5F5] p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
         >
           <label
             class="w-full text-start"
             [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
-            >Work Permit File Exist</label
+            >Work Permit File Exist (Valid until {{ selectedDate }})</label
           >
         </div>
-        <div
+        <!-- <div
           *ngIf="!disableForm"
           class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
         >
@@ -273,9 +273,9 @@
             {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
             'Change Helper Work Permit' }}
           </label>
-        </div>
+        </div> -->
       </div>
-      <div
+      <!-- <div
         *ngIf="pageForWhat !== 'editData'"
         class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
       >
@@ -308,7 +308,105 @@
           [disabled]="disableForm"
           [minDate]="minDate"
         ></app-input-component>
+      </div> -->
+    </div>
+
+    <div
+      *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
+    >
+      <div class="w-full mt-2">
+        <div class="flex flex-row justify-start">
+          <p class="text-sm font-bold">Tenants Agreement File</p>
+        </div>
+        <div *ngIf="pageForWhat === 'editData'">
+          <div
+            (click)="downloadFile('tenants')"
+            class="bg-[#F5F5F5] p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+          >
+            <label
+              class="w-full text-start"
+              [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
+              >Tenants Aggreement File Exist (Valid until {{ selectedDate
+              }})</label
+            >
+          </div>
+          <!-- <div
+            *ngIf="!disableForm"
+            class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+          >
+            <input
+              class="w-full rounded text-base hidden"
+              type="file"
+              name="tenants"
+              (change)="onUploadTenantsWorkPermit($event)"
+              id="tenants"
+            />
+            <label
+              class="w-full text-start"
+              [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-gray-500'"
+              for="tenants"
+            >
+              {{ selectedNameTenantsWorkPermit ? selectedNameTenantsWorkPermit :
+              'Upload Tenants Agreement File' }}
+            </label>
+          </div> -->
+        </div>
+        <!-- <div
+          *ngIf="pageForWhat !== 'editData'"
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="tenants"
+            (change)="onUploadTenantsWorkPermit($event)"
+            id="tenants"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-gray-500'"
+            for="tenants"
+          >
+            {{ selectedNameTenantsWorkPermit ? selectedNameTenantsWorkPermit :
+            'Upload Tenants Agreement File' }}
+          </label>
+        </div>
+        <div
+          *ngIf="pageForWhat !== 'editData'"
+          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+        >
+          <input
+            class="w-full rounded text-base hidden"
+            type="file"
+            name="tenants"
+            (change)="onUploadTenantsWorkPermit($event)"
+            id="tenants"
+          />
+          <label
+            class="w-full text-start"
+            [ngClass]="(selectedNameTenantsWorkPermit) ? 'text-black' : 'text-gray-500'"
+            for="tenants"
+          >
+            {{ selectedNameTenantsWorkPermit ? selectedNameTenantsWorkPermit :
+            'Upload Tenants Agreement File' }}
+          </label>
+        </div> -->
       </div>
+
+      <!-- <div class="mt-1.5">
+        <app-input-component
+          [id]="'end_tenants_agreement'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'Tenants Agreement End Date'"
+          [labelChild2]="''"
+          (eventEmitter)="onValueChange($event, 'end_tenants_agreement')"
+          [value]="selectedDate"
+          [disabled]="disableForm"
+          [minDate]="minDate"
+        ></app-input-component>
+      </div> -->
     </div>
 
     <div
@@ -376,8 +474,9 @@
     </div>
 
     <div
-      *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'tenants' && formData.type_of_residence !== 'primary_contact' && !formData.reject_reason"
+      *ngIf="pageForWhat === 'editData' && !formData.reject_reason && formData.type_of_residence !== 'primary_contact'"
     >
+      <!-- Cancel Edit Button - tidak tampil jika form disabled -->
       <app-submit-button
         *ngIf="!disableForm"
         [text]="'Cancel Edit'"
@@ -385,31 +484,16 @@
         (click)="justCancelEdit()"
       >
       </app-submit-button>
+
+      <!-- Process Edit Button - selalu tampil -->
       <app-submit-button
         [text]="buttonNameEdit"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="processEdit()"
       >
       </app-submit-button>
-      <app-submit-button
-        *ngIf="formData.status !== 'Pending Approval'"
-        [text]="'Change Password'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
-        (click)="changePassDirect()"
-      >
-      </app-submit-button>
-      <app-submit-button
-        *ngIf="formData.type_of_residence !== 'primary_contact'"
-        [text]="'Delete Family Member'"
-        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
-        (click)="onDelete()"
-      >
-      </app-submit-button>
-    </div>
 
-    <div
-      *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
-    >
+      <!-- Change Password Button - tidak tampil jika status Pending Approval -->
       <app-submit-button
         *ngIf="formData.status !== 'Pending Approval'"
         [text]="'Change Password'"
@@ -417,14 +501,28 @@
         (click)="changePassDirect()"
       >
       </app-submit-button>
+
+      <!-- Request Extension Work Permit - hanya untuk helper yang bukan Pending Approval -->
       <app-submit-button
+        *ngIf="formData.type_of_residence === 'helper' && formData.status !== 'Pending Approval'"
+        [text]="'Request Extension Work Permit'"
+        [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
+        (click)="openExtend()"
+      >
+      </app-submit-button>
+
+      <!-- Request Extension Agreement - hanya untuk tenants yang bukan Pending Approval -->
+      <app-submit-button
+        *ngIf="formData.type_of_residence === 'tenants' && formData.status !== 'Pending Approval'"
         [text]="'Request Extension Agreement'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="openExtend()"
       >
       </app-submit-button>
+
+      <!-- Delete Button - text berbeda tergantung tipe -->
       <app-submit-button
-        [text]="'Delete User'"
+        [text]="formData.type_of_residence === 'tenants' ? 'Delete User' : 'Delete Family Member'"
         [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base h-12'"
         (click)="onDelete()"
       >

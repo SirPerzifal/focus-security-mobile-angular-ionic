@@ -24,6 +24,7 @@ interface InputForm {
   unitName: string;
   email: string;
   phone: string;
+  intercomCode: string;
 }
 
 interface InputData {
@@ -79,6 +80,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     unitName: '',
     email: '',
     phone: '',
+    intercomCode: '',
     employeeExtensionNumber: '',
   }
 
@@ -266,6 +268,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               email: estate.family_email,
               phone: estate.family_mobile_number,
               employeeExtensionNumber: estate.employee_extension_number,
+              intercomCode: estate.intercom_code
             }
           } else {
             this.inputData = [
@@ -304,6 +307,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 formParams: 'phone',
                 name: 'Contact',
                 disabledInput: this.disabledInput
+              },    {
+                id: 'intercom_code',
+                formParams: 'intercomCode',
+                name: 'Intercome Code',
+                disabledInput: this.disabledInput
               }
             ]
             this.inputForm = {
@@ -315,6 +323,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               email: estate.family_email,
               phone: estate.family_mobile_number,
               employeeExtensionNumber: estate.employee_extension_number,
+              intercomCode: estate.intercom_code
             }
 
             console.log(this.inputForm.statusOwner);
@@ -449,6 +458,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
                 employeeExtensionNumber: estate.employee_extension_number,
+                intercomCode: estate.intercom_code
               }
               this.squareButton = [
                 {
@@ -499,6 +509,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   formParams: 'phone',
                   name: 'Contact',
                   disabledInput: this.disabledInput
+                },    {
+                  id: 'intercom_code',
+                  formParams: 'intercomCode',
+                  name: 'Intercome Code',
+                  disabledInput: this.disabledInput
                 }
               ]
               this.inputForm = {
@@ -510,6 +525,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 email: estate.family_email,
                 phone: estate.family_mobile_number,
                 employeeExtensionNumber: estate.employee_extension_number,
+                intercomCode: estate.intercom_code
               }
               console.log(this.inputForm.statusOwner);
               
@@ -701,6 +717,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
                   employeeExtensionNumber: estate.employee_extension_number,
+                  intercomCode: estate.intercom_code
                 }
               } else {
                 this.inputData = [
@@ -739,6 +756,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'phone',
                     name: 'Contact',
                     disabledInput: this.disabledInput
+                  },    {
+                    id: 'intercom_code',
+                    formParams: 'intercomCode',
+                    name: 'Intercome Code',
+                    disabledInput: this.disabledInput
                   }
                 ]
                 this.inputForm = {
@@ -750,6 +772,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
                   employeeExtensionNumber: estate.employee_extension_number,
+                  intercomCode: estate.intercom_code
                 }
               }
               if (estate.unit_id) {
@@ -848,7 +871,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 project_id: response.result.response[key]?.project_id,
                 project_name: response.result.response[key]?.project_name || '',
                 project_image: response.result.response[key]?.project_image || '',
-                record_type: response.result.response[key]?.record_type || ''
+                record_type: response.result.response[key]?.record_type || '',
+                intercom_code: response.result.response[key]?.intercom_code || ''
               })
             }
           }
@@ -967,6 +991,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
                   employeeExtensionNumber: estate.employee_extension_number,
+                  intercomCode: estate.intercom_code
                 }
                 this.squareButton = [
                   {
@@ -1017,6 +1042,11 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'phone',
                     name: 'Contact',
                     disabledInput: this.disabledInput
+                  },    {
+                    id: 'intercom_code',
+                    formParams: 'intercomCode',
+                    name: 'Intercome Code',
+                    disabledInput: this.disabledInput
                   }
                 ]
                 this.inputForm = {
@@ -1028,6 +1058,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   email: estate.family_email,
                   phone: estate.family_mobile_number,
                   employeeExtensionNumber: estate.employee_extension_number,
+                  intercomCode: estate.intercom_code
                 }
                 console.log(this.inputForm.statusOwner);
                 

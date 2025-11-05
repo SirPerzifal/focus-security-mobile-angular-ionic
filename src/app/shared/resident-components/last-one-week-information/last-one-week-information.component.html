@@ -1,0 +1,123 @@
+<ion-content class="expiry-modal-content">
+  <div class="modal-wrapper">
+    <!-- Close Button -->
+    <ion-button class="close-button" fill="clear" (click)="dismiss()">
+      <ion-icon name="close" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <!-- Icon Header with Animation -->
+    <div class="icon-header" [attr.data-urgency]="urgencyLevel">
+      <div class="icon-circle">
+        <ion-icon [name]="getIcon()" [color]="getUrgencyColor()"></ion-icon>
+      </div>
+
+      <!-- Urgency Badge -->
+      <ion-badge [color]="getUrgencyColor()" class="urgency-badge">
+        {{
+          urgencyLevel === "critical"
+            ? "URGENT"
+            : urgencyLevel === "warning"
+            ? "ATTENTION"
+            : "NOTICE"
+        }}
+      </ion-badge>
+    </div>
+
+    <!-- Title -->
+    <div class="modal-title">
+      <h2>{{ getTitle() }}</h2>
+    </div>
+
+    <!-- Countdown Card -->
+    <ion-card class="countdown-card" [color]="getUrgencyColor()">
+      <ion-card-content>
+        <div class="countdown-content">
+          <div class="countdown-number">
+            <span class="days-number">{{
+              daysRemaining >= 0 ? daysRemaining : 0
+            }}</span>
+            <span class="days-label">{{
+              daysRemaining === 1 ? "Day" : "Days"
+            }}</span>
+          </div>
+          <div class="countdown-text">
+            <p>{{ getCountdownText() }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Expiry Date Info -->
+    <div class="expiry-info" *ngIf="formattedDate">
+      <ion-item lines="none" class="info-item">
+        <ion-icon
+          name="calendar-outline"
+          slot="start"
+          color="medium"
+        ></ion-icon>
+        <ion-label>
+          <h3>Expiry Date</h3>
+          <p>{{ formattedDate }}</p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <!-- Message Content -->
+    <div class="message-content">
+      <ion-card class="message-card">
+        <ion-card-content>
+          <div class="message-icon">
+            <ion-icon
+              name="information-circle-outline"
+              color="medium"
+            ></ion-icon>
+          </div>
+          <p class="message-text">{{ message }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Action Buttons -->
+    <!-- <div class="action-buttons">
+      <ion-button
+        expand="block"
+        color="primary"
+        class="primary-action"
+        (click)="contactPrimaryContact()"
+      >
+        <ion-icon name="call-outline" slot="start"></ion-icon>
+        Contact Primary Contact
+      </ion-button>
+
+      <div class="secondary-actions">
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="medium"
+          (click)="viewDetails()"
+        >
+          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          View Details
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="clear"
+          color="medium"
+          (click)="remindLater()"
+        >
+          <ion-icon name="time-outline" slot="start"></ion-icon>
+          Remind Me Later
+        </ion-button>
+      </div>
+    </div> -->
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+      <p>
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        Please take action before the expiry date to avoid any complications.
+      </p>
+    </div>
+  </div>
+</ion-content>

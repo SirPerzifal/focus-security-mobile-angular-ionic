@@ -1,0 +1,265 @@
+.expiry-modal-content {
+  --background: white;
+  
+  .modal-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+  }
+
+  // Close Button
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    --color: white;
+    --background: rgba(0, 0, 0, 0.2);
+    --border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+
+  // Icon Header
+  .icon-header {
+    text-align: center;
+    margin: 40px 0 20px;
+    position: relative;
+
+    .icon-circle {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: pulse 2s infinite;
+
+      ion-icon {
+        font-size: 60px;
+      }
+    }
+
+    .urgency-badge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+      padding: 6px 16px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    &[data-urgency="critical"] .icon-circle {
+      animation: shake 0.5s infinite, pulse 2s infinite;
+    }
+  }
+
+  // Title
+  .modal-title {
+    text-align: center;
+    margin-bottom: 20px;
+
+    h2 {
+      color: var(--ion-color-primary);
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  // Countdown Card
+  .countdown-card {
+    margin: 0 0 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+    ion-card-content {
+      padding: 20px;
+    }
+
+    .countdown-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .countdown-number {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+
+        .days-number {
+          font-size: 48px;
+          font-weight: bold;
+          line-height: 1;
+          color: white;
+        }
+
+        .days-label {
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: rgba(255, 255, 255, 0.9);
+        }
+      }
+
+      .countdown-text {
+        flex: 1;
+
+        p {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: white;
+        }
+      }
+    }
+  }
+
+  // Expiry Info
+  .expiry-info {
+    margin-bottom: 20px;
+
+    .info-item {
+      --background: white;
+      --border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+      ion-label {
+        h3 {
+          font-size: 12px;
+          text-transform: uppercase;
+          color: var(--ion-color-medium);
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          margin-bottom: 4px;
+        }
+
+        p {
+          font-size: 16px;
+          font-weight: 500;
+          color: var(--ion-color-dark);
+        }
+      }
+    }
+  }
+
+  // Message Content
+  .message-content {
+    margin-bottom: 20px;
+
+    .message-card {
+      --background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+      ion-card-content {
+        padding: 20px;
+
+        .message-icon {
+          text-align: center;
+          margin-bottom: 12px;
+
+          ion-icon {
+            font-size: 32px;
+          }
+        }
+
+        .message-text {
+          margin: 0;
+          line-height: 1.6;
+          color: var(--ion-color-dark);
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  // Action Buttons
+  .action-buttons {
+    margin-top: auto;
+    padding-bottom: 20px;
+
+    .primary-action {
+      margin-bottom: 12px;
+      font-weight: 600;
+      height: 50px;
+      --border-radius: 12px;
+      text-transform: none;
+      font-size: 16px;
+    }
+
+    .secondary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      ion-button {
+        height: 44px;
+        --border-radius: 12px;
+        text-transform: none;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Footer Note
+  .footer-note {
+    text-align: center;
+    padding: 12px 0;
+
+    p {
+      margin: 0;
+      font-size: 12px;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+
+      ion-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// Responsive
+@media (min-width: 768px) {
+  .expiry-modal-content {
+    .modal-wrapper {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+}

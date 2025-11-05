@@ -6,6 +6,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { App } from '@capacitor/app';
 import { CheckAppVersionService } from './service/check-app-version/check-app-version.service';
 import { Platform } from '@ionic/angular';
+import { NotifyEndOfAgreementAndPermitService } from './service/notify-end-of-agreement-and-permit/notify-end-of-agreement-and-permit.service';
 // import { Preferences } from '@capacitor/preferences';
 
 
@@ -15,7 +16,7 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(library: FaIconLibrary, private AppVersionService: CheckAppVersionService, public platform: Platform) {
+  constructor(library: FaIconLibrary, private AppVersionService: CheckAppVersionService, private NotifyEndOfAgreementAndPermitService: NotifyEndOfAgreementAndPermitService, public platform: Platform) {
     library.addIconPacks(fas, far, fab);
     // Preferences.set({ key: 'usePreferredTextZoom', value: 'false' });
     App.addListener('appStateChange', async ({ isActive }) => {
@@ -27,6 +28,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       // Mulai periodic check setiap 2 menit
       this.AppVersionService.startPeriodicCheck();
+      this.NotifyEndOfAgreementAndPermitService.startPeriodicCheck();
     });
   }
 

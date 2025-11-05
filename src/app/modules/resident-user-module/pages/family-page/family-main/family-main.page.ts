@@ -14,7 +14,7 @@ export class FamilyMainPage implements OnInit {
   isLoading: boolean = true;
 
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date()  }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: ''  }
   ];
 
   constructor(private router: Router, private mainApi: MainApiResidentService) {
@@ -54,7 +54,8 @@ export class FamilyMainPage implements OnInit {
         end_date: new Date(), 
         family_photo: '', 
         reject_reason: '', 
-        helper_work_permit_expiry_date: new Date() 
+        helper_work_permit_expiry_date: new Date(),
+        helper_work_permit: 'string'
       }
     ];
     this.familyData.pop();
@@ -94,7 +95,8 @@ export class FamilyMainPage implements OnInit {
               tenancy_agreement: item['tenancy_aggrement'],
               family_photo: item['family_photo'],
               reject_reason: item['reject_reason'],
-              helper_work_permit_expiry_date: item['helper_work_permit_expiry_date']
+              helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
+              helper_work_permit: item['helper_work_permit']
             });
           }
         } else if (this.stateFill === 'family') {
@@ -113,7 +115,8 @@ export class FamilyMainPage implements OnInit {
               tenancy_agreement: item['tenancy_aggrement'],
               family_photo: item['family_photo'],
               reject_reason: item['reject_reason'],
-              helper_work_permit_expiry_date: item['helper_work_permit_expiry_date']
+              helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
+              helper_work_permit: item['helper_work_permit']
             });
           }
         } else {
@@ -132,7 +135,8 @@ export class FamilyMainPage implements OnInit {
             tenancy_agreement: item['tenancy_aggrement'],
             family_photo: item['family_photo'],
             reject_reason: item['reject_reason'],
-            helper_work_permit_expiry_date: item['helper_work_permit_expiry_date']
+            helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
+              helper_work_permit: item['helper_work_permit']
           });
         }
       });
@@ -162,31 +166,24 @@ export class FamilyMainPage implements OnInit {
         status: data.status, // Tambahkan ini jika perlu
         profile_image: data.family_photo,
         reject_reason: data.reject_reason,
-        helper_work_permit_expiry_date: data.helper_work_permit_expiry_date
+        helper_work_permit_expiry_date: data.helper_work_permit_expiry_date,
+        helper_work_permit: data.helper_work_permit
       }
     });
   }
 
   openExtend(data: any) {
-    this.router.navigate(['/tenant-extend-page'], {
+    this.router.navigate(['/extension-agreement-for-helper-tenants'], {
       state: {
         from: 'family-main',
         id: data.id,
+        family_name: data.name,
         type: data.type,
         hard_type: data.hard_type,
-        name: data.name,
-        mobile: data.mobile,
         head_type: data.head_type,
-        nickname: data.nickname,
-        email: data.email,
-        end_date: data.end_date,
-        tenant: data.tenant,
-        warning: data.warning,
-        status: data.status, // Tambahkan ini jika perlu
-        profile_image: data.family_photo,
-        reject_reason: data.reject_reason,
         from_where: 'card',
-        helper_work_permit_expiry_date: data.helper_work_permit_expiry_date
+        end_date: data.end_date ? data.end_date : data.helper_work_permit_expiry_date,
+        doc: data.tenancy_agreement ? data.tenancy_agreement : data.helper_work_permit
       }
     });
   }
