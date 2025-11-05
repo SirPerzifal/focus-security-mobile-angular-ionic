@@ -868,6 +868,18 @@
             : {{ functionMain.returnNone(selectedApproval.family_name) }}
           </p>
         </div>
+        <div
+          class="table-row"
+          *ngIf="['access_card'].includes(approval_type) && selectedApproval.card_id"
+        >
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Card ID
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{
+            functionMain.returnNone(selectedApproval.card_id) }}
+          </p>
+        </div>
         <div class="table-row" *ngIf="['pet'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Type 
@@ -1631,7 +1643,7 @@
   >
     <ng-template>
       <div class="wrapper-green">
-        <div class="w-full">
+        <div class="w-full" *ngIf="approval_type == 'vehicle'">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">RFID Tag Number</p>
           </div>
@@ -1645,7 +1657,7 @@
           >
           </textarea>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="approval_type == 'vehicle'">
           <div class="flex flex-row justify-start mb-1">
             <p class="text-base font-bold">Side Code</p>
           </div>
@@ -1656,6 +1668,20 @@
             [(ngModel)]="side_code"
             type="text"
             name="sideCode"
+          >
+          </textarea>
+        </div>
+        <div class="w-full" *ngIf="approval_type == 'access_card'">
+          <div class="flex flex-row justify-start mb-1">
+            <p class="text-base font-bold">Card ID</p>
+          </div>
+          <textarea
+            id="cardIdInput"
+            placeholder=""
+            class="!border-none w-full rounded py-2 px-3 h-20 text-base"
+            [(ngModel)]="access_card_id"
+            type="text"
+            name="cardIdInput"
           >
           </textarea>
         </div>
