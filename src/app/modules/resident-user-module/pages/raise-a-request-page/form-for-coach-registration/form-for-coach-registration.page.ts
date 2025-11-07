@@ -386,9 +386,9 @@ export class FormForCoachRegistrationPage implements OnInit {
       if (this.formSent.contactNumberCoach === "") {
         errMsg += 'Please provide the contact number of coach.\n';
       }
-      if (this.formSent.vehicleNumber === "") {
-        errMsg += 'Please provide the vehicle number of coach.\n';
-      }
+      // if (this.formSent.vehicleNumber === "") {
+      //   errMsg += 'Please provide the vehicle number of coach.\n';
+      // }
       if (this.formSent.coachingRegNumber === "") {
         errMsg += 'Please provide the reg number of coach.\n';
       }
@@ -424,9 +424,9 @@ export class FormForCoachRegistrationPage implements OnInit {
     if (!this.formSent.contactNumberCoach) {
       errMsg += 'Please provide the contact number of coach.\n';
     }
-    if (!this.formSent.vehicleNumber) {
-      errMsg += 'Please provide the vehicle number of coach.\n';
-    }
+    // if (!this.formSent.vehicleNumber) {
+    //   errMsg += 'Please provide the vehicle number of coach.\n';
+    // }
     // if (!this.formSent.sex) {
     //   errMsg += 'Please select the sex of coach.\n';
     // }
