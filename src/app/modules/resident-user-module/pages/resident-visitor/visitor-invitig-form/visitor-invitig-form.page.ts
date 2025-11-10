@@ -164,12 +164,14 @@ export class VisitorInvitigFormPage implements OnInit {
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
-        } else if (newPhoneNumber.startsWith('91')) {
-          processedNumber = newPhoneNumber.slice(2);
-          const countryCodeFromContact = newPhoneNumber.substring(0, 2);
-          const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
-          selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
-        } else {
+        } 
+        // else if (newPhoneNumber.startsWith('91')) {
+        //   processedNumber = newPhoneNumber.slice(2);
+        //   const countryCodeFromContact = newPhoneNumber.substring(0, 2);
+        //   const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+        //   selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
+        // }
+         else {
           processedNumber = newPhoneNumber;
           selectedCountryCode = '65';
         }
@@ -358,12 +360,14 @@ export class VisitorInvitigFormPage implements OnInit {
       const countryCodeFromInput = inputValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromInput);
       selectedCountryCode = isValidCountryCode ? countryCodeFromInput : '65';
-    } else if (inputValue.startsWith('91')) {
-      processedNumber = inputValue.slice(2);
-      const countryCodeFromContact = inputValue.substring(0, 2);
-      const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
-      selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
-    } else {
+    } 
+    // else if (inputValue.startsWith('91')) {
+    //   processedNumber = inputValue.slice(2);
+    //   const countryCodeFromContact = inputValue.substring(0, 2);
+    //   const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
+    //   selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
+    // } 
+    else {
       processedNumber = inputValue;
       selectedCountryCode = this.selectedCountry[index]?.selected_code || '65';
     }
