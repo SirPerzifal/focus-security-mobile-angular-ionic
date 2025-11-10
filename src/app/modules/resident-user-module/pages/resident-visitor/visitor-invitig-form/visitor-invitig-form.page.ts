@@ -508,7 +508,7 @@ export class VisitorInvitigFormPage implements OnInit {
           from: from
         }, 'post/create_expected_visitors').subscribe((response: any) => {
           if (response.result.response_code == 200) {
-            this.functionMain.presentToast('Success Add Invite', 'success');
+            this.functionMain.presentToast('Invite Sent Successfully', 'success');
             this.inviteeFormList = [];
             this.inviteeFormList = null;
             this.formData = {

@@ -396,7 +396,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     ).subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.toggleShowActInv()
-        this.functionMain.presentToast('Success resend invite.', 'success')
+        this.functionMain.presentToast('Invite Resent Successfully', 'success')
       }
     });
   }
