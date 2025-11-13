@@ -42,16 +42,20 @@ export class RecordsVisitorPage implements OnInit {
     this.isLoading = true
     this.logsData = [];
     this.historyVehicles = []
+    this.activeVehicles = []
     this.sortVehicle = []
     this.pagination = {}
-    let params = today ? {is_today: today,  log_type: type, project_id: this.project_id} : {...this.filter, is_today: today,  log_type: type, project_id: this.project_id, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage} 
+    let params = today ? {is_today: today,  log_type: type, project_id: this.project_id} : {...this.filter, is_today: today,  log_type: type, project_id: this.project_id, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage, not_checkout: ((this.searchOption == 'not_checkout' || this.searchOption == 'all') && this.project_config.is_industrial)} 
     console.log(params)
     this.clientMainService.getApi(params, '/vms/get/visitor_log').subscribe({
       next: (results) => {
+        this.isLoading = false;
         console.log(results.result)
         if (results.result.response_code === 200) {
           if (today){
+            this.logsData = results.result.response_result
             this.activeVehicles = results.result.response_result;
+            this.onTodayRadioClick(this.selectedTodayRadio)
           } else {
             this.logsData = results.result.response_result;
             this.historyVehicles = this.logsData
@@ -68,17 +72,15 @@ export class RecordsVisitorPage implements OnInit {
           this.currentPage = 1
           this.inputPage = 1
         }
-
-        this.isLoading = false;
       },
       error: (error) => {
+        this.isLoading = false;
         this.presentToast('An error occurred while loading wheel clamp data!', 'danger');
         console.error(error);
         this.pagination = {}
         this.total_pages = 0
         this.currentPage = 1
         this.inputPage = 1
-        this.isLoading = false;
       }
     });
   }
@@ -132,9 +134,7 @@ export class RecordsVisitorPage implements OnInit {
         this.contactHost = ''
         this.selectedHost = ''
         this.clearFilters()
-        if (this.activeVehicles.length == 0){
-          this.loadLogs(this.pageType, true)
-        }
+        this.loadLogs(this.pageType, true)
         setTimeout(() => {
           this.showActive = true;
           this.showActiveTrans = false
@@ -149,9 +149,7 @@ export class RecordsVisitorPage implements OnInit {
         this.isRadioClicked = false
         this.selectedRadio = ''
         this.showHistoryTrans = true
-        if (this.logsData.length == 0){
-          this.loadLogs(this.pageType, false)
-        }
+        this.loadLogs(this.pageType, false)
         setTimeout(() => {
           this.showHistory = true;
           this.showHistoryTrans = false
@@ -166,7 +164,7 @@ export class RecordsVisitorPage implements OnInit {
   historyVehicles: any[] = [];
   sortVehicle: any[] = []
   selectedRadio: string | null = null
-  searchOption: string | null = null
+  searchOption: string = ''
 
   convertToDDMMYYYY(dateString: string): string {
     const [year, month, day] = dateString.split('-'); // Pisahkan string berdasarkan "-"
@@ -272,6 +270,7 @@ export class RecordsVisitorPage implements OnInit {
     this.total_pages = 0
     this.currentPage = 1
     this.inputPage = 1
+    this.applyFilters()
     console.log(event.target.value)
   }
 
@@ -436,6 +435,21 @@ export class RecordsVisitorPage implements OnInit {
     setTimeout(() => {
       event.target.complete()
     }, 1000)
+  }
+
+  selectedTodayRadio = 'all'
+
+  onTodayRadioClick(value: string): void {
+    this.selectedTodayRadio = value
+    if (value == 'checked_out') {
+      this.activeVehicles = this.logsData.filter((item: any) => item.out_datetime)
+      console.log(this.sortVehicle)
+    } else if (value == 'not_checked_out') {
+      this.activeVehicles = this.logsData.filter((item: any) => !item.out_datetime)
+      console.log(this.sortVehicle)
+    } else if (value == 'all') {
+      this.activeVehicles = this.logsData
+    }
   }
 
 }

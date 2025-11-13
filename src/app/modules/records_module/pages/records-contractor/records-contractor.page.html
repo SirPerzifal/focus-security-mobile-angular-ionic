@@ -52,6 +52,7 @@
                 <option [value]="'date'">ENTRY DATE</option>
                 <option [value]="'block'" *ngIf="!project_config.is_industrial && !project_config.is_windows">BLOCK & UNIT</option>
                 <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
+                <option [value]="'not_checkout'" *ngIf="project_config.is_industrial">NOT CHECKED OUT</option>
                 <option [value]="'all'">ALL</option>
               </select>
             </div>
@@ -92,7 +93,7 @@
               </div>
             </div>
 
-            <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) || isRadioClicked)">
+            <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) || isRadioClicked || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial))">
               <div class="flex flex-row space-x-5 items-center">
                 <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
                 <input type="number" class="w-20 bg-white rounded text-2xl" style="border: 1px solid #6B7280;" [(ngModel)]="inputPage" (change)="changePage(inputPage)">
@@ -103,7 +104,7 @@
           </div>
 
           <div class="flex flex-col w-full space-y-5"
-            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) && !isRadioClicked">
+            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial)) && !isRadioClicked ">
             <div *ngIf="isLoading" class="flex justify-center items-center h-20">
               <!-- <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner> -->
               <app-modal-loading />
@@ -139,7 +140,7 @@
         </div>
 
         <div class="flex flex-col w-full space-y-5 mt-5" *ngIf="showActive" @fadeInOut>
-          <div class="flex flex-row w-full justify-start space-x-10" *ngIf="project_config.is_windows">
+          <div class="flex flex-row w-full justify-start space-x-10" *ngIf="project_config.is_industrial">
             <div class="flex flex-row items-center">
               <input id="today_checked_all" type="radio" name="today_filter"
                 class="size-6 text-[var(--ion-color-primary)]" value="search" [checked]="selectedTodayRadio == 'all'"

@@ -160,7 +160,7 @@
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
         </div>
-        <div class="w-full" *ngFor="let camera of Camera; let i = index">
+        <div class="w-full" *ngFor="let camera of (showDrive ? Camera : []); let i = index">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="saveRecord(true, camera.CamSentId)"></app-visitor-button>
         </div>
         <div class="w-full">

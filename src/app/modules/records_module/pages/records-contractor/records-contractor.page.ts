@@ -43,19 +43,22 @@ export class RecordsContractorPage implements OnInit {
     this.isLoading = true;
     this.logsData = [];
     this.historyVehicles = []
+    this.filteredActiveContractor = []
     this.sortVehicle = []
     this.pagination = {}
     this.params = {is_today: today, project_id: this.project_id}
     if (!today) {
-      this.params = {...this.params, ...this.filter, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage}
+      this.params = {...this.params, ...this.filter, not_checkout: ((this.searchOption == 'not_checkout' || this.searchOption == 'all') && this.project_config.is_industrial), host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage}
     }
     this.clientMainService.getApi(this.params, '/vms/get/contractor_logs').subscribe({
       next: (results) => {
+        this.isLoading = false;
         console.log(results.result)
         if (results.result.response_code === 200) {
           if (today){
             this.activeContractor = results.result.response_result;
             this.filteredActiveContractor = this.activeContractor
+            this.onTodayRadioClick(this.selectedTodayRadio)
           } else {
             this.logsData = results.result.response_result;
             this.historyVehicles = this.logsData
@@ -72,13 +75,11 @@ export class RecordsContractorPage implements OnInit {
           this.currentPage = 1
           this.inputPage = 1
         }
-
-        this.isLoading = false;
       },
       error: (error) => {
+        this.isLoading = false;
         this.presentToast('An error occurred while loading contractor data!', 'danger');
         console.error(error);
-        this.isLoading = false;
         this.pagination = {}
         this.total_pages = 0
         this.currentPage = 1
@@ -128,9 +129,7 @@ export class RecordsContractorPage implements OnInit {
       this.showHistoryTrans = false;
       if (type == 'active') {
         this.showActiveTrans = true
-        if (this.activeContractor.length == 0){
-          this.loadLogs(true)
-        }
+        this.loadLogs(true)
         setTimeout(() => {
           this.showActive = true;
           this.showActiveTrans = false
@@ -141,9 +140,7 @@ export class RecordsContractorPage implements OnInit {
         this.selectedRadio = ''
         this.clearFilters()
         this.showHistoryTrans = true
-        if (this.logsData.length == 0){
-          this.loadLogs(false)
-        }
+        this.loadLogs(false)
         setTimeout(() => {
           this.showHistory = true;
           this.showHistoryTrans = false
@@ -407,10 +404,10 @@ export class RecordsContractorPage implements OnInit {
   onTodayRadioClick(value: string): void {
     this.selectedTodayRadio = value
     if (value == 'checked_out') {
-      this.filteredActiveContractor = this.activeContractor.filter((item: any) => item.check_out)
+      this.filteredActiveContractor = this.activeContractor.filter((item: any) => item.out_datetime)
       console.log(this.sortVehicle)
     } else if (value == 'not_checked_out') {
-      this.filteredActiveContractor = this.activeContractor.filter((item: any) => !item.check_out)
+      this.filteredActiveContractor = this.activeContractor.filter((item: any) => !item.out_datetime)
       console.log(this.sortVehicle)
     } else if (value == 'all') {
       this.filteredActiveContractor = this.activeContractor

@@ -22,6 +22,8 @@ import { MainVmsService } from '../vms/main_vms/main-vms.service';
 interface RingtonePlugin {
   play(): Promise<void>;
   stop(): Promise<void>;
+  playOutgoing(): Promise<void>;
+  stopOutgoing(): Promise<void>;
 }
 
 const Ringtone = registerPlugin<RingtonePlugin>('Ringtone', {
@@ -81,6 +83,7 @@ export class WebRtcService extends ApiService {
   private callerName: string = '';
   private receiverName: string = '';
   private callerSocketId: any;
+  private hostCode: any = ''
   private receiverSocketId: any;
   private nativeOffer: any;
   private targetSocketIds: any;
@@ -279,6 +282,7 @@ export class WebRtcService extends ApiService {
       }
 
       this.callerName = '';
+      this.hostCode = '';
       this.receiverName = '';
       this.callerSocketId = null;
       this.receiverSocketId = null;
@@ -430,6 +434,9 @@ export class WebRtcService extends ApiService {
         query: { uniqueId: userInfo.family_id || 'Public-User' },
       });
 
+      console.log(this.socket, "enicencieninceicneicencienciecn");
+      
+
       // Register event handlers
       this.socket.on('offer', (offer: any) => this.handleOffer(offer));
       this.socket.on('answer', (answer: any) => this.handleAnswer(answer));
@@ -441,7 +448,7 @@ export class WebRtcService extends ApiService {
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
-      this.socket.on('kick-user', (data: any) => this.handleKickUser(data));
+      this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
       this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
       this.socket.on('intercom-close-gate', (data: any) => this.handleCloseGate(data));
@@ -507,6 +514,30 @@ export class WebRtcService extends ApiService {
         await Ringtone.stop();
       } catch (err) {
         console.error('Ringtone error:', err);
+      }
+    } else {
+      console.log('Ringtone not supported on this platform.');
+    }
+  }
+
+  async playOutgoingRingtone() {
+    if (Capacitor.getPlatform() === 'android') {
+      try {
+        await Ringtone.playOutgoing();
+      } catch (err) {
+        console.error('Ringtone Outgoing error:', err);
+      }
+    } else {
+      console.log('Ringtone not supported on this platform.');
+    }
+  }
+
+  async stopOutgoingRingtone() {
+    if (Capacitor.getPlatform() === 'android') {
+      try {
+        await Ringtone.stopOutgoing();
+      } catch (err) {
+        console.error('Ringtone outgoing error:', err);
       }
     } else {
       console.log('Ringtone not supported on this platform.');
@@ -719,12 +750,14 @@ export class WebRtcService extends ApiService {
     this.receiverName = offer.receiverName;
     this.callerSocketId = offer.callerSocketId;
     this.receiverSocketId = offer.receiverSocketId;
+    this.hostCode = offer.hostCode
     this.targetSocketIds = offer.targetSocketIds;
     this.project_id = offer.project_id;
     await this.showIncomingCallModal(offer.offerObj);
   }
 
   async handleAnswer(answer: any) {
+    await this.stopOutgoingRingtone();
     await this.stopRingtone();
 
     this.callerName = answer.callerName;
@@ -1016,7 +1049,8 @@ export class WebRtcService extends ApiService {
       receiverName: this.receiverName,
       callerName: this.callerName,
       callerSocketId: this.callerSocketId,
-      receiverSocketId: this.receiverSocketId
+      receiverSocketId: this.receiverSocketId,
+      hostCode: this.hostCode,
     });
   }
 
@@ -1076,12 +1110,14 @@ export class WebRtcService extends ApiService {
   }
 
   async handleRejectCall() {
+    await this.stopOutgoingRingtone();
     await this.stopRingtone();
     await this.closeModal();
     this.resetCallData();
   }
 
   async rejectCall() {
+    await this.stopOutgoingRingtone();
     await this.stopRingtone();
     this.socket.emit('reject-call', {
       callerSocketId: this.callerSocketId,
@@ -1137,6 +1173,7 @@ export class WebRtcService extends ApiService {
     this.receiverSocketId = data.receiverSocketId;
     this.targetSocketIds = data.targetSocketIds;
     this.project_id = data.project_id;
+    await this.playOutgoingRingtone();
     await this.showOutgoingCallModal();
   }
 

@@ -421,26 +421,38 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
   }
 
   resendInvite(invite_id: number, phoneNumber?: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    });
-    
-    this.http.post<any>(
-      `${this.baseUrl}/resident/post/resend_invite`, 
-      {
-        jsonrpc: '2.0',
-        params: {
-          contractor_id: invite_id,
-        }
-      },
-      { headers }
-    ).subscribe((response: any) => {
+    this.mainApiResidentService.endpointMainProcess({
+      contractor_id: invite_id
+    }, 'post/resend_invite').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         this.toggleShowActInv()
-        this.functionMain.presentToast('Success resend invite', 'success')
+        this.functionMain.presentToast('Invite Resent Successfully.', 'success')
+      } else {
+
       }
-    });
+    }, (error) => {
+      console.log(error);
+    })
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    //   'Accept': 'application/json',
+    // });
+    
+    // this.http.post<any>(
+    //   `${this.baseUrl}/resident/post/resend_invite`, 
+    //   {
+    //     jsonrpc: '2.0',
+    //     params: {
+    //       contractor_id: invite_id,
+    //     }
+    //   },
+    //   { headers }
+    // ).subscribe((response: any) => {
+    //   if (response.result.response_code === 200) {
+    //     this.toggleShowActInv()
+    //     this.functionMain.presentToast('Success resend invite', 'success')
+    //   }
+    // });
   }
 
   shareInvite(invite_id: number, phoneNumber?: string) {

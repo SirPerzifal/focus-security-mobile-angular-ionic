@@ -89,6 +89,7 @@ export class LoginVmsPage implements OnInit {
       }
       console.log("HI")
       this.getPreference().then((value: any) => {
+        this.storage.clearAllValueFromStorage()
         console.log(value)
         let params = {
           barcode: barcode, 
@@ -109,7 +110,6 @@ export class LoginVmsPage implements OnInit {
                 key: 'USER_INFO',
                 value: results.result.response_status.access_token,
               }).then(()=>{
-                this.storage.clearAllValueFromStorage()
                 let storageData = {
                   'background': results.result.response_status.background
                 }

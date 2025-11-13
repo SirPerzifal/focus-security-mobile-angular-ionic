@@ -710,7 +710,7 @@ export class ContractorInvitingFormPage implements OnInit {
       invitees: this.inviteeFormList,
     }, 'post/create_expected_contractor').subscribe((response: any) => {
       if (response.result.response_code == 200) {
-        this.functionMain.presentToast('Success Add Invite', 'success');
+        this.functionMain.presentToast('Invitation Sent Successfully', 'success');
         this.resetForm();
         this.router.navigate(['/contractor-commercial-main'], {
           queryParams: {

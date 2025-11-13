@@ -222,6 +222,7 @@ export class ResidentHomePagePage implements OnInit {
       console.log(params)
       if (params) {
         if (params['reload']){
+          console.log("jinkx 1")
           this.webRtcService.initializeSocket();
           this.webRtcService.callActionStatus.subscribe(status => {
             this.callActionStatus = status;
@@ -229,7 +230,6 @@ export class ResidentHomePagePage implements OnInit {
         }
       }
     })
-    this.webRtcService.initializeSocket();
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
@@ -455,7 +455,6 @@ export class ResidentHomePagePage implements OnInit {
         this.isModalUpdateProfile = false;
         this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
           if (value) {
-            this.webRtcService.initializeSocket();
             const decodedUserState = decodeURIComponent(escape(atob(value)));
             console.log(JSON.parse(decodedUserState).unit_id); // Pastikan untuk mengurai JSON
           }
