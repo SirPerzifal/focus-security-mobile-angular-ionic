@@ -182,7 +182,14 @@
             <div class="flex flex-row justify-start mb-1 mt-1">
               <p class="text-base cw-3:text-sm font-bold">Type of Issue</p>
             </div>
+            <div
+              *ngIf="fromWhere === 'app-report'"
+              class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base text-start h-12 text-[#6B7280] flex items-center"
+            >
+              App Issue
+            </div>
             <select
+              *ngIf="fromWhere !== 'app-report'"
               id="type_of_issue"
               placeholder="Type of Issue"
               class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"

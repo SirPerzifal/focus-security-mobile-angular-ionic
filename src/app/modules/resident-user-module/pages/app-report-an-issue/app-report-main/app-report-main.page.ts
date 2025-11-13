@@ -203,7 +203,7 @@ export class AppReportMainPage implements OnInit {
 
   onSubmit() {
     let errMsg = ''
-    if (!this.reporterDetailsFrom.typeReport) {
+    if (!this.reporterDetailsFrom.typeReport && this.fromWhere !== 'app-report') {
       errMsg += 'Type of issue is required! \n'
     }
     if (!this.reporterDetailsFrom.summaryReport) {
