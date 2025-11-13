@@ -351,7 +351,7 @@ export class FormForCoachRegistrationPage implements OnInit {
 
     this.mainApi.endpointMainProcess(payload, 'post/request_register_coach').subscribe(
       (response: any) => {
-        this.functionMain.presentToast('Successfully added coach.', 'success');
+        this.functionMain.presentToast('Coach registration completed successfully', 'success');
         this.router.navigate(['/raise-a-request-page']);
       },
       (error: any) => {

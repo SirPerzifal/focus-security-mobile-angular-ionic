@@ -324,10 +324,10 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
         requestor_signature: this.formSent.renovationSigned
       }, 'post/request_schedule_permit').subscribe((response: any) => {
         if (response.result.response_code === 200) {
-          this.functionMain.presentToast('Successfully added add schedule.', 'success');
+          this.functionMain.presentToast('Renovation schedule added successfully', 'success');
           this.router.navigate(['/raise-a-request-page']);
         } else if (response.result.response_code === 400) {
-          this.functionMain.presentToast('Failed added add schedule.', 'danger');
+          this.functionMain.presentToast('Renovation schedule adding failed', 'danger');
         } else if (response.result.status === "error") {
           this.functionMain.presentToast(response.result.message, 'danger');
         }
@@ -403,10 +403,10 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
           requestor_signature: this.formSent.renovationSigned
         }, 'post/request_schedule_permit').subscribe((response: any) => {
           if (response.result.response_code === 200) {
-            this.functionMain.presentToast('Successfully added add schedule.', 'success');
+            this.functionMain.presentToast('Renovation schedule added successfully', 'success');
             this.router.navigate(['/raise-a-request-page']);
           } else if (response.result.response_code === 400) {
-            this.functionMain.presentToast('Failed added add schedule.', 'danger');
+            this.functionMain.presentToast('Renovation schedule adding failed', 'danger');
           } else if (response.result.status === "error") {
             this.functionMain.presentToast(response.result.message, 'danger');
           }
@@ -442,10 +442,10 @@ export class FormForRequestRegistrationPermitPage implements OnInit {
             requestor_signature: this.formSent.renovationSigned
           }, 'post/request_schedule_permit').subscribe((response: any) => {
             if (response.result.response_code === 200) {
-              this.functionMain.presentToast('Successfully added add schedule.', 'success');
+              this.functionMain.presentToast('Renovation schedule added successfully', 'success');
               this.router.navigate(['/raise-a-request-page']);
             } else if (response.result.response_code === 400) {
-              this.functionMain.presentToast('Failed added add schedule.', 'danger');
+              this.functionMain.presentToast('Renovation schedule adding failed', 'danger');
             } else if (response.result.status === "error") {
               this.functionMain.presentToast(response.result.message, 'danger');
             }

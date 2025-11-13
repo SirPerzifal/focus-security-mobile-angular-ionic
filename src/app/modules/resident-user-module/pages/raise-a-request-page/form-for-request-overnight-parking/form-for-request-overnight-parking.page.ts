@@ -300,7 +300,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
           payment_receipt: result.data[1] || '', // Use receipt URL if available
           stripe_id: this.stripeId,
         }, 'post/overnight_parking_application').subscribe((response: any) => {
-          this.functionMain.presentToast('Successfully added overnight request.', 'success');
+          this.functionMain.presentToast('Overnight Request submitted successfully', 'success');
           this.router.navigate(['/raise-a-request-page']);
         })
       } else {
@@ -330,7 +330,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             purpose: this.formSent.purpose,
             payment_receipt: this.formSent.payment_receipt,
           }, 'post/overnight_parking_application').subscribe((response: any) => {
-            this.functionMain.presentToast('Successfully added overnight request.', 'success');
+            this.functionMain.presentToast('Overnight Request submitted successfully', 'success');
             this.router.navigate(['/raise-a-request-page']);
           })
         }
@@ -370,7 +370,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             purpose: this.formSent.purpose,
             payment_receipt: this.formSent.payment_receipt
           }, 'post/overnight_parking_application').subscribe((response: any) => {
-            this.functionMain.presentToast('Successfully added overnight request.', 'success');
+            this.functionMain.presentToast('Overnight Request submitted successfully', 'success');
             this.router.navigate(['/raise-a-request-page'])
           })
         }
@@ -392,7 +392,7 @@ export class FormForRequestOvernightParkingPage implements OnInit {
             purpose: this.formSent.purpose,
             payment_receipt: this.formSent.payment_receipt
           }, 'post/overnight_parking_application').subscribe((response: any) => {
-            this.functionMain.presentToast('Successfully added overnight request.', 'success');
+            this.functionMain.presentToast('Overnight Request submitted successfully', 'success');
             this.router.navigate(['/raise-a-request-page'])
           })
         }

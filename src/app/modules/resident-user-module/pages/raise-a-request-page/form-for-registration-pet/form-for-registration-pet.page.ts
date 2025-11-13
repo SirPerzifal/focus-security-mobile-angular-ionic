@@ -222,7 +222,7 @@ export class FormForRegistrationPetPage implements OnInit {
           stripe_id: this.stripeId
         }, 'post/request_pet_registration').subscribe((response: any) => {
           this.router.navigate(['raise-a-request-page'])
-          this.functionMain.presentToast('Successfully added pet.', 'success')
+          this.functionMain.presentToast('Pet registration completed successfully', 'success')
         })
       } else {
         return
@@ -251,7 +251,7 @@ export class FormForRegistrationPetPage implements OnInit {
             payment_receipt: this.formSent.paymentReceipt
           }, 'post/request_pet_registration').subscribe((response: any) => {
             this.router.navigate(['raise-a-request-page'])
-            this.functionMain.presentToast('Successfully added pet.', 'success')
+            this.functionMain.presentToast('Pet registration completed successfully', 'success')
           })
         }
       } else {
@@ -275,7 +275,7 @@ export class FormForRegistrationPetPage implements OnInit {
         payment_receipt: this.formSent.paymentReceipt
       }, 'post/request_pet_registration').subscribe((response: any) => {
         this.router.navigate(['raise-a-request-page'])
-        this.functionMain.presentToast('Successfully added pet.', 'success')
+        this.functionMain.presentToast('Pet registration completed successfully', 'success')
       })
     }
   }
