@@ -247,7 +247,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
           bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
           stripe_id: this.stripeId, // Include the Stripe ID for the payment
         }, 'post/request_bicycle_tag').subscribe((response: any) => {
-          this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+          this.functionMain.presentToast('Bicycle tag added successfully', 'success')
           this.router.navigate(['raise-a-request-page'])
         })
       } else {
@@ -275,7 +275,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
             bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
             bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
           }, 'post/request_bicycle_tag').subscribe((response: any) => {
-            this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+            this.functionMain.presentToast('Bicycle tag added successfully', 'success')
             this.router.navigate(['raise-a-request-page'])
           })
         }
@@ -306,7 +306,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
             bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
             bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
           }, 'post/request_bicycle_tag').subscribe((response: any) => {
-            this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+            this.functionMain.presentToast('Bicycle tag added successfully', 'success')
             this.router.navigate(['raise-a-request-page'])
           })
         }
@@ -322,7 +322,7 @@ export class FormForRequestBibycleTagApplicationPage implements OnInit {
           bicycle_tag_id: this.formSent.cardId ? this.formSent.cardId : 0, // Optional untuk replacement
           bicycle_image: this.formSent.bicycleImage, // Optional untuk new application
         }, 'post/request_bicycle_tag').subscribe((response: any) => {
-          this.functionMain.presentToast('Successfully added bicycle card.', 'success')
+          this.functionMain.presentToast('Bicycle tag added successfully', 'success')
           this.router.navigate(['raise-a-request-page'])
         })
       }
