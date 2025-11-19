@@ -121,7 +121,7 @@
             class="border !border-black w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-14 text-[#6B7280]"
             (change)="onTypeReportChange($event)">
             <option value="0" selected disabled hidden>{{ typeOfReport.length > 0 ? 'Choose Type of Issue' : 'No Type of Issue Found'}}</option>
-            <option *ngFor="let tor of typeOfReport" [value]="tor.id">{{ tor.name }}</option>
+            <option *ngFor="let tor of typeOfReport" [value]="tor.id" selected>{{ tor.name }}</option>
           </select>
         </div>
         <u class="text-base font-bold text-start">Reporter Details</u>

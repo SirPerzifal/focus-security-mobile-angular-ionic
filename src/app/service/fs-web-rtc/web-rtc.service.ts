@@ -452,6 +452,7 @@ export class WebRtcService extends ApiService {
       this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
       this.socket.on('intercom-close-gate', (data: any) => this.handleCloseGate(data));
+      this.socket.on('handle-vms-sync-state', (data: any) => this.handleChangeStateVMS(data));
 
       // Listen for native events
       this.listenForNativeEvents();
@@ -1360,6 +1361,68 @@ export class WebRtcService extends ApiService {
   getIsFromIntercom() {
     let id = this.isReceiver ? this.callerId : this.receiverId
     return id ? id.toString().includes('Intercom') : false
+  }
+
+  changeStateVMS(project_id: any = false, fcm_ids: any = []) {
+    if (!project_id) return
+    this.socket.emit('vms-change-state', { project_id: project_id, fcm_ids: fcm_ids });
+  }
+
+  handleChangeStateVMS(data: any) {
+    this.loadConfig(data)
+  }
+
+  async loadConfig(data: any = false) {
+    let rggData: any =false
+    let preference: any = false
+    this.storage.getValueFromStorage('RGG_CALL_DATA').then(value => {
+      if ( value ) {
+        rggData = value
+      } else {
+        rggData = false
+      }
+      Preferences.get({ key: 'USER_INFO' }).then((result) => {
+        if (result.value) {
+          preference = jwtDecode(result.value);
+          console.log(preference)
+          if (data.fcm_ids.includes(preference.fcm_token_id)) {
+
+            this.mainVmsService.getApi({project_id: data.project_id, fcm_token_id: preference.fcm_token_id}, '/vms/get/current_config').subscribe({
+              next: (results) => {
+                console.log(results)
+                if (results.result.status_code === 200) {
+                  Preferences.clear()
+                  Preferences.set({
+                    key: 'USER_INFO',
+                    value: results.result.response_status.access_token,
+                  }).then(()=>{
+                      this.storage.clearAllValueFromStorage()
+                      let storageData = {
+                        'background': results.result.response_status.background
+                      }
+                      this.storage.setValueToStorage('USESATE_DATA', storageData)
+                      let countryCodeData = results.result.response_status.country_codes.country_code_data
+                      this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData)
+                      if (rggData) { 
+                        this.storage.setValueToStorage('RGG_CALL_DATA', rggData)
+                      }
+                  });
+                  if (this.router.url.includes('home-vms')) {
+                    this.mainVmsService.configUpdated$.next();
+                  }
+                } else {
+                  this.presentToast('An error occurred while trying to get current config!', 'danger');
+                }
+              },
+              error: (error) => {
+                this.presentToast('An error occurred while trying to get current config!', 'danger');
+                console.error(error);
+              }
+            });
+          }
+        }
+      })
+    })
   }
 
 }

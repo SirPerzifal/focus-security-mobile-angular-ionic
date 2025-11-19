@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError, from, mergeMap } from 'rxjs';
+import { catchError, Observable, throwError, from, mergeMap, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +42,6 @@ export class MainVmsService extends ApiService{
 
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+
+  configUpdated$ = new Subject<void>();
 }

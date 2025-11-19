@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
@@ -9,6 +9,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { IonRouterOutlet, Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
 import { StorageService } from 'src/app/service/storage/storage.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService) { 
+  constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService, private cdr: ChangeDetectorRef, private mainVmsService: MainVmsService) { 
     this.checkScreenSize();
     this.initializeBackButtonHandling();
   }
@@ -49,6 +50,12 @@ export class HomePage implements OnInit {
     });
     // this.onLoadCount()
     document.addEventListener('click', this.handleClickOutside, true);
+
+    this.mainVmsService.configUpdated$.subscribe(() => {
+      this.loadProjectName();
+      this.cdr.detectChanges();
+    });
+
   }
 
   getRGGData() {
@@ -298,6 +305,9 @@ export class HomePage implements OnInit {
         console.log(results)
         if (results.result.status_code === 200) {
           this.loadConfig()
+          if (results.result.info && results.result.info.is_vms_sync) {
+            this.webrtc.changeStateVMS(this.project_id, results.result.info.fcm_ids)
+          }
         } else {
           this.functionMain.presentToast("An error occurred while trying to change this device's states!", 'danger');
         }

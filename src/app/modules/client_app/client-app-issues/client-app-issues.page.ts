@@ -140,7 +140,7 @@ export class ClientAppIssuesPage implements OnInit {
   loadType() {
     this.reportIssueService.getReportAppTypeOfIssues(this.userData.project_id).subscribe(
       (response) => {
-        // console.log(response);
+        console.log(response);
         this.typeOfReport = response.result.result;
         // this.presentToast(response.result.message, 'success');
       },
@@ -155,6 +155,7 @@ export class ClientAppIssuesPage implements OnInit {
     // console.log(event.target.value);
     const type = event.target.value;
     this.reporterDetailsFrom.typeReport = parseInt(type);
+    console.log(this.reporterDetailsFrom.typeReport)
   }
 
   onSubmit() {
@@ -166,9 +167,6 @@ export class ClientAppIssuesPage implements OnInit {
     if (this.project_config.is_industrial && (!this.reporterDetailsFrom.host)) {
       errMsg += 'Host is required! \n'
     }
-    if (!this.reporterDetailsFrom.typeReport) {
-      errMsg += 'Type of issue is required! \n'
-    }
     if (!this.reporterDetailsFrom.summaryReport) {
       errMsg += 'Summary is required! \n'
     }
@@ -177,7 +175,7 @@ export class ClientAppIssuesPage implements OnInit {
       return
     }
     let params = {
-      ticket_type_id: this.reporterDetailsFrom.typeReport,
+      ticket_type_id: 0,
       requestor_id: this.reporterDetailsFrom.requestorId,
       summary: this.reporterDetailsFrom.summaryReport,
       unit_id: this.reporterDetailsFrom.unit_id,

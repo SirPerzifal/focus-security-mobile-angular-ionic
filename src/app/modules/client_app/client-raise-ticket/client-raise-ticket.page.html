@@ -107,7 +107,7 @@
       <app-modal-loading *ngIf="isLoading && !isNew" class="mt-4"/>
       <div *ngIf="!isLoading && !isNew">
         <div *ngIf="showTicketList.length > 0; else noTicket" class="space-y-4 mt-4">
-          <div *ngFor="let ticket of showTicketList; let i = index" [ngClass]="'rounded p-5 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
+          <div *ngFor="let ticket of showTicketList; let i = index" [ngClass]="'rounded p-5 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-[var(--ion-color-tertiary)]')">
             <p class="font-bold text-base text-black mb-2">{{ ticket.ticket_name }} - {{ ticket.ticket_type }}</p>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
