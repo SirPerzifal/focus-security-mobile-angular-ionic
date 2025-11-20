@@ -51,13 +51,13 @@
       <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor" class="mt-4"
         [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor')" *ngIf="project_config.is_allow_vms_contractor" class="mt-4"
+      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor', false)" *ngIf="project_config.is_allow_vms_contractor" class="mt-4"
         [isActive]="true" [disableClick]="true"/>
 
-      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in')" *ngIf="project_config.is_allow_vms_schedule" class="mt-4"
+      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in', true)" *ngIf="project_config.is_allow_vms_schedule" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov')" *ngIf="project_config.is_allow_vms_renovation_schedule" class="mt-4"
+      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov', true)" *ngIf="project_config.is_allow_vms_renovation_schedule" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery" class="mt-4"
@@ -67,12 +67,12 @@
         [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" *ngIf="project_config.is_allow_vms_coaches" class="mt-4"
-        (click)="onClickMoveCustom('coach')" [isActive]="true" [disableClick]="true" />
+        (click)="onClickMoveCustom('coach', false)" [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true" *ngIf="project_config.is_allow_vms_emergency_vehicles" class="mt-4"
         [routerLink]="['/emergency-module']" [disableClick]="true" />
 
-      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor')" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list" class="mt-4"
+      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor', false)" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list" class="mt-4"
         [isActive]="true" [disableClick]="true" />
 
       <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car" class="mt-4"

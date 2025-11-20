@@ -344,6 +344,8 @@ export class EmergencyModulePage implements OnInit {
               this.onSubmit(isOpenBarrier, camera_id, true)
             }
           })
+        } else if (results.result.response_code === 407) {
+            this.functionMain.presentToast(results.result.status_description, 'danger');
         } else {
           this.functionMain.presentToast('An error occurred while attempting to save emergecny vehicle data!', 'danger');
         }

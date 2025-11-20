@@ -61,6 +61,7 @@ export class MoveFormPage implements OnInit {
   ngOnInit() {
     // Ambil parameter dari route
     this.loadProjectName().then(() => {
+      
       // this.refreshVehicle()
     })
     this.route.queryParams.subscribe(params => {
@@ -70,10 +71,11 @@ export class MoveFormPage implements OnInit {
   }
 
   async loadProjectName() {
-    await this.functionMain.vmsPreferences().then((value) => {
+    await this.functionMain.vmsPreferences().then(async (value) => {
       this.project_id = value.project_id
       this.project_config = value.config
       this.Camera = value.config.lpr
+      this.bypass_worktime = !(await this.functionMain.checkOpenTime())
     })
   }
 
@@ -162,9 +164,10 @@ export class MoveFormPage implements OnInit {
   contractor_name = ''
   company_name = ''
   remarks = ''
+  bypass_worktime = false
 
   // Fungsi submit umum
-  submitForm(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
+  async submitForm(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     let errMsg = ''
     if (!this.block_id || !this.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
@@ -233,6 +236,7 @@ export class MoveFormPage implements OnInit {
       pass_number: this.pass_number,
       remarks: this.remarks,
       bypass_ban: bypass_ban,
+      bypass_worktime: this.bypass_worktime,
     }    
     this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {

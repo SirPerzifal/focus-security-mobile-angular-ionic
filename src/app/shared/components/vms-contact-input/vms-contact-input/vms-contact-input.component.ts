@@ -140,8 +140,8 @@ export class VmsContactInputComponent  implements OnInit {
       } else {
         this.setDefaultCode(cleanedValue)
       }
-      this.onChange(this.combinedValue);
-      this.valueChange.emit(this.combinedValue);
+      this.onChange(this.contactValue ? this.combinedValue : '');
+      this.valueChange.emit(this.contactValue ? this.combinedValue : '');
     }
     
   }
@@ -173,15 +173,19 @@ export class VmsContactInputComponent  implements OnInit {
       this.contactValue = inputValue;
     }
     this.keyupEvent.emit(event);
-    this.valueChange.emit(this.combinedValue);
-    this.onChange(this.combinedValue);
+    this.valueChange.emit(this.contactValue ? this.combinedValue : '');
+    this.onChange(this.contactValue ? this.combinedValue : '');
   }
 
   onCountryCodeChange(event: Event): void {
     this.selectedCode = (event.target as HTMLSelectElement).value;
     let selected = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0]
-    this.valueChange.emit(this.combinedValue);
-    this.onChange(this.combinedValue);
+    console.log(selected)
+    if (selected && this.contactValue) {
+      this.contactValue = this.contactValue.slice(0, selected.maxDigit)
+      this.valueChange.emit(this.combinedValue);
+      this.onChange(this.combinedValue);
+    }
   }
 
   getContactInformation(){

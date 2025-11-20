@@ -6,7 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
-import { IonRouterOutlet, Platform } from '@ionic/angular';
+import { AlertController, IonRouterOutlet, Platform } from '@ionic/angular';
 import { App } from '@capacitor/app'
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
@@ -18,7 +18,7 @@ import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService, private cdr: ChangeDetectorRef, private mainVmsService: MainVmsService) { 
+  constructor(private router: Router, private clientMainService: ClientMainService, private authService: AuthService, private functionMain: FunctionMainService, private webrtc: WebRtcService, private platform: Platform, private storage: StorageService, private cdr: ChangeDetectorRef, private mainVmsService: MainVmsService, private alertController: AlertController) { 
     this.checkScreenSize();
     this.initializeBackButtonHandling();
   }
@@ -174,13 +174,18 @@ export class HomePage implements OnInit {
     
   }
 
-  onClickMoveCustom(type: string) {
+  onClickMoveCustom(type: string, is_time_res: boolean = false) {
+    if (is_time_res && !this.project_config.is_industrial){
+      this.worktimeAlert(type)
+    } else {
+      this.movePage(type)
+    }
+    
+  }
+
+  movePage(type: string) {
     if (type == 'contractor') {
-      // if (this.project_config.office_closing_hours) {
-      //   this.functionMain.presentToast("Can't open this menu because office hours have ended!", 'danger')
-      // } else {
-        this.router.navigate(['contractor-form']);
-      // }
+      this.router.navigate(['contractor-form']);
     } else {
       this.router.navigate(['move-home'], {
         queryParams: { type: type }
@@ -329,6 +334,35 @@ export class HomePage implements OnInit {
     }
   };
 
-
+  public async worktimeAlert(type: string) {
+    this.functionMain.checkOpenTime().then(async (value) => {
+      console.log(value)
+      if (!value) {
+        const alertButtons = await this.alertController.create({
+          cssClass: 'checkout-alert',
+          header: `Can't access this menu because of the work time restriction (${this.project_config.office_opening_hours} - ${this.project_config.office_closing_hours})`,
+          buttons: [
+            {
+              text: 'Bypass',
+              role: 'confirm',
+              handler: () => {
+                this.movePage(type)
+              },
+            },
+            {
+              text: 'Close',
+              role: 'cancel',
+              handler: () => {
+              },
+            },
+          ]
+        }
+        )
+        await alertButtons.present();
+      } else {
+        this.movePage(type)
+      }
+    })
+  }
 
 }
