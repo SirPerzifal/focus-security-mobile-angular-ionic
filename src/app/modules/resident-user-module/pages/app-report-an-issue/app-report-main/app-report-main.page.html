@@ -191,14 +191,22 @@
             <select
               *ngIf="fromWhere !== 'app-report'"
               id="type_of_issue"
-              placeholder="Type of Issue"
               class="border border-[#BDBDBD] w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
               (change)="onTypeReportChange($event)"
             >
               <option selected disabled hidden>Choose Type of Issue</option>
-              <option *ngFor="let tor of typeOfReport" [value]="tor.id">
-                {{ tor.name }}
-              </option>
+
+              <!-- Jika list tidak kosong -->
+              <ng-container *ngIf="typeOfReport.length > 0; else noType">
+                <option *ngFor="let tor of typeOfReport" [value]="tor.id">
+                  {{ tor.name }}
+                </option>
+              </ng-container>
+
+              <!-- Jika list kosong -->
+              <ng-template #noType>
+                <option disabled>No type issue found, please contact your admin to add the type</option>
+              </ng-template>
             </select>
           </div>
 

@@ -421,7 +421,7 @@ export class MakeANewEventPage implements OnInit {
       } else if (response.result.response_code == 401) {
         this.functionMain.presentToast(response.result.response_description, 'danger');
       } else {
-        this.functionMain.presentToast(`Failed!`, 'danger');
+        this.functionMain.presentToast(response.result.error_message, 'danger');
       }
     })
 

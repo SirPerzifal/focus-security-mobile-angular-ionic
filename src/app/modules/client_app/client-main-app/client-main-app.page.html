@@ -1,26 +1,38 @@
 <ion-header  *ngIf="callActionStatus != 'acceptCall'">
-  <div class="header fixed top-0">
-    <div class="flex flex-col justify-start">
-      <div class="flex flex-col justify-end h-full">
-        <img height="80" [src]="functionMain.getImage(userData.image_profile)" width="80" class="w-80 h-80" />
-        <div class="absolute flex flex-col items-end ml-8">
-          <ion-icon class="drop-shadow-xl text-base bg-white rounded-full p-1" name="pencil"
-            [routerLink]="['/client-my-profile']">
-          </ion-icon>
+  <div
+    [ngClass]="
+      isIOS && isMobile ? 'h-[153px] header fixed top-0' : 'h-[160px] header fixed top-0'
+    "
+  >
+    <div
+      [ngClass]="
+        isIOS && isMobile
+          ? 'flex flex-col justify-start mt-[30px]'
+          : 'flex flex-col justify-start mt-[27px]'
+      "
+    >
+      <div class="flex flex-col justify-start">
+        <div class="flex flex-col justify-end h-full">
+          <img height="80" [src]="functionMain.getImage(userData.image_profile)" width="80" class="w-80 h-80" />
+          <div class="absolute flex flex-col items-end ml-8">
+            <ion-icon class="drop-shadow-xl text-base bg-white rounded-full p-1" name="pencil"
+              [routerLink]="['/client-my-profile']">
+            </ion-icon>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-start mt-4 text-start w-[70%]">
+          <h1 class="text-[black]">
+            Welcome {{ userData.name }}
+          </h1>
+          <p class="text-[black] font-bold">
+            {{ functionMain.returnNone(userData.name_condo) }}
+          </p>
         </div>
       </div>
-
-      <div class="flex flex-col items-start mt-4 text-start w-[70%]">
-        <h1 class="text-[black]">
-          Welcome {{ userData.name }}
-        </h1>
-        <p class="text-[black] font-bold">
-          {{ functionMain.returnNone(userData.name_condo) }}
-        </p>
+      <div class="logo w-[30%] flex flex-row justify-end">
+        <img alt="iFS360 logo" height="60" src="assets/logoIFS.png" />
       </div>
-    </div>
-    <div class="logo w-[30%] flex flex-row justify-end">
-      <img alt="iFS360 logo" height="60" src="assets/logoIFS.png" />
     </div>
   </div>
 </ion-header>

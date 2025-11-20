@@ -37,6 +37,17 @@ export class ClientMainAppPage implements OnInit {
     image_profile: '',
   };
 
+  platformInfo: string = '';
+  isAndroid: boolean = false;
+  isIOS: boolean = false;
+  isMobile: boolean = false;
+  isDesktop: boolean = false;
+  isTablet: boolean = false;
+  isPWA: boolean = false;
+  isCordova: boolean = false;
+  isCapacitor: boolean = false;
+  isElectron: boolean = false;
+
   constructor(
     private webRtcService: WebRtcService,
     private router: Router,
@@ -48,11 +59,14 @@ export class ClientMainAppPage implements OnInit {
     private modalController: ModalController,
     private appVersionCheck: CheckAppVersionService
   ) {
-      this.initializeBackButtonHandling();
-    }
+    this.initializeBackButtonHandling();
+  }
 
   callActionStatus: string = '';
   ngOnInit() {
+    this.platform.ready().then(() => {
+      this.checkPlatform();
+    });
     this.route.queryParams.subscribe(params => {
       console.log(params)
       if (params) {
@@ -72,6 +86,23 @@ export class ClientMainAppPage implements OnInit {
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
+  }
+
+  checkPlatform() {
+    // Mendapatkan informasi platform
+    this.platformInfo = this.platform.platforms().join(', ');
+    const test = this.platform.platforms()
+    
+    // Memeriksa jenis platform
+    this.isAndroid = this.platform.is('android');
+    this.isIOS = this.platform.is('ios');
+    this.isMobile = this.platform.is('mobile');
+    this.isDesktop = this.platform.is('desktop');
+    this.isTablet = this.platform.is('tablet');
+    this.isPWA = this.platform.is('pwa');
+    this.isCordova = this.platform.is('cordova');
+    this.isCapacitor = this.platform.is('capacitor');
+    this.isElectron = this.platform.is('electron');
   }
 
   initializeBackButtonHandling() {
