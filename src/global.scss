@@ -54,10 +54,6 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
-ion-header {
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-}
 ion-spinner {
   transform: scale(2);
 }
@@ -533,7 +529,7 @@ ion-header {
 }
 
 ion-content#resident-content {
-  --offset-bottom: -78px !important;
+  --offset-bottom: -75px !important;
 }
 
 /* Rounded sliders */
