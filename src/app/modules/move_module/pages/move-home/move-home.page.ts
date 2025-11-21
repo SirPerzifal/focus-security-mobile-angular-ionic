@@ -101,7 +101,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
       unit: this.choosenUnit,
       host: this.selectedHost,
       issue_date: this.startDateFilter,
-      end_issue_date: this.endDateFilter
+      end_issue_date: this.endDateFilter,
     }
     // Gunakan forkJoin untuk mengambil kedua jenis jadwal secara bersamaan
     if (this.pageType === 'move_in') {
@@ -124,7 +124,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
           }
         });
       } else {
-        this.clientMainService.getApi(params, '/vms/get/move_in_out_schedule_history').subscribe({
+        this.clientMainService.getApi({...params, schedule_type: 'move_in_out'}, '/vms/get/move_in_out_schedule_history').subscribe({
           next: (results) => {
             console.log(results)
             if (results.result.status_code === 200) {
@@ -171,7 +171,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
           }
         });
       } else {
-        this.clientMainService.getApi(params, '/vms/get/renovation_schedule_history').subscribe({
+        this.clientMainService.getApi({...params, schedule_type: 'renovation'}, '/vms/get/move_in_out_schedule_history').subscribe({
           next: (results) => {
             console.log(results.result.result)
             if (results.result.status_code === 200) {
@@ -585,12 +585,12 @@ export class MoveHomePage implements OnInit, OnDestroy {
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
       this.sortVehicle = Array.from(
-        new Set(this.sortVehicle.map((record) => record.schedule_date ? new Date(record.schedule_date.split(' ')[0]).toISOString() : '-' ))
+        new Set(this.sortVehicle.map((record) => record.schedule_date ? this.functionMain.convertNewDateTZ(record.schedule_date).split(' ')[0] : '-' ))
       ).map((date) => ({
         vehicle_number: '',
         date: new Date(date),
-        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.sortVehicle.filter(item => item.schedule_date ? new Date(item.schedule_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.schedule_date == date ) ,            
+        schedule_date: date,
+        data: this.sortVehicle.filter(item => item.schedule_date ? this.functionMain.convertNewDateTZ(item.schedule_date).split(' ')[0] == date : item.schedule_date == date ) ,            
       })).sort((a, b) => b.date.getTime() - a.date.getTime());;
       console.log(this.sortVehicle)
     } else if (this.selectedRadio == 'sort_vehicle') {

@@ -107,10 +107,7 @@ export class ContractorFormPage implements OnInit {
   // Update jumlah pax
   onPaxCountChange(event: any) {
     this.paxCount = parseInt(event.target.value, 10);
-    // Reset pax data
-    // this.paxData = Array.from({ length: this.paxCount }, () => ({ contractor_name: '', identification_number: '' }));
     this.paxData = [];
-    // Kumpulkan data pax setelah mengubah paxCount
     this.collectPaxData();
 }
   

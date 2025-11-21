@@ -5,6 +5,8 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { NavigationService } from 'src/app/service/global/navigation-service/navigation-service.service.spec';
 import { App } from '@capacitor/app'
+import NavigationType from 'src/app/plugins/navigation-type.plugin';
+import { PluginListenerHandle } from '@capacitor/core';
 
 @Component({
   selector: 'app-bottom-nav-bar',
@@ -14,6 +16,8 @@ import { App } from '@capacitor/app'
 export class BottomNavBarComponent implements OnInit {
 
   @Input() clientRoute: boolean = false
+  navigationMode: 'gesture' | 'button' | 'unknown' = 'unknown';
+  private navigationListener?: PluginListenerHandle;
 
   constructor(
     private webRtcService: WebRtcService,
@@ -46,7 +50,14 @@ export class BottomNavBarComponent implements OnInit {
     this.router.navigate([this.clientRoute ? '/client-settings' : '/resident-settings-page']);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (this.platform.is('android')) {
+      // 1. Get current navigation type
+      await this.checkNavigationType();
+      
+      // 2. Listen for changes
+      await this.listenNavigationChanges();
+    }
     this.functionMain.vmsPreferences().then((value: any)=> {
       // console.log(value)
       this.is_client = value.is_client
@@ -71,6 +82,55 @@ export class BottomNavBarComponent implements OnInit {
     });
   }
 
+  async checkNavigationType() {
+    try {
+      const result = await NavigationType.getNavigationType();
+      
+      console.log('Navigation Type:', result.type);
+      console.log('Height (dp):', result.heightDp);
+      console.log('Height (px):', result.heightPx);
+      
+      // Adjust UI based on type
+      this.adjustUIForNavigationType(result.type);
+    } catch (error) {
+      console.error('Error detecting navigation type:', error);
+    }
+  }
+
+  async listenNavigationChanges() {
+    try {
+      // Start listening
+      await NavigationType.startListening();
+      
+      // Add listener untuk perubahan
+      this.navigationListener = await NavigationType.addListener(
+        'navigationTypeChanged',
+        (data) => {
+          console.log('Navigation type changed to:', data.type);
+          this.adjustUIForNavigationType(data.type);
+        }
+      );
+      
+      console.log('👂 Listening for navigation type changes...');
+    } catch (error) {
+      console.error('Error setting up listener:', error);
+    }
+  }
+
+  adjustUIForNavigationType(type: string) {
+    if (type === 'gesture') {
+      console.log('User pakai GESTURE navigation');
+      // Adjust bottom padding, margin, etc
+      // this.bottomPadding = '20px';
+      this.navigationMode = type;
+    } else if (type === 'button') {
+      this.navigationMode = type;
+      console.log('User pakai BUTTON navigation (3 buttons)');
+      // Adjust untuk button navigation
+      // this.bottomPadding = '0px';
+    }
+  }
+
   initializeBackButtonHandling(is_home: boolean = false) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       if (is_home) {
@@ -79,6 +139,13 @@ export class BottomNavBarComponent implements OnInit {
         history.back();
       }
     });
+  }
+
+  ngOnDestroy() {
+    // Cleanup listener
+    if (this.navigationListener) {
+      this.navigationListener.remove();
+    }
   }
 
   callVms() {

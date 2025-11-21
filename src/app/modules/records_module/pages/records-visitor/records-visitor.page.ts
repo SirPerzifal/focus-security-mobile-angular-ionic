@@ -365,12 +365,12 @@ export class RecordsVisitorPage implements OnInit {
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
       this.sortVehicle = Array.from(
-        new Set(this.sortVehicle.map((record) => record.entry_datetime ? new Date(record.entry_datetime.split(' ')[0]).toISOString() : '-' ))
+        new Set(this.sortVehicle.map((record) => record.entry_datetime ? this.functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[0] : '-' ))
       ).map((date) => ({
         vehicle_number: '',
         date: new Date(date),
-        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.sortVehicle.filter(item => item.entry_datetime ? new Date(item.entry_datetime).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.entry_datetime == date ) ,            
+        schedule_date: date,
+        data: this.sortVehicle.filter(item => item.entry_datetime ? this.functionMain.convertNewDateTZ(item.entry_datetime).split(' ')[0] == date : item.entry_datetime == date ) ,            
       })).sort((a, b) => b.date.getTime() - a.date.getTime());;
       console.log(this.sortVehicle)
     } else if (this.selectedRadio == 'sort_vehicle') {
