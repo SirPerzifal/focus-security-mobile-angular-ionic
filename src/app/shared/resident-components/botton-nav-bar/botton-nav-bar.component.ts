@@ -59,6 +59,8 @@ export class BottonNavBarComponent implements OnInit {
       
       // 2. Listen for changes
       await this.listenNavigationChanges();
+    } else {
+      this.adjustUIForNavigationType('gesture')
     }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
