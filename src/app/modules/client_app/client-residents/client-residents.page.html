@@ -45,7 +45,7 @@
       <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
     </div>
     <app-modal-loading *ngIf="isLoading" />
-    <div class="flex flex-col mb-24 space-y-2 mt-4" *ngIf="!isLoading">
+    <div class="flex flex-col mb-32 space-y-2 mt-4" *ngIf="!isLoading">
         <div
           class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
           *ngFor="let contact of Residents">

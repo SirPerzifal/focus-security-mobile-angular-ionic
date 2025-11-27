@@ -21,7 +21,7 @@
       (click)="onBack()"></ion-icon>
   </div>
 
-  <div class="px-4 mt-2 text-center mb-24" *ngIf="isMain">
+  <div class="px-4 mt-2 text-center mb-32" *ngIf="isMain">
     <div class="flex flex-row justify-between space-x-1">
       <div class="w-1/4">
         <app-visitor-button [text]="'Active'"
@@ -213,7 +213,7 @@
 
   </div>
 
-  <div *ngIf="!isMain" class="px-5 text-center mb-24">
+  <div *ngIf="!isMain" class="px-5 text-center mb-32">
     <div>
       <h2 class="font-bold mb-2 mt-2">{{ dataForGraph.title }}</h2>
     </div>

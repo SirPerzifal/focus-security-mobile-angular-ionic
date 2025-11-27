@@ -6,7 +6,7 @@
   </div>
   <!-- CONTENT -->
   <div class="flex flex-col relative mx-4">
-    <div class="flex flex-col justify-between mt-4 space-y-2 w-full mb-24">
+    <div class="flex flex-col justify-between mt-4 space-y-2 w-full mb-32">
       <img [src]="facilityForm.facility_banner ? functionMain.getImage(facilityForm.facility_banner) : 'assets/icon/exc-client/no_image.jpg'" [alt]="facilityForm.facility_name" class="w-full h-40 object-cover rounded-2xl">
       <div class="w-full flex flex-col">
         <label class="text-base"><b>Room</b></label>
@@ -80,7 +80,7 @@
     </div>
   </div>
   <!-- ############################### -->
-  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end">
+  <ion-fab slot="fixed" class="mb-24" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="createNew()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

@@ -229,29 +229,6 @@ export class OvernightParkingListPage implements OnInit {
   }
 
   applyFilters() {
-    // this.filteredHistorySchedules = this.historySchedules.filter(item => {
-    //   const visitorDate = new Date(item.approved_date.split(' ')[0]);
-    //   visitorDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for date comparison
-
-    //   // Convert the selected start and end dates to Date objects
-    //   const selectedStartDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-    //   const selectedEndDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
-
-    //   // Set time to 00:00:00 for comparison
-    //   if (selectedStartDate) {
-    //     selectedStartDate.setHours(0, 0, 0, 0);
-    //   }
-    //   if (selectedEndDate) {
-    //     selectedEndDate.setHours(0, 0, 0, 0);
-    //   }
-
-    //   const dateMatches = (!selectedStartDate || visitorDate >= selectedStartDate) && (!selectedEndDate || visitorDate <= selectedEndDate);
-    //   const typeMatches = this.choosenBlock ? item.block_id == this.choosenBlock : true;
-    //   const hostMatches = this.selectedHost ? item.industrial_host_id == this.selectedHost : true;
-
-    //   return typeMatches && dateMatches && hostMatches;
-    // });
-    // console.log(this.filteredHistorySchedules)
     this.loadOvernight('history')
   }
 
@@ -397,12 +374,12 @@ export class OvernightParkingListPage implements OnInit {
     if (this.selectedRadio == 'sort_date') {
       this.isRadioClicked = true
       this.sortVehicle = Array.from(
-        new Set(this.sortVehicle.map((record) => record.approved_date ? new Date(record.approved_date.split(' ')[0]).toISOString() : '-' ))
+        new Set(this.sortVehicle.map((record) => record.request_date ? this.functionMain.convertNewDateTZ(record.request_date).split(' ')[0] : '-' ))
       ).map((date) => ({
         vehicle_number: '',
         date: new Date(date),
-        schedule_date: this.convertToDDMMYYYY(new Date(date).toLocaleDateString('en-CA').split('T')[0]),
-        data: this.sortVehicle.filter(item => item.approved_date ? new Date(item.approved_date).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0) : item.approved_date == date ) ,            
+        schedule_date: date,
+        data: this.sortVehicle.filter(item => item.request_date ? this.functionMain.convertNewDateTZ(item.request_date).split(' ')[0] == date : item.request_date == date ) ,            
       })).sort((a, b) => b.date.getTime() - a.date.getTime());;
       console.log(this.sortVehicle)
     } else if (this.selectedRadio == 'sort_vehicle') {

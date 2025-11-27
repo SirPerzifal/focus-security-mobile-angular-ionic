@@ -11,7 +11,7 @@
       (click)="onBack()"></ion-icon>
   </div>
   <!-- CONTENT -->
-  <div class="flex flex-col relative mx-4 mb-24" *ngIf="isMain" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32" *ngIf="isMain" @fadeInOut>
     <div class="flex flex-col">
       <app-modal-loading *ngIf="isLoading" class="mt-4" />
       <div class="my-4" *ngIf="!isLoading">
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mx-4 mb-24 mt-4" *ngIf="isDetail" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32 mt-4" *ngIf="isDetail" @fadeInOut>
     <div
       class="bg-green-100 p-4 rounded flex flex-col justify-between w-full mb-1">
       <div class="text-base w-ful">
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mx-4 mb-24 mt-4" *ngIf="isNew" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32 mt-4" *ngIf="isNew" @fadeInOut>
     <div class="w-full flex flex-col space-y-4">
       <div class="w-full flex flex-col justify-center items-center">
             <input #clientNeweliveryIcon type="file" class="hidden" (change)="onImageChange($event)"
@@ -88,7 +88,7 @@
     </div>
   </div>
 
-  <ion-fab slot="fixed" class="mb-20" vertical="bottom" horizontal="end">
+  <ion-fab slot="fixed" class="mb-24" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="showNew()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

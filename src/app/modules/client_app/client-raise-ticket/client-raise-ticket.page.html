@@ -20,7 +20,7 @@
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
   </div>
-  <div class="flex flex-col mx-4 mb-24">
+  <div class="flex flex-col mx-4 mb-32">
     <div class="flex items-center justify-center flex-col" *ngIf="isHome" @fadeInOut>
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5" *ngIf="!isMainLoading && menuItems.length > 0; else noTicketType">
         <div class="w-full h-full relative" *ngFor="let menu of menuItems">

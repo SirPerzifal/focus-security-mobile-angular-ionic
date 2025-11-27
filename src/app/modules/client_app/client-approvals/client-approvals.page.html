@@ -39,7 +39,7 @@
     </div>
   </div>
   <div
-    class="flex flex-col relative mx-4 mb-24"
+    class="flex flex-col relative mx-4 mb-32"
     *ngIf="isApprovalHome"
     @fadeInOut
   >
@@ -673,7 +673,7 @@
   </div>
 
   <div
-    class="flex flex-row relative mx-4 mt-4 mb-24"
+    class="flex flex-row relative mx-4 mt-4 mb-32"
     *ngIf="isDetail"
     @fadeInOut
   >
@@ -1628,7 +1628,7 @@
           </textarea>
         </div>
         <app-visitor-button
-          [text]="'Confirm Rejection'"
+          [text]="'Confirm'"
           [extraClass]="'bg-gray-300 text-gray-800 p-2 w-40 rounded border border-black font-bold'"
           (click)="rejectDetail()"
         ></app-visitor-button>

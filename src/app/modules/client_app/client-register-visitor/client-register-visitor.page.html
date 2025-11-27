@@ -21,7 +21,7 @@
       (click)="onBack()"></ion-icon>
   </div>
   <!-- CONTENT -->
-  <div class="flex flex-col relative mx-4 mb-24" *ngIf="isMain" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32" *ngIf="isMain" @fadeInOut>
     <div class="flex flex-row justify-start items-center w-full space-x-3 mt-2">
       <div class="w-full">
         <app-visitor-button [text]="'Active'"
@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mx-4 mb-24 mt-4 w-full" *ngIf="isDetail" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32 mt-4 w-full" *ngIf="isDetail" @fadeInOut>
     <div
       [class]="visitorDetail.is_cancel ? 'bg-[#E3787E] p-4 rounded flex flex-col justify-between w-full mb-1' : 'bg-[var(--ion-color-tertiary)] p-4 rounded flex flex-col justify-between w-full mb-1'">
       <div class="text-base w-ful">

@@ -62,7 +62,7 @@
       <ion-spinner name="dots"></ion-spinner>
     </div> -->
     <app-modal-loading *ngIf="isLoading" class="mt-4" />
-    <div class="flex flex-col mt-3 mb-24" *ngIf="!isLoading">
+    <div class="flex flex-col mt-3 mb-32" *ngIf="!isLoading">
       <div class="space-y-3" *ngIf="sortContact.length > 0; else noContact">
         <div class="flex flex-col" *ngFor="let header of sortContact">
           <div class="text-base font-semibold text-gray-600 text-start ml-4">
@@ -117,7 +117,7 @@
       </div>
       <div *ngIf="!isLoading">
         <div
-          class="flex flex-col relative space-y-3 mt-6 mb-24"
+          class="flex flex-col relative space-y-3 mt-6 mb-32"
           *ngIf="sortContact.length > 0; else noContact"
         >
           <div class="flex flex-col" *ngFor="let header of sortContact">

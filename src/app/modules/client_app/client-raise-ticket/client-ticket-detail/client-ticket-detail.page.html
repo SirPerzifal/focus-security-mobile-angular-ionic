@@ -19,7 +19,7 @@
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>
   </div>
-  <div class="flex flex-col mx-4 mb-24">
+  <div class="flex flex-col mx-4 mb-32">
     <div class="flex flex-col w-full">
       <div
         [ngClass]="'rounded p-5 my-4 mt-4 w-full ' + ( ticket.ticket_status == 'New' ? 'bg-[#F8F1BA]' : 'bg-green-100')">
@@ -121,7 +121,7 @@
               <div class="flex justify-between w-full" [ngClass]="message.is_vms ? 'flex-row' : 'flex-row-reverse'">
                 <div>
                   # {{ message.sender_name ? message.sender_name : (message.is_vms ? 'Security' : ( message.is_client ?
-                  'Client User' : 'Resident User')) }}
+                  'Client User' : (message.is_resident ? 'Resident User' : message.user ))) }}
                 </div>
               </div>
               <div class="w-full p-3 rounded"
