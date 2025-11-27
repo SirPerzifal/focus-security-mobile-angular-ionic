@@ -57,6 +57,8 @@ export class BottomNavBarComponent implements OnInit {
       
       // 2. Listen for changes
       await this.listenNavigationChanges();
+    } else {
+      this.adjustUIForNavigationType('gesture')
     }
     this.functionMain.vmsPreferences().then((value: any)=> {
       // console.log(value)
