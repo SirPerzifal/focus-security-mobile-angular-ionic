@@ -151,7 +151,7 @@ export class PaymentFormVehiclePage implements OnInit {
   onUploadPaymentReceipt(event: any) {
     let data = event.target.files[0];
     if (data) {
-      this.selectedPaymentReceiptFileName = data.name; // Store the selected file name
+      this.selectedPaymentReceiptFileName = this.truncateFileName(data.name, 30); // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
         // console.log('Base64 successed');
         this.paymentReceipt = base64.split(',')[1]; // Update the form control for image file
@@ -161,6 +161,18 @@ export class PaymentFormVehiclePage implements OnInit {
     } else {
       this.selectedPaymentReceiptFileName = ''; // Reset if no file is selected
     }
+  }
+
+  truncateFileName(fileName: string, maxLength: number): string {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    
+    const extension = fileName.split('.').pop();
+    const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedLength = maxLength - extension!.length - 4; // 4 untuk "..." dan "."
+    
+    return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
   }
 
   convertToBase64(file: File): Promise<string> {

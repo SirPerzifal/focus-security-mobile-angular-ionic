@@ -83,7 +83,10 @@
       >
         <app-loading-animation *ngIf="isLoading"></app-loading-animation>
       </div>
-      <div *ngIf="!isLoading" class="grid grid-cols-3 gap-2 mb-4 px-4">
+      <div
+        *ngIf="!isLoading && roomSchedule.length > 0"
+        class="grid grid-cols-3 gap-2 mb-4 px-4"
+      >
         <button
           *ngFor="let timeSlot of roomSchedule"
           [ngClass]="getTimeSlotClass(timeSlot)"

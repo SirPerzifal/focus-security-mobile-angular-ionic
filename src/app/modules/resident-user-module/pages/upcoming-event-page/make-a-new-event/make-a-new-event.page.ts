@@ -365,9 +365,9 @@ export class MakeANewEventPage implements OnInit {
     if (!this.EventsForm.contact_number && this.userType != 'industrial') {
       errMsg += 'Contact number is required! \n'
     }
-    if (!this.EventsForm.vehicle_number && this.userType != 'industrial') {
-      errMsg += 'Vehicle number is required! \n'
-    }
+    // if (!this.EventsForm.vehicle_number && this.userType != 'industrial') {
+    //   errMsg += 'Vehicle number is required! \n'
+    // }
     if (!this.selectedStartTime) {
       errMsg += 'Start time must be selected! \n'
     }

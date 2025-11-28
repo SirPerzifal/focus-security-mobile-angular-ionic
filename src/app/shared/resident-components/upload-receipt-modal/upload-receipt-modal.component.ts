@@ -51,7 +51,7 @@ export class UploadReceiptModalComponent  implements OnInit {
   uploadReceipt(event: any) {
     let data = event.target.files[0];
     if (data) {
-      this.selectedFileName = data.name; // Store the selected file name
+      this.selectedFileName = this.truncateFileName(data.name, 30); // Store the selected file name
       this.convertToBase64(data).then((base64: string) => {
         // console.log('Base64 successed');
         this.receiptBase64 = base64.split(',')[1]; // Update the form control for image file
@@ -61,6 +61,18 @@ export class UploadReceiptModalComponent  implements OnInit {
     } else {
       this.selectedFileName = ''; // Reset if no file is selected
     }
+  }
+
+  truncateFileName(fileName: string, maxLength: number): string {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    
+    const extension = fileName.split('.').pop();
+    const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedLength = maxLength - extension!.length - 4; // 4 untuk "..." dan "."
+    
+    return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
   }
 
   onSubmitReceipt() {

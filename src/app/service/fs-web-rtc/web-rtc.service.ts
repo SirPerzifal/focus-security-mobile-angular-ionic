@@ -19,6 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 import { registerPlugin } from '@capacitor/core';
 import { ClientMainService } from '../client-app/client-main.service';
 import { MainVmsService } from '../vms/main_vms/main-vms.service';
+import { Estate } from 'src/models/resident/resident.model';
 interface RingtonePlugin {
   play(): Promise<void>;
   stop(): Promise<void>;
@@ -449,7 +450,7 @@ export class WebRtcService extends ApiService {
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
       this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
-      this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
+      this.socket.on('kick-user-expiry', (data: any) => this.handleKickUserExpiry(data));
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
       this.socket.on('intercom-close-gate', (data: any) => this.handleCloseGate(data));
       this.socket.on('handle-vms-sync-state', (data: any) => this.handleChangeStateVMS(data));
@@ -882,6 +883,64 @@ export class WebRtcService extends ApiService {
           console.log(error)
         }
       )
+    }
+  }
+
+  async handleKickUserExpiry(data: any) {
+    this.family_id = false
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    this.decoded = {}
+    const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+    if (storedValue) {
+      try {
+        this.decoded = JSON.parse(await this.storage.decodeData(storedValue)) as Estate;
+        // console.log(this.decoded)
+        this.family_id = this.decoded.family_id
+      } catch (error) {
+        console.log(error)
+        this.decoded = {}
+        this.family_id = false
+      }
+    } else {
+      this.decoded = {}
+      this.family_id = false
+    }
+    console.log(this.decoded, this.decoded.family_type, this.family_id);
+    if (this.decoded.family_type === 'Helper' || this.decoded.family_type === 'helper' || this.decoded.family_type === 'Tenants' ||this.decoded.family_type === 'tenants') {
+      console.log("Got u");
+      if (this.family_id) {
+        console.log("Got here");
+        this.http.post<any>(`${this.baseUrl}/resident/get/get_expiry_last_for_helper_and_tenants`, { jsonrpc: '2.0', params: { family_id: this.family_id } }).subscribe(
+          res => {
+            console.log(res, "sefwemfvuwmvwumiunwvwuinwiufeuvnwiuneuwfnqfiwmevuwvn")
+            if (res.result.response_code === 200 || res.result.response_code === 404) {
+              // Ada data yang perlu ditampilkan// Reset ke midnight
+
+              const expiryDate = new Date(res.result.expiry_date);
+              expiryDate.setHours(0, 0, 0, 0);
+
+              const isExpired = expiryDate < today;
+              if (isExpired) {
+                this.presentToast('Your about to get kick out from application in 3 second because your account has reach the expiry date, please contact your household.', 'warning')
+                setTimeout(() => {
+                  this.closeSocket();
+                  this.storage.clearAllValueFromStorage();
+                  Preferences.clear();
+                  this.router.navigate(['']);
+                }, 3000)
+              } else {
+                console.log('Tidak ada notifikasi expiry date');
+              }
+            } else {
+              console.log('Check expiry failed:', res.result.response_message);
+            }
+          },
+          error => {
+            console.log(error)
+          }
+        )
+      }
     }
   }
 

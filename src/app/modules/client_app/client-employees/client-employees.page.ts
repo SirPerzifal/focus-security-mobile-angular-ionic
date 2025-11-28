@@ -70,7 +70,7 @@ export class ClientEmployeesPage implements OnInit {
   onImageChange(value: any): void {
     let data = value.target.files[0];
     if (data) {
-      this.selectedImageName = data.name; // Store the selected file name
+      this.selectedImageName = this.truncateFileName(data.name, 30); // Store the selected file name
       this.functionMain.convertToBase64(data).then((base64: string) => {
         // console.log('Base64 successed');
         this.formData.image_family = base64.split(',')[1]; // Update the form control for image file
@@ -81,6 +81,17 @@ export class ClientEmployeesPage implements OnInit {
     }
   }
 
+  truncateFileName(fileName: string, maxLength: number): string {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    
+    const extension = fileName.split('.').pop();
+    const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedLength = maxLength - extension!.length - 4; // 4 untuk "..." dan "."
+    
+    return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
+  }
 
   onSubmit() {
     console.log(this.formData)

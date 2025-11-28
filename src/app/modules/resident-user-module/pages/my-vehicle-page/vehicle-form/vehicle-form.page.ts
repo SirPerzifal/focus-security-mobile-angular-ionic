@@ -258,7 +258,7 @@ export class VehicleFormPage implements OnInit {
       let data = event.target.files[0];
       if (data) {
       this.isModalChooseUpload = !this.isModalChooseUpload;
-        this.selectedNameVehicleLog = data.name; // Store the selected file name
+        this.selectedNameVehicleLog = this.truncateFileName(data.name, 30); // Store the selected file name
         this.convertToBase64(data).then((base64: string) => {
           // console.log('Base64 successed');
           this.vehicleForm.vehicleLog = base64.split(',')[1]; // Update the form control for image file
@@ -291,6 +291,18 @@ export class VehicleFormPage implements OnInit {
     else if (type === 'other_make_vehicle') {
       this.vehicleForm.otherVehicleMake = event;
     }
+  }
+
+  truncateFileName(fileName: string, maxLength: number): string {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    
+    const extension = fileName.split('.').pop();
+    const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedLength = maxLength - extension!.length - 4; // 4 untuk "..." dan "."
+    
+    return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
   }
 
   loadFamilyMember() {

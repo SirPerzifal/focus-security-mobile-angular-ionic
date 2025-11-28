@@ -172,16 +172,28 @@ export class DetailHistoryInCommercialPage implements OnInit, OnDestroy {
   onFileChange(value: any): void {
     let data = value.target.files[0];
     if (data) {
-      this.selectedFileName = data.name; // Store the selected file name
+      this.selectedFileName = this.truncateFileName(data.name, 30);
+      
       this.functionMain.convertToBase64(data).then((base64: string) => {
-        // console.log('Base64 successed');
-        this.formData.image = base64.split(',')[1]; // Update the form control for image file
+        this.formData.image = base64.split(',')[1];
       }).catch(error => {
         console.error('Error converting to base64', error);
       });
     } else {
-      this.selectedFileName = ''; // Reset if no file is selected
+      this.selectedFileName = '';
     }
+  }
+
+  truncateFileName(fileName: string, maxLength: number): string {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    
+    const extension = fileName.split('.').pop();
+    const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedLength = maxLength - extension!.length - 4; // 4 untuk "..." dan "."
+    
+    return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
   }
 
   reinviteModal(invite: any) {
