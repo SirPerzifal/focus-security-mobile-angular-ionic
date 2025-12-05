@@ -101,7 +101,7 @@
                     </ng-container>
                   </div>
                 </div>
-                <div class="flex flex-row">
+                <div class="flex flex-row w-full">
                   <img
                     alt="Profile picture of {{ data.name }}"
                     class="h-16 w-16 rounded-full"
@@ -113,9 +113,9 @@
                     "
                     width="50"
                   />
-                  <div class="ml-4 text-start">
-                    <h2 class="text-lg font-bold">{{ data.name }}</h2>
-                    <p class="text-sm text-gray-600">
+                  <div class="ml-4 text-start w-[70%]">
+                    <h2 class="text-lg font-bold truncate w-full">{{ data.name }}</h2>
+                    <p class="text-sm text-gray-600 truncate w-full">
                       {{ data.head_type }} ({{ data.type }})
                     </p>
                   </div>
@@ -138,7 +138,7 @@
                     class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
                     (click)="openExtend(data)"
                   >
-                    Tenancies
+                    Extension
                   </button>
 
                   <!-- Tombol Helper's (hanya untuk Helper) -->
@@ -147,7 +147,7 @@
                     class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
                     (click)="openExtend(data)"
                   >
-                    Helper's
+                    Extension
                   </button>
                 </div>
               </div>

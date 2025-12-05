@@ -120,7 +120,7 @@
             <div class="flex flex-col justify-start w-4/5">
               <div class="flex justify-between w-full" [ngClass]="message.is_vms ? 'flex-row' : 'flex-row-reverse'">
                 <div>
-                  # {{ message.sender_name ? message.sender_name : (message.is_vms ? 'Security' : ( message.is_client ?
+                  {{ message.sender_name ? message.sender_name : (message.is_vms ? 'Security' : ( message.is_client ?
                   'Client User' : (message.is_resident ? 'Resident User' : message.user ))) }}
                 </div>
               </div>
@@ -144,7 +144,7 @@
               </div>
             </div>
 
-            <div class="w-1/5 flex flex-row justify-end" *ngIf="message.is_client">
+            <div class="w-1/5 flex flex-row justify-end" *ngIf="message.is_client || (!message.is_client && !message.is_resident && !message.is_vms)">
               <div class="rounded-full overflow-hidden w-12 h-12">
                 <img class="w-12 h-12"
                   [src]="message.sender_profile ? functionMain.getImage(message.sender_profile) : 'assets/icon/exc-client/user.png'"

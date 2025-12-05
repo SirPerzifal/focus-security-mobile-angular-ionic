@@ -73,7 +73,7 @@
               class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
               *ngFor="let contact of header.data"
             >
-              <span class="text-lg font-bold">{{ contact.name }}</span>
+              <span class="text-lg font-bold truncate">{{ contact.name }}</span>
               <a (click)="onClickCallButton(contact)">
                 <div
                   class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2"
@@ -129,7 +129,7 @@
                 class="flex flex-row w-full items-center h-16 rounded-full bg-[var(--ion-color-secondary)] justify-between px-6"
                 *ngFor="let contact of header.data"
               >
-                <span class="text-lg font-bold w-[70%]"
+                <span class="text-lg font-bold w-[70%] truncate"
                   >{{ contact.name }}</span
                 >
                 <div

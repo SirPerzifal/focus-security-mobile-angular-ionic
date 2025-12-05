@@ -53,7 +53,7 @@
           <div (click)="viewDetail(employee)"
             class="flex flex-row w-full items-center h-14 rounded-full bg-[var(--ion-color-secondary)] justify-between px-4"
             *ngFor="let employee of showVisitorList">
-            <span class="text-lg font-bold">{{ employee.family_full_name }}</span>
+            <span class="text-lg font-bold truncate w-4/5">{{ employee.family_full_name }}</span>
             <div
               class="w-10 h-10 rounded-full bg-[var(--ion-color-primary)] flex flex-col justify-center items-center mr-2">
               <fa-icon [icon]="faArrow" class="flex flex-col justify-center items-center text-xl text-white"></fa-icon>
@@ -194,7 +194,7 @@
       <div class="text-base w-ful">
         <div class="w-full flex flex-col justify-center items-center my-2">
           <img [src]="functionMain.getImage(visitorDetail.image_profile)" class="h-40">
-          <p class="text-lg my-2 text-black font-bold">{{ functionMain.returnNone(visitorDetail.family_full_name) }}</p>
+          <p class="text-lg my-2 text-black font-bold text-center">{{ functionMain.returnNone(visitorDetail.family_full_name) }}</p>
         </div>
         <!-- <div class="text-base font-bold mb-2">{{ functionMain.returnNone(visitorDetail.family_full_name)}}</div> -->
         <table class="w-full">

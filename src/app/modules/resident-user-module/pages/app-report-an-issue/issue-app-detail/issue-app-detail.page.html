@@ -213,7 +213,7 @@
           </div>
           <div
             class="w-1/5 flex flex-row justify-start"
-            *ngIf="message.is_client"
+            *ngIf="message.is_client || (!message.is_client && !message.is_resident && !message.is_vms)"
           >
             <div class="rounded-full overflow-hidden w-12 h-12">
               <img
@@ -229,7 +229,7 @@
               [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'"
             >
               <div>
-                # {{ message.sender_name ? message.sender_name : (message.is_vms
+                {{ message.sender_name ? message.sender_name : (message.is_vms
                 ? 'VMS Admin' : ( message.is_client ? 'Client User' : (message.is_resident ? 'Resident User' : message.user ))) }}
               </div>
             </div>

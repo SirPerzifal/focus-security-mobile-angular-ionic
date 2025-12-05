@@ -46,7 +46,7 @@
             </ion-icon> -->
           </div>
         </div>
-        <h2 class="text-xl font-bold">{{ userName }}</h2>
+        <h2 class="text-xl font-bold w-4/5 text-center">{{ userName }}</h2>
       </div>
 
       <div class="mt-4 space-y-2 w-full px-4">
@@ -118,7 +118,7 @@
           </div>
           <div
             *ngIf="!isLoading"
-            class="space-y-4 h-[47.5rem] overflow-y-auto rounded-lg style-overflow-hidden"
+            class="space-y-4 rounded-lg mb-8"
           >
             <div
               class="bg-[#D8ECCF] border rounded-lg p-4 px-6 flex items-center w-full"
@@ -132,7 +132,7 @@
                 [src]="functionMain.getImage(estate.image_profile)"
                 width="50"
               />
-              <div class="flex-1 px-2">
+              <div class="flex-1 px-2 w-3/5">
                 <p class="font-bold cw-3:text[13px]">{{estate.project_name}}</p>
                 <p class="cw-3:text[13px]">{{estate.family_name}}</p>
                 <p

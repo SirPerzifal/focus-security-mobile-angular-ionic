@@ -439,7 +439,7 @@
                   Block
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.block_id.name) }}
+                  : {{ functionMain.returnNone(approval.block_id) }}
                 </p>
               </div>
               <div
@@ -450,7 +450,7 @@
                   Unit
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.unit_id.name) }}
+                  : {{ functionMain.returnNone(approval.unit_id) }}
                 </p>
               </div>
               <div class="table-row" *ngIf="['family'].includes(approval_type)">
@@ -558,25 +558,13 @@
               </div>
               <div
                 class="table-row"
-                *ngIf="['overnight'].includes(approval_type) && approval.states == 'approved'"
-              >
-                <p class="font-bold table-cell w-1/2 text-base text-black">
-                  Approved Date
-                </p>
-                <p class="ml-2 table-cell text-base text-black">
-                  : {{ approval.approved_date ?
-                  functionMain.convertNewDateTZ(approval.approved_date) : '-' }}
-                </p>
-              </div>
-              <div
-                class="table-row"
                 *ngIf="['facility'].includes(approval_type)"
               >
                 <p class="font-bold table-cell w-1/2 text-base text-black">
                   Booked By
                 </p>
                 <p class="ml-2 table-cell text-base text-black">
-                  : {{ functionMain.returnNone(approval.requestor_id.name) }}
+                  : {{ functionMain.returnNone(approval.requestor_name) }}
                 </p>
               </div>
               <div class="table-row" *ngIf="['family'].includes(approval_type)">
@@ -672,6 +660,7 @@
     </div>
   </div>
 
+  <!-- mark detail-->
   <div
     class="flex flex-row relative mx-4 mt-4 mb-32"
     *ngIf="isDetail"
@@ -1078,7 +1067,7 @@
         >
           <p class="font-bold table-cell w-1/2 text-base text-black">Block</p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.block_id.name) }}
+            : {{ functionMain.returnNone(selectedApproval.block_id) }}
           </p>
         </div>
         <div
@@ -1087,7 +1076,7 @@
         >
           <p class="font-bold table-cell w-1/2 text-base text-black">Unit</p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.unit_id.name) }}
+            : {{ functionMain.returnNone(selectedApproval.unit_id) }}
           </p>
         </div>
         <div class="table-row" *ngIf="['family'].includes(approval_type)">
@@ -1289,25 +1278,12 @@
             functionMain.convertDateExtend(selectedApproval.request_date).split(' ')[0] : '-' }}
           </p>
         </div>
-        <div
-          class="table-row"
-          *ngIf="['overnight'].includes(approval_type) && selectedApproval.states == 'approved'"
-        >
-          <p class="font-bold table-cell w-1/2 text-base text-black">
-            Approved Date
-          </p>
-          <p class="ml-2 table-cell text-base text-black">
-            : {{ selectedApproval.approved_date ?
-            functionMain.convertNewDateTZ(selectedApproval.approved_date) : '-'
-            }}
-          </p>
-        </div>
         <div class="table-row" *ngIf="['facility'].includes(approval_type)">
           <p class="font-bold table-cell w-1/2 text-base text-black">
             Booked By
           </p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.requestor_id.name) }}
+            : {{ functionMain.returnNone(selectedApproval.requestor_name) }}
           </p>
         </div>
         <div
@@ -1355,7 +1331,7 @@
             Requestor
           </p>
           <p class="ml-2 table-cell text-base text-black">
-            : {{ functionMain.returnNone(selectedApproval.requestor.name ) }}
+            : {{ functionMain.returnNone(selectedApproval.requestor_name ) }}
           </p>
         </div>
         <div
@@ -1502,6 +1478,16 @@
             : {{
             functionMain.convertToDDMMYYYY(selectedApproval.temporary_end_date)
             }}
+          </p>
+        </div>
+        <div class="table-row" *ngIf="selectedApproval.states == 'approved' || selectedApproval.appeal_status == 'approved'">
+          <p class="font-bold table-cell w-1/2 text-base text-black">
+            Approved Date
+          </p>
+          <p class="ml-2 table-cell text-base text-black">
+            : {{ selectedApproval.approved_date ?
+            functionMain.convertNewDateTZ(selectedApproval.approved_date).split('
+            ')[0] : '-' }}
           </p>
         </div>
         <div class="table-row">
