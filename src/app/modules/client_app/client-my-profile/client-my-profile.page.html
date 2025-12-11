@@ -44,7 +44,7 @@
               (blur)="isEdit = false"
               style="outline: none; box-shadow: none"
             />
-            <span class="text-xl font-bold mb-6 w-4/5" *ngIf="!isEdit"
+            <span class="text-xl font-bold mb-6" *ngIf="!isEdit" (click)="editName()"
               >{{ userData.name }}</span
             >
             <div class="w-1">

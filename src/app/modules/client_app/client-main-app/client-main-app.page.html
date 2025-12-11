@@ -1,7 +1,7 @@
 <ion-header *ngIf="callActionStatus != 'acceptCall'">
   <div
     [ngClass]="
-      isIOS && isMobile ? 'h-[170px] header fixed top-0' : 'h-[160px] header fixed top-0'
+      isIOS && isMobile ? 'min-h-[170px] header fixed top-0' : 'min-h-[160px] header fixed top-0'
     "
   >
     <div
@@ -31,7 +31,7 @@
 
         <div class="flex flex-col items-start mt-4 text-start w-[70%]">
           <h1 class="text-[black] truncate w-full">Welcome {{ userData.name }}</h1>
-          <p class="text-[black] font-bold truncate w-full">
+          <p class="text-[black] font-bold w-full">
             {{ functionMain.returnNone(userData.name_condo) }}
           </p>
         </div>

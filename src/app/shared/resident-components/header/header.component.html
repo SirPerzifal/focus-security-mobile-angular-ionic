@@ -1,8 +1,8 @@
 <div
   [ngClass]="
     isIOS && isMobile
-      ? 'h-[190px] header fixed top-0'
-      : 'h-[162px] header fixed top-0'
+      ? 'min-h-[190px] header fixed top-0'
+      : 'min-h-[162px] header fixed top-0'
   "
 >
   <div
@@ -12,22 +12,27 @@
         : 'flex flex-col justify-start mt-[27px]'
     "
   >
-    <img
-      alt="Profile picture of a person"
-      height="80"
-      [src]="functionMain.getImage(profileImage)"
-      width="80"
-      class="w-80 h-80"
-    />
-    <ion-icon
-      class="absolute bottom-16 drop-shadow-xl left-12 text-base bg-white rounded-full p-1"
-      name="pencil"
-      (click)="backToPrev()"
-    >
-    </ion-icon>
+    <div class="flex flex-col justify-end h-full">
+      <img
+        alt="Profile picture of a person"
+        height="80"
+        [src]="functionMain.getImage(profileImage)"
+        width="80"
+        class="w-80 h-80"
+      />
+      <div class="absolute flex flex-col items-end ml-8">
+        <ion-icon
+          class="drop-shadow-xl text-base bg-white rounded-full p-1"
+          name="pencil"
+          (click)="backToPrev()"
+        ></ion-icon>
+      </div>
+    </div>
+    
+    
     <div class="flex flex-col items-start mt-4 w-[70%]">
       <h1 class="text-[black] text-start truncate w-full">Welcome {{ userName }}</h1>
-      <p class="text-[black] text-start font-bold truncate w-full">
+      <p class="text-[black] text-start font-bold w-full">
         {{ condoName }}
       </p>
     </div>
