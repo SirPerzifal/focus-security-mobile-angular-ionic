@@ -194,91 +194,9 @@ export class RaiseARequestMainPage implements OnInit {
           if ( value ) {
             const estate = JSON.parse(value) as Estate;
             console.log(estate);
-            if (estate.family_type === 'Tenants' || estate.family_type === 'Member') {
-              this.squareButton = [
-                {
-                  id: 1,
-                  name: 'Apply Overnight',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp',
-                  routeLinkTo: '/form-for-request-overnight-parking'
-                },
-                {
-                  id: 2,
-                  name: 'Bicycle Tag',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp',
-                  routeLinkTo: '/form-for-request-bibycle-tag-application'
-                },
-                {
-                  id: 3,
-                  name: 'Coach Registration',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp',
-                  routeLinkTo: '/form-for-coach-registration'
-                },
-                {
-                  id: 4,
-                  name: 'Pet Registration',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp',
-                  routeLinkTo: '/form-for-registration-pet'
-                },
-                {
-                  id: 5,
-                  name: 'Appeal Parking',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp',
-                  routeLinkTo: '/form-and-history-appeal-parking-fines'
-                }
-              ]
-            } else {
-              this.squareButton = [
-                {
-                  id: 1,
-                  name: 'Access Card',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp',
-                  routeLinkTo: '/form-for-request-access-card',
-                },
-                {
-                  id: 2,
-                  name: 'Apply Overnight',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp',
-                  routeLinkTo: '/form-for-request-overnight-parking'
-                },
-                {
-                  id: 3,
-                  name: 'Bicycle Tag',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp',
-                  routeLinkTo: '/form-for-request-bibycle-tag-application'
-                },
-                {
-                  id: 4,
-                  name: 'Coach Registration',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp',
-                  routeLinkTo: '/form-for-coach-registration'
-                },
-                {
-                  id: 5,
-                  name: 'Move Permit',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp',
-                  routeLinkTo: '/form-for-request-move-in-out-permit'
-                },
-                {
-                  id: 6,
-                  name: 'Pet Registration',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp',
-                  routeLinkTo: '/form-for-registration-pet'
-                },
-                {
-                  id: 7,
-                  name: 'Renovation Work',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp',
-                  routeLinkTo: '/form-for-request-registration-permit'
-                },
-                {
-                  id: 8,
-                  name: 'Appeal Parking',
-                  src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp',
-                  routeLinkTo: '/form-and-history-appeal-parking-fines'
-                }
-              ]
-            }
+            this.mainApi.endpointMainProcess({}, 'get/button_menus_config_raise_a_request').subscribe((button: any) => {
+              this.squareButton = button.result.data.buttons
+            })
           }
         })
       }

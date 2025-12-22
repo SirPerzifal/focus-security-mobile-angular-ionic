@@ -340,7 +340,7 @@ export class FamilyFormPage implements OnInit {
       this.buttonNameEdit = 'Click To Edit';
       return;
     }
-    this.buttonNameEdit = 'Save Edit Change';
+    this.buttonNameEdit = 'Save Change';
     this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 
@@ -595,7 +595,7 @@ export class FamilyFormPage implements OnInit {
       this.functionMain.presentToast('You can change your profile data now to resubmit', 'success');
       return;
     }
-    this.buttonNameEdit = 'Save Edit Change';
+    this.buttonNameEdit = 'Save Change';
     this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 

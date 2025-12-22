@@ -705,6 +705,10 @@ const routes: Routes = [
     path: 'extension-agreement-for-helper-tenants',
     loadChildren: () => import('./modules/resident-user-module/pages/family-page/extension-agreement-for-helper-tenants/extension-agreement-for-helper-tenants.module').then( m => m.ExtensionAgreementForHelperTenantsPageModule)
   },
+  {
+    path: 'maintenance-page',
+    loadChildren: () => import('./modules/global_module/maintenance-page/maintenance-page.module').then( m => m.MaintenancePagePageModule)
+  },
 ];
 
 @NgModule({

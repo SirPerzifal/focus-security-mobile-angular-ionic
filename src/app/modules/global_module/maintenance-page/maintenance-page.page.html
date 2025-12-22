@@ -1,0 +1,22 @@
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
+  <div class="w-full min-h-full flex flex-col justify-center items-center bg-[#C6D1C9]">
+    <div class="flex flex-col items-center justify-center h-4/5 w-4/5">
+      <div class="mb-16">
+        <img alt="iFS360 logo" src="assets/logoIFS.png" class="max-h-44 max-w-44" />
+      </div>
+      <div class="flex flex-col items-center text-[var(--ion-color-primary)]">
+        <span class="w-full text-center text-5xl font-bold">We'll be back soon</span>
+        <span class="w-full text-center text-xl mt-5">This app is currently undergoing maintenance to serve you better.</span>
+        <span class="w-full text-center text-xl mt-2">Please check back again shortly.</span>
+        <span class="w-full text-center text-xl">Thank you for your understanding.</span>
+      </div>
+      <div class="mt-16 flex flex-col items-center text-[var(--ion-color-primary)] font-bold italic">
+          <span class="w-full text-center text-base">Under maintenance</span>
+          <span class="w-full text-center text-base">{{ data['maintenance_start_time'] }} - {{ data['maintenance_end_time'] }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>

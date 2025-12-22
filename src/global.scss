@@ -52,7 +52,16 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// @import "@ionic/angular/css/palettes/dark.system.css";
+body {
+  color-scheme: light !important;
+}
+
+body.dark {
+  // Override semua dark mode styles
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+}
 
 ion-spinner {
   transform: scale(2);

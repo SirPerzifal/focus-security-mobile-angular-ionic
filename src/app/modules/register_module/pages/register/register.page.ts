@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { RegisterService } from 'src/app/service/resident/register-resident/register.service';
+import { MainVmsService } from 'src/app/service/vms/main_vms/main-vms.service';
 
 interface ProjectData{
   id:number;
@@ -18,7 +20,7 @@ interface ProjectData{
 export class RegisterPage implements OnInit {
 
   constructor(
-    private registerService: RegisterService,
+    private mainVms: MainVmsService,
     private functionMain: FunctionMainService,
     private router: Router,
   ) { }
@@ -29,59 +31,31 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter(){
-    this.loadProjects()
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
-  loadProjects(){
-    this.registerService.getProjectList().subscribe({
+  searchProject(){
+    this.mainVms.getApi({code: this.projectCode}, '/residential/register/post/project').subscribe({
       next: (response: any) => {
+        console.log(response)
         if (response.result.response_code === 200) {
-          this.projectList = response.result.projects.map((project:any)=>({
-            id:project.id,
-            name: project.code + ' - ' + project.project_name,
-            code:project.code
-          }));
+          if (response.result.result.is_success) {
+            this.router.navigate(['/register-resident'], {queryParams: { projectId: response.result.result.project_id }})
+          } else {
+            this.functionMain.presentToast(response.result.result.message, 'danger');
+          }
         } else {
-          this.functionMain.presentToast('An error occurred while loading project data!', 'danger');
+          this.functionMain.presentToast('An error occurred while trying to check the location code!', 'danger');
         }
       },
       error: (error) => {
-        this.functionMain.presentToast('An error occurred while loading project data!', 'danger');
+        this.functionMain.presentToast('An error occurred while trying to check the location code!', 'danger');
       }
     })
   }
 
-  async onRegisterResident(){
-    if(this.projectCode){
-      let filteredObject = this.projectList.find(projectObj => projectObj.code === this.projectCode)
-      if(filteredObject){
-        this.router.navigate(['/register-resident'], {queryParams: { projectId: filteredObject.id }})
-      }else{
-        this.functionMain.presentToast('Your Location Code is invalid!', 'danger');
-      }
-      
-    }else{
-      this.functionMain.presentToast('Please enter a Location Code!', 'danger');
-    }
-  }
-
-  async onRegisterCommercial(){
-    if(this.projectCode){
-      // this.router.navigate(['/register-commercial'], {queryParams: { projectId: this.selectedOption.id }})
-      let filteredObject = this.projectList.find(projectObj => projectObj.code === this.projectCode)
-      if(filteredObject){
-        this.router.navigate(['/register-commercial'], {queryParams: { projectId: filteredObject.id }})
-      }else{
-        this.functionMain.presentToast('Your Location Code is invalid!', 'danger');
-      }
-    }else{
-      this.functionMain.presentToast('Please enter a Location Code!', 'danger');
-    }
-  }
-
-
-  onOptionSelected(option: any) {
-    this.selectedOption = option;  // Store the selected option
-  }
 }

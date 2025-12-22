@@ -432,6 +432,7 @@ export class WebRtcService extends ApiService {
 
       // Connect ke WebSocket
       this.socket = io('wss://ws.sgeede.com', {
+      // this.socket = io('http://localhost:8091', {
         query: { uniqueId: userInfo.family_id || 'Public-User' },
       });
 
@@ -1482,6 +1483,56 @@ export class WebRtcService extends ApiService {
         }
       })
     })
+  }
+
+  maintenanceSocket: any = false;
+  async initializeMaintenanceSocket() {
+    try { 
+      this.maintenanceSocket = io('wss://ws.sgeede.com', { 
+        query: { isCheck: true }, 
+      }); 
+      this.maintenanceSocket.on('handle-server-response', (data: any) => this.handleServerResponse(data)); 
+    } 
+    catch (error) { 
+      console.error('Error during socket initialization:', error); 
+    } 
+  } 
+  
+  async checkServerMaintenance() { 
+    if (!this.maintenanceSocket) {
+      await this.initializeMaintenanceSocket() 
+    } 
+    this.maintenanceSocket.emit('check-server-maintenance', {}); 
+  }
+
+  async handleServerResponse(data: any) {
+    let is_maintenance = ((data['is_maintenance'] == 'True') ? this.checkMaintenanceHours(data) : false)
+    if (!this.router.url.includes('maintenance-page')) {
+      if (is_maintenance) {
+        this.router.navigate(['/maintenance-page'], {state: data})
+      }
+    } else {
+      if (!is_maintenance) {
+        this.router.navigate(['/'],)
+      }
+    }
+  }
+
+  checkMaintenanceHours(data: any) {
+    if (data['maintenance_start_time'] && data['maintenance_end_time']) {
+      let currentdate = new Date()
+      let startHour = new Date(currentdate);
+      startHour.setHours(data['maintenance_start_time'].split(':')[0], data['maintenance_start_time'].split(':')[1], 0, 0)
+      let endHour = new Date(currentdate);
+      endHour.setHours(data['maintenance_end_time'].split(':')[0], data['maintenance_end_time'].split(':')[1], 0, 0)
+      if (startHour <= currentdate && endHour >= currentdate) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
   }
 
 }
