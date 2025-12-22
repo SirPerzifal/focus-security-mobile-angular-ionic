@@ -10,5 +10,5 @@ export class ApiService {
   // readonly baseUrl = 'http://192.168.1.217:8017';
   // readonly baseUrl = 'http://localhost:8069';
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 }
