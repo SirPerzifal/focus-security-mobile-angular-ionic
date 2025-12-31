@@ -27,11 +27,12 @@ export class ClientReportsPage implements OnInit {
 
   ngOnInit() {
     this.loadProject().then(() => {
-      if (this.project_config.is_industrial) {
-        this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
-      } else {
-        this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
-      }
+      this.loadRecord()
+      // if (this.project_config.is_industrial) {
+      //   this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
+      // } else {
+      //   this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
+      // }
     })
   }
 
@@ -61,35 +62,7 @@ export class ClientReportsPage implements OnInit {
   isData = false
   textSecond = ''
 
-  menuItems: any = [
-    { src: 'assets/icon/exc-client/report.png', alt: 'Clocking Records', model: '', params: {}, text: 'Clocking Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Security Attendance', model: '', params: {}, text: 'Security Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Cleaners Attendance', model: '', params: {}, text: 'Cleaners Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Landscape Attendance', model: '', params: {}, text: 'Landscape Attendance', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Contractor Records', model: 'fs.residential.contractor', params: {}, text: 'Contractor Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Visitor Records', model: 'fs.residential.visitors', params: {is_today: true, log_type: 'visitor', project_id: this.project_id}, text: 'Visitor Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Vehicle Records', model: 'fs.residential.vehicle', params: {is_today: true, log_type: 'vehicle', project_id: this.project_id}, text: 'Vehicle Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Facility Booking Records', model: 'room.booking', params: {}, text: 'Facility Booking Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Ticket Records', model: 'helpdesk.ticket', params: {}, text: 'Ticket Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Unregistered Resident Car', model: 'fs.vms.unregistered.resident.car', params: {}, text: 'Unregistered Resident Car', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'OBA Records', model: '', params: {}, text: 'OBA Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Polling Records', model: 'fs.residential.polling', params: {}, text: 'Polling Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Incident Records', model: '', params: {}, text: 'Incident Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Security Occurrence', model: '', params: {}, text: 'Security Occurrence', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Book Records', model: '', params: {}, text: 'Book Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Key Movement Records', model: '', params: {}, text: 'Key Movement Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Shift HOTO Records', model: '', params: {}, text: 'Shift HOTO Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Renovation Work/Fines/Access card', model: '', params: {}, text: 'Renovation Work/Fines/Access card', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Overnight parking', model: 'fs.vms.overnight.parking.list', params: {}, text: 'Overnight parking', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Bicycle Tags', model: 'fs.residential.bicycle.tag', params: {}, text: 'Bicycle Tags', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Pet Registration', model: 'fs.residential.pet', params: {}, text: 'Pet Registration', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Move In/Out', model: 'fs.residential.schedule', params: {}, text: 'Move In/Out', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Coach Registration', model: 'fs.residential.registered.coaches', params: {}, text: 'Coach Registration', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Parking Appeal Records', model: 'fs.vms.offence', params: {}, text: 'Parking Appeal Records', permission: [true, false]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Delivery Records', model: 'fs.residential.delivery', params: {}, text: 'Delivery Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Collection Records', model: 'fs.vms.collection', params: {}, text: 'Collection Records', permission: [true, true]},
-    { src: 'assets/icon/exc-client/report.png', alt: 'Emergency Vehicles Records', model: 'fs.vms.emergency.vehicle', params: {}, text: 'Emergency Vehicles Records', permission: [true, true]},
-  ];
+  menuItems: any = [];
   
   reportsData: any = []
   showReports: any = []
@@ -136,17 +109,55 @@ export class ClientReportsPage implements OnInit {
     }
   }
 
+  async defaultMenu() {
+    let tempMenu: any = [
+      { src: 'assets/icon/exc-client/report.png', alt: 'Clocking Records', model: '', params: {}, text: 'Clocking Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Security Attendance', model: '', params: {}, text: 'Security Attendance', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Cleaners Attendance', model: '', params: {}, text: 'Cleaners Attendance', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Landscape Attendance', model: '', params: {}, text: 'Landscape Attendance', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Contractor Records', model: 'fs.residential.contractor', params: {}, text: 'Contractor Records', permission: [true, true]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Visitor Records', model: 'fs.residential.visitors', params: {is_today: true, log_type: 'visitor', project_id: this.project_id}, text: 'Visitor Records', permission: [true, true]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Vehicle Records', model: 'fs.residential.vehicle', params: {is_today: true, log_type: 'vehicle', project_id: this.project_id}, text: 'Vehicle Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Facility Booking Records', model: 'room.booking', params: {}, text: 'Facility Booking Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Ticket Records', model: 'helpdesk.ticket', params: {}, text: 'Ticket Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Unregistered Resident Car', model: 'fs.vms.unregistered.resident.car', params: {}, text: 'Unregistered Resident Car', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'OBA Records', model: '', params: {}, text: 'OBA Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Polling Records', model: 'fs.residential.polling', params: {}, text: 'Polling Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Incident Records', model: '', params: {}, text: 'Incident Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Security Occurrence', model: '', params: {}, text: 'Security Occurrence', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Book Records', model: '', params: {}, text: 'Book Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Key Movement Records', model: '', params: {}, text: 'Key Movement Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Shift HOTO Records', model: '', params: {}, text: 'Shift HOTO Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Renovation Work/Fines/Access card', model: '', params: {}, text: 'Renovation Work/Fines/Access card', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Overnight parking', model: 'fs.vms.overnight.parking.list', params: {}, text: 'Overnight parking', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Bicycle Tags', model: 'fs.residential.bicycle.tag', params: {}, text: 'Bicycle Tags', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Pet Registration', model: 'fs.residential.pet', params: {}, text: 'Pet Registration', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Move In/Out', model: 'fs.residential.schedule', params: {}, text: 'Move In/Out', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Coach Registration', model: 'fs.residential.registered.coaches', params: {}, text: 'Coach Registration', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Parking Appeal Records', model: 'fs.vms.offence', params: {}, text: 'Parking Appeal Records', permission: [true, false]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Delivery Records', model: 'fs.residential.delivery', params: {}, text: 'Delivery Records', permission: [true, true]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Collection Records', model: 'fs.vms.collection', params: {}, text: 'Collection Records', permission: [true, true]},
+      { src: 'assets/icon/exc-client/report.png', alt: 'Emergency Vehicles Records', model: 'fs.vms.emergency.vehicle', params: {}, text: 'Emergency Vehicles Records', permission: [true, true]},
+    ];
+    if (this.project_config.is_industrial) {
+      this.menuItems = tempMenu.filter((item: any) => item.permission[1] )
+    } else {
+      this.menuItems = tempMenu.filter((item: any) => item.permission[0] )
+    }
+  }
+
   async loadRecord(){
     this.isLoading = true
-    this.clientMainService.getApi({}, '/client/get/records_config').subscribe({
+    this.clientMainService.getApi({}, '/client/get/records_menu').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
           this.menuItems = results.result.result.map((item: any) => ({
             src: 'assets/icon/exc-client/report.png', 
-            alt: item.title, 
-            model: item.model, 
-            text: item.title, 
+            alt: item.title,
+            record_id: item.record_id,
+            text: item.title,
+            model: item.model_name
             }
           ))
         } else {
@@ -164,7 +175,7 @@ export class ClientReportsPage implements OnInit {
 
   async loadConfig(){
     this.isLoading = true
-    this.clientMainService.getApi({model_name: this.selectedReport.model}, '/get/model/fields').subscribe({
+    this.clientMainService.getApi({record_id: this.selectedReport.record_id}, '/get/model/fields').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -301,7 +312,11 @@ export class ClientReportsPage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.loadConfig().then(() => event.target.complete())
+    if (this.isHome){
+      this.loadRecord().then(() => event.target.complete())
+    } else {
+      this.loadConfig().then(() => event.target.complete())
+    }
   }
 
 }

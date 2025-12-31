@@ -18,7 +18,9 @@ export class VmsGatePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadProjectName().then(() => { })
+    this.loadProjectName().then(() => {
+      this.loadCamera()
+    })
   }
 
   private routerSubscription!: Subscription;
@@ -36,14 +38,6 @@ export class VmsGatePage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
       this.project_config = value.config
-      console.log(this.project_config)
-      console.log(value.config.lpr)
-      this.Camera = value.config.lpr.map((item: any) => {
-        return {
-          'id': item.CamSentId,
-          'name': item.CamID
-        }
-      })
     })
   }
 
@@ -52,6 +46,28 @@ export class VmsGatePage implements OnInit {
   project_id: any = ''
 
   selectedCamera: any = ''
+
+  loadCamera() {
+    this.clientMainService.getApi({}, '/vms/get/lpr_list').subscribe({
+      next: (results) => {
+        console.log(results)
+        if (results.result.response_code === 200) {
+          this.Camera = results.result.result.map((item: any) => {
+            return {
+              'id': item.CamSentId,
+              'name': item.CamID
+            }
+          })
+        } else {
+          this.functionMain.presentToast('An error occurred while trying to get LPR list!', 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get LPR list!', 'danger');
+        console.error(error);
+      }
+    });
+  }
 
   openGate(is_close: boolean = false) {
     console.log(this.selectedCamera)
