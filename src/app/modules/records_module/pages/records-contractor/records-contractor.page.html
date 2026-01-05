@@ -110,7 +110,7 @@
               <app-modal-loading />
             </div>
             <div
-              class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+              class="flex flex-row justify-between min-h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
               *ngFor="let log of historyVehicles" (click)="onArrowClick(log)">
               <span class="text-2xl font-bold text-white">{{ functionMain.returnNone(log.vehicle_number) }}, {{ functionMain.returnNone(log.identification_number) }} {{ project_config.is_industrial ? (log.out_datetime ? '(CHECKED OUT)' : '(NOT CHECKED OUT)') : '' }}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
@@ -126,7 +126,7 @@
                 logs.vehicle_number }}</span>
               <div class="flex flex-col w-full space-y-5 pl-4 mt-5">
                 <div
-                  class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+                  class="flex flex-row justify-between min-h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
                   *ngFor="let log of logs.data" (click)="onArrowClick(log)">
                   <span class="text-2xl font-bold text-white">{{ functionMain.returnNone(log.vehicle_number) }}, {{ functionMain.returnNone(log.identification_number) }} {{ project_config.is_industrial ? (log.out_datetime ? '(CHECKED OUT)' : '(NOT CHECKED OUT)') : '' }}</span>
                   <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
@@ -163,7 +163,7 @@
           <div *ngIf="isLoading" class="flex justify-center items-center h-20">
             <app-modal-loading />
           </div>
-          <div class="flex flex-row justify-between h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
+          <div class="flex flex-row justify-between min-h-20 w-full bg-[var(--ion-color-primary)] items-center rounded p-4"
             *ngFor="let log of filteredActiveContractor" (click)="onArrowClick(log)">
             <span class="text-2xl font-bold text-white">{{ functionMain.returnNone(log.contractor_name) }}, {{ functionMain.returnNone(log.identification_number) }}  {{ project_config.is_industrial ? (log.out_datetime ? '(CHECKED OUT)' : '(NOT CHECKED OUT)') : '' }}</span>
             <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>

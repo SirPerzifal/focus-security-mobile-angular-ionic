@@ -47,7 +47,7 @@ export class RecordsMainPage implements OnInit {
   loadRecords() {
     this.recordsMenu = [
       {
-        text: 'VISITOR LOGS',
+        text: 'WALK IN RECORDS',
         icon: 'assets/icon-vms/records_menu/Visitor_Logs.png',
         route: '/records-visitor',
         needSize: false,
@@ -59,7 +59,7 @@ export class RecordsMainPage implements OnInit {
         iconWrapper: "!h-[78px] mt-1",
       },
       {
-        text: 'VEHICLE LOGS',
+        text: 'DRIVE IN RECORDS',
         icon: 'assets/icon-vms/records_menu/Vehicle_Logs.png',
         route: '/records-visitor',
         needSize: false,
