@@ -36,7 +36,7 @@ export class CheckAppVersionService extends ApiService {
       this.checkVersion();
     }, 10000);
 
-    // Lalu cek setiap 2 menit
+    // Lalu cek setiap 1 menit
     this.checkInterval = interval(this.checkIntervalMinutes * 60 * 1000).subscribe(() => {
       this.checkVersion();
     });

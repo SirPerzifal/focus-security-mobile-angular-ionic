@@ -254,26 +254,40 @@
             >Work Permit File Exist (Valid until {{ selectedDate }})</label
           >
         </div>
-        <!-- <div
-          *ngIf="!disableForm"
-          class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      </div>
+      <div
+        *ngIf="pageForWhat !== 'editData'"
+        class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
+      >
+        <input
+          class="w-full rounded text-base hidden"
+          type="file"
+          name="helper_work_permit"
+          (change)="onUploadHelperWorkPermit($event)"
+          id="helper_work_permit"
+        />
+        <label
+          class="w-full text-start"
+          [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
+          for="helper_work_permit"
         >
-          <input
-            class="w-full rounded text-base hidden"
-            type="file"
-            name="helper_work_permit"
-            (change)="onUploadHelperWorkPermit($event)"
-            id="helper_work_permit"
-          />
-          <label
-            class="w-full text-start"
-            [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
-            for="helper_work_permit"
-          >
-            {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
-            'Change Helper Work Permit' }}
-          </label>
-        </div> -->
+          {{ selectedNameHelperWorkPermit ? selectedNameHelperWorkPermit :
+          'Change Helper Work Permit' }}
+        </label>
+      </div>
+      <div class="mt-1.5">
+        <app-input-component
+          [id]="'helper_work_permit_expiry_date'"
+          [type]="'date'"
+          [typeAction]="''"
+          [labelParent]="''"
+          [labelChild1]="'Helper Work Permit Expiry Date'"
+          [labelChild2]="''"
+          (eventEmitter)="onValueChange($event, 'helper_work_permit_expiry_date')"
+          [value]="selectedDate"
+          [disabled]="disableForm"
+          [minDate]="minDate"
+        ></app-input-component>
       </div>
       <!-- <div
         *ngIf="pageForWhat !== 'editData'"

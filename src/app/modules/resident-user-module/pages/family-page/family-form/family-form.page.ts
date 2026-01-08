@@ -392,11 +392,22 @@ export class FamilyFormPage implements OnInit {
           }, 'post/update_family').subscribe((response: any) => {
             console.log(response);
             if (edit) {
-              this.functionMain.presentToast('Success edit data', 'success');
+              if (response.result.response_code == 200) {
+                this.functionMain.presentToast('Success edit family data', 'success');
+                this.router.navigate(['family-page-main']);
+              } else {
+                const message = response.result.response_description ? response.result.response_description : 'Failed Edit Record';
+                this.functionMain.presentToast(message, 'danger');
+              }
             } else {
-              this.functionMain.presentToast('Success Add Record', 'success');
+              if (response.result.response_code == 200) {
+                this.functionMain.presentToast('Success add family data', 'success');
+                this.router.navigate(['family-page-main']);
+              } else {
+                const message = response.result.response_description ? response.result.response_description : 'Failed Add Record';
+                this.functionMain.presentToast(message, 'danger');
+              }
             }
-            this.router.navigate(['family-page-main']);
             // if (response.result.response_code == 200) {
             // } else {
             //   this.functionMain.presentToast('Failed Add Record', 'danger');
@@ -416,7 +427,7 @@ export class FamilyFormPage implements OnInit {
           }, 'post/post_family_detail').subscribe((response: any) => {
             console.log(response);
             if (response.result.response_code == 200) {
-              this.functionMain.presentToast('Success Add Record', 'success');
+              this.functionMain.presentToast('Success Add New Family Member', 'success');
               this.router.navigate(['family-page-main']);
             } else {
               const message = response.result.response_description ? response.result.response_description : 'Failed Add Record';

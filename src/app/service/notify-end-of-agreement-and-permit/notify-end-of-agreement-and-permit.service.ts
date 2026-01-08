@@ -6,6 +6,9 @@ import { catchError, interval, Subscription, throwError } from 'rxjs';
 import { LastOneWeekInformationComponent } from 'src/app/shared/resident-components/last-one-week-information/last-one-week-information.component';
 import { MainApiResidentService } from '../resident/main/main-api-resident.service';
 import { StorageService } from '../storage/storage.service';
+import { FunctionMainService } from '../function/function-main.service';
+import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,7 @@ import { StorageService } from '../storage/storage.service';
 export class NotifyEndOfAgreementAndPermitService extends ApiService {
   private checkInterval: Subscription | null = null;
   private lastCheckTime: number = 0;
-  private checkIntervalHours = 24; // Cek setiap 24 jam (1 hari)
+  private checkIntervalHours = 10; // Cek setiap 10 menit
   private isModalOpen = false; // Flag untuk prevent multiple modals
   private currentModal: HTMLIonModalElement | null = null; // Simpan referensi modal yang aktif
 
@@ -21,7 +24,11 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     http: HttpClient,
     private modalController: ModalController,
     private mainApiResidential: MainApiResidentService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private functionMain: FunctionMainService,
+    private webRTcService: WebRtcService,
+    private router: Router,
+    private mainApi: MainApiResidentService
   ) {
     super(http);
   }
@@ -39,16 +46,12 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     setTimeout(() => {
       this.checkExpiryDateAccount();
     }, 5000);
-
-    // Lalu cek setiap 24 jam (dalam milliseconds)
-    // 24 jam = 24 * 60 * 60 * 1000 milliseconds
-    const intervalMs = this.checkIntervalHours * 60 * 60 * 1000;
     
-    this.checkInterval = interval(intervalMs).subscribe(() => {
+    this.checkInterval = interval(10000).subscribe(() => {
       this.checkExpiryDateAccount();
     });
 
-    console.log(`Periodic check started: setiap ${this.checkIntervalHours} jam`);
+    console.log(`Periodic check started: setiap ${this.checkIntervalHours} menit`);
   }
 
   /**
@@ -68,13 +71,13 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    */
   async checkExpiryDateAccount(forceCheck: boolean = false) {
     const now = Date.now();
-    const timeSinceLastCheck = (now - this.lastCheckTime) / (1000 * 60 * 60); // dalam jam
+    const timeSinceLastCheck = (now - this.lastCheckTime) / (1000); // dalam menit
 
     // Jika bukan force check dan belum mencapai interval, skip
     if (!forceCheck && timeSinceLastCheck < this.checkIntervalHours) {
       console.log(
-        `Skip check, baru cek ${timeSinceLastCheck.toFixed(1)} jam yang lalu. ` +
-        `Cek berikutnya dalam ${(this.checkIntervalHours - timeSinceLastCheck).toFixed(1)} jam`
+        `Skip check, baru cek ${timeSinceLastCheck.toFixed(1)} menit yang lalu. ` +
+        `Cek berikutnya dalam ${(this.checkIntervalHours - timeSinceLastCheck).toFixed(1)} menit`
       );
       return;
     }
@@ -98,6 +101,8 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
 
     console.log(forceCheck ? 'Force checking expiry date...' : 'Checking expiry date...');
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
     try {
       this.mainApiResidential.endpointMainProcess(
         {}, 
@@ -107,11 +112,46 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
           if (response.result.response_code !== 200) {
             console.log('Check expiry failed:', response.result.response_message);
           } else {
-            // Ada data yang perlu ditampilkan
-            if (response.result.response_message) {
-              this.showLastOneWeekModal(response.result.response_message);
+            const expiryDate = new Date(response.result.expiry_date);
+            expiryDate.setHours(0, 0, 0, 0);
+            console.log("Expiry Date:", expiryDate);
+            console.log("Today Date:", today);
+
+            const isExpired = expiryDate <= today;
+            console.log("Is Expired:", isExpired);
+            if (isExpired) {
+              this.functionMain.presentToast('Your about to get kick out from application in 3 second because your account has reach the expiry date, please contact your household.', 'warning')
+              setTimeout(() => {
+                this.mainApi.endpointMainProcess({}, 'post/logout').subscribe({
+                  next: (response) => {
+                    if (response.result.status_code === 200) {
+                      this.cleanUp();
+                      this.webRTcService.closeSocket();
+                      this.functionMain.logout();
+                      this.router.navigate(['']);
+                    } else {
+                      this.cleanUp();
+                      this.webRTcService.closeSocket();
+                      this.functionMain.logout();
+                      this.router.navigate(['']);
+                    }
+                  },
+                  error: (error) => {
+                    console.error(error);
+                    this.cleanUp();
+                    this.webRTcService.closeSocket();
+                    this.functionMain.logout();
+                    this.router.navigate(['']);
+                  }
+                })
+              }, 3000)
             } else {
               console.log('Tidak ada notifikasi expiry date');
+              if (response.result.response_message) {
+                this.showLastOneWeekModal(response.result.response_message);
+              } else {
+                console.log('Tidak ada notifikasi expiry date');
+              }
             }
           }
         },
