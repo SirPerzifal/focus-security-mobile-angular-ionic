@@ -15,6 +15,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
   private lastCheckTime: number = 0;
   private checkIntervalHours = 24; // Cek setiap 24 jam (1 hari)
   private isModalOpen = false; // Flag untuk prevent multiple modals
+  private currentModal: HTMLIonModalElement | null = null; // Simpan referensi modal yang aktif
 
   constructor(
     http: HttpClient,
@@ -127,31 +128,61 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    * Tampilkan modal informasi expiry date
    */
   private async showLastOneWeekModal(message: string) {
-    // // Check apakah sudah ada modal terbuka
-    // const existingModal = await this.modalController.getTop();
-    // if (existingModal) {
-    //   console.log('Modal sudah ada, skip tampilkan modal baru');
-    //   return;
-    // }
+    // Prevent multiple modals
+    if (this.isModalOpen || this.currentModal) {
+      console.log('Modal sudah ada, skip tampilkan modal baru');
+      return;
+    }
 
-    // this.isModalOpen = true;
+    this.isModalOpen = true;
 
     const modal = await this.modalController.create({
       component: LastOneWeekInformationComponent,
       cssClass: 'expiry-date-of-account',
       componentProps: {
-        message: message // Fix typo: messgae -> message
+        message: message
       },
       backdropDismiss: true
     });
 
+    // Simpan referensi modal
+    this.currentModal = modal;
+
     // Handle ketika modal ditutup
     modal.onDidDismiss().then(() => {
       this.isModalOpen = false;
+      this.currentModal = null;
       console.log('Modal closed');
     });
 
     await modal.present();
+  }
+
+  /**
+   * Cleanup: tutup modal dan stop periodic check
+   */
+  async cleanUp() {
+    console.log('Starting cleanup...');
+    
+    // Tutup modal jika ada
+    if (this.currentModal) {
+      try {
+        await this.currentModal.dismiss();
+        console.log('Modal dismissed');
+      } catch (error) {
+        console.error('Error dismissing modal:', error);
+      }
+      this.currentModal = null;
+      this.isModalOpen = false;
+    }
+
+    // Stop periodic check
+    this.stopPeriodicCheck();
+    
+    // Reset last check time
+    this.resetLastCheckTime();
+    
+    console.log('Cleanup completed');
   }
 
   /**

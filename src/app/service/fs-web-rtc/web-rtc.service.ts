@@ -20,6 +20,7 @@ import { registerPlugin } from '@capacitor/core';
 import { ClientMainService } from '../client-app/client-main.service';
 import { MainVmsService } from '../vms/main_vms/main-vms.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { NotifyEndOfAgreementAndPermitService } from '../notify-end-of-agreement-and-permit/notify-end-of-agreement-and-permit.service';
 interface RingtonePlugin {
   play(): Promise<void>;
   stop(): Promise<void>;
@@ -105,6 +106,7 @@ export class WebRtcService extends ApiService {
     private router: Router, 
     private platform: Platform,
     private mainVmsService: MainVmsService,
+    private notifyService: NotifyEndOfAgreementAndPermitService
   ) {
     super(http);
     this.initializeSocket();
@@ -925,6 +927,7 @@ export class WebRtcService extends ApiService {
               if (isExpired) {
                 this.presentToast('Your about to get kick out from application in 3 second because your account has reach the expiry date, please contact your household.', 'warning')
                 setTimeout(() => {
+                  this.notifyService.cleanUp();
                   this.closeSocket();
                   this.storage.clearAllValueFromStorage();
                   Preferences.clear();

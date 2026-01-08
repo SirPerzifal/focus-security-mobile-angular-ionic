@@ -105,9 +105,9 @@ export class LastOneWeekInformationComponent implements OnInit {
   getIcon(): string {
     switch (this.expiryType) {
       case 'tenancy':
-        return 'home-outline';
+        return 'alert-circle-outline';
       case 'permit':
-        return 'card-outline';
+        return 'alert-circle-outline';
       default:
         return 'alert-circle-outline';
     }
