@@ -59,6 +59,7 @@
                 <option selected disabled hidden value="">CHOOSE SEARCH BY</option>
                 <option [value]="'date'">ENTRY DATE</option>
                 <option [value]="'vehicle_no'" *ngIf="pageType == 'vehicle'">VEHICLE NUMBER</option>
+                <option [value]="'visitor_name'" *ngIf="pageType == 'visitor'">VISITOR NAME</option>
                 <option [value]="'block'" *ngIf="!project_config.is_industrial">BLOCK & UNIT</option>
                 <option [value]="'host'" *ngIf="project_config.is_industrial">HOST</option>
                 <option [value]="'not_checkout'" *ngIf="project_config.is_industrial">NOT CHECKED OUT</option>
@@ -88,6 +89,15 @@
               <app-text-input #recordVisitorVehicleNumberFilter [id]="'record_visitor_vehicle_number_filter'"
                 [labelText]="'VEHICLE NUMBER'" [placeholder]="'SHA 8928 C'" [customClasses]="{'w-full ':true}"
                 [type]="'text'" [(ngModel)]="vehicleNumberFilter" (change)="onVehicleFilterChange($event)"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+              </app-text-input>
+            </div>
+
+            <div class="w-full"
+              *ngIf="(searchOption == 'visitor_name' || searchOption == 'all') && pageType == 'visitor'">
+              <app-text-input #recordVisitorVisitorNameFilter [id]="'record_visitor_visitor_name'"
+                [labelText]="'VISITOR NAME'" [placeholder]="'Doni'" [customClasses]="{'w-full ':true}"
+                [type]="'text'" [(ngModel)]="visitorNameFilter" (change)="onVisitorFilterChange($event)"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
               </app-text-input>
             </div>
@@ -124,7 +134,7 @@
               <app-m2m-selection [Arrays]="Host" [showButton]="project_config.is_industrial" (outputValue)="onHostChange($event)" [placeholder]="'CHOOSE HOST'" [isOne]="true" [isVMS]="true" [labelText]="'HOST'" [Selected]="contactHost" [customTopDiv]="'mt-0'"></app-m2m-selection>
             </div>
 
-            <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost) || isRadioClicked || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial))">
+            <div class="flex flex-row w-full justify-end mt-5" *ngIf="((filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || filter.visitor_name || selectedHost) || isRadioClicked || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial))">
               <div class="flex flex-row space-x-5 items-center">
                 <ion-icon name="chevron-back-outline" size="large" (click)="changePage(currentPage - 1)"></ion-icon>
                 <input type="number" class="w-20 bg-white rounded text-2xl" style="border: 1px solid #6B7280;" [(ngModel)]="inputPage" (change)="changePage(inputPage)">
@@ -135,7 +145,7 @@
           </div>
 
           <div class="flex flex-col w-full space-y-5"
-            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || selectedHost  || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial)) && !isRadioClicked">
+            *ngIf="(filter.block || filter.unit || filter.issue_date || filter.end_issue_date || filter.vehicle_number || filter.visitor_name || selectedHost  || ((searchOption == 'not_checkout' || searchOption == 'all') && project_config.is_industrial)) && !isRadioClicked">
             <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-20">
               <ion-spinner name="dots" class="text-[var(--ion-color-primary)]"></ion-spinner>
             </div> -->

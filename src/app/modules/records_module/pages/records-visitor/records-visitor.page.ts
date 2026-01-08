@@ -204,6 +204,11 @@ export class RecordsVisitorPage implements OnInit {
     this.applyFilters()
   }
 
+  onVisitorFilterChange(event: any) {
+    this.filter.visitor_name = event.target.value
+    this.applyFilters()
+  }
+
   Block: any[] = []
   Unit: any[] = []
 
@@ -211,10 +216,12 @@ export class RecordsVisitorPage implements OnInit {
     block: '',
     unit: '',
     vehicle_number: '',
+    visitor_name: '',
     issue_date: '',
     end_issue_date: ''
   }
   vehicleNumberFilter = ''
+  visitorNameFilter = ''
 
   loadBlock() {
     this.blockUnitService.getBlock().subscribe({
@@ -263,7 +270,9 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.end_issue_date = ''
     this.filter.block = ''
     this.filter.vehicle_number = ''
+    this.filter.visitor_name = ''
     this.vehicleNumberFilter = ''
+    this.visitorNameFilter = ''
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
@@ -283,7 +292,9 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.end_issue_date = ''
     this.filter.block = ''
     this.filter.vehicle_number = ''
+    this.filter.visitor_name = ''
     this.vehicleNumberFilter = ''
+    this.visitorNameFilter = ''
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
@@ -351,7 +362,9 @@ export class RecordsVisitorPage implements OnInit {
       this.filter.end_issue_date = ''
       this.filter.block = ''
       this.filter.vehicle_number = ''
+      this.filter.visitor_name = ''
       this.vehicleNumberFilter = ''
+      this.visitorNameFilter = ''
       this.filter.unit = ''
       this.selectedHost = ''
       this.loadLogs(this.pageType, false)
