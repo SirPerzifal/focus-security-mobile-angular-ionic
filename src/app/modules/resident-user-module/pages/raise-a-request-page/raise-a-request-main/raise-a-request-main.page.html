@@ -391,7 +391,7 @@
                   </ng-container>
                 </table>
                 <div
-                  *ngIf="allData.application_title === 'Request schedules Application.'"
+                  *ngIf="allData.schedule_type === 'Renovation'"
                   class="flex flex-row mt-2 text-[13px] w-full"
                 >
                   <div class="w-full">
@@ -522,21 +522,24 @@
         <p class="text-base !font-bold text-black">Acknowledge Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.is_acknowledge_date ?
-          functionMain.convertToDDMMYYYYHHMMDD(renovationDetail.is_acknowledge_date) : '-' }}
+          functionMain.convertToDDMMYYYYHHMMDD(renovationDetail.is_acknowledge_date)
+          : '-' }}
         </p>
       </div>
       <div *ngIf="renovationDetail.is_acknowledged" class="flex flex-col">
         <p class="text-base !font-bold text-black">Commencement Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.commencement_date ?
-          functionMain.convertToDDMMYYYY(renovationDetail.commencement_date) : '-' }}
+          functionMain.convertToDDMMYYYY(renovationDetail.commencement_date) :
+          '-' }}
         </p>
       </div>
       <div *ngIf="renovationDetail.is_acknowledged" class="flex flex-col">
         <p class="text-base !font-bold text-black">Expected End Date</p>
         <p class="text-base !font-light">
           {{ renovationDetail.expected_end_date ?
-          functionMain.convertToDDMMYYYY(renovationDetail.expected_end_date) : '-' }}
+          functionMain.convertToDDMMYYYY(renovationDetail.expected_end_date) :
+          '-' }}
         </p>
       </div>
       <div
