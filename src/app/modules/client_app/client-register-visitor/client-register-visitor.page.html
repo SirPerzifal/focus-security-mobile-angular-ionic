@@ -106,7 +106,7 @@
           </div>
         </ng-template>
       </div>
-     
+
       <form (ngSubmit)="onSubmit()" *ngIf="isNew">
         <div class="flex flex-col justify-between mt-4 space-y-3">
           <div class="w-full">
@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col relative mx-4 mb-32 mt-4 w-full" *ngIf="isDetail" @fadeInOut>
+  <div class="flex flex-col relative mx-4 mb-32 mt-4" *ngIf="isDetail" @fadeInOut>
     <div
       [class]="visitorDetail.is_cancel ? 'bg-[#E3787E] p-4 rounded flex flex-col justify-between w-full mb-1' : 'bg-[var(--ion-color-tertiary)] p-4 rounded flex flex-col justify-between w-full mb-1'">
       <div class="text-base w-ful">
@@ -193,25 +193,20 @@
           </tr>
         </table>
       </div>
-      <!-- <div class="w-full flex flex-row justify-around mt-6" *ngIf="visitorDetail.banned">
-        <app-visitor-button [text]="'Reinvite'"
-          [extraClass]="'bg-[#D0D0D0] text-[#757575] w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"></app-visitor-button>
-        <app-visitor-button [text]="'Reinstate'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"></app-visitor-button>
-        <app-visitor-button [text]="'Call'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"></app-visitor-button>
+      <div class="flex mt-4 flex-wrap">
+        <button (click)="resendInvite(true, visitorDetail.id)" *ngIf="isActive"
+          class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded mr-2">
+          Resend Invite
+        </button>
+        <button (click)="resendInvite(false, visitorDetail.id)" *ngIf="isActive"
+          class="bg-[var(--ion-color-primary)] text-white w-40 mt-3 font-bold px-4 py-2 rounded mr-2">
+          Share Invite
+        </button>
+        <button (click)="onCancel(visitorDetail)" *ngIf="isActive"
+          class="bg-[#E3787E] text-black w-40 mt-3 font-bold px-4 py-2 rounded">
+          Cancel Invite
+        </button>
       </div>
-      <div class="w-full flex flex-row justify-around mt-6" *ngIf="!visitorDetail.banned">
-        <app-visitor-button [text]="'Reinvite'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"
-          *ngIf="visitorDetail.purpose === 'Visiting'"></app-visitor-button>
-        <app-visitor-button [text]="'Ban Visitor'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"
-          *ngIf="visitorDetail.purpose === 'Visiting'"></app-visitor-button>
-        <app-visitor-button [text]="'Call'"
-          [extraClass]="'bg-[var(--ion-color-primary)] text-white w-24 h-8 text-base cw-4:w-[84px] cw-4:text-sm'"
-          *ngIf="visitorDetail.purpose !== 'Drop Off'"></app-visitor-button>
-      </div> -->
     </div>
   </div>
   <!-- ############################### -->

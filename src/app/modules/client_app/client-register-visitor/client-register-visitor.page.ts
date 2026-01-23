@@ -237,19 +237,6 @@ export class ClientRegisterVisitorPage implements OnInit {
   historyVisitor: any = []
 
   applyDateFilter() {
-    // this.showVisitorList = this.visitorList.filter((visitor: any) => {
-    //   const visitorDate = new Date(visitor.entry_date).setHours(0,0,0,0);
-
-    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter).setHours(0,0,0,0) : null;
-    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter).setHours(0,0,0,0) : null;
-      
-    //   const isAfterStartDate = !startDate || visitorDate >= startDate;
-    //   const isBeforeEndDate = !endDate || visitorDate <= endDate;
-
-    //   const fixedEndDate = visitorDate < new Date().setHours(0,0,0,0)
-
-    //   return isAfterStartDate && isBeforeEndDate && fixedEndDate;
-    // });
     this.currentPage = 1
     this.inputPage = 1
     this.loadClient()
@@ -319,5 +306,45 @@ export class ClientRegisterVisitorPage implements OnInit {
     this.currentPage = page
     this.inputPage = page
     this.loadClient()
+  }
+
+  resendInvite(is_resend: boolean, ma_id: any) {
+    this.clientMainService.getApi({is_resend: is_resend, ma_id: ma_id}, '/client/post/visitor_resend_whatsapp').subscribe({
+      next: (results) => {
+        console.log(results)
+        console.log(results.result)
+        if (results.result.status_code === 200) {
+          if (!is_resend) {
+            const originalMessage = results.result.messages;
+            const encodedMessage = encodeURIComponent(originalMessage);
+            const phone = results.result.phone.replace(/\D/g, '');
+            
+            let whatsappLink;
+            if (phone) {
+              whatsappLink = `https://wa.me/${phone}?text=${encodedMessage}`;
+            } else {
+              whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+            }
+            
+            if (this.isIOS()) {
+              window.location.href = whatsappLink;
+            } else {
+              window.open(whatsappLink, '_blank');
+            }
+          }
+          this.functionMain.presentToast(results.result.status_description, 'success');
+        } else {
+          this.functionMain.presentToast(results.result.status_description, 'danger');
+        }
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to resend an invitation!', 'danger');
+        console.error(error);
+      }
+    });
+  }
+
+  private isIOS(): boolean {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 }
