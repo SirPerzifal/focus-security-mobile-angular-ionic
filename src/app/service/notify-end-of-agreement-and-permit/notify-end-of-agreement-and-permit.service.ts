@@ -113,7 +113,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
             console.log('Check expiry failed:', response.result.response_message);
           } else {
             const expiryDate = new Date(response.result.expiry_date);
-            expiryDate.setHours(0, 0, 0, 0);
+            expiryDate.setHours(23, 59, 59, 999);
             console.log("Expiry Date:", expiryDate);
             console.log("Today Date:", today);
 

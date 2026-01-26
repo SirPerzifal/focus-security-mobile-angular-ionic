@@ -185,6 +185,7 @@ export class VmsContactInputComponent  implements OnInit {
       this.contactValue = this.contactValue.slice(0, selected.maxDigit)
       this.valueChange.emit(this.combinedValue);
       this.onChange(this.combinedValue);
+      this.getSelected()
     }
   }
 
@@ -237,6 +238,11 @@ export class VmsContactInputComponent  implements OnInit {
 
   getSelected() {
     let selected = this.countryCodes.filter((item: any) => item.code == this.initialSelection)[0]
+    return `${this.isSmallScreen ? '' : selected.country} +${selected.code}`
+  }
+
+  getSelectedCode() {
+    let selected = this.countryCodes.filter((item: any) => item.code == this.selectedCode)[0]
     return `${this.isSmallScreen ? '' : selected.country} +${selected.code}`
   }
 
