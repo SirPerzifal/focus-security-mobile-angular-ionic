@@ -110,8 +110,7 @@ export class ResidentHomePagePage implements OnInit {
       id: 4,
       name: 'House Rule',
       src: 'assets/icon/resident-icon/house-rule.png',
-      document: '',
-      documentName: ''
+      documentId: '',
     },
     {
       id: 5,
