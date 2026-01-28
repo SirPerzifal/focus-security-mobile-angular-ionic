@@ -117,64 +117,24 @@ export class ClientHouseRulesPage implements OnInit {
     });
   }
 
-  async downloadDocument(base64Doc: string, title: string) {
-    try {
-      const byteCharacters = atob(base64Doc);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      if (Capacitor.isNativePlatform()) {
-        const base64 = await this.convertBlobToBase64(blob);
-        const saveFile = await Filesystem.writeFile({
-          path: `${title}.pdf`,
-          data: base64,
-          directory: Directory.Data
-        });
-        const path = saveFile.uri;
-        await FileOpener.open({
-          filePath: path,
-          contentType: blob.type
-        });
-        console.log('File is opened');
-      } else {
-        const href = window.URL.createObjectURL(blob);
-        this.downloadFile(href, `${title}.pdf`);
-      }
-    } catch (error) {
-      console.error('Error downloading document:', error);
-      // Optionally, show an error message to the user
-    }
-  }
-
-  convertBlobToBase64(blob: Blob) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        resolve(reader.result as string);
-      };
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  downloadFile(href: string, filename: string) {
-    const link = document.createElement("a");
-    link.style.display = "none";
-    link.href = href;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-        URL.revokeObjectURL(link.href);
-        // Periksa apakah parentNode tidak null sebelum menghapus
-        if (link.parentNode) {
-            link.parentNode.removeChild(link);
+  getDownloadDocument(document: any) {
+    console.log(document)
+    this.clientMainService.getApi({document_id: document.id, type_request: 'client_page', client_page: 'house'}, '/resident/get/download_document').subscribe({
+      next: (results) => {
+        console.log(results.result.title)
+        if (results.result.response_code == 200) {
+          this.functionMain.downloadDocument(results.result.blob, results.result.title, results.result.type)
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to get the document!`, 'danger');
         }
-    }, 0);
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get the document!', 'danger');
+        console.error(error);
+        this.isLoading = false
+      }
+    });
   }
 
   handleRefresh(event: any) {

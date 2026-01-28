@@ -145,36 +145,10 @@ export class ClientNoticesPage implements OnInit {
       document_id: noticeId,
       type_request: type
     }, '/resident/get/download_document').subscribe(async (response: any) => {
-      console.log("download", response);
-      try {
-        const byteCharacters = atob(response.result.blob);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: response.result.type });
-  
-        if (Capacitor.isNativePlatform()) {
-          const base64 = await this.convertBlobToBase64(blob);
-          const saveFile = await Filesystem.writeFile({
-            path: `${response.result.title}`,
-            data: base64,
-            directory: Directory.Data
-          });
-          const path = saveFile.uri;
-          await FileOpener.open({
-            filePath: path,
-            contentType: blob.type
-          });
-          console.log('File is opened');
-        } else {
-          const href = window.URL.createObjectURL(blob);
-          this.downloadFile(href, `${response.result.title}`);
-        }
-      } catch (error) {
-        console.error('Error downloading document:', error);
-        // Optionally, show an error message to the user
+      if (response.result.response_code == 200) {
+        this.functionMain.downloadDocument(response.result.blob, response.result.title, response.result.type)
+      } else {
+        this.functionMain.presentToast(`An error occurred while trying to get the document!`, 'danger');
       }
     })
   }

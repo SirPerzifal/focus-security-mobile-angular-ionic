@@ -1510,7 +1510,7 @@
           class="w-12 h-12 mt-3"
           src="assets/icon/exc-client/file_download.webp"
           alt="File Download"
-          (click)="functionMain.downloadDocument(selectedApproval.pet_license, selectedApproval.type_of_pet + '_' + selectedApproval.pet_breed + '_Pet Licence', selectedApproval.pet_license_mime)"
+          (click)="this.getDownloadDocument(selectedApproval)"
         />
       </div>
       <div
@@ -1523,7 +1523,7 @@
           src="assets/icon/exc-client/file_download.webp"
           alt="File Download"
           *ngIf="selectedApproval.vehicle_log_type.includes('application')"
-          (click)="functionMain.downloadDocument(selectedApproval.vehicle_log, selectedApproval.vehicle_number + '_Vehicle Log')"
+          (click)="this.getDownloadDocument(selectedApproval)"
         />
         <app-image-zoom
           [imageZoom]="functionMain.getImage(selectedApproval.vehicle_log)"
@@ -1542,7 +1542,7 @@
           class="w-12 h-12 mt-3"
           src="assets/icon/exc-client/file_download.webp"
           alt="File Download"
-          (click)="functionMain.downloadDocument(selectedApproval.tenancy_aggrement, selectedApproval.family_full_name + '_Tenancy Agreement')"
+          (click)="this.getDownloadDocument(selectedApproval)"
           *ngIf="selectedApproval.attachment_mimetype.includes('application')"
         />
         <app-image-zoom
@@ -1551,7 +1551,6 @@
           [bgColor]="getBgClass()"
           *ngIf="selectedApproval.attachment_mimetype.includes('image')"
         ></app-image-zoom>
-        <!-- <app-base64-file-zoom [file]="selectedApproval.tenancy_file_pdf" *ngIf="selectedApproval.attachment_mimetype.includes('application')"></app-base64-file-zoom> -->
       </div>
       <div
         class="w-full flex flex-col justify-start mt-2"
@@ -1562,7 +1561,7 @@
           class="w-12 h-12 mt-3"
           src="assets/icon/exc-client/file_download.webp"
           alt="File Download"
-          (click)="functionMain.downloadDocument(selectedApproval.payment_receipt, selectedApproval.facility_name + '_Payment Receipt')"
+          (click)="this.getDownloadDocument(selectedApproval)"
           *ngIf="selectedApproval.attachment_mimetype.includes('application')"
         />
         <app-image-zoom

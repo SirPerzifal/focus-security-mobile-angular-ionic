@@ -228,26 +228,6 @@ export class ClientApprovalsPage implements OnInit {
   endDateFilter = ''
 
   applyDateFilter() {
-    // this.showApprovals = this.activeApprovals.filter((approval: any) => {
-    //   const approvalDate = new Date(this.approval_type =='overnight' ? approval.start_date : approval.application_date )
-
-    //   const approvalType = ['rejected', 'cancel', 'approved'].includes(approval.states)
-
-    //   const startDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
-    //   const endDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
-
-    //   if (startDate) {
-    //     startDate.setHours(0, 0, 0, 0);
-    //   }
-    //   if (endDate) {
-    //     endDate.setHours(23, 59, 59, 59);
-    //   }
-    //   // Cek kondisi filtering
-    //   const isAfterStartDate = startDate ? approvalDate >= startDate : true
-    //   const isBeforeEndDate = endDate ? approvalDate <= endDate : true
-
-    //   return isAfterStartDate && isBeforeEndDate && approvalType;
-    // });
     this.currentPage = 1
     this.inputPage = 1
     this.loadApproval()
@@ -540,6 +520,26 @@ export class ClientApprovalsPage implements OnInit {
       error: (error) => {
         this.functionMain.presentToast('An error occurred while trying to get notifications!', 'danger');
         console.error(error);
+      }
+    });
+  }
+
+  getDownloadDocument(document: any) {
+    console.log(document)
+    this.clientMainService.getApi({document_id: document.id, type_request: 'client_approval', client_page: this.approval_type}, '/resident/get/download_document').subscribe({
+      next: (results) => {
+        console.log(results.result.title)
+        if (results.result.response_code == 200) {
+          this.functionMain.downloadDocument(results.result.blob, results.result.title, results.result.type)
+        } else {
+          this.functionMain.presentToast(`An error occurred while trying to get the document!`, 'danger');
+        }
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.functionMain.presentToast('An error occurred while trying to get the document!', 'danger');
+        console.error(error);
+        this.isLoading = false
       }
     });
   }
