@@ -128,7 +128,6 @@ export class RaiseARequestMainPage implements OnInit {
       'Create Date',
       'States',
       'Access Card Status',
-      'Access Card End Date',
       'Reason for Rejection'
     ],
     'Overnight parking records Application.': [

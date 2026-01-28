@@ -147,7 +147,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
               }, 3000)
             } else {
               console.log('Tidak ada notifikasi expiry date');
-              if (response.result.response_message) {
+              if (response.result.response_message && this.router.url === 'resident-home-page') {
                 this.showLastOneWeekModal(response.result.response_message);
               } else {
                 console.log('Tidak ada notifikasi expiry date');
