@@ -102,7 +102,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     console.log(forceCheck ? 'Force checking expiry date...' : 'Checking expiry date...');
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0); // Set ke awal hari
     try {
       this.mainApiResidential.endpointMainProcess(
         {}, 
@@ -113,11 +113,11 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
             console.log('Check expiry failed:', response.result.response_message);
           } else {
             const expiryDate = new Date(response.result.expiry_date);
-            expiryDate.setHours(23, 59, 59, 999);
+            expiryDate.setHours(0, 0, 0, 0); // Set ke awal hari
             console.log("Expiry Date:", expiryDate);
             console.log("Today Date:", today);
 
-            const isExpired = expiryDate <= today;
+            const isExpired = expiryDate < today;
             console.log("Is Expired:", isExpired);
             if (isExpired) {
               this.functionMain.presentToast('Your about to get kick out from application in 3 second because your account has reach the expiry date, please contact your household.', 'warning')
@@ -146,8 +146,8 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
                 })
               }, 3000)
             } else {
-              console.log('Tidak ada notifikasi expiry date');
-              if (response.result.response_message && this.router.url === 'resident-home-page') {
+              console.log('Tidak ada notifikasi expiry date', this.router.url);
+              if (response.result.response_message && this.router.url === '/resident-home-page') {
                 this.showLastOneWeekModal(response.result.response_message);
               } else {
                 console.log('Tidak ada notifikasi expiry date');
