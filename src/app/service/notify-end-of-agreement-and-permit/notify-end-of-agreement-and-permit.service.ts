@@ -168,6 +168,14 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    * Tampilkan modal informasi expiry date
    */
   private async showLastOneWeekModal(message: string) {
+
+    console.log(message);
+    
+
+    if (message === 'No expiry data found within 7 days') {
+      return
+    }
+
     // Prevent multiple modals
     if (this.isModalOpen || this.currentModal) {
       console.log('Modal sudah ada, skip tampilkan modal baru');
