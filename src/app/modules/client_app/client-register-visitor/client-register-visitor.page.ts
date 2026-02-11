@@ -82,7 +82,7 @@ export class ClientRegisterVisitorPage implements OnInit {
           console.log(results)
           if (results.result.status_code === 200) {
             this.toggleShowActive()
-            // this.functionMain.presentToast(`Success!`, 'success');
+            this.functionMain.presentToast(`Successfully add new visitor!`, 'success');
           } else if (results.result.status_code === 206) {
             this.functionMain.banAlert(results.result.status_description, false, false, true).then((value: any) => {
               if (value) {
@@ -148,6 +148,9 @@ export class ClientRegisterVisitorPage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
+          if (this.isDetail) {
+            this.onBack()
+          }
           this.loadClient()
           this.functionMain.presentToast(`Successfully cancel invites!`, 'success');
         } else {
@@ -309,6 +312,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   }
 
   resendInvite(is_resend: boolean, ma_id: any) {
+    // this.functionMain.showResendInvite(ma_id, 'ma', ['SMS', 'Whatsapp'])
     this.clientMainService.getApi({is_resend: is_resend, ma_id: ma_id}, '/client/post/visitor_resend_whatsapp').subscribe({
       next: (results) => {
         console.log(results)

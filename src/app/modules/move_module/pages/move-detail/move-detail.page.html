@@ -119,7 +119,7 @@
           </tr> -->
         </table>
         <div class="flex flex-row justify-between w-full" *ngIf="['move_in', 'renov'].includes(pageType)">
-          <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4">CALL CONTRACTOR</button>
+          <button *ngIf="record.contact_number || record.contact_no" class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="functionMain.callFromPhone(record.contact_number ? functionMain.returnNone(record.contact_number) : functionMain.returnNone(record.contact_no))">CALL CONTRACTOR</button>z
           <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
         </div>
       </div>

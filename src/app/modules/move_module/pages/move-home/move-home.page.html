@@ -135,7 +135,7 @@
           <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name :
             '-') : ( pageType == 'coach' ? (schedule.coach_name ? schedule.coach_name : '-') : (schedule.block_name ? schedule.block_name : '-')) }}, {{ pageType == 'ma_visitor' ?
             (schedule.company_name ? schedule.company_name : '-') : ( pageType == 'coach' ? (schedule.coach_type ? schedule.coach_type : '-') : (schedule.unit_name ? schedule.unit_name : '-'))
-            }}</span>
+            }} {{pageType == 'move_in' && schedule.move_type ? ('(' + schedule.move_type + ')') : ''}}</span>
           <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"></ion-icon>
           <!-- <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle" *ngIf="pageType == 'coach' || pageType == 'ma_visitor'"
             (click)="coachForm(schedule)"></ion-icon> -->
@@ -157,7 +157,7 @@
               <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name :
                 '-') : ( pageType == 'coach' ? (schedule.coach_name ? schedule.coach_name : '-') : (schedule.block_name ? schedule.block_name : '-')) }}, {{ pageType == 'ma_visitor' ?
                 (schedule.company_name ? schedule.company_name : '-') : ( pageType == 'coach' ? (schedule.coach_type ? schedule.coach_type : '-') : (schedule.unit_name ? schedule.unit_name : '-'))
-                }}</span>
+                }} {{pageType == 'move_in' && schedule.move_type ? ('(' + schedule.move_type + ')') : ''}}</span>
               <ion-icon size="large" class="text-white size-14" name="arrow-forward-circle"></ion-icon>
             </div>
           </div>
@@ -176,7 +176,7 @@
           <span class="text-2xl font-bold text-white">{{ pageType == 'ma_visitor' ? (schedule.name ? schedule.name :
             '-') : ( pageType == 'coach' ? (schedule.coach_name ? schedule.coach_name : '-') : (schedule.block_name ? schedule.block_name : '-')) }}, {{ pageType == 'ma_visitor' ?
             (schedule.company_name ? schedule.company_name : '-') : ( pageType == 'coach' ? (schedule.coach_type ? schedule.coach_type : '-') : (schedule.unit_name ? schedule.unit_name : '-'))
-            }} {{pageType == 'ma_visitor' && schedule.is_submitted ? '(SUBMITTED)' : ''}}</span>
+            }} {{pageType == 'ma_visitor' && schedule.is_submitted ? '(SUBMITTED)' : ''}} {{pageType == 'move_in' && schedule.schedule_type ? ('(' + schedule.schedule_type + ')') : ''}}</span>
           <!-- <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"  *ngIf="pageType != 'coach' && pageType != 'ma_visitor'"
             (click)="form(schedule.block_name, schedule.unit_name, schedule.block_id, schedule.unit_id)"></ion-icon> -->
           <ion-icon size="large" class="text-white size-10" name="arrow-forward-circle"></ion-icon>

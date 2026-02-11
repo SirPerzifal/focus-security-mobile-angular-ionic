@@ -28,7 +28,8 @@ export class FunctionMainService {
     private webRtcService: WebRtcService,
     private storage: StorageService,
     private alertController: AlertController,
-    private mainApi: MainApiResidentService
+    private mainApi: MainApiResidentService,
+    private platform: Platform,
   ) { }
 
   public readonly limitHistory = 15
@@ -735,35 +736,98 @@ export class FunctionMainService {
   }
 
   async checkOpenTime() {
-  const value = await this.vmsPreferences()
-  if (value) {
-    const project_config = value.config
-    if (project_config.is_industrial) return true
+    const value = await this.vmsPreferences()
+    if (value) {
+      const project_config = value.config
+      if (project_config.is_industrial) return true
 
-    const today_date = new Date()
-    const current_hour = today_date.getHours()
-    const current_minute = today_date.getMinutes()
-    let is_before_open = false
-    let is_before_close = false
+      const today_date = new Date()
+      const current_hour = today_date.getHours()
+      const current_minute = today_date.getMinutes()
+      let is_before_open = false
+      let is_before_close = false
 
-    if (project_config.office_opening_hours) {
-      const [open_hour, open_minute] = project_config.office_opening_hours.split(':').map(Number)
-      if ((current_hour < open_hour) || (current_hour === open_hour && current_minute < open_minute)) {
-        is_before_open = true
+      if (project_config.office_opening_hours) {
+        const [open_hour, open_minute] = project_config.office_opening_hours.split(':').map(Number)
+        if ((current_hour < open_hour) || (current_hour === open_hour && current_minute < open_minute)) {
+          is_before_open = true
+        }
       }
-    }
 
-    if (project_config.office_closing_hours) {
-      const [close_hour, close_minute] = project_config.office_closing_hours.split(':').map(Number)
-      if ((current_hour > close_hour) || (current_hour === close_hour && current_minute > close_minute)) {
-        is_before_close = true
+      if (project_config.office_closing_hours) {
+        const [close_hour, close_minute] = project_config.office_closing_hours.split(':').map(Number)
+        if ((current_hour > close_hour) || (current_hour === close_hour && current_minute > close_minute)) {
+          is_before_close = true
+        }
       }
-    }
 
-    return !(is_before_open || is_before_close)
+      return !(is_before_open || is_before_close)
+    }
+    return false
   }
-  return false
-}
+
+  public async showResendInvite(id: any, model_id: any, buttons: string[] = ['SMS', 'Whatsapp', 'Email']) {
+    let buttonArray = buttons.map((button) => {
+      return {
+        text: button,
+        role: 'confirm',
+        handler: () => {
+            this.resendInvite(button, id, model_id)
+          },
+      }
+    })
+    if (buttonArray.length > 1) {
+      let alertButtons: any = await this.alertController.create({
+        cssClass: 'resend-alert',
+        header: `Resend Invitation Options`,
+        buttons: buttonArray,
+      })
+      await alertButtons.present();
+    } else {
+      if (buttonArray.length == 0) {
+        this.presentToast('No resend invitation option found, please contact your administrator!', 'danger');
+      } else {
+        this.resendInvite(buttons[0], id, model_id)
+
+      } 
+    }
+  }
+
+  resendInvite(platform: string, record_id: any, model_id: string) {
+    this.mainVmsService.getApi({platform: platform, record_id: record_id, model_id: model_id}, '/post/resend_invitation').subscribe({
+      next: (results) => {
+        console.log(results)
+        console.log(results.result)
+        if (results.result.status_code === 200) {
+          if (platform == 'Whatsapp') {
+            const originalMessage = results.result.messages;
+            const encodedMessage = encodeURIComponent(originalMessage);
+            const phone = results.result.phone.replace(/\D/g, '');
+            
+            let whatsappLink;
+            if (phone) {
+              whatsappLink = `https://wa.me/${phone}?text=${encodedMessage}`;
+            } else {
+              whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+            }
+            
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+              window.location.href = whatsappLink;
+            } else {
+              window.open(whatsappLink, '_blank');
+            }
+          }
+          this.presentToast(results.result.status_description, 'success');
+        } else {
+          this.presentToast(results.result.status_description, 'danger');
+        }
+      },
+      error: (error) => {
+        this.presentToast('An error occurred while trying to resend an invitation!', 'danger');
+        console.error(error);
+      }
+    });
+  }
 
 }
 

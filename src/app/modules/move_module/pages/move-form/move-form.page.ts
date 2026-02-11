@@ -52,6 +52,7 @@ export class MoveFormPage implements OnInit {
       this.block_id = this.record.block_id
       this.unit_id = this.record.unit_id
       this.requestor_id = this.record.requestor_id
+      this.request_id = this.record.id
       console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     } 
@@ -84,6 +85,7 @@ export class MoveFormPage implements OnInit {
   project_config: any = []
 
   requestor_id = ''
+  request_id = false
 
   // Metode baru untuk mengatur nilai input
   setInputValue(id: string, value: string) {
@@ -237,6 +239,7 @@ export class MoveFormPage implements OnInit {
       remarks: this.remarks,
       bypass_ban: bypass_ban,
       bypass_worktime: this.bypass_worktime,
+      request_id: this.request_id,
     }    
     this.clientMainService.getApi(params, '/vms/post/add_schedule').subscribe({
       next: (response) => {

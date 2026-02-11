@@ -709,6 +709,10 @@ const routes: Routes = [
     path: 'maintenance-page',
     loadChildren: () => import('./modules/global_module/maintenance-page/maintenance-page.module').then( m => m.MaintenancePagePageModule)
   },
+  {
+    path: 'client-door-access',
+    loadChildren: () => import('./modules/client_app/client-door-access/client-door-access.module').then( m => m.ClientDoorAccessPageModule)
+  },
 ];
 
 @NgModule({

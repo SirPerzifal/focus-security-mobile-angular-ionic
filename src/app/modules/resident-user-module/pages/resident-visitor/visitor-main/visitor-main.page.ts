@@ -379,6 +379,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   resendInvite(invite_id: number, phoneNumber?: string) {
+    // this.functionMain.showResendInvite(invite_id, 'visitor', ['SMS', 'Whatsapp'])
     this.mainApiResidentService.endpointMainProcess({
       invite_id: invite_id
     }, 'post/resend_invite').subscribe((response: any) => {
@@ -391,26 +392,26 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }, (error) => {
       console.log(error);
     })
-    // const headers = new HttpHeaders({
-    //   'Content-Type': 'application/json',
-    //   'Accept': 'application/json',
-    // });
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
     
-    // this.http.post<any>(
-    //   `${this.baseUrl}/resident/post/resend_invite`, 
-    //   {
-    //     jsonrpc: '2.0',
-    //     params: {
-    //       invite_id: invite_id,
-    //     }
-    //   },
-    //   { headers }
-    // ).subscribe((response: any) => {
-    //   if (response.result.response_code === 200) {
-    //     this.toggleShowActInv()
-    //     this.functionMain.presentToast('Success resend invite.', 'success')
-    //   }
-    // });
+    this.http.post<any>(
+      `${this.baseUrl}/resident/post/resend_invite`, 
+      {
+        jsonrpc: '2.0',
+        params: {
+          invite_id: invite_id,
+        }
+      },
+      { headers }
+    ).subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        this.toggleShowActInv()
+        this.functionMain.presentToast('Success resend invite.', 'success')
+      }
+    });
   }
 
   // Helper function untuk deteksi iOS

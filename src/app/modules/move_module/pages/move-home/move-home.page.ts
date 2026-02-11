@@ -56,7 +56,7 @@ export class MoveHomePage implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.loadProjectName().then(() => {
         this.pageType = params['type']
-        this.loadSchedulesHistory('today');
+        this.loadSchedulesHistory(this.showDay ? 'today' : 'history');
         if (this.project_config.is_industrial) {
           this.loadHost()
         } else {

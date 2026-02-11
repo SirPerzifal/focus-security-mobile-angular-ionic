@@ -365,11 +365,45 @@ select:focus>option:checked:before {
   }
 }
 
+.resend-alert {
+  .alert-wrapper {
+      background: var(--ion-color-secondary);
+  }
+
+  .alert-title{
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-align: center;
+  }
+
+  .alert-button-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      row-gap: 10px !important;
+  }
+
+  .alert-button{
+      background: var(--ion-color-primary);
+      font-weight: bold;
+      color: white;
+      border-radius: 6px;
+      height: 48px;
+      min-width: 42% !important;
+      margin-right: 0px;
+  }
+
+  .alert-button-inner{
+      justify-content: center;
+  }
+
+}
+
 .checkout-alert{
   .alert-wrapper {
       background: var(--ion-color-vms-alert);
       border-radius: 0.5rem;
-      width: 24rem;
+      width: 20rem;
       padding: 20px 0px 20px 0px;
       text-align: center;
       font-family: 'Comic Neue', serif;

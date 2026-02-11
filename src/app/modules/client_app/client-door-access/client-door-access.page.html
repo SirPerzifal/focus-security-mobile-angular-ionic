@@ -1,0 +1,68 @@
+<ion-header>
+  <app-resident-header [is_client]="true" [text]="'Door Access'" [text_second]="''" />
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
+    pullMax="80">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
+  </ion-refresher>
+  <div class="flex flex-col justify-between mt-2 ml-3">
+    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"></ion-icon>
+  </div>
+  <!-- CONTENT -->
+  <div class="flex flex-col relative mx-4 mb-32" *ngIf="isMain" @fadeInOut>
+    <div class="flex flex-col">
+      <app-modal-loading *ngIf="isLoading" class="mt-4" />
+      <div class="my-4" *ngIf="!isLoading">
+        <div class="space-y-3" *ngIf="Intercom.length > 0; else noVisitor">
+          <div class="flex flex-row w-full items-center bg-[#D8ECCF] p-4 rounded-lg justify-between"
+            *ngFor="let data of Intercom">
+            <div class="flex flex-col items-start ml-2">
+              <h2 class="text-lg font-bold text-gray-800">
+                <p class="capitalize">{{ data.name }}</p>
+              </h2>
+              <p>{{ data.position }}</p>
+            </div>
+            <div (click)="openGate(data.id)"
+              class="p-2 w-24 rounded-full bg-[var(--ion-color-primary)] flex flex-row justify-center items-center mr-2 text-white">
+              <span class="font-bold text-center">Open</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noVisitor>
+          <div class="w-full bg-transparent mt-8 text-center rounded-lg">
+            <p class="text-gray-600">There are no door access found.....</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col relative mx-4 mb-32 mt-4" *ngIf="isDetail" @fadeInOut>
+    <div
+      class="bg-green-100 p-4 rounded flex flex-col justify-between w-full mb-1">
+      <div class="text-base w-ful">
+        <div class="w-full flex flex-col justify-center items-center my-2">
+          <img [src]="functionMain.getImage(intercomDetail.icon_image)" class="h-40">
+        </div>
+        <table class="w-full">
+          <tr class="h-6">
+            <td class="w-2/5  font-bold">Name</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(intercomDetail.name)}}</td>
+          </tr>
+        </table>
+        <div class="flex flex-col w-full justify-around mt-4">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ############################### -->
+</ion-content>
+
+<ion-footer>
+  <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>
+</ion-footer>
