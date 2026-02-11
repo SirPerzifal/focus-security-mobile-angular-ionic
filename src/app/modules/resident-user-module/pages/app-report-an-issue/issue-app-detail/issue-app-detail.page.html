@@ -21,7 +21,7 @@
       name="arrow-back-circle"
       size="large"
       class="text-[var(--ion-color-primary)] size-12"
-      (click)="onBack()"
+      (click)="onBack(true)"
     ></ion-icon>
   </div>
   <div class="px-4 pb-4 pt-1.5 space-y-2">
@@ -190,7 +190,7 @@
         (click)="submitReply(true)"
         class="cw-2:text-[13px] bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold h-12 mt-2"
       >
-        Reply & Close Ticket 
+        Reply & Close Ticket
       </button>
     </div>
     <div class="mt-4">
@@ -229,8 +229,9 @@
               [ngClass]="message.is_vms ? 'flex-row' : message.is_client ? 'flex-row' : 'flex-row-reverse'"
             >
               <div>
-                {{ message.sender_name ? message.sender_name : (message.is_vms
-                ? 'VMS Admin' : ( message.is_client ? 'Client User' : (message.is_resident ? 'Resident User' : message.user ))) }}
+                {{ message.sender_name ? message.sender_name : (message.is_vms ?
+                'VMS Admin' : ( message.is_client ? 'Client User' :
+                (message.is_resident ? 'Resident User' : message.user ))) }}
               </div>
             </div>
             <div

@@ -533,7 +533,7 @@ export class FamilyFormPage implements OnInit {
         // console.log(res);
         if (response.result.response_code == 200) {
           this.functionMain.presentToast('Successfully deleted this member.', 'success');
-          this.router.navigate(['resident-my-family']); // Navigasi setelah modal ditutup
+          this.router.navigate(['family-page-main']); // Navigasi setelah modal ditutup
           this.isModalFamilyEditOpen = false; // Menutup modal
         } else {
           this.functionMain.presentToast('Error occurred while deleting this member.', 'danger');
