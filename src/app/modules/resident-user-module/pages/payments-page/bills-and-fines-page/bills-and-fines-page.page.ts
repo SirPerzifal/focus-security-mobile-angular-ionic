@@ -15,7 +15,9 @@ interface payment {
   total: number,
   date: string,
   overdue_in: string,
-  overdue: string
+  overdue: string,
+  reason_for_rejection: string,
+  manual_pay_submitted: boolean,
 }
 
 interface fines {
@@ -28,11 +30,13 @@ interface fines {
   is_pay : boolean,
   overdue: boolean, // Menentukan status overdue
   offence_data : [
-      {
-          id : number,
-          vehicle_number : string,
-      }
-  ]
+    {
+      id : number,
+      vehicle_number : string,
+    }
+  ],
+  reason_for_rejection: string,
+  manual_pay_submitted: boolean,
 }
 
 interface FinesResponse {
@@ -203,7 +207,6 @@ export class BillsAndFinesPagePage implements OnInit {
       const paymentLoaded = result.result.response_result;
 
       this.billsLoaded = paymentLoaded.map((item: any) => {
-        const isOverdue = item.start_date < new Date().toISOString().split('T')[0];
         return {
           id: item.id,
           title: item.bill_references,
@@ -211,9 +214,13 @@ export class BillsAndFinesPagePage implements OnInit {
           total: Number(item.total_bill),
           date: item.start_date,
           overdue_in: item.due_date,
-          overdue: isOverdue ? 'Yes' : 'No' // Menentukan status overdue
+          overdue: item.overdue,
+          reason_for_rejection: item.reason_for_rejection, // Menentukan status overdue
+          manual_pay_submitted: item.manual_pay_submitted,
         } as payment; // Menyatakan bahwa objek ini sesuai dengan tipe payment
       });
+
+      console.log(this.billsLoaded);
 
     })
   }
@@ -227,7 +234,6 @@ export class BillsAndFinesPagePage implements OnInit {
       const finesLoaded = response.result.response_result;
 
       this.fines = finesLoaded.map((fine: any) => {
-        const isOverdue = fine.start_date < new Date().toISOString().split('T')[0];
         return {
           id : fine.id,
           fines_references : fine.fines_references,
@@ -236,15 +242,18 @@ export class BillsAndFinesPagePage implements OnInit {
           due_date : fine.due_date,
           total_bill : fine.total_bill,
           is_pay : fine.is_pay,
-          overdue: isOverdue ? true : false, // Menentukan status overdue
+          overdue: fine.overdue, // Menentukan status overdue
           offence_data : fine.offence_data.map((offence_data: any) => {
             return {
               id : offence_data.id,
               vehicle_number : offence_data.vehicle_number,
             }
-          })
+          }),
+          reason_for_rejection: fine.reason_for_rejection,
+          manual_pay_submitted: fine.manual_pay_submitted,
         }
       })
+      console.log(this.fines);
     })
   }
 
@@ -419,6 +428,7 @@ export class BillsAndFinesPagePage implements OnInit {
     });
 
     modal.onDidDismiss().then((result) => {
+      console.log('Modal dismissed with data:', result);
       if (result.data) {
         const message = this.showBills ? 'Bill' : 'Fine';
         this.functionMain.presentToast(`Success Pay the ${message}.`, 'success');

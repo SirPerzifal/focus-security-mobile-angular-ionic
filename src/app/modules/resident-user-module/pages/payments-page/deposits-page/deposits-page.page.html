@@ -61,6 +61,38 @@
         >
           <div class="">
             <div
+              *ngIf="ad.userRequestForRefund"
+              class="flex flex-col justify-start items-start mb-2"
+            >
+              <div class="flex flex-row items-center justify-end mt-2">
+                <ng-container *ngIf="ad.requestRefundStatus === 'approved'">
+                  <ion-icon
+                    name="checkmark"
+                    class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p
+                    class="text-[var(--ion-color-primary)] font-bold text-base"
+                  >
+                    Approved
+                  </p>
+                </ng-container>
+                <ng-container *ngIf="ad.requestRefundStatus === 'requested'">
+                  <ion-icon
+                    name="alert"
+                    class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p class="text-yellow-500 font-bold text-base">Requested</p>
+                </ng-container>
+                <ng-container *ngIf="ad.requestRefundStatus === 'rejected'">
+                  <ion-icon
+                    name="close"
+                    class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+                  ></ion-icon>
+                  <p class="text-red-700 font-bold text-base">Rejected</p>
+                </ng-container>
+              </div>
+            </div>
+            <div
               class="text-green-700 font-bold underline underline-offset-1 text-base"
             >
               <a href="#">{{ ad.facility }}</a>
@@ -90,20 +122,6 @@
                   }}
                 </td>
               </tr>
-              <tr *ngIf="ad.userRequestForRefund" class="h-1">
-                <td class="font-bold">Refund Status</td>
-                <td>:</td>
-                <td
-                  class="font-bold p-2 rounded-lg"
-                  [ngClass]="{ 'bg-[#F8F1BA]': ad.requestRefundStatus === 'requested', 'bg-green-100': ad.requestRefundStatus === 'approved', 'bg-[#E3787E]': ad.requestRefundStatus === 'rejected' }"
-                >
-                  {{ ad.requestRefundStatus === 'requested' ? 'Requested' :
-                  ad.requestRefundStatus === 'approved' ? 'Approved' :
-                  ad.requestRefundStatus === 'rejected' ? 'Rejected' :
-                  ad.requestRefundStatus === 'pending_approval' ? 'Pending
-                  Approval' : '' }}
-                </td>
-              </tr>
               <tr *ngIf="ad.requestRefundStatus === 'rejected'" class="h-1">
                 <td class="font-bold">Reason</td>
                 <td>:</td>
@@ -119,6 +137,20 @@
               <app-submit-button
                 *ngIf="isCanRefund"
                 [text]="'Request Refund'"
+                [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
+                (click)="requestRefund(ad)"
+              >
+              </app-submit-button>
+            </div>
+          </div>
+          <div
+            *ngIf="ad.requestRefundStatus === 'rejected'"
+            class="flex flex-row mt-2 text-[13px] w-full"
+          >
+            <div class="w-full">
+              <app-submit-button
+                *ngIf="isCanRefund"
+                [text]="'Resubmit Request Refund'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
                 (click)="requestRefund(ad)"
               >

@@ -75,10 +75,10 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
 
     // Jika bukan force check dan belum mencapai interval, skip
     if (!forceCheck && timeSinceLastCheck < this.checkIntervalHours) {
-      console.log(
-        `Skip check, baru cek ${timeSinceLastCheck.toFixed(1)} menit yang lalu. ` +
-        `Cek berikutnya dalam ${(this.checkIntervalHours - timeSinceLastCheck).toFixed(1)} menit`
-      );
+      // console.log(
+      //   `Skip check, baru cek ${timeSinceLastCheck.toFixed(1)} menit yang lalu. ` +
+      //   `Cek berikutnya dalam ${(this.checkIntervalHours - timeSinceLastCheck).toFixed(1)} menit`
+      // );
       return;
     }
 
@@ -86,7 +86,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     const userData = await this.storageService.getValueFromStorage('USESATE_DATA');
     
     if (!userData) {
-      console.log('User belum login, skip check expiry date');
+      // console.log('User belum login, skip check expiry date');
       return;
     }
 
@@ -99,7 +99,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
       return;
     }
 
-    console.log(forceCheck ? 'Force checking expiry date...' : 'Checking expiry date...');
+    // console.log(forceCheck ? 'Force checking expiry date...' : 'Checking expiry date...');
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set ke awal hari
@@ -110,15 +110,15 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
       ).subscribe({
         next: (response: any) => {
           if (response.result.response_code !== 200) {
-            console.log('Check expiry failed:', response.result.response_message);
+            // console.log('Check expiry failed:', response.result.response_message);
           } else {
             const expiryDate = new Date(response.result.expiry_date);
             expiryDate.setHours(0, 0, 0, 0); // Set ke awal hari
-            console.log("Expiry Date:", expiryDate);
-            console.log("Today Date:", today);
+            // console.log("Expiry Date:", expiryDate);
+            // console.log("Today Date:", today);
 
             const isExpired = expiryDate < today;
-            console.log("Is Expired:", isExpired);
+            // console.log("Is Expired:", isExpired);
             if (isExpired) {
               this.functionMain.presentToast('Your about to get kick out from application in 3 second because your account has reach the expiry date, please contact your household.', 'warning')
               setTimeout(() => {
@@ -146,21 +146,21 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
                 })
               }, 3000)
             } else {
-              console.log('Tidak ada notifikasi expiry date', this.router.url);
+              // console.log('Tidak ada notifikasi expiry date', this.router.url);
               if (response.result.response_message && this.router.url === '/resident-home-page') {
                 this.showLastOneWeekModal(response.result.response_message);
               } else {
-                console.log('Tidak ada notifikasi expiry date');
+                // console.log('Tidak ada notifikasi expiry date');
               }
             }
           }
         },
         error: (error) => {
-          console.error('Error checking expiry date:', error);
+          // console.error('Error checking expiry date:', error);
         }
       });
     } catch (error) {
-      console.error('Exception checking expiry date:', error);
+      // console.error('Exception checking expiry date:', error);
     }
   }
 
@@ -169,7 +169,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    */
   private async showLastOneWeekModal(message: string) {
 
-    console.log(message);
+    // console.log(message);
     
 
     if (message === 'No expiry data found within 7 days') {
@@ -210,15 +210,15 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    * Cleanup: tutup modal dan stop periodic check
    */
   async cleanUp() {
-    console.log('Starting cleanup...');
+    // console.log('Starting cleanup...');
     
     // Tutup modal jika ada
     if (this.currentModal) {
       try {
         await this.currentModal.dismiss();
-        console.log('Modal dismissed');
+        // console.log('Modal dismissed');
       } catch (error) {
-        console.error('Error dismissing modal:', error);
+        // console.error('Error dismissing modal:', error);
       }
       this.currentModal = null;
       this.isModalOpen = false;
@@ -230,7 +230,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     // Reset last check time
     this.resetLastCheckTime();
     
-    console.log('Cleanup completed');
+    // console.log('Cleanup completed');
   }
 
   /**
@@ -258,6 +258,6 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    */
   resetLastCheckTime() {
     this.lastCheckTime = 0;
-    console.log('Last check time direset');
+    // console.log('Last check time direset');
   }
 }

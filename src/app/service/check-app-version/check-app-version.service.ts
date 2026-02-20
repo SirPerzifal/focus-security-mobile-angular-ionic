@@ -84,7 +84,7 @@ export class CheckAppVersionService extends ApiService {
     try {
       // Cek platform (hanya jalan di device, bukan browser)
       if (this.platform.is('mobileweb') || this.platform.is('desktop')) {
-        console.log('Version check hanya jalan di device');
+        // console.log('Version check hanya jalan di device');
         this.isChecking = false;
         return;
       }

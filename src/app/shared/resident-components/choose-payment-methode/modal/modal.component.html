@@ -15,7 +15,7 @@
         >
       </ion-item>
     </div>
-    <div *ngIf="paymentMethodAllowed === 'manual_payment'">
+    <div *ngIf="paymentMethodAllowed === 'payment_gateway'">
       <ion-item button="true" detail="false">
         <ion-label
           class="text-center"
@@ -24,7 +24,7 @@
         >
       </ion-item>
     </div>
-    <div *ngIf="paymentMethodAllowed === 'payment_gateway'">
+    <div *ngIf="paymentMethodAllowed === 'manual_payment'">
       <ion-item button="true" detail="false">
         <ion-label class="text-center" (click)="onClickPaymentChoose('manual')"
           >Manual Pay</ion-label

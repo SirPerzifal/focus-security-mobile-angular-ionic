@@ -72,11 +72,14 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
     this.mainApi.endpointCustomProcess({
       stripe_id: this.stripeId,
     }, '/get-stripe-payment-info').subscribe((response: any) => {
-      console.log('Payment processed successfully:', response);
       if (response.result.receipt_url) {
+        console.log('Payment successful with receipt URL:', response.result.receipt_url);
         this.modalController.dismiss([response.result.Intent.id, response.result.receipt_url]);
       } else {
-        this.modalController.dismiss(response.result.Intent.id);
+        console.log('Payment successful without receipt URL, using Intent ID:', response.result.Intent.id);
+        setTimeout(() => {
+          this.modalController.dismiss(response.result.Intent.id);
+        }, 1500);
       }
       // this.router.navigate([this.from], {
       //   state: {
@@ -84,7 +87,6 @@ export class ModalPaymentCustomComponent extends ApiService implements OnInit {
       //   }
       // });
     });
-    // }, 3500);
   }
   
 

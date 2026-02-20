@@ -454,14 +454,14 @@
                   <td class="w-[5%]">:</td>
                   <td>{{ booking.bookedBy }}</td>
                 </tr>
-                <tr *ngIf="userRole !== 'industrial'" class="h-1">
+                <!-- <tr *ngIf="userRole !== 'industrial'" class="h-1">
                   <td class="font-bold">Deposit Status</td>
                   <td class="w-[5%]">:</td>
                   <td>
-                    {{ booking.status === 'Approved' ? 'No Deposit Required' :
-                    'Pending Payment' }}
+                    {{ booking.amount_deposit !== 0 ? 'Approved' : 'No Deposit
+                    Require' }}
                   </td>
-                </tr>
+                </tr> -->
               </table>
             </div>
           </div>

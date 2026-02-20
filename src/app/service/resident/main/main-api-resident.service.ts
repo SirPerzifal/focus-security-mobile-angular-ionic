@@ -128,14 +128,118 @@ export class MainApiResidentService extends ApiService {
   }
 
   endpointCustomProcess(params: any, apiUrl: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
-    // console.log(params)
-    return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
-      catchError(this.handleError)
-    );
+    let modalRef: HTMLIonModalElement | null = null;
+    let openLoading = false;
+    let isStripePurpose = false;
+  
+    // Check if API URL contains 'post' to determine whether to show loading modal
+    if (apiUrl === "/create-payment-intent" || apiUrl === "/get-stripe-payment-info") {
+      isStripePurpose = true;
+      openLoading = true;
+    }
+
+    if (isStripePurpose) {
+      return from(this.storage.getValueFromStorage('USESATE_DATA')).pipe(
+        // Flatmap untuk menangani Promise berikutnya
+        switchMap((value: any) => {
+          if (!value) {
+            // Menangani kasus jika value tidak ada
+            return throwError(() => new Error('No estate data found'));
+          }
+    
+          return from(this.storage.decodeData(value));
+        }),
+        switchMap((decodedValue: any) => {
+          if (!decodedValue) {
+            return throwError(() => new Error('Failed to decode estate data'));
+          }
+          
+          const estate = JSON.parse(decodedValue) as Estate;
+          
+          // Set ID berdasarkan tipe estate
+          if (estate.record_type === 'industrial') {
+            this.hostId = estate.family_id;
+            this.familyId = 0
+            this.unitId = 0
+            this.blockId = 0
+          } else if (estate.record_type === 'resident') {
+            this.familyId = estate.family_id;
+            this.hostId = 0
+          }
+          
+          // Set ID yang sama untuk kedua tipe
+          this.unitId = estate.unit_id;
+          this.blockId = estate.block_id;
+          this.projectId = estate.project_id;
+          
+          const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          });
+          
+          // Body request berdasarkan ada/tidaknya data estate
+          let body;
+          
+          if (estate.record_type === 'industrial' || estate.record_type === 'resident') {
+            body = {
+              jsonrpc: '2.0',
+              params: {
+                host: this.hostId ? this.hostId : 0,
+                family_id: this.familyId ? this.familyId : 0,
+                unit_id: this.unitId ? this.unitId : 0,
+                block_id: this.blockId ? this.blockId : 0,
+                project_id: this.projectId ? this.projectId : 0,
+                ...params
+              }
+            };
+          } else {
+            body = {
+              jsonrpc: '2.0',
+              params: params
+            };
+          }
+          
+          // Create and present loading modal if needed
+          return from((async () => {
+            if (openLoading) {
+              modalRef = await this.modalController.create({
+                component: LoadingAnimationComponent,
+                cssClass: 'modal-loading',
+              });
+              await modalRef.present();
+            }
+            
+            // Mengirim HTTP request
+            return this.http.post(this.baseUrl + apiUrl, body, { headers });
+          })());
+        }),
+        mergeMap(response$ => response$.pipe(
+          
+        )),
+        tap(() => {
+          // Dismiss modal after successful response
+          if (modalRef) {
+            modalRef.dismiss();
+          }
+        }),
+        catchError((error) => {
+          // Dismiss modal on error
+          if (modalRef) {
+            modalRef.dismiss();
+          }
+          return this.handleError(error);
+        })
+      );
+    } else {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+      // console.log(params)
+      return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
+        catchError(this.handleError)
+      );
+    }
   }
 
   endpointProcess(params: any, apiUrl: string): Observable<any> {

@@ -49,10 +49,13 @@
                 ></app-loading-animation>
               </div>
               <div *ngIf="!isLoading">
-                <div *ngIf="billsLoaded.length > 0; else noBills">
+                <div
+                  *ngIf="billsLoaded.length > 0; else noBills"
+                  class="space-y-1.5"
+                >
                   <div *ngFor="let payment of billsLoaded">
                     <div
-                      [ngClass]="payment.overdue === 'Yes' ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'"
+                      [ngClass]="payment.overdue ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'"
                       class="p-4 rounded-xl w-full"
                     >
                       <div
@@ -77,10 +80,23 @@
                             }}
                           </div>
                           <div
-                            *ngIf="payment.overdue === 'Yes'"
+                            *ngIf="payment.overdue"
                             class="text-base cw-3:text-[13px] font-thin"
                           >
                             This bill is overdue
+                          </div>
+                          <div
+                            *ngIf="payment.reason_for_rejection"
+                            class="text-base cw-3:text-[13px] font-bold"
+                          >
+                            Manual Pay Rejected :{{ payment.reason_for_rejection
+                            }}
+                          </div>
+                          <div
+                            *ngIf="payment.reason_for_rejection === '' && payment.manual_pay_submitted"
+                            class="text-base cw-3:text-[13px] font-bold"
+                          >
+                            Manual Pay Submitted
                           </div>
                         </div>
                         <div
@@ -127,7 +143,7 @@
                 ></app-loading-animation>
               </div>
               <div *ngIf="!isLoading">
-                <div *ngIf="fines.length > 0; else noFines">
+                <div *ngIf="fines.length > 0; else noFines" class="space-y-1.5">
                   <div *ngFor="let fine of fines">
                     <div
                       [ngClass]="fine.overdue ? 'bg-[#E3787E]' : 'bg-[var(--ion-color-tertiary)]'"
@@ -159,6 +175,18 @@
                             class="text-base cw-3:text-[13px] font-thin"
                           >
                             This bill is overdue
+                          </div>
+                          <div
+                            *ngIf="fine.reason_for_rejection"
+                            class="text-base cw-3:text-[13px] font-bold"
+                          >
+                            Manual Pay Rejected :{{ fine.reason_for_rejection }}
+                          </div>
+                          <div
+                            *ngIf="fine.reason_for_rejection === '' && fine.manual_pay_submitted"
+                            class="text-base cw-3:text-[13px] font-bold"
+                          >
+                            Manual Pay Submitted
                           </div>
                         </div>
                         <div
@@ -236,7 +264,7 @@
       </div>
       <div *ngIf="!isLoading">
         <div *ngIf="getMonthYears().length > 0; else noHistoryPayments">
-          <div *ngFor="let monthYear of getMonthYears()">
+          <div *ngFor="let monthYear of getMonthYears()" class="space-y-1.5">
             <h2 class="text-lg font-bold">{{ monthYear }}</h2>
             <div *ngFor="let item of groupedData[monthYear]">
               <ng-container *ngIf="item.bill_references; else finesReferences">
@@ -273,7 +301,7 @@
                         S${{ item.total_bill.toFixed(2) }}
                       </div>
                       <div
-                        *ngIf="item.overdue === 'Yes'"
+                        *ngIf="item.overdue"
                         class="text-base cw-3:text-[13px] font-thin"
                       >
                         This bill is overdue
