@@ -29,6 +29,11 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.contractor_name) }}</td>
           </tr>
+          <tr *ngIf="['move_in', 'renov'].includes(pageType)">
+            <td class="font-bold w-2/5">{{ record.identification_type ? record.identification_type.toUpperCase() : 'NRIC' }}</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ functionMain.returnNone(record.identification_number) }}</td>
+          </tr>
           <tr *ngIf="['coach'].includes(pageType)">
             <td class="font-bold w-2/5">COACH NAME</td>
             <td class="w-[5%]">:</td>
@@ -49,7 +54,7 @@
             <td class="w-[5%]">:</td>
             <td>{{ functionMain.returnNone(record.vehicle_number) }}</td>
           </tr>
-           <tr>
+          <tr>
             <td class="font-bold w-2/5">CONTACT NO</td>
             <td class="w-[5%]">:</td>
             <td>{{ record.contact_number ? functionMain.returnNone(record.contact_number) : functionMain.returnNone(record.contact_no) }}</td>
@@ -119,7 +124,7 @@
           </tr> -->
         </table>
         <div class="flex flex-row justify-between w-full" *ngIf="['move_in', 'renov'].includes(pageType)">
-          <button *ngIf="record.contact_number || record.contact_no" class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="functionMain.callFromPhone(record.contact_number ? functionMain.returnNone(record.contact_number) : functionMain.returnNone(record.contact_no))">CALL CONTRACTOR</button>z
+          <button *ngIf="record.contact_number || record.contact_no" class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="functionMain.callFromPhone(record.contact_number ? functionMain.returnNone(record.contact_number) : functionMain.returnNone(record.contact_no))">CALL CONTRACTOR</button>
           <button class="w-[48%] bg-white text-black text-2xl font-bold rounded mt-5 h-14 mb-4" (click)="callResident()">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
         </div>
       </div>

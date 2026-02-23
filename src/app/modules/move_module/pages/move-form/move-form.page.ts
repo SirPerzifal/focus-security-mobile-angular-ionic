@@ -26,6 +26,7 @@ export class MoveFormPage implements OnInit {
   scheduleType = '';
   identificationType = '';
   pass_number = ''
+  isFromScan = false
 
   // Array untuk menyimpan data pax
   paxData: any[] = [];
@@ -59,17 +60,22 @@ export class MoveFormPage implements OnInit {
   }
 
   record: any
+  module_field = 'move_in'
+  module_config: any = {}
   ngOnInit() {
     // Ambil parameter dari route
     this.loadProjectName().then(() => {
-      
+      this.functionMain.getModuleField(this.project_id, this.scheduleType).then((result) => {
+        this.module_config = result
+      })
       // this.refreshVehicle()
     })
     this.route.queryParams.subscribe(params => {
       console.log(params)
-      this.scheduleType = params['schedule_type'] || 'move_in_out';
+      this.scheduleType = params['schedule_type'] || 'move_in';
     });
   }
+  
 
   async loadProjectName() {
     await this.functionMain.vmsPreferences().then(async (value) => {
@@ -177,30 +183,30 @@ export class MoveFormPage implements OnInit {
     if (!this.selectedImage && this.project_config.is_industrial) {
       errMsg += 'Visitor image is required!\n';
     }
-    if (!this.getInputValue('contractor_name')) {
+    if (!this.contractor_name && this.module_config.name) {
       errMsg += 'Contractor name is required! \n'
     }
-    if (!this.contact_number) {
+    if (!this.contact_number && this.module_config.contact_number) {
       errMsg += 'Contact number is required! \n'
     }
-    if (this.contact_number) {
+    if (this.contact_number && this.module_config.contact_number) {
       if (this.contact_number.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.identificationType) {
+    if (!this.identificationType && this.module_config.identification) {
       errMsg += 'Identification type must be selected! \n'
     }
-    if (!this.nric_value) {
+    if (!this.nric_value && this.module_config.identification) {
       errMsg += 'Identification number is required! \n'
     }
-    if (!this.getInputValue('contractor_company_name')) {
+    if (!this.company_name && this.module_config.company_name) {
       errMsg += 'Company name is required! \n'
     }
     if (!this.pass_number && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
-    if (!this.remarks) {
+    if (!this.remarks && this.module_config.remarks) {
       errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {

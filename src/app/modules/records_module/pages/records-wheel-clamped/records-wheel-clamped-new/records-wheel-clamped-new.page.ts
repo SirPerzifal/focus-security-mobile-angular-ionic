@@ -21,6 +21,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   ) {
     this.type = this.navParams.get('type')
     this.issueTime = this.navParams.get('issue_time')
+    this.isNew = this.navParams.get('issue_time') || false
     this.openSelection = this.navParams.get('is_open_selection')
     const vehicle_number = navParams.get('vehicle_number')
     if (vehicle_number){
@@ -91,6 +92,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   blockId = ''
   unitId = ''
   reasonOfIssuance = ''
+  isNew = false
 
   onBeforeClampImageFileSelected(file: any) {
     if (file){
@@ -138,20 +140,20 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.vehicleNumber) {
       errMsg += 'Offender vehicle number is required! \n'
     }
-    // if (!this.issueName && this.isVehicleNumberReadonly) {
-    //   errMsg += 'Offender name is required! \n'
-    // }
-    // if (!this.issueContact && this.isVehicleNumberReadonly) {
-    //   errMsg += 'Offender contact number is required! \n'
-    // }
-    // if (this.issueContact && this.isVehicleNumberReadonly) {
-    //   if (this.issueContact.length <= 2 ) {
-    //     errMsg += 'Offender contact number is required! \n'
-    //   }
-    // }
-    // if (!this.typeOfEntry) {
-    //   errMsg += 'Offender type of entry is required! \n'
-    // }
+    if (!this.issueName && !this.project_config.is_industrial) {
+      errMsg += 'Offender name is required! \n'
+    }
+    if (!this.issueContact && !this.project_config.is_industrial) {
+      errMsg += 'Offender contact number is required! \n'
+    }
+    if (this.issueContact && !this.project_config.is_industrial) {
+      if (this.issueContact.length <= 2 ) {
+        errMsg += 'Offender contact number is required! \n'
+      }
+    }
+    if (!this.typeOfEntry && !this.project_config.is_industrial) {
+      errMsg += 'Offender type of entry is required! \n'
+    }
     if ((!this.blockId || !this.unitId) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
@@ -164,15 +166,12 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.issueOfficer) {
       errMsg += 'Issue officer is required! \n'
     }
-    if (errMsg) {
-      this.functionMain.presentToast(errMsg, 'danger');
-    } else {
       let params = {
         vehicle_number: this.vehicleNumber, 
-        visitor_name: this.isVehicleNumberReadonly ?  this.issueName : '', 
+        visitor_name: !this.project_config.is_industrial ?  this.issueName : '',
         block_id: this.blockId, 
         unit_id: this.unitId, 
-        contact_number: this.isVehicleNumberReadonly ? this.issueContact : '',
+        contact_number: !this.project_config.is_industrial ? this.issueContact : '',
         type_notice: this.selectedNotice, 
         issuing_officer_name: this.issueOfficer,
         type: this.typeOfEntry,
@@ -184,8 +183,12 @@ export class RecordsWheelClampedNewPage implements OnInit {
         host: this.selectedHost,
         entry_datetime: this.issueTime,
       }
-      
       console.log(params)
+    if (errMsg) {
+      this.functionMain.presentToast(errMsg, 'danger');
+    } else {
+      
+      
       this.clientMainService.getApi(params, '/vms/post/offenses' ).subscribe({
         next: (results) => {
           console.log(results)

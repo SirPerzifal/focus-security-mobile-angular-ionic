@@ -44,7 +44,8 @@ export class RecordsWheelClampedPage implements OnInit {
       component: RecordsWheelClampedNewPage,
       cssClass: 'record-modal',
       componentProps: {
-        type: this.pageType
+        type: this.pageType,
+        is_new: true,
       }
     });
 

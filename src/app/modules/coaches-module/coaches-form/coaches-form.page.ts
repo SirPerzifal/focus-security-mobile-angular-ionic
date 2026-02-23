@@ -65,10 +65,14 @@ export class CoachesFormPage implements OnInit {
   schedule: any = []
   contactNumber = ''
   selectedBlock = ''
+  module_config: any = {}
   remarks = ''
 
   ngOnInit() {
     this.loadProjectName().then(() => {
+      this.functionMain.getModuleField(this.project_id, 'coach').then((result) => {
+        this.module_config = result
+      })
       console.log(this.schedule)
       this.contactNumber = this.schedule.contact_number ? this.schedule.contact_number : ''
       this.loadBlock()
@@ -250,24 +254,24 @@ export class CoachesFormPage implements OnInit {
     if (!this.selectedImage && this.project_config.is_industrial) {
       errMsg += 'Coach image is required!\n';
     }
-    if (!this.schedule.coach_name){
+    if (!this.schedule.coach_name && this.module_config.name){
       errMsg += 'Coach name is missing! \n'
     }
-    if (!this.contactNumber) {
+    if (!this.contactNumber && this.module_config.contact_number) {
       errMsg += 'Contact number is missing! \n'
     }
-    if (this.contactNumber) {
+    if (this.contactNumber && this.module_config.contact_number) {
       if (this.contactNumber.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (this.showDrive && !this.schedule.vehicle_number) {
+    if (this.showDrive && !this.schedule.vehicle_number && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is missing! \n'
     }
     if (!this.schedule.block_id || !this.schedule.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if (!this.remarks) {
+    if (!this.remarks && this.module_config.remarks) {
       errMsg += 'Remarks is required! \n'
     }
     if (errMsg) {
@@ -292,6 +296,7 @@ export class CoachesFormPage implements OnInit {
         visitor_image: this.project_config.is_industrial ? this.selectedImage : false,
         remarks: this.remarks,
         bypass_ban: bypass_ban,
+        event_id: this.schedule.event_id,
       }
       console.log(params)
       this.clientMainService.getApi(params, '/vms/post/add_coaches' ).subscribe({

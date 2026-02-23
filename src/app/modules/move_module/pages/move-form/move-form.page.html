@@ -60,20 +60,20 @@
             [labelText]="'NAME'" [placeholder]="'EG. KEVIN MARCH'" 
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
-            [isMandatory]="true"
+            [isMandatory]="module_config.name"
             [(ngModel)]="contractor_name"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
         <div class="w-full">
-          <app-vms-contact-input [id]="'move_contact'" [(value)]="contact_number" (contactInfo)="getContactInfo($event)" [isMandatory]="true"></app-vms-contact-input>
+          <app-vms-contact-input #moveContact [id]="'move_contact'" [(value)]="contact_number" [valueExist]="contact_number" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
         </div>
         <div class="w-full">
-          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" [isReadonly]="is_id_disabled" [isMandatory]="true"/>
+          <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" [isReadonly]="is_id_disabled" [isMandatory]="module_config.identification" />
         </div>
         <div class="w-full" *ngIf="identificationType == 'passport'">
           <app-text-input #contractorCheckoutPassport [id]="'contractor_checkout_passport'" [labelText]="'PASSPORT NUMBER'"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="true"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.identification"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nric_value"></app-text-input>
         </div>
         <div class="w-full flex flex-row justify-between items-end space-x-2" *ngIf="identificationType != 'passport'">
@@ -86,7 +86,7 @@
               [type]="'text'"
               (keyup)="onNricInput($event)"
               [(ngModel)]="nric_value"
-              [isMandatory]="true"
+              [isMandatory]="module_config.identification"
               [isReadonly]="true"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
             </app-text-input>
@@ -105,7 +105,7 @@
             [labelText]="'VEHICLE NUMBER'" [placeholder]="'SBA 7282 U'" 
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
-            [isMandatory]="true"
+            [isMandatory]="module_config.vehicle_number"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
             [(ngModel)]="vehicle_number">
           </app-text-input>
@@ -122,18 +122,18 @@
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
             [(ngModel)]="company_name"
-            [isMandatory]="true"
+            [isMandatory]="module_config.company_name"
             [customInputClasses]="{'border':true, 'w-full':true ,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
         <div class="w-full flex flex-col">
           <app-text-input [id]="'move_form_remarks'" [name]="'move_form_remarks'" [labelText]="'REMARKS'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="true"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
             [(ngModel)]="remarks"></app-text-input>
         </div>
         <div class="w-full" *ngIf="project_config.is_industrial">
           <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="true"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
         </div>
         <div class="w-full flex flex-col">

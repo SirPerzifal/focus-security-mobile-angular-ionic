@@ -30,15 +30,14 @@
           </app-input-image-preview>
         </div>
         <div class="w-full">
-          <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="schedule.coach_name"
-            [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"></app-text-input>
+          <app-text-input [id]="'walk_in_name'" [labelText]="'NAME'" [placeholder]="'EG. ZHU QING'" [customClasses]="{'w-full':true}" [type]="'text'" [(ngModel)]="schedule.coach_name" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isMandatory]="module_config.name"></app-text-input>
         </div>
         <div class="w-full">
-          <app-vms-contact-input [(value)]="contactNumber" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)"></app-vms-contact-input>
+          <app-vms-contact-input [(value)]="contactNumber" [valueExist]="contactNumber" [id]="'walk_in_contact'" (contactInfo)="getContactInfo($event)" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
         </div>
         <div class="w-full flex flex-row justify-between" *ngIf="showDrive">
           <div class="w-[90%]">
-            <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(value)]="schedule.vehicle_number"></app-text-input>
+            <app-text-input [id]="'drive_in_vehicle'" [labelText]="'VEHICLE NUMBER'" [placeholder]="'EG. SBS 2282 S'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(value)]="schedule.vehicle_number" [isMandatory]="module_config.vehicle_number"></app-text-input>
           </div>
           <div class="flex flex-col justify-end">
               <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
@@ -69,7 +68,7 @@
             </app-text-input>
         </div>
         <div class="w-full">
-          <label class="text-2xl"><u><b>COACH TYPE</b></u></label>
+          <label class="text-2xl"><u><b>COACH TYPE<span *ngIf="module_config.coach_type">*</span></b></u></label>
           <select id="walk_in_coach"  (change)="onCoachChange($event)" [(ngModel)]="schedule.coach_type_id"
             class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl text-black">
             <option value="" selected disabled hidden>SELECT COACH TYPE</option>
@@ -78,7 +77,7 @@
         </div>
         <div class="w-full flex flex-col">
           <app-text-input [id]="'coaches_form_remarks'" [name]="'coaches_form_remarks'" [labelText]="'REMARKS'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="true"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
             [(ngModel)]="remarks"></app-text-input>
         </div>
         <div class="w-full" *ngIf="showDrive && Camera.length > 0">
