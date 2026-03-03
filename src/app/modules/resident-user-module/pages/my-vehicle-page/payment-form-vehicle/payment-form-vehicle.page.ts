@@ -72,6 +72,7 @@ export class PaymentFormVehiclePage implements OnInit {
 
   isPaymentProcessed: boolean = false;
   paymentMethodAllowed: string = ''; // Default value
+  publishedkey: string = ''; // Default value
   qrCodeImage: string = '';
   selectedPaymentMethod: string = '';
   selectedPaymentReceiptFileName: string = '';
@@ -121,6 +122,7 @@ export class PaymentFormVehiclePage implements OnInit {
       this.qrCodeImage = result.result.qr_code;
       if (result.result.config.allowed_payment) {
         this.paymentMethodAllowed = result.result.config.allowed_payment;
+        this.publishedkey = result.result.config.published_key_stripe;
       }
     })
   }
@@ -143,7 +145,7 @@ export class PaymentFormVehiclePage implements OnInit {
   selectPaymentMethod(method: 'card' | 'paynow') {
     this.selectedPaymentMethod = method;
     if (method === 'card') {
-      const stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK'); // Replace with your actual publishable key
+      const stripe = Stripe(this.publishedkey); // Use the published key from API response
       this.electricPay(stripe);
     }
   }

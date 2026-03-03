@@ -26,13 +26,13 @@ export class ModalComponent  implements OnInit {
     const paymentId = this.navParams.get('paymentId');
     this.paymentId = paymentId
     this.loadQRCode();
-    this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK'); // Replace with your actual publishable key
   }
-
+  
   loadQRCode() {
     this.mainApi.endpointMainProcess({}, 'get/payment_qr_code').subscribe((result: any) => {
       if (result.result.config.allowed_payment) {
         this.paymentMethodAllowed = result.result.config.allowed_payment;
+        this.stripe = Stripe(result.result.config.published_key_stripe); // Replace with your actual publishable key
       }
     })
   }
