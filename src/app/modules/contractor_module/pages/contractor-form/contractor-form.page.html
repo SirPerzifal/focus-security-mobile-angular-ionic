@@ -43,7 +43,7 @@
             [(cameraSelected)]="selectedImage">
           </app-input-image-preview>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <app-nric-fin-selection [isReadonly]="is_id_disabled" (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" [isMandatory]="module_config.identification" />
         </div>
         <div class="w-full" *ngIf="identificationType == 'passport'">
@@ -58,7 +58,7 @@
           <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(0, false)">
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
-        </div>
+        </div> -->
         <div class="w-full">
           <app-text-input #contractorNameInput [id]="'contractor_name'" [labelText]="'NAME'" [placeholder]="'EG. MIFTAH AKHBAR'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="formData.contractor_name" [isMandatory]="module_config.contractor_name"></app-text-input>
         </div> 
@@ -141,13 +141,12 @@
           </select>
         </div>
         <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-2 items-end justify-between">
-          <div class="w-1/2">
+          <div class="w-full">
               <app-text-input #textInput [id]="'contractor_name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="nameIdentity[i]"></app-text-input>
           </div>
-          <div class="w-1/2 flex flex-col">
+          <!-- <div class="w-1/2 flex flex-col">
             <div class="flex flex-row justify-between w-full items-center">
               <label class="text-2xl mr-3"><b><u>{{typeIdentity[i] == 'passport' && project_config.is_industrial ? 'PASSPORT' : 'NRIC / FIN'}}</u>*</b></label>
-              <!-- <img alt="Loading" src="assets/img/Loading_Green.png" class="h-6 w-6" (click)="changeType(i)" /> -->
               <ion-icon name="swap-horizontal-outline" class="h-6 w-6" (click)="changeType(i)" *ngIf="project_config.is_industrial"></ion-icon>
             </div>
             <app-text-input #textInput [id]="'contractor_nric_fin_pax_' + i" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxIdentity[i]" (keyup)="nricPaxChange($event, i)" [isReadonly]="true" [isMandatory]="true" *ngIf="typeIdentity[i] != 'passport'"></app-text-input>
@@ -158,7 +157,7 @@
           </div>
           <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(i, true)" *ngIf="typeIdentity[i] != 'passport'">
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
-          </div>
+          </div> -->
         </div>
         <div class="w-full" *ngFor="let camera of (showDrive ? Camera : []); let i = index">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="saveRecord(true, camera.CamSentId)"></app-visitor-button>

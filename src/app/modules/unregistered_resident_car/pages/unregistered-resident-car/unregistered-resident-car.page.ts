@@ -240,12 +240,12 @@ export class UnregisteredResidentCarPage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
-        if (contactData.identification_type && contactData. identification_number) {
-          this.is_id_disabled = true
-        } else {
-          this.is_id_disabled = false
-        }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // if (contactData.identification_type && contactData. identification_number) {
+        //   this.is_id_disabled = true
+        // } else {
+        //   this.is_id_disabled = false
+        // }
       } else {
         if (contactData.block_id) {
           this.formData.block_id = contactData.block_id

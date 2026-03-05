@@ -131,11 +131,11 @@ export class MoveFormPage implements OnInit {
     this.paxData = [];
     for (let i = 0; i < this.paxCount; i++) {
       const name = this.getInputValue(`name_pax_${i}`);
-      const nric = this.getInputValue(`nric_fin_pax_${i}`);
-      console.log(`Pax ${i}: Name = ${name}, NRIC = ${nric}`); // Tambahkan log ini
+      // const nric = this.getInputValue(`nric_fin_pax_${i}`);
+      console.log(`Pax ${i}: Name = ${name}`); // Tambahkan log ini
       this.paxData.push({
         contractor_name: name,
-        identification_number: nric
+        identification_number: ''
       });
     }
   }
@@ -144,9 +144,9 @@ export class MoveFormPage implements OnInit {
     for (let i = 0; i < this.paxCount; i++) {
       console.log(i)
       const name = this.getInputValue(`name_pax_${i}`);
-      const nric = this.getInputValue(`nric_fin_pax_${i}`);
-      console.log(name, nric)
-      if (name && nric) {
+      // const nric = this.getInputValue(`nric_fin_pax_${i}`);
+      if (name) {
+      // if (name && nric) {
         
       } else {
         return true
@@ -194,12 +194,12 @@ export class MoveFormPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.identificationType && this.module_config.identification) {
-      errMsg += 'Identification type must be selected! \n'
-    }
-    if (!this.nric_value && this.module_config.identification) {
-      errMsg += 'Identification number is required! \n'
-    }
+    // if (!this.identificationType && this.module_config.identification) {
+    //   errMsg += 'Identification type must be selected! \n'
+    // }
+    // if (!this.nric_value && this.module_config.identification) {
+    //   errMsg += 'Identification number is required! \n'
+    // }
     if (!this.company_name && this.module_config.company_name) {
       errMsg += 'Company name is required! \n'
     }
@@ -210,7 +210,8 @@ export class MoveFormPage implements OnInit {
       errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {
-      errMsg += "All names and NRICs of contractor members must be filled in!!"
+      // errMsg += "All names and NRICs of contractor members must be filled in!!"
+      errMsg += "All names of contractor members must be filled in!!"
     }
     if (errMsg) {
       this.presentToast(errMsg, 'danger')
@@ -221,7 +222,8 @@ export class MoveFormPage implements OnInit {
 
     const subContractors = this.paxData.map(pax => ({
       contractor_name: pax.contractor_name, // Pastikan ini sesuai dengan nama property yang benar
-      identification_number: pax.identification_number // Pastikan ini sesuai dengan nama property yang benar
+      // identification_number: pax.identification_number 
+      identification_number: '' 
     }));
 
     console.log("subcon", subContractors);
@@ -230,8 +232,10 @@ export class MoveFormPage implements OnInit {
       contractor_name: this.getInputValue('contractor_name'),
       contractor_contact_no: this.contact_number,
       company_name: this.getInputValue('contractor_company_name'),
-      identification_type: this.identificationType,
-      identification_number: this.nric_value,
+      // identification_type: this.identificationType,
+      // identification_number: this.nric_value,
+      identification_type: '',
+      identification_number: '',
       schedule_type: this.scheduleType === 'move_in' ? 'move_in_out' : 'renovation',
       contractor_vehicle: this.getInputValue('contractor_vc'),
       block: this.block_id,
@@ -308,8 +312,8 @@ export class MoveFormPage implements OnInit {
           this.contact_number = value.contact_number ? value.contact_number : ''
           this.contractor_name = value.visitor_name ? value.visitor_name  : ''
           this.selectedImage = value.visitor_image
-          this.identificationType = value.identification_type ? value.identification_type : ''
-          this.nric_value = value.identification_number ? value.identification_number : '' 
+          // this.identificationType = value.identification_type ? value.identification_type : ''
+          // this.nric_value = value.identification_number ? value.identification_number : '' 
         }
       }
     })
@@ -328,11 +332,11 @@ export class MoveFormPage implements OnInit {
       this.requestor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.requestor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
-      this.identificationType = contactData.identification_type
-      this.nric_value = contactData.identification_number
-      if (contactData.identification_type && contactData.identification_number) {
-        this.is_id_disabled = true
-      }
+      // this.identificationType = contactData.identification_type
+      // this.nric_value = contactData.identification_number
+      // if (contactData.identification_type && contactData.identification_number) {
+      //   this.is_id_disabled = true
+      // }
     }
   }
 

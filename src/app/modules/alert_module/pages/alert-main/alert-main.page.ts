@@ -486,7 +486,7 @@ export class AlertMainPage implements OnInit {
       },
       {
         text: 'TICKETS',
-        icon: 'assets/icon-vms/records_menu/Facility_Bookings.png',
+        icon: 'assets/icon-vms/records_menu/Alert_ticket.png',
         isActive: true,
         route: '/records-main',
         needSize: false,
@@ -757,6 +757,7 @@ export class AlertMainPage implements OnInit {
       type: issue_type,
       vehicle_number: vehicle_number,
       issue_time: issue_time,
+      is_alert: true,
     }
     const modal = await this.modalController.create({
       component: RecordsWheelClampedNewPage,
@@ -868,28 +869,51 @@ export class AlertMainPage implements OnInit {
 
   intervalId: any = null
   loadInterval() {
-    console.log((this.router.url).split('?')[0])
     if ((this.router.url).split('?')[0] == '/alert-main') {
       let i = 0
       if (this.intervalId) {
-        console.log('RESET INTERVAL')
         clearInterval(this.intervalId)
         this.intervalId = null
-        console.log("CURRENT STOPPED INTERVAL", this.intervalId)
       }
       this.intervalId = setInterval(() => {
 
           this.refreshClicked()
-          console.log("INTERVAL WORK ", this.intervalId)
-          console.log("LOOP", i)
           i += 1
 
       }, 60000)
-      console.log("INTERVAL START", this.intervalId)
     } else {
       clearInterval(this.intervalId)
       this.intervalId = null
     }
+  }
+
+  async newOffenceModal() {
+    const modal = await this.modalController.create({
+      component: RecordsWheelClampedNewPage,
+      cssClass: 'record-modal',
+      componentProps: {
+        type: this.active_type,
+        is_new: true,
+      }
+    });
+
+    history.pushState(null, '', location.href);
+
+    const closeModalOnBack = () => {
+      window.removeEventListener('popstate', closeModalOnBack);
+    };
+    window.addEventListener('popstate', closeModalOnBack);
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        console.log(result.data)
+        if(result.data){
+          this.loadRecordsWheelClamp(this.active_type)
+        }
+      }
+    });
+
+    return await modal.present();
   }
 
 }

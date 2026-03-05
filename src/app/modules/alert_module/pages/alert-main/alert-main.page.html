@@ -51,9 +51,14 @@
       </div>
     </div>
 
-    <div class="mx-4" *ngIf="project_config.is_allow_vms_unregistered_simulation && active_type === 'unregistered'">
+    <!-- <div class="mx-4" *ngIf="project_config.is_allow_vms_unregistered_simulation && active_type === 'unregistered'">
       <div class="flex flex-row justify-end w-full">
         <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle" (click)="addUnregistered()"></ion-icon>
+      </div>
+    </div> -->
+    <div class="mx-4" *ngIf="active_type === 'first_warning' || active_type === 'wheel_clamp'">
+      <div class="flex flex-row justify-end w-full">
+        <ion-icon size="large" class="text-[var(--ion-color-primary)] size-14" name="add-circle" (click)="newOffenceModal()"></ion-icon>
       </div>
     </div>
     <div class="flex flex-row w-full justify-end mt-5" *ngIf="!main">

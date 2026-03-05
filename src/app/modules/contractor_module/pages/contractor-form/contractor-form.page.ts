@@ -115,11 +115,11 @@ export class ContractorFormPage implements OnInit {
     this.paxData = [];
     for (let i = 0; i < this.paxCount; i++) {
       const name = this.getInputValue(`contractor_name_pax_${i}`);
-      const nric = this.paxIdentity[i];
-      console.log(name, nric)
+      // const nric = this.paxIdentity[i];
+      console.log(name)
       this.paxData.push({
         contractor_name: name,
-        identification_number: nric
+        identification_number: ''
       });
     }
 
@@ -130,9 +130,10 @@ export class ContractorFormPage implements OnInit {
     for (let i = 0; i < this.paxCount; i++) {
       console.log(i)
       const name = this.getInputValue(`contractor_name_pax_${i}`);
-      const nric = this.paxIdentity[i];
-      console.log(name, nric)
-      if (name && nric) {
+      // const nric = this.paxIdentity[i];
+      console.log(name)
+      // if (name && nric) {
+      if (name) {
         
       } else {
         return true
@@ -184,7 +185,7 @@ export class ContractorFormPage implements OnInit {
     // Validasi input
     const contractorName = this.formData.contractor_name;
     const contractorContactNo = this.formData.contact_number;
-    const identificationNumber = this.nric_value;
+    // const identificationNumber = this.nric_value;
     const contractorVehicle = this.formData.contractor_vehicle;
     const companyName = this.formData.company_name;
     const remarks = this.remarksValue;
@@ -206,19 +207,19 @@ export class ContractorFormPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.identificationType && this.module_config.identification) {
-      errMsg += 'Identification type must be selected! \n'
-    }
-    if (!identificationNumber && this.module_config.identification) {
-      errMsg += 'Identification number is required! \n'
-    }
+    // if (!this.identificationType && this.module_config.identification) {
+    //   errMsg += 'Identification type must be selected! \n'
+    // }
+    // if (!identificationNumber && this.module_config.identification) {
+    //   errMsg += 'Identification number is required! \n'
+    // }
     if (!contractorVehicle && this.showDrive && this.module_config.vehicle_number) {
       errMsg += 'Vehicle number is required! \n'
     }
     if (!companyName && this.module_config.company_name) {
       errMsg += 'Company name is required! \n'
     }
-    if (((!this.selectedBlock && this.module_config.block) || (!this.selectedUnit && this.module_config.unit_id)) && !this.project_config.is_industrial) {
+    if (((!this.selectedBlock && this.module_config.block) || (!this.selectedUnit && this.module_config.unit)) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
     if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
@@ -243,7 +244,8 @@ export class ContractorFormPage implements OnInit {
       errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {
-      errMsg += "All names and ICs of contractor members must be filled in!!"
+      // errMsg += "All names and ICs of contractor members must be filled in!!"
+      errMsg += "All names of contractor members must be filled in!!"
     }
     if (errMsg) {
       this.functionMain.presentToast(errMsg, 'danger')
@@ -254,7 +256,8 @@ export class ContractorFormPage implements OnInit {
 
     const subContractors = this.paxData.map(pax => ({
       contractor_name: pax.contractor_name, // Pastikan ini sesuai dengan nama property yang benar
-      identification_number: pax.identification_number // Pastikan ini sesuai dengan nama property yang benar
+      // identification_number: pax.identification_number 
+      identification_number: '' 
     }));
 
     console.log("subcon", subContractors);
@@ -263,8 +266,10 @@ export class ContractorFormPage implements OnInit {
       contractor_name: contractorName,
       contractor_contact_no: contractorContactNo,
       company_name: companyName,
-      identification_type: this.identificationType,
-      identification_number: identificationNumber,
+      // identification_type: this.identificationType,
+      // identification_number: identificationNumber,
+      identification_type: '',
+      identification_number: '',
       contractor_vehicle: this.showDrive ? contractorVehicle : '',
       block: this.selectedBlock,
       unit: this.selectedUnit,
@@ -435,9 +440,9 @@ export class ContractorFormPage implements OnInit {
           this.formData.contractor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
           this.selectedImage = value.visitor_image
           this.selectedCard = value.contractor_card
-          this.identificationType = value.identification_type ? value.identification_type : ''
+          // this.identificationType = value.identification_type ? value.identification_type : ''
+          // this.nric_value = value.identification_number ? value.identification_number : '' 
           this.temp_type = this.identificationType
-          this.nric_value = value.identification_number ? value.identification_number : '' 
           this.contactUnit = ''
           this.contactHost = ''
           if (this.project_config.is_industrial) {
@@ -485,16 +490,16 @@ export class ContractorFormPage implements OnInit {
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       this.selectedCard = contactData.contractor_card
-      this.nric_value = contactData.identification_number
-      if (contactData.identification_type && contactData. identification_number) {
-        this.is_id_disabled = true
-      } else {
-        this.is_id_disabled = false
-      }
-      if (contactData.identification_type) {
-        this.identificationType = contactData.identification_type
-        this.temp_type = this.identificationType
-      }
+      // this.nric_value = contactData.identification_number
+      // if (contactData.identification_type && contactData. identification_number) {
+      //   this.is_id_disabled = true
+      // } else {
+      //   this.is_id_disabled = false
+      // }
+      // if (contactData.identification_type) {
+      //   this.identificationType = contactData.identification_type
+      //   this.temp_type = this.identificationType
+      // }
       if (this.project_config.is_industrial) {
         if (contactData.industrial_host_ids.lentgh > 0) {
           setTimeout(() => {
@@ -792,15 +797,15 @@ export class ContractorFormPage implements OnInit {
           this.formData.contractor_vehicle = this.searchData.vehicle_number;
           this.formData.company_name = this.searchData.company_name
           this.contractor_entry_purpose = this.searchData.type_of_work
-          this.identificationType = this.searchData.identification_type
+          // this.identificationType = this.searchData.identification_type
+          // this.nric_value= this.searchData.identification_number
           this.selectedImage = this.searchData.visitor_image
           this.selectedCard = this.searchData.contractor_card
-          this.nric_value= this.searchData.identification_number
-          if (this.searchData.identification_type && this.searchData.identification_number) {
-            this.is_id_disabled = true
-          } else {
-            this.is_id_disabled = false
-          }
+          // if (this.searchData.identification_type && this.searchData.identification_number) {
+          //   this.is_id_disabled = true
+          // } else {
+          //   this.is_id_disabled = false
+          // }
             
           if (this.project_config.is_industrial) {
             setTimeout(() => {

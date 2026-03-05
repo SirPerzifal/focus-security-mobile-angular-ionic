@@ -13,6 +13,7 @@ import {jwtDecode} from 'jwt-decode';
 import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
 import { StorageService } from '../storage/storage.service';
 import { MainApiResidentService } from '../resident/main/main-api-resident.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -451,10 +452,24 @@ export class FunctionMainService {
 
   async getLprConfig(project_id: number) {
     try {
-      const results = await this.mainVmsService.getApi({project_id: project_id}, '/fs/get/latest_vehicle_number').toPromise();
+      const value = await this.storage.getValueFromStorage('VMS_LPR');
+      
+      console.log('valuevaluevaluevaluevaluevalue', value)
+      if (!value) {
+        this.presentToast("LPR should be selected first on the homepage!", 'danger')
+        return false
+      }
+
+      const results = await firstValueFrom(
+        this.mainVmsService.getApi({ 
+            project_id: project_id,
+            lpr_id: value.CamSentId
+        }, '/fs/get/latest_vehicle_number')
+      );
+
       console.log(results);
 
-      if (results.result.response_code === 200) {
+      if (results?.result?.response_code === 200) {
         return results.result.response_result[0];
       } else {
         this.presentToast('Failed to get project latest vehicle number', 'danger');
@@ -766,13 +781,13 @@ export class FunctionMainService {
     return false
   }
 
-  public async showResendInvite(id: any, model_id: any, buttons: string[] = ['SMS', 'Whatsapp', 'Email']) {
+  public async showResendInvite(id: any, model_id: any, buttons: string[] = ['SMS', 'Whatsapp', 'Email'], family_id: any = false) {
     let buttonArray = buttons.map((button) => {
       return {
         text: button,
         role: 'confirm',
         handler: () => {
-            this.resendInvite(button, id, model_id)
+            this.resendInvite(button, id, model_id, family_id)
           },
       }
     })
@@ -787,14 +802,14 @@ export class FunctionMainService {
       if (buttonArray.length == 0) {
         this.presentToast('No resend invitation option found, please contact your administrator!', 'danger');
       } else {
-        this.resendInvite(buttons[0], id, model_id)
+        this.resendInvite(buttons[0], id, model_id, family_id)
 
       } 
     }
   }
 
-  resendInvite(platform: string, record_id: any, model_id: string) {
-    this.mainVmsService.getApi({platform: platform, record_id: record_id, model_id: model_id}, '/post/resend_invitation').subscribe({
+  resendInvite(platform: string, record_id: any, model_id: string, family_id: any = false) {
+    this.mainVmsService.getApi({platform: platform, record_id: record_id, model_id: model_id, family_id: family_id}, '/post/resend_invitation').subscribe({
       next: (results) => {
         console.log(results)
         console.log(results.result)

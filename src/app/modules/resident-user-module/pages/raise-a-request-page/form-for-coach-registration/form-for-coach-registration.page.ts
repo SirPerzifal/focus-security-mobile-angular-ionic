@@ -439,9 +439,10 @@ export class FormForCoachRegistrationPage implements OnInit {
     if (!this.formSent.typeOfCoaching) {
       errMsg += 'Please select the type of coaching.\n';
     }
-    if (!this.formSent.facilityRequired) {
-      errMsg += 'Please select the facility required.\n';
-    }
+    // Non-manfatory per 23/02/2026
+    // if (!this.formSent.facilityRequired) {
+    //   errMsg += 'Please select the facility required.\n';
+    // }
     if (!this.formSent.durationPerSession) {
       errMsg += 'Please provide the duration per session.\n';
     }

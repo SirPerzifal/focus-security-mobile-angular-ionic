@@ -233,12 +233,12 @@ export class CollectionModulePage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_name && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.walkInFormData.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Visitor is required!\n';
     }
@@ -282,8 +282,10 @@ export class CollectionModulePage implements OnInit {
         host: this.selectedHost,
         company_name: this.walkInFormData.company_name,
         remarks: this.walkInFormData.remarks,
-        nric: this.nric_value,
-        identification_type: this.identificationType,
+        // nric: this.nric_value,
+        // identification_type: this.identificationType,
+        nric: '',
+        identification_type: '',
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
@@ -323,12 +325,12 @@ export class CollectionModulePage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.driveInFormData.visitor_name && (this.module_config.visitor_name && this.project_config.is_industrial)) {
       errMsg += 'Visitor is required!\n';
     }
@@ -380,8 +382,10 @@ export class CollectionModulePage implements OnInit {
         host: this.selectedHost,
         company_name: this.driveInFormData.company_name,
         remarks: this.driveInFormData.remarks,
-        nric: this.nric_value,
-        identification_type: this.identificationType,
+        // nric: this.nric_value,
+        // identification_type: this.identificationType,
+        nric: '',
+        identification_type: '',
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
@@ -462,7 +466,7 @@ export class CollectionModulePage implements OnInit {
           this.driveInFormData.visitor_name = value.visitor_name ? value.visitor_name  : ''
           this.driveInFormData.visitor_vehicle = value.vehicle_number ? value.vehicle_number  : ''
           this.selectedImage = value.visitor_image
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
           this.contactUnit = ''
           this.contactHost = ''
           if (this.project_config.is_industrial) {
@@ -493,7 +497,7 @@ export class CollectionModulePage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
         } else {
@@ -522,7 +526,7 @@ export class CollectionModulePage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
         } else {

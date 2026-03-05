@@ -153,15 +153,15 @@ export class DeliveriesPage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
     if (!this.formData.name && this.module_config.visitor_name) {
       errMsg += 'Please insert visitor name!\n';
     }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.formData.contact_number && this.module_config.contact_number){
       errMsg += 'Please insert a contact number!\n';
     }
@@ -208,8 +208,10 @@ export class DeliveriesPage implements OnInit {
         project_id: this.project_id,
         camera_id: camera_id,
         host: this.selectedHost,
-        identification_type: this.identificationType,
-        identification_number: this.nric_value,
+        identification_type: '',
+        identification_number: '',
+        // identification_type: this.identificationType, 
+        // identification_number: this.nric_value, 
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
@@ -357,12 +359,12 @@ export class DeliveriesPage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.formData.contact_number && this.module_config.contact_number){
       errMsg += 'Please insert visitor contact number!\n';
     }
@@ -422,8 +424,10 @@ export class DeliveriesPage implements OnInit {
         project_id: this.project_id,
         camera_id: camera_id,
         host: this.package_delivery_type === 'multiple' ? false : this.selectedHost,
-        identification_type: this.identificationType,
-        identification_number: this.nric_value,
+        // identification_type: this.identificationType,
+        // identification_number: this.nric_value,
+        identification_type: '',
+        identification_number: '',
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         bypass_ban: bypass_ban,
@@ -815,7 +819,7 @@ export class DeliveriesPage implements OnInit {
             this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
             this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
             this.selectedImage = value.visitor_image
-            this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+            // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
             this.contactUnit = ''
             this.contactHost = ''
             if (value.industrial_host_id) {
@@ -825,7 +829,7 @@ export class DeliveriesPage implements OnInit {
             this.formData.name = value.visitor_name ? value.visitor_name : ''
             this.formData.contact_number = value.contact_number ? value.contact_number : ''
             this.selectedImage = value.visitor_image
-            this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+            // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
             this.contactUnit = ''
             this.contactHost = ''
             if (this.project_config.is_industrial) {
@@ -864,7 +868,7 @@ export class DeliveriesPage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
         } else {
@@ -952,12 +956,12 @@ export class DeliveriesPage implements OnInit {
     if (!this.selectedImage && this.module_config.visitor_image) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.otherDeliveryForm.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Name is required!\n';
     }
@@ -997,7 +1001,12 @@ export class DeliveriesPage implements OnInit {
       console.log("BARRIER NOT OPENED");
     }
     let params = {
-      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, identification_type: this.identificationType, nric_value: this.nric_value, host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id, is_bulky: isBulky, is_bypass_worktime: this.isBypass,
+      ...this.otherDeliveryForm, project_id: this.project_id, pass_number: this.pass_number, 
+      // identification_type: this.identificationType, 
+      // nric_value: this.nric_value, 
+      identification_type: '', 
+      nric_value: '', 
+      host: this.selectedHost, visitor_image: this.selectedImage, bypass_ban: bypass_ban, camera_id: camera_id, is_bulky: isBulky, is_bypass_worktime: this.isBypass,
     }
     console.log(params)
     this.clientMainService.getApi(params, '/vms/post/add_deliveries_other').subscribe({
@@ -1049,7 +1058,7 @@ export class DeliveriesPage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
         } else {

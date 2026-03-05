@@ -139,12 +139,12 @@ export class WalkInPage implements OnInit {
     if (!this.selectedImage && (this.module_config.visitor_image && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
-    if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification type is required!\n';
-    }
-    if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
-      errMsg += 'Identification number is required!\n';
-    }
+    // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification type is required!\n';
+    // }
+    // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
+    //   errMsg += 'Identification number is required!\n';
+    // }
     if (!this.formData.visitor_name && this.module_config.visitor_name) {
       errMsg += 'Visitor name is required!\n';
     }
@@ -195,8 +195,10 @@ export class WalkInPage implements OnInit {
         entry_type: this.isFromScan ? this.searchData.entry_type : '',
         host: this.selectedHost,
         remarks: this.formData.remarks,
-        identification_type: this.identificationType,
-        identification_number: this.nric_value,
+        // identification_type: this.identificationType,
+        // identification_number: this.nric_value,
+        identification_type: '',
+        identification_number: '',
         pass_number: this.pass_number,
         visitor_image: this.selectedImage,
         ma_id: this.maId,
@@ -391,7 +393,7 @@ export class WalkInPage implements OnInit {
           this.formData.visitor_contact_no = value.contact_number ? value.contact_number : ''
           this.formData.visitor_name = value.visitor_name ? value.visitor_name  : ''
           this.selectedImage = value.visitor_image
-          this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
+          // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
           this.contactUnit = ''
           this.contactHost = ''
           if (this.project_config.is_industrial) {
@@ -424,7 +426,7 @@ export class WalkInPage implements OnInit {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
-        this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
+        // this.selectedNric = {type: contactData.identification_type ? contactData.identification_type : '', number: contactData.identification_number ? contactData.identification_number : '' }
         if (contactData.identification_type && contactData. identification_number) {
           this.is_id_disabled = true
         } else {
@@ -556,7 +558,7 @@ export class WalkInPage implements OnInit {
     this.company_name = this.searchData.company_name ? this.searchData.company_name : ''
     this.formData.family_id = this.searchData.family_id
     this.selectedImage = this.searchData.visitor_image
-    this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
+    // this.selectedNric = {type: this.searchData.identification_type , number: this.searchData.identification_number}
     if (this.searchData.identification_type && this.searchData.identification_number) {
       this.is_id_disabled = true
     } else {

@@ -86,6 +86,15 @@ export class HomePage implements OnInit {
       this.Intercom = value.config.intercom
       this.fcm_token_id = value.fcm_token_id ? value.fcm_token_id : false
       this.vms_family_id = value.vms_family_id
+      this.storage.getValueFromStorage('VMS_LPR').then(value => {
+        console.log("VMS LPR VALUEEEEE", value)
+        if (value) {
+          this.selectedLpr = value.CamSentId
+        } else {
+          this.selectedLpr = 0
+          this.isLprModal = true
+        }
+      })
     })
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
       if (value) {
@@ -258,6 +267,7 @@ export class HomePage implements OnInit {
                 this.storage.setValueToStorage('RGG_CALL_DATA', this.rggData)
               }
               this.loadProjectName()
+              this.loadLprConfig()
               this.webrtc.initializeSocket()
           });
           this.isLoading = false
@@ -363,6 +373,29 @@ export class HomePage implements OnInit {
         this.movePage(type)
       }
     })
+  }
+
+  selectedLpr = 0
+  onLprChange(event: any) {
+    this.selectedLpr = event.target.value
+    this.loadLprConfig()
+  }
+
+  loadLprConfig() {
+    console.log('this.selectedLprthis.selectedLpr', this.selectedLpr)
+    if (this.selectedLpr) {
+      let LPR = this.project_config.lpr.filter((lpr: any) => lpr.CamSentId == this.selectedLpr)
+      console.log('LPR', LPR)
+      if (LPR.length > 0) {
+        this.storage.setValueToStorage('VMS_LPR', LPR[0])
+      }
+    }
+    this.closeLprModal()
+  }
+
+  isLprModal = false
+  closeLprModal() {
+    if (this.isLprModal) this.isLprModal = false
   }
 
 }

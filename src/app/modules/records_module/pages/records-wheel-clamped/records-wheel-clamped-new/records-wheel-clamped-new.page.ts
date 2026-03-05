@@ -22,6 +22,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
     this.type = this.navParams.get('type')
     this.issueTime = this.navParams.get('issue_time')
     this.isNew = this.navParams.get('issue_time') || false
+    this.isAlert = this.navParams.get('is_alert') || false
     this.openSelection = this.navParams.get('is_open_selection')
     const vehicle_number = navParams.get('vehicle_number')
     if (vehicle_number){
@@ -93,6 +94,7 @@ export class RecordsWheelClampedNewPage implements OnInit {
   unitId = ''
   reasonOfIssuance = ''
   isNew = false
+  isAlert = false
 
   onBeforeClampImageFileSelected(file: any) {
     if (file){
@@ -140,21 +142,21 @@ export class RecordsWheelClampedNewPage implements OnInit {
     if (!this.vehicleNumber) {
       errMsg += 'Offender vehicle number is required! \n'
     }
-    if (!this.issueName && !this.project_config.is_industrial) {
+    if ((!this.issueName && !this.isAlert) && !this.project_config.is_industrial) {
       errMsg += 'Offender name is required! \n'
     }
-    if (!this.issueContact && !this.project_config.is_industrial) {
+    if ((!this.issueContact && !this.isAlert) && !this.project_config.is_industrial) {
       errMsg += 'Offender contact number is required! \n'
     }
-    if (this.issueContact && !this.project_config.is_industrial) {
+    if ((this.issueContact && !this.isAlert) && !this.project_config.is_industrial) {
       if (this.issueContact.length <= 2 ) {
         errMsg += 'Offender contact number is required! \n'
       }
     }
-    if (!this.typeOfEntry && !this.project_config.is_industrial) {
+    if ((!this.typeOfEntry&& !this.isAlert) && !this.project_config.is_industrial) {
       errMsg += 'Offender type of entry is required! \n'
     }
-    if ((!this.blockId || !this.unitId) && !this.project_config.is_industrial) {
+    if (((!this.blockId || !this.unitId) && !this.isAlert) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
     // if ((!this.selectedHost) && this.project_config.is_industrial) {

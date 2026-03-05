@@ -309,8 +309,7 @@
               [(ngModel)]="EventsForm.room_id"
             >
               <option value="" selected disabled hidden>
-                {{Rooms.length > 0 ? 'Choose Room' : 'Choose The Facility
-                First'}}
+                {{EventsForm.facility_id? 'Choose Room' : 'Choose The Facility First'}}
               </option>
               <option *ngFor="let room of Rooms" [value]="room.room_id">
                 {{ room.room_name }}

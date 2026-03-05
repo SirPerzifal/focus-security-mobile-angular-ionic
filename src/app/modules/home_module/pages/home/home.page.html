@@ -12,16 +12,24 @@
     </div>
   </div>
   <div class="flex flex-col relative mt-3">
-    <div class="flex flex-row justify-end text-center mx-4 relative" *ngIf="!rggData">
-      <div class="flex flex-row items-center space-x-4 relative" (click)="clickState()">
-        <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway().string }}</span>
-        <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color ">
-        </div>
+    <div class="flex flex-row justify-between items-center mx-4">
+      <div class="w-1/2">
+        <select class="lpr-top-selection p-1 w-full truncate flex flex-row justify-center items-center text-center h-[33px] rounded-sm text-white text-xl" [(ngModel)]="selectedLpr" (change)="onLprChange($event)">
+          <option value="0" hidden selected disabled>NO LPR SELECTED</option>
+          <option *ngFor="let lpr of project_config.lpr" [value]="lpr.CamSentId">{{ lpr.CamID}}</option>
+        </select>
       </div>
-      <div #stateComponent class="h-[60px] flex flex-row justify-center items-center bg-white rounded-lg text-xl border border-black absolute top-11 z-10" *ngIf="isShow" (click)="changeState()">
-        <div class="flex flex-row items-center space-x-4 px-4">
-          <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway(true).string }}</span>
-          <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway(true).color ">
+      <div class="w-1/2 flex flex-row justify-end items-center text-center relative" *ngIf="!rggData">
+        <div class="flex flex-row items-center space-x-4 relative" (click)="clickState()">
+          <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway().string }}</span>
+          <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color ">
+          </div>
+        </div>
+        <div #stateComponent class="h-[60px] flex flex-row justify-center items-center bg-white rounded-lg text-xl border border-black absolute top-11 z-10" *ngIf="isShow" (click)="changeState()">
+          <div class="flex flex-row items-center space-x-4 px-4">
+            <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway(true).string }}</span>
+            <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway(true).color ">
+            </div>
           </div>
         </div>
       </div>
@@ -114,6 +122,17 @@
         </app-text-input>
         <button class="h-20 w-2/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white"
           (click)="onLogout()">LOGOUT</button>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal id="text-modal" [isOpen]="isLprModal" [backdropDismiss]="false" [keyboardClose]="false" (didDismiss)="closeLprModal()">
+    <ng-template>
+      <div class="flex flex-row justify-center space-x-2 m-10">
+        <select #textInput [id]="'project_key'" [(ngModel)]="selectedLpr" (change)="onLprChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl">
+          <option value="0" hidden selected disabled>NO LPR SELECTED</option>
+          <option *ngFor="let lpr of project_config.lpr" [value]="lpr.CamSentId">{{ lpr.CamID}}</option>
+        </select>
       </div>
     </ng-template>
   </ion-modal>

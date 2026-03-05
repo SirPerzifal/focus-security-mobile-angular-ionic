@@ -244,7 +244,7 @@
               class="border w-full rounded-lg py-2 px-3 outline-[#BDBDBD] h-12 text-sm text-[#6B7280]"
               [(ngModel)]="EventsForm.room_id"
             >
-              <option value="" selected disabled hidden>Choose Room</option>
+              <option value="" selected disabled hidden>{{EventsForm.facility_id ? 'Choose Room' : 'Choose Facility First'}}</option>
               <option *ngFor="let room of Rooms" [value]="room.room_id">
                 {{ room.room_name }}
               </option>

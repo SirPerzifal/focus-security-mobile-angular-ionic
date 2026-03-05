@@ -202,6 +202,9 @@ export class MakeANewEventPage implements OnInit {
     if (event.event.facility_id) {
       this.Rooms = this.Facilities.filter((item: any) => item.facility_id === event.event.facility_id)[0].room_ids
       this.EventsForm.room_id = event.event.room_id
+    } else {
+      this.Rooms = []
+      this.EventsForm.room_id = ''
     }
     this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
     this.event_title = event.event.title  ? event.event.title : event.event.facility_name
@@ -353,14 +356,14 @@ export class MakeANewEventPage implements OnInit {
     if (this.EventsForm.registered_coach_id == 0 && this.userType != 'industrial') {
       errMsg += 'Coach must be selected! \n'
     }
-    if (this.EventsForm.facility_id == '') {
-      errMsg += 'Facility is required! \n'
-    }
-    if (this.EventsForm.room_id == '') {
-      errMsg += 'Room is required! \n'
-    }
     if (this.selectedBookId == 0 && this.userType == 'industrial') {
       errMsg += 'Booking is required! \n'
+    }
+    if (this.EventsForm.facility_id == '' && this.userType == 'industrial') {
+      errMsg += 'Facility is required! \n'
+    }
+    if (this.EventsForm.room_id == '' && (this.EventsForm.facility_id || this.userType == 'industrial')) {
+      errMsg += `Room is required${this.userType == 'industrial' ? '' : ' if facility is selected'}! \n`
     }
     if (!this.EventsForm.contact_number && this.userType != 'industrial') {
       errMsg += 'Contact number is required! \n'
@@ -518,17 +521,23 @@ export class MakeANewEventPage implements OnInit {
     this.EventsForm.registered_coach_id = event.target.value;
     this.coachData = this.Coach.filter((coach: any) => coach.id == this.selectedCoach)
     this.coachData = this.coachData[0]
-    this.EventsForm.facility_name = this.coachData.facility_name
     this.EventsForm.coach_type = this.coachData.coach_type
-    this.EventsForm.facility_id = this.coachData.facility_id
     this.EventsForm.contact_number = this.coachData.contact_number
     this.EventsForm.vehicle_number = this.coachData.vehicle_number
+    if (this.coachData.facility_id) {
+      this.EventsForm.facility_name = this.coachData.facility_name
+      this.EventsForm.facility_id = this.coachData.facility_id
+    } else {
+      this.EventsForm.facility_name = ''
+      this.EventsForm.facility_id = ''
+      this.Rooms = []
+    }
     if (this.selectedStartTime) {
       this.formatEnd(this.selectedStartTime)
     }
-    console.log(this.Facilities)
-    console.log(this.EventsForm.facility_id)
+    this.EventsForm.room_id = ''
     if (this.EventsForm.facility_id){
+      console.log("WORK HERE")
       if (this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id).length > 0) {
         this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
       } else {

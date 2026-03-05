@@ -421,7 +421,7 @@ export class ContractorCommercialMainPage extends ApiService implements OnInit {
   }
 
   resendInvite(invite_id: number, phoneNumber?: string) {
-    // this.functionMain.showResendInvite(invite_id, 'contractor', ['SMS', 'Whatsapp'])
+    // this.functionMain.showResendInvite(invite_id, 'contractor', ['SMS', 'Whatsapp']) 
     this.mainApiResidentService.endpointMainProcess({
       contractor_id: invite_id
     }, 'post/resend_invite').subscribe((response: any) => {

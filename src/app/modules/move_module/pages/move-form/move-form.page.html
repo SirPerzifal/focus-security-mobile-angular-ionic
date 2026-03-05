@@ -68,7 +68,7 @@
         <div class="w-full">
           <app-vms-contact-input #moveContact [id]="'move_contact'" [(value)]="contact_number" [valueExist]="contact_number" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
         </div>
-        <div class="w-full">
+        <!-- <div class="w-full">
           <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" [isReadonly]="is_id_disabled" [isMandatory]="module_config.identification" />
         </div>
         <div class="w-full" *ngIf="identificationType == 'passport'">
@@ -95,7 +95,7 @@
           <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(0, false)">
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
-        </div>
+        </div> -->
         <div class="w-full flex flex-row justify-between space-x-2">
           <div class="w-[90%]">
             <app-text-input 
@@ -145,15 +145,15 @@
           </select>
         </div>
         <div *ngFor="let count of [].constructor(paxCount); let i = index" class="w-full flex flex-row space-x-2 items-end justify-center">
-          <div class="w-1/2">
+          <div class="w-full">
             <app-text-input #textInput [id]="'name_pax_' + i" [labelText]="'NAME'" [placeholder]="'EG. ROBERT JONES'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="paxData[i].contractor_name"></app-text-input>
           </div>
-          <div class="w-1/2">
+          <!-- <div class="w-1/2">
             <app-text-input #textInput [id]="'nric_fin_pax_' + i" (keyup)="nricPaxChange($event)" [labelText]="'NRIC / FIN'" [placeholder]="'EG. SCAN NRIC / FIN'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="true" [(ngModel)]="paxData[i].identification_number"></app-text-input>
           </div>
           <div class="h-20 w-20 flex flex-col justify-center items-center bg-[var(--ion-color-primary)] rounded" (click)="openNricScan(i, true)">
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
-          </div>
+          </div> -->
         </div>
         <div class="w-full" *ngFor="let camera of Camera; let i = index">
           <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="submitForm(true, camera.CamSentId)"></app-visitor-button>

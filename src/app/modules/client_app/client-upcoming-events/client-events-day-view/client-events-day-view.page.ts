@@ -273,16 +273,21 @@ export class ClientEventsDayViewPage implements OnInit {
     this.EventsForm.registered_coach_id = event.target.value;
     this.coachData = this.Coach.filter((coach: any) => coach.id == this.selectedCoach)
     this.coachData = this.coachData[0]
-    this.EventsForm.facility_name = this.coachData.facility_name
     this.EventsForm.coach_type = this.coachData.coach_type
-    this.EventsForm.facility_id = this.coachData.facility_id
     this.EventsForm.contact_number = this.coachData.contact_number
     this.EventsForm.vehicle_number = this.coachData.vehicle_number
+    if (this.coachData.facility_id) {
+      this.EventsForm.facility_name = this.coachData.facility_name
+      this.EventsForm.facility_id = this.coachData.facility_id
+    } else {
+      this.EventsForm.facility_name = ''
+      this.EventsForm.facility_id = ''
+      this.Rooms = []
+    }
     if (this.selectedStartTime) {
       this.formatEnd(this.selectedStartTime)
     }
-    console.log(this.Facilities)
-    console.log(this.EventsForm.facility_id)
+    this.EventsForm.room_id = ''
     if (this.EventsForm.facility_id){
       if (this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id).length > 0) {
         this.Rooms = this.Facilities.filter((item: any) => item.facility_id == this.EventsForm.facility_id)[0].room_ids
@@ -390,8 +395,13 @@ export class ClientEventsDayViewPage implements OnInit {
     this.selectedHost = event.event.host_ids
     this.selectedBlock = event.event.block_ids
     this.selectedUnit = event.event.unit_ids
-    this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.event.facility_id)[0].room_ids
-    this.EventsForm.room_id = event.event.room_id
+    if (event.event.facility_id) {
+      this.Rooms = this.Facilities.filter((item: any) => item.facility_id == event.event.facility_id)[0].room_ids
+      this.EventsForm.room_id = event.event.room_id
+    } else {
+      this.Rooms = []
+      this.EventsForm.room_id = ''
+    }
     this.isCoachData = Boolean(this.EventsForm.registered_coach_id)
 
     this.selectedStartDate = event.event.start
@@ -502,11 +512,11 @@ export class ClientEventsDayViewPage implements OnInit {
     if (this.selectedBookId == 0 && this.project_config.is_industrial) {
       errMsg += 'Booking is required! \n'
     }
-    if (this.EventsForm.facility_id == '') {
+    if (this.EventsForm.facility_id == '' && this.project_config.is_industrial) {
       errMsg += 'Facility is required! \n'
     }
-    if (this.EventsForm.room_id == '') {
-      errMsg += 'Room is required! \n'
+    if (this.EventsForm.room_id == '' && (this.EventsForm.facility_id || this.project_config.is_industrial)) {
+      errMsg += `Room is required${this.project_config.is_industrial ? '' : ' if facility is selected'}! \n`
     }
     if (this.EventsForm.post_to == 'block' && this.EventsForm.block_ids.length == 0 && !this.project_config.is_industrial) {
       errMsg += 'At least one block must be selected! \n'
