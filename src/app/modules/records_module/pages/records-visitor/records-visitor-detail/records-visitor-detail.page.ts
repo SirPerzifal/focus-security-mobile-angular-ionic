@@ -52,6 +52,8 @@ export class RecordsVisitorDetailPage implements OnInit {
   project_id = 0
   project_config: any = []
 
+  allow_company = ['Contractor','Move In/Out','Renovation','Delivery','Package','Bulky Item Delivery','Other Delivery']
+
   returnNone(params: string){
     return params ? params : '-'
   }

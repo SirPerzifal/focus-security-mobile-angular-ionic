@@ -16,7 +16,7 @@
       <div class="w-1/2">
         <select class="lpr-top-selection p-1 w-full truncate flex flex-row justify-center items-center text-center h-[33px] rounded-sm text-white text-xl" [(ngModel)]="selectedLpr" (change)="onLprChange($event)">
           <option value="0" hidden selected disabled>NO LPR SELECTED</option>
-          <option *ngFor="let lpr of project_config.lpr" [value]="lpr.CamSentId">{{ lpr.CamID}}</option>
+          <option *ngFor="let lpr of project_config.lpr" [ngValue]="lpr.CamSentId">{{ lpr.CamID}}</option>
         </select>
       </div>
       <div class="w-1/2 flex flex-row justify-end items-center text-center relative" *ngIf="!rggData">
@@ -131,7 +131,7 @@
       <div class="flex flex-row justify-center space-x-2 m-10">
         <select #textInput [id]="'project_key'" [(ngModel)]="selectedLpr" (change)="onLprChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl">
           <option value="0" hidden selected disabled>NO LPR SELECTED</option>
-          <option *ngFor="let lpr of project_config.lpr" [value]="lpr.CamSentId">{{ lpr.CamID}}</option>
+          <option *ngFor="let lpr of project_config.lpr" [ngValue]="lpr.CamSentId">{{ lpr.CamID}}</option>
         </select>
       </div>
     </ng-template>

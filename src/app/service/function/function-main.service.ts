@@ -453,17 +453,15 @@ export class FunctionMainService {
   async getLprConfig(project_id: number) {
     try {
       const value = await this.storage.getValueFromStorage('VMS_LPR');
+      const pref_value = await this.vmsPreferences()
       
-      console.log('valuevaluevaluevaluevaluevalue', value)
-      if (!value) {
-        this.presentToast("LPR should be selected first on the homepage!", 'danger')
-        return false
-      }
+      console.log(pref_value)
+      if (pref_value.config.lpr.length == 0) return false
 
       const results = await firstValueFrom(
         this.mainVmsService.getApi({ 
             project_id: project_id,
-            lpr_id: value.CamSentId
+            lpr_id: value ? value.CamSentId : false
         }, '/fs/get/latest_vehicle_number')
       );
 

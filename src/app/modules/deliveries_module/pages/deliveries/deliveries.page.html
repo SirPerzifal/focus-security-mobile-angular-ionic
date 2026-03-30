@@ -49,8 +49,8 @@
             <div class="flex flex-row w-full flex-wrap mt-6">
               <div *ngFor="let button of foodDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image ? button.image : ''" [text]="button.text"
-                  [isActive]="button.isActive" [id]="button.id" (buttonClick)="toggleDeliveryButton(button)"
-                  [extraParentClass]="'mr-4'" />
+                  [isActive]="button.isActive" [id]="button.id" (click)="toggleDeliveryButton(button)"
+                  [extraParentClass]="'mr-4'" [disableClick]="true"/>
               </div>
             </div>
             <div class="flex flex-row mt-6" *ngIf="food_delivery_id" @fadeInOut>
@@ -103,6 +103,9 @@
                       [labelText]="'HOST'" [Selected]="contactHost" [isMandatory]="module_config.host"></app-m2m-selection>
                   </div>
                 </div>
+                <div class="w-full" *ngIf="food_delivery_id === 'other'">
+                  <app-text-input [id]="'package_company'" [(ngModel)]="formData.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isMandatory]="module_config.company_name"></app-text-input>
+                </div>
                 <div class="w-full" *ngIf="project_config.is_industrial">
                   <app-text-input #deliveryFoodPass [id]="'delivery_food_pass_number'" [labelText]="'PASS NUMBER'"
                     [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number"
@@ -143,7 +146,7 @@
             <div class="flex flex-row w-full flex-wrap mx-4">
               <div *ngFor="let button of packageDeliveryButtons">
                 <app-button-icon [customImageIcon]="button.image" [text]="button.text" [isActive]="button.isActive"
-                  [id]="button.id" (buttonClick)="toggleDeliveryButton(button)" [extraParentClass]="'mr-4'" />
+                  [id]="button.id" (click)="toggleDeliveryButton(button)" [extraParentClass]="'mr-4'" [disableClick]="true"/>
               </div>
             </div>
             <div class="flex flex-row mt-6" *ngIf="package_delivery_id" @fadeInOut>
@@ -174,6 +177,9 @@
                   <div class="flex flex-col justify-end">
                     <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)" />
                   </div>
+                </div>
+                <div class="w-full" *ngIf="package_delivery_id === 'other'">
+                  <app-text-input [id]="'package_company'" [(ngModel)]="formData.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isMandatory]="module_config.company_name"></app-text-input>
                 </div>
                 <div class="w-full" *ngIf="project_config.is_industrial">
                   <app-text-input #deliveryPackagePass [id]="'delivery_package_pass_number'" [labelText]="'PASS NUMBER'"
@@ -261,6 +267,16 @@
           <div class="w-full">
             <app-vms-contact-input [(value)]="otherDeliveryForm.visitor_contact_no" [id]="'bulky_item_contact_collection'" (contactInfo)="getDriveInContactInfo($event)" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
           </div>
+          <div class="w-full flex flex-row justify-between">
+            <div class="flex flex-col w-[90%]">
+              <app-text-input #DeliveryVehicle [id]="'delivery_vehicle_number'" [labelText]="'VEHICLE NUMBER'"
+                [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.vehicle_number"
+                [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="otherDeliveryForm.visitor_vehicle"></app-text-input>
+            </div>
+            <div class="flex flex-col justify-end">
+              <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
+            </div>
+          </div>
           <div class="w-full flex flex-col">
             <label class="text-2xl"><b><u>BLOCK</u>{{module_config.block ? '*' : ''}}</b></label>
             <select id="package_food_block" (change)="onBlockChange($event)" style="border: 1px solid #6B7280;"
@@ -276,6 +292,11 @@
           </div>
           <div class="w-full">
             <app-text-input [id]="'bulky_item_company'" [(ngModel)]="otherDeliveryForm.company_name" [labelText]="'COMPANY NAME'" [customClasses]="{'w-full':true}" [type]="'text'" [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isMandatory]="module_config.company_name"></app-text-input>
+          </div>
+          <div class="w-full flex flex-col">
+            <app-text-input [id]="'delivery_other_remarks'" [name]="'delivery_other_remarks'" [labelText]="'REMARKS'" [rows]="4"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
+              [(ngModel)]="otherDeliveryForm.remarks"></app-text-input>
           </div>
           <div class="w-full" *ngFor="let camera of Camera; let i = index">
             <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )" (click)="onSubmitOther(true, true, camera.CamSentId)"></app-visitor-button>

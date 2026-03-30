@@ -168,7 +168,7 @@ export class WalkInPage implements OnInit {
     if ((!this.company_name && this.module_config.company_name) && (this.project_config.is_industrial)) {
       errMsg += 'Company name is required! \n'
     }
-    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
+    if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial) && !this.maOgId) {
       errMsg += 'Pass number is required! \n'
     }
     if ((!this.formData.remarks && this.module_config.remarks)) {
@@ -423,6 +423,7 @@ export class WalkInPage implements OnInit {
       this.formData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
+        this.company_name = contactData.company_name ? contactData.company_name  : ''
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)

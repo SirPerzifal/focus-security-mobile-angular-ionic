@@ -8,6 +8,8 @@ import { MainApiResidentService } from 'src/app/service/resident/main/main-api-r
 
 import { ApiService } from 'src/app/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { StorageService } from 'src/app/service/storage/storage.service';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Component({
   selector: 'app-visitor-main',
@@ -119,6 +121,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     private activeRoute: ActivatedRoute,
     private mainApiResidentService: MainApiResidentService,
     private alertController: AlertController,
+    private storage: StorageService,
     http: HttpClient
   ) { super(http)
     const navigation = this.route.getCurrentNavigation();
@@ -132,7 +135,17 @@ export class VisitorMainPage extends ApiService implements OnInit  {
    }
 
   ionViewWillEnter() {
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      this.storage.decodeData(value).then((value: any) => {
+        if ( value ) {
+          const estate = JSON.parse(value) as Estate;
+          this.familyId = estate.family_id;
+        }
+      })
+    })
   }
+
+  familyId: any = 0
 
   handleRefresh(event: any) {
     this.isLoading = true;
@@ -379,7 +392,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   resendInvite(invite_id: number, phoneNumber?: string) {
-    // this.functionMain.showResendInvite(invite_id, 'visitor', ['SMS', 'Whatsapp'])
+    // this.functionMain.showResendInvite(invite_id, 'visitor', ['SMS', 'Whatsapp'], this.familyId)
     this.mainApiResidentService.endpointMainProcess({
       invite_id: invite_id
     }, 'post/resend_invite').subscribe((response: any) => {

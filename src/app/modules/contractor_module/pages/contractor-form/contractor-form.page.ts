@@ -487,6 +487,7 @@ export class ContractorFormPage implements OnInit {
     this.contactHost = ''
     if (contactData && !this.isFromScan) {
       this.formData.contractor_name = contactData.visitor_name ? contactData.visitor_name  : ''
+      this.formData.company_name = contactData.company_name ? contactData.company_name  : ''
       this.formData.contractor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       this.selectedCard = contactData.contractor_card

@@ -37,11 +37,13 @@ export class ClientRegisterVisitorPage implements OnInit {
     this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.project_id = value.project_id;
+      this.family_id = value.family_id
       this.loadClient()
     })
   }
 
   project_id = 0
+  family_id = 0
 
   formData = {
     name: '',
@@ -312,7 +314,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   }
 
   resendInvite(is_resend: boolean, ma_id: any) {
-    // this.functionMain.showResendInvite(ma_id, 'ma', ['SMS', 'Whatsapp'])
+    // this.functionMain.showResendInvite(ma_id, 'ma', ['SMS', 'Whatsapp'], this.family_id)
     this.clientMainService.getApi({is_resend: is_resend, ma_id: ma_id}, '/client/post/visitor_resend_whatsapp').subscribe({
       next: (results) => {
         console.log(results)

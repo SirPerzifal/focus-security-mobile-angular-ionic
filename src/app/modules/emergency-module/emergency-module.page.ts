@@ -4,6 +4,7 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-emergency-module',
@@ -188,6 +189,13 @@ export class EmergencyModulePage implements OnInit {
       }
       this.formData.project_id = this.project_id
     })
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }  
   }
 
   async loadProjectName() {

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MoveHomePage } from '../move-home/move-home.page';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-move-detail',
@@ -20,13 +21,20 @@ export class MoveDetailPage implements OnInit {
       console.log(this.record)
       // this.exit_date = temp_schedule.setHours(temp_schedule.getHours() + 1);
     } 
-   }
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.pageType = params['type']
       this.loadProjectName()
     })
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }  
   }
 
   async loadProjectName() {

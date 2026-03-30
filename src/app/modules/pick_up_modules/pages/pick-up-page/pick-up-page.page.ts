@@ -7,6 +7,7 @@ import { UserService } from 'src/app/service/vms/user/user.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pick-up-page',
@@ -48,6 +49,13 @@ export class PickUpPagePage implements OnInit {
         this.loadBlock()
       }
     })
+  }
+
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }  
   }
 
   @ViewChild('vehicleNumberInput') vehicleNumberInput!: TextInputComponent;

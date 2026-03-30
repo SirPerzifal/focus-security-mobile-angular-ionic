@@ -331,6 +331,7 @@ export class MoveFormPage implements OnInit {
     if (contactData) {
       this.requestor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.requestor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.company_name = contactData.company_name ? contactData.company_name  : ''
       this.selectedImage = contactData.visitor_image
       // this.identificationType = contactData.identification_type
       // this.nric_value = contactData.identification_number

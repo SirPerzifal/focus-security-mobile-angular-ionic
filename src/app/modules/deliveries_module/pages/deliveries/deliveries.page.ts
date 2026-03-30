@@ -6,6 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-deliveries',
@@ -59,6 +60,7 @@ export class DeliveriesPage implements OnInit {
     contact_number: '', 
     vehicle_number: '', 
     delivery_type: '', 
+    company_name: '',
     food_delivery: {
       id: 0,
       other: 'Test Others',
@@ -93,7 +95,6 @@ export class DeliveriesPage implements OnInit {
     this.foodPlatform.getFoodPlatForm(this.project_id).subscribe(
       res => {
         var result = res.result['result']
-        console.log(result)
         if (result) {
           result.forEach((item: any) => {
             const base64Image = item['icon'];
@@ -142,7 +143,6 @@ export class DeliveriesPage implements OnInit {
 
   onSubmitFood(openBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false) {
     console.log(openBarrier)
-    console.log(this.formData)
     let errMsg = ""
     if (!this.food_delivery_id){
       errMsg += 'Please select a delivery platform!\n';
@@ -179,6 +179,9 @@ export class DeliveriesPage implements OnInit {
     if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial){
       errMsg += 'Please insert a host!\n';
     }
+    if (!this.formData.company_name && this.module_config.company_name && this.food_delivery_id == 'other') {
+      errMsg += 'Please insert company name!\n';
+    }
     if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
@@ -200,6 +203,7 @@ export class DeliveriesPage implements OnInit {
           other: this.food_delivery_id === 'other' ? 'Others Checked' : '',
           delivery_option: this.showDrive ? 'drive_in' : 'walk_in',
         },
+        company_name: this.food_delivery_id === 'other' ? this.formData.company_name : '',
         package_delivery: {},
         remarks: this.formData.remarks,
         block: this.formData.block,
@@ -266,7 +270,8 @@ export class DeliveriesPage implements OnInit {
       name: '',
       contact_number: '', 
       vehicle_number: '', 
-      delivery_type: '', 
+      delivery_type: '',
+      company_name: '',
       food_delivery: {
         id: 0,
         other: '',
@@ -314,7 +319,8 @@ export class DeliveriesPage implements OnInit {
       name: '',
       contact_number: '', 
       vehicle_number: '', 
-      delivery_type: '', 
+      delivery_type: '',
+      company_name: '',
       food_delivery: {
         id: 0,
         other: '',
@@ -379,13 +385,16 @@ export class DeliveriesPage implements OnInit {
     if ((!this.formData.vehicle_number && this.module_config.vehicle_number) && this.showDrive){
       errMsg += 'Please insert visitor vehicle number!\n';
     }
+    if (!this.formData.company_name && this.module_config.company_name && this.package_delivery_id == 'other') {
+      errMsg += 'Please insert company name!\n';
+    }
     if ((!this.pass_number && this.module_config.pass_number) && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
     if (!this.formData.remarks && this.module_config.remarks){
       errMsg += 'Please insert a remarks!\n';
     }
-    if (!this.package_delivery_type){
+    if (!this.package_delivery_type && (this.module_config.number_of_pax || this.module_config.host || this.module_config.unit)){
       errMsg += 'Please select a delivery option!\n';
     }
     if (this.package_delivery_type == "single" && ((!this.formData.block && this.module_config.block) || (!this.formData.unit && this.module_config.unit)) && !this.project_config.is_industrial){
@@ -395,7 +404,11 @@ export class DeliveriesPage implements OnInit {
       errMsg += 'Please insert a visitor host!\n';
     }
     if (this.package_delivery_type == "multiple" && this.formData.pax == "0" && this.module_config.number_of_pax){
-      errMsg += 'Please insert number of Pax!\n';
+      if (this.project_config.is_industrial) {
+        errMsg += 'Please insert number of Hosts!\n';
+      } else {
+        errMsg += 'Please insert number of Units!\n';
+      }
     }
     if(errMsg != ""){
       this.functionMain.presentToast(errMsg, 'danger')
@@ -414,6 +427,7 @@ export class DeliveriesPage implements OnInit {
           delivery_option: this.package_delivery_type,
           delivery_type: this.showDrive ? 'drive_in' : 'walk_in',
         },
+        company_name: this.package_delivery_id === 'other' ? this.formData.company_name : '',
         block: this.package_delivery_type === 'multiple' ? '' : this.formData.block,
         unit: this.package_delivery_type === 'multiple' ? '' : this.formData.unit,
         remarks: this.formData.remarks,
@@ -575,6 +589,7 @@ export class DeliveriesPage implements OnInit {
       setTimeout(() => {
         this.bulkyItemDeliveries = true;
         this.bulkyItemDeliveriesTrans = false
+        this.refreshVehicle()
       }, 300)
     }
   }
@@ -617,17 +632,8 @@ export class DeliveriesPage implements OnInit {
     this.showWalkIn = false;
     this.showDriveIn = true;
   }
-
-    // Metode untuk menangani klik tombol
-  onButtonClick(event: { text: string, isActive: boolean }) {
-    console.log(`Button clicked: ${event.text}, Active: ${event.isActive}`);
-  }
   
   toggleDeliveryButton(selectedButton: any) {
-    // Reset all buttons to inactive
-    console.log(selectedButton)
-    // Set the selected button to active
-    console.log(this.food_delivery_id)
     if (this.foodDeliveries) {
       this.foodDeliveryButtons.forEach(button => button.isActive = false);
       this.food_delivery_id = ''
@@ -649,16 +655,14 @@ export class DeliveriesPage implements OnInit {
         }
       }, 300)
     }
-    console.log('new', this.food_delivery_id)
 
-    selectedButton.isActive = !selectedButton.isActive;
+    selectedButton.isActive = true;
 
     if (this.showDrive) {
       this.refreshVehicle()
     }
 
     // Handle any additional logic needed for the button click
-    console.log(`Button clicked: ${String(selectedButton.id)}, Active: ${selectedButton.isActive}`);
     
   }
 
@@ -692,15 +696,12 @@ export class DeliveriesPage implements OnInit {
       setTimeout(() => {
         this.food_delivery_type = selectedButton.text == 'WALK IN' ? 'walk_in' : 'drive_in'
       }, 300)
-      console.log(this.food_delivery_type)
     }
     
-    console.log(`Button clicked: ${selectedButton.text}, Active: ${selectedButton.isActive}`);
   }
 
   onBlockChange(event: any) {
     this.formData.block = event.target.value;
-    console.log(this.formData.block)
     this.loadUnit(); // Panggil method load unit
   }
 
@@ -718,7 +719,6 @@ export class DeliveriesPage implements OnInit {
       next: (response: any) => {
         if (response.result.status_code === 200) {
           this.Block = response.result.result;
-          console.log(response)
         } else {
         }
       },
@@ -732,20 +732,21 @@ export class DeliveriesPage implements OnInit {
 
   async loadUnit() {
     this.formData.unit = ''
-    this.blockUnitService.getUnit(this.formData.block).subscribe({
-      next: (response: any) => {
-        if (response.result.status_code === 200) {
-          this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
-          console.log(response)
-        } else {
-          console.error('Error:', response.result);
+    if (this.bulkyItemDeliveries ? this.otherDeliveryForm.block : this.formData.block) {
+      this.blockUnitService.getUnit(this.bulkyItemDeliveries ? this.otherDeliveryForm.block : this.formData.block).subscribe({
+        next: (response: any) => {
+          if (response.result.status_code === 200) {
+            this.Unit = response.result.result.map((item: any) => ({id: item.id, name: item.unit_name}))
+          } else {
+            console.error('Error:', response.result);
+          }
+        },
+        error: (error) => {
+          this.functionMain.presentToast('Error loading unit data', 'danger');
+          console.error('Error:', error.result);
         }
-      },
-      error: (error) => {
-        this.functionMain.presentToast('Error loading unit data', 'danger');
-        console.error('Error:', error.result);
-      }
-    });
+      });
+    }
   }
 
   module_field = 'delivery'
@@ -776,6 +777,13 @@ export class DeliveriesPage implements OnInit {
     
   }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }  
+  }
+
   selectedUnitType: string = ''; // To track the selected unit type
   showBlock: boolean = false; // To control the visibility of the block dropdown
   showUnit: boolean = false; // To control the visibility of the unit dropdown
@@ -791,10 +799,14 @@ export class DeliveriesPage implements OnInit {
       this.showRemarks = true; // Show remarks text area for multiple units
       this.showPax = true
       this.package_delivery_type = 'multiple'
+      this.formData.block = ''
+      this.formData.unit = ''
+      this.selectedHost = ''
     } else if (unitType === 'single') {
       this.showBlock = true; // Hide block dropdown for single unit
       this.showUnit = true; // Show unit dropdown for single unit
       this.showRemarks = false; // Hide remarks text area for single unit
+      this.formData.pax = '0'
       this.showPax = false
       this.package_delivery_type = 'single'
     } else {
@@ -815,15 +827,27 @@ export class DeliveriesPage implements OnInit {
         this.otherDeliveryForm.visitor_vehicle = value.vehicle_number ? value.vehicle_number : ''
         this.formData.vehicle_number = value.vehicle_number ? value.vehicle_number : ''
         if (!is_click) {
-          if (this.otherDeliveries) {
+          if (this.otherDeliveries || this.bulkyItemDeliveries) {
             this.otherDeliveryForm.visitor_contact_no = value.contact_number ? value.contact_number : ''
             this.otherDeliveryForm.visitor_name = value.visitor_name ? value.visitor_name  : ''
             this.selectedImage = value.visitor_image
             // this.selectedNric = {type: value.identification_type ? value.identification_type : '', number: value.identification_number ? value.identification_number : '' }
             this.contactUnit = ''
             this.contactHost = ''
-            if (value.industrial_host_id) {
-              this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+            if (this.project_config.is_industrial) {
+              if (value.industrial_host_id) {
+                this.contactHost = value.industrial_host_id ? value.industrial_host_id : ''
+              }
+            } else {
+              if (value.block_id) {
+                this.otherDeliveryForm.block = value.block_id
+                this.loadUnit().then(() => {
+                  setTimeout(() => {
+                    this.contactUnit = value.unit_id
+                    console.log(this.contactUnit)
+                  }, 300)
+                })
+              }
             }
           } else {
             this.formData.name = value.visitor_name ? value.visitor_name : ''
@@ -857,13 +881,20 @@ export class DeliveriesPage implements OnInit {
     if (contactData) {
       console.log(contactData)
       this.selectedImage = contactData.visitor_image
-      if (this.otherDeliveries) {
+      if (this.otherDeliveries || this.bulkyItemDeliveries) {
         this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
         this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
-        this.otherDeliveryForm.company_name = contactData.company_name
+        if (contactData.block_id) {
+          console.log("HYE CHECK THIS")
+          this.otherDeliveryForm.block = contactData.block_id
+        }
+        // this.otherDeliveryForm.company_name = contactData.company_name
       }
       this.formData.name = contactData.visitor_name ? contactData.visitor_name : ''
       this.formData.vehicle_number = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      if (this.food_delivery_id == 'other' || this.package_delivery_id == 'other') {
+        this.formData.company_name = contactData.company_name ? contactData.company_name  : ''
+      }
       if (this.project_config.is_industrial) {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
@@ -973,13 +1004,19 @@ export class DeliveriesPage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number && !isBulky) {
-      errMsg += 'Vehicle number is required!\n';
+    if (isBulky) {
+      if (!this.otherDeliveryForm.visitor_vehicle && this.module_config.vehicle_number) {
+        errMsg += 'Vehicle number is required!\n';
+      }
+    } else {
+      if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number) {
+        errMsg += 'Vehicle number is required!\n';
+      }
     }
     if (((!this.otherDeliveryForm.block && this.module_config.block) || (!this.otherDeliveryForm.unit && this.module_config.unit)) && !this.project_config.is_industrial){
       errMsg += 'Please insert a block and unit!\n';
     }
-    if ((!this.otherDeliveryForm.company_name && this.module_config.company_name) && this.project_config.is_industrial) {
+    if ((!this.otherDeliveryForm.company_name && this.module_config.company_name)) {
       errMsg += 'Company name is required!\n';
     }
     if ((!this.selectedHost && this.module_config.host) && this.project_config.is_industrial) {
@@ -988,7 +1025,7 @@ export class DeliveriesPage implements OnInit {
     if (!this.pass_number && this.module_config.pass_number && this.project_config.is_industrial) {
       errMsg += 'Pass number is required! \n'
     }
-    if ((!this.otherDeliveryForm.remarks && this.module_config.remarks) && this.project_config.is_industrial) {
+    if (!this.otherDeliveryForm.remarks && this.module_config.remarks) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {
@@ -1054,6 +1091,7 @@ export class DeliveriesPage implements OnInit {
       this.selectedImage = contactData.visitor_image
       this.otherDeliveryForm.visitor_name = contactData.visitor_name ? contactData.visitor_name  : ''
       this.otherDeliveryForm.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
+      this.otherDeliveryForm.company_name = contactData.company_name ? contactData.company_name  : ''
       if (this.project_config.is_industrial) {
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
@@ -1066,7 +1104,11 @@ export class DeliveriesPage implements OnInit {
         }
       } else {
         if (contactData.block_id) {
-          this.formData.block = contactData.block_id
+          if (this.bulkyItemDeliveries) {
+            this.otherDeliveryForm.block = contactData.block_id
+          } else {
+            this.formData.block = contactData.block_id
+          }
           this.loadUnit().then(() => {
             setTimeout(() => {
               this.contactUnit = contactData.unit_id

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-collection-module',
@@ -454,6 +455,13 @@ export class CollectionModulePage implements OnInit {
     this.isLoadingBlock =false
   }
 
+  private routerSubscription!: Subscription;
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }  
+  }
+
   vehicle_number = ''
 
   refreshVehicle(is_click: boolean = false) {
@@ -494,6 +502,7 @@ export class CollectionModulePage implements OnInit {
       this.driveInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
+        this.driveInFormData.company_name = contactData.company_name ? contactData.company_name  : ''
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)
@@ -523,6 +532,7 @@ export class CollectionModulePage implements OnInit {
       this.walkInFormData.visitor_vehicle = contactData.vehicle_number ? contactData.vehicle_number  : ''
       this.selectedImage = contactData.visitor_image
       if (this.project_config.is_industrial) {
+        this.walkInFormData.company_name = contactData.company_name ? contactData.company_name  : ''
         setTimeout(() => {
           this.contactHost = contactData.industrial_host_id ? contactData.industrial_host_id : ''
         }, 300)

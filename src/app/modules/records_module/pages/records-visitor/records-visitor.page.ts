@@ -45,7 +45,7 @@ export class RecordsVisitorPage implements OnInit {
     this.activeVehicles = []
     this.sortVehicle = []
     this.pagination = {}
-    let params = today ? {is_today: today,  log_type: type, project_id: this.project_id} : {...this.filter, is_today: today,  log_type: type, project_id: this.project_id, host: this.selectedHost, limit: this.functionMain.limitHistory, page: this.currentPage, not_checkout: ((this.searchOption == 'not_checkout' || this.searchOption == 'all') && this.project_config.is_industrial)} 
+    let params = today ? {is_today: today,  log_type: type, project_id: this.project_id, modules: this.selectedModule} : {...this.filter, is_today: today,  log_type: type, project_id: this.project_id, host: this.selectedHost, modules: this.selectedModule, limit: this.functionMain.limitHistory, page: this.currentPage, not_checkout: ((this.searchOption == 'not_checkout' || this.searchOption == 'all') && this.project_config.is_industrial)} 
     console.log(params)
     this.clientMainService.getApi(params, '/vms/get/visitor_log').subscribe({
       next: (results) => {
@@ -115,6 +115,7 @@ export class RecordsVisitorPage implements OnInit {
     await this.functionMain.vmsPreferences().then((value) => {
       this.project_id = value.project_id
       this.project_config = value.config
+      this.loadFilters()
     })
   }
 
@@ -133,6 +134,7 @@ export class RecordsVisitorPage implements OnInit {
         this.showActiveTrans = true
         this.contactHost = ''
         this.selectedHost = ''
+        this.selectedTodayRadio = ''
         this.clearFilters()
         this.loadLogs(this.pageType, true)
         setTimeout(() => {
@@ -148,6 +150,7 @@ export class RecordsVisitorPage implements OnInit {
         this.showActiveTrans = false;
         this.isRadioClicked = false
         this.selectedRadio = ''
+        this.selectedTodayRadio = ''
         this.showHistoryTrans = true
         this.loadLogs(this.pageType, false)
         setTimeout(() => {
@@ -298,6 +301,7 @@ export class RecordsVisitorPage implements OnInit {
     this.filter.unit = ''
     this.contactHost = ''
     this.selectedHost = ''
+    this.selectedModule = ''
   }
 
   applyFilters() {
@@ -463,6 +467,92 @@ export class RecordsVisitorPage implements OnInit {
     } else if (value == 'all') {
       this.activeVehicles = this.logsData
     }
+  }
+
+  filter_list: any = []
+
+  selectedModule = ''
+
+  loadFilters() {
+    this.filter_list = [
+      {
+        value: ['Pick Up','Drop Off'],
+        string: 'PICK UP / DROP OFF',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_entry,
+      },
+      {
+        value: ['Visitor'],
+        string: 'VISITORS',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_visitor,
+      },
+      {
+        value: ['Contractor'],
+        string: 'CONTRACTORS',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_contractor,
+      },
+      {
+        value: ['Move In/Out'],
+        string: 'MOVE IN/OUT',
+        permission: [true, false],
+        menu_show: this.project_config.is_allow_vms_schedule,
+      },
+      {
+        value: ['Renovation'],
+        string: 'RENOVATION',
+        permission: [true, false],
+        menu_show: this.project_config.is_allow_vms_renovation_schedule,
+      },
+      {
+        value: ['Delivery','Package','Bulky Item Delivery','Other Delivery'],
+        string: 'DELIVERY',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_delivery,
+      },
+      {
+        value: ['Collection'],
+        string: 'COLLECTION',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_collection,
+      },
+      {
+        value: ['Coaches'],
+        string: 'COACHES',
+        permission: [true, false],
+        menu_show: this.project_config.is_allow_vms_coaches,
+      },
+      {
+        value: ['Emergency Vehicle'],
+        string: 'EMERGENCY VEHICLE',
+        permission: [true, true],
+        menu_show: this.project_config.is_allow_vms_emergency_vehicles,
+      },
+      {
+        value: ['Unregistered Employee Car'],
+        string: 'UNREGISTERED EMPLOYEE CAR',
+        permission: [false, true],
+        menu_show: this.project_config.is_allow_vms_unregistered_resident_car,
+      },
+      {
+        value: ['Unregistered Resident Car'],
+        string: 'UNREGISTERED RESIDENT CAR',
+        permission: [true, false],
+        menu_show: this.project_config.is_allow_vms_unregistered_resident_car,
+      },
+    ]
+    if (this.project_config.is_industrial) {
+      this.filter_list = this.filter_list.filter((item: any) => item.permission[1] & item.menu_show)
+    } else {
+      this.filter_list = this.filter_list.filter((item: any) => item.permission[0] & item.menu_show)
+    }
+    console.log(this.filter_list)
+  }
+
+  onModuleChange() {
+    console.log(this.selectedModule)
+    this.loadLogs(this.pageType, this.showActive)
   }
 
 }

@@ -92,8 +92,11 @@ export class HomePage implements OnInit {
           this.selectedLpr = value.CamSentId
         } else {
           this.selectedLpr = 0
-          this.isLprModal = true
+          if (this.Camera.length > 0) {
+            this.isLprModal = true
+          }
         }
+        console.log(this.selectedLpr)
       })
     })
     this.storage.getValueFromStorage('USESATE_DATA').then(value => {
@@ -377,7 +380,8 @@ export class HomePage implements OnInit {
 
   selectedLpr = 0
   onLprChange(event: any) {
-    this.selectedLpr = event.target.value
+    console.log(this.selectedLpr)
+    // this.selectedLpr = event.target.value
     this.loadLprConfig()
   }
 
@@ -396,6 +400,10 @@ export class HomePage implements OnInit {
   isLprModal = false
   closeLprModal() {
     if (this.isLprModal) this.isLprModal = false
+  }
+
+  ionViewWillEnter() {
+    console.log("ENTER THISS AHHAHAHA")
   }
 
 }
