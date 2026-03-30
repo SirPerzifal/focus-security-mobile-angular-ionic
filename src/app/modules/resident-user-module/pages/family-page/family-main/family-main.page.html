@@ -1,5 +1,8 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="'My Family'"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="'My Family'"
+    (typeOfFamily)="onChangeTypeFamily($event)"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content id="resident-content" [fullscreen]="true">
@@ -27,7 +30,8 @@
   <div class="px-4 pb-4 space-y-2 mb-28">
     <div class="flex flex-col justify-between">
       <button
-        class="bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base"
+        [ngClass]="userRole === 'Tenants' || userRole === 'Helper' || userRole === 'Member' ? 'bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base' : 'bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base'"
+        [disabled]="userRole === 'Tenants' || userRole === 'Helper' || userRole === 'Member'"
         [routerLink]="['/family-form']"
       >
         Add New Family Member
@@ -114,7 +118,9 @@
                     width="50"
                   />
                   <div class="ml-4 text-start w-[70%]">
-                    <h2 class="text-lg font-bold truncate w-full">{{ data.name }}</h2>
+                    <h2 class="text-lg font-bold truncate w-full">
+                      {{ data.name }}
+                    </h2>
                     <p class="text-sm text-gray-600 truncate w-full">
                       {{ data.head_type }} ({{ data.type }})
                     </p>

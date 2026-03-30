@@ -12,6 +12,7 @@ export class FamilyMainPage implements OnInit {
   fromWhere: boolean = false; //
   stateFill: string = '';
   isLoading: boolean = true;
+  userRole: string = '';
 
   familyData = [
     { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: ''  }
@@ -28,6 +29,10 @@ export class FamilyMainPage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  onChangeTypeFamily(event: any) {
+    this.userRole = event;
   }
 
   handleRefresh(event: any) {

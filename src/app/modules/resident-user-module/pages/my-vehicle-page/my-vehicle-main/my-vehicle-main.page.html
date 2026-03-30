@@ -33,14 +33,14 @@
     <div *ngIf="pageName !== 'Vehicle Detail'" @fadeInOut>
       <div class="flex flex-col space-y-2">
         <button
-          [ngClass]="userRole === 'Tenants' || userRole === 'Helper' ? 'bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base' : 'bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base'"
-          [disabled]="userRole === 'Tenants' || userRole === 'Helper'"
+          [ngClass]="userRole === 'Tenants' || userRole === 'Helper' || userRole === 'Member' ? 'bg-gray-200 text-gray-600 mt-1 w-full rounded-full h-12 font-bold text-base' : 'bg-[var(--ion-color-primary)] text-white mt-1 w-full rounded-full h-12 font-bold text-base'"
+          [disabled]="userRole === 'Tenants' || userRole === 'Helper' || userRole === 'Member'"
           (click)="navigateToAddNewVehicle()"
         >
           Add New Vehicle
         </button>
         <div
-          *ngIf="userRole === 'Tenants' || userRole === 'Helper'"
+          *ngIf="userRole === 'Tenants' || userRole === 'Helper' || userRole === 'Member'"
           class="text-center text-base white:text-black mx-5 mb-2"
         >
           "Please contact your primary or secondary contact of the household to
