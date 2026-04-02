@@ -40,7 +40,7 @@ export class VmsIntercomPage implements OnInit {
       this.Intercom = value.config.intercom.map((item: any) => {
         return {
           'id': item.id,
-          'name': item.name
+          'name': item.name + (item.position ? ` (${item.position})` : ``) + (item.type ? ` - ${item.type == 'entry' ? 'Entry' : 'Exit'}` : ``)
         }
       })
     })

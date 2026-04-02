@@ -92,6 +92,7 @@ export class WebRtcService extends ApiService {
   private callAction: string = '';
   private callerId: number = 0;
   private receiverId: number = 0;
+  private unitId: number = 0;
   private userName: string = '';
   private userId: number = 0;
   private modalLock = false;
@@ -121,6 +122,7 @@ export class WebRtcService extends ApiService {
         this.callerSocketId = actionData.callerSocketId;
         this.callAction = actionData.callAction;
         this.callActionStatus.next(actionData.callAction);
+        this.unitId = actionData.unitId;
         // if (actionData.callAction === 'rejectCall'){
         //   this.rejectCall();
         // }
@@ -291,6 +293,7 @@ export class WebRtcService extends ApiService {
       this.targetSocketIds = null;
       this.project_id = null;
       this.callAction = '';
+      this.unitId = 0;
       this.pendingCandidates = [];
       this.callerpendingCandidates = [];
       this.remoteDescriptionSet = false;
@@ -750,6 +753,7 @@ export class WebRtcService extends ApiService {
     this.callerName = offer.callerName;
     this.callerId = offer.callerId;
     this.receiverId = offer.receiverId;
+    this.unitId = offer.unitId;
     this.receiverName = offer.receiverName;
     this.callerSocketId = offer.callerSocketId;
     this.receiverSocketId = offer.receiverSocketId;
@@ -809,6 +813,7 @@ export class WebRtcService extends ApiService {
   async handleSenderPendingCall(data: any) {
     this.receiverSocketId = data.receiverSocketId;
     this.receiverId = data.receiverId;
+    this.unitId = data.unitId;
     console.log('pending', this.receiverId)
 
     for (const candidate of this.callerpendingCandidates) {
@@ -1124,6 +1129,7 @@ export class WebRtcService extends ApiService {
       this.socket.emit('reject-call', {
         targetSocketIds: newTargetSocketIds,
         project_id: this.project_id,
+        unitId: this.unitId,
       });
     }
     await this.showOngoingCallModal(true);
@@ -1189,6 +1195,7 @@ export class WebRtcService extends ApiService {
       targetSocketIds: this.targetSocketIds,
       project_id: this.project_id,
       receiverId: this.receiverId,
+      unitId: this.unitId,
       callerId: this.callerId,
       callerName: this.callerName
     });

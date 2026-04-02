@@ -37,6 +37,7 @@ export class FormForRegistrationPetPage implements OnInit {
     paymentReceipt: ''
   }
   projectId: number = 0;
+  fromWhere: boolean = false; 
 
   constructor(
     private modalController: ModalController,
@@ -44,7 +45,26 @@ export class FormForRegistrationPetPage implements OnInit {
     private functionMain: FunctionMainService,
     private router: Router,
     private storage: StorageService
-  ) { }
+  ) { 
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { from: any};
+    if (state) {
+      // console.log(state.from);
+      this.fromWhere = true
+    } 
+  }
+
+  backLink() {
+    if (this.fromWhere) {
+      this.router.navigate(['/profile-page-main'], {
+        state: {
+          from: 'profile'
+        }
+      })
+    } else {
+      this.router.navigate(['/raise-a-request-page'])
+    }
+  }
 
   ngOnInit() {
     this.loadAmount();

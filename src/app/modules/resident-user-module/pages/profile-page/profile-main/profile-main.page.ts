@@ -1416,7 +1416,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   }
 
   toWhere() {
-    this.router.navigate(['/pet-registration'], {
+    this.router.navigate(['/form-for-registration-pet'], {
       state: {
         from: 'profile'
       }
