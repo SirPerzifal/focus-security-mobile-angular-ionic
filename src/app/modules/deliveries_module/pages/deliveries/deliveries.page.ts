@@ -984,7 +984,7 @@ export class DeliveriesPage implements OnInit {
     if (this.showWalk) {
       this.otherDeliveryForm.visitor_vehicle = ''
     }
-    if (!this.selectedImage && this.module_config.visitor_image) {
+    if (!this.selectedImage && this.module_config.visitor_image && !isBulky) {
       errMsg += 'Visitor image is required!\n';
     }
     // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
