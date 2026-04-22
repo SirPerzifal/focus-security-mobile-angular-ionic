@@ -68,6 +68,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       text: ''
     }
   ]
+
+  isUsingSMS: boolean = false
   
   formData = {
     dateOfInvite: "",
@@ -295,6 +297,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         res => {
           var result = res.result['response_status'];
           // console.log(result)
+          this.isUsingSMS = res.result['response_allow_sms']
           if (result === 400) {
             // console.log(res);
             this.activeInvites = [];
@@ -396,39 +399,23 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   resendInvite(invite_id: number, phoneNumber?: string) {
-    // this.functionMain.showResendInvite(invite_id, 'visitor', ['SMS', 'Whatsapp'], this.familyId)
-    this.mainApiResidentService.endpointMainProcess({
-      invite_id: invite_id
-    }, 'post/resend_invite').subscribe((response: any) => {
-      if (response.result.response_code === 200) {
-        this.toggleShowActInv()
-        this.functionMain.presentToast('Invite Resent Successfully', 'success')
-      } else {
+    let button = ['Quick Share', 'Whatsapp']
+    if (this.isUsingSMS) {
+      button.push('SMS')
+    }
+    this.functionMain.showResendInvite(invite_id, 'visitor', button, this.familyId)
+    // this.mainApiResidentService.endpointMainProcess({
+    //   invite_id: invite_id
+    // }, 'post/resend_invite').subscribe((response: any) => {
+    //   if (response.result.response_code === 200) {
+    //     this.toggleShowActInv()
+    //     this.functionMain.presentToast('Invite Resent Successfully', 'success')
+    //   } else {
 
-      }
-    }, (error) => {
-      console.log(error);
-    })
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    });
-    
-    this.http.post<any>(
-      `${this.baseUrl}/resident/post/resend_invite`, 
-      {
-        jsonrpc: '2.0',
-        params: {
-          invite_id: invite_id,
-        }
-      },
-      { headers }
-    ).subscribe((response: any) => {
-      if (response.result.response_code === 200) {
-        this.toggleShowActInv()
-        this.functionMain.presentToast('Success resend invite.', 'success')
-      }
-    });
+    //   }
+    // }, (error) => {
+    //   console.log(error);
+    // })
   }
 
   // Helper function untuk deteksi iOS

@@ -1573,7 +1573,7 @@
       </div>
       <div
         class="flex flex-col mt-4 space-y-2"
-        *ngIf="['pending_approval', 'requested'].includes(selectedApproval.states) || ['issued'].includes(selectedApproval.appeal_status)"
+        *ngIf="(!['renovation'].includes(approval_type) && ['pending_approval', 'requested'].includes(selectedApproval.states) || ['issued'].includes(selectedApproval.appeal_status)) || (['renovation'].includes(approval_type) && ['pending_approval'].includes(selectedApproval.states))"
       >
         <button
           (click)="approveData(selectedApproval)"

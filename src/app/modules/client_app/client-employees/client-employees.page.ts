@@ -97,7 +97,7 @@ export class ClientEmployeesPage implements OnInit {
     console.log(this.formData)
     let errMsg = ''
     if (this.formData.image_family == ''){
-      errMsg += 'Profile image is required \n'
+      errMsg += 'Profile image is required! \n'
     }
     if (this.formData.full_name == ''){
       errMsg += 'Full name is required! \n'

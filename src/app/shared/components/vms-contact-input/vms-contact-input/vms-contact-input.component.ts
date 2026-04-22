@@ -153,11 +153,20 @@ export class VmsContactInputComponent  implements OnInit {
   get combinedValue(): string {
     return `${this.selectedCode}${this.contactValue}`.trim();
   }
-  
+
+  selectedLpr: any = false
+  getSelectedLPR() {
+    this.storage.getValueFromStorage('VMS_LPR').then((value) => {
+      if (value) {
+        this.selectedLpr = value.CamSentId
+      }
+    })
+  }
 
   ngOnInit() {
     this.isSmallScreen = window.innerWidth < (this.isModal ? 750 : 570);
     this.getCode()
+    this.getSelectedLPR()
   }
 
   onChange: (value: string) => void = () => {};
@@ -197,9 +206,11 @@ export class VmsContactInputComponent  implements OnInit {
         return
       }
       this.functionMain.vmsPreferences().then((value) => {
+        console.log(value)
         let params = {
           contact_number: this.combinedValue,
-          project_id: value.project_id
+          project_id: value.project_id,
+          lpr: this.selectedLpr,
         }
         this.mainVmsService.getApi(params, '/vms/get/search_contact_number' ).subscribe({
           next: (results) => {

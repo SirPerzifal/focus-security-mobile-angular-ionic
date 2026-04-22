@@ -21,11 +21,6 @@
           <app-m2m-selection [Arrays]="Camera" (outputValue)="onCameraChange($event)" [placeholder]="Camera.length > 0 ? 'CHOOSE GATE' : 'NO GATE FOUND'" [isOne]="true" [isVMS]="true"
             [labelText]="'GATE'"></app-m2m-selection>
         </div>
-        <!-- <div class="w-full" *ngFor="let camera of Camera; let i = index">
-          <app-visitor-button [text]="'SAVE RECORD & OPEN BARRIER ' + camera.CamID" 
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 ' + (i == 0 ? 'mt-6' : 'mt-1' )"
-            (click)="onSubmit(true, camera.CamSentId)"></app-visitor-button>
-        </div> -->
         <div class="w-full">
           <app-visitor-button [text]="'OPEN GATE'" 
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
@@ -38,7 +33,6 @@
         </div>
       </div>
     </div>
-    
   </div>
   
 </ion-content>

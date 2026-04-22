@@ -45,6 +45,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   project_id = 0
   family_id = 0
 
+  isUsingSMS: boolean = false
   formData = {
     name: '',
     company_name: '',
@@ -121,6 +122,7 @@ export class ClientRegisterVisitorPage implements OnInit {
       next: (results) => {
         this.isLoading = false
         console.log(results)
+          this.isUsingSMS = results.result.response_allow_sms
         if (results.result.status_code === 200) {
           if (this.isActive) {
             this.activeVisitor = results.result.data
@@ -314,40 +316,44 @@ export class ClientRegisterVisitorPage implements OnInit {
   }
 
   resendInvite(is_resend: boolean, ma_id: any) {
-    // this.functionMain.showResendInvite(ma_id, 'ma', ['SMS', 'Whatsapp'], this.family_id)
-    this.clientMainService.getApi({is_resend: is_resend, ma_id: ma_id}, '/client/post/visitor_resend_whatsapp').subscribe({
-      next: (results) => {
-        console.log(results)
-        console.log(results.result)
-        if (results.result.status_code === 200) {
-          if (!is_resend) {
-            const originalMessage = results.result.messages;
-            const encodedMessage = encodeURIComponent(originalMessage);
-            const phone = results.result.phone.replace(/\D/g, '');
+    let button = ['Quick Share', 'Whatsapp']
+    if (this.isUsingSMS) {
+      button.push('SMS')
+    }
+    this.functionMain.showResendInvite(ma_id, 'ma', button, this.family_id)
+    // this.clientMainService.getApi({is_resend: is_resend, ma_id: ma_id}, '/client/post/visitor_resend_whatsapp').subscribe({
+    //   next: (results) => {
+    //     console.log(results)
+    //     console.log(results.result)
+    //     if (results.result.status_code === 200) {
+    //       if (!is_resend) {
+    //         const originalMessage = results.result.messages;
+    //         const encodedMessage = encodeURIComponent(originalMessage);
+    //         const phone = results.result.phone.replace(/\D/g, '');
             
-            let whatsappLink;
-            if (phone) {
-              whatsappLink = `https://wa.me/${phone}?text=${encodedMessage}`;
-            } else {
-              whatsappLink = `https://wa.me/?text=${encodedMessage}`;
-            }
+    //         let whatsappLink;
+    //         if (phone) {
+    //           whatsappLink = `https://wa.me/${phone}?text=${encodedMessage}`;
+    //         } else {
+    //           whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+    //         }
             
-            if (this.isIOS()) {
-              window.location.href = whatsappLink;
-            } else {
-              window.open(whatsappLink, '_blank');
-            }
-          }
-          this.functionMain.presentToast(results.result.status_description, 'success');
-        } else {
-          this.functionMain.presentToast(results.result.status_description, 'danger');
-        }
-      },
-      error: (error) => {
-        this.functionMain.presentToast('An error occurred while trying to resend an invitation!', 'danger');
-        console.error(error);
-      }
-    });
+    //         if (this.isIOS()) {
+    //           window.location.href = whatsappLink;
+    //         } else {
+    //           window.open(whatsappLink, '_blank');
+    //         }
+    //       }
+    //       this.functionMain.presentToast(results.result.status_description, 'success');
+    //     } else {
+    //       this.functionMain.presentToast(results.result.status_description, 'danger');
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.functionMain.presentToast('An error occurred while trying to resend an invitation!', 'danger');
+    //     console.error(error);
+    //   }
+    // });
   }
 
   private isIOS(): boolean {

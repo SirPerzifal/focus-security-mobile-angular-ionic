@@ -178,6 +178,7 @@ export class OvernightParkingModalPage implements OnInit {
           notice_image: this.issue != 'wheel_clamp' ? this.beforeClampImageFile : false,
           before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
           after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
+          log_id: this.vehicle.log_id,
         }
       } else {
         params = {
@@ -197,6 +198,7 @@ export class OvernightParkingModalPage implements OnInit {
           before_clamp_image: this.issue == 'wheel_clamp' ? this.beforeClampImageFile : false,
           after_clamp_image: this.issue == 'wheel_clamp' ? this.afterClampImageFile : false,
           project_id: this.project_id,
+          log_id: this.vehicle.log_id,
         }
       }
       console.log(params)

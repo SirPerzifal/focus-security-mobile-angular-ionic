@@ -812,7 +812,7 @@ export class FunctionMainService {
         console.log(results)
         console.log(results.result)
         if (results.result.status_code === 200) {
-          if (platform == 'Whatsapp') {
+          if (platform == 'Quick Share') {
             const originalMessage = results.result.messages;
             const encodedMessage = encodeURIComponent(originalMessage);
             const phone = results.result.phone.replace(/\D/g, '');
