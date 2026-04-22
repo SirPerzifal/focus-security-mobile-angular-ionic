@@ -134,6 +134,7 @@ export class BillsAndFinesPagePage implements OnInit {
   historyFines: FinesData[] = [];
   bills: BillsData[] = [];
   mergeData: any[] = [];
+  familyType: string = '';
 
   constructor(
     private mainApiResidentService: MainApiResidentService,
@@ -142,8 +143,42 @@ export class BillsAndFinesPagePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadBills();
     // this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK');
+  }
+
+  onChangeTypeFamily(event: any) {
+    this.familyType = event;
+    if (event === 'Tenants') {
+      this.navButtonsMain = [
+        {
+          text: 'Fees',
+          active: false,
+          action: 'click',
+        },
+        {
+          text: 'History',
+          active: false,
+          action: 'click',
+        },
+      ]
+      // Reset semua tombol menjadi tidak aktif
+      this.navButtonsMain.forEach(button => {
+        button.active = false;
+      });
+
+      // Aktifkan tombol yang sesuai
+      const selectedButton = this.navButtonsMain.find(button => button.text === 'Fees');
+      if (selectedButton) {
+        selectedButton.active = true;
+      }
+      this.isLoading = true;
+      this.showHistory = false;
+      this.showBills = false;
+      this.showFines = true;
+      this.loadFinesData();
+    } else {
+      this.loadBills();
+    }
   }
 
   handleRefresh(event: any) {
@@ -288,7 +323,10 @@ export class BillsAndFinesPagePage implements OnInit {
     
     this.mainApiResidentService.endpointMainProcess({}, 'get/payment_history').subscribe((response: any) => {
       const fines = response.result.response_result.fines;
-      const bills = response.result.response_result.bills;
+      let bills = [];
+      if (!(this.familyType === 'Tenants' || this.familyType === 'Member')) {
+        bills = response.result.response_result.bills;
+      }
       
       // Transform fines data
       this.historyFines = fines.map((fine: FinesResponse) => {

@@ -55,16 +55,19 @@ export class VisitorInvitigFormPage implements OnInit {
   ) {
     this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[] };
+    const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[], invitessFromExcel: Invitee[] };
   
     if (state) {
-        this.formData = {
-          ...state.formData,
-          dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
-        };
-        console.log(state.formData.dateOfInvite);
+      this.formData = {
+        ...state.formData,
+        dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
+      };
       if (state.selectedInvitees) {
         this.inviteeFormList = state.selectedInvitees; // Update local list
+        this.isFormVisible = true; // Show form if there are invitees
+        this.addInviteeText = 'Add More Invitees'; // Update button text
+      } else if (state.invitessFromExcel && state.invitessFromExcel.length > 0) {
+        this.inviteeFormList = state.invitessFromExcel; // Update local list
         this.isFormVisible = true; // Show form if there are invitees
         this.addInviteeText = 'Add More Invitees'; // Update button text
       }
@@ -84,7 +87,6 @@ export class VisitorInvitigFormPage implements OnInit {
       this.initializeInviteeForm(params);
     });
     this.mainApiResidentService.endpointCustomProcess({}, '/fs-get-country-code').subscribe((value: any) => {
-      console.log(value)
       if (value && value.result.country_code_data.length > 0) {
         this.countryCodes = value.result.country_code_data.map((value: any) => {
           return {
@@ -98,7 +100,6 @@ export class VisitorInvitigFormPage implements OnInit {
           if (b.country === 'SG') return 1;
           return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
         });
-        console.log(JSON.stringify(this.countryCodes));
       }
     })
   }
@@ -113,7 +114,7 @@ export class VisitorInvitigFormPage implements OnInit {
       host_ids: [] // Pastikan ini array kosong
     };
 
-    const selectedCode: any = { 
+    const selectedCode: any = {
       selected_code: '65'
     };
 

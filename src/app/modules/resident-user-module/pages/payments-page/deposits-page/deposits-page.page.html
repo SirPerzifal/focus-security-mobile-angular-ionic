@@ -2,6 +2,8 @@
   <app-header-inner-page
     [text]="'Visitors'"
     [text_second]="pageName"
+    (typeOfFamily)="onChangeTypeFamily($event)"
+    (familyId)="onChangeFamilyId($event)"
   ></app-header-inner-page>
 </ion-header>
 
@@ -122,6 +124,11 @@
                   }}
                 </td>
               </tr>
+              <tr class="h-1">
+                <td class="font-bold">Requestor Name</td>
+                <td>:</td>
+                <td>{{ ad.requestRefundName ? ad.requestRefundName : '-' }}</td>
+              </tr>
               <tr *ngIf="ad.requestRefundStatus === 'rejected'" class="h-1">
                 <td class="font-bold">Reason</td>
                 <td>:</td>
@@ -135,7 +142,10 @@
           >
             <div class="w-full">
               <app-submit-button
-                *ngIf="isCanRefund"
+                *ngIf="isCanRefund && !(  
+                  (ad.requestMemberType === 'tenants' || ad.requestMemberType === 'member') && 
+                  (familyId !== ad.requestorId && familyId !== ad.requestorId)
+                )"
                 [text]="'Request Refund'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
                 (click)="requestRefund(ad)"
@@ -149,7 +159,10 @@
           >
             <div class="w-full">
               <app-submit-button
-                *ngIf="isCanRefund"
+                *ngIf="isCanRefund && !(  
+                  (ad.requestMemberType === 'tenants' || ad.requestMemberType === 'member') && 
+                  (familyId !== ad.requestorId && familyId !== ad.requestorId)
+                )"
                 [text]="'Resubmit Request Refund'"
                 [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base'"
                 (click)="requestRefund(ad)"
@@ -254,6 +267,11 @@
                 <td>
                   {{ functionMain.convertToDDMMYYYY(dh.returnDepositDate) }}
                 </td>
+              </tr>
+              <tr class="h-1">
+                <td class="font-bold">Requestor Name</td>
+                <td>:</td>
+                <td>{{ dh.requestRefundName ? dh.requestRefundName : '-' }}</td>
               </tr>
             </table>
           </div>

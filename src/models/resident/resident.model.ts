@@ -51,7 +51,16 @@ export interface FormData {
     facility_other: string,
     hiredCar: string;
     unit: number;
-  }
+}
+
+export interface InviteeNew {
+  visitor_name: string;
+  vehicle_number: string;
+  contact_number: string;
+  contact_number_display: string;
+  company_name: string;
+  host_ids: number[];
+}
 
 export interface Invitee {
   visitor_name: string;
@@ -60,4 +69,24 @@ export interface Invitee {
   contact_number_display: string;
   company_name: string;
   host_ids: [] // Pastikan ini array kosong
+}
+
+export interface FamilyDetailResponse {
+  response_code: number;
+  response_result: {
+    id: number;
+    family_full_name: string;
+    family_nickname: string;
+    family_email: string;
+    family_mobile_number: string;
+    member_type: string;
+  } | false;
+}
+
+export interface ExcelRow {
+  Name: string;
+  'Mobile Number': string | number;
+  'Vehicle Number': string;
+  'Company Name': string;
+  'Host Related': string;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
@@ -10,6 +10,9 @@ import { ApiService } from 'src/app/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { ModalChooseFormManualOrUploadExcelComponent } from 'src/app/shared/resident-components/modal-choose-form-manual-or-upload-excel/modal-choose-form-manual-or-upload-excel.component';
+import { UploadExcelProcessorComponent } from 'src/app/shared/resident-components/upload-excel-processor/upload-excel-processor.component';
+
 
 @Component({
   selector: 'app-visitor-main',
@@ -122,6 +125,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     private mainApiResidentService: MainApiResidentService,
     private alertController: AlertController,
     private storage: StorageService,
+    private modalController: ModalController,
     http: HttpClient
   ) { super(http)
     const navigation = this.route.getCurrentNavigation();
@@ -549,7 +553,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     this.formData.facility_other = event;
   }
 
-  onSubmitNext() {
+  async onSubmitNext() {
+
     let errMsg = '';
     if (this.formData.dateOfInvite == "") {
       errMsg += 'Please fill date of invite! \n';
@@ -567,14 +572,62 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }
     
     if (errMsg == '') {
-      this.route.navigate(['/visitor-invitig-form'], {
-        state: {
-          formData: this.formData,
-        }
-      });
+      if (this.userType === 'industrial') {
+        const modal = await this.modalController.create({
+          component: ModalChooseFormManualOrUploadExcelComponent,
+          cssClass: 'choose-pay-modal',
+        })
+  
+        modal.onDidDismiss().then((result) => {
+          if (result.data) {
+            const data = result.data;
+            console.log(data);
+            
+            if (data === 'manual') {
+              this.onChooseForm([]);
+            } else if (data === 'excel') {
+              this.openModalUploadExcel();
+            }
+          } else {
+            return
+          }
+        });
+  
+        return await modal.present();
+      } else {
+        this.onChooseForm([]);
+      }
     } else {
       this.functionMain.presentToast(errMsg, 'danger');
     }
+  }
+
+  async openModalUploadExcel() {
+    const modal = await this.modalController.create({
+      component: UploadExcelProcessorComponent,
+      cssClass: 'upload-excel-modal',
+    })
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        const data = result.data;
+        this.onChooseForm(data);
+      } else {
+        return
+      }
+    });
+
+    return await modal.present();
+  }
+
+  onChooseForm(listOfInvitees: any = []) {
+    // console.log(listOfInvitees);
+    this.route.navigate(['/visitor-invitig-form'], {
+      state: {
+        formData: this.formData,
+        invitessFromExcel: listOfInvitees
+      }
+    });
   }
 
   public async presentCustomAlert(

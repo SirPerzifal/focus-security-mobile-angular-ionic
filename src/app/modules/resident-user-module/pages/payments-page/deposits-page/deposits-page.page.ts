@@ -13,6 +13,9 @@ interface ActiveDeposit {
   eventDate: string,
   expectedReturnDepositDate: string, 
   facility: string,
+  requestRefundName: string,
+  requestMemberType: string,
+  requestorId: number,
   id: number
 }
 
@@ -25,6 +28,9 @@ interface ActiveDepositResponse {
   event_date: string,
   expected_return_deposit_date: string, 
   facility: string,
+  requestor_name: string,
+  member_type: string,
+  requestor_id: number,
   id: number
 }
 
@@ -33,6 +39,9 @@ interface HistoryDeposit {
   depositDate: string,
   eventDate: string,
   returnDepositDate: string, 
+  requestRefundName: string,
+  requestMemberType: string,
+  requestorId: number,
   facility: string,
   id: number
 }
@@ -43,6 +52,9 @@ interface HistoryDepositResponse {
   event_date: string,
   return_deposit_date: string, 
   facility: string,
+  requestor_name: string,
+  member_type: string,
+  requestor_id: number,
   id: number
 }
 
@@ -94,6 +106,17 @@ export class DepositsPagePage implements OnInit {
 
   ngOnInit() {
     this.loadActiveDeposit();
+  }
+
+  familyType: string = '';
+  onChangeTypeFamily(event: any) {
+    this.familyType = event;
+  }
+
+  familyId: number = 0;
+  onChangeFamilyId(event: any) {
+    this.familyId = event;
+    console.log(this.familyId);
   }
 
   // Metode untuk menampilkan halaman deposit history
@@ -160,6 +183,9 @@ export class DepositsPagePage implements OnInit {
             eventDate: activeDeposit.event_date,
             expectedReturnDepositDate: activeDeposit.expected_return_deposit_date, 
             facility: activeDeposit.facility,
+            requestRefundName: activeDeposit.requestor_name,
+            requestMemberType: activeDeposit.member_type,
+            requestorId: activeDeposit.requestor_id,
             id: activeDeposit.id
           }
         })
@@ -189,6 +215,9 @@ export class DepositsPagePage implements OnInit {
             depositDate: historyDeposit.deposit_date,
             eventDate: historyDeposit.event_date,
             returnDepositDate: historyDeposit.return_deposit_date, 
+            requestRefundName: historyDeposit.requestor_name,
+            requestMemberType: historyDeposit.member_type,
+            requestorId: historyDeposit.requestor_id,
             facility: historyDeposit.facility,
             id: historyDeposit.id
           }

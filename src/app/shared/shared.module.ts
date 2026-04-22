@@ -36,6 +36,9 @@ import { RefresherPageComponent } from './resident-components/refresher-page/ref
 import { ModalShowQRAccessDoorComponent } from './resident-components/modal-show-qr-access-door/modal-show-qr-access-door.component';
 import { UpdateAppInformationComponent } from './resident-components/update-app-information/update-app-information.component';
 import { LastOneWeekInformationComponent } from './resident-components/last-one-week-information/last-one-week-information.component';
+import { ModalChooseFormManualOrUploadExcelComponent } from './resident-components/modal-choose-form-manual-or-upload-excel/modal-choose-form-manual-or-upload-excel.component';
+import { ConfirmationBeforeNextPageComponent } from './resident-components/confirmation-before-next-page/confirmation-before-next-page.component';
+import { UploadExcelProcessorComponent } from './resident-components/upload-excel-processor/upload-excel-processor.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +72,10 @@ import { LastOneWeekInformationComponent } from './resident-components/last-one-
     RefresherPageComponent,
     ModalShowQRAccessDoorComponent,
     UpdateAppInformationComponent,
-    LastOneWeekInformationComponent
+    LastOneWeekInformationComponent,
+    ModalChooseFormManualOrUploadExcelComponent,
+    ConfirmationBeforeNextPageComponent,
+    UploadExcelProcessorComponent
   ],
   imports: [
     CommonModule,
@@ -108,7 +114,10 @@ import { LastOneWeekInformationComponent } from './resident-components/last-one-
     RefresherPageComponent,
     ModalShowQRAccessDoorComponent,
     UpdateAppInformationComponent,
-    LastOneWeekInformationComponent
+    LastOneWeekInformationComponent,
+    ModalChooseFormManualOrUploadExcelComponent,
+    ConfirmationBeforeNextPageComponent,
+    UploadExcelProcessorComponent
   ]
 })
 export class SharedModule { }

@@ -14,6 +14,8 @@ import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
 import { StorageService } from '../storage/storage.service';
 import { MainApiResidentService } from '../resident/main/main-api-resident.service';
 import { firstValueFrom } from 'rxjs';
+import { InviteeNew, ExcelRow, Estate } from 'src/models/resident/resident.model';
+import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +26,11 @@ export class FunctionMainService {
     private toastController: ToastController,
     private mainVmsService: MainVmsService,
     private modalController: ModalController,
-    private authService: AuthService,
     private router: Router,
     private webRtcService: WebRtcService,
     private storage: StorageService,
     private alertController: AlertController,
     private mainApi: MainApiResidentService,
-    private platform: Platform,
   ) { }
 
   public readonly limitHistory = 15
@@ -842,6 +842,118 @@ export class FunctionMainService {
     });
   }
 
+  /**
+   * Entry point utama:
+   * Baca file Excel → parse baris → resolve host_ids → return array Invitee
+   */
+  async parseExcelToInvitees(file: File): Promise<InviteeNew[]> {
+    const rows = await this.readExcelFile(file);
+    const invitees = await Promise.all(rows.map((row) => this.mapRowToInvitee(row)));
+    return invitees;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  /** Baca file xlsx dan kembalikan array of raw row objects */
+  private readExcelFile(file: File): Promise<ExcelRow[]> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        try {
+          const data = new Uint8Array(e.target!.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+
+          // Ambil sheet pertama
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+
+          // Konversi ke JSON; header otomatis dari baris pertama
+          const rows: ExcelRow[] = XLSX.utils.sheet_to_json<ExcelRow>(sheet, {
+            raw: false,     // semua value jadi string
+            defval: '',     // cell kosong → string kosong
+          });
+
+          resolve(rows);
+        } catch (err) {
+          reject(err);
+        }
+      };
+
+      reader.onerror = () => reject(reader.error);
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  /** Map satu baris Excel → Invitee (termasuk resolve host_ids via API) */
+  private async mapRowToInvitee(row: ExcelRow): Promise<InviteeNew> {
+    const usesateDataRaw = await this.storage.getValueFromStorage('USESATE_DATA');
+    const usesateData = this.storage.decodeData(usesateDataRaw);
+    const estate = JSON.parse(String(usesateData)) as Estate;
+    const rawContact = String(row['Mobile Number'] ?? '').trim();
+    const hostName   = String(row['Host Related'] ?? '').trim();
+
+    // Resolve host id dari nama — jika tidak ditemukan, host_ids tetap []
+    console.log(estate, estate.family_id);
+    
+    const hostId = hostName ? await this.getHostIdByName(hostName) : estate.family_id;
+
+    return {
+      visitor_name:           String(row['Name'] ?? '').trim(),
+      vehicle_number:         String(row['Vehicle Number'] ?? '').trim(),
+      contact_number:         this.normalizePhone(rawContact),
+      contact_number_display: rawContact,
+      company_name:           String(row['Company Name'] ?? '').trim(),
+      host_ids:               hostId !== null ? [hostId] : [],
+    };
+  }
+
+  /**
+   * Panggil endpoint get_family_detail untuk mendapatkan id berdasarkan nama host.
+   * Mengembalikan null jika tidak ditemukan atau error.
+   */
+  private async getHostIdByName(familyName: string): Promise<number | null> {
+    try {
+      const response = await firstValueFrom(
+        this.mainApi.endpointMainProcess(
+          { family_name: familyName },
+          'get/get_family_detail'
+        )
+      );
+
+      const id = response?.result?.response_result?.id;
+      return id ?? null;
+
+    } catch {
+      console.warn(`[InviteeExcelService] Gagal fetch host untuk "${familyName}"`);
+      return null;
+    }
+  }
+
+  /**
+   * Normalisasi nomor telepon ke format internasional sederhana.
+   * Contoh: "6589230465" → "6589230465", "89230461" → "6589230461"
+   * Sesuaikan logika ini dengan kebutuhan proyekmu.
+   */
+  private normalizePhone(raw: string): string {
+    const digits = raw.replace(/\D/g, '');
+
+    if (!digits) return '';
+
+    // Sudah diawali kode negara 65 (SG) atau 62 (ID)
+    if (digits.startsWith('65') || digits.startsWith('62')) {
+      return `${digits}`;
+    }
+
+    // Awali dengan 0 → ganti dengan 65 (Singapura)
+    if (digits.startsWith('0')) {
+      return `65${digits.slice(1)}`;
+    }
+
+    // Default: tambahkan 65
+    return `65${digits}`;
+  }
+
 }
-
-

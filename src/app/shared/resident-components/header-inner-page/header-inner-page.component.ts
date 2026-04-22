@@ -26,6 +26,7 @@ export class HeaderInnerPageComponent  implements OnInit {
   @Input() text_second: string = "";
   @Output() typeOfUser = new EventEmitter<any>();
   @Output() typeOfFamily = new EventEmitter<any>();
+  @Output() familyId = new EventEmitter<any>();
   condoImage: string = '';
 
   platformInfo: string = '';
@@ -55,6 +56,7 @@ export class HeaderInnerPageComponent  implements OnInit {
             this.userType = estate.record_type;
             this.typeOfUser.emit(this.userType);
             this.typeOfFamily.emit(estate.family_type);
+            this.familyId.emit(estate.family_id);
           }
         })
       } 

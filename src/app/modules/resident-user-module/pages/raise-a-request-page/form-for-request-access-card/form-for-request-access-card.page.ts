@@ -220,6 +220,7 @@ export class FormForRequestAccessCardPage implements OnInit {
 
   processPayment(result: any) {
     if (result[1] === 'electronic') {
+      this.modalController.dismiss();
       this.electricPay(result[0])
     } else {
       this.manualPay(result[2])
