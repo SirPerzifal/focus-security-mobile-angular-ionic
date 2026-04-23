@@ -37,6 +37,9 @@ interface fines {
   ],
   reason_for_rejection: string,
   manual_pay_submitted: boolean,
+  requestor_id: number,
+  requestor_name: string,
+  member_type: string
 }
 
 interface FinesResponse {
@@ -144,6 +147,12 @@ export class BillsAndFinesPagePage implements OnInit {
 
   ngOnInit() {
     // this.stripe = Stripe('pk_test_51QpnAMEYQAqGD36Tk2M4AdoDQ6ngZVc41jB8vp88UF3XaeytrViZM1R2ax04szYUfL8vH4SOn8qi7ZS32ZXrqz0h00qJH2GoBK');
+  }
+
+  familyId: number = 0;
+  onChangeFamilyId(event: any) {
+    this.familyId = event;
+    console.log(this.familyId);
   }
 
   onChangeTypeFamily(event: any) {
@@ -286,6 +295,9 @@ export class BillsAndFinesPagePage implements OnInit {
           }),
           reason_for_rejection: fine.reason_for_rejection,
           manual_pay_submitted: fine.manual_pay_submitted,
+          requestor_id: fine.requestor_id,
+          member_type: fine.member_type,
+          requestor_name: fine.requestor_name
         }
       })
       console.log(this.fines);
@@ -457,6 +469,7 @@ export class BillsAndFinesPagePage implements OnInit {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
+      id: 'payment-modal-stripe-name',
       componentProps: {
         stripe: stripe,
         clientSecret: clientSecret,

@@ -90,7 +90,7 @@
 
     <div *ngIf="pageForWhat !== 'editData'" class="w-full mt-1">
       <div class="flex flex-row justify-start">
-        <p class="text-sm font-bold">Resident Profile</p>
+        <p class="text-base cw-3:text-sm font-bold">Resident Profile</p>
       </div>
       <div
         (click)="chooseWhereToChoose()"
@@ -108,7 +108,7 @@
 
     <div class="w-full flex flex-row justify-between">
       <div class="w-[30%] flex flex-col justify-start">
-        <label class="text-sm"><b>Code</b></label>
+        <label class="text-base cw-3:text-sm"><b>Code</b></label>
         <select
           id="contry_code"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-xs"
@@ -124,7 +124,7 @@
         </select>
       </div>
       <div class="w-[65%] flex flex-col justify-start">
-        <label class="text-sm"><b>Mobile Number</b></label>
+        <label class="text-base cw-3:text-sm"><b>Mobile Number</b></label>
         <input
           id="contry_code"
           class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-12 text-base"
@@ -143,7 +143,9 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'primary_contact'"
       class="w-full mt-1"
     >
-      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Residence</label
+      >
       <select
         id="type_of_residence"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -160,7 +162,9 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'helper'"
       class="w-full mt-1"
     >
-      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Residence</label
+      >
       <select
         id="type_of_residence"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -177,7 +181,9 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence === 'tenants'"
       class="w-full mt-1"
     >
-      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Residence</label
+      >
       <select
         id="type_of_residence"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -194,7 +200,9 @@
       *ngIf="pageForWhat === 'editData' && formData.type_of_residence !== 'primary_contact' && formData.type_of_residence !== 'helper' && formData.type_of_residence !== 'tenants'"
       class="w-full mt-1"
     >
-      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Residence</label
+      >
       <select
         id="type_of_residence"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -209,7 +217,9 @@
     </div>
 
     <div *ngIf="pageForWhat !== 'editData'" class="w-full mt-1">
-      <label class="text-sm font-bold mb-[-4px]">Type Of Residence</label>
+      <label class="text-base cw-3:text-sm font-bold mb-[-4px]"
+        >Type Of Residence</label
+      >
       <select
         id="type_of_residence"
         class="border w-full rounded py-2 px-3 outline-[#BDBDBD] text-base h-12 text-[#6B7280]"
@@ -241,7 +251,7 @@
 
     <div *ngIf="formData.type_of_residence === 'helper'" class="w-full mt-2">
       <div class="flex flex-row justify-start">
-        <p class="text-sm font-bold">Helper Work Permit File</p>
+        <p class="text-base cw-3:text-sm font-bold">Helper Work Permit File</p>
       </div>
       <div *ngIf="pageForWhat === 'editData'">
         <div
@@ -285,7 +295,7 @@
           [labelChild2]="''"
           (eventEmitter)="onValueChange($event, 'helper_work_permit_expiry_date')"
           [value]="selectedDate"
-          [disabled]="disableForm"
+          [disabled]="makeDateCanAccess()"
           [minDate]="minDate"
         ></app-input-component>
       </div>
@@ -330,7 +340,7 @@
     >
       <div class="w-full mt-2">
         <div class="flex flex-row justify-start">
-          <p class="text-sm font-bold">Tenants Agreement File</p>
+          <p class="text-base cw-3:text-sm font-bold">Tenants Agreement File</p>
         </div>
         <div *ngIf="pageForWhat === 'editData'">
           <div
@@ -407,7 +417,7 @@
         </div> -->
       </div>
 
-      <!-- <div class="mt-1.5">
+      <div class="mt-1.5">
         <app-input-component
           [id]="'end_tenants_agreement'"
           [type]="'date'"
@@ -415,12 +425,11 @@
           [labelParent]="''"
           [labelChild1]="'Tenants Agreement End Date'"
           [labelChild2]="''"
-          (eventEmitter)="onValueChange($event, 'end_tenants_agreement')"
           [value]="selectedDate"
-          [disabled]="disableForm"
+          [disabled]="makeDateCanAccess()"
           [minDate]="minDate"
         ></app-input-component>
-      </div> -->
+      </div>
     </div>
 
     <div
@@ -428,7 +437,7 @@
     >
       <div class="w-full mt-2">
         <div class="flex flex-row justify-start">
-          <p class="text-sm font-bold">Tenants Agreement File</p>
+          <p class="text-base cw-3:text-sm font-bold">Tenants Agreement File</p>
         </div>
         <div
           class="bg-white p-3 h-12 rounded border border-gray-500 w-full flex flex-row text-start items-center justify-start"
@@ -552,7 +561,7 @@
   >
     <ng-template>
       <div class="wrapper p-4">
-        <p class="mt-2 text-sm text-black mb-2">
+        <p class="mt-2 text-base cw-3:text-sm text-black mb-2">
           If you want to delete this contact, you have to choose which family
           member to promote as a replacement for {{ formData.type_of_residence
           === 'primary_contact' ? 'Primary Contacts' : 'Secondary Contacts' }}
@@ -643,7 +652,7 @@
                   src="assets/icon/other-file-icon.png"
                 />
                 <span
-                  class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                  class="text-base cw-3:text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
                   >From File</span
                 >
               </label>
@@ -656,7 +665,7 @@
             >
               <img class="w-10 h-10 my-2" src="assets/icon/image-icon.png" />
               <span
-                class="text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
+                class="text-base cw-3:text-sm font-bold text-[black] text-center normal-case cw-4:text-xs"
                 >From Camera</span
               >
             </div>

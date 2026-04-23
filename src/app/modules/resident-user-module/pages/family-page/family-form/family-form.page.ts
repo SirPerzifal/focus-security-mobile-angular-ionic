@@ -90,9 +90,6 @@ export class FamilyFormPage implements OnInit {
         this.selectedDate = String(this.functionMain.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]));
       }
       this.end_date = String(this.functionMain.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]));
-      let str = state.mobile;
-      let newStr = str.substring(2);
-      this.contactValue = newStr;
       if (state.from) {
         this.fromWhere = state.from;
       }
@@ -116,7 +113,16 @@ export class FamilyFormPage implements OnInit {
           if (b.country === 'SG') return 1;
           return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
         });
-        console.log(JSON.stringify(this.countryCodes));
+        let str = this.formData.mobile_number;
+        let newStr = str.substring(0, 2);
+        let conIfTrue = str.substring(2);
+        const twoDigitFoundOnCountryCode = (value.result.country_code_data.find((c: any) => c.code === newStr));
+        if (twoDigitFoundOnCountryCode) {
+          this.contactValue = conIfTrue;
+          this.selectedCode = twoDigitFoundOnCountryCode.code;
+        } else {
+          this.contactValue = this.formData.mobile_number;
+        }
       }
     })
   }
@@ -333,16 +339,9 @@ export class FamilyFormPage implements OnInit {
     return nameWithoutExt.substring(0, truncatedLength) + '...' + '.' + extension;
   }
 
-  ableChangeInput() {
-    this.disableForm = !this.disableForm;
-    if (this.disableForm === true) {
-      this.functionMain.presentToast('You can not change your profile data', 'danger');
-      this.buttonNameEdit = 'Click To Edit';
-      return;
-    }
-    this.buttonNameEdit = 'Save Change';
-    this.functionMain.presentToast('You can change your profile data now', 'success');
-  }
+  private originalFormData: any = null;
+  private originalContactValue: string = '';
+  private originalSelectedCode: string = '';
 
   processAddNewFamily(edit?: string) {
     let errMsg = ''
@@ -606,14 +605,33 @@ export class FamilyFormPage implements OnInit {
       this.functionMain.presentToast('You can change your profile data now to resubmit', 'success');
       return;
     }
+
+    // User mulai edit → simpan snapshot dulu
+    this.originalFormData = JSON.parse(JSON.stringify(this.formData)); // deep copy
+    this.originalContactValue = this.contactValue;
+    this.originalSelectedCode = this.selectedCode;
+
     this.buttonNameEdit = 'Save Change';
     this.functionMain.presentToast('You can change your profile data now', 'success');
   }
 
   justCancelEdit() {
-    this.disableForm = !this.disableForm;
+    if (this.originalFormData) {
+      this.formData = JSON.parse(JSON.stringify(this.originalFormData));
+      this.contactValue = this.originalContactValue;
+      this.selectedCode = this.originalSelectedCode;
+      this.originalFormData = null;
+    }
+    this.disableForm = true;
     this.buttonNameEdit = 'Click To Edit';
-    this.functionMain.presentToast('You can not change your profile data', 'danger');
+    // this.functionMain.presentToast('You can not change your profile data', 'danger');
+  }
+
+  makeDateCanAccess() {
+    if (this.pageForWhat) {
+      return true
+    }
+    return this.disableForm;
   }
 
 }

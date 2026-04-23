@@ -220,12 +220,14 @@ export class MainApiResidentService extends ApiService {
           // Dismiss modal after successful response
           if (modalRef) {
             modalRef.dismiss();
+            this.modalController.dismiss();
           }
         }),
         catchError((error) => {
           // Dismiss modal on error
           if (modalRef) {
             modalRef.dismiss();
+            this.modalController.dismiss();
           }
           return this.handleError(error);
         })

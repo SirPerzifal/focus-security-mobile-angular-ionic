@@ -268,12 +268,9 @@ export class RaiseARequestMainPage implements OnInit {
       type: type
     }, 'get/raise_a_request_status').subscribe(      
       (response: any) => {
-        console.log("Response data:", JSON.stringify(response));
         
         // Process the flat array data format
         const data = response.result.data || [];
-        console.log(response.result, data, response.data, response.result.data);
-        
         
         // Group the data by application type
         this.accessCard = data.filter((item: any) => item.application_title === 'Access cards Application.');

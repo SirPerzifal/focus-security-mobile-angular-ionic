@@ -220,7 +220,6 @@ export class FormForRequestAccessCardPage implements OnInit {
 
   processPayment(result: any) {
     if (result[1] === 'electronic') {
-      this.modalController.dismiss();
       this.electricPay(result[0])
     } else {
       this.manualPay(result[2])
@@ -246,6 +245,7 @@ export class FormForRequestAccessCardPage implements OnInit {
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
+      id: 'payment-modal-stripe-name',
       componentProps: {
         stripe: stripe,
         clientSecret: clientSecret,

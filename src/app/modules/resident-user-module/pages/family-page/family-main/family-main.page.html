@@ -61,100 +61,112 @@
                   'bg-[#E3787E]': data.status === 'Rejected' || data.status === 'rejected',
                   'bg-sky-100': data.status === 'pending_payment' || data.status === 'Pending Payment'
                 }"
-                [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-col'"
+                [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-row'"
               >
-                <div class="flex flex-col justify-start items-start mb-2">
-                  <div class="flex flex-row items-center justify-end mt-2">
-                    <ng-container
-                      *ngIf="data.status === 'approved' || data.status === 'Approved'"
-                    >
-                      <ion-icon
-                        name="checkmark"
-                        class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
-                      ></ion-icon>
-                      <p
-                        class="text-[var(--ion-color-primary)] font-bold text-base"
+                <div class="flex flex-col w-full">
+                  <div class="flex flex-col justify-start items-start mb-2">
+                    <div class="flex flex-row items-center justify-end mt-2">
+                      <ng-container
+                        *ngIf="data.status === 'approved' || data.status === 'Approved'"
                       >
-                        Approved
-                      </p>
-                    </ng-container>
-                    <ng-container
-                      *ngIf="
-                        data.status === 'pending_approval' ||
-                        data.status === 'Pending Approval' ||
-                        data.status === 'pending_payment' ||
-                        data.status === 'Pending Payment'
-                      "
-                    >
-                      <ion-icon
-                        name="alert"
-                        class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
-                      ></ion-icon>
-                      <p class="text-yellow-500 font-bold text-base">
-                        Pending Approval
-                      </p>
-                    </ng-container>
-                    <ng-container
-                      *ngIf="data.status === 'rejected' || data.status === 'Rejected'"
-                    >
-                      <ion-icon
-                        name="close"
-                        class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
-                      ></ion-icon>
-                      <p class="text-red-700 font-bold text-base">Rejected</p>
-                    </ng-container>
+                        <ion-icon
+                          name="checkmark"
+                          class="bg-[var(--ion-color-primary)] mr-2 p-1 rounded-full text-white text-[16px]"
+                        ></ion-icon>
+                        <p
+                          class="text-[var(--ion-color-primary)] font-bold text-base"
+                        >
+                          Approved
+                        </p>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="
+                          data.status === 'pending_approval' ||
+                          data.status === 'Pending Approval' ||
+                          data.status === 'pending_payment' ||
+                          data.status === 'Pending Payment'
+                        "
+                      >
+                        <ion-icon
+                          name="alert"
+                          class="bg-yellow-500 mr-2 p-1 rounded-full text-white text-[16px]"
+                        ></ion-icon>
+                        <p class="text-yellow-500 font-bold text-base">
+                          Pending Approval
+                        </p>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="data.status === 'rejected' || data.status === 'Rejected'"
+                      >
+                        <ion-icon
+                          name="close"
+                          class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+                        ></ion-icon>
+                        <p class="text-red-700 font-bold text-base">Rejected</p>
+                      </ng-container>
+                    </div>
                   </div>
-                </div>
-                <div class="flex flex-row w-full">
-                  <img
-                    alt="Profile picture of {{ data.name }}"
-                    class="h-16 w-16 rounded-full"
-                    height="50"
-                    [src]="
-                    data.family_photo
-                        ? 'data:image/png;base64,' + data.family_photo
-                        : 'https://placehold.co/600x400?text=' + data.name.charAt(0)
-                    "
-                    width="50"
-                  />
-                  <div class="ml-4 text-start w-[70%]">
-                    <h2 class="text-lg font-bold truncate w-full">
-                      {{ data.name }}
-                    </h2>
-                    <p class="text-sm text-gray-600 truncate w-full">
-                      {{ data.head_type }} ({{ data.type }})
-                    </p>
+                  <div class="flex flex-row w-full">
+                    <img
+                      alt="Profile picture of {{ data.name }}"
+                      class="h-16 w-16 rounded-full"
+                      height="50"
+                      [src]="
+                      data.family_photo
+                          ? 'data:image/png;base64,' + data.family_photo
+                          : 'https://placehold.co/600x400?text=' + data.name.charAt(0)
+                      "
+                      width="50"
+                    />
+                    <div class="ml-4 text-start w-[70%]">
+                      <h2 class="text-lg font-bold truncate w-full">
+                        {{ data.name }}
+                      </h2>
+                      <p class="text-sm text-gray-600 truncate w-full">
+                        {{ data.head_type }} ({{ data.type }})
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="button-card-facility flex items-center font-bold w-full mt-2"
+                    [ngClass]="{'space-x-1.5': data.type === 'Tenants' || data.type === 'Helper'}"
+                  >
+                    <!-- Tombol View Details (selalu tampil) -->
+                    <button
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                      (click)="openDetails(data)"
+                    >
+                      View Details
+                    </button>
+
+                    <!-- Tombol Tenancies (hanya untuk Tenants) -->
+                    <button
+                      *ngIf="data.type === 'Tenants' && (data.status === 'approved' || data.status === 'Approved')"
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                      (click)="openExtend(data)"
+                    >
+                      Extension
+                    </button>
+
+                    <!-- Tombol Helper's (hanya untuk Helper) -->
+                    <button
+                      *ngIf="data.type === 'Helper' && (data.status === 'approved' || data.status === 'Approved')"
+                      class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
+                      (click)="openExtend(data)"
+                    >
+                      Extension
+                    </button>
                   </div>
                 </div>
                 <div
-                  class="button-card-facility flex items-center font-bold w-full mt-2"
-                  [ngClass]="{'space-x-1.5': data.type === 'Tenants' || data.type === 'Helper'}"
+                  *ngIf="checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
+                  class="flex flex-col items-center z-10 absolute"
                 >
-                  <!-- Tombol View Details (selalu tampil) -->
-                  <button
-                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
-                    (click)="openDetails(data)"
-                  >
-                    View Details
-                  </button>
-
-                  <!-- Tombol Tenancies (hanya untuk Tenants) -->
-                  <button
-                    *ngIf="data.type === 'Tenants' && (data.status === 'approved' || data.status === 'Approved')"
-                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
-                    (click)="openExtend(data)"
-                  >
-                    Extension
-                  </button>
-
-                  <!-- Tombol Helper's (hanya untuk Helper) -->
-                  <button
-                    *ngIf="data.type === 'Helper' && (data.status === 'approved' || data.status === 'Approved')"
-                    class="bg-[var(--ion-color-primary)] text-white px-3 py-2 text-base rounded-md font-bold w-full"
-                    (click)="openExtend(data)"
-                  >
-                    Extension
-                  </button>
+                  <img
+                    alt="IFS360"
+                    class="w-[7.5rem] h-[3.5rem] mr-[-25px] mt-[-6px] ml-[202px] cw-3:ml-[150px]"
+                    src="assets/icon/expired-ribbon.png"
+                  />
                 </div>
               </div>
             </div>

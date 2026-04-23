@@ -224,6 +224,7 @@ export class PaymentFormVehiclePage implements OnInit {
       const modal = await this.modalController.create({
         component: ModalPaymentCustomComponent,
         cssClass: 'payment-modal',
+      id: 'payment-modal-stripe-name',
         componentProps: {
           stripe: stripe,
           clientSecret: clientSecret,

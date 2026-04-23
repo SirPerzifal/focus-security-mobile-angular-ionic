@@ -114,6 +114,7 @@ export class BillsMaintenancePage extends ApiService implements OnInit, OnDestro
     const modal = await this.modalController.create({
       component: ModalPaymentCustomComponent,
       cssClass: 'payment-modal',
+      id: 'payment-modal-stripe-name',
       componentProps: {
         stripe: this.stripe,
         clientSecret: clientSecret

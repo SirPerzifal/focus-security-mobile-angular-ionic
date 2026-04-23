@@ -15,7 +15,7 @@ export class FamilyMainPage implements OnInit {
   userRole: string = '';
 
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: ''  }
+    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: '', is_tenant_expired: false, is_helper_expired: false  }
   ];
 
   constructor(private router: Router, private mainApi: MainApiResidentService) {
@@ -60,7 +60,9 @@ export class FamilyMainPage implements OnInit {
         family_photo: '', 
         reject_reason: '', 
         helper_work_permit_expiry_date: new Date(),
-        helper_work_permit: 'string'
+        helper_work_permit: 'string',
+        is_helper_expired: false,
+        is_tenant_expired: false
       }
     ];
     this.familyData.pop();
@@ -101,7 +103,9 @@ export class FamilyMainPage implements OnInit {
               family_photo: item['family_photo'],
               reject_reason: item['reject_reason'],
               helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
-              helper_work_permit: item['helper_work_permit']
+              helper_work_permit: item['helper_work_permit'],
+              is_tenant_expired: item['is_tenant_expired'],
+              is_helper_expired: item['is_helper_expired'],
             });
           }
         } else if (this.stateFill === 'family') {
@@ -121,7 +125,9 @@ export class FamilyMainPage implements OnInit {
               family_photo: item['family_photo'],
               reject_reason: item['reject_reason'],
               helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
-              helper_work_permit: item['helper_work_permit']
+              helper_work_permit: item['helper_work_permit'],
+              is_tenant_expired: item['is_tenant_expired'],
+              is_helper_expired: item['is_helper_expired'],
             });
           }
         } else {
@@ -141,7 +147,9 @@ export class FamilyMainPage implements OnInit {
             family_photo: item['family_photo'],
             reject_reason: item['reject_reason'],
             helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
-              helper_work_permit: item['helper_work_permit']
+            helper_work_permit: item['helper_work_permit'],
+              is_tenant_expired: item['is_tenant_expired'],
+              is_helper_expired: item['is_helper_expired'],
           });
         }
       });
@@ -193,4 +201,12 @@ export class FamilyMainPage implements OnInit {
     });
   }
 
+  checkExpiredData(memberType: string, isTenantExpired: boolean, isHelperExpired: boolean) {
+    if (memberType === "helper") {
+      return isHelperExpired ? true : false
+    } else if (memberType === "tenants") {
+      return isTenantExpired ? true : false
+    }
+    return false
+  }
 }

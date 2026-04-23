@@ -3,6 +3,7 @@
     [text]="'My Payments'"
     [text_second]="'Bills & Fees'"
     (typeOfFamily)="onChangeTypeFamily($event)"
+    (familyId)="onChangeFamilyId($event)"
   ></app-header-inner-page>
 </ion-header>
 
@@ -195,6 +196,10 @@
                         >
                           <div>S${{ fine.total_bill.toFixed(2) }}</div>
                           <button
+                            *ngIf="!(  
+                              (fine.member_type === 'tenants' || fine.member_type === 'member') && 
+                              (familyId !== fine.requestor_id && familyId !== fine.requestor_id)
+                            )"
                             class="bg-[var(--ion-color-primary)] text-white py-2 text-base rounded-md font-bold w-full"
                             (click)="payNow(fine.id, 'fs.residential.fines.payment')"
                           >
