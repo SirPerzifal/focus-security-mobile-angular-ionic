@@ -68,7 +68,7 @@
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial || maOgId">
             <app-text-input #visitorWalkInUpCompanyName [id]="'visitor_walk_in_company_name'" [labelText]="'COMPANY NAME'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="true"
+              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isReadonly]="maOgId"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="company_name" [isMandatory]="maOgId ? false : module_config.company_name"></app-text-input>
           </div>
           <div class="w-full" *ngIf="project_config.is_industrial && !maOgId">
