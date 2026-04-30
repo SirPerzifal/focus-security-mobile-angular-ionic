@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { BlockUnitService } from 'src/app/service/global/block_unit/block-unit.service';
 import { RegisterService } from 'src/app/service/resident/register-resident/register.service';
+import { LoadingAnimationComponent } from 'src/app/shared/resident-components/loading-animation/loading-animation.component';
 
 @Component({
   selector: 'app-register-resident',
@@ -17,7 +19,8 @@ export class RegisterResidentPage implements OnInit {
     private route: ActivatedRoute,
     private functionMain: FunctionMainService,
     private blockUnitService: BlockUnitService,
-    private RegisterService: RegisterService
+    private RegisterService: RegisterService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -96,7 +99,13 @@ export class RegisterResidentPage implements OnInit {
     });
   }
 
-  onSubmitRegister() {
+  async onSubmitRegister() {
+    let modalRef: HTMLIonModalElement | null = null;
+    modalRef = await this.modalController.create({
+      component:LoadingAnimationComponent,
+      cssClass: 'modal-loading',
+    });
+    await modalRef.present();
     console.log(this.formData)
     let errMsg = ""
     if (!this.formData.full_name) {
@@ -128,6 +137,7 @@ export class RegisterResidentPage implements OnInit {
               unit: '',
               family_type: ''
             };
+            modalRef.dismiss();
 
             this.router.navigate(['login-end-user'])
             this.functionMain.presentToast('Please wait for approval', 'success');

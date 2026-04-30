@@ -11,7 +11,7 @@ export class UploadExcelProcessorComponent  implements OnInit {
 
   selectExcelImport: string = '';
 
-  constructor(private inviteeExcelService: FunctionMainService, private modalController: ModalController) { }
+  constructor(private inviteeExcelService: FunctionMainService, public modalController: ModalController) { }
 
   ngOnInit() {}
 

@@ -161,6 +161,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }, 1000)
   }
 
+  is_user_can_upload_excel: boolean = false;
   ngOnInit() {
     this.getTodayDate();
     this.getActiveInvites();
@@ -303,6 +304,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
             this.activeInvites = [];
             this.activeInvites.pop()
             this.isLoading = false;
+            this.is_user_can_upload_excel = res.result.is_user_can_upload_excel;
             return;
           } else if (result === 200) {
             var result_data = res.result['response_result']
@@ -332,9 +334,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
               total_records: res.result.pagination.total_records ? Number(res.result.pagination.total_records) : 0
             }
             this.isLoading = false
+            this.is_user_can_upload_excel = res.result.is_user_can_upload_excel;
           } else {
             this.activeInvites = [];
             this.activeInvites.pop();
+            this.is_user_can_upload_excel = res.result.is_user_can_upload_excel;
           }
         },
         error => {
@@ -559,7 +563,9 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     }
     
     if (errMsg == '') {
-      if (this.userType === 'industrial') {
+      console.log(this.userType, this.is_user_can_upload_excel);
+      
+      if (this.userType === 'industrial' && this.is_user_can_upload_excel === true) {
         const modal = await this.modalController.create({
           component: ModalChooseFormManualOrUploadExcelComponent,
           cssClass: 'choose-pay-modal',
@@ -568,10 +574,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         modal.onDidDismiss().then((result) => {
           if (result.data) {
             const data = result.data;
-            console.log(data);
-            
             if (data === 'manual') {
-              this.onChooseForm([]);
+              this.onChooseForm([], true);
             } else if (data === 'excel') {
               this.openModalUploadExcel();
             }
@@ -593,11 +597,14 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     const modal = await this.modalController.create({
       component: UploadExcelProcessorComponent,
       cssClass: 'upload-excel-modal',
+      backdropDismiss: false
     })
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         const data = result.data;
+        // console.log(data);
+        
         this.onChooseForm(data);
       } else {
         return
@@ -607,8 +614,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     return await modal.present();
   }
 
-  onChooseForm(listOfInvitees: any = []) {
+  onChooseForm(listOfInvitees: any = [], isManual?: boolean) {
     // console.log(listOfInvitees);
+    if (!listOfInvitees || listOfInvitees.length === 0 && isManual !== true) {
+      return; // stop, ga jadi navigate
+    }
     this.route.navigate(['/visitor-invitig-form'], {
       state: {
         formData: this.formData,

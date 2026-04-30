@@ -889,24 +889,39 @@ export class FunctionMainService {
 
   /** Map satu baris Excel → Invitee (termasuk resolve host_ids via API) */
   private async mapRowToInvitee(row: ExcelRow): Promise<InviteeNew> {
-    const usesateDataRaw = await this.storage.getValueFromStorage('USESATE_DATA');
-    const usesateData = this.storage.decodeData(usesateDataRaw);
-    const estate = JSON.parse(String(usesateData)) as Estate;
-    const rawContact = String(row['Mobile Number'] ?? '').trim();
-    const hostName   = String(row['Host Related'] ?? '').trim();
-
-    // Resolve host id dari nama — jika tidak ditemukan, host_ids tetap []
-    console.log(estate, estate.family_id);
+    const value = await this.storage.getValueFromStorage('USESATE_DATA');
     
-    const hostId = hostName ? await this.getHostIdByName(hostName) : estate.family_id;
+    if (value) {
+      const decoded = await this.storage.decodeData(value);
+      
+      if (decoded) {
+        const estate = JSON.parse(decoded) as Estate;
+        const rawContact = String(row['Mobile Number'] ?? '').trim();
+        const hostName   = String(row['Host Related'] ?? '').trim();
 
+        console.log(estate, estate.family_id);
+
+        const hostId = hostName ? await this.getHostIdByName(hostName) : estate.family_id;
+
+        return {
+          visitor_name:           String(row['Name'] ?? '').trim(),
+          vehicle_number:         String(row['Vehicle Number'] ?? '').trim(),
+          contact_number:         this.normalizePhone(rawContact),
+          contact_number_display: rawContact,
+          company_name:           String(row['Company Name'] ?? '').trim(),
+          host_ids:               hostId !== null ? [hostId] : [],
+        };
+      }
+    }
+
+    // Fallback jika storage kosong / decode gagal
     return {
-      visitor_name:           String(row['Name'] ?? '').trim(),
-      vehicle_number:         String(row['Vehicle Number'] ?? '').trim(),
-      contact_number:         this.normalizePhone(rawContact),
-      contact_number_display: rawContact,
-      company_name:           String(row['Company Name'] ?? '').trim(),
-      host_ids:               hostId !== null ? [hostId] : [],
+      visitor_name:           '',
+      vehicle_number:         '',
+      contact_number:         '',
+      contact_number_display: '',
+      company_name:           '',
+      host_ids:               [],
     };
   }
 
@@ -924,6 +939,7 @@ export class FunctionMainService {
       );
 
       const id = response?.result?.response_result?.id;
+      console.log(id, "jsfweivnwev")
       return id ?? null;
 
     } catch {
