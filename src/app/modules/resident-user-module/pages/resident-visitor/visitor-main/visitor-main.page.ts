@@ -586,7 +586,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   
         return await modal.present();
       } else {
-        this.onChooseForm([]);
+        this.onChooseForm([], true);
       }
     } else {
       this.functionMain.presentToast(errMsg, 'danger');
