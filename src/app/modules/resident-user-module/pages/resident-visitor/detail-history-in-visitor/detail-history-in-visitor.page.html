@@ -82,7 +82,7 @@
                 <tr class="h-6" *ngIf="historyData.mode_of_entry !== 'Walk In'">
                   <td class="w-[60%] font-bold">Vehicle No</td>
                   <td class="w-[10%]">:</td>
-                  <td>{{ historyData.vehicle_number || '-' }}</td>
+                  <td class="uppercase">{{ historyData.vehicle_number || '-' }}</td>
                   <!-- Menampilkan '-' jika vehicle_number kosong -->
                 </tr>
                 <!-- <tr class="h-6" *ngIf="historyData.purpose === 'Visiting'">

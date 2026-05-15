@@ -155,7 +155,7 @@ export class RaiseARequestMainPage implements OnInit {
       'Create Date',
       'States',
       'Schedule Type',
-      'Schedule Date',
+      'Schedule Start Date',
       'Reason for Rejection'
     ],
     'Pets Application.': [
@@ -183,14 +183,14 @@ export class RaiseARequestMainPage implements OnInit {
     private mainApi: MainApiResidentService,
     private router: Router,
     public functionMain: FunctionMainService,
-        private storage: StorageService, 
+    private storage: StorageService,
   ) { }
 
   ngOnInit() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
-      if ( value ) {
+      if (value) {
         this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
+          if (value) {
             const estate = JSON.parse(value) as Estate;
             console.log(estate);
             this.mainApi.endpointMainProcess({}, 'get/button_menus_config_raise_a_request').subscribe((button: any) => {
@@ -233,14 +233,14 @@ export class RaiseARequestMainPage implements OnInit {
 
   goToPage(event: any) {
     const inputValue = parseInt(event.target.value, 10);
-    
+
     // Validate input: ensure it's a number within valid range
     if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
       this.loadHistoryRequests('goto', inputValue);
     } else {
       // Reset to current page if invalid input
       event.target.value = this.pagination.current_page;
-      
+
       // Optional: Show a toast message for invalid page
       this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
     }
@@ -266,32 +266,32 @@ export class RaiseARequestMainPage implements OnInit {
     this.mainApi.endpointMainProcess({
       page: page,
       type: type
-    }, 'get/raise_a_request_status').subscribe(      
+    }, 'get/raise_a_request_status').subscribe(
       (response: any) => {
-        
+
         // Process the flat array data format
         const data = response.result.data || [];
-        
+
         // Group the data by application type
         this.accessCard = data.filter((item: any) => item.application_title === 'Access cards Application.');
         this.overnight = data.filter((item: any) => item.application_title === 'Overnight parking records Application.');
         this.bicycle = data.filter((item: any) => item.application_title === 'Bicycle tags Application.');
         this.coach = data.filter((item: any) => item.application_title === 'Registered coaches Application.');
-        
+
         // Filter and process Request Schedules 
         const allSchedules = data.filter((item: any) => item.application_title === 'Request schedules Application.');
         this.schedule = allSchedules;
         this.typeSchedule = [...new Set(allSchedules.map((item: any) => item.schedule_type || ''))];
-        
+
         this.pet = data.filter((item: any) => item.application_title === 'Pets Application.');
         this.appeal = data.filter((item: any) => item.application_title === 'Offences Application.');
 
         // Combine all data for filterable list
         this.allDatas = [...data];
         this.filteredDatas = [...data];
-        
+
         this.isLoading = false;
-        
+
         // Update pagination from response
         this.pagination = {
           current_page: response.result.pagination?.current_page ? Number(response.result.pagination.current_page) : 1,
@@ -299,8 +299,8 @@ export class RaiseARequestMainPage implements OnInit {
           total_page: response.result.pagination?.total_pages ? Number(response.result.pagination.total_pages) : 1,
           total_records: response.result.pagination?.total_records ? Number(response.result.pagination.total_records) : 0
         }
-        console.log(this.pagination);
-        
+        console.log(this.allDatas);
+
       },
       (error) => {
         console.error("Error loading history requests:", error);
@@ -320,54 +320,54 @@ export class RaiseARequestMainPage implements OnInit {
   }
 
   isOvernightParking(data: AllData): data is OvernightParking {
-      return (data as OvernightParking).vehicle_number !== undefined;
+    return (data as OvernightParking).vehicle_number !== undefined;
   }
 
   isBicycleTag(data: AllData): data is BicycleTag {
-      return (data as BicycleTag).bicycle_tag !== undefined;
+    return (data as BicycleTag).bicycle_tag !== undefined;
   }
 
   isRegisteredCoach(data: AllData): data is RegisteredCoach {
-      return (data as RegisteredCoach).coach_name !== undefined;
+    return (data as RegisteredCoach).coach_name !== undefined;
   }
 
   isRequestSchedule(data: AllData): data is RequestSchedule {
-      return (data as RequestSchedule).schedule_type !== undefined;
+    return (data as RequestSchedule).schedule_type !== undefined;
   }
 
   isPetRegistration(data: AllData): data is PetRegistration {
-      return (data as PetRegistration).type_of_pet !== undefined;
+    return (data as PetRegistration).type_of_pet !== undefined;
   }
 
   isAppeal(data: AllData): data is Appeal {
-      return (data as Appeal).appeal_status !== undefined;
+    return (data as Appeal).appeal_status !== undefined;
   }
 
-getRequestValue(allData: any, field: string): string {
-  // Convert field name to property name (lowercase and replace spaces with underscores)
-  const propertyName = field.toLowerCase().replace(/ /g, '_');
-  
-  // Check if property exists in allData
-  if (propertyName in allData) {
-    return allData[propertyName] !== null && allData[propertyName] !== undefined ? 
-      String(allData[propertyName]) : '-';
+  getRequestValue(allData: any, field: string): string {
+    // Convert field name to property name (lowercase and replace spaces with underscores)
+    const propertyName = field.toLowerCase().replace(/ /g, '_');
+
+    // Check if property exists in allData
+    if (propertyName in allData) {
+      return allData[propertyName] !== null && allData[propertyName] !== undefined ?
+        String(allData[propertyName]) : '-';
+    }
+
+    // Special cases for field mapping
+    switch (propertyName) {
+      case 'create_date':
+        return allData.create_date || '-';
+      case 'states':
+        return allData.states || '-';
+      case 'appeal_status':
+        return allData.appeal_status || '-';
+      case 'reason_for_appeal':
+        return allData.reason_for_appeal ? String(allData.reason_for_appeal) : '-';
+      // Add more cases as needed
+      default:
+        return '-';
+    }
   }
-  
-  // Special cases for field mapping
-  switch (propertyName) {
-    case 'create_date':
-      return allData.create_date || '-';
-    case 'states':
-      return allData.states || '-';
-    case 'appeal_status':
-      return allData.appeal_status || '-';
-    case 'reason_for_appeal':
-      return allData.reason_for_appeal ? String(allData.reason_for_appeal) : '-';
-    // Add more cases as needed
-    default:
-      return '-';
-  }
-}
 
   getIconName(state: string): string {
     switch (state) {
@@ -514,7 +514,7 @@ getRequestValue(allData: any, field: string): string {
         }
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: response.result.type });
-  
+
         if (Capacitor.isNativePlatform()) {
           const base64 = await this.convertBlobToBase64(blob);
           const saveFile = await Filesystem.writeFile({
@@ -558,11 +558,11 @@ getRequestValue(allData: any, field: string): string {
     document.body.appendChild(link);
     link.click();
     setTimeout(() => {
-        URL.revokeObjectURL(link.href);
-        // Periksa apakah parentNode tidak null sebelum menghapus
-        if (link.parentNode) {
-            link.parentNode.removeChild(link);
-        }
+      URL.revokeObjectURL(link.href);
+      // Periksa apakah parentNode tidak null sebelum menghapus
+      if (link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
     }, 0);
   }
 }

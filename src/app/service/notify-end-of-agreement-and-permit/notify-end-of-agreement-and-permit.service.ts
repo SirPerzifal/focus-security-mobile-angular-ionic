@@ -9,6 +9,7 @@ import { StorageService } from '../storage/storage.service';
 import { FunctionMainService } from '../function/function-main.service';
 import { WebRtcService } from '../fs-web-rtc/web-rtc.service';
 import { Router } from '@angular/router';
+import { Estate } from 'src/models/resident/resident.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     setTimeout(() => {
       this.checkExpiryDateAccount();
     }, 5000);
-    
+
     this.checkInterval = interval(10000).subscribe(() => {
       this.checkExpiryDateAccount();
     });
@@ -84,10 +85,21 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
 
     // Check apakah user sudah login (ada data di storage)
     const userData = await this.storageService.getValueFromStorage('USESATE_DATA');
-    
+
     if (!userData) {
       // console.log('User belum login, skip check expiry date');
       return;
+    }
+
+    const decodedValue = await this.storageService.decodeData(userData)
+    const estate = JSON.parse(decodedValue) as Estate;
+
+    const searchItems = ['Helper', 'Tenants'];
+
+    const missing = searchItems.every(item => !estate.family_type.includes(item));
+
+    if (missing) {
+      return
     }
 
     // Update last check time
@@ -105,7 +117,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
     today.setHours(0, 0, 0, 0); // Set ke awal hari
     try {
       this.mainApiResidential.endpointMainProcess(
-        {}, 
+        {},
         'get/get_expiry_last_for_helper_and_tenants'
       ).subscribe({
         next: (response: any) => {
@@ -170,7 +182,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
   private async showLastOneWeekModal(message: string) {
 
     // console.log(message);
-    
+
 
     if (message === 'No expiry data found within 7 days') {
       return
@@ -211,7 +223,7 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
    */
   async cleanUp() {
     // console.log('Starting cleanup...');
-    
+
     // Tutup modal jika ada
     if (this.currentModal) {
       try {
@@ -226,10 +238,10 @@ export class NotifyEndOfAgreementAndPermitService extends ApiService {
 
     // Stop periodic check
     this.stopPeriodicCheck();
-    
+
     // Reset last check time
     this.resetLastCheckTime();
-    
+
     // console.log('Cleanup completed');
   }
 

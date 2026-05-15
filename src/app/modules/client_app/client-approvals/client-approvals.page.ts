@@ -26,7 +26,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ClientApprovalsPage implements OnInit {
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private clientMainService: ClientMainService,
     public functionMain: FunctionMainService,
     private getUserInfoService: GetUserInfoService,
@@ -49,12 +49,12 @@ export class ClientApprovalsPage implements OnInit {
 
   loadMenu() {
     if (this.project_config.is_industrial) {
-      this.menuItems = this.menuItems.filter((item: any) => item.permission[1] )
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[1])
     } else {
-      this.menuItems = this.menuItems.filter((item: any) => item.permission[0] )
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[0])
     }
   }
-  
+
   private routerSubscription!: Subscription;
   ngOnDestroy() {
     if (this.routerSubscription) {
@@ -72,21 +72,21 @@ export class ClientApprovalsPage implements OnInit {
   project_id = 0
 
   menuItems: any = [
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/deals/Money Bag.webp', alt: 'Refund Deposits Icon', route: 'refund_deposits', text: 'Refund Deposits', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], menu_count: 0},
-    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], menu_count: 0},
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 2.webp', alt: 'Access Card Icon', route: 'access_card', text: 'Access Card', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/deals/Money Bag.webp', alt: 'Refund Deposits Icon', route: 'refund_deposits', text: 'Refund Deposits', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Apply Overnight Icon', route: 'overnight', text: 'Apply Overnight', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 5.webp', alt: 'Bicycle Tag Icon', route: 'bicycle', text: 'Bicycle Tag', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 4.webp', alt: 'Coach Registration Icon', route: 'coach', text: 'Coach Registration', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 6.webp', alt: 'Move Permit Icon', route: 'move_permit', text: 'Move Permit', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 7.webp', alt: 'Pet Registration Icon', route: 'pet', text: 'Pet Registration', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 8.webp', alt: 'Renovation Work Icon', route: 'renovation', text: 'Renovation Work', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/raise_request/Rectangle 3.webp', alt: 'Appeal Parking Icon', route: 'parking', text: 'Appeal Parking', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/icon4.png', alt: 'Vehicle', route: 'vehicle', text: 'Vehicle Approvals', permission: [true, true], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/icon1.png', alt: 'Residents', route: 'family', text: 'Residents', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/icon3.png', alt: 'Faciliy Booking', route: 'facility', text: 'Facility', permission: [true, true], menu_count: 0 },
     // { src: 'assets/icon/resident-icon/icon2.png', alt: 'Payment', route: '', text: 'Payment', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], menu_count: 0},
-    { src: 'assets/icon/resident-icon/find_service/Contractor.png', alt: 'Contractor', route: 'contractor', text: 'Contractor', permission: [false, true], menu_count: 0},
+    { src: 'assets/icon/exc-client/car_time.png', alt: 'Vehicle Extension', route: 'vehicle_extension', text: 'Vehicle Extension', permission: [true, false], menu_count: 0 },
+    { src: 'assets/icon/resident-icon/find_service/Contractor.png', alt: 'Contractor', route: 'contractor', text: 'Contractor', permission: [false, true], menu_count: 0 },
     // { src: 'assets/icon/resident-icon/upcoming-event.png', alt: 'Events', route: 'events', text: 'Events', permission: [false, true], menu_count: 0},
   ];
 
@@ -96,13 +96,26 @@ export class ClientApprovalsPage implements OnInit {
       this.isData = true
       this.textSecond = menu.text
       this.isClosed = false
-      this.isActive = true
+      if (menu.route === "refund_deposits") {
+        this.isNotReturned = true
+      } else {
+        this.isActive = true
+      }
     }, 300)
     if (menu.route == "") {
       this.activeApprovals = []
       this.showApprovals = []
       this.approval_type = menu.route
       this.approval_name = menu.text
+    } else if (menu.route == "refund_deposits") {
+      this.activeApprovals = []
+      this.closedApprovals = []
+      this.showApprovals = []
+      this.pagination = {}
+      this.approval_type = menu.route
+      this.approval_name = menu.text
+      console.log(menu.route)
+      this.toggleShowNotReturned()
     } else {
       this.activeApprovals = []
       this.closedApprovals = []
@@ -117,14 +130,16 @@ export class ClientApprovalsPage implements OnInit {
 
   isLoading = false
 
-  async loadApproval(){
+  async loadApproval() {
     this.isLoading = true
     console.log(this.approval_type)
     let params = {}
     if (this.isActive) {
-      params = {record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive}
+      params = { record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive }
+    } else if (this.isNotReturned) {
+      params = { record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: false, is_not_returned: this.isNotReturned }
     } else {
-      params = {record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter}
+      params = { record_list: this.approval_type, project_id: this.project_id, page: this.currentPage, limit: this.functionMain.limitHistory, is_active: this.isActive, issue_date: this.startDateFilter, end_issue_date: this.endDateFilter }
     }
     this.activeApprovals = []
     this.closedApprovals = []
@@ -138,6 +153,11 @@ export class ClientApprovalsPage implements OnInit {
             this.pagination = this.activePagination
             this.activeApprovals = results.result.booking
             this.showApprovals = this.activeApprovals
+          } else if (this.isNotReturned) {
+            this.notReturnedPagination = results.result.pagination
+            this.pagination = this.notReturnedPagination
+            this.notReturnedApprovals = results.result.booking
+            this.showApprovals = this.notReturnedApprovals
           } else {
             this.closedPagination = results.result.pagination
             this.pagination = this.closedPagination
@@ -149,6 +169,9 @@ export class ClientApprovalsPage implements OnInit {
           if (this.isActive) {
             this.activePagination = {}
             this.pagination = this.activePagination
+          } else if (this.isNotReturned) {
+            this.notReturnedPagination = {}
+            this.pagination = this.notReturnedPagination
           } else {
             this.closedPagination = {}
             this.pagination = this.closedPagination
@@ -172,7 +195,7 @@ export class ClientApprovalsPage implements OnInit {
       this.selectedApproval = []
     } else {
       if (this.isHome) {
-        this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
+        this.router.navigate(['/client-main-app'], { queryParams: { reload: true } })
       } else {
         this.isData = false
         setTimeout(() => {
@@ -187,13 +210,28 @@ export class ClientApprovalsPage implements OnInit {
 
   activeApprovals: any = []
   closedApprovals: any = []
+  notReturnedApprovals: any = []
   showApprovals: any = []
 
   isActive = true
   isClosed = false
   isClosedTrans = false
+  isNotReturned = false
+
+  toggleShowNotReturned() {
+    this.isClosed = false
+    this.isActive = false
+    this.isNotReturned = true
+    this.pagination = this.notReturnedPagination
+    this.showApprovals = this.notReturnedApprovals
+    if (this.notReturnedApprovals.length == 0) {
+      this.loadApproval()
+    }
+  }
+
   toggleShowActive() {
     this.isClosed = false
+    this.isNotReturned = false
     this.isActive = true
     this.pagination = this.activePagination
     this.showApprovals = this.activeApprovals
@@ -204,6 +242,7 @@ export class ClientApprovalsPage implements OnInit {
 
   toggleShowClosed() {
     this.isActive = false
+    this.isNotReturned = false
     this.isClosed = true
     this.pagination = this.closedPagination
     this.showApprovals = this.closedApprovals
@@ -264,10 +303,10 @@ export class ClientApprovalsPage implements OnInit {
     setTimeout(() => {
       this.isDetail = true
     }, 300);
-    
+
   }
 
-  selectedApproval: any =[]
+  selectedApproval: any = []
 
   isApprovalHome = true
   isDetail = false
@@ -295,7 +334,7 @@ export class ClientApprovalsPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'warning')
       return
     }
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag, side_code: this.side_code, card_id: this.access_card_id}, '/client/post/approve').subscribe({
+    this.clientMainService.getApi({ model_name: this.approval_type, record_id: approval.id, rfid: this.rfid_tag, side_code: this.side_code, card_id: this.access_card_id }, '/client/post/approve').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
@@ -322,7 +361,7 @@ export class ClientApprovalsPage implements OnInit {
       this.functionMain.presentToast('Reason for rejection is required!', 'danger')
       return
     }
-    this.clientMainService.getApi({model_name: this.approval_type, record_id: this.selectedApproval.id, reject_reason: this.reject_reason}, '/client/post/reject').subscribe({
+    this.clientMainService.getApi({ model_name: this.approval_type, record_id: this.selectedApproval.id, reject_reason: this.reject_reason }, '/client/post/reject').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.success) {
@@ -345,7 +384,7 @@ export class ClientApprovalsPage implements OnInit {
     });
   }
 
-  toggleApprovalHome(){
+  toggleApprovalHome() {
     this.isDetail = false
     setTimeout(() => {
       this.isApprovalHome = true
@@ -400,16 +439,16 @@ export class ClientApprovalsPage implements OnInit {
 
   getBgClass(): string {
     return this.selectedApproval.states === 'approved' ? 'bg-green-100' :
-           this.selectedApproval.states === 'pending_approval' || this.selectedApproval.states === 'pending_payment' ? 'bg-sky-100' :
-           this.selectedApproval.states === 'rejected' || this.selectedApproval.states === 'cancel' ? 'bg-[#E3787E]' :
-           this.selectedApproval.states === 'requested' ? 'bg-[#F8F1BA]' :
-           !this.selectedApproval.states ? 'bg-[#c4c4c4]' : '';
+      this.selectedApproval.states === 'pending_approval' || this.selectedApproval.states === 'pending_payment' ? 'bg-sky-100' :
+        this.selectedApproval.states === 'rejected' || this.selectedApproval.states === 'cancel' ? 'bg-[#E3787E]' :
+          this.selectedApproval.states === 'requested' ? 'bg-[#F8F1BA]' :
+            !this.selectedApproval.states ? 'bg-[#c4c4c4]' : '';
   }
-  
+
   paymentConfig: any = []
   paymentChange: any = []
-  loadProjectTax(){
-    this.clientMainService.getApi({project_id: this.project_id}, '/client/get/payment_config').subscribe({
+  loadProjectTax() {
+    this.clientMainService.getApi({ project_id: this.project_id }, '/client/get/payment_config').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code == 200) {
@@ -427,7 +466,7 @@ export class ClientApprovalsPage implements OnInit {
 
   layerBack() {
     history.pushState(null, '', location.href);
-    
+
     const closeModalOnBack = () => {
       this.closePaymentmodal()
       window.removeEventListener('popstate', closeModalOnBack);
@@ -441,7 +480,7 @@ export class ClientApprovalsPage implements OnInit {
     this.isPaymentModal = true
 
     this.layerBack()
-    
+
   }
 
   closePaymentmodal() {
@@ -456,7 +495,7 @@ export class ClientApprovalsPage implements OnInit {
         console.log(results)
         if (results.result.response_code == 200) {
           this.isPaymentModal = false
-          this.paymentConfig = this.paymentChange 
+          this.paymentConfig = this.paymentChange
           console.log(this.paymentConfig)
         } else {
           this.paymentChange = this.paymentConfig
@@ -469,9 +508,9 @@ export class ClientApprovalsPage implements OnInit {
         console.error(error);
       }
     });
-    
+
   }
-  
+
   returnArray(array: any) {
     return (array.map((arr: any) => arr.name)).join(', ')
   }
@@ -493,6 +532,7 @@ export class ClientApprovalsPage implements OnInit {
   pagination: any = {}
   activePagination: any = {}
   closedPagination: any = {}
+  notReturnedPagination: any = {}
 
   pageForward(page: number) {
     this.currentPage = page
@@ -501,7 +541,7 @@ export class ClientApprovalsPage implements OnInit {
   }
 
   loadNotificationCount() {
-    this.clientMainService.getApi({selected_project_id: this.project_id, menu_name: 'approval'}, '/client/get/notification_count').subscribe({
+    this.clientMainService.getApi({ selected_project_id: this.project_id, menu_name: 'approval' }, '/client/get/notification_count').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           let counts = results.result.counts[0]
@@ -526,7 +566,7 @@ export class ClientApprovalsPage implements OnInit {
 
   getDownloadDocument(document: any) {
     console.log(document)
-    this.clientMainService.getApi({document_id: document.id, type_request: 'client_approval', client_page: this.approval_type}, '/resident/get/download_document').subscribe({
+    this.clientMainService.getApi({ document_id: document.id, type_request: 'client_approval', client_page: this.approval_type }, '/resident/get/download_document').subscribe({
       next: (results) => {
         console.log(results.result.title)
         if (results.result.response_code == 200) {

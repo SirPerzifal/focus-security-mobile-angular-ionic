@@ -60,6 +60,14 @@
     ></ion-refresher-content>
   </ion-refresher>
   <div class="p-5 text-center mb-32">
+    <div class="notifications" *ngIf="!isLoading && showNotificationCard">
+      <!-- <h1 class="font-bold text-xl text-left px-2 mb-1">Notifications</h1> -->
+      <div
+        class="notification-info flex items-center gap-3 text-left bg-[var(--ion-color-tertiary)] rounded-lg px-5 py-1.5 text-[black] my-2 font-semibold cursor-pointer" [routerLink]="['/client-notification']">
+        <ion-icon name="notifications" class="text-[red] p-0 mt-.5 size-6" [routerLink]="['/client-notification']"></ion-icon>
+        <p [routerLink]="['/client-notification']"> You have <strong>{{notificationCount}}  </strong> new notifications</p>
+      </div>
+    </div>
     <div class="flex items-center justify-center flex-col" *ngIf="!isLoading">
       <div class="w-full grid grid-cols-3 flex-wrap justify-center gap-3 mt-5">
         <div

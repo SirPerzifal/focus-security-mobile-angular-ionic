@@ -71,6 +71,13 @@
       <div
         class="flex flex-row justify-start items-center w-full space-x-3 mt-2"
       >
+        <div class="w-full" *ngIf="textSecond === 'Refund Deposits'">
+          <app-visitor-button
+            [text]="'Not Returned'"
+            [extraClass]="'w-full leading-none cw-4:text-sm ' + (isNotReturned ? 'bg-[var(--ion-color-primary)] text-white': 'bg-[#D0D0D0] text-[#757575]')"
+            (click)="toggleShowNotReturned()"
+          ></app-visitor-button>
+        </div>
         <div class="w-full">
           <app-visitor-button
             [text]="'Pending'"
@@ -632,6 +639,19 @@
                 <p class="ml-2 table-cell text-base text-black">
                   : {{ approval.expected_return_deposit_date ?
                   functionMain.formatDateDDMMYYYY(approval.expected_return_deposit_date)
+                  : '-' }}
+                </p>
+              </div>
+              <div
+                class="table-row"
+                *ngIf="['refund_deposits'].includes(approval_type)"
+              >
+                <p class="font-bold table-cell w-1/2 text-base text-black">
+                  Refund Date
+                </p>
+                <p class="ml-2 table-cell text-base text-black">
+                  : {{ approval.return_deposit_date ?
+                  functionMain.formatDateDDMMYYYY(approval.return_deposit_date)
                   : '-' }}
                 </p>
               </div>

@@ -19,20 +19,21 @@ export class MainApiResidentService extends ApiService {
   blockId: number = 0;
   projectId: number = 0;
 
-  constructor(http: HttpClient, private storage: StorageService, private modalController: ModalController) { 
+  constructor(http: HttpClient, private storage: StorageService, private modalController: ModalController) {
     super(http);
   }
 
   endpointMainProcess(params: any, apiUrl: string): Observable<any> {
+
     let modalRef: HTMLIonModalElement | null = null;
     let openLoading = false;
-  
+
     // Check if API URL contains 'post' to determine whether to show loading modal
     const urlSegments = apiUrl.split('/');
     if (urlSegments.length > 0 && urlSegments.includes('post')) {
       openLoading = true;
     }
-    
+
     // Mengkonversi Promise chain menjadi Observable
     return from(this.storage.getValueFromStorage('USESATE_DATA')).pipe(
       // Flatmap untuk menangani Promise berikutnya
@@ -41,16 +42,15 @@ export class MainApiResidentService extends ApiService {
           // Menangani kasus jika value tidak ada
           return throwError(() => new Error('No estate data found'));
         }
-  
+
         return from(this.storage.decodeData(value));
       }),
       switchMap((decodedValue: any) => {
         if (!decodedValue) {
           return throwError(() => new Error('Failed to decode estate data'));
         }
-        
+
         const estate = JSON.parse(decodedValue) as Estate;
-        
         // Set ID berdasarkan tipe estate
         if (estate.record_type === 'industrial') {
           this.hostId = estate.family_id;
@@ -61,20 +61,20 @@ export class MainApiResidentService extends ApiService {
           this.familyId = estate.family_id;
           this.hostId = 0
         }
-        
+
         // Set ID yang sama untuk kedua tipe
         this.unitId = estate.unit_id;
         this.blockId = estate.block_id;
         this.projectId = estate.project_id;
-        
+
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         });
-        
+
         // Body request berdasarkan ada/tidaknya data estate
         let body;
-        
+
         if (estate.record_type === 'industrial' || estate.record_type === 'resident') {
           body = {
             jsonrpc: '2.0',
@@ -93,7 +93,7 @@ export class MainApiResidentService extends ApiService {
             params: params
           };
         }
-        
+
         // Create and present loading modal if needed
         return from((async () => {
           if (openLoading) {
@@ -103,13 +103,13 @@ export class MainApiResidentService extends ApiService {
             });
             await modalRef.present();
           }
-          
+
           // Mengirim HTTP request
           return this.http.post(this.baseUrl + '/resident/' + apiUrl, body, { headers });
         })());
       }),
       mergeMap(response$ => response$.pipe(
-        
+
       )),
       tap(() => {
         // Dismiss modal after successful response
@@ -131,7 +131,7 @@ export class MainApiResidentService extends ApiService {
     let modalRef: HTMLIonModalElement | null = null;
     let openLoading = false;
     let isStripePurpose = false;
-  
+
     // Check if API URL contains 'post' to determine whether to show loading modal
     if (apiUrl === "/create-payment-intent" || apiUrl === "/get-stripe-payment-info") {
       isStripePurpose = true;
@@ -146,16 +146,16 @@ export class MainApiResidentService extends ApiService {
             // Menangani kasus jika value tidak ada
             return throwError(() => new Error('No estate data found'));
           }
-    
+
           return from(this.storage.decodeData(value));
         }),
         switchMap((decodedValue: any) => {
           if (!decodedValue) {
             return throwError(() => new Error('Failed to decode estate data'));
           }
-          
+
           const estate = JSON.parse(decodedValue) as Estate;
-          
+
           // Set ID berdasarkan tipe estate
           if (estate.record_type === 'industrial') {
             this.hostId = estate.family_id;
@@ -166,20 +166,20 @@ export class MainApiResidentService extends ApiService {
             this.familyId = estate.family_id;
             this.hostId = 0
           }
-          
+
           // Set ID yang sama untuk kedua tipe
           this.unitId = estate.unit_id;
           this.blockId = estate.block_id;
           this.projectId = estate.project_id;
-          
+
           const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           });
-          
+
           // Body request berdasarkan ada/tidaknya data estate
           let body;
-          
+
           if (estate.record_type === 'industrial' || estate.record_type === 'resident') {
             body = {
               jsonrpc: '2.0',
@@ -198,7 +198,7 @@ export class MainApiResidentService extends ApiService {
               params: params
             };
           }
-          
+
           // Create and present loading modal if needed
           return from((async () => {
             if (openLoading) {
@@ -208,13 +208,13 @@ export class MainApiResidentService extends ApiService {
               });
               await modalRef.present();
             }
-            
+
             // Mengirim HTTP request
             return this.http.post(this.baseUrl + apiUrl, body, { headers });
           })());
         }),
         mergeMap(response$ => response$.pipe(
-          
+
         )),
         tap(() => {
           // Dismiss modal after successful response
@@ -238,7 +238,7 @@ export class MainApiResidentService extends ApiService {
         'Accept': 'application/json'
       });
       // console.log(params)
-      return this.http.post(this.baseUrl + apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
+      return this.http.post(this.baseUrl + apiUrl, { jsonrpc: '2.0', params: params }, { headers }).pipe(
         catchError(this.handleError)
       );
     }
@@ -250,14 +250,14 @@ export class MainApiResidentService extends ApiService {
       'Accept': 'application/json'
     });
     // console.log(params)
-    return this.http.post(this.baseUrl + '/resident/' + apiUrl, {jsonrpc: '2.0', params: params}, { headers }).pipe(
+    return this.http.post(this.baseUrl + '/resident/' + apiUrl, { jsonrpc: '2.0', params: params }, { headers }).pipe(
       catchError(this.handleError)
     );
   }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
-    
+
     if (error.error instanceof ErrorEvent) {
       console.error('Client-side error:', error.error.message);
     } else {

@@ -41,6 +41,14 @@
           <span class="sr-only">Search</span>
       </button>
     </div> -->
+    <div class="notifications mb-5" *ngIf="!isLoading && showNotificationCard">
+      <!-- <h1 class="font-bold text-xl text-left px-2 mb-1">Notifications</h1> -->
+      <div
+        class="notification-info flex items-center gap-3 text-left bg-[var(--ion-color-tertiary)] rounded-lg px-5 py-1.5 text-[black] my-2 font-semibold cursor-pointer" [routerLink]="['/notification-page-main']">
+        <ion-icon name="notifications" class="text-[red] p-0 mt-.5 size-6" [routerLink]="['/notification-page-main']"></ion-icon>
+        <p [routerLink]="['/notification-page-main']"> You have <strong>{{notificationCount}}</strong> new notifications</p>
+      </div>
+    </div>
     <div class="flex flex-col gap-3">
       <div *ngFor="let lb of longButtondata">
         <app-long-button

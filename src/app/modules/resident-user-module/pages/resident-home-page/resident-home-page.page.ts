@@ -31,14 +31,14 @@ import { NotifyEndOfAgreementAndPermitService } from 'src/app/service/notify-end
   styleUrls: ['./resident-home-page.page.scss'],
 })
 export class ResidentHomePagePage implements OnInit {
-  
+
   estate: Estate[] = [];
 
   isLoading: boolean = false;
   isModalUpdateProfile: boolean = false;
-  
+
   houseRules: { title: string, base64Doc: string }[] = [];
-  
+
   fcmToken: string = '';
   searchTerm: string = '';
   condominiumName: string = '';
@@ -48,6 +48,7 @@ export class ResidentHomePagePage implements OnInit {
   imageProfile: string = '';
   familyType: string = '';
   callActionStatus: string = '';
+  notificationCount = 0;
 
   longButtondata: any[] = [
     {
@@ -153,7 +154,7 @@ export class ResidentHomePagePage implements OnInit {
     private route: ActivatedRoute,
     private appVersionCheck: CheckAppVersionService,
     private notifyEndAgreement: NotifyEndOfAgreementAndPermitService
-  ) {}
+  ) { }
 
   handleRefresh(event: any) {
     this.isLoading = true;
@@ -170,9 +171,9 @@ export class ResidentHomePagePage implements OnInit {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       // Force check saat masuk halaman ini
       this.appVersionCheck.checkVersion(true);
-      if ( value ) {
+      if (value) {
         this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
+          if (value) {
             this.notifyEndAgreement.checkExpiryDateAccount(true);
             const estate = JSON.parse(value) as Estate;
             this.setData(estate, estate.image_profile);
@@ -185,8 +186,8 @@ export class ResidentHomePagePage implements OnInit {
           }
         })
       } else {
-        Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-          if(value?.value){
+        Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+          if (value?.value) {
             // console.log(value.value)
             const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
             this.isLoading = true;
@@ -206,7 +207,7 @@ export class ResidentHomePagePage implements OnInit {
       App.exitApp();
     });
   }
-  
+
   async initBluetooth() {
     try {
       await BleClient.initialize();
@@ -220,7 +221,7 @@ export class ResidentHomePagePage implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log(params)
       if (params) {
-        if (params['reload']){
+        if (params['reload']) {
           console.log("jinkx 1")
           this.webRtcService.initializeSocket();
           this.webRtcService.callActionStatus.subscribe(status => {
@@ -241,14 +242,14 @@ export class ResidentHomePagePage implements OnInit {
     }
   }
 
-  async loadEstate( email:string ) {
+  async loadEstate(email: string) {
     this.mainApiResident.endpointProcess({
       email: email
     }, 'get/estate').subscribe((result: any) => {
       if (result.result.status_code === 200) {
         var listedEstate = []
-        for (var key in result.result.response){
-          if(result.result.response.hasOwnProperty(key)){
+        for (var key in result.result.response) {
+          if (result.result.response.hasOwnProperty(key)) {
             listedEstate.push({
               user_id: result.result.response[key]?.user_id,
               family_id: result.result.response[key]?.family_id,
@@ -314,10 +315,10 @@ export class ResidentHomePagePage implements OnInit {
             }
           })
         } else if (result.data === 'gas ini dari resident') {
-          this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+          this.router.navigate(['/client-main-app'], { queryParams: { reload: true } });
         } else {
-          Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-            if(value?.value){
+          Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+            if (value?.value) {
               const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
               this.isLoading = true;
               // Mengubah string JSON menjadi objek JavaScript
@@ -348,20 +349,26 @@ export class ResidentHomePagePage implements OnInit {
     // }
   }
 
+  showNotificationCard: boolean = false;
   loadMenusConfig() {
     this.isLoading = true;
-    this.mainApiResident.endpointMainProcess({}, 'get/button_menus_config').subscribe((result:any) => {
+    this.mainApiResident.endpointMainProcess({}, 'get/button_menus_config').subscribe((result: any) => {
       if (result.result.response_code === 200) {
         this.isLoading = false
         this.longButtondata = result.result.result.long_button_data.filter((longButton: any) => {
           return longButton.active === true;
         });
-        this.squareButton = result.result.result.square_button.filter((squareButton: any) => {
-          return squareButton.active === true;
-        });
-        console.log(this.squareButton);
-        
+        this.squareButton = result.result.result.square_button.filter((btn: any) =>
+          btn.active && btn.name !== 'Notifications'
+        );
+        result.result.result.square_button.forEach((item: any) => {
+          if (item.name === 'Notifications') {
+            this.notificationCount = item.paramForBadgeNotification
+            this.showNotificationCard = item.active
+          }
+        })
       } else {
+        this.showNotificationCard = false;
         console.error('Error fetching notifications:', result);
       }
     })
@@ -397,7 +404,7 @@ export class ResidentHomePagePage implements OnInit {
       if (permissionStatus.camera !== 'granted') {
         await Camera.requestPermissions();
       }
-      
+
       const image = await Camera.getPhoto({
         quality: 50,
         resultType: CameraResultType.Base64, // Ubah ke Base64
@@ -408,14 +415,14 @@ export class ResidentHomePagePage implements OnInit {
         promptLabelCancel: 'Cancel',
         promptLabelPhoto: 'Take Photo',
       });
-      
-      if (image && image.base64String) {  
+
+      if (image && image.base64String) {
         this.isModalChooseUpload = !this.isModalChooseUpload;
         // Update the form data with the base64 image
         this.selectedProfile = image.base64String;
-        
+
         this.showingProfile = image.base64String;
-        
+
         // Display success message
         this.functionMain.presentToast('Photo captured successfully', 'success');
       }
@@ -508,7 +515,7 @@ export class ResidentHomePagePage implements OnInit {
   private waitForToken(familyId: number): Promise<string> {
     return new Promise((resolve) => {
       const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
-      
+
       const timeout = setTimeout(() => {
         this.cleanupTokenListeners();
         console.log('FCM registration timed out');
@@ -520,7 +527,7 @@ export class ResidentHomePagePage implements OnInit {
         if (token.value) {
           this.fcmToken = token.value;
           console.log('FCM Token received:', token.value);
-            
+
           // ✅ Send token to backend
           this.mainApiResident.endpointCustomProcess({
             family_id: familyId,
@@ -560,6 +567,6 @@ export class ResidentHomePagePage implements OnInit {
     });
   }
 
-  private cleanupTokenListeners: () => void = () => {};
+  private cleanupTokenListeners: () => void = () => { };
 
 }

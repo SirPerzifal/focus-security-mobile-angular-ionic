@@ -70,13 +70,13 @@ export class ClientMainAppPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log(params)
       if (params) {
-        if (params['reload']){
+        if (params['reload']) {
           console.log("FROM CLIENT")
           this.webRtcService.initializeSocket()
           this.webRtcService.callActionStatus.subscribe(status => {
             this.callActionStatus = status;
           });
-          this.loadProject().then(()=>{
+          this.loadProject().then(() => {
             this.loadNotificationCount()
           })
         }
@@ -92,7 +92,7 @@ export class ClientMainAppPage implements OnInit {
     // Mendapatkan informasi platform
     this.platformInfo = this.platform.platforms().join(', ');
     const test = this.platform.platforms()
-    
+
     // Memeriksa jenis platform
     this.isAndroid = this.platform.is('android');
     this.isIOS = this.platform.is('ios');
@@ -146,7 +146,7 @@ export class ClientMainAppPage implements OnInit {
       }
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
         console.log(value)
-        if ( value ) {
+        if (value) {
           // this.webRtcService.initializeSocket()
           this.userData.image_profile = value.image_profile
         } else {
@@ -157,14 +157,14 @@ export class ClientMainAppPage implements OnInit {
     })
   }
 
-  async loadEstate( email:string ) {
+  async loadEstate(email: string) {
     this.clientMainService.getApi({
       email: email
     }, '/resident/get/estate').subscribe((result: any) => {
       if (result.result.status_code === 200) {
         var listedEstate = []
-        for (var key in result.result.response){
-          if(result.result.response.hasOwnProperty(key)){
+        for (var key in result.result.response) {
+          if (result.result.response.hasOwnProperty(key)) {
             listedEstate.push({
               user_id: result.result.response[key]?.user_id,
               family_id: result.result.response[key]?.family_id,
@@ -215,7 +215,7 @@ export class ClientMainAppPage implements OnInit {
           this.storage.setValueToStorage('USESATE_DATA', storageData)
           this.loadConfig();
         } else if (result.data === 'gas ini dari resident') {
-          this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
+          this.router.navigate(['/resident-home-page'], { queryParams: { reload: true } });
         } else {
           this.isLoading = true;
           this.loadEstate(this.userData.email);
@@ -236,45 +236,47 @@ export class ClientMainAppPage implements OnInit {
 
   menuItems: any = []
 
+  showNotificationCard: boolean = false;
   initMenu() {
     this.menuItems = [
-      { src: "assets/icon/resident-icon/Approvals.png", alt: "Icon for Approvals", text: "Approvals", route: "/client-approvals", permission: [true, true], menu_show: this.project_config.is_allow_client_approval, menu_count: 0, id: 'approval', params: {}},
-      { src: "assets/icon/resident-icon/Raise_Ticket.png", alt: "Icon for Raise Ticket", text: "Ticket", route: "/client-raise-ticket", permission: [true, true], menu_show: this.project_config.is_allow_client_ticket, menu_count: 0, id: 'ticket', params: {}},
-      { src: "assets/icon/resident-icon/polling.png", alt: "Icon for Polling", text: "Polling", route: "/client-polling", permission: [true, true], menu_show: this.project_config.is_allow_client_polling, menu_count: 0, id: 'polling', params: {}},
-      { src: "assets/icon/resident-icon/Notices.png", alt: "Icon for Notices", text: "Notices", route: "/client-notices", permission: [true, true], menu_show: this.project_config.is_allow_client_notices, menu_count: 0, id: 'notices', params: {}},
-      { src: "assets/icon/home-icon/sound.webp", alt: "Icon for Docs", text: "Docs", route: "/client-docs", permission: [true, true], menu_show: this.project_config.is_allow_client_docs, menu_count: 0, id: 'docs', params: {}},
-      { src: "assets/icon/exc-client/report.png", alt: "Icon for Report an Issue", text: "Records", route: "/client-reports", permission: [true, true], menu_show: this.project_config.is_allow_client_reports, menu_count: 0, id: 'records', params: {}},
-      { src: "assets/icon/resident-icon/upcoming-event.png", alt: "Icon for Upcoming Events", text: "Upcoming Events", route: "/client-upcoming-events", permission: [true, true], menu_show: this.project_config.is_allow_client_events, menu_count: 0, id: 'events', params: {}},
-      { src: "assets/icon/resident-icon/Register_Visitor.png", alt: "Icon for Register a Visitor", text: "My Visitors", route: "/client-register-visitor", permission: [true, true], menu_show: this.project_config.is_allow_client_visitors, menu_count: 0, id: 'visitor', params: {}},
-      { src: "assets/icon/resident-icon/Facilities.png", alt: "Icon for Facilities", text: "Facilities", route: "/client-facility", permission: [true, true], menu_show: this.project_config.is_allow_client_facilities, menu_count: 0, id: 'facilities', params: {}},
-      { src: "assets/icon/exc-client/house_rules.png", alt: "Icon for House Rules", text: "House Rules", route: "/client-house-rules", permission: [true, true], menu_show: this.project_config.is_allow_client_house_rules, menu_count: 0, id: 'rules', params: {}},
-      { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Quick Dials", text: "Quick Dials", route: "/client-quick-dials", permission: [true, true], menu_show: this.project_config.is_allow_client_quick_dials, menu_count: 0, id: 'dials', params: {}},
-      { src: "assets/icon/exc-client/blacklist.png", alt: "Icon for Blacklist", text: "Blacklist", route: "/client-blacklist", permission: [true, true], menu_show: this.project_config.is_allow_client_blacklist, menu_count: 0, id: 'blacklist', params: {}},
-      { src: "assets/icon/exc-client/wheel.png", alt: "Icon for Wheel Clamp", text: "Wheel Clamp", route: "/client-wheel-clamp", permission: [true, true], menu_show: this.project_config.is_allow_client_wheel_clamp, menu_count: 0, id: 'clamp', params: {}},
-      { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Residents", text: "Residents", route: "/client-residents", permission: [true, false], menu_show: this.project_config.is_allow_client_residents, menu_count: 0, id: 'residents', params: {}},
-      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for Employees", text: "Employees", route: "/client-employees", permission: [false, true], menu_show: this.project_config.is_allow_client_employees, menu_count: 0, id: 'employees', params: {}},
-      { src: "assets/icon/home-icon/door.png", alt: "Icon for Door Access", text: "Door Access", route: "/client-door-access", permission: [false, false], menu_show: this.project_config.is_allow_client_door_access, menu_count: 0, id: 'door_access', params: {}},
-      { src: "assets/icon/exc-client/payment_setting.png", alt: "Icon for Payment Setting", text: "Payment Setting", route: "/client-payment-settings", permission: [true, false], menu_show: this.project_config.is_allow_client_payment_setting, menu_count: 0, id: 'payment', params: {}},
-      { src: "assets/icon/resident-icon/department.png", alt: "Icon for Departments", text: "Departments", route: "/client-department", permission: [false, true], menu_show: this.project_config.is_allow_client_department, menu_count: 0, id: 'departments', params: {}},
-      { src: "assets/icon/exc-client/burger.png", alt: "Icon for Deliveries", text: "Food Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_food_platform, menu_count: 0, id: 'delivery', params: {type: 'delivery'}},
-      { src: "assets/icon/exc-client/package.png", alt: "Icon for Package Express", text: "Package Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_package_platform, menu_count: 0, id: 'package', params: {type: 'package'}},
-      { src: "assets/icon/resident-icon/notification.png", alt: "Icon for Notifications", text: "Notifications", route: "/client-notification", permission: [true, true], menu_show: this.project_config.is_allow_client_notifications, menu_count: 0, id: 'notifications', params: {}},
-      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for User RFID List", text: "RFID User List", route: "/client-rfid-user-list", permission: [false, false], menu_show: this.project_config.is_allow_rfid_user_list, menu_count: 0, id: 'rfid', params: {}},
+      { src: "assets/icon/resident-icon/Approvals.png", alt: "Icon for Approvals", text: "Approvals", route: "/client-approvals", permission: [true, true], menu_show: this.project_config.is_allow_client_approval, menu_count: 0, id: 'approval', params: {} },
+      { src: "assets/icon/resident-icon/Raise_Ticket.png", alt: "Icon for Raise Ticket", text: "Ticket", route: "/client-raise-ticket", permission: [true, true], menu_show: this.project_config.is_allow_client_ticket, menu_count: 0, id: 'ticket', params: {} },
+      { src: "assets/icon/resident-icon/polling.png", alt: "Icon for Polling", text: "Polling", route: "/client-polling", permission: [true, true], menu_show: this.project_config.is_allow_client_polling, menu_count: 0, id: 'polling', params: {} },
+      { src: "assets/icon/resident-icon/Notices.png", alt: "Icon for Notices", text: "Notices", route: "/client-notices", permission: [true, true], menu_show: this.project_config.is_allow_client_notices, menu_count: 0, id: 'notices', params: {} },
+      { src: "assets/icon/home-icon/sound.webp", alt: "Icon for Docs", text: "Docs", route: "/client-docs", permission: [true, true], menu_show: this.project_config.is_allow_client_docs, menu_count: 0, id: 'docs', params: {} },
+      { src: "assets/icon/exc-client/report.png", alt: "Icon for Report an Issue", text: "Records", route: "/client-reports", permission: [true, true], menu_show: this.project_config.is_allow_client_reports, menu_count: 0, id: 'records', params: {} },
+      { src: "assets/icon/resident-icon/upcoming-event.png", alt: "Icon for Upcoming Events", text: "Upcoming Events", route: "/client-upcoming-events", permission: [true, true], menu_show: this.project_config.is_allow_client_events, menu_count: 0, id: 'events', params: {} },
+      { src: "assets/icon/resident-icon/Register_Visitor.png", alt: "Icon for Register a Visitor", text: "My Visitors", route: "/client-register-visitor", permission: [true, true], menu_show: this.project_config.is_allow_client_visitors, menu_count: 0, id: 'visitor', params: {} },
+      { src: "assets/icon/resident-icon/Facilities.png", alt: "Icon for Facilities", text: "Facilities", route: "/client-facility", permission: [true, true], menu_show: this.project_config.is_allow_client_facilities, menu_count: 0, id: 'facilities', params: {} },
+      { src: "assets/icon/exc-client/house_rules.png", alt: "Icon for House Rules", text: "House Rules", route: "/client-house-rules", permission: [true, true], menu_show: this.project_config.is_allow_client_house_rules, menu_count: 0, id: 'rules', params: {} },
+      { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Quick Dials", text: "Quick Dials", route: "/client-quick-dials", permission: [true, true], menu_show: this.project_config.is_allow_client_quick_dials, menu_count: 0, id: 'dials', params: {} },
+      { src: "assets/icon/exc-client/blacklist.png", alt: "Icon for Blacklist", text: "Blacklist", route: "/client-blacklist", permission: [true, true], menu_show: this.project_config.is_allow_client_blacklist, menu_count: 0, id: 'blacklist', params: {} },
+      { src: "assets/icon/exc-client/wheel.png", alt: "Icon for Wheel Clamp", text: "Wheel Clamp", route: "/client-wheel-clamp", permission: [true, true], menu_show: this.project_config.is_allow_client_wheel_clamp, menu_count: 0, id: 'clamp', params: {} },
+      { src: "assets/icon/resident-icon/quick-dials.png", alt: "Icon for Residents", text: "Residents", route: "/client-residents", permission: [true, false], menu_show: this.project_config.is_allow_client_residents, menu_count: 0, id: 'residents', params: {} },
+      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for Employees", text: "Employees", route: "/client-employees", permission: [false, true], menu_show: this.project_config.is_allow_client_employees, menu_count: 0, id: 'employees', params: {} },
+      { src: "assets/icon/home-icon/door.png", alt: "Icon for Door Access", text: "Door Access", route: "/client-door-access", permission: [false, false], menu_show: this.project_config.is_allow_client_door_access, menu_count: 0, id: 'door_access', params: {} },
+      { src: "assets/icon/exc-client/payment_setting.png", alt: "Icon for Payment Setting", text: "Payment Setting", route: "/client-payment-settings", permission: [true, false], menu_show: this.project_config.is_allow_client_payment_setting, menu_count: 0, id: 'payment', params: {} },
+      { src: "assets/icon/resident-icon/department.png", alt: "Icon for Departments", text: "Departments", route: "/client-department", permission: [false, true], menu_show: this.project_config.is_allow_client_department, menu_count: 0, id: 'departments', params: {} },
+      { src: "assets/icon/exc-client/burger.png", alt: "Icon for Deliveries", text: "Food Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_food_platform, menu_count: 0, id: 'delivery', params: { type: 'delivery' } },
+      { src: "assets/icon/exc-client/package.png", alt: "Icon for Package Express", text: "Package Platform", route: "/client-delivery", permission: [true, true], menu_show: this.project_config.is_allow_client_package_platform, menu_count: 0, id: 'package', params: { type: 'package' } },
+      { src: "assets/icon/resident-icon/notification.png", alt: "Icon for Notifications", text: "Notifications", route: "/client-notification", permission: [true, true], menu_show: this.project_config.is_allow_client_notifications, menu_count: 0, id: 'notifications', params: {} },
+      { src: "assets/icon/resident-icon/icon1.png", alt: "Icon for User RFID List", text: "RFID User List", route: "/client-rfid-user-list", permission: [false, false], menu_show: this.project_config.is_allow_rfid_user_list, menu_count: 0, id: 'rfid', params: {} },
     ];
     console.log(this.project_config);
     if (this.project_config.is_industrial) {
-      this.menuItems = this.menuItems.filter((item: any) => item.permission[1] && item.menu_show )
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[1] && item.menu_show && item.id !== 'notifications')
     } else {
-      this.menuItems = this.menuItems.filter((item: any) => item.permission[0] && item.menu_show )
+      this.menuItems = this.menuItems.filter((item: any) => item.permission[0] && item.menu_show && item.id !== 'notifications')
     }
+    this.showNotificationCard = this.project_config.is_allow_client_notifications
   }
-  
+
   onClickMenu(route: any = {}) {
     console.log(route.route)
     if (route == "") {
 
     } else {
-      this.router.navigate([route.route], {queryParams: route.params})
+      this.router.navigate([route.route], { queryParams: route.params })
     }
   }
 
@@ -286,7 +288,7 @@ export class ClientMainAppPage implements OnInit {
   isLoading = false
   async loadConfig() {
     this.isLoading = true
-    this.clientMainService.getApi({id: this.user_id, selected_project_id: this.project_id}, '/client/get/current_config').subscribe({
+    this.clientMainService.getApi({ id: this.user_id, selected_project_id: this.project_id }, '/client/get/current_config').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
@@ -294,7 +296,7 @@ export class ClientMainAppPage implements OnInit {
           Preferences.set({
             key: 'USER_INFO',
             value: results.result.access_token,
-          }).then(()=>{
+          }).then(() => {
             this.storage.clearAllValueFromStorage()
             let storageData = {
               'image_profile': results.result.image_profile
@@ -321,16 +323,21 @@ export class ClientMainAppPage implements OnInit {
   }
 
   count: any = {}
+  notificationCount = 0;
   loadNotificationCount() {
     this.count = {}
-    this.clientMainService.getApi({selected_project_id: this.project_id}, '/client/get/notification_count').subscribe({
+    this.clientMainService.getApi({ selected_project_id: this.project_id }, '/client/get/notification_count').subscribe({
       next: (results) => {
         if (results.result.response_code === 200) {
           let counts = results.result.counts
           if (counts) {
             counts.forEach((count: any) => {
-              let index = this.menuItems.findIndex((item: any) => item.id == count.title)
-              this.menuItems[index].menu_count = count.counts
+              if (count.title == 'notifications') {
+                this.notificationCount = count.counts
+              } else {
+                const menu = this.menuItems.find((menu: any) => menu.id == count.title)
+                if (menu) menu.menu_count = count.counts
+              }
             })
           }
         } else {

@@ -1,5 +1,9 @@
 <ion-header>
-  <app-resident-header [is_client]="true"  [text]="'Notifications'" [text_second]="''" />
+  <app-resident-header
+    [is_client]="true"
+    [text]="'Notifications'"
+    [text_second]="''"
+  />
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-refresher
@@ -15,9 +19,20 @@
       refreshingSpinner="none"
     ></ion-refresher-content>
   </ion-refresher>
-  <div class="flex flex-col justify-between mt-2 ml-3">
-    <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
-      (click)="onBack()"></ion-icon>
+  <div class="w-full flex flex-row justify-between items-center mt-2 px-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      (click)="onBack()"
+    ></ion-icon>
+    <button
+      class="bg-[var(--ion-color-primary)] p-2 rounded mb-[3px] text-white text-base flex items-center gap-2"
+      (click)="markAllAsRead()"
+    >
+      <p class="font-semibold">Mark all as read</p> 
+      <ion-icon name="mail-open-outline" class="text-2xl"></ion-icon>
+    </button>
   </div>
   <!-- CONTENT -->
   <div class="flex flex-row justify-between items-center mx-4 mt-2">
@@ -27,29 +42,48 @@
         id="simple-search"
         [(ngModel)]="searchTerm"
         (change)="loadNotification()"
-        class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56 p-2.5"
+        class="bg-gray-100 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         placeholder="Search"
         required
       />
     </div>
-    <app-client-pagination [currentPage]="currentPage" [inputPage]="inputPage" [pagination]="pagination" (pageForward)="pageForward($event)" />
   </div>
   <!-- <div *ngIf="isLoading" class="flex justify-center items-center h-[50%]">
     <ion-spinner name="dots"></ion-spinner>
   </div> -->
   <div class="w-full" *ngIf="isLoading">
-    <app-modal-loading class="mt-4"/>
+    <app-modal-loading class="mt-4" />
   </div>
   <div *ngIf="!isLoading">
-    <div class="mx-4 text-center mb-32" *ngIf="Notifications.length > 0; else noNotification">
-      <div class="mt-4 space-y-4">
-        <div *ngFor="let notification of filteredNotifications" class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full">
-          <div class="flex justify-between mb-1 text-sm">
-            <p class="italic">{{ functionMain.convertNewDateTZ(notification.date).split(' ')[0] }}</p>
-            <p class="italic">{{ functionMain.convertNewDateTZ(notification.date).split(' ')[1] }}</p>
+    <div
+      class="mx-4 mb-32"
+      *ngIf="Notifications.length > 0; else noNotification"
+    >
+      <div class="mt-4" *ngFor="let group of groupedNotifications">
+        <!-- Date Group Header -->
+        <div class="flex items-center gap-2 my-3">
+          <div class="flex-1 h-px bg-gray-300"></div>
+          <span class="text-base font-semibold text-gray-500 uppercase tracking-wider px-2 whitespace-nowrap">
+            {{ group.dayName }}, {{ group.date }}
+          </span>
+          <div class="flex-1 h-px bg-gray-300"></div>
+        </div>
+        <!-- Notifications in this group -->
+        <div class="space-y-3">
+          <div
+            *ngFor="let notification of group.notifications"
+            class="bg-[var(--ion-color-tertiary)] p-4 rounded-lg w-full"
+            (click)="goTo(notification.to_page, notification.id)"
+          >
+            <div class="flex justify-end items-center text-sm">
+              <p [ngClass]="notification.is_read ? 'italic' : 'italic font-bold'">
+                {{ functionMain.convertNewDateTZ(notification.date).split(' ')[1] }}
+              </p>
+              <div class="bg-red-700 text-[2rem] ml-2 rounded-full h-[0.8rem] w-[0.8rem]" *ngIf="!notification.is_read"></div>
+            </div>
+            <p class="text-left"><strong>{{ notification.title }}</strong></p>
+            <p class="text-left">{{ notification.body }}</p>
           </div>
-          <p class="text-left"><strong>{{ notification.title }}</strong></p>
-          <p class="text-left">{{ notification.body }}</p>
         </div>
       </div>
     </div>
@@ -59,8 +93,7 @@
       </div>
     </ng-template>
   </div>
-
-  </ion-content>
+</ion-content>
 
 <ion-footer>
   <app-bottom-nav-bar [clientRoute]="true"></app-bottom-nav-bar>

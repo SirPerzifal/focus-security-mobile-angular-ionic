@@ -13,19 +13,20 @@ export class FamilyMainPage implements OnInit {
   stateFill: string = '';
   isLoading: boolean = true;
   userRole: string = '';
+  pagesName: string = '';
 
   familyData = [
-    { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: '', is_tenant_expired: false, is_helper_expired: false  }
+    { id: 0, type: '', hard_type: '', name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), family_photo: '', reject_reason: '', helper_work_permit_expiry_date: new Date(), helper_work_permit: '', is_tenant_expired: false, is_helper_expired: false }
   ];
 
   constructor(private router: Router, private mainApi: MainApiResidentService) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { from: any};
+    const state = navigation?.extras.state as { from: any };
     if (state) {
       // // console.log(state.from);
       this.fromWhere = true
       this.stateFill = state.from;
-    } 
+    }
   }
 
   ngOnInit() {
@@ -45,20 +46,20 @@ export class FamilyMainPage implements OnInit {
 
   ionViewWillEnter() {
     this.familyData = [
-      { 
-        id: 0, 
-        type: '', 
-        hard_type: '' ,
-        name: '', 
-        mobile: '', 
-        nickname: '', 
-        email: '', 
-        head_type: '', 
-        status: '', 
-        tenancy_agreement: '', 
-        end_date: new Date(), 
-        family_photo: '', 
-        reject_reason: '', 
+      {
+        id: 0,
+        type: '',
+        hard_type: '',
+        name: '',
+        mobile: '',
+        nickname: '',
+        email: '',
+        head_type: '',
+        status: '',
+        tenancy_agreement: '',
+        end_date: new Date(),
+        family_photo: '',
+        reject_reason: '',
         helper_work_permit_expiry_date: new Date(),
         helper_work_permit: 'string',
         is_helper_expired: false,
@@ -73,7 +74,7 @@ export class FamilyMainPage implements OnInit {
     if (this.fromWhere || this.stateFill === 'helper' || this.stateFill === 'family') {
       this.router.navigate(['/profile-page-main']);
     }
-     else {
+    else {
       this.router.navigate(['/resident-home-page']);
     }
   }
@@ -83,19 +84,20 @@ export class FamilyMainPage implements OnInit {
     this.mainApi.endpointMainProcess({}, 'get/get_family').subscribe((response: any) => {
       var result = response.result['response_result'];
       result.forEach((item: any) => {
-        
+
         // Cek apakah stateFill ada
         if (this.stateFill === 'helper') {
           // Hanya tambahkan item jika member_type atau member_hard_type adalah 'helper'
           if (item['member_type'] === 'Helper' || item['member_hard_type'] === 'helper') {
+            this.pagesName = 'My Employee'
             this.familyData.push({
-              id: item['family_id'], 
-              type: item['member_type'], 
-              hard_type: item['member_hard_type'], 
-              name: item['family_full_name'], 
-              mobile: item['family_mobile_number'], 
-              nickname: item['family_nickname'], 
-              email: item['family_email'], 
+              id: item['family_id'],
+              type: item['member_type'],
+              hard_type: item['member_hard_type'],
+              name: item['family_full_name'],
+              mobile: item['family_mobile_number'],
+              nickname: item['family_nickname'],
+              email: item['family_email'],
               head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
               end_date: item['end_of_tenancy_aggrement'],
               status: item['states'],
@@ -109,15 +111,16 @@ export class FamilyMainPage implements OnInit {
             });
           }
         } else if (this.stateFill === 'family') {
+          this.pagesName = 'My Family'
           if (item['member_type'] === 'Primary Contacts' || item['member_hard_type'] === 'primary_contact' || item['member_hard_type'] === 'secondary_contact' || item['member_type'] === 'Secondary Contacts' || item['member_hard_type'] === 'member' || item['member_type'] === 'Member') {
             this.familyData.push({
-              id: item['family_id'], 
-              type: item['member_type'], 
-              hard_type: item['member_hard_type'], 
-              name: item['family_full_name'], 
-              mobile: item['family_mobile_number'], 
-              nickname: item['family_nickname'], 
-              email: item['family_email'], 
+              id: item['family_id'],
+              type: item['member_type'],
+              hard_type: item['member_hard_type'],
+              name: item['family_full_name'],
+              mobile: item['family_mobile_number'],
+              nickname: item['family_nickname'],
+              email: item['family_email'],
               head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
               end_date: item['end_of_tenancy_aggrement'],
               status: item['states'],
@@ -131,15 +134,16 @@ export class FamilyMainPage implements OnInit {
             });
           }
         } else {
+          this.pagesName = 'My Family'
           // Jika stateFill tidak ada, tambahkan semua item
           this.familyData.push({
-            id: item['family_id'], 
-            type: item['member_type'], 
-            hard_type: item['member_hard_type'], 
-            name: item['family_full_name'], 
-            mobile: item['family_mobile_number'], 
-            nickname: item['family_nickname'], 
-            email: item['family_email'], 
+            id: item['family_id'],
+            type: item['member_type'],
+            hard_type: item['member_hard_type'],
+            name: item['family_full_name'],
+            mobile: item['family_mobile_number'],
+            nickname: item['family_nickname'],
+            email: item['family_email'],
             head_type: item['member_hard_type'] == 'tenants' ? 'Tenants' : 'Family',
             end_date: item['end_of_tenancy_aggrement'],
             status: item['states'],
@@ -148,8 +152,8 @@ export class FamilyMainPage implements OnInit {
             reject_reason: item['reject_reason'],
             helper_work_permit_expiry_date: item['helper_work_permit_expiry_date'],
             helper_work_permit: item['helper_work_permit'],
-              is_tenant_expired: item['is_tenant_expired'],
-              is_helper_expired: item['is_helper_expired'],
+            is_tenant_expired: item['is_tenant_expired'],
+            is_helper_expired: item['is_helper_expired'],
           });
         }
       });

@@ -2,13 +2,22 @@ import { Component, OnInit } from '@angular/core';
 
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { Router } from '@angular/router';
 
 interface Notification {
   id: number;
   title: string;
   body: string;
   date: string;
-  time : string;
+  time: string;
+  to_page: string;
+  is_read: number[];
+}
+
+interface NotificationGroup {
+  date: string;
+  dayName: string;
+  notifications: Notification[];
 }
 
 @Component({
@@ -21,22 +30,16 @@ export class NotificationMainPage implements OnInit {
 
   notifications: Notification[] = []; // Ubah ke array of Notification
   filteredNotifications: Notification[] = []; // Ubah ke array of Notification
+  groupedNotifications: NotificationGroup[] = [];
   searchTerm: string = '';
-
-  pagination = {
-    current_page: 1,    // Changed to number with default value
-    per_page: 10,       // Changed to number with default value
-    total_page: 1,      // Changed to number with default value
-    total_records: 0    // Changed to number with default value
-  }
 
   constructor(
     private mainApi: MainApiResidentService,
-    private functionMain: FunctionMainService
+    private functionMain: FunctionMainService,
+    private router: Router
   ) { }
 
   handleRefresh(event: any) {
-    this.clearFilter();
     this.notifications = []
     this.isLoading = true;
     setTimeout(() => {
@@ -49,31 +52,14 @@ export class NotificationMainPage implements OnInit {
     this.loadNotification();
   }
 
-  goToPage(event: any, want?: string) {
-    const inputValue = parseInt(event.target.value, 10);
-    
-    // Validate input: ensure it's a number within valid range
-    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= this.pagination.total_page) {
-      this.loadNotification('goto', inputValue);
-    } else {
-      // Reset to current page if invalid input
-      event.target.value = this.pagination.current_page;
-      
-      // Optional: Show a toast message for invalid page
-      this.functionMain.presentToast('Please enter a valid page number between 1 and ' + this.pagination.total_page, 'warning');
-    }
-  }
-
-  loadNotification(type?: string, page?: number) {
-    this.mainApi.endpointMainProcess({
-      page: page
-    }, 'get/notifications').subscribe((response: any) => {
+  loadNotification() {
+    this.mainApi.endpointMainProcess({}, 'get/notifications').subscribe((response: any) => {
       if (response.result.response_code === 200) {
         // Mengisi notifications dengan objek
         this.notifications = response.result.notifications; // Simpan objek notifikasi
         // // console.log(response.result.notifications);
-        
-        
+
+
         // Format tanggal untuk setiap notifikasi
         this.notifications = this.notifications.map(notification => {
           const formattedDate = this.formatDate(notification.date); // Format the date
@@ -85,17 +71,11 @@ export class NotificationMainPage implements OnInit {
           };
         });
         this.filteredNotifications = this.notifications; // Update filtered notifications
+        this.groupedNotifications = this.groupByDate(this.filteredNotifications);
         this.isLoading = false; // Ubah loading status ke false
 
-        this.pagination = {
-          current_page: response.result.pagination.current_page ? Number(response.result.pagination.current_page) : 1,
-          per_page: response.result.pagination.per_page ? Number(response.result.pagination.per_page) : 10,
-          total_page: response.result.pagination.total_pages ? Number(response.result.pagination.total_pages) : 1,
-          total_records: response.result.pagination.total_records ? Number(response.result.pagination.total_records) : 0
-        }
-
         // // console.log("this notifications", this.notifications)
-        // // console.log("thisfilterednotifications", this.filteredNotifications)
+        console.log("thisfilterednotifications", this.filteredNotifications)
       } else {
         console.error('Error fetching notifications:', response);
       }
@@ -114,7 +94,7 @@ export class NotificationMainPage implements OnInit {
 
     // Mengubah format jam menjadi 24-jam
     const formattedHours = hours.padStart(2, '0');
-    
+
     // Mengembalikan format dd-mm-yyyy hh:mm:ss
     return [`${formattedHours}:${minutes}`, `${day}-${month}-${year}`];
   }
@@ -123,11 +103,89 @@ export class NotificationMainPage implements OnInit {
     this.filteredNotifications = this.notifications.filter(notification =>
       notification.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+    this.groupedNotifications = this.groupByDate(this.filteredNotifications);
   }
 
-  clearFilter() {
-    this.searchTerm = '';
-    this.filteredNotifications = this.notifications; // Reset to all notifications
+  groupByDate(notifications: Notification[]): NotificationGroup[] {
+    const groups: { [date: string]: Notification[] } = {};
+    notifications.forEach(notification => {
+      const key = notification.date;
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(notification);
+    });
+    return Object.keys(groups).map(date => {
+      const [dd, mm, yyyy] = date.split('-');
+      const dateObj = new Date(+yyyy, +mm - 1, +dd);
+      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+      return { date, dayName, notifications: groups[date] };
+    });
+  }
+
+  markAllAsRead() {
+    this.mainApi.endpointMainProcess({ read_all: true }, 'get/notifications').subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        // Mengisi notifications dengan objek
+        this.notifications = response.result.notifications; // Simpan objek notifikasi
+        // // console.log(response.result.notifications);
+
+
+        // Format tanggal untuk setiap notifikasi
+        this.notifications = this.notifications.map(notification => {
+          const formattedDate = this.formatDate(notification.date); // Format the date
+
+          return {
+            ...notification,
+            time: formattedDate[0], // Set the time
+            date: formattedDate[1], // Set the date
+          };
+        });
+        this.filteredNotifications = this.notifications; // Update filtered notifications
+        this.groupedNotifications = this.groupByDate(this.filteredNotifications);
+        this.isLoading = false; // Ubah loading status ke false
+
+        // // console.log("this notifications", this.notifications)
+        console.log("thisfilterednotifications", this.filteredNotifications)
+      } else {
+        console.error('Error fetching notifications:', response);
+      }
+    })
+  }
+
+  goTo(path: string, notification_id: number) {
+    this.mainApi.endpointMainProcess({ notification_id: notification_id }, 'get/notifications').subscribe((response: any) => {
+      if (response.result.response_code === 200) {
+        // Mengisi notifications dengan objek
+        this.notifications = response.result.notifications; // Simpan objek notifikasi
+        // // console.log(response.result.notifications);
+
+
+        // Format tanggal untuk setiap notifikasi
+        this.notifications = this.notifications.map(notification => {
+          const formattedDate = this.formatDate(notification.date); // Format the date
+
+          return {
+            ...notification,
+            time: formattedDate[0], // Set the time
+            date: formattedDate[1], // Set the date
+          };
+        });
+        this.filteredNotifications = this.notifications; // Update filtered notifications
+        this.groupedNotifications = this.groupByDate(this.filteredNotifications);
+        this.isLoading = false; // Ubah loading status ke false
+        if (path === '') {
+          return
+        } else {
+          this.router.navigate([path]);
+        }
+
+        // // console.log("this notifications", this.notifications)
+        console.log("thisfilterednotifications", this.filteredNotifications)
+      } else {
+        console.error('Error fetching notifications:', response);
+      }
+    })
   }
 
 }
