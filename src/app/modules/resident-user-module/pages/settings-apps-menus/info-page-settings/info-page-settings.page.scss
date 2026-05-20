@@ -1,30 +1,249 @@
-    .body-of-faq {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f8f9fa;
-      color: #333;
-    }
-    .h-1-faq {
-      text-align: center;
-      color: #2c3e50;
-    }
-    .faq-container {
-      max-width: 900px;
-      margin: auto;
-    }
-    .faq-item {
-      margin-bottom: 25px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 15px;
-    }
-    .faq-question {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #007bff;
-      margin-bottom: 8px;
-    }
-    .faq-answer {
-      font-size: 1em;
-      line-height: 1.6;
-    }
+// ──────────────────────────────────────────────
+// FAQ / Tutorial Videos page
+// ──────────────────────────────────────────────
+
+.body-of-faq {
+  padding: 0 0 100px;
+  min-height: 100%;
+}
+
+// ── Heading ────────────────────────────────────
+.faq-heading {
+  padding: 20px 16px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 8px;
+}
+
+.faq-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ion-text-color, #111);
+  margin: 0 0 4px;
+}
+
+.faq-subtitle {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+// ── Video list ─────────────────────────────────
+.video-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 0 12px;
+}
+
+.video-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:active {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+// ── Thumbnail ──────────────────────────────────
+.thumbnail-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 160px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbnail-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2d2d2d;
+  color: #888;
+  font-size: 2.2rem;
+}
+
+// Play button overlay – hidden by default, shown on card tap
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  transition: background 0.15s ease;
+
+  .video-card:active & {
+    background: rgba(0, 0, 0, 0.45);
+  }
+}
+
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.play-icon {
+  color: #ff0000;
+  font-size: 1.4rem;
+  margin-left: 3px; // optical centering for play triangle
+}
+
+// YouTube badge (bottom-left of thumbnail)
+.yt-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.yt-icon {
+  color: #ff0000;
+  font-size: 0.85rem;
+}
+
+// ── Video info ─────────────────────────────────
+.video-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.video-title-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ion-text-color, #111);
+  line-height: 1.35;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-name-label {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 0;
+}
+
+// ── Skeleton loader ────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+$shimmer: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-thumb {
+  background: $shimmer;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: $shimmer;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+
+  &.long  { width: 90%; }
+  &.short { width: 55%; margin-top: 4px; }
+}
+
+// ── Error state ────────────────────────────────
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+  gap: 12px;
+  color: #888;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #e74c3c;
+}
+
+.error-message {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border: 1.5px solid var(--ion-color-primary, #3880ff);
+  border-radius: 24px;
+  background: transparent;
+  color: var(--ion-color-primary, #3880ff);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(56, 128, 255, 0.1);
+  }
+}
+
+// ── Empty state ────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 24px;
+  gap: 12px;
+  color: #aaa;
+  text-align: center;
+
+  p { margin: 0; font-size: 0.95rem; }
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  color: #ccc;
+}

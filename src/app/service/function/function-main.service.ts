@@ -897,11 +897,17 @@ export class FunctionMainService {
       if (decoded) {
         const estate = JSON.parse(decoded) as Estate;
         const rawContact = String(row['Mobile Number'] ?? '').trim();
-        const hostName   = String(row['Host Related'] ?? '').trim();
+        const hostNameArray = String(row['Host Related'] ?? '').split(',').map(name => name.trim()).filter(name => name);
 
-        console.log(estate, estate.family_id);
-
-        const hostId = hostName ? await this.getHostIdByName(hostName) : estate.family_id;
+        let hostIds: number[] = [];
+        for (const hostName of hostNameArray) {
+          const hostId = await this.getHostIdByName(hostName);
+          if (hostId) {
+            hostIds.push(hostId);
+          } else {
+            hostIds.push(estate.family_id); // fallback ke estate id jika host tidak ditemukan
+          }
+        }
 
         return {
           visitor_name:           String(row['Name'] ?? '').trim(),
@@ -909,7 +915,7 @@ export class FunctionMainService {
           contact_number:         this.normalizePhone(rawContact),
           contact_number_display: rawContact,
           company_name:           String(row['Company Name'] ?? '').trim(),
-          host_ids:               hostId !== null ? [hostId] : [],
+          host_ids:               hostIds !== null ? hostIds : [],
         };
       }
     }
@@ -933,7 +939,7 @@ export class FunctionMainService {
     try {
       const response = await firstValueFrom(
         this.mainApi.endpointMainProcess(
-          { family_name: familyName },
+          { extension_number_of_host: familyName },
           'get/get_family_detail'
         )
       );

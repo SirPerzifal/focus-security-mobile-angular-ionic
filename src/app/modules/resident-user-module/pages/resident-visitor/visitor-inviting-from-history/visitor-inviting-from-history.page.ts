@@ -56,7 +56,7 @@ export class VisitorInvitingFromHistoryPage implements OnInit {
       next: (response: any) => {
         if (response.result.response_status === 200) {
           this.historyData = response.result.response_result;
-          // console.log(response.result.response_result)
+          console.log(this.historyData)
         } else {
           // this.functionMain.presentToast('Now you have no visitor history data', 'danger');
           // console.log(response)

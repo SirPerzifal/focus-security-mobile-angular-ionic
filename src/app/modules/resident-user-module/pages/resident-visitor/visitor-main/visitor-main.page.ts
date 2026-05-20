@@ -603,7 +603,6 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         const data = result.data;
-        // console.log(data);
         
         this.onChooseForm(data);
       } else {

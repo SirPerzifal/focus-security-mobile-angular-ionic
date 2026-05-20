@@ -450,7 +450,81 @@
       <p>Contact: support&#64;ifs360-sg.com</p>
     </div>
   </div>
-  <div class="body-of-faq" *ngIf="pageName === 'FAQ'"></div>
+  <div class="body-of-faq" *ngIf="pageName === 'FAQ'">
+    <!-- Page heading -->
+    <div class="faq-heading">
+      <h1 class="faq-title">Tutorial Videos</h1>
+    </div>
+
+    <!-- Loading skeletons -->
+    <div *ngIf="isLoadingVideos" class="video-list">
+      <div class="video-card skeleton-card" *ngFor="let i of [1,2,3]">
+        <div class="thumbnail-wrapper skeleton-thumb"></div>
+        <div class="video-info">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="!isLoadingVideos && videoError" class="error-state">
+      <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+      <p class="error-message">{{ videoError }}</p>
+      <button class="retry-btn" (click)="loadTutorialVideos()">
+        <ion-icon name="refresh-outline"></ion-icon> Retry
+      </button>
+    </div>
+
+    <!-- Empty state -->
+    <div
+      *ngIf="!isLoadingVideos && !videoError && tutorialVideos.length === 0"
+      class="empty-state"
+    >
+      <ion-icon name="videocam-outline" class="empty-icon"></ion-icon>
+      <p>No tutorial videos available yet.</p>
+    </div>
+
+    <!-- Video list -->
+    <div
+      *ngIf="!isLoadingVideos && !videoError && tutorialVideos.length > 0"
+      class="video-list"
+    >
+      <div
+        class="video-card"
+        *ngFor="let video of tutorialVideos"
+        (click)="openVideo(video.link)"
+      >
+        <!-- Thumbnail with play button overlay -->
+        <div class="thumbnail-wrapper">
+          <img
+            *ngIf="video.thumbnail_url"
+            [src]="video.thumbnail_url"
+            [alt]="video.video_title || video.name"
+            class="thumbnail-img"
+          />
+          <div *ngIf="!video.thumbnail_url" class="thumbnail-fallback">
+            <ion-icon name="videocam-outline"></ion-icon>
+          </div>
+          <div class="play-overlay">
+            <div class="play-btn">
+              <ion-icon name="play" class="play-icon"></ion-icon>
+            </div>
+          </div>
+          <div class="yt-badge">
+            <ion-icon name="logo-youtube" class="yt-icon"></ion-icon>
+            YouTube
+          </div>
+        </div>
+
+        <!-- Video info -->
+        <div class="video-info">
+          <p class="video-title-text">{{ video.video_title || video.name }}</p>
+          <p class="video-name-label">{{ video.name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>

@@ -84,12 +84,11 @@ export class FamilyMainPage implements OnInit {
     this.mainApi.endpointMainProcess({}, 'get/get_family').subscribe((response: any) => {
       var result = response.result['response_result'];
       result.forEach((item: any) => {
-
         // Cek apakah stateFill ada
         if (this.stateFill === 'helper') {
           // Hanya tambahkan item jika member_type atau member_hard_type adalah 'helper'
+          this.pagesName = 'My Employee'
           if (item['member_type'] === 'Helper' || item['member_hard_type'] === 'helper') {
-            this.pagesName = 'My Employee'
             this.familyData.push({
               id: item['family_id'],
               type: item['member_type'],
@@ -160,6 +159,8 @@ export class FamilyMainPage implements OnInit {
       if (this.familyData) {
         this.isLoading = false;
       }
+      console.log(this.pagesName);
+      
     })
     // // console.log(this.stateFill);
     // console.log("tes", this.familyData);

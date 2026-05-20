@@ -44,6 +44,8 @@ export class VisitorInvitigFormPage implements OnInit {
   currentInviteeIndex: number | null = null; // Track the index of the invitee being edited
   selectedCountry: any[] = [];
 
+  inviteFromExcel: any[] = [];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -67,9 +69,8 @@ export class VisitorInvitigFormPage implements OnInit {
         this.isFormVisible = true; // Show form if there are invitees
         this.addInviteeText = 'Add More Invitees'; // Update button text
       } else if (state.invitessFromExcel && state.invitessFromExcel.length > 0) {
-        this.inviteeFormList = state.invitessFromExcel; // Update local list
-        this.isFormVisible = true; // Show form if there are invitees
-        this.addInviteeText = 'Add More Invitees'; // Update button text
+        // this.initializeInviteeFormExcel(state.invitessFromExcel); // Update local list with Excel data
+        this.inviteFromExcel = state.invitessFromExcel;
       }
     }
   }
@@ -77,31 +78,34 @@ export class VisitorInvitigFormPage implements OnInit {
   // Pastikan selectedCountry diinisialisasi dengan benar
   ngOnInit() {
     this.isFormInitialized = false;
-    // Jika selectedCountry belum diinisialisasi
     if (!this.selectedCountry || this.selectedCountry.length === 0) {
       this.selectedCountry = [];
     }
-    
-    // Gunakan setTimeout untuk memastikan rendering
+
     this.route.queryParams.subscribe(params => {
       this.initializeInviteeForm(params);
     });
+
     this.mainApiResidentService.endpointCustomProcess({}, '/fs-get-country-code').subscribe((value: any) => {
       if (value && value.result.country_code_data.length > 0) {
-        this.countryCodes = value.result.country_code_data.map((value: any) => {
-          return {
-            country: value.country,
-            code: value.code,
-            minDigit: value.min_digit,
-            maxDigit: value.max_digit,
-          }
-        }).sort((a: any, b: any) => {
+        this.countryCodes = value.result.country_code_data.map((value: any) => ({
+          country: value.country,
+          code: value.code,
+          minDigit: value.min_digit,
+          maxDigit: value.max_digit,
+        })).sort((a: any, b: any) => {
           if (a.country === 'SG') return -1;
           if (b.country === 'SG') return 1;
-          return a.country.localeCompare(b.country); // urutan alfabetis untuk yang lain
+          return a.country.localeCompare(b.country);
         });
       }
-    })
+    });
+
+    if (this.inviteFromExcel.length > 0) {
+      // Pastikan host & familyId dimuat dulu sebelum initialize
+      this.loadHost();
+      this.loadFamilyIdThenInitExcel(); // <-- ganti ini
+    }
   }
 
   addInitialInvitee() {
@@ -699,6 +703,72 @@ export class VisitorInvitigFormPage implements OnInit {
     }, 500); // Increase timeout to ensure familyId is loaded
   }
 
+  initializeInviteeFormExcel(selectedInvitees?: any) {
+    // Proses data invitee
+    if (selectedInvitees && selectedInvitees.length > 0) {
+      this.inviteeFormList = selectedInvitees.map((invitee: any) => {
+        // console.log(invitee);
+        
+        let contact_number = invitee.contact_number || '';
+        let contact_number_display = '';
+        let country_code = '65';
+
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          country_code = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+          contact_number_display = contact_number.substring(2); // Sisa untuk display
+        } else {
+          contact_number_display = contact_number;
+        }
+
+        return {
+          visitor_name: invitee.visitor_name || '',
+          contact_number: contact_number, // Full number dengan country code
+          contact_number_display: contact_number_display, // Number tanpa country code untuk display
+          vehicle_number: invitee.vehicle_number || '',
+          company_name: invitee.company_name || '',
+          host_ids: invitee.host_ids || [] // PERBAIKAN: Pertahankan data asli, jangan paksa array kosong
+        };
+      });
+
+      // Set selectedCountry berdasarkan contact number
+      this.selectedCountry = selectedInvitees.map((invitee: any) => {
+        let contact_number = invitee.contact_number || '';
+        let selectedCountry = '65'; // default
+
+        // Validasi untuk contact_number
+        if (contact_number.startsWith('6') && contact_number.length > 2) {
+          selectedCountry = contact_number.substring(0, 2); // Ambil 2 karakter terdepan
+        }
+
+        return {
+          selected_code: selectedCountry
+        };
+      });
+      
+      this.addInviteeText = 'Add More Invitees';
+    }
+    
+    // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
+    while (this.selectedCountry.length < this.inviteeFormList.length) {
+      this.selectedCountry.push({ selected_code: '65' });
+    }
+
+    if (this.inviteeFormList.length > 0) {
+      this.isFormVisible = true; // Show form if there are invitees
+    }
+
+    this.isFormInitialized = true;
+
+    console.log(this.inviteeFormList);
+    
+    
+    // PERBAIKAN: Setup entryCheck setelah semua data dimuat dan familyId tersedia
+    setTimeout(() => {
+      this.setupEntryChecks();
+    }, 1000); // Increase timeout to ensure familyId is loaded
+  }
+
   // Perbaiki method setupEntryChecks() untuk handle case ketika yserType belum diset:
   private setupEntryChecks() {
     this.inviteeFormList.forEach((invitee: any, index: number) => {
@@ -744,6 +814,23 @@ export class VisitorInvitigFormPage implements OnInit {
             if (this.inviteeFormList.length > 0) {
               this.setupEntryChecks();
             }
+          }
+        });
+      }
+    });
+  }
+
+  loadFamilyIdThenInitExcel() {
+    this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
+      if (value) {
+        this.storage.decodeData(value).then((decoded: any) => {
+          if (decoded) {
+            const estate = JSON.parse(decoded) as Estate;
+            this.familyId = estate.family_id;
+
+            // Baru initialize setelah familyId tersedia
+            console.log(this.inviteFromExcel);
+            this.initializeInviteeFormExcel(this.inviteFromExcel);
           }
         });
       }
