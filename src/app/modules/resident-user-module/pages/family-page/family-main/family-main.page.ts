@@ -167,6 +167,7 @@ export class FamilyMainPage implements OnInit {
   }
 
   openDetails(data: any) {
+    const is_expired = this.checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired);
     this.router.navigate(['/family-form'], {
       state: {
         for: 'editData',
@@ -185,7 +186,8 @@ export class FamilyMainPage implements OnInit {
         profile_image: data.family_photo,
         reject_reason: data.reject_reason,
         helper_work_permit_expiry_date: data.helper_work_permit_expiry_date,
-        helper_work_permit: data.helper_work_permit
+        helper_work_permit: data.helper_work_permit,
+        is_expired: is_expired
       }
     });
   }

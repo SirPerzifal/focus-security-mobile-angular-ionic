@@ -54,12 +54,14 @@
             <div *ngFor="let data of familyData">
               <div
                 [ngClass]="{
-                  'bg-[var(--ion-color-tertiary)]':
-                  data.status === 'approved' || data.status === 'Approved',
-                  'bg-[#F8F1BA]':
-                  data.status === 'pending_approval' || data.status === 'Pending Approval',
-                  'bg-[#E3787E]': data.status === 'Rejected' || data.status === 'rejected',
-                  'bg-sky-100': data.status === 'pending_payment' || data.status === 'Pending Payment'
+                  'bg-[#E3787E]': data.status === 'rejected' || data.status === 'Rejected' 
+                                  || checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired),
+                  'bg-[var(--ion-color-tertiary)]': (data.status === 'approved' || data.status === 'Approved') 
+                                                    && !checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired),
+                  'bg-[#F8F1BA]': (data.status === 'pending_approval' || data.status === 'Pending Approval') 
+                                  && !checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired),
+                  'bg-sky-100':   (data.status === 'pending_payment' || data.status === 'Pending Payment') 
+                                  && !checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)
                 }"
                 [class]="'flex bg-[#D8ECCF] items-start p-4 border rounded-lg flex-row'"
               >
@@ -67,7 +69,7 @@
                   <div class="flex flex-col justify-start items-start mb-2">
                     <div class="flex flex-row items-center justify-end mt-2">
                       <ng-container
-                        *ngIf="data.status === 'approved' || data.status === 'Approved'"
+                        *ngIf="(data.status === 'approved' || data.status === 'Approved') && !checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
                       >
                         <ion-icon
                           name="checkmark"
@@ -80,12 +82,7 @@
                         </p>
                       </ng-container>
                       <ng-container
-                        *ngIf="
-                          data.status === 'pending_approval' ||
-                          data.status === 'Pending Approval' ||
-                          data.status === 'pending_payment' ||
-                          data.status === 'Pending Payment'
-                        "
+                        *ngIf="(data.status === 'pending_approval' || data.status === 'Pending Approval' || data.status === 'pending_payment' || data.status === 'Pending Payment') && !checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
                       >
                         <ion-icon
                           name="alert"
@@ -96,13 +93,30 @@
                         </p>
                       </ng-container>
                       <ng-container
-                        *ngIf="data.status === 'rejected' || data.status === 'Rejected'"
+                        *ngIf="data.status === 'rejected' || data.status === 'Rejected' || checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
                       >
                         <ion-icon
+                          *ngIf="!checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
                           name="close"
                           class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
                         ></ion-icon>
-                        <p class="text-red-700 font-bold text-base">Rejected</p>
+                        <ion-icon
+                          *ngIf="checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
+                          name="timer"
+                          class="bg-red-700 mr-2 p-1 rounded-full text-white text-[16px]"
+                        ></ion-icon>
+                        <p
+                          *ngIf="!checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
+                          class="text-red-700 font-bold text-base"
+                        >
+                          Rejected
+                        </p>
+                        <p
+                          *ngIf="checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
+                          class="text-red-700 font-bold text-base"
+                        >
+                          Expired
+                        </p>
                       </ng-container>
                     </div>
                   </div>
@@ -157,16 +171,6 @@
                       Extension
                     </button>
                   </div>
-                </div>
-                <div
-                  *ngIf="checkExpiredData(data.hard_type, data.is_tenant_expired, data.is_helper_expired)"
-                  class="flex flex-col items-center z-10 absolute"
-                >
-                  <img
-                    alt="IFS360"
-                    class="w-[7.5rem] h-[3.5rem] mr-[-25px] mt-[-6px] ml-[202px] cw-3:ml-[150px]"
-                    src="assets/icon/expired-ribbon.png"
-                  />
                 </div>
               </div>
             </div>

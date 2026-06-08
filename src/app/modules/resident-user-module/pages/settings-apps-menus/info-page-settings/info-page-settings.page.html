@@ -1,5 +1,8 @@
 <ion-header [translucent]="true">
-  <app-header-inner-page [text]="pageName"></app-header-inner-page>
+  <app-header-inner-page
+    [text]="pageName"
+    (familyId)="onChangeFamilyId($event)"
+  ></app-header-inner-page>
 </ion-header>
 
 <ion-content id="resident-content" [fullscreen]="true">
@@ -493,7 +496,7 @@
       <div
         class="video-card"
         *ngFor="let video of tutorialVideos"
-        (click)="openVideo(video.link)"
+        (click)="openVideo(video.secure_url)"
       >
         <!-- Thumbnail with play button overlay -->
         <div class="thumbnail-wrapper">

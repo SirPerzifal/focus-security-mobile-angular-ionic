@@ -8,7 +8,7 @@ import { ApiService } from 'src/app/service/api.service';
 export interface TutorialVideo {
   id: number;
   name: string;
-  link: string;
+  secure_url: string;
   thumbnail_url: string;
   video_title: string;
   sequence: number;
@@ -28,6 +28,15 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
   tutorialVideos: TutorialVideo[] = [];
   isLoadingVideos: boolean = false;
   videoError: string = '';
+  familyId: number = 0;
+  onChangeFamilyId(event: any) {
+    this.familyId = event;
+    if (this.familyId) {
+        if (this.pageName === 'FAQ') {
+        this.loadTutorialVideos();
+      }
+    }
+  }
 
   constructor(
     http: HttpClient,
@@ -43,9 +52,7 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
   }
 
   ngOnInit() {
-    if (this.pageName === 'FAQ') {
-      this.loadTutorialVideos();
-    }
+    
   }
 
   async getVersion() {
@@ -78,7 +85,9 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
       const response: any = await this.http
         .post(
           this.baseUrl + '/api/tutorial-videos',
-          { jsonrpc: '2.0', params: {} },
+          { jsonrpc: '2.0', params: {
+            family_id: this.familyId
+          } },
           { headers }
         )
         .pipe(catchError(this.handleError))

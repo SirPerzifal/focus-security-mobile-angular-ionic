@@ -183,30 +183,24 @@ export class MoveFormPage implements OnInit {
     if (!this.selectedImage && this.project_config.is_industrial) {
       errMsg += 'Visitor image is required!\n';
     }
-    if (!this.contractor_name && this.module_config.name) {
+    if (!this.contractor_name && this.module_config.name[0]) {
       errMsg += 'Contractor name is required! \n'
     }
-    if (!this.contact_number && this.module_config.contact_number) {
+    if (!this.contact_number && this.module_config.contact_number[0]) {
       errMsg += 'Contact number is required! \n'
     }
-    if (this.contact_number && this.module_config.contact_number) {
+    if (this.contact_number && this.module_config.contact_number[0]) {
       if (this.contact_number.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    // if (!this.identificationType && this.module_config.identification) {
-    //   errMsg += 'Identification type must be selected! \n'
-    // }
-    // if (!this.nric_value && this.module_config.identification) {
-    //   errMsg += 'Identification number is required! \n'
-    // }
-    if (!this.company_name && this.module_config.company_name) {
+    if (!this.company_name && this.module_config.company_name[0]) {
       errMsg += 'Company name is required! \n'
     }
     if (!this.pass_number && (this.project_config.is_industrial)) {
       errMsg += 'Pass number is required! \n'
     }
-    if (!this.remarks && this.module_config.remarks) {
+    if (!this.remarks && this.module_config.remarks[0]) {
       errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {

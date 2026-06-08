@@ -53,20 +53,20 @@
             [(cameraSelected)]="selectedImage">
           </app-input-image-preview>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="module_config.name[1]">
           <app-text-input 
             #textInput
             [id]="'contractor_name'" 
             [labelText]="'NAME'" [placeholder]="'EG. KEVIN MARCH'" 
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
-            [isMandatory]="module_config.name"
+            [isMandatory]="module_config.name[0]"
             [(ngModel)]="contractor_name"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
-        <div class="w-full">
-          <app-vms-contact-input #moveContact [id]="'move_contact'" [(value)]="contact_number" [valueExist]="contact_number" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number"></app-vms-contact-input>
+        <div class="w-full" *ngIf="module_config.contact_number[1]">
+          <app-vms-contact-input #moveContact [id]="'move_contact'" [(value)]="contact_number" [valueExist]="contact_number" (contactInfo)="getContactInfo($event)" [isReadonly]="isFromScan" [isMandatory]="module_config.contact_number[0]"></app-vms-contact-input>
         </div>
         <!-- <div class="w-full">
           <app-nric-fin-selection (change)="onIdentificationTypeChange($event)" [(selectedIdentification)]="identificationType" [includePassport]="project_config.is_industrial" [isReadonly]="is_id_disabled" [isMandatory]="module_config.identification" />
@@ -96,7 +96,7 @@
             <fa-icon [icon]="faBarcode" class="text-[40px] text-white"></fa-icon>
           </div>
         </div> -->
-        <div class="w-full flex flex-row justify-between space-x-2">
+        <div class="w-full flex flex-row justify-between space-x-2" *ngIf="module_config.vehicle_number[1]">
           <div class="w-[90%]">
             <app-text-input 
             [(ngModel)]="requestor_vehicle"
@@ -105,7 +105,7 @@
             [labelText]="'VEHICLE NUMBER'" [placeholder]="'SBA 7282 U'" 
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
-            [isMandatory]="module_config.vehicle_number"
+            [isMandatory]="module_config.vehicle_number[0]"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
             [(ngModel)]="vehicle_number">
           </app-text-input>
@@ -114,7 +114,7 @@
             <img alt="Loading" src="assets/img/Loading_Green.png" class="h-20 w-20" (click)="refreshVehicle(true)"/>
           </div>
         </div> 
-        <div class="w-full">
+        <div class="w-full" *ngIf="module_config.company_name[1]">
           <app-text-input 
             #textInput
             [id]="'contractor_company_name'" 
@@ -122,18 +122,18 @@
             [customClasses]="{'w-full':true}" 
             [type]="'text'" 
             [(ngModel)]="company_name"
-            [isMandatory]="module_config.company_name"
+            [isMandatory]="module_config.company_name[0]"
             [customInputClasses]="{'border':true, 'w-full':true ,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
           </app-text-input>
         </div> 
-        <div class="w-full flex flex-col">
+        <div class="w-full flex flex-col" *ngIf="module_config.remarks[1]">
           <app-text-input [id]="'move_form_remarks'" [name]="'move_form_remarks'" [labelText]="'REMARKS'" [rows]="4"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'textarea'" [textAreaClass]="'w-full bg-white border border-[#6B7280] text-gray-900 text-2xl rounded'" [isMandatory]="module_config.remarks[0]"
             [(ngModel)]="remarks"></app-text-input>
         </div>
-        <div class="w-full" *ngIf="project_config.is_industrial">
+        <div class="w-full" *ngIf="project_config.is_industrial && module_config.pass_number[1]">
           <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number"
+            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number[0]"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
         </div>
         <div class="w-full flex flex-col">

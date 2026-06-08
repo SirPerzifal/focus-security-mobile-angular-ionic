@@ -261,7 +261,9 @@
           <label
             class="w-full text-start"
             [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
-            >Work Permit File Exist (Valid until {{ selectedDate }})</label
+            >{{ !expiredData ? 'Work Permit File Exist (Valid until ' +
+            selectedDate + ')' : 'This work permit is expired, extend the permit
+            or register new' }}</label
           >
         </div>
       </div>
@@ -350,8 +352,9 @@
             <label
               class="w-full text-start"
               [ngClass]="(selectedNameHelperWorkPermit) ? 'text-black' : 'text-gray-500'"
-              >Tenants Aggreement File Exist (Valid until {{ selectedDate
-              }})</label
+              >{{ !expiredData ? 'Work Permit File Exist (Valid until ' +
+              selectedDate + ')' : 'This work permit is expired, extend the
+              permit or register new' }}</label
             >
           </div>
           <!-- <div

@@ -54,6 +54,7 @@ export class FamilyFormPage implements OnInit {
   familyEditData = [
     { id: 0, type: '', hard_type: '' ,name: '', mobile: '', nickname: '', email: '', head_type: '', status: '', tenancy_agreement: '', end_date: new Date(), helper_work_permit_expiry_date: new Date() }
   ];
+  expiredData: boolean = false;
 
   constructor(
     private router: Router,
@@ -63,7 +64,7 @@ export class FamilyFormPage implements OnInit {
     private platform: Platform
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { status: string, for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenancy_agreement: string, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string, helper_work_permit_expiry_date: Date, helper_work_permit: string };
+    const state = navigation?.extras.state as { status: string, for: any, from: string, id: number, type: string, hard_type: string, name: string, mobile: string, head_type: string, nickname: string, email: string, end_date: Date, tenancy_agreement: string, tenant: boolean, warning: boolean, profile_image: string, reject_reason: string, helper_work_permit_expiry_date: Date, helper_work_permit: string, is_expired: boolean };
     if (state) {
       console.log(state);
       
@@ -92,6 +93,9 @@ export class FamilyFormPage implements OnInit {
       this.end_date = String(this.functionMain.convertToDDMMYYYY(new Date(state.end_date).toISOString().split('T')[0]));
       if (state.from) {
         this.fromWhere = state.from;
+      }
+      if (state.is_expired) {
+        this.expiredData = state.is_expired
       }
     }
   }
