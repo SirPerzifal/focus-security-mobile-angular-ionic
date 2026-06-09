@@ -180,7 +180,7 @@ export class MoveFormPage implements OnInit {
     if (!this.block_id || !this.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if (!this.selectedImage && this.project_config.is_industrial) {
+    if (!this.selectedImage && this.module_config.visitor_image[0] this.project_config.is_industrial) {
       errMsg += 'Visitor image is required!\n';
     }
     if (!this.contractor_name && this.module_config.name[0]) {

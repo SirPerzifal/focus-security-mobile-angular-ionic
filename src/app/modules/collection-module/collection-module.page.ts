@@ -231,7 +231,7 @@ export class CollectionModulePage implements OnInit {
 
   onSubmitWalkIn(bypass_ban: boolean = false){
     let errMsg = ""
-    if (!this.selectedImage && (this.module_config.visitor_name[0] && this.project_config.is_industrial)) {
+    if (!this.selectedImage && (this.module_config.visitor_image[0] && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
     if (!this.walkInFormData.visitor_name && this.module_config.visitor_name[0]) {
