@@ -84,7 +84,7 @@
           </div> -->
           <div class="w-full flex flex-row justify-between">
             <div
-              *ngIf="module_config.vehicle_number[1]"
+              *ngIf="module_config.vehicle_number?.[1]"
               class="w-[90%] flex flex-col"
             >
               <app-text-input
@@ -96,7 +96,7 @@
                 [type]="'text'"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl': true}"
                 [(ngModel)]="vehicleNumber"
-                [isMandatory]="module_config.vehicle_number[0]"
+                [isMandatory]="module_config.vehicle_number?.[0]"
               ></app-text-input>
             </div>
             <div class="h-25 flex flex-col justify-end">
@@ -122,14 +122,14 @@
             </div> -->
             <div class="w-full">
               <app-text-input
-                *ngIf="module_config.location[1]"
+                *ngIf="module_config.location?.[1]"
                 #entryPickUpPass
                 [id]="'entry_pick_up_pass_industrial_location'"
                 [labelText]="'LOCATION'"
                 [placeholder]="''"
                 [customClasses]="{'w-full':true}"
                 [type]="'text'"
-                [isMandatory]="module_config.location[0]"
+                [isMandatory]="module_config.location?.[0]"
                 [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
                 [(ngModel)]="industrial_location"
               ></app-text-input>
@@ -139,10 +139,10 @@
             class="w-full flex flex-col"
             *ngIf="!project_config.is_industrial"
           >
-            <div *ngIf="module_config.location[1]">
+            <div *ngIf="module_config.location?.[1]">
               <label class="text-2xl"
                 ><b
-                  ><u>LOCATION</u>{{module_config.location[0] ? '*' : ''}}</b
+                  ><u>LOCATION</u>{{module_config.location?.[0] ? '*' : ''}}</b
                 ></label
               >
               <select

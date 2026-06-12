@@ -1,35 +1,76 @@
 <ion-content [fullscreen]="true" *ngIf="callActionStatus == 'acceptCall'">
   <app-loading-animation></app-loading-animation>
 </ion-content>
-<ion-content [fullscreen]="true" class="p-8 h-full flex flex-col overflow-scroll scrollbar overflow-y-hidden vms-body" *ngIf="callActionStatus != 'acceptCall'">
+<ion-content
+  [fullscreen]="true"
+  class="p-8 h-full flex flex-col overflow-scroll scrollbar overflow-y-hidden vms-body"
+  *ngIf="callActionStatus != 'acceptCall'"
+>
   <!-- Gambar sebagai latar belakang -->
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
     <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
-    <div class="flex flex-row justify-center fixed inset-0 ">
-      <img alt="IFS360" [src]="showImage" class="object-contain w-full h-full" />
+    <div class="flex flex-row justify-center fixed inset-0">
+      <img
+        alt="IFS360"
+        [src]="showImage"
+        class="object-contain w-full h-full"
+      />
     </div>
   </div>
   <div class="flex flex-col relative mt-3">
     <div class="flex flex-row justify-between items-center mx-4">
       <div class="w-1/2">
-        <select class="lpr-top-selection p-1 w-full truncate flex flex-row justify-center items-center text-center h-[33px] rounded-sm text-white text-xl" [(ngModel)]="selectedLpr" (change)="onLprChange($event)">
+        <select
+          class="lpr-top-selection p-1 w-full truncate flex flex-row justify-center items-center text-center h-[33px] rounded-sm text-white text-xl"
+          [(ngModel)]="selectedLpr"
+          (change)="onLprChange($event)"
+        >
           <option value="0" hidden selected disabled>NO LPR SELECTED</option>
-          <option *ngFor="let lpr of project_config.lpr" [ngValue]="lpr.CamSentId">{{ lpr.CamID}}</option>
+          <option
+            *ngFor="let lpr of project_config.lpr"
+            [ngValue]="lpr.CamSentId"
+          >
+            {{ lpr.CamID}}
+          </option>
         </select>
       </div>
-      <div class="w-1/2 flex flex-row justify-end items-center text-center relative" *ngIf="!rggData">
-        <div class="flex flex-row items-center space-x-4 relative" (click)="clickState()">
-          <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway().string }}</span>
-          <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color ">
-          </div>
+      <div
+        class="w-1/2 flex flex-row justify-end items-center text-center relative"
+        *ngIf="!rggData"
+      >
+        <div
+          class="flex flex-row items-center space-x-4 relative"
+          (click)="clickState()"
+        >
+          <span class="text-xl font-bold text-[var(--ion-color-primary)]"
+            >{{ isAway().string }}</span
+          >
+          <div
+            [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway().color "
+          ></div>
         </div>
-        <div #stateComponent class="h-[60px] flex flex-row justify-center items-center bg-white rounded-lg text-xl border border-black absolute top-11 z-10" *ngIf="isShow" (click)="changeState()">
+        <div
+          #stateComponent
+          class="h-[60px] flex flex-row justify-center items-center bg-white rounded-lg text-xl border border-black absolute top-11 z-10"
+          *ngIf="isShow"
+          (click)="changeState()"
+        >
           <div class="flex flex-row items-center space-x-4 px-4">
-            <span class="text-xl font-bold text-[var(--ion-color-primary)]">{{ isAway(true).string }}</span>
-            <div [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway(true).color ">
-            </div>
+            <span class="text-xl font-bold text-[var(--ion-color-primary)]"
+              >{{ isAway(true).string }}</span
+            >
+            <div
+              [class]="'w-[33px] h-[33px] rounded-full flex flex-row items-center justify-center ' + isAway(true).color "
+            ></div>
           </div>
         </div>
       </div>
@@ -37,101 +78,272 @@
     <div class="flex flex-row justify-between items-center text-center mx-4">
       <div class="w-[66px]"></div>
       <div class="flex flex-col align-items-center">
-        <span class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>{{ project_name }}</b></span>
         <span
-          class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"><b>iFS360
-            VISITOR MANAGEMENT SYSTEM</b></span>
+          class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"
+          ><b>{{ project_name }}</b></span
+        >
+        <span
+          class="text-[30px] sm:text-[35px] md:text-[39px] lg:text-[50px] text-[var(--ion-color-primary)]"
+          ><b>iFS360 VISITOR MANAGEMENT SYSTEM</b></span
+        >
       </div>
       <div
-        class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-full flex flex-row items-center justify-center">
-        <ion-icon name="log-out-outline" size="large" class="text-white size-10"
-          (click)="isLogoutModal = true"></ion-icon>
+        class="w-[66px] h-[66px] bg-[var(--ion-color-primary)] rounded-full flex flex-row items-center justify-center"
+      >
+        <ion-icon
+          name="log-out-outline"
+          size="large"
+          class="text-white size-10"
+          (click)="isLogoutModal = true"
+        ></ion-icon>
       </div>
     </div>
-    <div [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around space-y-4 items-center mt-8 mb-8' : 'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'" *ngIf="!isLoading">
+    <div
+      [ngClass]="isSmallScreen ? 'flex flex-row flex-wrap justify-around space-y-4 items-center mt-8 mb-8' : 'grid grid-cols-3 space-y-4 justify-items-center mt-8 mb-8'"
+      *ngIf="!isLoading"
+    >
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'ALERTS'"
+        [isActive]="true"
+        [disableClick]="true"
+        *ngIf="project_config.is_allow_vms_alerts"
+        class="mt-4"
+        [routerLink]="['/alert-main']"
+        [isWarning]="totalRedAlerts"
+        [totalWarning]="alertTotal"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'ALERTS'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_alerts" class="mt-4"
-        [routerLink]="['/alert-main']" [isWarning]="totalRedAlerts" [totalWarning]="alertTotal"/>
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'PICK UP / DROP OFF'"
+        *ngIf="project_config.is_allow_vms_entry"
+        class="mt-4"
+        [routerLink]="['/pick-up-page']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'PICK UP / DROP OFF'" *ngIf="project_config.is_allow_vms_entry" class="mt-4"
-        [routerLink]="['/pick-up-page']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'VISITORS'"
+        *ngIf="project_config.is_allow_vms_visitor"
+        class="mt-4"
+        [routerLink]="['/walk-in']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'VISITORS'" *ngIf="project_config.is_allow_vms_visitor" class="mt-4"
-        [routerLink]="['/walk-in']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'CONTRACTORS'"
+        (click)="onClickMoveCustom('contractor', false)"
+        *ngIf="project_config.is_allow_vms_contractor"
+        class="mt-4"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'CONTRACTORS'" (click)="onClickMoveCustom('contractor', false)" *ngIf="project_config.is_allow_vms_contractor" class="mt-4"
-        [isActive]="true" [disableClick]="true"/>
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'MOVE IN / OUT'"
+        (click)="onClickMoveCustom('move_in', true)"
+        *ngIf="project_config.is_allow_vms_schedule"
+        class="mt-4"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'MOVE IN / OUT'" (click)="onClickMoveCustom('move_in', true)" *ngIf="project_config.is_allow_vms_schedule" class="mt-4"
-        [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'RENOVATION'"
+        (click)="onClickMoveCustom('renov', true)"
+        *ngIf="project_config.is_allow_vms_renovation_schedule"
+        class="mt-4"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RENOVATION'" (click)="onClickMoveCustom('renov', true)" *ngIf="project_config.is_allow_vms_renovation_schedule" class="mt-4"
-        [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'DELIVERY'"
+        *ngIf="project_config.is_allow_vms_delivery"
+        class="mt-4"
+        [routerLink]="['/deliveries']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'DELIVERY'" *ngIf="project_config.is_allow_vms_delivery" class="mt-4"
-        [routerLink]="['/deliveries']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'COLLECTION'"
+        *ngIf="project_config.is_allow_vms_collection"
+        class="mt-4"
+        [routerLink]="['/collection-module']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'COLLECTION'" *ngIf="project_config.is_allow_vms_collection" class="mt-4"
-        [routerLink]="['/collection-module']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'COACHES'"
+        [routerLink]="['/coaches-module']"
+        *ngIf="project_config.is_allow_vms_coaches"
+        class="mt-4"
+        (click)="onClickMoveCustom('coach', false)"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'COACHES'" [routerLink]="['/coaches-module']" *ngIf="project_config.is_allow_vms_coaches" class="mt-4"
-        (click)="onClickMoveCustom('coach', false)" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'EMERGENCY VEHICLES'"
+        [isActive]="true"
+        *ngIf="project_config.is_allow_vms_emergency_vehicles"
+        class="mt-4"
+        [routerLink]="['/emergency-module']"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'EMERGENCY VEHICLES'" [isActive]="true" *ngIf="project_config.is_allow_vms_emergency_vehicles" class="mt-4"
-        [routerLink]="['/emergency-module']" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        (click)="onClickMoveCustom('ma_visitor', false)"
+        [text]="'MA VISITOR'"
+        *ngIf="project_config.is_allow_vms_ma_visitor_list"
+        class="mt-4"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [isHomeButton]="true" (click)="onClickMoveCustom('ma_visitor', false)" [text]="'MA VISITOR'" *ngIf="project_config.is_allow_vms_ma_visitor_list" class="mt-4"
-        [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'UNREGISTERED RESIDENT CAR'"
+        *ngIf="project_config.is_allow_vms_unregistered_resident_car"
+        class="mt-4"
+        [routerLink]="['/unregistered-resident-car']"
+        [isActive]="true"
+        [disableClick]="true"
+        [isClient]="project_config.is_industrial"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED RESIDENT CAR'" *ngIf="project_config.is_allow_vms_unregistered_resident_car" class="mt-4"
-        [routerLink]="['/unregistered-resident-car']" [isActive]="true" [disableClick]="true" [isClient]="project_config.is_industrial" />
-
-      <app-button-icon [isHomeButton]="true" [text]="'OVERNIGHT PARKING'" [isActive]="true" *ngIf="project_config.is_allow_vms_overnight_parking_list" class="mt-4"
-        [routerLink]="['/overnight-parking-list']" [disableClick]="true" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'OVERNIGHT PARKING'"
+        [isActive]="true"
+        *ngIf="project_config.is_allow_vms_overnight_parking_list"
+        class="mt-4"
+        [routerLink]="['/overnight-parking-list']"
+        [disableClick]="true"
+      />
 
       <!-- <app-button-icon [isHomeButton]="true" [text]="'UNREGISTERED VEHICLES'" [routerLink]="['/unregistered-simulation-module']" *ngIf="project_config.is_allow_vms_unregistered_simulation" class="mt-4"
         [isActive]="true" [disableClick]="true" /> -->
 
-      <app-button-icon [isHomeButton]="true" [text]="'SEARCH VEHICLE'" [isActive]="true" [disableClick]="true" *ngIf="project_config.is_allow_vms_search_vehicle" class="mt-4"
-        [routerLink]="['/resident-car-list']" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'SEARCH VEHICLE'"
+        [isActive]="true"
+        [disableClick]="true"
+        *ngIf="project_config.is_allow_vms_search_vehicle"
+        class="mt-4"
+        [routerLink]="['/resident-car-list']"
+      />
 
-      <app-button-icon [isHomeButton]="true" [text]="'RECORDS'" [isActive]="true" [disableClick]="true"  class="mt-4"
-        [routerLink]="['/records-main']" />
+      <app-button-icon
+        [isHomeButton]="true"
+        [text]="'RECORDS'"
+        [isActive]="true"
+        [disableClick]="true"
+        class="mt-4"
+        [routerLink]="['/records-main']"
+      />
 
-      <app-button-icon [text]="'CHECKOUT'" [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'" *ngIf="project_config.is_industrial" class="mt-4"
-        [routerLink]="['/vms-checkout']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [text]="'CHECKOUT'"
+        [customImageIcon]="'assets/icon-vms/door-check-out-icon-white.png'"
+        *ngIf="project_config.is_industrial && project_config.is_this_project_need_checkout"
+        class="mt-4"
+        [routerLink]="['/vms-checkout']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
-      <app-button-icon [text]="'GATES'" [customImageIcon]="'assets/icon-vms/parking-barrier.png'" *ngIf="Camera.length > 0" class="mt-4"
-        [routerLink]="['/vms-gate']" [isActive]="true" [disableClick]="true" />
-      
-      <app-button-icon [text]="'INTERCOM'" [customImageIcon]="'assets/icon-vms/intercom_white.png'" *ngIf="Intercom.length > 0" class="mt-4"
-          [routerLink]="['/vms-intercom']" [isActive]="true" [disableClick]="true" />
+      <app-button-icon
+        [text]="'GATES'"
+        [customImageIcon]="'assets/icon-vms/parking-barrier.png'"
+        *ngIf="Camera.length > 0"
+        class="mt-4"
+        [routerLink]="['/vms-gate']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
 
+      <app-button-icon
+        [text]="'INTERCOM'"
+        [customImageIcon]="'assets/icon-vms/intercom_white.png'"
+        *ngIf="Intercom.length > 0"
+        class="mt-4"
+        [routerLink]="['/vms-intercom']"
+        [isActive]="true"
+        [disableClick]="true"
+      />
     </div>
     <div *ngIf="isLoading" class="flex justify-center items-center h-20 mt-20">
       <app-modal-loading />
     </div>
-
   </div>
-  <ion-modal id="text-modal" [isOpen]="isLogoutModal" (didDismiss)="closeModal()">
+  <ion-modal
+    id="text-modal"
+    [isOpen]="isLogoutModal"
+    (didDismiss)="closeModal()"
+  >
     <ng-template>
       <div class="flex flex-row justify-center space-x-2 m-10">
-        <app-text-input #textInput [id]="'project_key'" [placeholder]="'PROJECT PASSWORD'" [customClasses]="{'w-full ':true}"
-          [type]="'text'" [(ngModel)]="project_key" [autoComplete]="'off'" [showPlaceholder]="true"
-          [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}">
+        <app-text-input
+          #textInput
+          [id]="'project_key'"
+          [placeholder]="'PROJECT PASSWORD'"
+          [customClasses]="{'w-full ':true}"
+          [type]="'text'"
+          [(ngModel)]="project_key"
+          [autoComplete]="'off'"
+          [showPlaceholder]="true"
+          [customInputClasses]="{'w-[60%]': true,'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}"
+        >
         </app-text-input>
-        <button class="h-20 w-2/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white"
-          (click)="onLogout()">LOGOUT</button>
+        <button
+          class="h-20 w-2/5 bg-[var(--ion-color-primary)] text-2xl font-bold rounded text-white"
+          (click)="onLogout()"
+        >
+          LOGOUT
+        </button>
       </div>
     </ng-template>
   </ion-modal>
 
-  <ion-modal id="text-modal" [isOpen]="isLprModal" [backdropDismiss]="false" [keyboardClose]="false" (didDismiss)="closeLprModal()">
+  <ion-modal
+    id="text-modal"
+    [isOpen]="isLprModal"
+    [backdropDismiss]="false"
+    [keyboardClose]="false"
+    (didDismiss)="closeLprModal()"
+  >
     <ng-template>
       <div class="flex flex-row justify-center space-x-2 m-10">
-        <select #textInput [id]="'project_key'" [(ngModel)]="selectedLpr" (change)="onLprChange($event)" class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl">
+        <select
+          #textInput
+          [id]="'project_key'"
+          [(ngModel)]="selectedLpr"
+          (change)="onLprChange($event)"
+          class="border w-full rounded py-2 px-3 outline-[#BDBDBD] h-20 text-2xl"
+        >
           <option value="0" hidden selected disabled>NO LPR SELECTED</option>
-          <option *ngFor="let lpr of project_config.lpr" [ngValue]="lpr.CamSentId">{{ lpr.CamID}}</option>
+          <option
+            *ngFor="let lpr of project_config.lpr"
+            [ngValue]="lpr.CamSentId"
+          >
+            {{ lpr.CamID}}
+          </option>
         </select>
       </div>
     </ng-template>

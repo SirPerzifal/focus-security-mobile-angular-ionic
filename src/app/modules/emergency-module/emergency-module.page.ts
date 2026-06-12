@@ -283,10 +283,10 @@ export class EmergencyModulePage implements OnInit {
   onSubmit(isOpenBarrier: boolean = false, camera_id: string = '', bypass_ban: boolean = false){
     let errMsg = ''
     console.log(this.formData)
-    if ((!this.formData.officer_name && this.module_config.rank_name[0]) && (this.showPolice)) {
+    if ((!this.formData.officer_name && this.module_config.rank_name?.[0]) && (this.showPolice)) {
       errMsg += "Rank and name is required! \n"
     }
-    if ((!this.formData.officer_name && this.module_config.rank_name[0]) && (this.showOthers)) {
+    if ((!this.formData.officer_name && this.module_config.rank_name?.[0]) && (this.showOthers)) {
       errMsg += "Name is required! \n"
     }
     // if (!this.formData.contact_number && (this.showOthers || this.showPolice)) {
@@ -297,13 +297,13 @@ export class EmergencyModulePage implements OnInit {
     //     errMsg += "Contact number is required! \n"
     //   }
     // }
-    if ((!this.formData.station_devision && this.module_config.station_division[0]) && (this.showPolice || this.showSCDF || this.showAmbulance)) {
+    if ((!this.formData.station_devision && this.module_config.station_division?.[0]) && (this.showPolice || this.showSCDF || this.showAmbulance)) {
       errMsg += "Station & division is required! \n"
     }
-    if ((!this.formData.station_devision && this.module_config.govt_agency_name[0]) && (this.showOthers)) {
+    if ((!this.formData.station_devision && this.module_config.govt_agency_name?.[0]) && (this.showOthers)) {
       errMsg += "Govt agency name is required! \n"
     }
-    if (!this.formData.vehicle_number && this.module_config.vehicle_number[0]) {
+    if (!this.formData.vehicle_number && this.module_config.vehicle_number?.[0]) {
       errMsg += "Vehicle number is required! \n"
     }
     if (((!this.formData.block_id && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit_id && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
@@ -312,10 +312,10 @@ export class EmergencyModulePage implements OnInit {
     // if ((!this.selectedHost) && this.project_config.is_industrial) {
     //   errMsg += "Host is required! \n"
     // }
-    if ((!this.pass_number && this.module_config.pass_number[0]) && this.project_config.is_industrial && this.showOthers) {
+    if ((!this.pass_number && this.module_config.pass_number?.[0]) && this.project_config.is_industrial && this.showOthers) {
       errMsg += 'Pass number is required! \n'
     }
-    if (!this.formData.purpose && this.module_config.purpose[0]) {
+    if (!this.formData.purpose && this.module_config.purpose?.[0]) {
       errMsg += "Purpose is required! \n"
     }
     if (errMsg) {

@@ -1,5 +1,12 @@
 <ion-content [fullscreen]="true" class="vms-body">
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999;" pullFactor="0.3" pullMin="40" pullMax="80">
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="handleRefresh($event)"
+    style="z-index: 999"
+    pullFactor="0.3"
+    pullMin="40"
+    pullMax="80"
+  >
     <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
   <!-- Gambar sebagai latar belakang -->
@@ -8,11 +15,19 @@
   </div>
   <div class="flex flex-col relative mt-2 mx-4">
     <div class="w-full">
-      <app-vms-header [urlCustom]="'/records-visitor'" [homeRoute]="true" [params]="params"/>
+      <app-vms-header
+        [urlCustom]="'/records-visitor'"
+        [homeRoute]="true"
+        [params]="params"
+      />
     </div>
     <div class="flex flex-row mx-4">
-      <div class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded">
-        <span class="text-3xl font-bold mt-2" *ngIf="blacklist.length > 0">BANNED</span>
+      <div
+        class="flex flex-col mt-8 space-y-5 mb-4 w-full bg-[var(--ion-color-primary)] text-white p-5 rounded"
+      >
+        <span class="text-3xl font-bold mt-2" *ngIf="blacklist.length > 0"
+          >BANNED</span
+        >
         <table class="text-2xl">
           <tr>
             <td class="font-bold w-2/5">VISITOR NAME</td>
@@ -29,7 +44,9 @@
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.contact_number) }}</td>
           </tr>
-          <tr *ngIf="project_config.is_industrial || allow_company.includes(record.visit_type)">
+          <tr
+            *ngIf="project_config.is_industrial || allow_company.includes(record.visit_type)"
+          >
             <td class="font-bold w-2/5">COMPANY NAME</td>
             <td class="w-[5%]">:</td>
             <td>{{ returnNone(record.company_name) }}</td>
@@ -47,22 +64,36 @@
           <tr>
             <td class="font-bold w-2/5">ENTRY DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.entry_datetime ? functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[0] : '-' }}</td>
-          </tr>         
+            <td>
+              {{ record.entry_datetime ?
+              functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[0]
+              : '-' }}
+            </td>
+          </tr>
           <tr>
             <td class="font-bold w-2/5">ENTRY TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.entry_datetime ? functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[1] : '-' }}</td>
+            <td>
+              {{ record.entry_datetime ?
+              functionMain.convertNewDateTZ(record.entry_datetime).split(' ')[1]
+              : '-' }}
+            </td>
           </tr>
           <tr *ngIf="!project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING BLOCK & UNIT</td>
             <td class="w-[5%]">:</td>
-            <td>{{ returnNone(record.block_name) }} | {{ returnNone(record.unit_name) }}</td>
+            <td>
+              {{ returnNone(record.block_name) }} | {{
+              returnNone(record.unit_name) }}
+            </td>
           </tr>
           <tr *ngIf="project_config.is_industrial">
             <td class="font-bold w-2/5">VISITING HOST</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.industrial_host_names ? record.industrial_host_names : returnNone(record.industrial_host_name) }}</td>
+            <td>
+              {{ record.industrial_host_names ? record.industrial_host_names :
+              returnNone(record.industrial_host_name) }}
+            </td>
           </tr>
           <tr *ngIf="pageType == 'visitor' && record.vehicle_number">
             <td class="font-bold w-2/5">VEHICLE NUMBER</td>
@@ -87,34 +118,93 @@
           <tr>
             <td class="font-bold w-2/5">EXIT DATE</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.checkout_datetime ? functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[0] : '-' }}</td>
-          </tr>         
+            <td>
+              {{ record.checkout_datetime ?
+              functionMain.convertNewDateTZ(record.checkout_datetime).split('
+              ')[0] : '-' }}
+            </td>
+          </tr>
           <tr>
             <td class="font-bold w-2/5">EXIT TIME</td>
             <td class="w-[5%]">:</td>
-            <td>{{ record.checkout_datetime ? functionMain.convertNewDateTZ(record.checkout_datetime).split(' ')[1] : '-' }}</td>
+            <td>
+              {{ record.checkout_datetime ?
+              functionMain.convertNewDateTZ(record.checkout_datetime).split('
+              ')[1] : '-' }}
+            </td>
           </tr>
           <tr *ngIf="pageType == 'vehicle'">
             <td class="font-bold w-2/5">WARNING ISSUE</td>
             <td class="w-[5%]">:</td>
-            <td class="uppercase">{{ issueResult ? (issueResult.offence_type ? issueResult.offence_type.replace('_', ' ') : '-') : 'NO ISSUE' }}</td>
+            <td class="uppercase">
+              {{ issueResult ? (issueResult.offence_type ?
+              issueResult.offence_type.replace('_', ' ') : '-') : 'NO ISSUE' }}
+            </td>
           </tr>
         </table>
         <div class="flex flex-col justify-around w-full">
           <div class="flex flex-row w-full justify-around">
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="functionMain.callFromPhone(record.contact_number)" *ngIf="record.contact_number">CALL VISITOR</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="callResident()"  *ngIf="hideCallEmployee">CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}</button>
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="functionMain.callFromPhone(record.contact_number)"
+              *ngIf="record.contact_number"
+            >
+              CALL VISITOR
+            </button>
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="callResident()"
+              *ngIf="hideCallEmployee"
+            >
+              CALL {{ project_config.is_industrial ? 'EMPLOYEE' : 'RESIDENT' }}
+            </button>
           </div>
-          <div class="flex flex-row w-full justify-around mb-4" >
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="onBlacklist()" *ngIf="blacklist.length == 0">BLACKLIST VISITOR</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="onLiftBan()" *ngIf="blacklist.length > 0">LIFT BAN</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="presentModal('none')" *ngIf="!issueResult && pageType == 'vehicle'">FIRST WARNING</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="presentModal('first_warning')" *ngIf="issueResult && issueResult.offence_type == 'first_warning' && pageType == 'vehicle'">SECOND WARNING</button>
-            <button class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14" (click)="presentModal('wheel_clamp')" *ngIf="issueResult && issueResult.offence_type == 'second_warning' && pageType == 'vehicle'">WHEEL CLAMP</button>
+          <div class="flex flex-row w-full justify-around mb-4">
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="onBlacklist()"
+              *ngIf="blacklist.length == 0"
+            >
+              BLACKLIST VISITOR
+            </button>
+            <!-- <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="onBlacklist()"
+              *ngIf="!project_config.is_this_project_need_checkout"
+            >
+              CHECKED OUT THE VISITOR
+            </button> -->
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="onLiftBan()"
+              *ngIf="blacklist.length > 0"
+            >
+              LIFT BAN
+            </button>
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="presentModal('none')"
+              *ngIf="!issueResult && pageType == 'vehicle'"
+            >
+              FIRST WARNING
+            </button>
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="presentModal('first_warning')"
+              *ngIf="issueResult && issueResult.offence_type == 'first_warning' && pageType == 'vehicle'"
+            >
+              SECOND WARNING
+            </button>
+            <button
+              class="w-2/5 bg-white text-black text-2xl font-bold rounded mt-5 min-h-14"
+              (click)="presentModal('wheel_clamp')"
+              *ngIf="issueResult && issueResult.offence_type == 'second_warning' && pageType == 'vehicle'"
+            >
+              WHEEL CLAMP
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
 </ion-content>

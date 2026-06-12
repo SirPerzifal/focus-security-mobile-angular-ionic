@@ -254,24 +254,24 @@ export class CoachesFormPage implements OnInit {
     if (!this.selectedImage && this.project_config.is_industrial) {
       errMsg += 'Coach image is required!\n';
     }
-    if (!this.schedule.coach_name && this.module_config.name[0]){
+    if (!this.schedule.coach_name && this.module_config.name?.[0]){
       errMsg += 'Coach name is missing! \n'
     }
-    if (!this.contactNumber && this.module_config.contact_number[0]) {
+    if (!this.contactNumber && this.module_config.contact_number?.[0]) {
       errMsg += 'Contact number is missing! \n'
     }
-    if (this.contactNumber && this.module_config.contact_number[0]) {
+    if (this.contactNumber && this.module_config.contact_number?.[0]) {
       if (this.contactNumber.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (this.showDrive && !this.schedule.vehicle_number && this.module_config.vehicle_number[0]) {
+    if (this.showDrive && !this.schedule.vehicle_number && this.module_config.vehicle_number?.[0]) {
       errMsg += 'Vehicle number is missing! \n'
     }
     if (!this.schedule.block_id || !this.schedule.unit_id) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if (!this.remarks && this.module_config.remarks[0]) {
+    if (!this.remarks && this.module_config.remarks?.[0]) {
       errMsg += 'Remarks is required! \n'
     }
     if (errMsg) {

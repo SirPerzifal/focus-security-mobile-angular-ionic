@@ -136,7 +136,7 @@ export class WalkInPage implements OnInit {
     console.log(this.formData)
     console.log(this.selectedHost)
     let errMsg = ""
-    if (!this.selectedImage && (this.module_config.visitor_image[0] && this.project_config.is_industrial)) {
+    if (!this.selectedImage && (this.module_config.visitor_image?.[0] && this.project_config.is_industrial)) {
       errMsg += 'Visitor image is required!\n';
     }
     // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
@@ -145,18 +145,18 @@ export class WalkInPage implements OnInit {
     // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
     //   errMsg += 'Identification number is required!\n';
     // }
-    if (!this.formData.visitor_name && this.module_config.visitor_name[0]) {
+    if (!this.formData.visitor_name && this.module_config.visitor_name?.[0]) {
       errMsg += 'Visitor name is required!\n';
     }
-    if (!this.formData.visitor_contact_no && this.module_config.contact_number[0]) {
+    if (!this.formData.visitor_contact_no && this.module_config.contact_number?.[0]) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.formData.visitor_contact_no && this.module_config.contact_number[0]) {
+    if (this.formData.visitor_contact_no && this.module_config.contact_number?.[0]) {
       if (this.formData.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (!this.formData.visitor_vehicle && this.module_config.vehicle_number[0] && this.showDrive) {
+    if (!this.formData.visitor_vehicle && this.module_config.vehicle_number?.[0] && this.showDrive) {
       errMsg += 'Vehicle number is required!\n';
     }
     if (((!this.formData.block && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
@@ -165,13 +165,13 @@ export class WalkInPage implements OnInit {
     if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if ((!this.company_name && this.module_config.company_name[0]) && (this.project_config.is_industrial)) {
+    if ((!this.company_name && this.module_config.company_name?.[0]) && (this.project_config.is_industrial)) {
       errMsg += 'Company name is required! \n'
     }
-    if ((!this.pass_number && this.module_config.pass_number[0]) && (this.project_config.is_industrial) && !this.maOgId) {
+    if ((!this.pass_number && this.module_config.pass_number?.[0]) && (this.project_config.is_industrial) && !this.maOgId) {
       errMsg += 'Pass number is required! \n'
     }
-    if ((!this.formData.remarks && this.module_config.remarks[0])) {
+    if ((!this.formData.remarks && this.module_config.remarks?.[0])) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {

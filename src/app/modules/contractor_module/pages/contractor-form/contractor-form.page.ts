@@ -190,16 +190,16 @@ export class ContractorFormPage implements OnInit {
     const companyName = this.formData.company_name;
     const remarks = this.remarksValue;
 
-    if (!this.selectedImage && this.module_config.contractor_image[0]) {
+    if (!this.selectedImage && this.module_config.contractor_image?.[0]) {
       errMsg += 'Contractor image is required! \n'
     }
-    if (!this.selectedCard && !this.project_config.is_industrial && this.module_config.contractor_card[0]) {
+    if (!this.selectedCard && !this.project_config.is_industrial && this.module_config.contractor_card?.[0]) {
       errMsg += 'Contractor ID Card is required! \n'
     }
-    if (!contractorName && this.module_config.contractor_name[0]) {
+    if (!contractorName && this.module_config.contractor_name?.[0]) {
       errMsg += 'Contractor name is required! \n'
     }
-    if (!contractorContactNo && this.module_config.contact_number[0]) {
+    if (!contractorContactNo && this.module_config.contact_number?.[0]) {
       errMsg += 'Contact number is required! \n'
     }
     if (contractorContactNo && this.module_config.contact_number) {
@@ -213,10 +213,10 @@ export class ContractorFormPage implements OnInit {
     // if (!identificationNumber && this.module_config.identification) {
     //   errMsg += 'Identification number is required! \n'
     // }
-    if (!contractorVehicle && this.showDrive && this.module_config.vehicle_number[0]) {
+    if (!contractorVehicle && this.showDrive && this.module_config.vehicle_number?.[0]) {
       errMsg += 'Vehicle number is required! \n'
     }
-    if (!companyName && this.module_config.company_name[0]) {
+    if (!companyName && this.module_config.company_name?.[0]) {
       errMsg += 'Company name is required! \n'
     }
     if (((!this.selectedBlock && this.module_config.block && this.module_config.block[0]) || (!this.selectedUnit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
@@ -225,22 +225,22 @@ export class ContractorFormPage implements OnInit {
     if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
-    if ((!this.contractor_total_package && this.module_config.total_package[0]) && this.project_config.is_industrial) {
+    if ((!this.contractor_total_package && this.module_config.total_package?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Total package is required! \n'
     }
-    if ((!this.contractor_entry_purpose && this.module_config.purpose[0]) && this.project_config.is_industrial) {
+    if ((!this.contractor_entry_purpose && this.module_config.purpose?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Entry purpose is required! \n'
     }
-    if ((!this.contractor_expired_date && this.module_config.sic_expiry_date[0]) && this.project_config.is_industrial) {
+    if ((!this.contractor_expired_date && this.module_config.sic_expiry_date?.[0]) && this.project_config.is_industrial) {
       errMsg += 'SIC expiry date is required! \n'
     }
-    if ((!this.contractor_gate_pass_number && this.module_config.gate_pass_number[0]) && this.project_config.is_industrial) {
+    if ((!this.contractor_gate_pass_number && this.module_config.gate_pass_number?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Gate pass number is required! \n'
     }
-    if ((!this.contractor_pass_number && this.module_config.pass_number[0]) && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
+    if ((!this.contractor_pass_number && this.module_config.pass_number?.[0]) && (this.project_config.is_industrial || this.project_config.is_allow_pass_number_resident)) {
       errMsg += 'Pass number is required! \n'
     }
-    if (!this.remarksValue && this.module_config.remarks[0]) {
+    if (!this.remarksValue && this.module_config.remarks?.[0]) {
       errMsg += 'Remarks is required! \n'
     }
     if (this.checkPaxData()) {

@@ -214,14 +214,14 @@ export class PickUpPagePage implements OnInit {
     // if (this.project_config.is_industrial && !this.nric_value) {
     //   errMsg += 'Identification number is required! \n'
     // }
-    if (!vehicleNumber && this.module_config.vehicle_number[0]) {
+    if (!vehicleNumber && this.module_config.vehicle_number?.[0]) {
       errMsg += 'Vehicle number is required! \n'
       console.log(this.vehicleNumberInput.value)
     }
-    if ((!location && this.module_config.location[0]) && !this.project_config.is_industrial) {
+    if ((!location && this.module_config.location?.[0]) && !this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
-    if ((!this.industrial_location && this.module_config.location[0]) && this.project_config.is_industrial) {
+    if ((!this.industrial_location && this.module_config.location?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Location is required! \n'
     }
     // if (!this.selectedHost && this.project_config.is_industrial) {
