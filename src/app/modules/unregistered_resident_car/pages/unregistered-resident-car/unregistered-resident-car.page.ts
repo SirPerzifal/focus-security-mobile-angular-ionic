@@ -68,7 +68,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     if ((!this.formData.name && this.module_config.visitor_name?.[0]) && !this.project_config.is_industrial) {
       errMsg += 'Name is missing! \n'
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Employee must be selected! \n'
     }
     if ((!this.formData.contact_number  && this.module_config.contact_number?.[0]) && !this.project_config.is_industrial) {
@@ -82,7 +82,7 @@ export class UnregisteredResidentCarPage implements OnInit {
     if (!this.formData.vehicle_number && this.module_config.vehicle_number?.[0]) {
       errMsg += 'Vehicle number is missing! \n'
     }
-    if (((!this.formData.block_id && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit_id && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.formData.block_id && this.module_config.block && this.module_config.block?.[0]) || (!this.formData.unit_id && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
     if (!this.formData.reason && this.module_config.reason?.[0]) {

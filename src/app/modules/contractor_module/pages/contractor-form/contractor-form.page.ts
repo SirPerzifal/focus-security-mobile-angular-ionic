@@ -202,7 +202,7 @@ export class ContractorFormPage implements OnInit {
     if (!contractorContactNo && this.module_config.contact_number?.[0]) {
       errMsg += 'Contact number is required! \n'
     }
-    if (contractorContactNo && this.module_config.contact_number) {
+    if (contractorContactNo && this.module_config.contact_number?.[0]) {
       if (contractorContactNo.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
@@ -219,10 +219,10 @@ export class ContractorFormPage implements OnInit {
     if (!companyName && this.module_config.company_name?.[0]) {
       errMsg += 'Company name is required! \n'
     }
-    if (((!this.selectedBlock && this.module_config.block && this.module_config.block[0]) || (!this.selectedUnit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.selectedBlock && this.module_config.block && this.module_config.block?.[0]) || (!this.selectedUnit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected! \n'
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected! \n'
     }
     if ((!this.contractor_total_package && this.module_config.total_package?.[0]) && this.project_config.is_industrial) {

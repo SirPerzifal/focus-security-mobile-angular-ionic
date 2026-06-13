@@ -511,12 +511,25 @@
           </div>
           <div class="play-overlay">
             <div class="play-btn">
-              <ion-icon name="play" class="play-icon"></ion-icon>
+              <ion-icon
+                *ngIf="video.video_source === 'youtube'"
+                name="play"
+                class="yt-play-icon"
+              ></ion-icon>
+              <ion-icon
+                *ngIf="video.video_source === 'nextcloud'"
+                name="play"
+                class="next-play-icon"
+              ></ion-icon>
             </div>
           </div>
-          <div class="yt-badge">
+          <div *ngIf="video.video_source === 'youtube'" class="yt-badge">
             <ion-icon name="logo-youtube" class="yt-icon"></ion-icon>
             YouTube
+          </div>
+          <div *ngIf="video.video_source === 'nextcloud'" class="yt-badge">
+            <ion-icon name="cloud-upload" class="next-icon"></ion-icon>
+            Nextcloud
           </div>
         </div>
 

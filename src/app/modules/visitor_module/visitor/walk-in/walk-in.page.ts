@@ -159,10 +159,10 @@ export class WalkInPage implements OnInit {
     if (!this.formData.visitor_vehicle && this.module_config.vehicle_number?.[0] && this.showDrive) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if (((!this.formData.block && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.formData.block && this.module_config.block && this.module_config.block?.[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
     if ((!this.company_name && this.module_config.company_name?.[0]) && (this.project_config.is_industrial)) {

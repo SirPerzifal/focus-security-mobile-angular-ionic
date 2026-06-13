@@ -106,8 +106,14 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
-.play-icon {
+.yt-play-icon {
   color: #ff0000;
+  font-size: 1.4rem;
+  margin-left: 3px; // optical centering for play triangle
+}
+
+.next-play-icon {
+  color: #0084ff;
   font-size: 1.4rem;
   margin-left: 3px; // optical centering for play triangle
 }
@@ -131,6 +137,11 @@
 
 .yt-icon {
   color: #ff0000;
+  font-size: 0.85rem;
+}
+
+.next-icon {
+  color: #0084ff;
   font-size: 0.85rem;
 }
 

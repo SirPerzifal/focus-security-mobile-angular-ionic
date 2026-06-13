@@ -173,10 +173,10 @@ export class DeliveriesPage implements OnInit {
     if (this.food_delivery_type == 'drive_in' && !this.formData.vehicle_number && this.module_config.vehicle_number?.[0]){
       errMsg += 'Please insert a vehicle number!\n';
     }
-    if (((!this.formData.block && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial){
+    if (((!this.formData.block && this.module_config.block && this.module_config.block?.[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial){
       errMsg += 'Please insert a block and unit!\n';
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial){
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial){
       errMsg += 'Please insert a host!\n';
     }
     if (!this.formData.company_name && this.module_config.company_name?.[0] && this.food_delivery_id == 'other') {
@@ -394,13 +394,13 @@ export class DeliveriesPage implements OnInit {
     if (!this.formData.remarks && this.module_config.remarks?.[0]){
       errMsg += 'Please insert a remarks!\n';
     }
-    if (!this.package_delivery_type && (this.module_config.number_of_pax?.[0] || this.module_config.host?.[0] || (this.module_config.unit && this.module_config.unit[0]))){
+    if (!this.package_delivery_type && (this.module_config.number_of_pax?.[0] || this.module_config.host?.[0] || (this.module_config.unit && this.module_config.unit?.[0]))){
       errMsg += 'Please select a delivery option!\n';
     }
-    if (this.package_delivery_type == "single" && ((!this.formData.block && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial){
+    if (this.package_delivery_type == "single" && ((!this.formData.block && this.module_config.block && this.module_config.block?.[0]) || (!this.formData.unit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial){
       errMsg += 'Please insert visitor block and unit!\n';
     }
-    if (this.package_delivery_type == "single" && (!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial){
+    if (this.package_delivery_type == "single" && (!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial){
       errMsg += 'Please insert a visitor host!\n';
     }
     if (this.package_delivery_type == "multiple" && this.formData.pax == "0" && this.module_config.number_of_pax?.[0]){
@@ -984,7 +984,7 @@ export class DeliveriesPage implements OnInit {
     if (this.showWalk) {
       this.otherDeliveryForm.visitor_vehicle = ''
     }
-    if (!this.selectedImage && this.module_config.visitor_image[0] && !isBulky) {
+    if (!this.selectedImage && this.module_config.visitor_image?.[0] && !isBulky) {
       errMsg += 'Visitor image is required!\n';
     }
     // if ((!this.identificationType && this.module_config.identification) && this.project_config.is_industrial) {
@@ -993,39 +993,39 @@ export class DeliveriesPage implements OnInit {
     // if ((!this.nric_value && this.module_config.identification) && this.project_config.is_industrial) {
     //   errMsg += 'Identification number is required!\n';
     // }
-    if (!this.otherDeliveryForm.visitor_name && this.module_config.visitor_name[0]) {
+    if (!this.otherDeliveryForm.visitor_name && this.module_config.visitor_name?.[0]) {
       errMsg += 'Name is required!\n';
     }
-    if (!this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number[0]) {
+    if (!this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number?.[0]) {
       errMsg += 'Contact number is required!\n';
     }
-    if (this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number[0]) {
+    if (this.otherDeliveryForm.visitor_contact_no && this.module_config.contact_number?.[0]) {
       if (this.otherDeliveryForm.visitor_contact_no.length <= 2 ) {
         errMsg += 'Contact number is required! \n'
       }
     }
     if (isBulky) {
-      if (!this.otherDeliveryForm.visitor_vehicle && this.module_config.vehicle_number[0]) {
+      if (!this.otherDeliveryForm.visitor_vehicle && this.module_config.vehicle_number?.[0]) {
         errMsg += 'Vehicle number is required!\n';
       }
     } else {
-      if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number[0]) {
+      if (!this.otherDeliveryForm.visitor_vehicle && this.showDrive && this.module_config.vehicle_number?.[0]) {
         errMsg += 'Vehicle number is required!\n';
       }
     }
-    if (((!this.otherDeliveryForm.block && this.module_config.block && this.module_config.block[0]) || (!this.otherDeliveryForm.unit && this.module_config.unit &&  this.module_config.unit[0])) && !this.project_config.is_industrial){
+    if (((!this.otherDeliveryForm.block && this.module_config.block && this.module_config.block?.[0]) || (!this.otherDeliveryForm.unit && this.module_config.unit &&  this.module_config.unit?.[0])) && !this.project_config.is_industrial){
       errMsg += 'Please insert a block and unit!\n';
     }
-    if ((!this.otherDeliveryForm.company_name && this.module_config.company_name[0])) {
+    if ((!this.otherDeliveryForm.company_name && this.module_config.company_name?.[0])) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
-    if (!this.pass_number && this.module_config.pass_number[0] && this.project_config.is_industrial) {
+    if (!this.pass_number && this.module_config.pass_number?.[0] && this.project_config.is_industrial) {
       errMsg += 'Pass number is required! \n'
     }
-    if (!this.otherDeliveryForm.remarks && this.module_config.remarks[0]) {
+    if (!this.otherDeliveryForm.remarks && this.module_config.remarks?.[0]) {
       errMsg += 'Remarks is required!\n';
     }
     if (errMsg != "") {

@@ -306,7 +306,7 @@ export class EmergencyModulePage implements OnInit {
     if (!this.formData.vehicle_number && this.module_config.vehicle_number?.[0]) {
       errMsg += "Vehicle number is required! \n"
     }
-    if (((!this.formData.block_id && this.module_config.block && this.module_config.block[0]) || (!this.formData.unit_id && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.formData.block_id && this.module_config.block && this.module_config.block?.[0]) || (!this.formData.unit_id && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += "Block and unit is required! \n"
     }
     // if ((!this.selectedHost) && this.project_config.is_industrial) {

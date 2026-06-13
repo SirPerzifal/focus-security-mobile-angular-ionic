@@ -245,13 +245,13 @@ export class CollectionModulePage implements OnInit {
         errMsg += 'Contact number is required! \n'
       }
     }
-    if (((!this.walkInFormData.block && this.module_config.block && this.module_config.block[0]) || (!this.walkInFormData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.walkInFormData.block && this.module_config.block && this.module_config.block?.[0]) || (!this.walkInFormData.unit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
     if ((!this.walkInFormData.company_name && this.module_config.company_name?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
     if ((!this.pass_number && this.module_config.pass_number?.[0]) && (this.project_config.is_industrial)) {
@@ -334,13 +334,13 @@ export class CollectionModulePage implements OnInit {
     if (!this.driveInFormData.visitor_vehicle && this.module_config.vehicle_number?.[0]) {
       errMsg += 'Vehicle number is required!\n';
     }
-    if (((!this.driveInFormData.block && this.module_config.block && this.module_config.block[0]) || (!this.driveInFormData.unit && this.module_config.unit && this.module_config.unit[0])) && !this.project_config.is_industrial) {
+    if (((!this.driveInFormData.block && this.module_config.block && this.module_config.block?.[0]) || (!this.driveInFormData.unit && this.module_config.unit && this.module_config.unit?.[0])) && !this.project_config.is_industrial) {
       errMsg += 'Block and unit must be selected!\n';
     }
     if ((!this.driveInFormData.company_name && this.module_config.company_name?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Company name is required!\n';
     }
-    if ((!this.selectedHost && this.module_config.host && this.module_config.host[0]) && this.project_config.is_industrial) {
+    if ((!this.selectedHost && this.module_config.host && this.module_config.host?.[0]) && this.project_config.is_industrial) {
       errMsg += 'Host must be selected!\n';
     }
     if ((!this.pass_number && this.module_config.pass_number?.[0]) && (this.project_config.is_industrial)) {

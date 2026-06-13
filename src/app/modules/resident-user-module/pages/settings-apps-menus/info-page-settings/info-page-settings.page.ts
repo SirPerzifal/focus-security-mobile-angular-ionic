@@ -9,6 +9,7 @@ export interface TutorialVideo {
   id: number;
   name: string;
   secure_url: string;
+  video_source: string;
   thumbnail_url: string;
   video_title: string;
   sequence: number;
