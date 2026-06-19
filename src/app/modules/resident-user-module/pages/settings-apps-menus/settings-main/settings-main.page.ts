@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
@@ -97,6 +97,7 @@ export class SettingsMainPage implements OnInit {
     private webRtcService: WebRtcService,
     private storage: StorageService,
     private route: Router,
+    private activatedRoute: ActivatedRoute,
     public functionMain: FunctionMainService,
     private authService: AuthService,
     private mainApi: MainApiResidentService,
@@ -124,6 +125,15 @@ export class SettingsMainPage implements OnInit {
         }
       })
     })
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['openChangePassword'] === 'true') {
+        const changePasswordButton = this.listButtons.find(b => b.text === 'Change Password');
+        if (changePasswordButton) {
+          this.onClickButton(changePasswordButton);
+        }
+      }
+    });
   }
 
   onToggleShowPassword(type: string) {

@@ -214,6 +214,60 @@
     </div>
   </div>
 
+  <!-- Default Password Warning Modal -->
+  <ion-modal
+    #defaultPasswordModal
+    id="default-password-modal"
+    [isOpen]="showDefaultPasswordModal"
+    [backdropDismiss]="false"
+    [keyboardClose]="false"
+  >
+    <ng-template>
+      <div
+        class="wrapper flex flex-col items-center justify-center px-4 py-6 text-center"
+      >
+        <div class="mb-4">
+          <ion-icon
+            name="warning-outline"
+            style="font-size: 3rem; color: #f59e0b"
+          ></ion-icon>
+        </div>
+        <h2 class="text-lg font-bold mb-2">Default Password Detected</h2>
+        <p class="text-sm text-gray-600 mb-6">
+          You are currently using your <strong>default password</strong>. For
+          your security, we strongly recommend changing your password before
+          continuing.
+        </p>
+        <div class="flex flex-col w-full">
+          <div class="w-full">
+            <ion-button
+              expand="block"
+              fill="outline"
+              class="fslp-button !rounded-lg"
+              style="
+                --color: var(--ion-color-primary);
+                --border-color: var(--ion-color-primary);
+              "
+              (click)="closeDefaultPasswordModal()"
+            >
+              Close
+            </ion-button>
+          </div>
+          <div class="w-full">
+            <ion-button
+              expand="block"
+              class="fslp-button !rounded-lg"
+              style="--background: var(--ion-color-primary); --color: #fff"
+              (click)="goToChangePassword()"
+            >
+              Go to Change Password
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
   <!-- Forgot Password Modal -->
   <ion-modal
     id="forgot-password-modal"

@@ -704,3 +704,28 @@ ion-content#resident-content {
   justify-content: center; 
   margin-top: 20px;
 }
+
+/* Login end-user modals — must be global because Ionic renders modals in a portal */
+ion-modal#forgot-password-modal {
+  --width: 75%;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#forgot-password-modal .wrapper {
+  padding: 15px;
+  background-color: white;
+}
+
+ion-modal#default-password-modal {
+  --width: 75%;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#default-password-modal .wrapper {
+  padding: 15px;
+  background-color: white;
+}

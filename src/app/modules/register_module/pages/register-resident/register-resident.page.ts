@@ -100,19 +100,10 @@ export class RegisterResidentPage implements OnInit {
   }
 
   async onSubmitRegister() {
-    let modalRef: HTMLIonModalElement | null = null;
-    modalRef = await this.modalController.create({
-      component:LoadingAnimationComponent,
-      cssClass: 'modal-loading',
-    });
-    await modalRef.present();
     console.log(this.formData)
     let errMsg = ""
     if (!this.formData.full_name) {
       errMsg += 'Full Name is required!\n';
-    }
-    if (!this.formData.nickname) {
-      errMsg += 'Nickname is required!\n';
     }
     if (!this.formData.mobile_number && !this.formData.email_address) {
       errMsg += 'Mobile Number or Email Address is required!\n';
@@ -125,6 +116,13 @@ export class RegisterResidentPage implements OnInit {
       return
     }
     try {
+      let modalRef: HTMLIonModalElement | null = null;
+      modalRef = await this.modalController.create({
+        component:LoadingAnimationComponent,
+        cssClass: 'modal-loading',
+      });
+      await modalRef.present();
+      
       this.RegisterService.postRegister(this.formData.full_name, this.formData.nickname, this.formData.email_address, this.formData.mobile_number, this.formData.block, this.formData.unit, this.formData.family_type).subscribe(
         res => {
           if (res.result.status_code == 200) {
@@ -143,6 +141,7 @@ export class RegisterResidentPage implements OnInit {
             this.functionMain.presentToast('Please wait for approval', 'success');
           } else {
             this.functionMain.presentToast(res.result.status_desc, 'danger');
+            modalRef.dismiss();
             console.log(res.result);
           }
 

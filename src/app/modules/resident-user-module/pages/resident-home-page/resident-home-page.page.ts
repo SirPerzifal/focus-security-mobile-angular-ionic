@@ -183,6 +183,13 @@ export class ResidentHomePagePage implements OnInit {
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
+
+            // Estate already set: check if user wants to go change password
+            const pendingChangePassword = localStorage.getItem('PENDING_CHANGE_PASSWORD');
+            if (pendingChangePassword === 'true') {
+              localStorage.removeItem('PENDING_CHANGE_PASSWORD');
+              this.router.navigate(['/settings-main'], { queryParams: { openChangePassword: 'true' } });
+            }
           }
         })
       } else {
@@ -291,16 +298,15 @@ export class ResidentHomePagePage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       console.log(result)
       if (result) {
         console.log("HEY 1")
         this.isLoading = false;
         if (result.data !== 'gas ini dari client' && result.data !== 'gas ini dari resident') {
           console.log("HEY 2")
-          this.storage.decodeData(result.data).then((value: any) => {
+          this.storage.decodeData(result.data).then(async (value: any) => {
             if (value) {
-
               this.notifyEndAgreement.checkExpiryDateAccount(true);
               console.log("END USER FORM MODAL")
               this.webRtcService.initializeSocket();
@@ -312,6 +318,13 @@ export class ResidentHomePagePage implements OnInit {
                 this.isModalUpdateProfile = true
               }
               this.getNotificationPermission(estate.family_id);
+
+              // Check if user came from login with intent to change password
+              const pendingChangePassword = localStorage.getItem('PENDING_CHANGE_PASSWORD');
+              if (pendingChangePassword === 'true') {
+                localStorage.removeItem('PENDING_CHANGE_PASSWORD');
+                this.router.navigate(['/settings-main'], { queryParams: { openChangePassword: 'true' } });
+              }
             }
           })
         } else if (result.data === 'gas ini dari resident') {

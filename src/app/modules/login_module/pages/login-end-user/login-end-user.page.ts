@@ -7,7 +7,7 @@ import { Preferences } from '@capacitor/preferences';
 import { LoginParams } from 'src/models/resident/resident.model';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
-import { Platform } from '@ionic/angular';
+import { Platform, IonModal } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { Subscription } from 'rxjs';
 
@@ -177,20 +177,24 @@ export class LoginEndUserPage implements OnInit {
           res => {
             if (res.result.status_code == 200) {
               console.log("works!", res);
+
               if (res.result.status === true) {
                 Preferences.set({
                   key: 'USER_INFO',
                   value: res.result.access_token,
                 }).then(()=>{
-                  this.existUser = {
-                    login: '',
-                    password: '',
+                  this.existUser = { login: '', password: '' };
+                  this.isAnimating = false;
+                  this.waitingResponseLoginApi = false;
+
+                  if (res.result?.is_first_login === true) {
+                    // Show modal — hold navigation until user acts
+                    this.openModalToChangePassword(res.result.status, res.result.is_first_login, '/client-main-app');
+                  } else {
+                    setTimeout(() => {
+                      this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
+                    }, 300); // Match this duration with the CSS animation duration
                   }
-                  setTimeout(() => {
-                    this.isAnimating = false;
-                    this.waitingResponseLoginApi = false;
-                    this.router.navigate(['/client-main-app'], {queryParams: {reload: true}})
-                  }, 300); // Match this duration with the CSS animation duration
                 });
               } else {
                 const userCredentials = {
@@ -201,15 +205,18 @@ export class LoginEndUserPage implements OnInit {
                   key: 'USER_INFO',
                   value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
                 }).then(() => {
-                  this.existUser = {
-                    login: '',
-                    password: '',
+                  this.existUser = { login: '', password: '' };
+                  this.isAnimating = false;
+                  this.waitingResponseLoginApi = false;
+
+                  if (res.result?.is_first_login === true) {
+                    // Show modal — hold navigation until user acts
+                    this.openModalToChangePassword(res.result.status, res.result.is_first_login, '/resident-home-page');
+                  } else {
+                    setTimeout(() => {
+                      this.router.navigate(['/resident-home-page']);
+                    }, 300); // Match this duration with the CSS animation duration
                   }
-                  setTimeout(() => {
-                    this.isAnimating = false;
-                    this.waitingResponseLoginApi = false;
-                    this.router.navigate(['/resident-home-page']);
-                  }, 300); // Match this duration with the CSS animation duration
                 });
               }
             } else {
@@ -240,6 +247,48 @@ export class LoginEndUserPage implements OnInit {
         }, 300); // Match this duration with the CSS animation duration
         this.functionMain.presentToast("There's something wrong with Server.", 'danger');
       }
+    }
+  }
+
+  @ViewChild('defaultPasswordModal') defaultPasswordModal!: IonModal;
+
+  showDefaultPasswordModal: boolean = false;
+  defaultPasswordRouteTarget: string = '';
+  defaultHomeRoute: string = '';
+
+  openModalToChangePassword(clientOrNo: boolean, firstLogin: boolean, homeRoute: string = '') {
+    if (firstLogin) {
+      if (clientOrNo === true) {
+        this.defaultPasswordRouteTarget = '/client-change-password';
+      } else {
+        this.defaultPasswordRouteTarget = '/settings-main';
+      }
+      this.defaultHomeRoute = homeRoute;
+      this.showDefaultPasswordModal = true;
+    }
+  }
+
+  async closeDefaultPasswordModal() {
+    await this.defaultPasswordModal.dismiss();
+    this.showDefaultPasswordModal = false;
+    // Navigate to the intended home page since we held it while showing the modal
+    if (this.defaultHomeRoute === '/client-main-app') {
+      this.router.navigate([this.defaultHomeRoute], { queryParams: { reload: true } });
+    } else if (this.defaultHomeRoute) {
+      this.router.navigate([this.defaultHomeRoute]);
+    }
+  }
+
+  async goToChangePassword() {
+    await this.defaultPasswordModal.dismiss();
+    this.showDefaultPasswordModal = false;
+    // Use synchronous localStorage so the flag is guaranteed written before navigation starts
+    localStorage.setItem('PENDING_CHANGE_PASSWORD', 'true');
+    // Navigate home first — estate must be selected before settings-main can work
+    if (this.defaultHomeRoute === '/client-main-app') {
+      this.router.navigate([this.defaultHomeRoute], { queryParams: { reload: true } });
+    } else if (this.defaultHomeRoute) {
+      this.router.navigate([this.defaultHomeRoute]);
     }
   }
 

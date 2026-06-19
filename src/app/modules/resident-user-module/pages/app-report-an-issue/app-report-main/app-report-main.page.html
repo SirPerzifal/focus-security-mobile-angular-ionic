@@ -72,16 +72,16 @@
               [value]="pagination.current_page"
               (blur)="goToPage($event)"
               (keyup.enter)="goToPage($event)"
-              class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none "
+              class="min-h-9.5 min-w-8 flex justify-center items-center !border-2 !border-black text-gray-800 py-1 px-3 text-sm text-center rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:pointer-events-none"
               [min]="1"
               [max]="pagination.total_page"
             />
             <span
-              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm "
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm"
               >of</span
             >
             <span
-              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm "
+              class="min-h-9.5 flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm"
               >{{ pagination.total_page }}</span
             >
           </div>
@@ -126,6 +126,10 @@
             </h2>
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
+                <tr>
+                  <td class="font-bold">Reported By</td>
+                  <td class="cw-3:text-sm">: {{ report.requestor_name }}</td>
+                </tr>
                 <tr>
                   <td class="font-bold">Reported On</td>
                   <td class="cw-3:text-sm">
@@ -205,7 +209,9 @@
 
               <!-- Jika list kosong -->
               <ng-template #noType>
-                <option disabled>No type issue found, please contact your admin to add the type</option>
+                <option disabled>
+                  No type issue found, please contact your admin to add the type
+                </option>
               </ng-template>
             </select>
           </div>

@@ -82,6 +82,10 @@
             <table class="w-full text-left border-collapse mt-2">
               <tbody>
                 <tr>
+                  <td class="font-bold">Reported By</td>
+                  <td class="cw-3:text-sm">: {{ report.requestor_name }}</td>
+                </tr>
+                <tr>
                   <td class="font-bold">Reported On</td>
                   <td class="cw-3:text-sm">: {{ functionMain.convertNewDateTZ(report.issued_on) }}</td>
                 </tr>
