@@ -31,7 +31,7 @@
       <app-text-input
         [(ngModel)]="formData.full_name"
         [id]="'full_name'"
-        [placeholder]="'Full Name'"
+        [placeholder]="'Full Name as per ID'"
         [customClasses]="{'w-full':true}"
         [type]="'text'"
         [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"
@@ -60,16 +60,28 @@
         [showPlaceholder]="true"
       ></app-text-input>
     </div>
-    <div class="mt-2">
-      <app-text-input
-        [(ngModel)]="formData.mobile_number"
-        [id]="'phone'"
-        [placeholder]="'Mobile No'"
-        [customClasses]="{'w-full':true}"
-        [type]="'text'"
-        [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"
-        [showPlaceholder]="true"
-      ></app-text-input>
+    <div class="mt-2 flex flex-row w-full space-x-2">
+      <select
+        id="contry_code"
+        class="!border !border-[#6b7280] w-[35%] rounded py-2 px-3 outline-[#BDBDBD] h-10 text-xs"
+        name="contry_code"
+        (change)="onCountryCodeChange($event)"
+      >
+        <option *ngFor="let code of countryCodes" [value]="code.code">
+          {{ code.country }} +{{ code.code }}
+        </option>
+      </select>
+      <div class="w-full">
+        <app-text-input
+          (change)="onChangeMobileNumber($event)"
+          [id]="'phone'"
+          [placeholder]="'Mobile No'"
+          [customClasses]="{'w-full':true}"
+          [type]="'number'"
+          [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-10':true, 'text-xs':true}"
+          [showPlaceholder]="true"
+        ></app-text-input>
+      </div>
     </div>
     <div class="mt-2">
       <select

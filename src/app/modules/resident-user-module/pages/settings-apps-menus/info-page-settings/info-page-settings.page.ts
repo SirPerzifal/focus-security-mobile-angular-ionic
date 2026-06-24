@@ -122,5 +122,13 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
     }
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+
+  onClick(is_reload: boolean = false) {
+    this.route.navigate(['/app-report-main'], {
+      state: {
+        fromWhere: 'app-report',
+      }
+    });
+  }
 }
 

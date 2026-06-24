@@ -57,7 +57,7 @@
             <app-input-component
               [id]="id.id"
               [type]="'text'"
-              [value]="inputForm[id.formParams]"
+              [value]="inputForm[id.formParams] ? inputForm[id.formParams] : '-'"
               [disabled]="id.disabledInput"
               [labelChild1]="id.name"
               (eventEmitter)="onChangeValueInput($event, id.id)"
@@ -116,10 +116,7 @@
           >
             <app-loading-animation *ngIf="isLoading"></app-loading-animation>
           </div>
-          <div
-            *ngIf="!isLoading"
-            class="space-y-4 rounded-lg mb-8"
-          >
+          <div *ngIf="!isLoading" class="space-y-4 rounded-lg mb-8">
             <div
               class="bg-[#D8ECCF] border rounded-lg p-4 px-6 flex items-center w-full"
               *ngFor="let estate of profileEstate"

@@ -310,7 +310,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               },    {
                 id: 'intercom_code',
                 formParams: 'intercomCode',
-                name: 'Intercome Code',
+                name: 'Intercom Code',
                 disabledInput: this.disabledInput
               }
             ]
@@ -352,11 +352,15 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           }
           Preferences.get({key: 'USER_INFO'}).then(async (value) => {
             if(value?.value){
-              const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-              this.isLoading = true;
-              // Mengubah string JSON menjadi objek JavaScript
-              const credential = JSON.parse(decodedEstateString);
-              this.loadEstate(credential.emailOrPhone);
+              try {
+                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                this.isLoading = true;
+                // Mengubah string JSON menjadi objek JavaScript
+                const credential = JSON.parse(decodedEstateString);
+                this.loadEstate(credential.emailOrPhone ? credential.emailOrPhone : (estate.family_email ? estate.family_email : estate.family_mobile_number));
+              } catch (error) {
+                this.loadEstate(estate.family_email ? estate.family_email : estate.family_mobile_number);
+              }
             }
           })
         }
@@ -512,7 +516,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 },    {
                   id: 'intercom_code',
                   formParams: 'intercomCode',
-                  name: 'Intercome Code',
+                  name: 'Intercom Code',
                   disabledInput: this.disabledInput
                 }
               ]
@@ -759,7 +763,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   },    {
                     id: 'intercom_code',
                     formParams: 'intercomCode',
-                    name: 'Intercome Code',
+                    name: 'Intercom Code',
                     disabledInput: this.disabledInput
                   }
                 ]
@@ -1045,7 +1049,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   },    {
                     id: 'intercom_code',
                     formParams: 'intercomCode',
-                    name: 'Intercome Code',
+                    name: 'Intercom Code',
                     disabledInput: this.disabledInput
                   }
                 ]

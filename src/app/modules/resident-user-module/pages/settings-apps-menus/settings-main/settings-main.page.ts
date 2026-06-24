@@ -56,7 +56,7 @@ export class SettingsMainPage implements OnInit {
       routeTo: '/info-page-settings',
       isClick: false,
     },{
-      text: 'Non-Active Account',
+      text: 'Deactivate Account',
       isRoute: false,
       route: '',
       isClick: true,
@@ -308,8 +308,8 @@ export class SettingsMainPage implements OnInit {
         })
       } else if (button.text === 'Logout') {
         this.logout();
-      } else if (button.text === 'Non-Active Account') {
-        console.log('Non-Active Account Clicked');
+      } else if (button.text === 'Deactivate Account') {
+        console.log('Deactivate Account Clicked');
         this.isModalNonActivateAccount = true;
       }
     } else if (role === 'back') {
@@ -330,7 +330,7 @@ export class SettingsMainPage implements OnInit {
     this.isModalNonActivateAccount = false;
   }
 
-  public async showAlertButtons(type: string = 'non-active') {
+  public async showAlertButtons(type: string = 'deactive') {
     this.closeModalNonActivateAccount();
     const alertButtons = await this.alertController.create({
       cssClass: 'non-active-account-alert',

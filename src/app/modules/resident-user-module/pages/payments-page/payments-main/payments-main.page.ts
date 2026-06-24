@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentsMainPage implements OnInit {
 
+  userRole: string = '';
   longButtondata: any[] = [
     {
       id: 1,
@@ -25,6 +26,21 @@ export class PaymentsMainPage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onChangeTypeFamily(event: any) {
+    this.userRole = event;
+    console.log(this.userRole)
+    if (this.userRole === "Member" || this.userRole === "Tenants") {
+      this.longButtondata = [
+        {
+          id: 1,
+          name: 'My Deposit',
+          src: 'assets/icon/resident-icon/payment-manage.png',
+          routeLinkTo: '/deposits-page',
+        },
+      ];
+    }
   }
 
 }

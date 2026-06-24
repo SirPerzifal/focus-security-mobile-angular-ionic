@@ -444,13 +444,75 @@
       </li>
     </ul>
   </div>
-  <div *ngIf="pageName === 'App Built Details'">
-    <div class="px-5 pb-5 pt-2 space-y-3 text-justify text-lg mb-24">
-      <h1 class="font-bold text-2xl">App Built Details</h1>
-      <p class="font-bold text-xl">Version: {{ currentversion }}</p>
-      <p>Build Date: {{ lastUpdatedDate }}</p>
-      <p>Developer: Asiatact Pte Ltd</p>
-      <p>Contact: support&#64;ifs360-sg.com</p>
+  <div *ngIf="pageName === 'App Built Details'" class="app-details-container">
+    <!-- Brand Header Section -->
+    <div class="brand-section">
+      <div class="app-logo-outer">
+        <div class="app-logo-inner">
+          <ion-icon name="shield-checkmark" class="logo-icon"></ion-icon>
+        </div>
+      </div>
+      <h2 class="app-name">iFS360</h2>
+      <p class="app-subtitle">Focus Integrated Security Solution</p>
+    </div>
+
+    <!-- Info List Card -->
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-icon-wrapper">
+          <ion-icon name="git-branch-outline" class="info-row-icon"></ion-icon>
+        </div>
+        <div class="info-text">
+          <span class="info-label">Version</span>
+          <span class="info-value">{{ currentversion || '1.0.0' }}</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-icon-wrapper">
+          <ion-icon name="calendar-clear-outline" class="info-row-icon"></ion-icon>
+        </div>
+        <div class="info-text">
+          <span class="info-label">Build Date</span>
+          <span class="info-value">{{ lastUpdatedDate || '-' }}</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-icon-wrapper">
+          <ion-icon name="business-outline" class="info-row-icon"></ion-icon>
+        </div>
+        <div class="info-text">
+          <span class="info-label">Developer</span>
+          <span class="info-value">Focus Integrated Solution Pte Ltd</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact & Support Section -->
+    <div class="support-card">
+      <div class="support-header">
+        <ion-icon name="help-circle-outline" class="support-header-icon"></ion-icon>
+        <div class="support-title-group">
+          <h3>Need Support?</h3>
+          <p>Contact us for assistance or reporting issues</p>
+        </div>
+      </div>
+      
+      <div class="support-email">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>support&#64;ifs360-sg.com</span>
+      </div>
+
+      <button class="support-action-btn" (click)="onClick()">
+        <span>Report an Issue / Contact Us</span>
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Footer Copyright Note -->
+    <div class="footer-copyright">
+      <p>&copy; Focus Integrated Solution. All rights reserved.</p>
     </div>
   </div>
   <div class="body-of-faq" *ngIf="pageName === 'FAQ'">
