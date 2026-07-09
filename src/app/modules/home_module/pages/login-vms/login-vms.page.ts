@@ -7,10 +7,11 @@ import { ClientMainService } from 'src/app/service/client-app/client-main.servic
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { Preferences } from '@capacitor/preferences';
 import { StorageService } from 'src/app/service/storage/storage.service';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
 import { CalendarUtils } from 'angular-calendar';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
+import { FcmTokenService } from 'src/app/service/fcm-token/fcm-token.service';
 
 @Component({
   selector: 'app-login-vms',
@@ -28,6 +29,7 @@ export class LoginVmsPage implements OnInit {
     private appVersionCheck: CheckAppVersionService,
     private route: ActivatedRoute,
     private webrtc: WebRtcService,
+    private fcmTokenService: FcmTokenService,
   ) {}
 
   ngOnInit() {
@@ -167,56 +169,17 @@ export class LoginVmsPage implements OnInit {
         return '';
       }
 
-      // Clean up and register
-      PushNotifications.removeAllListeners();
-      PushNotifications.register();
-
-      // Return promise for token registration
-      return this.waitForToken();
+      // ✅ Use FcmTokenService which correctly returns Firebase FCM token on iOS
+      const token = await this.fcmTokenService.getToken(10000);
+      if (token) {
+        this.fcmToken = token;
+        console.log('FCM Token received via FcmTokenService:', token);
+        return token;
+      }
+      return '';
     } catch (err) {
       console.error('Push Notification Error:', err);
       return '';
     }
   }
-
-  private waitForToken(): Promise<string> {
-    return new Promise((resolve) => {
-      const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
-      
-      const timeout = setTimeout(() => {
-        this.cleanupTokenListeners();
-        console.log('FCM registration timed out');
-        resolve('');
-      }, TIMEOUT_MS);
-
-      const onRegistration = (token: Token) => {
-        this.cleanupTokenListeners();
-        if (token.value) {
-          this.fcmToken = token.value;
-          console.log('FCM Token received:', token.value);
-          resolve(token.value);
-        } else {
-          resolve('');
-        }
-      };
-
-      const onRegistrationError = (error: any) => {
-        this.cleanupTokenListeners();
-        console.error('Push notification registration error:', error);
-        resolve('');
-      };
-
-      // Add listeners
-      PushNotifications.addListener('registration', onRegistration);
-      PushNotifications.addListener('registrationError', onRegistrationError);
-
-      // Store cleanup function
-      this.cleanupTokenListeners = () => {
-        clearTimeout(timeout);
-        PushNotifications.removeAllListeners();
-      };
-    });
-  }
-
-  private cleanupTokenListeners: () => void = () => {};
 }
