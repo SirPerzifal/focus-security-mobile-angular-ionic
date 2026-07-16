@@ -99,6 +99,7 @@ export class WebRtcService extends ApiService {
   private pendingCandidates: RTCIceCandidate[] = [];
   private callerpendingCandidates: RTCIceCandidate[] = [];
   private remoteDescriptionSet = false;
+  private pendingCallData: any = null;
   audioStatus = new BehaviorSubject<string>('');
   callActionStatus = new BehaviorSubject<string>('');
 
@@ -109,6 +110,34 @@ export class WebRtcService extends ApiService {
   ) {
     super(http);
     this.initializeSocket();
+
+    // Listen for real-time native events dispatched from iOS/Android wrapper
+    document.addEventListener('NativeCallActionReceived', (e: any) => {
+      const actionData = e.detail;
+      console.log('📱 WebRtcService: NativeCallActionReceived event:', actionData);
+      this.handleCallAction(actionData);
+    });
+  }
+
+  private handleCallAction(actionData: any) {
+    if (!actionData) return;
+    this.callerName = actionData.callerName;
+    this.receiverName = actionData.receiverName;
+    this.callerSocketId = actionData.callerSocketId;
+    this.receiverId = parseInt(actionData.receiverId, 10) || 0;
+    this.callAction = actionData.callAction;
+    this.callActionStatus.next(actionData.callAction);
+    this.unitId = actionData.unitId;
+
+    // If user tapped Decline on the iOS/Android push notification, emit reject-call immediately
+    if (actionData.callAction === 'rejectCall') {
+      this.rejectCall();
+    }
+
+    // ✅ If we already received the pending call socket data, process it now
+    if (this.pendingCallData) {
+      this.handleReceiverPendingCall(this.pendingCallData);
+    }
   }
 
   private listenForNativeEvents() {
@@ -116,18 +145,7 @@ export class WebRtcService extends ApiService {
     if (storedAction) {
       const parsedAction = JSON.parse(storedAction);
       if (Array.isArray(parsedAction) && parsedAction.length > 0) {
-        const actionData = parsedAction[0];
-        this.callerName = actionData.callerName;
-        this.receiverName = actionData.receiverName;
-        this.callerSocketId = actionData.callerSocketId;
-        this.receiverId = parseInt(actionData.receiverId, 10) || 0;
-        this.callAction = actionData.callAction;
-        this.callActionStatus.next(actionData.callAction);
-        this.unitId = actionData.unitId;
-        // If user tapped Decline on the iOS push notification, emit reject-call immediately
-        if (actionData.callAction === 'rejectCall') {
-          this.rejectCall();
-        }
+        this.handleCallAction(parsedAction[0]);
       }
       localStorage.removeItem('callData');
     }
@@ -300,6 +318,7 @@ export class WebRtcService extends ApiService {
       this.callerpendingCandidates = [];
       this.remoteDescriptionSet = false;
       this.callActionStatus.next('');
+      this.pendingCallData = null;
 
       localStorage.removeItem('callData');
     } catch (error) {
@@ -1031,6 +1050,7 @@ export class WebRtcService extends ApiService {
   }
 
   async handleReceiverPendingCall(data: any) {
+    this.pendingCallData = data;
     this.nativeOffer = data.offerObj;
     this.callerId = data.callerId;
     this.callerSocketId = data.callerSocketId;

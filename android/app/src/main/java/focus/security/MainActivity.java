@@ -143,7 +143,8 @@ public class MainActivity extends BridgeActivity {
                         "    localStorage.setItem('callData', JSON.stringify(parsedData));" +
                         "} else {" +
                         "    localStorage.setItem('callData', JSON.stringify([newCall]));" +
-                        "}";
+                        "}" +
+                        "document.dispatchEvent(new CustomEvent('NativeCallActionReceived', { detail: newCall }));";
                     bridge.getWebView().evaluateJavascript(js, null);
                 });
             }

@@ -137,6 +137,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 }));
                             """
                         webView.evaluateJavaScript(javascript, completionHandler: nil)
+
+                        // ✅ Drain any pending call action stored when app was killed
+                        if let pending = UserDefaults.standard.string(forKey: "pendingCallAction") {
+                            UserDefaults.standard.removeObject(forKey: "pendingCallAction")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                self.injectCallData(jsonString: pending)
+                            }
+                        }
                     }
                 }
 
@@ -212,12 +220,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return nil
     }
 
-    // Inject callData into Angular's localStorage so listenForNativeEvents() picks it up
     private func injectCallData(jsonString: String) {
         guard let rootView = self.window?.rootViewController?.view,
               let webView = findWebView(in: rootView) else { return }
         let escaped = jsonString.replacingOccurrences(of: "'", with: "\\'")  // escape single quotes
-        webView.evaluateJavaScript("localStorage.setItem('callData', '\(escaped)');", completionHandler: nil)
+        let js = """
+            localStorage.setItem('callData', '\(escaped)');
+            let parsed = JSON.parse('\(escaped)');
+            let singleCall = Array.isArray(parsed) ? parsed[0] : parsed;
+            document.dispatchEvent(new CustomEvent('NativeCallActionReceived', { detail: singleCall }));
+        """
+        webView.evaluateJavaScript(js, completionHandler: nil)
     }
 }
 
