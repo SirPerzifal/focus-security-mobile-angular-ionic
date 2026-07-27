@@ -129,14 +129,17 @@ export class WebRtcService extends ApiService {
     this.callActionStatus.next(actionData.callAction);
     this.unitId = actionData.unitId;
 
-    // If user tapped Decline on the iOS/Android push notification, emit reject-call immediately
+    // If user tapped Decline on the push notification
     if (actionData.callAction === 'rejectCall') {
       this.rejectCall();
+      return;
     }
 
-    // ✅ If we already received the pending call socket data, process it now
+    // If we already received pending call socket data, process it; otherwise show incoming call modal
     if (this.pendingCallData) {
       this.handleReceiverPendingCall(this.pendingCallData);
+    } else {
+      this.showIncomingCallModal();
     }
   }
 
@@ -246,13 +249,14 @@ export class WebRtcService extends ApiService {
   // }
 
   async showIncomingCallModal(offer: any) {
-    if (this.callerName) {
-      await this.playRingtone();
-      return this.presentSingletonModal(IncomingCallPage, {
-        offer: offer,
-        callerName: this.callerName,
-      });
+    if (!this.callerName) {
+      this.callerName = 'Visitor';
     }
+    await this.playRingtone();
+    return this.presentSingletonModal(IncomingCallPage, {
+      offer: offer,
+      callerName: this.callerName,
+    });
   }
 
   async showOutgoingCallModal() {
@@ -469,6 +473,12 @@ export class WebRtcService extends ApiService {
       // this.socket = io('http://192.168.1.217:8091', {
       this.socket = io('wss://ws.sgeede.com', {
         query: { uniqueId: userInfo.family_id || 'Public-User' },
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 10000,
+        transports: ['websocket', 'polling'],
       });
 
       console.log(this.socket, "enicencieninceicneicencienciecn");
@@ -480,11 +490,13 @@ export class WebRtcService extends ApiService {
       this.socket.on('ice-candidate', (candidate: any) => this.handleICECandidate(candidate));
       this.socket.on('end-call', () => this.handleEndCall());
       this.socket.on('reject-call', () => this.handleRejectCall());
+      this.socket.on('call-timeout', () => this.handleRejectCall());
       this.socket.on('user-not-found', (data: any) => this.handleUserNotFound(data));
       this.socket.on('receiver-info', (data: any) => this.handleReceiverInfo(data));
       this.socket.on('receiver-pending-call', (data: any) => this.handleReceiverPendingCall(data));
       this.socket.on('sender-pending-call', (data: any) => this.handleSenderPendingCall(data));
       this.socket.on('open-modal-call', (data: any) => this.handleOngoingCallModal());
+      this.socket.on('kick-user', (data: any) => this.handleKickUser(data));
       this.socket.on('kick-user-testing-demo', (data: any) => this.handleKickUser(data));
       // this.socket.on('kick-user-expiry', (data: any) => this.handleKickUserExpiry(data));
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
@@ -1125,7 +1137,9 @@ export class WebRtcService extends ApiService {
       this.rejectCall();
       // }else if(this.callAction === 'openDialogCall'){
     } else {
-      if (!this.callerName) return
+      if (!this.callerName) {
+        this.callerName = 'Visitor';
+      }
       await this.startLocalStream();
       if (!this.peerConnection) {
         this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });

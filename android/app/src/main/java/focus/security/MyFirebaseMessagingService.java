@@ -344,7 +344,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .build();
 
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("callAction", "openDialogCall");
             intent.putExtra("receiverName", data.get("receiverName"));
             intent.putExtra("callerName", data.get("callerName"));
@@ -352,28 +352,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("unitId", data.get("unitId"));
             PendingIntent fullScreenIntent = PendingIntent.getActivity(
                     this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            Intent acceptIntent = new Intent(this, MainActivity.class);
-            acceptIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            acceptIntent.setAction("com.sgeede.focus.security.ACTION_ACCEPT_CALL");
-            acceptIntent.putExtra("callAction", "acceptCall");
-            acceptIntent.putExtra("receiverName", data.get("receiverName"));
-            acceptIntent.putExtra("callerName", data.get("callerName"));
-            acceptIntent.putExtra("callerSocketId", data.get("callerSocketId"));
-            acceptIntent.putExtra("unitId", data.get("unitId"));
-            PendingIntent acceptPendingIntent = PendingIntent.getActivity(
-                    this, 1, acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            Intent rejectIntent = new Intent(this, MainActivity.class);
-            rejectIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            rejectIntent.setAction("com.sgeede.focus.security.ACTION_REJECT_CALL");
-            rejectIntent.putExtra("callAction", "rejectCall");
-            rejectIntent.putExtra("receiverName", data.get("receiverName"));
-            rejectIntent.putExtra("callerName", data.get("callerName"));
-            rejectIntent.putExtra("callerSocketId", data.get("callerSocketId"));
-            rejectIntent.putExtra("unitId", data.get("unitId"));
-            PendingIntent rejectPendingIntent = PendingIntent.getActivity(
-                    this, 2, rejectIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(channelId,
@@ -384,26 +362,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 channel.setBypassDnd(true);
                 channel.setSound(null, null); 
                 notificationManager.createNotificationChannel(channel);
-                
             }
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(data.get("callerName"))
-                    .setContentText("Incoming Call")
+                    .setContentTitle(data.get("callerName") != null ? data.get("callerName") : "Incoming Call")
+                    .setContentText("Incoming Call - Tap to open")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setCategory(NotificationCompat.CATEGORY_CALL)
-                    .setOngoing(true)
-                    .setAutoCancel(false)
+                    .setOngoing(false)
+                    .setAutoCancel(true)
+                    .setContentIntent(fullScreenIntent)
                     .setFullScreenIntent(fullScreenIntent, true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                notificationBuilder.setStyle(NotificationCompat.CallStyle.forIncomingCall(
-                        caller,
-                        rejectPendingIntent,
-                        acceptPendingIntent 
-                ));
-            }
 
             // Tampilkan notifikasi dengan ID unik
             notificationManager.notify(3001, notificationBuilder.build());

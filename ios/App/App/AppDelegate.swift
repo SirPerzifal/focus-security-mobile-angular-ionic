@@ -63,6 +63,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive.
+        UNUserNotificationCenter.current().delegate = self
+
+        // Drain any pending call action stored when app was launched/resumed from notification click
+        if let pending = UserDefaults.standard.string(forKey: "pendingCallAction") {
+            UserDefaults.standard.removeObject(forKey: "pendingCallAction")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                self.injectCallData(jsonString: pending)
+            }
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -243,7 +252,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
         let userInfo = notification.request.content.userInfo
-        let type = userInfo["type"] as? String ?? ""
+        let getMetadata = { (key: String) -> String in
+            if let val = userInfo[key] as? String {
+                return val
+            }
+            if let dataDict = userInfo["data"] as? [AnyHashable: Any], let val = dataDict[key] as? String {
+                return val
+            }
+            if let customDict = userInfo["custom"] as? [AnyHashable: Any], let val = customDict[key] as? String {
+                return val
+            }
+            return ""
+        }
+        let type = getMetadata("type")
 
         if type == "incoming_call" {
             print("📞 Incoming call notification — starting ringtone loop")
@@ -273,13 +294,35 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         let actionId = response.actionIdentifier
 
-        // Extract call metadata from the data payload
-        let callerName    = userInfo["callerName"]    as? String ?? ""
-        let receiverName  = userInfo["receiverName"]  as? String ?? ""
-        let callerSocketId = userInfo["callerSocketId"] as? String ?? ""
-        let callerId      = userInfo["callerId"]      as? String ?? ""
-        let receiverId    = userInfo["receiverId"]    as? String ?? ""
-        let unitId        = userInfo["unitId"]        as? String ?? ""
+        // Extract call metadata from the data payload safely (checking top-level and nested dictionaries, converting to String)
+        let getMetadata = { (key: String) -> String in
+            let getString = { (value: Any) -> String in
+                if let str = value as? String {
+                    return str
+                }
+                if let num = value as? NSNumber {
+                    return num.stringValue
+                }
+                return "\(value)"
+            }
+            if let val = userInfo[key] {
+                return getString(val)
+            }
+            if let dataDict = userInfo["data"] as? [AnyHashable: Any], let val = dataDict[key] {
+                return getString(val)
+            }
+            if let customDict = userInfo["custom"] as? [AnyHashable: Any], let val = customDict[key] {
+                return getString(val)
+            }
+            return ""
+        }
+
+        let callerName     = getMetadata("callerName")
+        let receiverName   = getMetadata("receiverName")
+        let callerSocketId = getMetadata("callerSocketId")
+        let callerId       = getMetadata("callerId")
+        let receiverId     = getMetadata("receiverId")
+        let unitId         = getMetadata("unitId")
 
         var callAction = ""
         if actionId == "ANSWER_ACTION" {
