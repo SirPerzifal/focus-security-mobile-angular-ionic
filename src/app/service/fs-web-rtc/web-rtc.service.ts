@@ -139,7 +139,7 @@ export class WebRtcService extends ApiService {
     if (this.pendingCallData) {
       this.handleReceiverPendingCall(this.pendingCallData);
     } else {
-      this.showIncomingCallModal();
+      this.showIncomingCallModal(this.nativeOffer);
     }
   }
 
@@ -248,13 +248,13 @@ export class WebRtcService extends ApiService {
   //   return await this.activeModal.present();
   // }
 
-  async showIncomingCallModal(offer: any) {
+  async showIncomingCallModal(offer: any = null) {
     if (!this.callerName) {
       this.callerName = 'Visitor';
     }
     await this.playRingtone();
     return this.presentSingletonModal(IncomingCallPage, {
-      offer: offer,
+      offer: offer || this.nativeOffer,
       callerName: this.callerName,
     });
   }
