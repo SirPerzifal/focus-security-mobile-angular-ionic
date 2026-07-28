@@ -868,77 +868,63 @@ export class WebRtcService extends ApiService {
   family_id: any = false
   decoded: any = {}
   async handleKickUser(data: any) {
-    this.family_id = false
-    this.decoded = {}
+    console.log('🚨 WebRtcService: kick-user event received:', data);
+    this.family_id = false;
+    this.decoded = {};
+
+    const executeLogout = () => {
+      this.presentToast('You are about to get kicked out from application in 3 seconds because your account has been logged in on another device.', 'warning');
+      console.log('User kick-out triggered — logging out in 3s');
+      setTimeout(() => {
+        this.closeSocket();
+        this.storage.clearAllValueFromStorage();
+        Preferences.clear();
+        this.router.navigate(['']);
+      }, 3000);
+    };
+
     const clientData = (await Preferences.get({ key: 'USER_INFO' })).value;
     const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
     if (clientData) {
       try {
-        // console.log("THING 1")
-        this.decoded = jwtDecode(clientData)
-        this.family_id = this.decoded.family_id
-        // console.log(this.decoded)
+        this.decoded = jwtDecode(clientData);
+        this.family_id = this.decoded.vms_family_id || this.decoded.family_id;
       } catch (error) {
-        this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
-        // console.log(this.decoded)
-        this.family_id = this.decoded.family_id
+        try {
+          this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
+          this.family_id = this.decoded.vms_family_id || this.decoded.family_id;
+        } catch (e) {}
       }
     } else if (storedValue) {
       try {
         this.decoded = JSON.parse(await this.storage.decodeData(storedValue));
-        // console.log(this.decoded)
-        this.family_id = this.decoded.family_id
+        this.family_id = this.decoded.vms_family_id || this.decoded.family_id;
       } catch (error) {
-        console.log(error)
-        this.decoded = {}
-        this.family_id = false
+        this.decoded = {};
+        this.family_id = false;
       }
-    } else {
-      this.decoded = {}
-      this.family_id = false
     }
+
     if (this.family_id) {
-      this.http.post<any>(`${this.baseUrl}/get/fcm_token`, { jsonrpc: '2.0', params: { family_id: this.family_id } }).subscribe(
-        res => {
-          console.log(res)
-          if (res.result['status_code'] == 200) {
-            var fcm_token = res.result['status_desc'];
+      this.http.post<any>(`${this.baseUrl}/get/fcm_token`, { jsonrpc: '2.0', params: { family_id: this.family_id } }).subscribe({
+        next: (res) => {
+          if (res && res.result && res.result['status_code'] == 200) {
+            const fcm_token = res.result['status_desc'];
             this.getFCMToken().then(token => {
-              // Skip comparison if token could not be determined
-              // (null = iOS FCMTokenReceived timed out or not yet available)
-              if (token === null || token === undefined || token === '') {
-                console.log('FCM token not available — skipping kick-out check');
-                return;
-              }
-              if (token != fcm_token) {
-                console.log(this.platform.platforms(), this.platform.platforms().join(', '));
-
-                const isDesktop = this.platform.is('mobileweb') || this.platform.is('desktop');
-                console.log("Is Dekstop", isDesktop);
-
-                if (isDesktop) {
-                  console.log("You are in desktop device", isDesktop);
-                } else {
-                  this.presentToast('You are about to get kick out from application in 3 second because your account has been login on another device.', 'warning')
-                  console.log('You are about to get kick out from application in 3 second because your account has been login on another device.', 'warning');
-                  setTimeout(() => {
-                    this.closeSocket();
-                    this.storage.clearAllValueFromStorage();
-                    Preferences.clear();
-                    this.router.navigate(['']);
-                  }, 3000)
-                }
-              } else {
+              if (!token || token != fcm_token) {
+                executeLogout();
               }
             });
           } else {
-            console.log("ERROR OVER HEY")
+            executeLogout();
           }
         },
-        error => {
-          console.log(error)
+        error: () => {
+          executeLogout();
         }
-      )
+      });
+    } else {
+      executeLogout();
     }
   }
 
