@@ -27,6 +27,13 @@
       </div>
       <div class="flex flex-row mt-2 text-[13px] w-full">
         <div class="w-full">
+          <app-visitor-button [text]="'FAQ'" [routerLink]="['/client-faq']"
+            [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'">
+          </app-visitor-button>
+        </div>
+      </div>
+      <div class="flex flex-row mt-2 text-[13px] w-full">
+        <div class="w-full">
           <app-visitor-button [text]="'Logout'"
             [extraClass]="'bg-[var(--ion-color-primary)] text-white mt-1 w-full text-base !font-light'" (click)="logout()">
           </app-visitor-button>

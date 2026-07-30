@@ -91,27 +91,27 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       formParams: 'nameCondominium',
       name: 'Condominium Name',
       disabledInput: true
-    },    {
+    }, {
       id: 'status_owner',
       formParams: 'statusOwner',
       name: 'Status',
       disabledInput: true
-    },    {
+    }, {
       id: 'block_name',
       formParams: 'blockName',
       name: 'Block',
       disabledInput: true
-    },    {
+    }, {
       id: 'unit_name',
       formParams: 'unitName',
       name: 'Unit',
       disabledInput: true
-    },    {
+    }, {
       id: 'email_owner',
       formParams: 'email',
       name: 'Email',
       disabledInput: true
-    },    {
+    }, {
       id: 'phone_number',
       formParams: 'phone',
       name: 'Contact',
@@ -123,19 +123,19 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     {
       name: 'Family',
       src: 'assets/icon/resident-icon/profile/Add User Group Woman Man.webp',
-    },    {
+    }, {
       name: 'Employee',
       src: 'assets/icon/resident-icon/profile/Furniture.webp',
-    },    {
+    }, {
       name: 'Estate',
       src: 'assets/icon/resident-icon/profile/Home.png',
-    },    {
+    }, {
       name: 'Ban',
       src: 'assets/icon/resident-icon/profile/No User.webp',
-    },    {
+    }, {
       name: 'Pets',
       src: 'assets/icon/resident-icon/profile/Pets.webp',
-    },    {
+    }, {
       name: 'Vehicles',
       src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
     }
@@ -146,7 +146,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   //for estate
   profileEstate: Estate[] = [];
   isLoading: boolean = false;
-  activeUnit : number = 0;
+  activeUnit: number = 0;
   noData: boolean = false;
 
   //for ban
@@ -226,7 +226,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       this.storage.decodeData(value).then((value: any) => {
-        if ( value ) {
+        if (value) {
           const estate = JSON.parse(value) as Estate;
           this.imageProfile = estate.image_profile;
           this.familyId = estate.family_id;
@@ -239,22 +239,22 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 formParams: 'familyNickname',
                 name: 'Nickname',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'employee_extension_number',
                 formParams: 'employeeExtensionNumber',
                 name: 'Employee Extension Number',
                 disabledInput: this.disabledInput
-              },    {
+              }, {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
                 name: 'Project Name',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'email_owner',
                 formParams: 'email',
                 name: 'Email',
                 disabledInput: this.disabledInput
-              },    {
+              }, {
                 id: 'phone_number',
                 formParams: 'phone',
                 name: 'Contact',
@@ -279,37 +279,37 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 formParams: 'familyNickname',
                 name: 'Nickname',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'condominium_name',
                 formParams: 'nameCondominium',
                 name: 'Condominium Name',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'status_owner',
                 formParams: 'statusOwner',
                 name: 'Status',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'block_name',
                 formParams: 'blockName',
                 name: 'Block',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'unit_name',
                 formParams: 'unitName',
                 name: 'Unit',
                 disabledInput: true
-              },    {
+              }, {
                 id: 'email_owner',
                 formParams: 'email',
                 name: 'Email',
                 disabledInput: this.disabledInput
-              },    {
+              }, {
                 id: 'phone_number',
                 formParams: 'phone',
                 name: 'Contact',
                 disabledInput: this.disabledInput
-              },    {
+              }, {
                 id: 'intercom_code',
                 formParams: 'intercomCode',
                 name: 'Intercom Code',
@@ -329,9 +329,15 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             }
 
             console.log(this.inputForm.statusOwner);
-            
-            if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
+
+            if (this.inputForm.statusOwner === 'Tenants' || this.inputForm.statusOwner === 'Member') {
               console.log("tesj sw");
+              this.squareButton = [
+                { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' },
+                { name: 'Ban', src: 'assets/icon/resident-icon/profile/No User.webp' },
+                { name: 'Pets', src: 'assets/icon/resident-icon/profile/Pets.webp' },
+              ]; // kosong
+            } else if (this.inputForm.statusOwner === 'Helper') {
               this.squareButton = [
                 { name: 'Estate', src: 'assets/icon/resident-icon/profile/Home.png' }
               ]; // kosong
@@ -352,8 +358,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
           } else {
             this.activeUnit = estate.family_id;
           }
-          Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-            if(value?.value){
+          Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+            if (value?.value) {
               try {
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                 this.isLoading = true;
@@ -371,7 +377,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    
+
   }
 
   private routerSubscription!: Subscription;
@@ -388,10 +394,10 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         {
           name: 'Estate',
           src: 'assets/icon/resident-icon/profile/Home.png',
-        },    {
+        }, {
           name: 'Ban',
           src: 'assets/icon/resident-icon/profile/No User.webp',
-        },{
+        }, {
           name: 'Vehicles',
           src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
         }
@@ -401,17 +407,17 @@ export class ProfileMainPage implements OnInit, OnDestroy {
 
   ableChangeInput(afterChange?: string) {
     console.log(afterChange);
-    
+
     // Toggle the disabledInput state
     this.disabledInput = !this.disabledInput;
-  
+
     // Update the disabledInput for email and phone fields
     this.inputData.forEach(input => {
       if (input.formParams === 'familyNickname') {
         input.disabledInput = this.disabledInput;
       }
     });
-  
+
     if (this.disabledInput === true) {
       if (afterChange === 'afterEdit') {
         this.functionMain.presentToast('Your data has been change.', 'success');
@@ -420,7 +426,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       }
       this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
         this.storage.decodeData(value).then((value: any) => {
-          if ( value ) {
+          if (value) {
             const estate = JSON.parse(value) as Estate;
             this.imageProfile = estate.image_profile;
             this.familyId = estate.family_id;
@@ -433,22 +439,22 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   formParams: 'familyNickname',
                   name: 'Nickname',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'employee_extension_number',
                   formParams: 'employeeExtensionNumber',
                   name: 'Employee Extension Number',
                   disabledInput: this.disabledInput
-                },    {
+                }, {
                   id: 'condominium_name',
                   formParams: 'nameCondominium',
                   name: 'Project Name',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'email_owner',
                   formParams: 'email',
                   name: 'Email',
                   disabledInput: this.disabledInput
-                },    {
+                }, {
                   id: 'phone_number',
                   formParams: 'phone',
                   name: 'Contact',
@@ -470,10 +476,10 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 {
                   name: 'Estate',
                   src: 'assets/icon/resident-icon/profile/Home.png',
-                },    {
+                }, {
                   name: 'Ban',
                   src: 'assets/icon/resident-icon/profile/No User.webp',
-                },{
+                }, {
                   name: 'Vehicles',
                   src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
                 }
@@ -485,37 +491,37 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   formParams: 'familyNickname',
                   name: 'Nickname',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'condominium_name',
                   formParams: 'nameCondominium',
                   name: 'Condominium Name',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'status_owner',
                   formParams: 'statusOwner',
                   name: 'Status',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'block_name',
                   formParams: 'blockName',
                   name: 'Block',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'unit_name',
                   formParams: 'unitName',
                   name: 'Unit',
                   disabledInput: true
-                },    {
+                }, {
                   id: 'email_owner',
                   formParams: 'email',
                   name: 'Email',
                   disabledInput: this.disabledInput
-                },    {
+                }, {
                   id: 'phone_number',
                   formParams: 'phone',
                   name: 'Contact',
                   disabledInput: this.disabledInput
-                },    {
+                }, {
                   id: 'intercom_code',
                   formParams: 'intercomCode',
                   name: 'Intercom Code',
@@ -534,7 +540,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                 intercomCode: estate.intercom_code
               }
               console.log(this.inputForm.statusOwner);
-              
+
               if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
                 console.log("tesj sw");
                 this.squareButton = [
@@ -557,8 +563,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             } else {
               this.activeUnit = estate.family_id;
             }
-            Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-              if(value?.value){
+            Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+              if (value?.value) {
                 const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                 this.isLoading = true;
                 // Mengubah string JSON menjadi objek JavaScript
@@ -605,7 +611,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       if (permissionStatus.camera !== 'granted') {
         await Camera.requestPermissions();
       }
-      
+
       const image = await Camera.getPhoto({
         quality: 90,
         // allowEditing: true,
@@ -615,16 +621,16 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         promptLabelCancel: 'Cancel',
         promptLabelPhoto: 'Take Photo',
       });
-      
+
       if (image && image.base64String) {
         this.isModalChooseUpload = !this.isModalChooseUpload;
         // Update the form data with the base64 image
         this.imageProfile = image.base64String;
-        
+
         // Update display name to show a camera capture was made
         const timestamp = new Date().toISOString().split('T')[0];
         this.imageProfile = image.base64String;
-        
+
         // Display success message
         this.functionMain.presentToast('Photo captured successfully', 'success');
       }
@@ -663,7 +669,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.inputForm.familyNickname = value;
     }
   }
-  
+
   saveChangeProfile() {
     console.log(this.inputForm, this.imageProfile);
     this.mainResident.endpointMainProcess({
@@ -678,7 +684,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
         this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
           this.storage.decodeData(value).then((value: any) => {
-            if ( value ) {
+            if (value) {
               this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.imageProfile = estate.image_profile;
@@ -692,22 +698,22 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'familyNickname',
                     name: 'Nickname',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'employee_extension_number',
                     formParams: 'employeeExtensionNumber',
                     name: 'Employee Extension Number',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Project Name',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'email_owner',
                     formParams: 'email',
                     name: 'Email',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'phone_number',
                     formParams: 'phone',
                     name: 'Contact',
@@ -732,37 +738,37 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'familyNickname',
                     name: 'Nickname',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Condominium Name',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'status_owner',
                     formParams: 'statusOwner',
                     name: 'Status',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'block_name',
                     formParams: 'blockName',
                     name: 'Block',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'unit_name',
                     formParams: 'unitName',
                     name: 'Unit',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'email_owner',
                     formParams: 'email',
                     name: 'Email',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'phone_number',
                     formParams: 'phone',
                     name: 'Contact',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'intercom_code',
                     formParams: 'intercomCode',
                     name: 'Intercom Code',
@@ -786,8 +792,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               } else {
                 this.activeUnit = estate.family_id;
               }
-              Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-                if(value?.value){
+              Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+                if (value?.value) {
                   const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                   this.isLoading = true;
                   // Mengubah string JSON menjadi objek JavaScript
@@ -851,15 +857,15 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     }
   }
 
-  loadEstate(email:string) {
+  loadEstate(email: string) {
     this.mainResident.endpointProcess({
       email: email,
     }, 'get/estate').subscribe(
       response => {
         if (response.result.status_code === 200) {
           var listedEstate = []
-          for (var key in response.result.response){
-            if(response.result.response.hasOwnProperty(key)){
+          for (var key in response.result.response) {
+            if (response.result.response.hasOwnProperty(key)) {
               listedEstate.push({
                 user_id: response.result.response[key]?.user_id,
                 family_id: response.result.response[key]?.family_id,
@@ -912,7 +918,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
             })
           } else {
-            this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+            this.router.navigate(['/client-main-app'], { queryParams: { reload: true } });
             Preferences.set({
               key: 'USER_INFO',
               value: response.result.access_token,
@@ -952,7 +958,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then((response: any) => {
         this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
           this.storage.decodeData(value).then((value: any) => {
-            if ( value ) {
+            if (value) {
               this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.imageProfile = estate.image_profile;
@@ -966,22 +972,22 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'familyNickname',
                     name: 'Nickname',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'employee_extension_number',
                     formParams: 'employeeExtensionNumber',
                     name: 'Employee Extension Number',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Project Name',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'email_owner',
                     formParams: 'email',
                     name: 'Email',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'phone_number',
                     formParams: 'phone',
                     name: 'Contact',
@@ -1003,10 +1009,10 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   {
                     name: 'Estate',
                     src: 'assets/icon/resident-icon/profile/Home.png',
-                  },    {
+                  }, {
                     name: 'Ban',
                     src: 'assets/icon/resident-icon/profile/No User.webp',
-                  },{
+                  }, {
                     name: 'Vehicles',
                     src: 'assets/icon/resident-icon/profile/Oncoming Automobile.webp',
                   }
@@ -1018,37 +1024,37 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                     formParams: 'familyNickname',
                     name: 'Nickname',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'condominium_name',
                     formParams: 'nameCondominium',
                     name: 'Condominium Name',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'status_owner',
                     formParams: 'statusOwner',
                     name: 'Status',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'block_name',
                     formParams: 'blockName',
                     name: 'Block',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'unit_name',
                     formParams: 'unitName',
                     name: 'Unit',
                     disabledInput: true
-                  },    {
+                  }, {
                     id: 'email_owner',
                     formParams: 'email',
                     name: 'Email',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'phone_number',
                     formParams: 'phone',
                     name: 'Contact',
                     disabledInput: this.disabledInput
-                  },    {
+                  }, {
                     id: 'intercom_code',
                     formParams: 'intercomCode',
                     name: 'Intercom Code',
@@ -1067,7 +1073,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
                   intercomCode: estate.intercom_code
                 }
                 console.log(this.inputForm.statusOwner);
-                
+
                 if (this.inputForm.statusOwner === 'Helper' || this.inputForm.statusOwner === 'Tenants') {
                   console.log("tesj sw");
                   this.squareButton = [
@@ -1090,8 +1096,8 @@ export class ProfileMainPage implements OnInit, OnDestroy {
               } else {
                 this.activeUnit = estate.family_id;
               }
-              Preferences.get({key: 'USER_INFO'}).then(async (value) => {
-                if(value?.value){
+              Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
+                if (value?.value) {
                   const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
                   this.isLoading = true;
                   // Mengubah string JSON menjadi objek JavaScript
@@ -1167,17 +1173,17 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         return;
       } else {
         const bannedItems = result.filter((item: any) => item['is_banned'] === true);
-        
+
         bannedItems.forEach((item: any) => {
           const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
           const entryDate = new Date();
-          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+          entryDate.setHours(entryHours, entryMinutes, 0, 0);
           entryDate.setHours(entryDate.getHours() + 1);
           const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
           const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
           const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
           const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-      
+
           this.historyData.push({
             purpose: item['purpose'],
             visitor_name: item['visitor_name'],
@@ -1196,7 +1202,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
             id: item['visitor_id']
           });
           console.log(this.historyData);
-          
+
           this.isLoading = false;
         });
       }
@@ -1234,7 +1240,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         },
       ]
     });
-    await alertButtons.present ();
+    await alertButtons.present();
   }
 
   reinstateProcess(historyData: any) {
@@ -1259,7 +1265,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
     this.mainResident.endpointMainProcess({}, 'get/contractor_history').subscribe((response) => {
       this.isLoading = true; // Set loading to true at the start
       var result = response.result['response_result'];
-      
+
       if (response.result.response_status === 400) {
         this.isLoading = false;
         return;
@@ -1269,14 +1275,14 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         bannedItems.forEach((item: any) => {
           const [entryHours, entryMinutes] = item['entry_time'].split(':').map(Number);
           const entryDate = new Date();
-          entryDate.setHours(entryHours, entryMinutes, 0, 0); 
+          entryDate.setHours(entryHours, entryMinutes, 0, 0);
           entryDate.setHours(entryDate.getHours() + 1);
           const exitTime = `${entryDate.getHours().toString().padStart(2, '0')}:${entryDate.getMinutes().toString().padStart(2, '0')}`;
-          
+
           const visitDate = item['visit_date'] ? item['visit_date'] : new Date();
           const dateParts = visitDate.split('-'); // Misalnya, '2023-10-15' menjadi ['2023', '10', '15']
           const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-  
+
           this.filteredData.push({
             purpose: item['purpose'],
             visitor_name: item['contractor_name'],
@@ -1331,7 +1337,7 @@ export class ProfileMainPage implements OnInit, OnDestroy {
         {
           text: 'Cancel',
           role: 'cancel',
-          cssClass:'secondary',
+          cssClass: 'secondary',
           handler: (blah) => {
             // console.log('Confirm Cancel: blah', blah);
           }
