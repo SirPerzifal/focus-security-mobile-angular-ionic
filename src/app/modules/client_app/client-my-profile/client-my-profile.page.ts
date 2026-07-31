@@ -45,6 +45,7 @@ export class ClientMyProfilePage implements OnInit {
     family_id: '',
   };
   isLoading = false;
+  runningLoadProject: boolean = false;
 
   constructor(
     private router: Router,
@@ -54,8 +55,14 @@ export class ClientMyProfilePage implements OnInit {
     private mainResident: MainApiResidentService
   ) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.loadProject();
+  }
+
+  ngOnInit() {
+    if (!this.runningLoadProject) {
+      this.loadProject();
+    }
   }
 
   private routerSubscription!: Subscription;
@@ -66,6 +73,7 @@ export class ClientMyProfilePage implements OnInit {
   }
 
   async loadProject() {
+    this.runningLoadProject = true
     await this.functionMain.vmsPreferences().then((value) => {
       console.log(value)
       this.savedPref = value
@@ -83,6 +91,7 @@ export class ClientMyProfilePage implements OnInit {
       this.storage.getValueFromStorage('USESATE_DATA').then(value => {
         this.userData.image_profile = value.image_profile
       })
+      this.runningLoadProject = false;
     })
   }
 
@@ -103,7 +112,7 @@ export class ClientMyProfilePage implements OnInit {
           Preferences.set({
             key: 'USER_INFO',
             value: results.result.access_token,
-          }).then(()=>{
+          }).then(() => {
             this.storage.clearAllValueFromStorage()
             let storageData = {
               'image_profile': results.result.image_profile
@@ -156,26 +165,29 @@ export class ClientMyProfilePage implements OnInit {
           return;
         }
       }
-  
+
       this.functionMain.presentToast('Error taking photo', 'danger');
     }
   }
 
   page = 'My Profile'
-  changePage(page: string) {
+  async changePage(page: string) {
     if (page === 'main_profile') {
       console.log(page, 'main_profile');
       this.page = 'My Profile';
     } else if (page === 'estate') {
-      this.loadEstate(this.userData.email);
-      this.activeUnit = this.userData.family_id;
-      console.log(page, 'estate');
+      await this.functionMain.vmsPreferences().then((value) => {
+        console.log(value)
+        this.savedPref = value
+        this.loadEstate(value.email);
+        this.activeUnit = value.family_id;
+      })
       this.page = 'Change Estate';
     }
   }
 
   profileEstate: Estate[] = [];
-  loadEstate(email:string) {
+  loadEstate(email: string) {
     this.isLoading = true
     this.mainResident.endpointProcess({
       email: email,
@@ -183,8 +195,8 @@ export class ClientMyProfilePage implements OnInit {
       response => {
         if (response.result.status_code === 200) {
           var listedEstate = []
-          for (var key in response.result.response){
-            if(response.result.response.hasOwnProperty(key)){
+          for (var key in response.result.response) {
+            if (response.result.response.hasOwnProperty(key)) {
               listedEstate.push({
                 user_id: response.result.response[key]?.user_id,
                 family_id: response.result.response[key]?.family_id,
@@ -237,7 +249,7 @@ export class ClientMyProfilePage implements OnInit {
               key: 'USER_INFO',
               value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials))))
             })
-            this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
+            this.router.navigate(['/resident-home-page'], { queryParams: { reload: true } });
           } else {
             Preferences.set({
               key: 'USER_INFO',
@@ -284,7 +296,7 @@ export class ClientMyProfilePage implements OnInit {
   private waitForToken(familyId: number): Promise<string> {
     return new Promise((resolve) => {
       const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
-      
+
       const timeout = setTimeout(() => {
         this.cleanupTokenListeners();
         console.log('FCM registration timed out');
@@ -296,7 +308,7 @@ export class ClientMyProfilePage implements OnInit {
         if (token.value) {
           this.fcmToken = token.value;
           console.log('FCM Token received:', token.value);
-            
+
           // ✅ Send token to backend
           this.mainResident.endpointCustomProcess({
             previous_family_id: this.userData.family_id,
@@ -337,7 +349,7 @@ export class ClientMyProfilePage implements OnInit {
     });
   }
 
-  private cleanupTokenListeners: () => void = () => {};
+  private cleanupTokenListeners: () => void = () => { };
 
   activeUnit: any = null;
   async chooseEstateClick(estate: any) {
@@ -349,7 +361,7 @@ export class ClientMyProfilePage implements OnInit {
       this.storage.setValueToStorage('USESATE_DATA', storageData)
       await this.getNotificationPermission(estate.family_id).then(() => {
         this.getAccessToken(estate.family_id, 'client');
-        this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
+        this.router.navigate(['/client-main-app'], { queryParams: { reload: true } });
       });
       return;
     } else {

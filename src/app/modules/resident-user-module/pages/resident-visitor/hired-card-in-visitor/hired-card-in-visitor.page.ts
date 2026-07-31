@@ -49,21 +49,21 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
       image: 'assets/icon/pick_up-page/Grab_Outline.png',
       icon: '',
       ion_icon: ''
-    },{
+    }, {
       name: 'TAXI',
       value: 'taxi',
       active: false,
       image: '',
       icon: 'faTaxi',
       ion_icon: ''
-    },{
+    }, {
       name: 'CAR',
       value: 'private_car',
       active: false,
       image: '',
       icon: '',
       ion_icon: 'car-sport-outline'
-    },{
+    }, {
       name: 'BIKE',
       value: 'motor_bike',
       active: false,
@@ -96,7 +96,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
 
   showPick = true;
   showDrop = false;
-  
+
   agreementChecked: boolean = false; // Status checkbox
   termsAndCOndition: string = '';
 
@@ -106,7 +106,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     private mainApiResidentService: MainApiResidentService,
     public functionMain: FunctionMainService,
     private storage: StorageService
-  )  {}
+  ) { }
 
   ngOnInit() {
     this.getTodayDate();
@@ -177,7 +177,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
       this.formData.entry_date = event;
       console.log(event, this.formData.entry_date);
-      
+
     } else {
       this.selectedDate = ''
     }
@@ -199,11 +199,11 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     if (this.formData.vehicle_number == '') {
       errMsg += 'Please fill the vehicle number!\n';
     }
-  
+
     if (!this.agreementChecked) { // Validasi checkbox
       errMsg += 'You must agree to the terms above!\n';
     }
-  
+
     if (errMsg != '') {
       this.functionMain.presentToast(errMsg, 'danger');
     } else {
@@ -226,12 +226,13 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
               if (response.result.status === 'unit same') {
                 this.functionMain.presentToast('Visitor has been ban on this unit!', 'danger');
               } else {
+                this.functionMain.presentToast('Visitor has been ban on different unit!', 'danger');
                 // this.presentAlertForBannedVisitor(`${response.result.family_ban_name} (${response.result.unit_name})`, response.result.family_ban_id);
               }
             } else {
               this.functionMain.presentToast('Visitor has been ban!', 'danger');
             }
-          }  else {
+          } else {
             this.functionMain.presentToast('Failed Add Record', 'danger');
           }
         })
@@ -250,7 +251,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
         // email: email
         terms_condition: this.termsAndCOndition
       }
-  
+
     });
 
     modal.onDidDismiss().then((result) => {
