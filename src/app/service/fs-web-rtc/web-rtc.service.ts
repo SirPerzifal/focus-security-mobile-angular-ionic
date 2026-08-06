@@ -1051,6 +1051,9 @@ export class WebRtcService extends ApiService {
     this.pendingCallData = data;
     this.nativeOffer = data.offerObj;
     this.callerId = data.callerId;
+    if (data.callerName && data.callerName !== 'undefined' && data.callerName !== 'null') {
+      this.callerName = data.callerName;
+    }
     this.callerSocketId = data.callerSocketId;
     this.receiverSocketId = data.receiverSocketId;
     this.targetSocketIds = data.targetSocketIds;
