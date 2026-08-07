@@ -58,7 +58,7 @@ export class VisitorInvitigFormPage implements OnInit {
     this.addInitialInvitee();
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { formData: FormData, selectedInvitees: Invitee[], invitessFromExcel: Invitee[] };
-  
+
     if (state) {
       this.formData = {
         ...state.formData,
@@ -109,9 +109,9 @@ export class VisitorInvitigFormPage implements OnInit {
   }
 
   addInitialInvitee() {
-    const initialInvitee: Invitee = { 
-      visitor_name: '', 
-      contact_number: '', 
+    const initialInvitee: Invitee = {
+      visitor_name: '',
+      contact_number: '',
       contact_number_display: '', // Tambahkan field untuk display
       vehicle_number: '',
       company_name: '',
@@ -132,7 +132,7 @@ export class VisitorInvitigFormPage implements OnInit {
     this.router.navigate(['visitor-main'], {
       state: {
         formData: this.formData,
-      }, 
+      },
       queryParams: {
         reload: true
       }
@@ -169,24 +169,24 @@ export class VisitorInvitigFormPage implements OnInit {
           const countryCodeFromContact = newPhoneNumber.substring(0, 2);
           const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
           selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '65';
-        } 
+        }
         // else if (newPhoneNumber.startsWith('91')) {
         //   processedNumber = newPhoneNumber.slice(2);
         //   const countryCodeFromContact = newPhoneNumber.substring(0, 2);
         //   const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromContact);
         //   selectedCountryCode = isValidCountryCode ? countryCodeFromContact : '91';
         // }
-         else {
+        else {
           processedNumber = newPhoneNumber;
           selectedCountryCode = '65';
         }
 
         // Buat nomor lengkap untuk pengecekan duplikasi
         const fullNumber = selectedCountryCode + processedNumber;
-        
+
         // Cek duplikasi
         const shouldClearInput = await this.checkIsThereNumberAlreadyOnForm(fullNumber, this.currentInviteeIndex);
-        
+
         if (shouldClearInput) {
           // User memilih "Change" - kosongkan input
           this.inviteeFormList[this.currentInviteeIndex].visitor_name = '';
@@ -214,7 +214,7 @@ export class VisitorInvitigFormPage implements OnInit {
   removeInvitee(index: number) {
     this.inviteeFormList.splice(index, 1); // Menghapus invitee dari list
     this.selectedCountry.splice(index, 1); // Menghapus selectedCountry yang sesuai
-    
+
     if (this.inviteeFormList.length === 0) {
       this.isFormVisible = false; // Sembunyikan form jika tidak ada invitee
     }
@@ -222,14 +222,14 @@ export class VisitorInvitigFormPage implements OnInit {
 
   public async presentCustomAlert(
     index: number,
-    header: string = 'Remove this form?', 
+    header: string = 'Remove this form?',
     confirmText: string = 'Confirm',
     cancelText: string = 'Cancel',
   ) {
     const alert = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
       header: header,
-      message: 'Are you sure you want to remove this invitee?', 
+      message: 'Are you sure you want to remove this invitee?',
       buttons: [
         {
           text: confirmText,
@@ -247,26 +247,26 @@ export class VisitorInvitigFormPage implements OnInit {
         },
       ]
     });
-  
+
     await alert.present();
   }
 
   addInvitee() {
-    const newInvitee: Invitee = { 
-      visitor_name: '', 
+    const newInvitee: Invitee = {
+      visitor_name: '',
       contact_number: '65', // Default dengan country code
       contact_number_display: '', // Kosong untuk display
       vehicle_number: '',
       company_name: '',
       host_ids: [] // Pastikan ini array kosong
     };
-    
+
     // Tambahkan invitee baru ke list
     this.inviteeFormList.push(newInvitee);
-    
+
     // Pastikan juga menambahkan item baru ke selectedCountry
     this.selectedCountry.push({ selected_code: '65' });
-    
+
     this.addInviteeText = 'Add More Invitees';
     this.isFormVisible = true;
   }
@@ -275,7 +275,7 @@ export class VisitorInvitigFormPage implements OnInit {
   updateContactNumber(index: number) {
     const displayNumber = this.inviteeFormList[index].contact_number_display || '';
     const countryCode = this.selectedCountry[index].selected_code || '65';
-    
+
     // Update full contact number
     this.inviteeFormList[index].contact_number = countryCode + displayNumber;
   }
@@ -289,17 +289,17 @@ export class VisitorInvitigFormPage implements OnInit {
   async checkIsThereNumberAlreadyOnForm(number: string, currentIndex: number): Promise<boolean> {
     // Membuat nomor lengkap dengan country code untuk perbandingan
     const fullNumber = number;
-    
+
     // Cek apakah nomor sudah ada di form (kecuali di index yang sedang diedit)
-    const isDuplicate = this.inviteeFormList.some((invitee: any, index: number) => 
+    const isDuplicate = this.inviteeFormList.some((invitee: any, index: number) =>
       index !== currentIndex && invitee.contact_number === fullNumber
     );
-    
+
     if (isDuplicate) {
       // Tampilkan alert dengan pilihan
       return await this.presentDuplicateAlert();
     }
-    
+
     return false; // Tidak ada duplikasi
   }
 
@@ -342,11 +342,11 @@ export class VisitorInvitigFormPage implements OnInit {
       const min = selectedCountry.minDigit;
       const max = selectedCountry.maxDigit;
 
-      if (inputValue.length < min) { 
+      if (inputValue.length < min) {
         this.functionMain.presentToast(`Phone is not minimum character ${min}`, 'danger');
         return;
-      } else if (inputValue.length > max) { 
-        this.functionMain.presentToast(`Phone is reach maximum character ${max}`, 'danger'); 
+      } else if (inputValue.length > max) {
+        this.functionMain.presentToast(`Phone is reach maximum character ${max}`, 'danger');
         return;
       }
     } else {
@@ -365,7 +365,7 @@ export class VisitorInvitigFormPage implements OnInit {
       const countryCodeFromInput = inputValue.substring(0, 2);
       const isValidCountryCode = this.countryCodes.some(code => code.code === countryCodeFromInput);
       selectedCountryCode = isValidCountryCode ? countryCodeFromInput : '65';
-    } 
+    }
     // else if (inputValue.startsWith('91')) {
     //   processedNumber = inputValue.slice(2);
     //   const countryCodeFromContact = inputValue.substring(0, 2);
@@ -379,10 +379,10 @@ export class VisitorInvitigFormPage implements OnInit {
 
     // Buat nomor lengkap untuk pengecekan duplikasi
     const fullNumber = selectedCountryCode + processedNumber;
-    
+
     // Cek duplikasi sebelum update
     const shouldClearInput = await this.checkIsThereNumberAlreadyOnForm(fullNumber, index);
-    
+
     if (shouldClearInput) {
       // User memilih "Change" - kosongkan input
       event.target.value = '';
@@ -399,26 +399,26 @@ export class VisitorInvitigFormPage implements OnInit {
   validateFormBeforeSubmit(): boolean {
     const phoneNumbers = this.inviteeFormList.map((invitee: any) => invitee.contact_number);
     const uniqueNumbers = new Set(phoneNumbers);
-    
+
     // Cek jika ada nomor kosong
     const hasEmptyNumbers = phoneNumbers.some((num: any) => !num || num.length <= 2);
     if (hasEmptyNumbers) {
       // this.functionMain.presentToast('Please fill all phone numbers', 'danger');
       return false;
     }
-    
+
     // Info saja jika ada duplikasi (karena user sudah dikonfirmasi sebelumnya)
     if (phoneNumbers.length !== uniqueNumbers.size) {
       console.log('Duplicate numbers detected but user has confirmed');
     }
-    
+
     return true;
   }
 
 
   navigateToInviteFormHistory() {
-    this.router.navigate(['/visitor-inviting-from-history'], { 
-      state: { existingInvitees: this.inviteeFormList } 
+    this.router.navigate(['/visitor-inviting-from-history'], {
+      state: { existingInvitees: this.inviteeFormList }
     });
   }
 
@@ -480,8 +480,8 @@ export class VisitorInvitigFormPage implements OnInit {
       this.functionMain.presentToast(errMsg, 'danger');
       return;
     }
-    const isValid = this.inviteeFormList.every((invitee: any) => 
-      invitee.visitor_name.trim() !== '' && 
+    const isValid = this.inviteeFormList.every((invitee: any) =>
+      invitee.visitor_name.trim() !== '' &&
       invitee.contact_number.trim() !== ''
     );
 
@@ -490,7 +490,7 @@ export class VisitorInvitigFormPage implements OnInit {
 
     if (isValid && isFormValid) {
       console.log(this.inviteeFormList);
-      
+
       try {
         const submitData = this.inviteeFormList.map((invitee: any) => ({
           visitor_name: invitee.visitor_name,
@@ -501,8 +501,8 @@ export class VisitorInvitigFormPage implements OnInit {
         }));
 
         this.mainApiResidentService.endpointMainProcess({
-          date_of_visit: this.formData.dateOfInvite, 
-          entry_type: this.formData.entryType, 
+          date_of_visit: this.formData.dateOfInvite,
+          entry_type: this.formData.entryType,
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
           is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
@@ -568,7 +568,7 @@ export class VisitorInvitigFormPage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
       header: 'This visitor has been banned!',
-      message: `Kindly call ${residentName} to verify this ban,`, 
+      message: `Kindly call ${residentName} to verify this ban.`,
       buttons: [
         {
           text: 'Call',
@@ -576,29 +576,29 @@ export class VisitorInvitigFormPage implements OnInit {
           handler: () => {
             this.webRtcService.createOffer(false, residentId, false, false).then((result: any) => {
               // console.log(result, "valuereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercallsvaluereturnoffercalls");
-              
+
               // if (result === 'reject' || result === 'cancel' || result.endsWith('is not logged on any devices')) {
               //   console.log('suk sini atas');
-                
+
               //   alert.dismiss();
               // } else {
               //   console.log('suk sini bawah');
-                
-                this.presentAlertForBannedVisitorAfterCall()
+
+              this.presentAlertForBannedVisitorAfterCall()
               // }
             });
           }
         },
       ]
     });
-  
+
     await alert.present();
   }
 
   async presentAlertForBannedVisitorAfterCall() {
     const alert = await this.alertController.create({
       cssClass: 'custom-alert-class-resident-visitors-page',
-      message: `Whats the decision?`, 
+      message: `Whats the decision?`,
       buttons: [
         {
           text: 'Proceed',
@@ -606,7 +606,7 @@ export class VisitorInvitigFormPage implements OnInit {
           handler: () => {
             this.onSubmit('proceed_anyway')
           }
-        },{
+        }, {
           text: 'Cancel',
           cssClass: 'cancel-button',
           handler: () => {
@@ -614,7 +614,7 @@ export class VisitorInvitigFormPage implements OnInit {
         }
       ]
     });
-  
+
     await alert.present();
   }
 
@@ -631,7 +631,7 @@ export class VisitorInvitigFormPage implements OnInit {
     if (navigationState && navigationState['selectedInvitees']) {
       selectedInvitees = navigationState['selectedInvitees'];
       console.log(selectedInvitees);
-    } 
+    }
     // Jika tidak ada, cek params
     else if (params && params['selectedInvitees']) {
       try {
@@ -645,7 +645,7 @@ export class VisitorInvitigFormPage implements OnInit {
     if (selectedInvitees && selectedInvitees.length > 0) {
       this.inviteeFormList = selectedInvitees.map((invitee: any) => {
         console.log(invitee);
-        
+
         let contact_number = invitee.contact_number || '';
         let contact_number_display = '';
         let country_code = '65';
@@ -682,10 +682,10 @@ export class VisitorInvitigFormPage implements OnInit {
           selected_code: selectedCountry
         };
       });
-      
+
       this.addInviteeText = 'Add More Invitees';
     }
-    
+
     // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
     while (this.selectedCountry.length < this.inviteeFormList.length) {
       this.selectedCountry.push({ selected_code: '65' });
@@ -696,7 +696,7 @@ export class VisitorInvitigFormPage implements OnInit {
     }
 
     this.isFormInitialized = true;
-    
+
     // PERBAIKAN: Setup entryCheck setelah semua data dimuat dan familyId tersedia
     setTimeout(() => {
       this.setupEntryChecks();
@@ -708,7 +708,7 @@ export class VisitorInvitigFormPage implements OnInit {
     if (selectedInvitees && selectedInvitees.length > 0) {
       this.inviteeFormList = selectedInvitees.map((invitee: any) => {
         // console.log(invitee);
-        
+
         let contact_number = invitee.contact_number || '';
         let contact_number_display = '';
         let country_code = '65';
@@ -745,10 +745,10 @@ export class VisitorInvitigFormPage implements OnInit {
           selected_code: selectedCountry
         };
       });
-      
+
       this.addInviteeText = 'Add More Invitees';
     }
-    
+
     // Setelah memproses inviteeFormList, pastikan selectedCountry memiliki ukuran yang sama
     while (this.selectedCountry.length < this.inviteeFormList.length) {
       this.selectedCountry.push({ selected_code: '65' });
@@ -761,8 +761,8 @@ export class VisitorInvitigFormPage implements OnInit {
     this.isFormInitialized = true;
 
     console.log(this.inviteeFormList);
-    
-    
+
+
     // PERBAIKAN: Setup entryCheck setelah semua data dimuat dan familyId tersedia
     setTimeout(() => {
       this.setupEntryChecks();
@@ -773,7 +773,7 @@ export class VisitorInvitigFormPage implements OnInit {
   private setupEntryChecks() {
     this.inviteeFormList.forEach((invitee: any, index: number) => {
       const hostIdsCount = invitee.host_ids?.length || 0;
-      
+
       if (hostIdsCount > 1) {
         this.entryCheck[index] = "other_host";
       } else if (hostIdsCount === 1 && invitee.host_ids[0] === this.familyId) {
@@ -789,11 +789,11 @@ export class VisitorInvitigFormPage implements OnInit {
   // Tambahkan method untuk re-setup entryChecks saat yserType berubah:
   onChangeTypeOfUser(event: any) {
     this.yserType = event;
-    
+
     if (this.yserType === 'industrial') {
       this.loadHost();
       this.loadFamilyId();
-      
+
       // Re-setup entryChecks setelah familyId dimuat
       setTimeout(() => {
         this.setupEntryChecks();
@@ -809,7 +809,7 @@ export class VisitorInvitigFormPage implements OnInit {
           if (value) {
             const estate = JSON.parse(value) as Estate;
             this.familyId = estate.family_id;
-            
+
             // Setup entryChecks setelah familyId dimuat
             if (this.inviteeFormList.length > 0) {
               this.setupEntryChecks();
