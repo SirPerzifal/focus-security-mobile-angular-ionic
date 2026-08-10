@@ -14,19 +14,7 @@
   [fullscreen]="true"
   *ngIf="callActionStatus != 'acceptCall'"
 >
-  <ion-refresher
-    slot="fixed"
-    (ionRefresh)="handleRefresh($event)"
-    style="z-index: 999"
-    pullFactor="0.3"
-    pullMin="40"
-    pullMax="80"
-  >
-    <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"
-      refreshingSpinner="none"
-    ></ion-refresher-content>
-  </ion-refresher>
+  <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
 
   <!-- <app-loading-animation *ngIf="isLoading"></app-loading-animation> -->
   <div *ngIf="!isLoading" class="p-5 text-center">
@@ -82,6 +70,19 @@
         <ion-title>Upload Profile</ion-title>
       </ion-toolbar>
       <div class="px-5 pb-3 mt-[70px]">
+        <!-- Profile Photo Gate Access Acknowledgement Notice -->
+        <div class="bg-amber-50 border border-amber-300 rounded-xl p-3.5 mb-3 text-left shadow-xs">
+          <div class="flex items-center gap-2 mb-1">
+            <ion-icon name="shield-checkmark-outline" class="text-amber-700 text-lg font-bold shrink-0"></ion-icon>
+            <h4 class="text-xs sm:text-sm font-bold text-amber-950 m-0 uppercase tracking-wide">
+              Important: Gate Access Photo Guidelines
+            </h4>
+          </div>
+          <p class="text-xs text-amber-900 m-0 leading-relaxed">
+            This profile photo will be used for <strong>facial recognition and opening security gates</strong>. Please upload a <strong>clear, front-facing photo of your real face</strong>. Avatars, pets, scenery, or group photos are strictly prohibited and will prevent gate access from working.
+          </p>
+        </div>
+
         <div class="w-full mb-2">
           <div class="flex flex-row justify-start mb-1"></div>
           <div

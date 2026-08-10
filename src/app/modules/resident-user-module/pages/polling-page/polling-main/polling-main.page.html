@@ -23,19 +23,7 @@
     </div>
     <div *ngIf="showOpen" @fadeInOut>
       <div class="px-4 mt-2 text-center mb-20" *ngIf="!voteNow">
-        <ion-refresher
-          slot="fixed"
-          (ionRefresh)="handleRefresh($event)"
-          style="z-index: 999"
-          pullFactor="0.3"
-          pullMin="40"
-          pullMax="80"
-        >
-          <ion-refresher-content
-            pullingIcon="chevron-down-circle-outline"
-            refreshingSpinner="none"
-          ></ion-refresher-content>
-        </ion-refresher>
+        <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
         <div
           *ngIf="isLoading"
           class="flex justify-center items-center h-full mt-14"
@@ -152,19 +140,7 @@
     </div>
 
     <div *ngIf="showUpcoming" @fadeInOut>
-      <ion-refresher
-        slot="fixed"
-        (ionRefresh)="handleRefresh($event)"
-        style="z-index: 999"
-        pullFactor="0.3"
-        pullMin="40"
-        pullMax="80"
-      >
-        <ion-refresher-content
-          pullingIcon="chevron-down-circle-outline"
-          refreshingSpinner="none"
-        ></ion-refresher-content>
-      </ion-refresher>
+      <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
       <div
         *ngIf="isLoading"
         class="flex justify-center items-center h-full mt-14"
@@ -188,19 +164,7 @@
     </div>
 
     <div *ngIf="showClosed" @fadeInOut>
-      <ion-refresher
-        slot="fixed"
-        (ionRefresh)="handleRefresh($event)"
-        style="z-index: 999"
-        pullFactor="0.3"
-        pullMin="40"
-        pullMax="80"
-      >
-        <ion-refresher-content
-          pullingIcon="chevron-down-circle-outline"
-          refreshingSpinner="none"
-        ></ion-refresher-content>
-      </ion-refresher>
+      <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
       <div class="px-4 mt-2 text-center mb-20" *ngIf="!showGraph">
         <div
           *ngIf="isLoading"

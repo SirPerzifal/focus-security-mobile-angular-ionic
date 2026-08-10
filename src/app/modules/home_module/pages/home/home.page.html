@@ -7,16 +7,7 @@
   *ngIf="callActionStatus != 'acceptCall'"
 >
   <!-- Gambar sebagai latar belakang -->
-  <ion-refresher
-    slot="fixed"
-    (ionRefresh)="handleRefresh($event)"
-    style="z-index: 999"
-    pullFactor="0.3"
-    pullMin="40"
-    pullMax="80"
-  >
-    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
-  </ion-refresher>
+  <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
   <div class="absolute inset-0 flex justify-center items-center opacity-20">
     <div class="flex flex-row justify-center fixed inset-0">
       <img

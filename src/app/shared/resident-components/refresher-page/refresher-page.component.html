@@ -1,13 +1,34 @@
+<!-- Always visible under navbar so users know page can be refreshed -->
+<div class="app-refresh-bar">
+  <div class="app-refresh-bar__row" *ngIf="!isReady && !isRefreshing">
+    <span class="app-refresh-bar__line"></span>
+    <span class="app-refresh-bar__text">Pull to refresh</span>
+    <span class="app-refresh-bar__line"></span>
+  </div>
+
+  <div class="app-refresh-bar__row" *ngIf="isReady && !isRefreshing">
+    <span class="app-refresh-bar__line"></span>
+    <span class="app-refresh-bar__text">Release to refresh</span>
+    <span class="app-refresh-bar__line"></span>
+  </div>
+
+  <div class="app-refresh-bar__row" *ngIf="isRefreshing">
+    <span class="app-refresh-bar__line"></span>
+    <ion-icon name="sync-outline" class="app-refresh-bar__loop"></ion-icon>
+    <span class="app-refresh-bar__line"></span>
+  </div>
+</div>
+
+<!-- Gesture handler only (visuals hidden) -->
 <ion-refresher
+  class="app-custom-refresher"
   slot="fixed"
-  (ionRefresh)="handleRefresh($event)"
-  style="z-index: 999"
   pullFactor="0.3"
   pullMin="40"
   pullMax="80"
+  (ionStart)="onStart()"
+  (ionPull)="onPull($event)"
+  (ionRefresh)="handleRefresh($event)"
 >
-  <ion-refresher-content
-    pullingIcon="chevron-down-circle-outline"
-    refreshingSpinner="none"
-  ></ion-refresher-content>
+  <ion-refresher-content [pullingIcon]="null" [refreshingSpinner]="null"></ion-refresher-content>
 </ion-refresher>

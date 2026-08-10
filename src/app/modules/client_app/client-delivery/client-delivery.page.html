@@ -2,10 +2,7 @@
   <app-resident-header [is_client]="true" [text]="page_name" [text_second]="''" />
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="z-index: 999" pullFactor="0.3" pullMin="40"
-    pullMax="80">
-    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="none"></ion-refresher-content>
-  </ion-refresher>
+  <app-refresher-page (eventEmitter)="handleRefresh($event)"></app-refresher-page>
   <div class="flex flex-col justify-between mt-2 ml-3">
     <ion-icon name="arrow-back-circle" size="large" class="text-[var(--ion-color-primary)] size-12"
       (click)="onBack()"></ion-icon>

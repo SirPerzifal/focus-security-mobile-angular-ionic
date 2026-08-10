@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 5;
+}
+
+/* Persistent hint — sits below navbar */
+.app-refresh-bar {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.4rem 1.25rem;
+  background: var(--ion-background-color, #fff);
+  pointer-events: none;
+}
+
+.app-refresh-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.app-refresh-bar__line {
+  flex: 1;
+  height: 1px;
+  background: #c8c8c8;
+  min-width: 1.5rem;
+}
+
+.app-refresh-bar__text {
+  flex-shrink: 0;
+  color: var(--ion-color-primary, #2f6fed);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.app-refresh-bar__loop {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: var(--ion-color-primary, #2f6fed);
+  animation: app-refresh-spin 0.85s linear infinite;
+}
+
+@keyframes app-refresh-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ghost refresher: keep pull gesture, hide default Ionic visuals */
+:host ::ng-deep .app-custom-refresher {
+  z-index: 11 !important;
+
+  ion-refresher-content {
+    .refresher-pulling-icon,
+    .refresher-pulling-text,
+    .refresher-refreshing-icon,
+    .refresher-refreshing-text {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}

@@ -17,10 +17,10 @@
   <div class="px-4 pb-4 pt-1.5 space-y-2">
     <div
       *ngIf="pageForWhat === 'editData'"
-      class="w-full mt-2 flex items-center justify-center"
+      class="w-full mt-2 flex flex-col items-center justify-center"
     >
       <div
-        class="w-32 h-32 mb-4 flex flex-col justify-center items-center relative"
+        class="w-32 h-32 mb-2 flex flex-col justify-center items-center relative"
       >
         <img
           alt="Profile picture of Maria"
@@ -43,6 +43,19 @@
           (click)="chooseWhereToChoose()"
         >
         </ion-icon> -->
+      </div>
+
+      <!-- Profile Photo Gate Access Acknowledgement Notice -->
+      <div class="bg-amber-50 border border-amber-300 rounded-xl p-3.5 mb-2 w-full text-left shadow-xs">
+        <div class="flex items-center gap-2 mb-1">
+          <ion-icon name="shield-checkmark-outline" class="text-amber-700 text-lg font-bold shrink-0"></ion-icon>
+          <h4 class="text-xs sm:text-sm font-bold text-amber-950 m-0 uppercase tracking-wide">
+            Important: Gate Access Photo Guidelines
+          </h4>
+        </div>
+        <p class="text-xs text-amber-900 m-0 leading-relaxed">
+          This profile photo will be used for <strong>facial recognition and opening security gates</strong>. Please upload a <strong>clear, front-facing photo of their real face</strong>. Avatars, pets, scenery, or group photos are strictly prohibited and will prevent gate access from working.
+        </p>
       </div>
     </div>
 
@@ -89,6 +102,19 @@
     </div>
 
     <div *ngIf="pageForWhat !== 'editData'" class="w-full mt-1">
+      <!-- Profile Photo Gate Access Acknowledgement Notice -->
+      <div class="bg-amber-50 border border-amber-300 rounded-xl p-3.5 mb-2 text-left shadow-xs">
+        <div class="flex items-center gap-2 mb-1">
+          <ion-icon name="shield-checkmark-outline" class="text-amber-700 text-lg font-bold shrink-0"></ion-icon>
+          <h4 class="text-xs sm:text-sm font-bold text-amber-950 m-0 uppercase tracking-wide">
+            Important: Gate Access Photo Guidelines
+          </h4>
+        </div>
+        <p class="text-xs text-amber-900 m-0 leading-relaxed">
+          This profile photo will be used for <strong>facial recognition and opening security gates</strong>. Please upload a <strong>clear, front-facing photo of their real face</strong>. Avatars, pets, scenery, or group photos are strictly prohibited and will prevent gate access from working.
+        </p>
+      </div>
+
       <div class="flex flex-row justify-start">
         <p class="text-base cw-3:text-sm font-bold">Resident Profile</p>
       </div>

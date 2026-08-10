@@ -8,11 +8,14 @@ import { MaintenancePagePageRoutingModule } from './maintenance-page-routing.mod
 
 import { MaintenancePagePage } from './maintenance-page.page';
 
+import { SharedModule } from 'src/app/shared/shared.module';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    SharedModule,
     MaintenancePagePageRoutingModule
   ],
   declarations: [MaintenancePagePage]

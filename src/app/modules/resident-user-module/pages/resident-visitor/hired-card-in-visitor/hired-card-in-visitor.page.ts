@@ -226,7 +226,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
               if (response.result.status === 'unit same') {
                 this.functionMain.presentToast('Visitor has been ban on this unit!', 'danger');
               } else {
-                this.functionMain.presentToast('Visitor has been ban by a different unit!', 'danger');
+                this.functionMain.presentToast('The visitor has been banned by another unit. Please contact management for further assistance.', 'danger');
                 // this.presentAlertForBannedVisitor(`${response.result.family_ban_name} (${response.result.unit_name})`, response.result.family_ban_id);
               }
             } else {
