@@ -419,9 +419,12 @@ export class WebRtcService extends ApiService {
       if (!userInfo.family_id) {
         const clientData = await Preferences.get({ key: 'USER_INFO' });
         if (clientData.value) {
-          const parsedClient = jwtDecode(clientData.value) as { name: string; family_id: number };
+          // ✅ FIX Bug 2: include intercom_name in type so intercom devices use their
+          // actual gate name (from fs.intercom.user.name) as the caller display name
+          // instead of falling back to 'Security' / 'Visitor'.
+          const parsedClient = jwtDecode(clientData.value) as { name?: string; family_id?: string | number; intercom_name?: string };
           if (parsedClient.family_id) {
-            userInfo.family_name = parsedClient.name;
+            userInfo.family_name = parsedClient.intercom_name || parsedClient.name || 'Security';
             userInfo.family_id = parsedClient.family_id.toString();
             console.log("Got userInfo from USER_INFO", userInfo);
           }
