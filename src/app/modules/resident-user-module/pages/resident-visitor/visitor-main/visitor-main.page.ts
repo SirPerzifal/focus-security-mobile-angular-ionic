@@ -77,6 +77,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
     entryType: "",
     entryTitle: "",
     entryMessage: "",
+    isProvideBlock: false,
     isProvideUnit: false,
     facility: '',
     facility_other: "",
@@ -189,6 +190,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryType: "",
           entryTitle: "",
           entryMessage: "",
+          isProvideBlock: false,
           isProvideUnit: false,
           facility: '',
           facility_other: "",
@@ -245,6 +247,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           entryType: "",
           entryTitle: "",
           entryMessage: "",
+          isProvideBlock: false,
           isProvideUnit: false,
           facility: '',
           facility_other: "",
@@ -509,6 +512,10 @@ export class VisitorMainPage extends ApiService implements OnInit  {
 
   onEntryTypeChange(entryType: string) {
     this.formData.entryType = entryType;
+  }
+
+  onProvideBlockChange(event: any) {
+    this.formData.isProvideBlock = !this.formData.isProvideBlock;
   }
 
   onProvideUnitChange(event: any) {

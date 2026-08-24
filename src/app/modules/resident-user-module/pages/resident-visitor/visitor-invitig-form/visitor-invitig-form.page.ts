@@ -32,6 +32,7 @@ export class VisitorInvitigFormPage implements OnInit {
     entryType: "",
     entryTitle: "",
     entryMessage: "",
+    isProvideBlock: false,
     isProvideUnit: false,
     facility: '',
     facility_other: "",
@@ -62,6 +63,7 @@ export class VisitorInvitigFormPage implements OnInit {
     if (state) {
       this.formData = {
         ...state.formData,
+        isProvideBlock: (state.formData as any).isProvideBlock ?? false,
         dateOfInvite: new Date(state.formData.dateOfInvite) // Ensure this is a Date object
       };
       if (state.selectedInvitees) {
@@ -505,6 +507,7 @@ export class VisitorInvitigFormPage implements OnInit {
           entry_type: this.formData.entryType,
           entry_title: this.formData.entryTitle,
           entry_message: this.formData.entryMessage,
+          is_provide_block: this.formData.isProvideBlock ? this.formData.isProvideBlock : false,
           is_provide_unit: this.formData.isProvideUnit ? this.formData.isProvideUnit : false,
           facility: this.formData.facility === 'other' || this.formData.facility === 'no_facility' ? 0 : Number(this.formData.facility),
           invitees: submitData,
@@ -522,6 +525,7 @@ export class VisitorInvitigFormPage implements OnInit {
               entryType: "",
               entryTitle: "",
               entryMessage: "",
+              isProvideBlock: false,
               isProvideUnit: false,
               facility: '',
               facility_other: "",

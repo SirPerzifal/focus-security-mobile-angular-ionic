@@ -115,7 +115,16 @@
         ></app-input-component>
       </div>
 
-      <div *ngIf="userType !== 'industrial'">
+      <div *ngIf="userType !== 'industrial'" class="flex flex-col space-y-1">
+        <app-radio-check-input-case
+          [type]="'checkbox'"
+          [id]="'provide_block_number'"
+          [name]="'provide_block_number'"
+          [value]="'1'"
+          (valueEmit)="onProvideBlockChange($event)"
+          [check]="formData.isProvideBlock"
+          [text]="'Provide my block to visitor'"
+        ></app-radio-check-input-case>
         <app-radio-check-input-case
           [type]="'checkbox'"
           [id]="'provide_unit_number'"
