@@ -86,7 +86,7 @@ export class WebRtcService extends ApiService {
   private callerSocketId: any;
   private hostCode: any = ''
   private receiverSocketId: any;
-  private nativeOffer: any;
+  nativeOffer: any; // public — read by IncomingCallPage as fallback
   private targetSocketIds: any;
   private project_id: any;
   private callAction: string = '';
