@@ -47,6 +47,10 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
   originalNotices: any[] = []; // Menyimpan salinan dari notices asli
   newOrOld: string = '';
 
+  // Notice detail modal
+  selectedNotice: any = null;
+  isNoticeModalOpen: boolean = false;
+
   //docs
   files: any = [];
 
@@ -169,6 +173,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
             end_date: notice.end_date,
             create_date: notice.create_date,
             is_prioritize: notice.is_prioritize,
+            is_read: notice.is_read || false,
             doc_type: notice.doc_type
           }))
           .sort((a: any, b: any) => (b.is_prioritize ? 1 : 0) - (a.is_prioritize ? 1 : 0));
@@ -178,6 +183,36 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       }
+    });
+  }
+
+  openNoticeModal(notice: any) {
+    this.selectedNotice = notice;
+    this.isNoticeModalOpen = true;
+    if (!notice.is_read) {
+      this.markNoticeRead(notice);
+    }
+  }
+
+  closeNoticeModal() {
+    this.isNoticeModalOpen = false;
+    this.selectedNotice = null;
+  }
+
+  markNoticeRead(notice: any) {
+    this.mainApi.endpointMainProcess(
+      { notice_id: Number(notice.id) },
+      'post/mark_notice_read'
+    ).subscribe({
+      next: (response: any) => {
+        if (response.result.response_code === 200) {
+          notice.is_read = true;
+          // Update originalNotices too
+          const original = this.originalNotices.find((n: any) => n.id === notice.id);
+          if (original) original.is_read = true;
+        }
+      },
+      error: (err: any) => console.error('Failed to mark notice as read', err)
     });
   }
 

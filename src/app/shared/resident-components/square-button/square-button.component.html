@@ -1,4 +1,4 @@
-<ng-container *ngIf="name === 'Notifications'; else otherButtons">
+<ng-container *ngIf="name === 'Notifications' || name === 'Notices & Docs'; else otherButtons">
   <div
     [ngClass]="
       active ? 'w-full h-full relative' : 'hidden w-full h-full relative'

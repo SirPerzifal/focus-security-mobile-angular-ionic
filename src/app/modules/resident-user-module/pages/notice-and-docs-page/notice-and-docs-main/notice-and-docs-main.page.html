@@ -42,48 +42,41 @@
         <div *ngFor="let notice of notices">
           <div
             *ngIf="!isLoading"
-            class="bg-[var(--ion-color-tertiary)] p-4 rounded"
+            class="bg-[var(--ion-color-tertiary)] p-4 rounded-xl shadow-sm cursor-pointer active:scale-[0.98] transition-transform"
+            [class.opacity-60]="notice.is_read"
+            (click)="openNoticeModal(notice)"
           >
-            <h2 class="font-bold">{{ notice.notice_title }}</h2>
-            <p>{{ notice.notice_content }}</p>
-            <table>
-              <tr>
-                <td class="pr-2">Start Date</td>
-                <td>
-                  : {{ functionMainService.convertToDDMMYYYY(notice.start_date)
-                  }}
-                </td>
-              </tr>
-              <tr>
-                <td class="pr-2">End Date</td>
-                <td>
-                  : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
-                </td>
-              </tr>
-            </table>
-            <div [class]="notice.doc_type ? 'flex flex-row justify-between items-center' : 'flex flex-row justify-end items-center'">
-              <button *ngIf="notice.doc_type"
-                class="bg-[var(--ion-color-primary)] text-white font-bold px-3 py-2 rounded text-sm"
-                (click)="downloadAttachment(notice.id, 'notice')"
-              >
-                Download Attachment
-              </button>
-              <ion-icon
-                *ngIf="notice.is_prioritize !== false; else notPriority"
-                class="text-yellow-500 text-4xl"
-                name="star"
-                (click)="prioritizeNotice(notice)"
-              >
-              </ion-icon>
-              <ng-template #notPriority>
-                <div (click)="prioritizeNotice(notice)">
-                  <ion-icon
-                    class="text-yellow-500 text-4xl"
-                    name="star-outline"
-                  >
-                  </ion-icon>
+            <div class="flex flex-row items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    *ngIf="!notice.is_read"
+                    class="inline-flex items-center rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide shrink-0"
+                  >NEW</span>
+                  <h2 class="font-bold text-sm leading-snug truncate">{{ notice.notice_title }}</h2>
                 </div>
-              </ng-template>
+                <p class="text-xs text-gray-500">
+                  {{ functionMainService.convertToDDMMYYYY(notice.start_date) }}
+                  &ndash;
+                  {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
+                </p>
+              </div>
+              <div class="flex flex-col items-center gap-1 shrink-0">
+                <ion-icon
+                  *ngIf="notice.is_prioritize !== false; else notPriorityCard"
+                  class="text-yellow-500 text-2xl"
+                  name="star"
+                  (click)="$event.stopPropagation(); prioritizeNotice(notice)"
+                ></ion-icon>
+                <ng-template #notPriorityCard>
+                  <ion-icon
+                    class="text-yellow-500 text-2xl"
+                    name="star-outline"
+                    (click)="$event.stopPropagation(); prioritizeNotice(notice)"
+                  ></ion-icon>
+                </ng-template>
+                <ion-icon name="chevron-forward" class="text-gray-400 text-lg"></ion-icon>
+              </div>
             </div>
           </div>
         </div>
@@ -96,13 +89,86 @@
           <p class="text-gray-600">You have no notice yet.....</p>
           <p class="text-gray-600">
             Go to
-            <strong
-              ><a [routerLink]="['/resident-home-page']">Home Page</a></strong
-            >
+            <strong><a [routerLink]="['/resident-home-page']">Home Page</a></strong>
           </p>
         </div>
       </ng-template>
     </div>
+
+    <!-- Notice Detail Modal -->
+    <ion-modal
+      [isOpen]="isNoticeModalOpen"
+      (didDismiss)="closeNoticeModal()"
+      [initialBreakpoint]="0.92"
+      [breakpoints]="[0, 0.92]"
+    >
+      <ng-template>
+        <div class="flex flex-col h-full">
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+              <span
+                *ngIf="selectedNotice && !selectedNotice.is_read"
+                class="inline-flex items-center rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide shrink-0"
+              >NEW</span>
+              <h2 class="font-bold text-base truncate">{{ selectedNotice?.notice_title }}</h2>
+            </div>
+            <ion-icon
+              name="close-circle"
+              class="text-3xl text-gray-400 shrink-0 ml-2 cursor-pointer"
+              (click)="closeNoticeModal()"
+            ></ion-icon>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+            <!-- Dates -->
+            <div class="bg-gray-50 rounded-xl p-3 space-y-1.5">
+              <div class="flex items-center gap-2 text-sm">
+                <ion-icon name="calendar-outline" class="text-[var(--ion-color-primary)] shrink-0"></ion-icon>
+                <span class="text-gray-500 w-20 shrink-0">Start Date</span>
+                <span class="font-semibold">{{ functionMainService.convertToDDMMYYYY(selectedNotice?.start_date) }}</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <ion-icon name="calendar-outline" class="text-[var(--ion-color-primary)] shrink-0"></ion-icon>
+                <span class="text-gray-500 w-20 shrink-0">End Date</span>
+                <span class="font-semibold">{{ functionMainService.convertToDDMMYYYY(selectedNotice?.end_date) }}</span>
+              </div>
+            </div>
+
+            <!-- Notice Content -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2">Notice Content</h3>
+              <p class="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">{{ selectedNotice?.notice_content }}</p>
+            </div>
+          </div>
+
+          <!-- Modal Footer Actions -->
+          <div class="px-5 py-4 border-t border-gray-100 flex flex-row items-center gap-3">
+            <button
+              *ngIf="selectedNotice?.doc_type"
+              class="flex-1 bg-[var(--ion-color-primary)] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2"
+              (click)="downloadAttachment(selectedNotice?.id, 'notice')"
+            >
+              <ion-icon name="download-outline"></ion-icon>
+              Download Attachment
+            </button>
+            <button
+              class="flex items-center justify-center gap-2 border border-yellow-400 rounded-xl py-3 px-4 text-sm font-bold text-yellow-600"
+              [class.bg-yellow-50]="selectedNotice?.is_prioritize"
+              (click)="prioritizeNotice(selectedNotice)"
+            >
+              <ion-icon
+                [name]="selectedNotice?.is_prioritize ? 'star' : 'star-outline'"
+                class="text-yellow-500 text-lg"
+              ></ion-icon>
+              {{ selectedNotice?.is_prioritize ? 'Favourited' : 'Favourite' }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ion-modal>
+
     <div *ngIf="showDocs" class="mt-2" @fadeInOut>
       <nav
         *ngIf="previousParentNames.length > 0"
