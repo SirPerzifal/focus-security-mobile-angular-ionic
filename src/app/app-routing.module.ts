@@ -337,6 +337,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/client_app/client-settings/client-privacy-policy/client-privacy-policy.module').then( m => m.ClientPrivacyPolicyPageModule)
   },
   {
+    path: 'client-terms-conditions',
+    loadChildren: () => import('./modules/client_app/client-settings/client-terms-conditions/client-terms-conditions.module').then( m => m.ClientTermsConditionsPageModule)
+  },
+  {
     path: 'client-faq',
     loadChildren: () => import('./modules/client_app/client-settings/client-faq/client-faq.module').then( m => m.ClientFaqPageModule)
   },

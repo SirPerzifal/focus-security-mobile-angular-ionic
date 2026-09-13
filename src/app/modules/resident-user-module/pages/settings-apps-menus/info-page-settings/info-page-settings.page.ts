@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { catchError, throwError } from 'rxjs';
 import { ApiService } from 'src/app/service/api.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TermsConditionsService } from 'src/app/service/terms-conditions/terms-conditions.service';
 
 export interface TutorialVideo {
   id: number;
@@ -25,6 +27,8 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
   pageName: string = '';
   currentversion: string = '';
   lastUpdatedDate: string = '';
+  termsHtml: SafeHtml = '';
+  isLoadingTerms: boolean = false;
 
   tutorialVideos: TutorialVideo[] = [];
   isLoadingVideos: boolean = false;
@@ -42,6 +46,8 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
   constructor(
     http: HttpClient,
     private route: Router,
+    private termsConditionsService: TermsConditionsService,
+    private sanitizer: DomSanitizer,
   ) {
     super(http);
     const navigation = this.route.getCurrentNavigation();
@@ -50,6 +56,9 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
       this.pageName = state.pageName;
     }
     this.getVersion();
+    if (this.pageName === 'Terms & Conditions') {
+      this.loadTerms();
+    }
   }
 
   ngOnInit() {
@@ -127,6 +136,19 @@ export class InfoPageSettingsPage extends ApiService implements OnInit {
     this.route.navigate(['/app-report-main'], {
       state: {
         fromWhere: 'setting-app-report',
+      }
+    });
+  }
+
+  loadTerms() {
+    this.isLoadingTerms = true;
+    this.termsConditionsService.fetchTerms().subscribe({
+      next: (terms) => {
+        this.termsHtml = this.sanitizer.bypassSecurityTrustHtml(terms.html || '');
+        this.isLoadingTerms = false;
+      },
+      error: () => {
+        this.isLoadingTerms = false;
       }
     });
   }

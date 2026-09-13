@@ -1,0 +1,17 @@
+<ion-content [fullscreen]="true">
+  <app-resident-header [is_client]="true" [text]="'Settings'" />
+  <div class="w-full flex items-start justify-start mt-2 ml-3">
+    <ion-icon
+      name="arrow-back-circle"
+      size="large"
+      class="text-[var(--ion-color-primary)] size-12"
+      [routerLink]="['/client-settings']"
+    ></ion-icon>
+  </div>
+  <div class="px-5 pb-5 pt-2 text-justify text-base mb-24 terms-conditions-popup__content">
+    <div *ngIf="isLoading" class="flex justify-center py-8">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    <div *ngIf="!isLoading" [innerHTML]="termsHtml"></div>
+  </div>
+</ion-content>

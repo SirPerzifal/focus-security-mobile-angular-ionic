@@ -85,6 +85,13 @@
     </div>
     <app-modal-loading *ngIf="isLoading" class="" />
   </div>
+
+  <app-terms-conditions-popup
+    [isOpen]="isOpenTermsPopup"
+    [title]="termsTitle"
+    [htmlContent]="termsHtml"
+    (accepted)="onTermsAccepted()"
+  ></app-terms-conditions-popup>
 </ion-content>
 
 <ion-footer *ngIf="callActionStatus != 'acceptCall'">

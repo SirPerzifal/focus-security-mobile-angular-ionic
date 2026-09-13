@@ -25,6 +25,7 @@ import { App } from '@capacitor/app';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
 import { NotifyEndOfAgreementAndPermitService } from 'src/app/service/notify-end-of-agreement-and-permit/notify-end-of-agreement-and-permit.service';
+import { TermsConditionsData, TermsConditionsService } from 'src/app/service/terms-conditions/terms-conditions.service';
 
 @Component({
   selector: 'app-resident-home-page',
@@ -37,6 +38,11 @@ export class ResidentHomePagePage implements OnInit {
 
   isLoading: boolean = false;
   isModalUpdateProfile: boolean = false;
+
+  isOpenTermsPopup = false;
+  termsTitle = 'Terms & Conditions of Use';
+  termsHtml = '';
+  private pendingTerms: TermsConditionsData | null = null;
 
   houseRules: { title: string, base64Doc: string }[] = [];
 
@@ -155,7 +161,8 @@ export class ResidentHomePagePage implements OnInit {
     private route: ActivatedRoute,
     private appVersionCheck: CheckAppVersionService,
     private notifyEndAgreement: NotifyEndOfAgreementAndPermitService,
-    private fcmTokenService: FcmTokenService
+    private fcmTokenService: FcmTokenService,
+    private termsConditionsService: TermsConditionsService
   ) { }
 
   handleRefresh(event: any) {
@@ -169,6 +176,7 @@ export class ResidentHomePagePage implements OnInit {
   ionViewWillEnter() {
     this.initializeBackButtonHandling()
     this.fetchContacts();
+    this.loadTermsAndConditions();
     // this.initBluetooth();
     this.storage.getValueFromStorage('USESATE_DATA').then((value: any) => {
       // Force check saat masuk halaman ini
@@ -540,4 +548,39 @@ export class ResidentHomePagePage implements OnInit {
     }
   }
 
+  loadTermsAndConditions() {
+    this.termsConditionsService.fetchTerms().subscribe({
+      next: async (terms) => {
+        const needsAccept = await this.termsConditionsService.needsAcceptance(terms);
+        if (needsAccept) {
+          this.pendingTerms = terms;
+          this.termsTitle = terms.title || 'Terms & Conditions of Use';
+          this.termsHtml = terms.html;
+          this.isOpenTermsPopup = true;
+          return;
+        }
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      },
+      error: () => {
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      }
+    });
+  }
+
+  onTermsAccepted() {
+    const version = this.pendingTerms?.version;
+    this.termsConditionsService.acceptTerms(version).subscribe({
+      next: () => {
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      },
+      error: () => {
+        this.functionMain.presentToast('Failed to save terms acceptance. Please try again.', 'danger');
+      }
+    });
+  }
+
 }
+

@@ -15,6 +15,15 @@
     ></ion-icon>
   </div>
   <div
+    *ngIf="pageName === 'Terms & Conditions'"
+    class="px-5 pb-5 pt-2 text-justify text-base mb-24 terms-conditions-popup__content"
+  >
+    <div *ngIf="isLoadingTerms" class="flex justify-center py-8">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    <div *ngIf="!isLoadingTerms" [innerHTML]="termsHtml"></div>
+  </div>
+  <div
     *ngIf="pageName === 'Privacy Policy'"
     class="px-5 pb-5 pt-2 space-y-3 text-justify text-lg mb-24"
   >

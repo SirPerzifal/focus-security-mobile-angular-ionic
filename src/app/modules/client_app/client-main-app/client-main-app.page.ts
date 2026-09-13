@@ -13,6 +13,7 @@ import { StorageService } from 'src/app/service/storage/storage.service';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
 import { CheckAppVersionService } from 'src/app/service/check-app-version/check-app-version.service';
+import { TermsConditionsData, TermsConditionsService } from 'src/app/service/terms-conditions/terms-conditions.service';
 
 @Component({
   selector: 'app-client-main-app',
@@ -25,6 +26,11 @@ export class ClientMainAppPage implements OnInit {
   partner_id: number = 1;
   paramForBadgeNotification: number = 0;
   condominiumName: string = '';
+
+  isOpenTermsPopup = false;
+  termsTitle = 'Terms & Conditions of Use';
+  termsHtml = '';
+  private pendingTerms: TermsConditionsData | null = null;
 
   userData = {
     name: '',
@@ -57,7 +63,8 @@ export class ClientMainAppPage implements OnInit {
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private modalController: ModalController,
-    private appVersionCheck: CheckAppVersionService
+    private appVersionCheck: CheckAppVersionService,
+    private termsConditionsService: TermsConditionsService
   ) {
     this.initializeBackButtonHandling();
   }
@@ -86,6 +93,7 @@ export class ClientMainAppPage implements OnInit {
     this.webRtcService.callActionStatus.subscribe(status => {
       this.callActionStatus = status;
     });
+    this.loadTermsAndConditions();
   }
 
   checkPlatform() {
@@ -351,5 +359,38 @@ export class ClientMainAppPage implements OnInit {
     });
   }
 
+  loadTermsAndConditions() {
+    this.termsConditionsService.fetchTerms().subscribe({
+      next: async (terms) => {
+        const needsAccept = await this.termsConditionsService.needsAcceptance(terms);
+        if (needsAccept) {
+          this.pendingTerms = terms;
+          this.termsTitle = terms.title || 'Terms & Conditions of Use';
+          this.termsHtml = terms.html;
+          this.isOpenTermsPopup = true;
+          return;
+        }
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      },
+      error: () => {
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      }
+    });
+  }
+
+  onTermsAccepted() {
+    const version = this.pendingTerms?.version;
+    this.termsConditionsService.acceptTerms(version).subscribe({
+      next: () => {
+        this.pendingTerms = null;
+        this.isOpenTermsPopup = false;
+      },
+      error: () => {
+        this.functionMain.presentToast('Failed to save terms acceptance. Please try again.', 'danger');
+      }
+    });
+  }
 
 }

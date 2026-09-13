@@ -1,0 +1,45 @@
+.terms-conditions-popup-modal {
+  --height: 85%;
+  --width: 92%;
+  --max-width: 500px;
+  --border-radius: 16px;
+}
+
+.terms-conditions-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+
+.terms-conditions-popup__header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111;
+  }
+}
+
+.terms-conditions-popup__body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+.terms-conditions-popup__content {
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 4px 14px 0;
+}
+
+.terms-conditions-popup__footer {
+  padding: 12px 20px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

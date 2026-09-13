@@ -46,6 +46,11 @@ export class SettingsMainPage implements OnInit {
       routeTo: '/info-page-settings',
       isClick: false,
     },{
+      text: 'Terms & Conditions',
+      isRoute: true,
+      routeTo: '/info-page-settings',
+      isClick: false,
+    },{
       text: 'Privacy Policy',
       isRoute: true,
       routeTo: '/info-page-settings',

@@ -1,0 +1,29 @@
+<ion-modal
+  [isOpen]="isOpen"
+  [backdropDismiss]="false"
+  class="terms-conditions-popup-modal"
+>
+  <ng-template>
+    <div class="terms-conditions-popup">
+      <div class="terms-conditions-popup__header">
+        <h2>{{ title }}</h2>
+      </div>
+
+      <div class="terms-conditions-popup__body">
+        <div class="terms-conditions-popup__content" [innerHTML]="sanitizedHtml"></div>
+      </div>
+
+      <div class="terms-conditions-popup__footer">
+        <app-checkbox-confirmation
+          label="I have read and agree to the iFS360 App Terms and Conditions and acknowledge the Privacy Policy."
+          [checked]="agreed"
+          (checkedChange)="onAgreedChange($event)"
+        ></app-checkbox-confirmation>
+
+        <ion-button expand="block" color="primary" [disabled]="!agreed" (click)="onAccept()">
+          I Agree &amp; Continue
+        </ion-button>
+      </div>
+    </div>
+  </ng-template>
+</ion-modal>

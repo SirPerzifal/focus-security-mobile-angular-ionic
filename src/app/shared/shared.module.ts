@@ -8,6 +8,7 @@ import { ButtonIconComponent } from './components/button-icon/button-icon.compon
 import { BottomNavBarComponent } from './components/bottom-nav-bar/bottom-nav-bar.component';
 import { MultiLineButtonComponent } from './components/multi-line-button/multi-line-button.component';
 import { CheckboxConfirmationComponent } from './components/checkbox-confirmation/checkbox-confirmation.component';
+import { TermsConditionsPopupComponent } from './components/terms-conditions-popup/terms-conditions-popup.component';
 import { VotingGraphComponent } from './components/voting-graph/voting-graph.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ModalPaymentCustomComponent } from './resident-components/modal-payment-custom/modal-payment-custom.component';
@@ -46,6 +47,7 @@ import { UploadExcelProcessorComponent } from './resident-components/upload-exce
     BottomNavBarComponent,
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
+    TermsConditionsPopupComponent,
     VotingGraphComponent,
     CalendarComponent,
     ModalPaymentCustomComponent,
@@ -88,6 +90,7 @@ import { UploadExcelProcessorComponent } from './resident-components/upload-exce
     BottomNavBarComponent,
     MultiLineButtonComponent,
     CheckboxConfirmationComponent,
+    TermsConditionsPopupComponent,
     VotingGraphComponent,
     CalendarComponent,
     ModalPaymentCustomComponent,
