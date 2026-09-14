@@ -170,8 +170,15 @@ export class HiredCarPage implements OnInit, OnDestroy {
       this.presentToast(errMsg, 'danger');
     } else {
       try {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
         this.mainApiResidentService.endpointProcess({
           entry_type: this.formData.entry_type,
+          entry_date: todayStr,
           vehicle_type: this.formData.vehicle_type,
           vehicle_number: this.formData.vehicle_number,
           unit: this.formData.unit,

@@ -124,6 +124,8 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     this.minDate = `${yyyy}-${mm}-${dd}`; // Format yyyy-mm-dd
     // Menyimpan nama hari ke dalam this.day
     this.day = `${dd}-${mm}-${yyyy}`;
+    this.formData.entry_date = this.minDate;
+    this.selectedDate = `${dd}/${mm}/${yyyy}`;
   }
 
   loaadTextForPage() {
