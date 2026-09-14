@@ -4,6 +4,8 @@ import { Platform, ModalController } from '@ionic/angular';
 import { catchError, interval, Subscription, throwError } from 'rxjs';
 import { ApiService } from '../api.service';
 import { App } from '@capacitor/app';
+import { Preferences } from '@capacitor/preferences';
+import { jwtDecode } from 'jwt-decode';
 import { UpdateAppInformationComponent } from 'src/app/shared/resident-components/update-app-information/update-app-information.component';
 
 @Injectable({
@@ -58,9 +60,14 @@ export class CheckAppVersionService extends ApiService {
    * pada ionViewDidEnter()
    */
   async checkVersion(forceCheck: boolean = false) {
-    // this.showUpdateModal('1.0.7', '2024-07-01'); return; // Hapus ini setelah modal siap
     // Cegah multiple check bersamaan
     if (this.isChecking) {
+      return;
+    }
+
+    const isVms = await this.isVmsUser();
+    if (isVms && (await this.hasVmsShownToday())) {
+      console.log('Skip update check for VMS: already raised today');
       return;
     }
 
@@ -99,7 +106,6 @@ export class CheckAppVersionService extends ApiService {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       });
-      // console.log(params)
       const response: any = await this.http.post(this.baseUrl + '/get/app_detail', {jsonrpc: '2.0', params: {}}, { headers }).pipe(
         catchError(this.handleError)
       ).toPromise();
@@ -118,15 +124,7 @@ export class CheckAppVersionService extends ApiService {
       // Bandingkan versi
       if (this.isVersionOutdated(currentVersion, latestVersion)) {
         console.log('Ada update tersedia!');
-        
         await this.showUpdateModal(latestVersion, result.when_the_app_get_update);
-        // // Tampilkan modal hanya jika belum pernah ditampilkan di sesi ini
-        // if (!this.hasShownModalInSession) {
-        //   await this.showUpdateModal(latestVersion, result.when_the_app_get_update);
-        //   this.hasShownModalInSession = true;
-        // } else {
-        //   console.log('Ada update tersedia! tapi modal sudah pernah ditampilkan di sesi ini');
-        // }
       } else {
         console.log('App sudah up to date');
       }
@@ -136,6 +134,56 @@ export class CheckAppVersionService extends ApiService {
     } finally {
       this.isChecking = false;
     }
+  }
+
+  async isVmsUser(): Promise<boolean> {
+    try {
+      if (typeof window !== 'undefined' && window.location) {
+        const path = (window.location.pathname || '') + (window.location.hash || '');
+        if (path.toLowerCase().includes('vms')) {
+          return true;
+        }
+      }
+      const tokenData = await Preferences.get({ key: 'USER_INFO' });
+      if (tokenData?.value) {
+        let rawToken = tokenData.value;
+        try {
+          const decodedString = decodeURIComponent(escape(atob(rawToken)));
+          const credential = JSON.parse(decodedString);
+          if (credential?.access_token) {
+            rawToken = credential.access_token;
+          }
+        } catch {}
+        const decoded: any = jwtDecode(rawToken);
+        return !!decoded?.is_vms;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  async hasVmsShownToday(): Promise<boolean> {
+    const todayStr = new Date().toDateString();
+    const localVal = localStorage.getItem('vms_last_update_modal_date');
+    if (localVal === todayStr) {
+      return true;
+    }
+    try {
+      const prefVal = await Preferences.get({ key: 'vms_last_update_modal_date' });
+      if (prefVal?.value === todayStr) {
+        return true;
+      }
+    } catch {}
+    return false;
+  }
+
+  async recordVmsModalShownToday(): Promise<void> {
+    const todayStr = new Date().toDateString();
+    localStorage.setItem('vms_last_update_modal_date', todayStr);
+    try {
+      await Preferences.set({ key: 'vms_last_update_modal_date', value: todayStr });
+    } catch {}
   }
 
   private shouldSkipNotification(): boolean {
@@ -174,23 +222,31 @@ export class CheckAppVersionService extends ApiService {
 
   /**
    * Tampilkan modal update
-   * Ganti dengan modal component yang sudah kamu buat
    */
   private async showUpdateModal(newVersion: string, updateDate: string) {
-    // Import modal component kamu disini
+    const activeModal = await this.modalController.getTop();
+    if (activeModal) {
+      return;
+    }
+
+    const isVms = await this.isVmsUser();
     const modal = await this.modalController.create({
       component: UpdateAppInformationComponent,
       cssClass: 'update-app-information-modal',
       componentProps: {
         newVersion: newVersion,
-        updateDate: updateDate
+        updateDate: updateDate,
+        isVms: isVms
       },
-      backdropDismiss: false
+      backdropDismiss: isVms
     });
     
     await modal.present();
 
-    // Sementara pakai alert sederhana (ganti dengan modal)
+    if (isVms) {
+      await this.recordVmsModalShownToday();
+    }
+
     console.log('=== UPDATE TERSEDIA ===');
     console.log('Versi Baru:', newVersion);
     console.log('Tanggal Update:', updateDate);
@@ -203,6 +259,8 @@ export class CheckAppVersionService extends ApiService {
    */
   resetModalFlag() {
     this.hasShownModalInSession = false;
+    localStorage.removeItem('vms_last_update_modal_date');
+    Preferences.remove({ key: 'vms_last_update_modal_date' }).catch(() => {});
   }
 
   private handleError(error: any) {

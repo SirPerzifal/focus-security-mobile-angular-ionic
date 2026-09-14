@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Update Available</ion-title>
+    <ion-buttons slot="end" *ngIf="isVms">
+      <ion-button (click)="closeModal()" class="text-white">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -30,27 +35,19 @@
       <ion-icon name="download-outline" slot="start"></ion-icon>
       Update
     </ion-button>
+
+    <!-- Tombol Close untuk VMS -->
+    <ion-button
+      *ngIf="isVms"
+      expand="block"
+      fill="outline"
+      color="medium"
+      size="default"
+      class="!mt-3 !text-base !capitalize"
+      (click)="closeModal()"
+    >
+      <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+      Close
+    </ion-button>
   </div>
 </ion-content>
-
-<!-- <ion-footer>
-  <ion-toolbar class="footer-toolbar">
-    <ion-buttons slot="start">
-      <ion-button (click)="remindLater()" fill="clear" size="small">
-        <ion-icon name="time-outline" slot="start"></ion-icon>
-        Later
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button
-        (click)="dontShowToday()"
-        fill="clear"
-        size="small"
-        color="medium"
-      >
-        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
-        Don't Show Today
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer> -->
