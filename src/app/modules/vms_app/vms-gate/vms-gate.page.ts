@@ -69,26 +69,31 @@ export class VmsGatePage implements OnInit {
     });
   }
 
-  openGate(is_close: boolean = false) {
+  openGate(is_close: boolean = false, freeze: boolean = false) {
     console.log(this.selectedCamera)
     if (!this.selectedCamera) {
       this.functionMain.presentToast('Please select the gate first!', 'danger')
       return
     }
-    this.clientMainService.getApi({camera_id: this.selectedCamera, is_close: is_close}, '/vms/post/open_barrier').subscribe({
+    const actionName = is_close ? 'close' : (freeze ? 'freeze open' : 'open');
+    this.clientMainService.getApi({camera_id: this.selectedCamera, is_close: is_close, freeze: freeze}, '/vms/post/open_barrier').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.functionMain.presentToast(`Successfully to ${is_close ? 'close' : 'open'} the barrier!`, 'success');
+          this.functionMain.presentToast(`Successfully to ${actionName} the barrier!`, 'success');
         } else {
-          this.functionMain.presentToast(`Failed to ${is_close ? 'close' : 'open'} the barrier!`, 'danger');
+          this.functionMain.presentToast(`Failed to ${actionName} the barrier!`, 'danger');
         }
       },
       error: (error) => {
-        this.functionMain.presentToast(`An error occurred while trying to ${is_close ? 'close' : 'open'} the barrier!`, 'danger');
+        this.functionMain.presentToast(`An error occurred while trying to ${actionName} the barrier!`, 'danger');
         console.error(error);
       }
     });
+  }
+
+  freezeGate() {
+    this.openGate(false, true);
   }
 
   handleRefresh(event: any) {

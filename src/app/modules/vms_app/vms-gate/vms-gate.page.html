@@ -22,12 +22,17 @@
         <div class="w-full">
           <app-visitor-button [text]="'OPEN GATE'" 
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
-            (click)="openGate()"></app-visitor-button>
+            (click)="openGate(false, false)"></app-visitor-button>
+        </div>
+        <div class="w-full">
+          <app-visitor-button [text]="'FREEZE GATE'" 
+            [extraClass]="'bg-[#E58929] text-white w-full text-2xl h-20 mt-1'"
+            (click)="freezeGate()"></app-visitor-button>
         </div>
         <div class="w-full">
           <app-visitor-button [text]="'CLOSE GATE'" 
-            [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
-            (click)="openGate(true)"></app-visitor-button>
+            [extraClass]="'bg-[#C62828] text-white w-full text-2xl h-20 mt-1'"
+            (click)="openGate(true, false)"></app-visitor-button>
         </div>
       </div>
     </div>
