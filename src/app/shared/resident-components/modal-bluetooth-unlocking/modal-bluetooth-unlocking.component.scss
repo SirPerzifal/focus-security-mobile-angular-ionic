@@ -1,0 +1,291 @@
+.ble-unlock-modal-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+}
+
+.ble-card {
+  width: 100%;
+  max-width: 360px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.header-section {
+  margin-bottom: 24px;
+
+  .door-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+    text-transform: capitalize;
+  }
+
+  .door-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.visual-indicator-area {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+// Radar Pulse Effect
+.radar-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .radar-center {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+
+    .ble-icon {
+      font-size: 32px;
+      color: #ffffff;
+      animation: iconPulse 1.5s ease-in-out infinite;
+    }
+  }
+
+  .radar-pulse {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid rgba(2, 132, 199, 0.5);
+    background: rgba(2, 132, 199, 0.08);
+    animation: pulseRing 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+
+    &.pulse-1 {
+      animation-delay: 0s;
+    }
+    &.pulse-2 {
+      animation-delay: 0.7s;
+    }
+    &.pulse-3 {
+      animation-delay: 1.4s;
+    }
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Success Checkmark
+.success-wrapper {
+  .success-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    .success-icon {
+      font-size: 72px;
+      color: #10b981;
+    }
+  }
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Error Circle
+.error-wrapper {
+  .error-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #fef2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: errorShake 0.4s ease-in-out;
+
+    .error-icon {
+      font-size: 68px;
+      color: #ef4444;
+    }
+  }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.status-section {
+  margin-bottom: 24px;
+  width: 100%;
+
+  .status-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px 0;
+  }
+
+  .sub-status {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .error-box {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+
+    .error-text {
+      font-size: 0.85rem;
+      color: #dc2626;
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  .rssi-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #15803d;
+    margin-top: 8px;
+
+    .rssi-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+.action-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    width: 100%;
+    padding: 13px 18px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .retry-btn {
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+
+    .btn-icon {
+      font-size: 18px;
+    }
+
+    &:hover {
+      background: #0369a1;
+    }
+  }
+
+  .close-btn {
+    background: var(--ion-color-primary, #16a34a);
+    color: #ffffff;
+
+    &.secondary {
+      background: #f1f5f9;
+      color: #475569;
+
+      &:hover {
+        background: #e2e8f0;
+      }
+    }
+  }
+}

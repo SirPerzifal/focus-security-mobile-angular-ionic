@@ -35,6 +35,7 @@ import { UploadReceiptModalComponent } from './resident-components/upload-receip
 import { LoadingAnimationComponent } from './resident-components/loading-animation/loading-animation.component';
 import { RefresherPageComponent } from './resident-components/refresher-page/refresher-page.component';
 import { ModalShowQRAccessDoorComponent } from './resident-components/modal-show-qr-access-door/modal-show-qr-access-door.component';
+import { ModalBluetoothUnlockingComponent } from './resident-components/modal-bluetooth-unlocking/modal-bluetooth-unlocking.component';
 import { UpdateAppInformationComponent } from './resident-components/update-app-information/update-app-information.component';
 import { LastOneWeekInformationComponent } from './resident-components/last-one-week-information/last-one-week-information.component';
 import { ModalChooseFormManualOrUploadExcelComponent } from './resident-components/modal-choose-form-manual-or-upload-excel/modal-choose-form-manual-or-upload-excel.component';
@@ -73,6 +74,7 @@ import { UploadExcelProcessorComponent } from './resident-components/upload-exce
     LoadingAnimationComponent,
     RefresherPageComponent,
     ModalShowQRAccessDoorComponent,
+    ModalBluetoothUnlockingComponent,
     UpdateAppInformationComponent,
     LastOneWeekInformationComponent,
     ModalChooseFormManualOrUploadExcelComponent,
@@ -116,6 +118,7 @@ import { UploadExcelProcessorComponent } from './resident-components/upload-exce
     LoadingAnimationComponent,
     RefresherPageComponent,
     ModalShowQRAccessDoorComponent,
+    ModalBluetoothUnlockingComponent,
     UpdateAppInformationComponent,
     LastOneWeekInformationComponent,
     ModalChooseFormManualOrUploadExcelComponent,

@@ -1,0 +1,72 @@
+<div class="ble-unlock-modal-container">
+  <div class="ble-card">
+    <!-- Header -->
+    <div class="header-section">
+      <h3 class="door-title">{{ door?.name || 'Intercom Door' }}</h3>
+      <p class="door-subtitle">{{ door?.position || 'Bluetooth Access' }}</p>
+    </div>
+
+    <!-- Visual Status Area -->
+    <div class="visual-indicator-area">
+      <!-- Scanning / Connecting / Unlocking State -->
+      <div *ngIf="currentState === 'checking' || currentState === 'scanning' || currentState === 'connecting' || currentState === 'unlocking'" class="radar-wrapper">
+        <div class="radar-pulse pulse-1"></div>
+        <div class="radar-pulse pulse-2"></div>
+        <div class="radar-pulse pulse-3"></div>
+        <div class="radar-center">
+          <ion-icon name="bluetooth" class="ble-icon"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Success State -->
+      <div *ngIf="currentState === 'success'" class="success-wrapper">
+        <div class="success-circle">
+          <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="currentState === 'error'" class="error-wrapper">
+        <div class="error-circle">
+          <ion-icon name="alert-circle" class="error-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div class="status-section">
+      <h4 *ngIf="currentState !== 'error'" class="status-text">{{ statusMessage }}</h4>
+      <p *ngIf="currentState === 'scanning'" class="sub-status">Hold your phone close to the intercom terminal.</p>
+      
+      <div *ngIf="currentState === 'error'" class="error-box">
+        <p class="error-text">{{ errorMessage }}</p>
+      </div>
+
+      <!-- Signal Strength Badge if detected -->
+      <div *ngIf="detectedRssi !== null && currentState !== 'error' && currentState !== 'success'" class="rssi-badge">
+        <ion-icon name="wifi-outline" class="rssi-icon"></ion-icon>
+        <span>Signal: {{ detectedRssi }} dBm</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-section">
+      <button
+        *ngIf="currentState === 'error'"
+        (click)="retry()"
+        class="retry-btn"
+      >
+        <ion-icon name="refresh-outline" class="btn-icon"></ion-icon>
+        Try Again
+      </button>
+
+      <button
+        (click)="closeModal()"
+        class="close-btn"
+        [ngClass]="{'secondary': currentState === 'error'}"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
