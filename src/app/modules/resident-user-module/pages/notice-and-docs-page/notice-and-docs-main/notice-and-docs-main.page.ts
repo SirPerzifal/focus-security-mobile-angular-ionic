@@ -218,6 +218,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
 
   prioritizeNotice(noticeid: any) {
     if (noticeid.is_prioritize) {
+      noticeid.is_prioritize = false;
       this.mainApi.endpointMainProcess({
         notice_id: Number(noticeid.id)
       }, 'post/delete_notice_priority').subscribe((response: any) => {
@@ -225,9 +226,11 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         this.notices = [];
         this.loadNotice();
       }, (error) => {
+        noticeid.is_prioritize = true;
         console.error(error);
       })
     } else {
+      noticeid.is_prioritize = true;
       this.mainApi.endpointMainProcess({
         notice_id: Number(noticeid.id)
       }, 'post/notice_set_priority').subscribe((response: any) => {
@@ -235,6 +238,7 @@ export class NoticeAndDocsMainPage implements OnInit, OnDestroy {
         this.notices = [];
         this.loadNotice();
       }, (error) => {
+        noticeid.is_prioritize = false;
         console.error(error);
       })
     }

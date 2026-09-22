@@ -30,43 +30,58 @@
         <ion-spinner name="circular"></ion-spinner>
       </div>
       <div *ngFor="let notice of notices">
-        <div  *ngIf="!isLoading" class="bg-[var(--ion-color-tertiary)] p-4 rounded">
-          <h2 class="font-bold">
-            {{ notice.notice_title }}
-          </h2>
-          <p>
-            {{ notice.notice_content }}
-          </p>
-          <table>
+        <div *ngIf="!isLoading" class="bg-[var(--ion-color-tertiary)] p-4 rounded-xl shadow-sm space-y-3">
+          <div class="flex justify-between items-start gap-2">
+            <h2 class="font-bold text-base leading-snug">
+              {{ notice.notice_title }}
+            </h2>
+            <div class="shrink-0">
+              <ion-icon *ngIf="notice.is_prioritize !== false; else notPriority" class="text-yellow-500 text-3xl cursor-pointer" name="star" (click)="prioritizeNotice(notice)">
+              </ion-icon>
+              <ng-template #notPriority>
+                <div (click)="prioritizeNotice(notice)">
+                  <ion-icon class="text-yellow-500 text-3xl cursor-pointer" name="star-outline">
+                  </ion-icon>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <table class="w-full text-xs text-gray-700">
             <tr>
-              <td class="pr-2">
+              <td class="pr-2 py-0.5 text-gray-500 w-16">
                 Start
               </td>
-              <td>
+              <td class="py-0.5 font-medium">
                 : {{ functionMainService.convertToDDMMYYYY(notice.start_date) }}
               </td>
             </tr>
             <tr>
-              <td class="pr-2">
+              <td class="pr-2 py-0.5 text-gray-500 w-16">
                 End
               </td>
-              <td>
+              <td class="py-0.5 font-medium">
                 : {{ functionMainService.convertToDDMMYYYY(notice.end_date) }}
               </td>
             </tr>
           </table>
-          <div class="flex justify-between items-center">
-            <button class="bg-[var(--ion-color-primary)] text-white mt-3 font-bold px-3 py-2 rounded text-sm" (click)="downloadAttachment(notice.notice_attachment)">
-            Download Attachment
+
+          <!-- Download Attachment Button (Elevated UP above notice content) -->
+          <div *ngIf="notice.notice_attachment" class="pt-1">
+            <button
+              type="button"
+              class="w-full bg-[var(--ion-color-primary)] text-white font-bold py-2.5 px-3 rounded-lg text-xs flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform"
+              (click)="downloadAttachment(notice.notice_attachment)"
+            >
+              <ion-icon name="download-outline" class="text-base"></ion-icon>
+              <span>Download Attachment</span>
             </button>
-            <ion-icon *ngIf="notice.is_prioritize !== false; else notPriority" class="text-yellow-500 text-4xl" name="star" (click)="prioritizeNotice(notice)">
-            </ion-icon>
-            <ng-template #notPriority>
-              <div (click)="prioritizeNotice(notice)">
-                <ion-icon class="text-yellow-500 text-4xl" name="star-outline">
-                </ion-icon>
-              </div>
-            </ng-template>
+          </div>
+
+          <div class="pt-1">
+            <p class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+              {{ notice.notice_content }}
+            </p>
           </div>
         </div>
       </div>
