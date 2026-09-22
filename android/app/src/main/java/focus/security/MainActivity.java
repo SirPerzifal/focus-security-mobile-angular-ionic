@@ -30,6 +30,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(RingtonePlugin.class);
         registerPlugin(NavigationTypePlugin.class);
         super.onCreate(savedInstanceState);
+        lockTextZoom();
 
         getWindow().addFlags(
             android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -38,7 +39,6 @@ public class MainActivity extends BridgeActivity {
         );
         handleIntent(getIntent());
         handleNotificationIntent(getIntent());
-        
     }
 
     //tambah
@@ -91,9 +91,24 @@ public class MainActivity extends BridgeActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        lockTextZoom();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        // Force text zoom to 100% in the WebView
+        lockTextZoom();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        lockTextZoom();
+    }
+
+    private void lockTextZoom() {
         if (bridge != null && bridge.getWebView() != null) {
             bridge.getWebView().getSettings().setTextZoom(100);
         }
