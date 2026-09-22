@@ -53,6 +53,26 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
+/* ==========================================================================
+   Font & Scaling Lockdown:
+   Ensure device accessibility / font-size or custom device fonts
+   do NOT distort or alter the application UI.
+   ========================================================================== */
+html, body, :root {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  --ion-font-family: 'Roboto', 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+ion-app, ion-content, body {
+  font-family: var(--ion-font-family);
+}
+
 body {
   color-scheme: light !important;
 }

@@ -177,11 +177,15 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
     if (event) {
       const date = new Date(event);
       this.selectedDate = this.functionMain.formatDate(date); // Update selectedDate with the chosen date in dd/mm/yyyy format
-      this.formData.entry_date = event;
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      this.formData.entry_date = `${yyyy}-${mm}-${dd}`;
       console.log(event, this.formData.entry_date);
 
     } else {
-      this.selectedDate = ''
+      this.selectedDate = '';
+      this.formData.entry_date = '';
     }
   }
 
