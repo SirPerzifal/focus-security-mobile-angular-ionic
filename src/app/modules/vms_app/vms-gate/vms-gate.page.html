@@ -24,7 +24,7 @@
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
             (click)="openGate(false, false)"></app-visitor-button>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="canFreezeCurrentGate">
           <app-visitor-button [text]="'FREEZE GATE'" 
             [extraClass]="'bg-[#E58929] text-white w-full text-2xl h-20 mt-1'"
             (click)="freezeGate()"></app-visitor-button>

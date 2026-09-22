@@ -55,7 +55,8 @@ export class VmsGatePage implements OnInit {
           this.Camera = results.result.result.map((item: any) => {
             return {
               'id': item.CamSentId,
-              'name': item.CamID
+              'name': item.CamID,
+              'can_freeze': !!item.CanFreeze
             }
           })
         } else {
@@ -69,11 +70,21 @@ export class VmsGatePage implements OnInit {
     });
   }
 
+  get canFreezeCurrentGate(): boolean {
+    if (!this.selectedCamera) return false;
+    const cam = this.Camera.find((item: any) => item.id == this.selectedCamera);
+    return cam ? !!cam.can_freeze : false;
+  }
+
   openGate(is_close: boolean = false, freeze: boolean = false) {
     console.log(this.selectedCamera)
     if (!this.selectedCamera) {
       this.functionMain.presentToast('Please select the gate first!', 'danger')
       return
+    }
+    if (freeze && !this.canFreezeCurrentGate) {
+      this.functionMain.presentToast('Freezing is not allowed for this gate!', 'danger');
+      return;
     }
     const actionName = is_close ? 'close' : (freeze ? 'freeze open' : 'open');
     this.clientMainService.getApi({camera_id: this.selectedCamera, is_close: is_close, freeze: freeze}, '/vms/post/open_barrier').subscribe({
