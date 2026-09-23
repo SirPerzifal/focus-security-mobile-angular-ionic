@@ -150,7 +150,10 @@
         </div>
         <div class="w-full">
           <app-text-input #contractorPassNumber [id]="'contractor_pass_number'" [labelText]="'PASS NUMBER'"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'"
+            [placeholder]="''" [customClasses]="{'w-full':true}"
+            [type]="project_config.vms_pass_number_type === 'selection' ? 'select' : 'text'"
+            [options]="project_config.vms_pass_number_options || []"
+            [selectPlaceholder]="'CHOOSE PASS NUMBER'"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [isReadonly]="data_is_checkout"
             [(ngModel)]="contractor_pass_number"></app-text-input>
         </div>        

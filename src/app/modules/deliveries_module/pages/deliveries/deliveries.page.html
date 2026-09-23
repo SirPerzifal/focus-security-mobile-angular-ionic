@@ -109,7 +109,11 @@
                 </div>
                 <div class="w-full" *ngIf="project_config.is_industrial && module_config.pass_number?.[1]">
                   <app-text-input #deliveryFoodPass [id]="'delivery_food_pass_number'" [labelText]="'PASS NUMBER'"
-                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number?.[0]"
+                    [placeholder]="''" [customClasses]="{'w-full':true}"
+                    [type]="module_config.pass_number?.[2] === 'selection' ? 'select' : 'text'"
+                    [options]="module_config.pass_number?.[3] || []"
+                    [selectPlaceholder]="'CHOOSE PASS NUMBER'"
+                    [isMandatory]="module_config.pass_number?.[0]"
                     [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
                 </div>
                 <div class="w-full flex flex-col" *ngIf="module_config.remarks?.[1]" @fadeInOut>
@@ -188,7 +192,11 @@
                 </div>
                 <div class="w-full" *ngIf="project_config.is_industrial && module_config.pass_number?.[1]">
                   <app-text-input #deliveryPackagePass [id]="'delivery_package_pass_number'" [labelText]="'PASS NUMBER'"
-                    [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number?.[0]"
+                    [placeholder]="''" [customClasses]="{'w-full':true}"
+                    [type]="module_config.pass_number?.[2] === 'selection' ? 'select' : 'text'"
+                    [options]="module_config.pass_number?.[3] || []"
+                    [selectPlaceholder]="'CHOOSE PASS NUMBER'"
+                    [isMandatory]="module_config.pass_number?.[0]"
                     [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number">
                   </app-text-input>
                 </div>
@@ -361,7 +369,11 @@
           </div>
           <div class="w-full" *ngIf="module_config.pass_number?.[1]">
             <app-text-input #deliveryOtherPass [id]="'delivery_other_pass_number'" [labelText]="'PASS NUMBER'"
-              [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number?.[0]"
+              [placeholder]="''" [customClasses]="{'w-full':true}"
+              [type]="module_config.pass_number?.[2] === 'selection' ? 'select' : 'text'"
+              [options]="module_config.pass_number?.[3] || []"
+              [selectPlaceholder]="'CHOOSE PASS NUMBER'"
+              [isMandatory]="module_config.pass_number?.[0]"
               [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number">
             </app-text-input>
           </div>

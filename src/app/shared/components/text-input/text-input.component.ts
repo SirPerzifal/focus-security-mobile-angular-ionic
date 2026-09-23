@@ -31,6 +31,8 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Input() min: string | null = null;
   @Input() max: string | null = null;
   @Input() isMandatory: boolean = false;
+  @Input() options: any[] = [];
+  @Input() selectPlaceholder: string = '';
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() keyupEvent = new EventEmitter<KeyboardEvent>();
@@ -251,5 +253,14 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
       this.valueChange.emit(this._value);
       this.onChange(this._value); 
     }
+  }
+
+  onSelectChange(event: Event): void {
+    const inputValue = (event.target as HTMLSelectElement).value;
+    this._value = inputValue;
+    this._displayValue = inputValue;
+    this.valueChange.emit(this._value);
+    this.onChange(this._value);
+    this.onTouched();
   }
 }

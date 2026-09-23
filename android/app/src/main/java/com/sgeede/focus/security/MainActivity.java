@@ -17,6 +17,7 @@ import android.content.res.Resources;
 
 import android.util.DisplayMetrics;
 import android.os.Build;
+import android.annotation.SuppressLint;
 
 public class MainActivity extends BridgeActivity {
 
@@ -73,6 +74,7 @@ public class MainActivity extends BridgeActivity {
         applyDensityOverride(res.getConfiguration(), res.getDisplayMetrics());
     }
 
+    @SuppressLint("WrongConstant")
     private void applyDensityOverride(Configuration config, DisplayMetrics dm) {
         config.fontScale = 1.0f;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -91,7 +93,7 @@ public class MainActivity extends BridgeActivity {
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         lockTextZoom();
     }

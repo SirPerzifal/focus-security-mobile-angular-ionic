@@ -54,3 +54,8 @@
 # Suppress OkHttp & Okio warnings
 -dontwarn okhttp3.**
 -dontwarn okio.**
+
+# Suppress Firebase Messaging & DirectBoot legacy/internal warnings
+-dontwarn com.google.android.gms.internal.firebase_messaging.**
+-dontwarn com.google.firebase.iid.**
+

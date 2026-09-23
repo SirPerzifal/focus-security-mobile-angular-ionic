@@ -131,7 +131,11 @@
         </div>
         <div class="w-full" *ngIf="project_config.is_industrial && module_config.pass_number?.[1]">
           <app-text-input #visitorDriveInUpPass [id]="'visitor_drive_in_pass_number'" [labelText]="'PASS NUMBER'"
-            [placeholder]="''" [customClasses]="{'w-full':true}" [type]="'text'" [isMandatory]="module_config.pass_number?.[0]"
+            [placeholder]="''" [customClasses]="{'w-full':true}"
+            [type]="module_config.pass_number?.[2] === 'selection' ? 'select' : 'text'"
+            [options]="module_config.pass_number?.[3] || []"
+            [selectPlaceholder]="'CHOOSE PASS NUMBER'"
+            [isMandatory]="module_config.pass_number?.[0]"
             [customInputClasses]="{'border':true, 'w-full':true,'rounded':true, 'py-2':true, 'px-3':true, 'outline-[#BDBDBD]':true,'h-20':true, 'text-2xl':true}" [(ngModel)]="pass_number"></app-text-input>
         </div>
         <div class="w-full flex flex-col">

@@ -57,7 +57,8 @@
         type !== 'date' &&
         type !== 'time' &&
         type !== 'month' &&
-        type !== 'textarea'
+        type !== 'textarea' &&
+        type !== 'select'
       "
       [id]="id"
       [class]="getFilteredCustomClasses(customInputClasses)"
@@ -72,6 +73,22 @@
       [max]="type === 'date' ? max : null"
       style="border: 1px solid #6b7280"
     />
+    <select
+      *ngIf="type === 'select'"
+      [id]="id"
+      [class]="getFilteredCustomClasses(customInputClasses)"
+      [(ngModel)]="value"
+      (change)="onSelectChange($event)"
+      [name]="name"
+      [disabled]="isReadonly"
+      style="border: 1px solid #6b7280"
+      class="bg-white text-black"
+    >
+      <option value="" selected disabled hidden>{{ selectPlaceholder || placeholder || 'SELECT ' + labelText }}</option>
+      <option *ngFor="let opt of options" [value]="opt.value !== undefined ? opt.value : opt">
+        {{ opt.label !== undefined ? opt.label : opt }}
+      </option>
+    </select>
     <textarea
       [id]="id"
       rows="4"
