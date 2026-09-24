@@ -59,3 +59,10 @@
 -dontwarn com.google.android.gms.internal.firebase_messaging.**
 -dontwarn com.google.firebase.iid.**
 
+# Preserve Capacitor Community and Official plugins and their helper classes
+-keep class getcapacitor.community.** { *; }
+-keep class com.capacitorjs.community.** { *; }
+-keep class com.capacitorjs.plugins.** { *; }
+-keep class com.blesoft.bluetoothle.** { *; }
+
+

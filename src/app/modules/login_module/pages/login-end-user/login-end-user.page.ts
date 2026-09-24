@@ -46,10 +46,26 @@ export class LoginEndUserPage implements OnInit {
     this.initializeBackButtonHandling();
   }
 
+  private backButtonSub?: Subscription;
+
+  ionViewWillEnter() {
+    this.initializeBackButtonHandling();
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+      this.backButtonSub = undefined;
+    }
+  }
+
   private routerSubscription!: Subscription;
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
     }
   }
 
@@ -59,10 +75,11 @@ export class LoginEndUserPage implements OnInit {
   }
 
   initializeBackButtonHandling() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log("tres");
-      
-      this.router.navigate([''])
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['']);
     });
   }
 

@@ -40,6 +40,15 @@ export class LoginProcessPage implements OnInit {
     }
   }
 
+  private backButtonSub?: Subscription;
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+      this.backButtonSub = undefined;
+    }
+  }
+
   ngOnInit() {}
 
   private routerSubscription!: Subscription;
@@ -47,13 +56,17 @@ export class LoginProcessPage implements OnInit {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   initializeBackButtonHandling() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
       App.exitApp();
-      console.log("tres");
-      
     });
   }
 }

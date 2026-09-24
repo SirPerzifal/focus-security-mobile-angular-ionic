@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { App } from '@capacitor/app';
+import { Subscription } from 'rxjs';
 import NavigationType from 'src/app/plugins/navigation-type.plugin';
 import { PluginListenerHandle } from '@capacitor/core';
 
@@ -12,7 +13,7 @@ import { NavigationService } from 'src/app/service/global/navigation-service/nav
   templateUrl: './botton-nav-bar.component.html',
   styleUrls: ['./botton-nav-bar.component.scss'],
 })
-export class BottonNavBarComponent implements OnInit {
+export class BottonNavBarComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
@@ -22,6 +23,7 @@ export class BottonNavBarComponent implements OnInit {
 
   navigationMode: 'gesture' | 'button' | 'unknown' = 'unknown';
   private navigationListener?: PluginListenerHandle;
+  private backButtonSub?: Subscription;
 
   get activeButton() {
     return this.navigationService.getActiveButton();
@@ -131,29 +133,25 @@ export class BottonNavBarComponent implements OnInit {
   }
 
   initializeBackButtonHandling() {
-    console.log("tes");
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log("tes");
-      this.router.events.subscribe(event => {
-        console.log("tes");
-        if (event instanceof NavigationStart) {
-          const url = event['url'].split('?')[0];
-          console.log("tes", url);
-          if (url === '/resident-home-page') {
-            console.log("tes");
-            
-            App.exitApp();
-          } else if (url !== '/resident-home-page') {
-            console.log("tes");
-            
-            history.back()
-          } else {
-            console.log("tes");
-            
-            this.router.navigate(['resident-home-page']);
-          }
-        }
-      });
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
+      const currentUrl = this.router.url.split('?')[0];
+      if (currentUrl === '/resident-home-page') {
+        App.exitApp();
+      } else {
+        history.back();
+      }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.navigationListener) {
+      this.navigationListener.remove();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 }

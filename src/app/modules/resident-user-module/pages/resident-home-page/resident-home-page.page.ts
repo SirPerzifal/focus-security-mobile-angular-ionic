@@ -217,10 +217,20 @@ export class ResidentHomePagePage implements OnInit {
     })
   }
 
+  private backButtonSub?: Subscription;
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+      this.backButtonSub = undefined;
+    }
+  }
+
   initializeBackButtonHandling() {
-    console.log("tes");
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log("tes");
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
       App.exitApp();
     });
   }
@@ -256,6 +266,9 @@ export class ResidentHomePagePage implements OnInit {
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
     }
   }
 
@@ -366,10 +379,11 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   async fetchContacts() {
-    const PermissionStatus = await Contacts.requestPermissions();
-    // if (PermissionStatus.contacts === 'granted') {
-    //   this.functionMain.presentToast('Now you app sync with your contact!', 'success');
-    // }
+    try {
+      const PermissionStatus = await Contacts.requestPermissions();
+    } catch (error) {
+      console.warn('Contacts permission error or denied:', error);
+    }
   }
 
   showNotificationCard: boolean = false;
