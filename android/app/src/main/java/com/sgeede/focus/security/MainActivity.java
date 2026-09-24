@@ -53,25 +53,22 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(applyDensityOverride(newBase));
-    }
-
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        applyDensityOverride(res);
-        return res;
+        try {
+            super.attachBaseContext(applyDensityOverride(newBase));
+        } catch (Throwable t) {
+            super.attachBaseContext(newBase);
+        }
     }
 
     private Context applyDensityOverride(Context context) {
-        Configuration config = new Configuration(context.getResources().getConfiguration());
-        applyDensityOverride(config, context.getResources().getDisplayMetrics());
-        return context.createConfigurationContext(config);
-    }
-
-    private void applyDensityOverride(Resources res) {
-        if (res == null) return;
-        applyDensityOverride(res.getConfiguration(), res.getDisplayMetrics());
+        if (context == null) return null;
+        try {
+            Configuration config = new Configuration(context.getResources().getConfiguration());
+            applyDensityOverride(config, context.getResources().getDisplayMetrics());
+            return context.createConfigurationContext(config);
+        } catch (Throwable t) {
+            return context;
+        }
     }
 
     @SuppressLint("WrongConstant")
@@ -80,16 +77,22 @@ public class MainActivity extends BridgeActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             int targetDpi = DisplayMetrics.DENSITY_DEVICE_STABLE;
             config.densityDpi = targetDpi;
-            dm.densityDpi = targetDpi;
-            dm.density = (float) targetDpi / DisplayMetrics.DENSITY_DEFAULT;
-            dm.scaledDensity = dm.density * config.fontScale;
+            if (dm != null) {
+                dm.densityDpi = targetDpi;
+                dm.density = (float) targetDpi / DisplayMetrics.DENSITY_DEFAULT;
+                dm.scaledDensity = dm.density * config.fontScale;
+            }
         }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        applyDensityOverride(getResources());
+        try {
+            if (newConfig != null) {
+                newConfig.fontScale = 1.0f;
+            }
+        } catch (Throwable ignored) {}
     }
 
     @Override
@@ -111,9 +114,11 @@ public class MainActivity extends BridgeActivity {
     }
 
     private void lockTextZoom() {
-        if (bridge != null && bridge.getWebView() != null) {
-            bridge.getWebView().getSettings().setTextZoom(100);
-        }
+        try {
+            if (bridge != null && bridge.getWebView() != null) {
+                bridge.getWebView().getSettings().setTextZoom(100);
+            }
+        } catch (Throwable ignored) {}
     }
     
     //selesai

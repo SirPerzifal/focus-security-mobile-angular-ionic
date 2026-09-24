@@ -297,14 +297,26 @@ export class FunctionMainService {
   vmsPreferences(): Promise<any> {
     return Preferences.get({ key: 'USER_INFO' }).then((result) => {
       if (result.value) {
-        this.preference = jwtDecode(result.value);
-        this.preference['access_token'] = result.value
-        
-        return this.preference;
+        try {
+          let rawToken = result.value;
+          try {
+            const decodedString = decodeURIComponent(escape(atob(rawToken)));
+            const credential = JSON.parse(decodedString);
+            if (credential?.access_token) {
+              rawToken = credential.access_token;
+            }
+          } catch {}
+          this.preference = jwtDecode(rawToken);
+          this.preference['access_token'] = rawToken;
+          return this.preference;
+        } catch (err) {
+          console.warn('vmsPreferences failed to decode token:', err);
+          return false;
+        }
       } else {
         return false;
       }
-    });
+    }).catch(() => false);
   }
 
   async downloadAttachment(idDocument: number, type: string = '') {

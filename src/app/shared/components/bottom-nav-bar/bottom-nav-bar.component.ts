@@ -18,6 +18,8 @@ export class BottomNavBarComponent implements OnInit {
   @Input() clientRoute: boolean = false
   navigationMode: 'gesture' | 'button' | 'unknown' = 'unknown';
   private navigationListener?: PluginListenerHandle;
+  private routerSubscription?: any;
+  private backButtonSub?: any;
 
   constructor(
     private webRtcService: WebRtcService,
@@ -61,10 +63,11 @@ export class BottomNavBarComponent implements OnInit {
       this.adjustUIForNavigationType('gesture')
     }
     this.functionMain.vmsPreferences().then((value: any)=> {
-      // console.log(value)
-      this.is_client = value.is_client
-    })
-    this.router.events.subscribe(event => {
+      if (value) {
+        this.is_client = !!value.is_client;
+      }
+    });
+    this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         const url = event['url'].split('?')[0];
         this.initializeBackButtonHandling(url === '/client-main-app')
@@ -134,7 +137,11 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   initializeBackButtonHandling(is_home: boolean = false) {
-    this.platform.backButton.subscribeWithPriority(10, () => {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+      this.backButtonSub = undefined;
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
       if (is_home) {
         App.exitApp();
       } else {
@@ -148,13 +155,21 @@ export class BottomNavBarComponent implements OnInit {
     if (this.navigationListener) {
       this.navigationListener.remove();
     }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   callVms() {
     this.functionMain.vmsPreferences().then((value: any)=> {
-      const project_id = 'Project-' + value.project_id.toString();
-      // const project_id = 'Intercom-3'
-      this.webRtcService.createOffer(false, project_id, false, true);
+      if (value?.project_id) {
+        const project_id = 'Project-' + value.project_id.toString();
+        // const project_id = 'Intercom-3'
+        this.webRtcService.createOffer(false, project_id, false, true);
+      }
     })
   }
 }

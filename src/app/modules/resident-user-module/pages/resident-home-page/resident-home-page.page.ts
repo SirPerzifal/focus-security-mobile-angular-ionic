@@ -12,6 +12,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { jwtDecode } from 'jwt-decode';
 
 import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components/modal-estate-homepage/modal-estate-homepage.component';
 
@@ -205,12 +206,24 @@ export class ResidentHomePagePage implements OnInit {
       } else {
         Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
           if (value?.value) {
-            // console.log(value.value)
-            const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-            this.isLoading = true;
-            // Mengubah string JSON menjadi objek JavaScript
-            const credential = JSON.parse(decodedEstateString);
-            this.loadEstate(credential.emailOrPhone);
+            try {
+              let email = '';
+              try {
+                const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                const credential = JSON.parse(decodedEstateString);
+                email = credential.emailOrPhone || credential.email;
+              } catch {
+                // If it's a raw JWT token
+                const decodedJwt: any = jwtDecode(value.value);
+                email = decodedJwt?.email || '';
+              }
+              if (email) {
+                this.isLoading = true;
+                this.loadEstate(email);
+              }
+            } catch (err) {
+              console.error('Error decoding credential for loadEstate:', err);
+            }
           }
         })
       }
@@ -237,7 +250,7 @@ export class ResidentHomePagePage implements OnInit {
 
   async initBluetooth() {
     try {
-      await BleClient.initialize();
+      await BleClient.initialize({ androidNeverForLocation: true });
       console.log('Bluetooth initialized');
     } catch (error) {
       console.error('Bluetooth initialization error:', error);
@@ -355,11 +368,23 @@ export class ResidentHomePagePage implements OnInit {
         } else {
           Preferences.get({ key: 'USER_INFO' }).then(async (value) => {
             if (value?.value) {
-              const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
-              this.isLoading = true;
-              // Mengubah string JSON menjadi objek JavaScript
-              const credential = JSON.parse(decodedEstateString);
-              this.loadEstate(credential.emailOrPhone);
+              try {
+                let email = '';
+                try {
+                  const decodedEstateString = decodeURIComponent(escape(atob(value.value)));
+                  const credential = JSON.parse(decodedEstateString);
+                  email = credential.emailOrPhone || credential.email;
+                } catch {
+                  const decodedJwt: any = jwtDecode(value.value);
+                  email = decodedJwt?.email || '';
+                }
+                if (email) {
+                  this.isLoading = true;
+                  this.loadEstate(email);
+                }
+              } catch (err) {
+                console.error('Error decoding credential for loadEstate fallback:', err);
+              }
             }
           })
         }

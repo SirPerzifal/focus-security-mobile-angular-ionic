@@ -417,31 +417,51 @@ export class WebRtcService extends ApiService {
       }
 
       if (!userInfo.family_id) {
-        const clientData = await Preferences.get({ key: 'USER_INFO' });
-        if (clientData.value) {
-          // ✅ FIX Bug 2: include intercom_name in type so intercom devices use their
-          // actual gate name (from fs.intercom.user.name) as the caller display name
-          // instead of falling back to 'Security' / 'Visitor'.
-          const parsedClient = jwtDecode(clientData.value) as { name?: string; family_id?: string | number; intercom_name?: string };
-          if (parsedClient.family_id) {
-            userInfo.family_name = parsedClient.intercom_name || parsedClient.name || 'Security';
-            userInfo.family_id = parsedClient.family_id.toString();
-            console.log("Got userInfo from USER_INFO", userInfo);
+        try {
+          const clientData = await Preferences.get({ key: 'USER_INFO' });
+          if (clientData.value) {
+            let rawToken = clientData.value;
+            try {
+              const decodedString = decodeURIComponent(escape(atob(rawToken)));
+              const credential = JSON.parse(decodedString);
+              if (credential?.access_token) {
+                rawToken = credential.access_token;
+              }
+            } catch {}
+            const parsedClient = jwtDecode(rawToken) as { name?: string; family_id?: string | number; intercom_name?: string };
+            if (parsedClient.family_id) {
+              userInfo.family_name = parsedClient.intercom_name || parsedClient.name || 'Security';
+              userInfo.family_id = parsedClient.family_id.toString();
+              console.log("Got userInfo from USER_INFO", userInfo);
+            }
           }
+        } catch (err) {
+          console.warn('WebRtcService: failed to decode USER_INFO for clientData:', err);
         }
       }
 
       if (!userInfo.family_id) {
-        const vmsData = await Preferences.get({ key: 'USER_INFO' }).then((result) => {
+        try {
+          const result = await Preferences.get({ key: 'USER_INFO' });
           if (result.value) {
-            const parsedVMS = jwtDecode(result.value) as { project_name: string; project_id: number, vms_family_id: string };
-            console.log(parsedVMS)
+            let rawToken = result.value;
+            try {
+              const decodedString = decodeURIComponent(escape(atob(rawToken)));
+              const credential = JSON.parse(decodedString);
+              if (credential?.access_token) {
+                rawToken = credential.access_token;
+              }
+            } catch {}
+            const parsedVMS = jwtDecode(rawToken) as { project_name: string; project_id: number, vms_family_id: string };
+            console.log(parsedVMS);
             if (parsedVMS.project_id && parsedVMS.project_name) {
               userInfo.family_name = 'Security';
               userInfo.family_id = parsedVMS.vms_family_id;
             }
           }
-        });
+        } catch (err) {
+          console.warn('WebRtcService: failed to decode USER_INFO for vmsData:', err);
+        }
       }
 
       // Set default kalau tetap kosong

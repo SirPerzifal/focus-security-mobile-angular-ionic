@@ -50,7 +50,7 @@ export class ModalBluetoothUnlockingComponent implements OnInit, OnDestroy {
     this.statusMessage = 'Checking Bluetooth...';
 
     try {
-      await BleClient.initialize();
+      await BleClient.initialize({ androidNeverForLocation: true });
       const isEnabled = await BleClient.isEnabled();
       if (!isEnabled) {
         try {
@@ -92,27 +92,35 @@ export class ModalBluetoothUnlockingComponent implements OnInit, OnDestroy {
           services: [this.SERVICE_UUID],
         },
         async (result) => {
-          console.log('BLE Device found:', result);
-          const devName = (result.device.name || '').toLowerCase();
-          const devId = result.device.deviceId;
-          const rssi = result.rssi ?? -100;
+          try {
+            console.log('BLE Device found:', result);
+            if (!result || !result.device) return;
 
-          // Check if device matches target door serial or IFS360 service
-          const matchesSerial = targetSerial ? devName.includes(targetSerial) : true;
-          const matchesPrefix = devName.startsWith('ifs_');
+            const devName = (result.device.name || '').toLowerCase();
+            const devId = result.device.deviceId;
+            const rssi = result.rssi ?? -100;
 
-          if (matchesSerial || matchesPrefix || result.uuids?.includes(this.SERVICE_UUID)) {
-            this.detectedRssi = rssi;
+            // Check if device matches target door serial or IFS360 service
+            const matchesSerial = targetSerial ? devName.includes(targetSerial) : true;
+            const matchesPrefix = devName.startsWith('ifs_');
 
-            // Proximity check: Must be within acceptable range
-            if (rssi < this.MIN_RSSI_THRESHOLD) {
-              this.statusMessage = 'Device detected, but signal is too weak. Please step closer to the door...';
-              return;
+            if (matchesSerial || matchesPrefix || result.uuids?.includes(this.SERVICE_UUID)) {
+              this.detectedRssi = rssi;
+
+              // Proximity check: Must be within acceptable range
+              if (rssi < this.MIN_RSSI_THRESHOLD) {
+                this.statusMessage = 'Device detected, but signal is too weak. Please step closer to the door...';
+                return;
+              }
+
+              // Target door found and in range!
+              await this.stopScan();
+              if (devId) {
+                await this.connectAndUnlock(devId);
+              }
             }
-
-            // Target door found and in range!
-            await this.stopScan();
-            await this.connectAndUnlock(devId);
+          } catch (callbackErr) {
+            console.error('Error handling BLE scan result:', callbackErr);
           }
         }
       );

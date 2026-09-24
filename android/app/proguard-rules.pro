@@ -59,10 +59,24 @@
 -dontwarn com.google.android.gms.internal.firebase_messaging.**
 -dontwarn com.google.firebase.iid.**
 
+# Preserve attributes essential for Kotlin coroutines, reflection, and callbacks
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
 # Preserve Capacitor Community and Official plugins and their helper classes
+-keep class com.getcapacitor.** { *; }
+-keep interface com.getcapacitor.** { *; }
 -keep class getcapacitor.community.** { *; }
--keep class com.capacitorjs.community.** { *; }
--keep class com.capacitorjs.plugins.** { *; }
--keep class com.blesoft.bluetoothle.** { *; }
+-keep interface getcapacitor.community.** { *; }
+-keep class com.capacitorjs.** { *; }
+-keep interface com.capacitorjs.** { *; }
+-keep class com.capacitorcommunity.** { *; }
+-keep interface com.capacitorcommunity.** { *; }
+-keep class com.ryltsov.** { *; }
+-keep interface com.ryltsov.** { *; }
+
+# Preserve Bluetooth LE plugin and its components
+-keep class com.capacitorjs.community.plugins.bluetoothle.** { *; }
+-keep interface com.capacitorjs.community.plugins.bluetoothle.** { *; }
+-dontwarn com.capacitorjs.community.plugins.bluetoothle.**
 
 

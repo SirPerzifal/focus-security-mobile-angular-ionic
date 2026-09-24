@@ -66,7 +66,6 @@ export class ClientMainAppPage implements OnInit {
     private appVersionCheck: CheckAppVersionService,
     private termsConditionsService: TermsConditionsService
   ) {
-    this.initializeBackButtonHandling();
   }
 
   callActionStatus: string = '';
@@ -113,8 +112,24 @@ export class ClientMainAppPage implements OnInit {
     this.isElectron = this.platform.is('electron');
   }
 
+  private backButtonSub?: Subscription;
+
+  ionViewWillEnter() {
+    this.initializeBackButtonHandling();
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+      this.backButtonSub = undefined;
+    }
+  }
+
   initializeBackButtonHandling() {
-    this.platform.backButton.subscribeWithPriority(10, () => {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(10, () => {
       App.exitApp();
     });
   }
@@ -123,6 +138,9 @@ export class ClientMainAppPage implements OnInit {
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
     }
   }
 
