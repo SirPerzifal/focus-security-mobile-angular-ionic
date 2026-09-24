@@ -86,25 +86,34 @@ export class ModalBluetoothUnlockingComponent implements OnInit, OnDestroy {
 
     try {
       const targetSerial = (this.door?.serial_number || '').trim().toLowerCase();
+      console.log('Starting BLE scan. Target door serial:', targetSerial, 'Service UUID:', this.SERVICE_UUID);
 
+      // Scan without restrictive service UUID filter so hardware scan filters don't drop packets
       await BleClient.requestLEScan(
         {
-          services: [this.SERVICE_UUID],
+          allowDuplicates: false,
         },
         async (result) => {
           try {
-            console.log('BLE Device found:', result);
             if (!result || !result.device) return;
 
-            const devName = (result.device.name || '').toLowerCase();
-            const devId = result.device.deviceId;
+            const devName = (result.device.name || result.localName || '').toLowerCase();
+            const devId = result.device.deviceId || '';
             const rssi = result.rssi ?? -100;
+            const rawUuids = (result.uuids || []).map((u: string) => u.toLowerCase());
 
-            // Check if device matches target door serial or IFS360 service
-            const matchesSerial = targetSerial ? devName.includes(targetSerial) : true;
-            const matchesPrefix = devName.startsWith('ifs_');
+            console.log('BLE Device found:', { name: devName, id: devId, rssi, uuids: rawUuids });
 
-            if (matchesSerial || matchesPrefix || result.uuids?.includes(this.SERVICE_UUID)) {
+            // Check if device matches target door:
+            // 1. Advertised Service UUID matches
+            const matchesUuid = rawUuids.includes(this.SERVICE_UUID.toLowerCase());
+            // 2. Name contains target serial
+            const matchesSerial = targetSerial ? devName.includes(targetSerial) : false;
+            // 3. Name starts with 'ifs' or contains 'intercom'
+            const matchesPrefix = devName.startsWith('ifs') || devName.includes('intercom');
+
+            if (matchesUuid || matchesSerial || matchesPrefix) {
+              console.log('Matched target door device!', { devName, devId, rssi });
               this.detectedRssi = rssi;
 
               // Proximity check: Must be within acceptable range
@@ -128,7 +137,7 @@ export class ModalBluetoothUnlockingComponent implements OnInit, OnDestroy {
       console.error('Scan error:', scanError);
       await this.stopScan();
       this.currentState = 'error';
-      this.errorMessage = 'Failed to scan for Bluetooth doors. Please ensure location/Bluetooth permissions are granted.';
+      this.errorMessage = 'Failed to scan for Bluetooth doors. Please ensure location/GPS and Bluetooth are turned ON in your phone settings.';
     }
   }
 
