@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, Platform } from '@ionic/angular';
-import { BleClient } from '@capacitor-community/bluetooth-le';
+import { BleClient, ScanMode } from '@capacitor-community/bluetooth-le';
 import { Haptics, NotificationType } from '@capacitor/haptics';
 
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -95,37 +95,44 @@ export class DoorAccessMainPage implements OnInit {
       if (!isEnabled) return;
 
       this.isBackgroundScanning = true;
-      await BleClient.requestLEScan({ allowDuplicates: false }, (result) => {
-        try {
-          if (!result || !result.device) return;
+      await BleClient.requestLEScan(
+        {
+          allowDuplicates: false,
+          scanMode: ScanMode.SCAN_MODE_LOW_LATENCY
+        },
+        (result) => {
+          try {
+            if (!result || !result.device) return;
 
-          const devName = (result.device.name || result.localName || '').toLowerCase();
-          const devId = result.device.deviceId || '';
-          const rssi = result.rssi ?? -100;
-          const rawUuids = (result.uuids || []).map((u: string) => u.toLowerCase());
+            const devName = (result.device.name || result.localName || '').toLowerCase();
+            const devId = result.device.deviceId || '';
+            const rssi = result.rssi ?? -100;
+            const cleanServiceUuid = this.SERVICE_UUID.replace(/-/g, '').toLowerCase();
+            const rawUuids = (result.uuids || []).map((u: string) => u.replace(/-/g, '').toLowerCase());
 
-          const matchesUuid = rawUuids.includes(this.SERVICE_UUID.toLowerCase());
-          const matchesPrefix = devName.startsWith('ifs') || devName.includes('intercom');
+            const matchesUuid = rawUuids.includes(cleanServiceUuid);
+            const matchesPrefix = devName.startsWith('ifs') || devName.includes('intercom');
 
-          for (const d of this.intercomDoorAccessList) {
-            const serial = (d.serial_number || '').trim().toLowerCase();
-            const matchesSerial = serial ? (devName.includes(serial) || (serial.length > 8 && devName.includes(serial.slice(-8)))) : false;
-            const singleDoorMatch = this.intercomDoorAccessList.length === 1 && (matchesUuid || matchesPrefix);
+            for (const d of this.intercomDoorAccessList) {
+              const serial = (d.serial_number || '').trim().toLowerCase();
+              const matchesSerial = serial ? (devName.includes(serial) || (serial.length > 8 && devName.includes(serial.slice(-8)))) : false;
+              const singleDoorMatch = this.intercomDoorAccessList.length === 1 && (matchesUuid || matchesPrefix);
 
-            if (matchesSerial || singleDoorMatch) {
-              d.isInRange = true;
-              d.rssi = rssi;
-              d.bleDeviceId = devId;
-            } else if ((matchesUuid || matchesPrefix) && !d.serial_number && this.intercomDoorAccessList.every((x: any) => !x.isInRange)) {
-              d.isInRange = true;
-              d.rssi = rssi;
-              d.bleDeviceId = devId;
+              if (matchesSerial || singleDoorMatch) {
+                d.isInRange = true;
+                d.rssi = rssi;
+                d.bleDeviceId = devId;
+              } else if ((matchesUuid || matchesPrefix) && !d.serial_number && this.intercomDoorAccessList.every((x: any) => !x.isInRange)) {
+                d.isInRange = true;
+                d.rssi = rssi;
+                d.bleDeviceId = devId;
+              }
             }
+          } catch (callbackErr) {
+            console.error('Error in background BLE scan:', callbackErr);
           }
-        } catch (callbackErr) {
-          console.error('Error in background BLE scan:', callbackErr);
         }
-      });
+      );
     } catch (scanErr) {
       console.warn('Background BLE proximity scan could not start:', scanErr);
     }
@@ -158,35 +165,27 @@ export class DoorAccessMainPage implements OnInit {
     door.isOpening = true;
 
     try {
-      // 1. Direct Open Signal to Intercom via WebSocket
+      // 1. Stop background BLE scan to free Bluetooth radio hardware and avoid native crashes
+      await this.stopBackgroundProximityScan();
+
+      // 2. Direct Open Signal to Intercom via WebSocket (opens gate relay in < 1s!)
       this.webRtcService.openGate(door.id);
       this.webRtcService.openGate(`Intercom-${door.id}`);
 
-      // 2. Generate temporary token and log to backend audit records
+      // 3. Log access record into Odoo backend
       this.mainApi.endpointMainProcess(
-        { intercom_door_id: door.id },
+        { intercom_door_id: door.id, access_type: 'bluetooth' },
         'get/barcode_access_intercom_door'
-      ).subscribe(async (response: any) => {
-        if (response.result && response.result.response_code === 200) {
-          const token = response.result.barcode;
-
-          // 3. If BLE device was detected in proximity, transmit token over BLE too
-          if (door.bleDeviceId) {
-            try {
-              const encoder = new TextEncoder();
-              const payload = JSON.stringify({ token, access_type: 'bluetooth', door_id: door.id });
-              const dataView = new DataView(encoder.encode(payload).buffer);
-              await BleClient.connect(door.bleDeviceId);
-              await BleClient.write(door.bleDeviceId, this.SERVICE_UUID, this.CHAR_UNLOCK_UUID, dataView);
-              await BleClient.disconnect(door.bleDeviceId);
-            } catch (bleErr) {
-              console.warn('BLE write skipped (socket already triggered):', bleErr);
-            }
-          }
+      ).subscribe({
+        next: (response: any) => {
+          console.log('Door access logged to backend:', response);
+        },
+        error: (err: any) => {
+          console.warn('Could not log access record:', err);
         }
       });
 
-      // 3. Instant Haptic Buzz & Visual Success Feedback
+      // 4. Instant Haptic Buzz & Visual Success Feedback
       try {
         await Haptics.notification({ type: NotificationType.Success });
       } catch (ignored) {}
@@ -195,7 +194,9 @@ export class DoorAccessMainPage implements OnInit {
 
       setTimeout(() => {
         door.isOpening = false;
-      }, 1500);
+        // Safely restart proximity scan if user is still on this screen
+        this.startBackgroundProximityScan();
+      }, 2000);
 
     } catch (err: any) {
       console.error('Direct open error:', err);
