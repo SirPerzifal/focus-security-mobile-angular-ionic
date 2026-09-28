@@ -163,6 +163,18 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   is_user_can_upload_excel: boolean = false;
+  visitor_qr_entry_mode: string = 'both';
+
+  applyEntryModeDefault() {
+    if (this.visitor_qr_entry_mode === 'single_only') {
+      this.formData.entryType = 'one_time_entry';
+      this.entryCheck = 'one_time_entry';
+    } else if (this.visitor_qr_entry_mode === 'multiple_only') {
+      this.formData.entryType = 'multiple_entry';
+      this.entryCheck = 'multiple_entry';
+    }
+  }
+
   ngOnInit() {
     this.getTodayDate();
     this.getActiveInvites();
@@ -302,6 +314,12 @@ export class VisitorMainPage extends ApiService implements OnInit  {
           var result = res.result['response_status'];
           // console.log(result)
           this.isUsingSMS = res.result['response_allow_sms']
+          if (res.result['visitor_qr_entry_mode']) {
+            this.visitor_qr_entry_mode = res.result['visitor_qr_entry_mode'];
+            if (!this.formData.entryType) {
+              this.applyEntryModeDefault();
+            }
+          }
           if (result === 400) {
             // console.log(res);
             this.activeInvites = [];
@@ -497,10 +515,19 @@ export class VisitorMainPage extends ApiService implements OnInit  {
 
   onChangeEntry(event: any) {
     console.log(event);
-    
+    if (this.visitor_qr_entry_mode === 'single_only') {
+      this.formData.entryType = 'one_time_entry';
+      this.entryCheck = 'one_time_entry';
+      return;
+    }
+    if (this.visitor_qr_entry_mode === 'multiple_only') {
+      this.formData.entryType = 'multiple_entry';
+      this.entryCheck = 'multiple_entry';
+      return;
+    }
     if (event.click === true) {
       this.formData.entryType = event.value;
-      this.entryCheck = event.value
+      this.entryCheck = event.value;
     } else if (event.click === false) {
       this.formData.entryType = '';
     }

@@ -74,6 +74,10 @@
                 <p class="font-bold table-cell text-base text-black w-2/5">Type</p>
                 <p class="ml-2 table-cell text-base text-black w-3/5">: {{ visitor.visitor_show_type }}</p>
               </div>
+              <div class="table-row" *ngIf="visitor.entry_type">
+                <p class="font-bold table-cell text-base text-black w-2/5">Entry Option</p>
+                <p class="ml-2 table-cell text-base text-black w-3/5">: {{ visitor.entry_type === 'multiple_entry' ? 'Multiple Entry' : 'One-Time Entry' }}</p>
+              </div>
             </div>
             <div class="flex mt-4 flex-wrap">
               <button (click)="viewDetail(visitor)"
@@ -133,6 +137,19 @@
               [customInputClasses]="{'border': true, 'w-full': true, 'rounded': true, 'py-2': true, 'px-3': true, 'outline-[#BDBDBD]': true, 'h-14': true, 'text-base': true}"
               [(ngModel)]="formData.vehicle_number"></app-text-input>
           </div>
+          <div class="w-full mt-1">
+            <label class="text-base font-bold mb-[-4px]">Entry Option</label>
+            <div class="flex items-center space-x-6 mt-2">
+              <label *ngIf="visitor_qr_entry_mode === 'both' || visitor_qr_entry_mode === 'single_only'" class="flex items-center cursor-pointer">
+                <input type="radio" name="entry_type" value="one_time_entry" [(ngModel)]="formData.entry_type" class="mr-2" />
+                <span class="text-base">One-Time Entry</span>
+              </label>
+              <label *ngIf="visitor_qr_entry_mode === 'both' || visitor_qr_entry_mode === 'multiple_only'" class="flex items-center cursor-pointer">
+                <input type="radio" name="entry_type" value="multiple_entry" [(ngModel)]="formData.entry_type" class="mr-2" />
+                <span class="text-base">Multiple Entry</span>
+              </label>
+            </div>
+          </div>
           <div class="w-full">
             <button class="bg-[var(--ion-color-primary)] text-white mt-3 w-full text-base rounded h-14 font-bold"
               type="submit">Register Visitor</button>
@@ -177,6 +194,11 @@
             <td class="w-2/5  font-bold">Mobile No</td>
             <td class="w-[5%]">:</td>
             <td>{{ visitorDetail.contact_number || '-' }}</td>
+          </tr>
+          <tr class="h-6" *ngIf="visitorDetail.entry_type">
+            <td class="w-2/5  font-bold">Entry Option</td>
+            <td class="w-[5%]">:</td>
+            <td>{{ visitorDetail.entry_type === 'multiple_entry' ? 'Multiple Entry' : 'One-Time Entry' }}</td>
           </tr>
         </table>
       </div>

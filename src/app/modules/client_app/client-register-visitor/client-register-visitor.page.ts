@@ -45,6 +45,7 @@ export class ClientRegisterVisitorPage implements OnInit {
   project_id = 0
   family_id = 0
 
+  visitor_qr_entry_mode: string = 'both'
   isUsingSMS: boolean = false
   formData = {
     name: '',
@@ -52,6 +53,7 @@ export class ClientRegisterVisitorPage implements OnInit {
     contact_number: '',
     selection_type: '',
     vehicle_number: '',
+    entry_type: 'one_time_entry',
   }
 
   onSubmit(bypass_ban: boolean = false) {
@@ -122,7 +124,15 @@ export class ClientRegisterVisitorPage implements OnInit {
       next: (results) => {
         this.isLoading = false
         console.log(results)
-          this.isUsingSMS = results.result.response_allow_sms
+        this.isUsingSMS = results.result.response_allow_sms
+        if (results.result.visitor_qr_entry_mode) {
+          this.visitor_qr_entry_mode = results.result.visitor_qr_entry_mode;
+          if (this.visitor_qr_entry_mode === 'multiple_only') {
+            this.formData.entry_type = 'multiple_entry';
+          } else if (this.visitor_qr_entry_mode === 'single_only') {
+            this.formData.entry_type = 'one_time_entry';
+          }
+        }
         if (results.result.status_code === 200) {
           if (this.isActive) {
             this.activeVisitor = results.result.data
@@ -209,6 +219,7 @@ export class ClientRegisterVisitorPage implements OnInit {
       contact_number: '',
       selection_type: '',
       vehicle_number: '', 
+      entry_type: this.visitor_qr_entry_mode === 'multiple_only' ? 'multiple_entry' : 'one_time_entry',
     }
   }
 
