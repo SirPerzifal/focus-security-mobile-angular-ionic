@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
+import { ScreenBrightnessService } from 'src/app/service/screen-brightness/screen-brightness.service';
 
 @Component({
   selector: 'app-modal-show-qr-access-door',
   templateUrl: './modal-show-qr-access-door.component.html',
   styleUrls: ['./modal-show-qr-access-door.component.scss'],
 })
-export class ModalShowQRAccessDoorComponent  implements OnInit {
+export class ModalShowQRAccessDoorComponent implements OnInit, OnDestroy {
 
   @Input() QRResult: string = '';
   @Input() closeModalTime: number = 0;
@@ -18,11 +19,15 @@ export class ModalShowQRAccessDoorComponent  implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    public functionMain: FunctionMainService
+    public functionMain: FunctionMainService,
+    private brightnessService: ScreenBrightnessService
   ) { }
 
   ngOnInit() {
     console.log('closeModalTime:', this.closeModalTime);
+
+    // Boost phone screen brightness to 100% for optical QR scanner reading
+    this.brightnessService.setMaxBrightness();
     
     // Set countdown awal (convert dari milidetik ke detik)
     this.countdown = Math.ceil(this.closeModalTime / 1000);
@@ -45,6 +50,9 @@ export class ModalShowQRAccessDoorComponent  implements OnInit {
   }
 
   ngOnDestroy() {
+    // Restore original phone screen brightness
+    this.brightnessService.restoreBrightness();
+
     // Clear timeout untuk mencegah memory leak
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
@@ -55,6 +63,7 @@ export class ModalShowQRAccessDoorComponent  implements OnInit {
   }
 
   closeModal() {
+    this.brightnessService.restoreBrightness();
     this.modalController.dismiss('closed');
   }
 }

@@ -33,6 +33,12 @@ import { UploadExcelProcessorComponent } from 'src/app/shared/resident-component
 export class VisitorMainPage extends ApiService implements OnInit  {
 
   userType: string = '';
+  is_allow_visitor_daily_invite: boolean = true;
+  is_allow_visitor_new_invite: boolean = true;
+  is_allow_visitor_active_tab: boolean = true;
+  is_allow_visitor_hired_car: boolean = true;
+  is_allow_visitor_history: boolean = true;
+
   navButtonsMain: any[] = [
     {
       text: 'Daily Invite',
@@ -177,6 +183,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
 
   ngOnInit() {
     this.getTodayDate();
+    this.loadVisitorConfig();
     this.getActiveInvites();
     this.activeRoute.queryParams.subscribe(params => {
       console.log(params);
@@ -194,7 +201,9 @@ export class VisitorMainPage extends ApiService implements OnInit  {
       if (params['openActive']) {
         this.selectedDate = '';
         this.entryCheck = '';
-        this.toggleShowActInv();
+        if (this.is_allow_visitor_active_tab) {
+          this.toggleShowActInv();
+        }
         this.getActiveInvites();
         this.formData = {
           dateOfInvite: "",
@@ -225,7 +234,11 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         this.formData.entryTitle = '';
         this.formData.entryMessage = '';
         this.formData.facility = '';
-        this.toggleShowNewInv()
+        if (this.is_allow_visitor_new_invite) {
+          this.toggleShowNewInv();
+        } else if (this.is_allow_visitor_active_tab) {
+          this.toggleShowActInv();
+        }
       }
     });
   }
@@ -251,7 +264,8 @@ export class VisitorMainPage extends ApiService implements OnInit  {
 
   onClick(event: any) {
     if (event) {
-      if (!this.showActInv) {
+      const clickedText = event[1];
+      if (clickedText === 'Active' && !this.showActInv) {
         this.toggleShowActInv();
         this.formData = {
           dateOfInvite: "",
@@ -267,19 +281,22 @@ export class VisitorMainPage extends ApiService implements OnInit  {
         }
         this.selectedDate = '';
         this.entryCheck = '';
-      } else if (!this.showNewInv) {
+      } else if (clickedText === 'New Invite' && !this.showNewInv) {
         this.toggleShowNewInv();
       }
     }
   }
 
   toggleShowActInv() {
+    if (!this.is_allow_visitor_active_tab) return;
     this.getActiveInvites();
     if (!this.showActInv){
       this.showNewInvTrans = true;
       this.showNewInv = false;
-      this.navButtonsSub[0].active = false;
-      this.navButtonsSub[1].active = true;
+      this.navButtonsSub.forEach(b => {
+        if (b.text === 'Active') b.active = true;
+        if (b.text === 'New Invite') b.active = false;
+      });
       setTimeout(()=>{
         this.showActInv = true;
       }, 300)
@@ -320,6 +337,7 @@ export class VisitorMainPage extends ApiService implements OnInit  {
               this.applyEntryModeDefault();
             }
           }
+          this.applyVisitorMenuConfig(res.result);
           if (result === 400) {
             // console.log(res);
             this.activeInvites = [];
@@ -489,15 +507,134 @@ export class VisitorMainPage extends ApiService implements OnInit  {
   }
 
   toggleShowNewInv() {
+    if (!this.is_allow_visitor_new_invite) return;
     if (!this.showNewInv){
       this.showActInvTrans = true;
       this.showActInv = false;
-      this.navButtonsSub[0].active = true;
-      this.navButtonsSub[1].active = false;
+      this.navButtonsSub.forEach(b => {
+        if (b.text === 'New Invite') b.active = true;
+        if (b.text === 'Active') b.active = false;
+      });
       setTimeout(()=>{
         this.showNewInv = true;
       }, 300)
     }
+  }
+
+  applyVisitorMenuConfig(config: any) {
+    if (!config) return;
+    if (config.is_allow_visitor_daily_invite !== undefined) {
+      this.is_allow_visitor_daily_invite = config.is_allow_visitor_daily_invite;
+    }
+    if (config.is_allow_visitor_new_invite !== undefined) {
+      this.is_allow_visitor_new_invite = config.is_allow_visitor_new_invite;
+    }
+    if (config.is_allow_visitor_active_tab !== undefined) {
+      this.is_allow_visitor_active_tab = config.is_allow_visitor_active_tab;
+    }
+    if (config.is_allow_visitor_hired_car !== undefined) {
+      this.is_allow_visitor_hired_car = config.is_allow_visitor_hired_car;
+    }
+    if (config.is_allow_visitor_history !== undefined) {
+      this.is_allow_visitor_history = config.is_allow_visitor_history;
+    }
+
+    if (!this.is_allow_visitor_daily_invite) {
+      if (this.is_allow_visitor_hired_car) {
+        this.route.navigate(['/hired-card-in-visitor']);
+      } else if (this.is_allow_visitor_history) {
+        this.route.navigate(['/history-in-visitor']);
+      } else {
+        this.route.navigate(['/resident-home-page']);
+      }
+      return;
+    }
+
+    const mainButtons: any[] = [];
+    if (this.is_allow_visitor_daily_invite) {
+      mainButtons.push({
+        text: 'Daily Invite',
+        active: true,
+        action: 'route',
+        routeTo: '/visitor-main'
+      });
+    }
+    if (this.is_allow_visitor_hired_car) {
+      mainButtons.push({
+        text: 'Hired Car',
+        active: false,
+        action: 'route',
+        routeTo: '/hired-card-in-visitor'
+      });
+    }
+    if (this.is_allow_visitor_history) {
+      mainButtons.push({
+        text: 'History',
+        active: false,
+        action: 'route',
+        routeTo: '/history-in-visitor'
+      });
+    }
+    this.navButtonsMain = mainButtons;
+
+    this.updateNavButtonsSub();
+  }
+
+  updateNavButtonsSub() {
+    const subButtons: any[] = [];
+    if (this.is_allow_visitor_new_invite) {
+      subButtons.push({
+        text: 'New Invite',
+        active: this.showNewInv,
+        action: 'click'
+      });
+    }
+    if (this.is_allow_visitor_active_tab) {
+      subButtons.push({
+        text: 'Active',
+        active: this.showActInv,
+        action: 'click'
+      });
+    }
+    while (subButtons.length < 3) {
+      subButtons.push({ text: '' });
+    }
+    this.navButtonsSub = subButtons;
+
+    if (!this.is_allow_visitor_new_invite && this.is_allow_visitor_active_tab) {
+      if (!this.showActInv) {
+        this.showNewInv = false;
+        this.showActInv = true;
+        this.navButtonsSub.forEach(b => {
+          if (b.text === 'Active') b.active = true;
+          if (b.text === 'New Invite') b.active = false;
+        });
+      }
+    } else if (this.is_allow_visitor_new_invite && !this.is_allow_visitor_active_tab) {
+      if (!this.showNewInv) {
+        this.showNewInv = true;
+        this.showActInv = false;
+        this.navButtonsSub.forEach(b => {
+          if (b.text === 'New Invite') b.active = true;
+          if (b.text === 'Active') b.active = false;
+        });
+      }
+    }
+  }
+
+  loadVisitorConfig() {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_menu_config').subscribe({
+      next: (res: any) => {
+        if (res?.result?.response_result) {
+          this.applyVisitorMenuConfig(res.result.response_result);
+        } else if (res?.result) {
+          this.applyVisitorMenuConfig(res.result);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching visitor config:', err);
+      }
+    });
   }
 
   onDateChange(event: any) {

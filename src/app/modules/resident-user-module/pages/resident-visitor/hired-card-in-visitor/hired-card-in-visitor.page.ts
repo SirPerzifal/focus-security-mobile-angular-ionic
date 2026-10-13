@@ -17,6 +17,10 @@ import { Estate } from 'src/models/resident/resident.model';
 })
 export class HiredCardInVisitorPage implements OnInit, OnDestroy {
 
+  is_allow_visitor_daily_invite: boolean = true;
+  is_allow_visitor_hired_car: boolean = true;
+  is_allow_visitor_history: boolean = true;
+
   navButtonsMain: any[] = [
     {
       text: 'Daily Invite',
@@ -110,6 +114,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getTodayDate();
+    this.loadVisitorConfig();
     this.loaadTextForPage();
     this.formData.vehicle_type = 'phv_vehicle';
   }
@@ -136,6 +141,7 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
           title: response.result.response_description.title,
           content: response.result.response_description.content // langsung assign
         };
+        this.applyVisitorMenuConfig(response.result);
       } else {
         // this.functionMain.presentToast('Failed to load text for page', 'danger');
       }
@@ -143,6 +149,72 @@ export class HiredCardInVisitorPage implements OnInit, OnDestroy {
       console.error('API error:', error);
       // this.functionMain.presentToast('An error occurred while fetching data', 'danger');
     });
+  }
+
+  loadVisitorConfig() {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_menu_config').subscribe({
+      next: (res: any) => {
+        if (res?.result?.response_result) {
+          this.applyVisitorMenuConfig(res.result.response_result);
+        } else if (res?.result) {
+          this.applyVisitorMenuConfig(res.result);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching visitor config:', err);
+      }
+    });
+  }
+
+  applyVisitorMenuConfig(config: any) {
+    if (!config) return;
+    if (config.is_allow_visitor_daily_invite !== undefined) {
+      this.is_allow_visitor_daily_invite = config.is_allow_visitor_daily_invite;
+    }
+    if (config.is_allow_visitor_hired_car !== undefined) {
+      this.is_allow_visitor_hired_car = config.is_allow_visitor_hired_car;
+    }
+    if (config.is_allow_visitor_history !== undefined) {
+      this.is_allow_visitor_history = config.is_allow_visitor_history;
+    }
+
+    if (!this.is_allow_visitor_hired_car) {
+      if (this.is_allow_visitor_daily_invite) {
+        this.router.navigate(['/visitor-main']);
+      } else if (this.is_allow_visitor_history) {
+        this.router.navigate(['/history-in-visitor']);
+      } else {
+        this.router.navigate(['/resident-home-page']);
+      }
+      return;
+    }
+
+    const mainButtons: any[] = [];
+    if (this.is_allow_visitor_daily_invite) {
+      mainButtons.push({
+        text: 'Daily Invite',
+        active: false,
+        action: 'route',
+        routeTo: '/visitor-main'
+      });
+    }
+    if (this.is_allow_visitor_hired_car) {
+      mainButtons.push({
+        text: 'Hired Car',
+        active: true,
+        action: 'route',
+        routeTo: '/hired-card-in-visitor'
+      });
+    }
+    if (this.is_allow_visitor_history) {
+      mainButtons.push({
+        text: 'History',
+        active: false,
+        action: 'route',
+        routeTo: '/history-in-visitor'
+      });
+    }
+    this.navButtonsMain = mainButtons;
   }
 
   toggleShowInv() {

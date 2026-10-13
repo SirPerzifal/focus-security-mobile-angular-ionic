@@ -13,6 +13,12 @@ import { FunctionMainService } from 'src/app/service/function/function-main.serv
 })
 export class HistoryInVisitorPage implements OnInit, OnDestroy {
 
+  is_allow_visitor_daily_invite: boolean = true;
+  is_allow_visitor_new_invite: boolean = true;
+  is_allow_visitor_active_tab: boolean = true;
+  is_allow_visitor_hired_car: boolean = true;
+  is_allow_visitor_history: boolean = true;
+
   navButtonsMain: any[] = [
     {
       text: 'Daily Invite',
@@ -56,6 +62,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
   constructor(private router: Router, private mainApiResidentService: MainApiResidentService, public functionMain: FunctionMainService, private alertController: AlertController) { 
   }
   ngOnInit() {
+    this.loadVisitorConfig();
   }
 
   handleRefresh(event: any) {
@@ -103,6 +110,7 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     this.mainApiResidentService.endpointMainProcess({
       page: page
     }, 'get/visitor_history').subscribe((response) => {
+      this.applyVisitorMenuConfig(response.result);
       var result = response.result['response_result']
       this.historyData = []
       if (response.result.response_status === 400) {
@@ -259,6 +267,78 @@ export class HistoryInVisitorPage implements OnInit, OnDestroy {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  loadVisitorConfig() {
+    this.mainApiResidentService.endpointMainProcess({}, 'get/visitor_menu_config').subscribe({
+      next: (res: any) => {
+        if (res?.result?.response_result) {
+          this.applyVisitorMenuConfig(res.result.response_result);
+        } else if (res?.result) {
+          this.applyVisitorMenuConfig(res.result);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching visitor config:', err);
+      }
+    });
+  }
+
+  applyVisitorMenuConfig(config: any) {
+    if (!config) return;
+    if (config.is_allow_visitor_daily_invite !== undefined) {
+      this.is_allow_visitor_daily_invite = config.is_allow_visitor_daily_invite;
+    }
+    if (config.is_allow_visitor_new_invite !== undefined) {
+      this.is_allow_visitor_new_invite = config.is_allow_visitor_new_invite;
+    }
+    if (config.is_allow_visitor_active_tab !== undefined) {
+      this.is_allow_visitor_active_tab = config.is_allow_visitor_active_tab;
+    }
+    if (config.is_allow_visitor_hired_car !== undefined) {
+      this.is_allow_visitor_hired_car = config.is_allow_visitor_hired_car;
+    }
+    if (config.is_allow_visitor_history !== undefined) {
+      this.is_allow_visitor_history = config.is_allow_visitor_history;
+    }
+
+    if (!this.is_allow_visitor_history) {
+      if (this.is_allow_visitor_daily_invite) {
+        this.router.navigate(['/visitor-main']);
+      } else if (this.is_allow_visitor_hired_car) {
+        this.router.navigate(['/hired-card-in-visitor']);
+      } else {
+        this.router.navigate(['/resident-home-page']);
+      }
+      return;
+    }
+
+    const mainButtons: any[] = [];
+    if (this.is_allow_visitor_daily_invite) {
+      mainButtons.push({
+        text: 'Daily Invite',
+        active: false,
+        action: 'route',
+        routeTo: '/visitor-main'
+      });
+    }
+    if (this.is_allow_visitor_hired_car) {
+      mainButtons.push({
+        text: 'Hired Car',
+        active: false,
+        action: 'route',
+        routeTo: '/hired-card-in-visitor'
+      });
+    }
+    if (this.is_allow_visitor_history) {
+      mainButtons.push({
+        text: 'History',
+        active: true,
+        action: 'route',
+        routeTo: '/history-in-visitor'
+      });
+    }
+    this.navButtonsMain = mainButtons;
   }
 
 }

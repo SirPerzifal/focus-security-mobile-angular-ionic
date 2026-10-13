@@ -231,7 +231,7 @@
               >
               or
             </p>
-            <p class="text-gray-600">
+            <p class="text-gray-600" *ngIf="is_allow_visitor_daily_invite && is_allow_visitor_new_invite">
               <strong
                 ><a [routerLink]="['/visitor-main']">Click Here</a></strong
               >

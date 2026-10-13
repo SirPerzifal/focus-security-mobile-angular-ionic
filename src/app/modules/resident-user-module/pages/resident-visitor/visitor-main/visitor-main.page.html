@@ -19,7 +19,7 @@
     <div id="nav_tabs_main">
       <app-nav-tabs [buttons]="navButtonsMain"></app-nav-tabs>
     </div>
-    <div id="sub_nav_tabs">
+    <div id="sub_nav_tabs" *ngIf="is_allow_visitor_new_invite || is_allow_visitor_active_tab">
       <app-nav-tabs
         [buttons]="navButtonsSub"
         (eventEmitter)="onClick($event)"
@@ -308,8 +308,8 @@
             Go to
             <strong><a href="/resident-home-page">Home Page</a></strong> or
           </p>
-          <p class="text-gray-600">
-            <strong><a href="/visitor-main">Click Here</a></strong> to invite a
+          <p class="text-gray-600" *ngIf="is_allow_visitor_new_invite">
+            <strong><a (click)="toggleShowNewInv()" class="cursor-pointer">Click Here</a></strong> to invite a
             friend now.
           </p>
         </div>
