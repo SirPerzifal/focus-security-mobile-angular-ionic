@@ -44,6 +44,7 @@ export class VmsGatePage implements OnInit {
   Camera: any = []
   project_config: any = []
   project_id: any = ''
+  gateBarrierMode: string = 'gate_only'
 
   selectedCamera: any = ''
 
@@ -52,11 +53,16 @@ export class VmsGatePage implements OnInit {
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
+          this.gateBarrierMode = results.result.gate_barrier_mode || 'gate_only'
           this.Camera = results.result.result.map((item: any) => {
+            const controlTarget = item.ControlTarget || item.TargetType || 'gate'
             return {
-              'id': item.CamSentId,
+              'id': item.SelectionId || `${item.CamSentId}:${controlTarget}`,
+              'camera_id': item.CamSentId,
+              'control_target': controlTarget,
               'name': item.CamID,
-              'can_freeze': !!item.CanFreeze
+              'can_freeze': !!item.CanFreeze && controlTarget !== 'barrier',
+              'target_type': item.TargetType || controlTarget,
             }
           })
         } else {
@@ -70,15 +76,40 @@ export class VmsGatePage implements OnInit {
     });
   }
 
+  get selectedControl(): any {
+    if (!this.selectedCamera) return null;
+    return this.Camera.find((item: any) => item.id == this.selectedCamera) || null;
+  }
+
   get canFreezeCurrentGate(): boolean {
-    if (!this.selectedCamera) return false;
-    const cam = this.Camera.find((item: any) => item.id == this.selectedCamera);
+    const cam = this.selectedControl;
     return cam ? !!cam.can_freeze : false;
+  }
+
+  get isBarrierSelected(): boolean {
+    const cam = this.selectedControl;
+    return !!cam && (cam.control_target || cam.target_type) === 'barrier';
+  }
+
+  get openButtonLabel(): string {
+    return this.isBarrierSelected ? 'OPEN BARRIER' : 'OPEN GATE';
+  }
+
+  get closeButtonLabel(): string {
+    return this.isBarrierSelected ? 'CLOSE BARRIER' : 'CLOSE GATE';
+  }
+
+  get chooseLabel(): string {
+    if (this.Camera.length === 0) {
+      return 'NO GATE FOUND';
+    }
+    return this.gateBarrierMode === 'both' ? 'CHOOSE GATE / BARRIER' : 'CHOOSE GATE';
   }
 
   openGate(is_close: boolean = false, freeze: boolean = false) {
     console.log(this.selectedCamera)
-    if (!this.selectedCamera) {
+    const cam = this.selectedControl;
+    if (!cam) {
       this.functionMain.presentToast('Please select the gate first!', 'danger')
       return
     }
@@ -86,18 +117,24 @@ export class VmsGatePage implements OnInit {
       this.functionMain.presentToast('Freezing is not allowed for this gate!', 'danger');
       return;
     }
+    const noun = this.isBarrierSelected ? 'barrier' : 'gate';
     const actionName = is_close ? 'close' : (freeze ? 'freeze open' : 'open');
-    this.clientMainService.getApi({camera_id: this.selectedCamera, is_close: is_close, freeze: freeze}, '/vms/post/open_barrier').subscribe({
+    this.clientMainService.getApi({
+      camera_id: cam.camera_id,
+      is_close: is_close,
+      freeze: freeze,
+      control_target: cam.control_target || cam.target_type || '',
+    }, '/vms/post/open_barrier').subscribe({
       next: (results) => {
         console.log(results)
         if (results.result.response_code === 200) {
-          this.functionMain.presentToast(`Successfully to ${actionName} the barrier!`, 'success');
+          this.functionMain.presentToast(`Successfully to ${actionName} the ${noun}!`, 'success');
         } else {
-          this.functionMain.presentToast(`Failed to ${actionName} the barrier!`, 'danger');
+          this.functionMain.presentToast(results.result.error || `Failed to ${actionName} the ${noun}!`, 'danger');
         }
       },
       error: (error) => {
-        this.functionMain.presentToast(`An error occurred while trying to ${actionName} the barrier!`, 'danger');
+        this.functionMain.presentToast(`An error occurred while trying to ${actionName} the ${noun}!`, 'danger');
         console.error(error);
       }
     });
@@ -109,6 +146,7 @@ export class VmsGatePage implements OnInit {
 
   handleRefresh(event: any) {
     setTimeout(() => {
+      this.loadCamera()
       event.target.complete()
     }, 1000)
   }
