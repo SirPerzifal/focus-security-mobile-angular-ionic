@@ -149,19 +149,27 @@ export class DoorAccessMainPage implements OnInit {
 
   /**
    * When user clicks a door:
-   * - If 'qr': opens QR Code modal as usual.
-   * - If 'bluetooth': directly executes the open function immediately (instant auto-open).
+   * - 'qr': opens the QR Code modal.
+   * - 'direct': shows Direct Open and opens immediately, regardless of distance.
+   * - 'bluetooth': opens only when the intercom is in range. Otherwise the card stays "Not in range".
    */
   async onClickDoor(door: any) {
     if (door.isOpening) return;
 
-    // Mode 1: QR Code
     if (door.door_access_mode === 'qr') {
       this.openQrModal(door);
       return;
     }
 
-    // Mode 2: Bluetooth / Auto-Open -> Instant Direct Open!
+    if (door.door_access_mode === 'bluetooth' && !door.isInRange) {
+      this.functionMain.presentToast('Intercom is not in range', 'warning');
+      return;
+    }
+
+    if (door.door_access_mode !== 'direct' && door.door_access_mode !== 'bluetooth') {
+      return;
+    }
+
     door.isOpening = true;
 
     try {
