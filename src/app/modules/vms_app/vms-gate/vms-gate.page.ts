@@ -61,7 +61,7 @@ export class VmsGatePage implements OnInit {
               'camera_id': item.CamSentId,
               'control_target': controlTarget,
               'name': item.CamID,
-              'can_freeze': !!item.CanFreeze && controlTarget !== 'barrier',
+              'can_freeze': !!item.CanFreeze,
               'target_type': item.TargetType || controlTarget,
             }
           })
@@ -93,6 +93,10 @@ export class VmsGatePage implements OnInit {
 
   get openButtonLabel(): string {
     return this.isBarrierSelected ? 'OPEN BARRIER' : 'OPEN GATE';
+  }
+
+  get freezeButtonLabel(): string {
+    return this.isBarrierSelected ? 'FREEZE BARRIER' : 'FREEZE GATE';
   }
 
   get closeButtonLabel(): string {
