@@ -60,6 +60,7 @@ export class VmsGatePage implements OnInit {
               'id': item.SelectionId || `${item.CamSentId}:${controlTarget}`,
               'camera_id': item.CamSentId,
               'control_target': controlTarget,
+              'trigger_method': item.TriggerMethod || '',
               'name': item.CamID,
               'can_freeze': !!item.CanFreeze,
               'target_type': item.TargetType || controlTarget,
@@ -124,10 +125,11 @@ export class VmsGatePage implements OnInit {
     const noun = this.isBarrierSelected ? 'barrier' : 'gate';
     const actionName = is_close ? 'close' : (freeze ? 'freeze open' : 'open');
     this.clientMainService.getApi({
-      camera_id: cam.camera_id,
+      camera_id: cam.trigger_method === 'web_relay' ? 'relay:gate' : cam.camera_id,
       is_close: is_close,
       freeze: freeze,
       control_target: cam.control_target || cam.target_type || '',
+      trigger_method: cam.trigger_method || '',
     }, '/vms/post/open_barrier').subscribe({
       next: (results) => {
         console.log(results)
