@@ -558,6 +558,31 @@ export class WebRtcService extends ApiService {
     }
   }
 
+  async openGateBT(intercom_id: any) {
+    let family_id: any = false;
+
+    try {
+      const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
+      if (storedValue) {
+        const decoded = await this.storage.decodeData(storedValue);
+        if (decoded) {
+          family_id = JSON.parse(decoded).family_id || false;
+        }
+      }
+    } catch (err) {
+      console.warn('WebRtcService.openGateBT: failed to get family_id from USESATE_DATA:', err);
+    }
+
+    if (family_id) {
+      this.mainVmsService.getApi({ intercom_id, family_id }, '/api/bluetooth').subscribe({
+        next: () => {},
+        error: () => {}
+      });
+    }
+
+    this.socket.emit('intercom-open-gate', { intercom_id });
+  }
+
   async closeGate(intercom_id: any) {
     console.log("EMITTED")
     this.socket.emit('intercom-close-gate', { intercom_id: intercom_id });

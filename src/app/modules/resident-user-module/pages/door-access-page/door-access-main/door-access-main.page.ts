@@ -170,7 +170,7 @@ export class DoorAccessMainPage implements OnInit {
 
       // 2. Direct Open Signal to Intercom via WebSocket (opens gate relay in < 1s!)
       this.webRtcService.openGate(door.id);
-      this.webRtcService.openGate(`Intercom-${door.id}`);
+      this.webRtcService.openGateBT(`Intercom-${door.id}`);
 
       // 3. Log access record into Odoo backend
       this.mainApi.endpointMainProcess(
