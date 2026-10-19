@@ -16,21 +16,21 @@
     <div class="flex flex-row">
       <div class="mt-8 flex flex-col items-center mx-4 space-y-5 w-full mb-4">
         <div class="w-full">
-          <app-m2m-selection [Arrays]="Camera" (outputValue)="onCameraChange($event)" [placeholder]="Camera.length > 0 ? 'CHOOSE GATE' : 'NO GATE FOUND'" [isOne]="true" [isVMS]="true"
-            [labelText]="'GATE'"></app-m2m-selection>
+          <app-m2m-selection [Arrays]="Camera" (outputValue)="onCameraChange($event)" [placeholder]="chooseLabel" [isOne]="true" [isVMS]="true"
+            [labelText]="gateBarrierMode === 'both' ? 'GATE / BARRIER' : 'GATE'"></app-m2m-selection>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'OPEN GATE'" 
+          <app-visitor-button [text]="openButtonLabel" 
             [extraClass]="'bg-[var(--ion-color-primary)] text-white w-full text-2xl h-20 mt-1'"
             (click)="openGate(false, false)"></app-visitor-button>
         </div>
         <div class="w-full" *ngIf="canFreezeCurrentGate">
-          <app-visitor-button [text]="'FREEZE GATE'" 
+          <app-visitor-button [text]="freezeButtonLabel" 
             [extraClass]="'bg-[#E58929] text-white w-full text-2xl h-20 mt-1'"
             (click)="freezeGate()"></app-visitor-button>
         </div>
         <div class="w-full">
-          <app-visitor-button [text]="'CLOSE GATE'" 
+          <app-visitor-button [text]="closeButtonLabel" 
             [extraClass]="'bg-[#C62828] text-white w-full text-2xl h-20 mt-1'"
             (click)="openGate(true, false)"></app-visitor-button>
         </div>
