@@ -44,7 +44,11 @@ export class SquareButtonComponent  implements OnInit {
   }
 
   routeLinkNotification() {
-    this.paramForBadgeNotification = 0;
+    // The notification badge is cleared on open. Notices & Docs stays until
+    // each notice is marked read and the home count is loaded again.
+    if (this.name === 'Notifications') {
+      this.paramForBadgeNotification = 0;
+    }
     this.router.navigate([this.routeLinkTo])
   }
 
