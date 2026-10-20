@@ -10,6 +10,7 @@ import { Platform } from '@ionic/angular';
 import { NotifyEndOfAgreementAndPermitService } from './service/notify-end-of-agreement-and-permit/notify-end-of-agreement-and-permit.service';
 import { CheckServerResponseService } from './service/check-server-response/check-server-response.service';
 import { Capacitor } from '@capacitor/core';
+import { WebRtcService } from './service/fs-web-rtc/web-rtc.service';
 
 // Pre-cache Firebase FCM token from AppDelegate so FcmTokenService can return it immediately
 if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
@@ -25,10 +26,16 @@ if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(library: FaIconLibrary, private AppVersionService: CheckAppVersionService, private NotifyEndOfAgreementAndPermitService: NotifyEndOfAgreementAndPermitService, public platform: Platform, private CheckResponse: CheckServerResponseService) {
+  constructor(library: FaIconLibrary, private AppVersionService: CheckAppVersionService, private NotifyEndOfAgreementAndPermitService: NotifyEndOfAgreementAndPermitService, public platform: Platform, private CheckResponse: CheckServerResponseService, private webRtc: WebRtcService) {
     library.addIconPacks(fas, far, fab);
     // Preferences.set({ key: 'usePreferredTextZoom', value: 'false' });
     App.addListener('appStateChange', async ({ isActive }) => {
+      if (isActive) {
+        this.webRtc.ensureSocket();
+      }
+    });
+    this.platform.resume.subscribe(() => {
+      this.webRtc.ensureSocket();
     });
     document.body.classList.toggle('dark', false);
     if (StatusBar) {

@@ -42,6 +42,9 @@ export class WebRtcService extends ApiService {
   private socket: any;
   /** uniqueId currently registered on the live socket (family_id or Public-User). */
   private connectedUniqueId: string | null = null;
+  /** True only after an intentional logout/close, so resume does not reconnect a signed-out user. */
+  private socketClosedByApp = false;
+  private ensuringSocket = false;
   private peerConnection!: RTCPeerConnection;
   private localStream!: MediaStream;
   private remoteStream!: MediaStream;
@@ -476,6 +479,7 @@ export class WebRtcService extends ApiService {
       }
 
       const uniqueId = String(userInfo.family_id || 'Public-User');
+      this.socketClosedByApp = false;
 
       // Skip only when already connected as the SAME user. A Public-User (or
       // previous family) socket must be replaced after login/estate select,
@@ -530,6 +534,18 @@ export class WebRtcService extends ApiService {
       this.socket.on('intercom-open-gate', (data: any) => this.handleOpenGate(data));
       this.socket.on('intercom-close-gate', (data: any) => this.handleCloseGate(data));
       this.socket.on('handle-vms-sync-state', (data: any) => this.handleChangeStateVMS(data));
+      this.socket.on('disconnect', (reason: string) => {
+        console.warn('WebRtcService socket disconnected:', reason);
+        if (this.socketClosedByApp || reason === 'io client disconnect') {
+          return;
+        }
+        // Socket.IO retries on its own; if that does not restore the session, rebuild it.
+        setTimeout(() => {
+          if (!this.socketClosedByApp && !this.socket?.connected) {
+            this.ensureSocket();
+          }
+        }, 2000);
+      });
 
       // Listen for native events
       this.listenForNativeEvents();
@@ -593,7 +609,70 @@ export class WebRtcService extends ApiService {
     this.socket.emit('intercom-close-gate', { intercom_id: intercom_id });
   }
 
+  /**
+   * Keep the resident reachable for intercom calls.
+   * Called when the app returns to the foreground: a dead socket means no modal
+   * and no in-app notification, which is why users had to kill and reopen the app.
+   */
+  async ensureSocket(): Promise<void> {
+    if (this.socketClosedByApp || this.ensuringSocket || this.isCallActive()) {
+      return;
+    }
+    this.ensuringSocket = true;
+    try {
+      if (this.socket?.connected) {
+        const alive = await this.probeSocket();
+        if (alive) {
+          return;
+        }
+        console.warn('WebRtcService: signaling probe failed, reconnecting');
+      }
+      await this.initializeSocket();
+    } finally {
+      this.ensuringSocket = false;
+    }
+  }
+
+  private isCallActive(): boolean {
+    const pc = this.peerConnection;
+    if (!pc) {
+      return false;
+    }
+    return pc.connectionState === 'connected'
+      || pc.connectionState === 'connecting'
+      || pc.iceConnectionState === 'checking'
+      || pc.iceConnectionState === 'connected'
+      || pc.iceConnectionState === 'completed';
+  }
+
+  private probeSocket(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.socket?.connected) {
+        resolve(false);
+        return;
+      }
+      let settled = false;
+      const finish = (ok: boolean) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        clearTimeout(timer);
+        resolve(ok);
+      };
+      const timer = setTimeout(() => finish(false), 3000);
+      try {
+        this.socket.timeout(2500).emit('client-heartbeat', (err: any, response: any) => {
+          finish(!err && response === 'ok');
+        });
+      } catch {
+        finish(false);
+      }
+    });
+  }
+
   closeSocket() {
+    this.socketClosedByApp = true;
     // Socket.IO client — use disconnect(), not native WebSocket readyState/close.
     if (this.socket) {
       try {
