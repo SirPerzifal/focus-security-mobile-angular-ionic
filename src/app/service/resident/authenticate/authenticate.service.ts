@@ -66,6 +66,20 @@ export class AuthService extends ApiService{
     return this.http.post<any>(`${this.baseUrl}/resident/get/estate`, {jsonrpc: '2.0', params: {email}})
   }
 
+  requestPasswordReset(login: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.baseUrl}/resident/post/forgot_password`, {
+      jsonrpc: '2.0',
+      params: { login },
+    }, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   changePassword(currentPassword: string, newPassword: string, userId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

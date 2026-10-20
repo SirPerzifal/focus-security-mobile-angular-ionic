@@ -273,11 +273,51 @@ export class LoginEndUserPage implements OnInit {
   }
 
   showForgotPasswordModal: boolean = false;
+  forgotPasswordLogin: string = '';
+  forgotPasswordSending: boolean = false;
+  forgotPasswordSent: boolean = false;
+  forgotPasswordMessage: string = '';
+
   showModalForgotPassword() {
-    this.showForgotPasswordModal = !this.showForgotPasswordModal
+    const login = (this.existUser.login || '').trim();
+    this.forgotPasswordLogin = login;
+    this.forgotPasswordSending = false;
+    this.forgotPasswordSent = false;
+    this.forgotPasswordMessage = '';
+    this.showForgotPasswordModal = true;
   }
 
-  closeRejectModal() {
-    this.showForgotPasswordModal = !this.showForgotPasswordModal
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal = false;
+    this.forgotPasswordSending = false;
+  }
+
+  submitForgotPassword() {
+    const login = (this.forgotPasswordLogin || '').trim();
+    if (!login || this.forgotPasswordSending) {
+      this.functionMain.presentToast('Please enter the email or phone number you use to log in.', 'warning');
+      return;
+    }
+
+    this.forgotPasswordSending = true;
+    this.authService.requestPasswordReset(login).subscribe({
+      next: (res) => {
+        this.forgotPasswordSending = false;
+        const result = res?.result || {};
+        if (result.response_code === 200) {
+          this.forgotPasswordSent = true;
+          this.forgotPasswordMessage = result.response_message;
+          return;
+        }
+        this.functionMain.presentToast(
+          result.response_message || 'We could not send the reset email. Please try again.',
+          'danger'
+        );
+      },
+      error: () => {
+        this.forgotPasswordSending = false;
+        this.functionMain.presentToast('We could not send the reset email. Please try again.', 'danger');
+      },
+    });
   }
 }

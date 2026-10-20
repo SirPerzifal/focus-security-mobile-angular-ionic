@@ -272,30 +272,59 @@
   <ion-modal
     id="forgot-password-modal"
     [isOpen]="showForgotPasswordModal"
-    (didDismiss)="closeRejectModal()"
+    (didDismiss)="closeForgotPasswordModal()"
   >
     <ng-template>
-      <div class="wrapper">
-        <div class="w-full text-center">
-          <video
-            autoplay
-            loop
-            muted
-            playsinline
-            webkit-playsinline
-            width="300"
-            height="300"
+      <div class="wrapper flex flex-col px-2 py-4 text-center">
+        <h2 class="text-lg font-bold mb-2">Reset password</h2>
+
+        <div *ngIf="!forgotPasswordSent">
+          <p class="text-sm text-gray-600 mb-4">
+            Enter the email or phone number you use to log in. We will email a
+            link to set a new password. The link is valid until 11:59 PM today.
+          </p>
+          <input
+            type="text"
+            name="forgot-login"
+            class="!border !border-gray-300 text-gray-900 !rounded-lg block w-full p-3.5 text-sm"
+            placeholder="Email or phone"
+            [(ngModel)]="forgotPasswordLogin"
+            autocomplete="username"
+          />
+          <ion-button
+            expand="block"
+            class="fslp-button !rounded-lg"
+            style="--background: var(--ion-color-primary); --color: #fff"
+            [disabled]="forgotPasswordSending"
+            (click)="submitForgotPassword()"
           >
-            <source
-              src="https://res.cloudinary.com/dkxor4kjf/video/upload/v1749453409/Animation_-_1749453252648_aruvnu.webm"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-          <h2>
-            The forgot password service is under construction, kindly contact
-            your administrator.
-          </h2>
+            {{ forgotPasswordSending ? 'Sending...' : 'Send reset link' }}
+          </ion-button>
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="fslp-button !rounded-lg"
+            style="
+              --color: var(--ion-color-primary);
+              --border-color: var(--ion-color-primary);
+            "
+            [disabled]="forgotPasswordSending"
+            (click)="closeForgotPasswordModal()"
+          >
+            Cancel
+          </ion-button>
+        </div>
+
+        <div *ngIf="forgotPasswordSent">
+          <p class="text-sm text-gray-600 mb-4">{{ forgotPasswordMessage }}</p>
+          <ion-button
+            expand="block"
+            class="fslp-button !rounded-lg"
+            style="--background: var(--ion-color-primary); --color: #fff"
+            (click)="closeForgotPasswordModal()"
+          >
+            Back to login
+          </ion-button>
         </div>
       </div>
     </ng-template>

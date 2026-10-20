@@ -727,7 +727,8 @@ ion-content#resident-content {
 
 /* Login end-user modals — must be global because Ionic renders modals in a portal */
 ion-modal#forgot-password-modal {
-  --width: 75%;
+  --width: 88%;
+  --max-width: 420px;
   --height: fit-content;
   --border-radius: 6px;
   --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
