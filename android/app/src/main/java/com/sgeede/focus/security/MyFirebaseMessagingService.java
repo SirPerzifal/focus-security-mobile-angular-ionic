@@ -139,22 +139,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String callerName = remoteMessage.getData().get("callerName");
 
-            if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("incoming_call") && !isForeground) {
+            if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("incoming_call")) {
                 wakeUpScreen(getApplicationContext());
                 Log.e(TAG, "Message data payload incoming_call: " + remoteMessage.getData());
-                Glide.with(this)
-                    .asBitmap()
-                    .load(remoteMessage.getData().get("imgurl"))
-                    .into(new CustomTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            sendNotification(callerName, remoteMessage.getData(), resource);
-                            playRingtone();
-                        }
-
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) { }
-                    });
+                // Intercom callers have no resident photo (image id 0). Waiting for that
+                // URL used to skip the notification and the ringtone entirely.
+                Bitmap caller = BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_ifs360_logo_transparent);
+                sendNotification(callerName, remoteMessage.getData(), caller);
+                playRingtone();
             } else if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("notification_tampan_dan_berani")) {
                 Log.e(TAG, "Message data payload notification_tampan_dan_berani: " + remoteMessage.getData());
                 wakeUpScreen(getApplicationContext());
