@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { FcmTokenService } from 'src/app/service/fcm-token/fcm-token.service';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { AlertController, Platform } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -1144,15 +1144,17 @@ export class ProfileMainPage implements OnInit, OnDestroy {
       this.fcmToken = token;
       console.log('FCM Token received:', token);
 
-      this.mainResident.endpointCustomProcess({
-        previous_family_id: this.familyId,
-        family_id: familyId,
-        fcm_token: token,
-        device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
-      }, '/set/fcm_token').subscribe({
-        next: (response: any) => console.log('FCM token sent to backend:', response),
-        error: (error: any) => console.error('Failed to send FCM token to backend:', error)
-      });
+      try {
+        const response: any = await lastValueFrom(this.mainResident.endpointCustomProcess({
+          previous_family_id: this.familyId,
+          family_id: familyId,
+          fcm_token: token,
+          device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
+        }, '/set/fcm_token'));
+        console.log('FCM token sent to backend:', response);
+      } catch (error: any) {
+        console.error('Failed to send FCM token to backend:', error);
+      }
 
       return token;
     } catch (err) {

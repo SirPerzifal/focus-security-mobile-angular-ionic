@@ -1,19 +1,20 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ClientMainService } from 'src/app/service/client-app/client-main.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
 import { GetUserInfoService } from 'src/app/service/global/get-user-info/get-user-info.service';
 import { AuthService } from 'src/app/service/resident/authenticate/authenticate.service';
 import { Preferences } from '@capacitor/preferences';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { FcmTokenService } from 'src/app/service/fcm-token/fcm-token.service';
 
 @Component({
   selector: 'app-client-my-profile',
@@ -52,7 +53,8 @@ export class ClientMyProfilePage implements OnInit {
     public functionMain: FunctionMainService,
     private clientMainService: ClientMainService,
     private storage: StorageService,
-    private mainResident: MainApiResidentService
+    private mainResident: MainApiResidentService,
+    private fcmTokenService: FcmTokenService
   ) { }
 
   ionViewWillEnter() {
@@ -268,88 +270,44 @@ export class ClientMyProfilePage implements OnInit {
 
   async getNotificationPermission(familyId: number): Promise<string> {
     try {
-      // Check if PushNotifications is available
-      if (typeof PushNotifications === 'undefined') {
+      if (typeof PushNotifications === 'undefined' || !Capacitor.isNativePlatform()) {
         console.warn('PushNotifications not available.');
         return '';
       }
 
-      // Request permissions
       const permission = await PushNotifications.requestPermissions();
       if (permission.receive !== 'granted') {
         console.log('Notification permission not granted');
         return '';
       }
 
-      // Clean up and register
-      PushNotifications.removeAllListeners();
-      PushNotifications.register();
+      const token = await this.fcmTokenService.getToken(15000);
+      if (!token) {
+        console.warn('FCM token could not be retrieved');
+        return '';
+      }
 
-      // Return promise for token registration
-      return this.waitForToken(familyId);
+      this.fcmToken = token;
+      console.log('FCM Token received:', token);
+
+      try {
+        const response: any = await lastValueFrom(this.mainResident.endpointCustomProcess({
+          previous_family_id: this.userData.family_id,
+          family_id: familyId,
+          fcm_token: token,
+          device_new: Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
+        }, '/set/fcm_token'));
+        console.log('FCM token sent to backend successfully:', response);
+      } catch (error) {
+        console.error('Failed to send FCM token to backend:', error);
+      }
+
+      return token;
     } catch (err) {
       console.error('Push Notification Error:', err);
       return '';
     }
   }
-
-  private waitForToken(familyId: number): Promise<string> {
-    return new Promise((resolve) => {
-      const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
-
-      const timeout = setTimeout(() => {
-        this.cleanupTokenListeners();
-        console.log('FCM registration timed out');
-        resolve('');
-      }, TIMEOUT_MS);
-
-      const onRegistration = (token: Token) => {
-        this.cleanupTokenListeners();
-        if (token.value) {
-          this.fcmToken = token.value;
-          console.log('FCM Token received:', token.value);
-
-          // ✅ Send token to backend
-          this.mainResident.endpointCustomProcess({
-            previous_family_id: this.userData.family_id,
-            family_id: familyId,
-            fcm_token: token.value,
-            device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
-          }, '/set/fcm_token').subscribe({
-            next: (response: any) => {
-              console.log('FCM token sent to backend successfully:', response);
-              resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
-            },
-            error: (error) => {
-              console.error('Failed to send FCM token to backend:', error);
-              resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
-            }
-          });
-          resolve(token.value);
-        } else {
-          resolve('');
-        }
-      };
-
-      const onRegistrationError = (error: any) => {
-        this.cleanupTokenListeners();
-        console.error('Push notification registration error:', error);
-        resolve('');
-      };
-
-      // Add listeners
-      PushNotifications.addListener('registration', onRegistration);
-      PushNotifications.addListener('registrationError', onRegistrationError);
-
-      // Store cleanup function
-      this.cleanupTokenListeners = () => {
-        clearTimeout(timeout);
-        PushNotifications.removeAllListeners();
-      };
-    });
-  }
-
-  private cleanupTokenListeners: () => void = () => { };
 
   activeUnit: any = null;
   async chooseEstateClick(estate: any) {

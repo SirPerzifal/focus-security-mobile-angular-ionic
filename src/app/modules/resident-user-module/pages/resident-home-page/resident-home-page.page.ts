@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { FcmTokenService } from 'src/app/service/fcm-token/fcm-token.service';
 
 import { ModalController } from '@ionic/angular';
@@ -18,7 +18,7 @@ import { ModalEstateHomepageComponent } from 'src/app/shared/resident-components
 
 import { Estate } from 'src/models/resident/resident.model';
 import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
-import { Observable, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
 
 import { Platform } from '@ionic/angular';
 import { BleClient } from '@capacitor-community/bluetooth-le';
@@ -190,7 +190,10 @@ export class ResidentHomePagePage implements OnInit {
             this.setData(estate, estate.image_profile);
             this.loadMenusConfig();
             this.uploadNewProfile();
-            this.getNotificationPermission(estate.family_id);
+            // Persist FCM first, then (re)connect socket with family_id so kick-out works
+            this.getNotificationPermission(estate.family_id).then(() => {
+              this.webRtcService.initializeSocket();
+            });
             if (!this.imageProfile) {
               this.isModalUpdateProfile = false
             }
@@ -263,7 +266,7 @@ export class ResidentHomePagePage implements OnInit {
       if (params) {
         if (params['reload']) {
           console.log("jinkx 1")
-          this.webRtcService.initializeSocket();
+          // Socket init is deferred until FCM is persisted (ionViewWillEnter / estate modal)
           this.webRtcService.callActionStatus.subscribe(status => {
             this.callActionStatus = status;
           });
@@ -345,7 +348,6 @@ export class ResidentHomePagePage implements OnInit {
             if (value) {
               this.notifyEndAgreement.checkExpiryDateAccount(true);
               console.log("END USER FORM MODAL")
-              this.webRtcService.initializeSocket();
               const estate = JSON.parse(value) as Estate;
               this.setData(estate, estate.image_profile);
               console.log(estate);
@@ -353,7 +355,10 @@ export class ResidentHomePagePage implements OnInit {
               if (!estate.image_profile) {
                 this.isModalUpdateProfile = true
               }
-              this.getNotificationPermission(estate.family_id);
+              // FCM must be on the server before socket connect, otherwise the old
+              // device's handleKickUser sees a matching token and skips logout.
+              await this.getNotificationPermission(estate.family_id);
+              this.webRtcService.initializeSocket();
 
               // Check if user came from login with intent to change password
               const pendingChangePassword = localStorage.getItem('PENDING_CHANGE_PASSWORD');
@@ -571,14 +576,16 @@ export class ResidentHomePagePage implements OnInit {
       this.fcmToken = token;
       console.log('FCM Token received:', token);
 
-      this.mainApiResident.endpointCustomProcess({
-        family_id: familyId,
-        fcm_token: token,
-        device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
-      }, '/set/fcm_token').subscribe({
-        next: (response: any) => console.log('FCM token sent to backend:', response),
-        error: (error: any) => console.error('Failed to send FCM token to backend:', error)
-      });
+      try {
+        const response: any = await lastValueFrom(this.mainApiResident.endpointCustomProcess({
+          family_id: familyId,
+          fcm_token: token,
+          device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
+        }, '/set/fcm_token'));
+        console.log('FCM token sent to backend:', response);
+      } catch (error: any) {
+        console.error('Failed to send FCM token to backend:', error);
+      }
 
       return token;
     } catch (err) {

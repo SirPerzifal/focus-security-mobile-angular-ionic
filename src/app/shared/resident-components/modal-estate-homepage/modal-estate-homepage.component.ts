@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 import { StorageService } from 'src/app/service/storage/storage.service';
 import { FunctionMainService } from 'src/app/service/function/function-main.service';
@@ -11,6 +11,7 @@ import { WebRtcService } from 'src/app/service/fs-web-rtc/web-rtc.service';
 import { Router } from '@angular/router';
 import { MainApiResidentService } from 'src/app/service/resident/main/main-api-resident.service';
 import { Preferences } from '@capacitor/preferences';
+import { FcmTokenService } from 'src/app/service/fcm-token/fcm-token.service';
 
 import { lastValueFrom } from 'rxjs';
 
@@ -35,7 +36,8 @@ export class ModalEstateHomepageComponent  implements OnInit {
     private storage: StorageService,
     public functionMain: FunctionMainService,
     private mainApiResident: MainApiResidentService,
-    private router: Router
+    private router: Router,
+    private fcmTokenService: FcmTokenService
   ) { }
 
   async ngOnInit() {
@@ -78,7 +80,7 @@ export class ModalEstateHomepageComponent  implements OnInit {
     } else {
       this.profileEstate = [];
     }
-  
+
     this.isLoading = false;
   }
 
@@ -100,7 +102,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
         if (this.isSuccess) {
           this.modalController.dismiss('gas ini dari resident');
         }
-        // this.router.navigate(['/client-main-app'], {queryParams: {reload: true}});
         return;
       } else {
         await this.getNotificationPermission(estate.family_id);
@@ -113,7 +114,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
     } else {
       if (this.client) {
         const estateString = JSON.stringify(estate);
-        // Melakukan encoding ke Base64
         const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
         this.storage.clearAllValueFromStorage();
         this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then(async (response: any) => {
@@ -122,12 +122,10 @@ export class ModalEstateHomepageComponent  implements OnInit {
           if (this.isSuccess) {
             this.modalController.dismiss('gas ini dari resident');
           }
-        // this.router.navigate(['/resident-home-page'], {queryParams: {reload: true}});
         })
         return;
       } else {
         const estateString = JSON.stringify(estate);
-        // Melakukan encoding ke Base64
         const encodedEstate = btoa(unescape(encodeURIComponent(estateString)));
         this.storage.clearAllValueFromStorage();
         this.storage.setValueToStorage('USESATE_DATA', encodedEstate).then(async (response: any) => {
@@ -140,7 +138,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
         return;
       }
     }
-    // Mengubah estate menjadi string JSON
   }
 
   async getAccessToken(familyId: number) {
@@ -163,12 +160,6 @@ export class ModalEstateHomepageComponent  implements OnInit {
             key: 'USER_INFO',
             value: btoa(unescape(encodeURIComponent(JSON.stringify(userCredentials)))),
           });
-          let countryCodeData = response.result.country_codes.country_code_data
-          // this.storage.setValueToStorage('COUNTRY_CODES_DATA', countryCodeData).then((value: any) => {
-          //   this.storage.getValueFromStorage('COUNTRY_CODES_DATA').then((value) => {
-          //     console.log(value, "ineciewncienwcwicniwenwin");
-          //   })
-          // })
         } else {
           await Preferences.set({
             key: 'USER_INFO',
@@ -191,92 +182,49 @@ export class ModalEstateHomepageComponent  implements OnInit {
       this.isSuccess = false
     }
   }
-  
-  
+
   async getNotificationPermission(familyId: number): Promise<string> {
-      try {
-        // Check if PushNotifications is available
-        if (typeof PushNotifications === 'undefined') {
-          console.warn('PushNotifications not available.');
-          return '';
-        }
-  
-        // Request permissions
-        const permission = await PushNotifications.requestPermissions();
-        if (permission.receive !== 'granted') {
-          console.log('Notification permission not granted');
-          return '';
-        }
-  
-        // Clean up and register
-        PushNotifications.removeAllListeners();
-        PushNotifications.register();
-  
-        // Return promise for token registration
-        return this.waitForToken(familyId);
-      } catch (err) {
-        console.error('Push Notification Error:', err);
+    try {
+      if (typeof PushNotifications === 'undefined' || !Capacitor.isNativePlatform()) {
+        console.warn('PushNotifications not available.');
         return '';
       }
+
+      const permission = await PushNotifications.requestPermissions();
+      if (permission.receive !== 'granted') {
+        console.log('Notification permission not granted');
+        return '';
+      }
+
+      // Use FcmTokenService so iOS stores the Firebase FCM token (not APNs hex)
+      const token = await this.fcmTokenService.getToken(15000);
+      if (!token) {
+        console.warn('FCM token could not be retrieved');
+        return '';
+      }
+
+      this.fcmToken = token;
+      console.log('FCM Token received:', token);
+
+      this.isClickProcess = true;
+      try {
+        const response: any = await lastValueFrom(this.mainApiResident.endpointCustomProcess({
+          family_id: familyId,
+          fcm_token: token,
+          device_new: Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
+        }, '/set/fcm_token'));
+        console.log('FCM token sent to backend successfully:', response);
+      } catch (error) {
+        console.error('Failed to send FCM token to backend:', error);
+      } finally {
+        this.isClickProcess = false;
+      }
+
+      return token;
+    } catch (err) {
+      console.error('Push Notification Error:', err);
+      this.isClickProcess = false;
+      return '';
     }
-  
-    private waitForToken(familyId: number): Promise<string> {
-      return new Promise((resolve) => {
-        const TIMEOUT_MS = 10000; // Reduced from 15s to 10s
-        
-        const timeout = setTimeout(() => {
-          this.cleanupTokenListeners();
-          console.log('FCM registration timed out');
-          resolve('');
-        }, TIMEOUT_MS);
-  
-        const onRegistration = async (token: Token) => {
-          this.cleanupTokenListeners();
-          if (token.value) {
-            this.fcmToken = token.value;
-            console.log('FCM Token received:', token.value);
-              
-            // ✅ Send token to backend
-            this.isClickProcess = true
-            await this.mainApiResident.endpointCustomProcess({
-              family_id: familyId,
-              fcm_token: token.value,
-              device_new: Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' ? 'ios' : 'android'
-            }, '/set/fcm_token').subscribe({
-              next: (response: any) => {
-                console.log('FCM token sent to backend successfully:', response);
-                this.isClickProcess = false
-                resolve(token.value); // ✅ PERBAIKAN: resolve dengan token
-              },
-              error: (error) => {
-                console.error('Failed to send FCM token to backend:', error);
-                this.isClickProcess = false
-                resolve(token.value); // ✅ Tetap resolve dengan token meski gagal kirim ke backend
-              }
-            });
-            resolve(token.value);
-          } else {
-            resolve('');
-          }
-        };
-  
-        const onRegistrationError = (error: any) => {
-          this.cleanupTokenListeners();
-          console.error('Push notification registration error:', error);
-          resolve('');
-        };
-  
-        // Add listeners
-        PushNotifications.addListener('registration', onRegistration);
-        PushNotifications.addListener('registrationError', onRegistrationError);
-  
-        // Store cleanup function
-        this.cleanupTokenListeners = () => {
-          clearTimeout(timeout);
-          PushNotifications.removeAllListeners();
-        };
-      });
-    }
-  
-    private cleanupTokenListeners: () => void = () => {};
+  }
 }

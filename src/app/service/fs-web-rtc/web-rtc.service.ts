@@ -14,12 +14,12 @@ import { ApiService } from '../api.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../resident/authenticate/authenticate.service';
 import { StorageService } from '../storage/storage.service';
-import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { BehaviorSubject } from 'rxjs';
 import { registerPlugin } from '@capacitor/core';
 import { ClientMainService } from '../client-app/client-main.service';
 import { MainVmsService } from '../vms/main_vms/main-vms.service';
 import { Estate } from 'src/models/resident/resident.model';
+import { FcmTokenService } from '../fcm-token/fcm-token.service';
 interface RingtonePlugin {
   play(): Promise<void>;
   stop(): Promise<void>;
@@ -40,6 +40,8 @@ const Ringtone = registerPlugin<RingtonePlugin>('Ringtone', {
 })
 export class WebRtcService extends ApiService {
   private socket: any;
+  /** uniqueId currently registered on the live socket (family_id or Public-User). */
+  private connectedUniqueId: string | null = null;
   private peerConnection!: RTCPeerConnection;
   private localStream!: MediaStream;
   private remoteStream!: MediaStream;
@@ -106,7 +108,8 @@ export class WebRtcService extends ApiService {
   constructor(http: HttpClient, private storage: StorageService, private toastController: ToastController, private modalController: ModalController,
     private router: Router,
     private platform: Platform,
-    private mainVmsService: MainVmsService
+    private mainVmsService: MainVmsService,
+    private fcmTokenService: FcmTokenService
   ) {
     super(http);
     this.initializeSocket();
@@ -472,30 +475,32 @@ export class WebRtcService extends ApiService {
         console.log("Fallback to default userInfo", userInfo);
       }
 
-      // Tutup socket lama jika ada
-      // ✅ FIX: Use socket.connected (Socket.IO API) — the old check used
-      // WebSocket.CLOSED (value 3) which is a native WebSocket constant and
-      // never worked correctly on a Socket.IO socket.
-      if (this.socket?.connected) {
-        // Already connected with this user — skip creating a new socket.
-        // A new socket would cause the server to emit kick-user-testing-demo
-        // to the existing socket, triggering a false-positive kick-out.
-        console.log('Socket already connected — skipping re-initialization');
+      const uniqueId = String(userInfo.family_id || 'Public-User');
+
+      // Skip only when already connected as the SAME user. A Public-User (or
+      // previous family) socket must be replaced after login/estate select,
+      // otherwise the signaling server never sees the real family_id and
+      // will not emit kick-user to the old device.
+      if (this.socket?.connected && this.connectedUniqueId === uniqueId) {
+        console.log('Socket already connected as', uniqueId, '— skipping re-initialization');
         this.listenForNativeEvents();
         return;
       }
       if (this.socket) {
+        this.socket.removeAllListeners();
         this.socket.disconnect();
+        this.socket = null;
       }
 
       // Setup user
       this.userName = userInfo.family_name || 'Security';
       this.userId = userInfo.family_id ? parseInt(userInfo.family_id, 10) || 0 : 0;
+      this.connectedUniqueId = uniqueId;
 
       // Connect ke WebSocket
       // this.socket = io('http://192.168.1.217:8091', {
       this.socket = io('wss://ws.sgeede.com', {
-        query: { uniqueId: userInfo.family_id || 'Public-User' },
+        query: { uniqueId },
         reconnection: true,
         reconnectionAttempts: Infinity,
         reconnectionDelay: 1000,
@@ -589,9 +594,17 @@ export class WebRtcService extends ApiService {
   }
 
   closeSocket() {
-    if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
-      this.socket.close();
+    // Socket.IO client — use disconnect(), not native WebSocket readyState/close.
+    if (this.socket) {
+      try {
+        this.socket.removeAllListeners();
+        this.socket.disconnect();
+      } catch (err) {
+        console.warn('WebRtcService.closeSocket:', err);
+      }
+      this.socket = null;
     }
+    this.connectedUniqueId = null;
   }
 
   async playRingtone() {
@@ -935,7 +948,15 @@ export class WebRtcService extends ApiService {
     const storedValue = await this.storage.getValueFromStorage('USESATE_DATA');
     if (clientData) {
       try {
-        this.decoded = jwtDecode(clientData);
+        let rawToken = clientData;
+        try {
+          const decodedString = decodeURIComponent(escape(atob(rawToken)));
+          const credential = JSON.parse(decodedString);
+          if (credential?.access_token) {
+            rawToken = credential.access_token;
+          }
+        } catch {}
+        this.decoded = jwtDecode(rawToken);
         this.family_id = this.decoded.vms_family_id || this.decoded.family_id;
       } catch (error) {
         try {
@@ -958,11 +979,15 @@ export class WebRtcService extends ApiService {
         next: (res) => {
           if (res && res.result && res.result['status_code'] == 200) {
             const fcm_token = res.result['status_desc'];
+            // Same-device guard: only stay logged in when local FCM still matches
+            // the canonical token on the server (this device is the active one).
             this.getFCMToken().then(token => {
-              if (!token || token != fcm_token) {
-                executeLogout();
+              if (token && token === fcm_token) {
+                console.log('Kick ignored — this device still owns the FCM token');
+                return;
               }
-            });
+              executeLogout();
+            }).catch(() => executeLogout());
           } else {
             executeLogout();
           }
@@ -1039,57 +1064,9 @@ export class WebRtcService extends ApiService {
 
   async getFCMToken(): Promise<string | null> {
     try {
-      if (!Capacitor.isNativePlatform()) {
-        return null;
-      }
-
-      // ✅ FIX: On iOS, the AppDelegate dispatches the real Firebase FCM token
-      // via a custom DOM event 'FCMTokenReceived' after mapping the APNs token.
-      // Calling PushNotifications.register() here would return the raw APNs hex
-      // token (different format from the Firebase FCM token stored in Odoo),
-      // causing a false-positive mismatch in handleKickUser.
-      if (Capacitor.getPlatform() === 'ios') {
-        return new Promise<string | null>((resolve) => {
-          // If AppDelegate already fired the event, it stored the token on window
-          const cached = (window as any).__firebaseFCMToken;
-          if (cached) {
-            resolve(cached);
-            return;
-          }
-
-          const handler = (e: Event) => {
-            const token = (e as CustomEvent<string>).detail;
-            (window as any).__firebaseFCMToken = token;  // cache for next call
-            document.removeEventListener('FCMTokenReceived', handler);
-            resolve(token);
-          };
-          document.addEventListener('FCMTokenReceived', handler);
-
-          // Safety timeout — returns null so handleKickUser skips the comparison
-          setTimeout(() => {
-            document.removeEventListener('FCMTokenReceived', handler);
-            resolve(null);
-          }, 5000);
-        });
-      }
-
-      // Android: standard PushNotifications registration flow
-      const permission = await PushNotifications.requestPermissions();
-      if (permission.receive !== 'granted') {
-        return null;
-      }
-
-      return new Promise((resolve, reject) => {
-        PushNotifications.addListener('registration', (token) => {
-          resolve(token.value);
-        });
-
-        PushNotifications.addListener('registrationError', (error) => {
-          reject(null);
-        });
-
-        PushNotifications.register();
-      });
+      // Delegate to FcmTokenService so kick compare uses the same token source
+      // as /set/fcm_token (Firebase FCM on iOS, not raw APNs).
+      return await this.fcmTokenService.getToken(5000);
     } catch (error) {
       return null;
     }
