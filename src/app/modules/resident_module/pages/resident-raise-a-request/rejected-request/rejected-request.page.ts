@@ -45,37 +45,37 @@ export class RejectedRequestPage implements OnInit, OnDestroy {
   fieldMapping: { [key: string]: string[] } = {
     'Access cards Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Access Card Status',
       'Access Card End Date'
     ],
     'Overnight parking records Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Vehicle Number',
       'Approved End Date'
     ],
     'Bicycle tags Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Bicycle Tag',
       'Bicycle Brand'
     ],
     'Registered coaches Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Coach Name',
       'Expected Start Date'
     ],
     'Request schedules Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Schedule Type',
       'Schedule Date'
     ],
     'Pets Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Type Of Pet',
       'Pet Breed'
     ],
@@ -219,6 +219,7 @@ export class RejectedRequestPage implements OnInit, OnDestroy {
   getRequestValue(allData: AllData, field: string): string {
     const fieldMap: { [key: string]: string } = {
       'create date': 'create_date',
+      'status': 'states',
       'states': 'states',
       'access card status': 'access_card_status',
       'access card end date': 'access_card_end_date',

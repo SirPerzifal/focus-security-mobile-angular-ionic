@@ -126,41 +126,41 @@ export class RaiseARequestMainPage implements OnInit {
   fieldMapping: { [key: string]: string[] } = {
     'Access cards Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Access Card Status',
       'Reason for Rejection'
     ],
     'Overnight parking records Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Vehicle Number',
       'Approved End Date',
       'Reason for Rejection'
     ],
     'Bicycle tags Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Bicycle Tag',
       'Bicycle Brand',
       'Reason for Rejection'
     ],
     'Registered coaches Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Coach Name',
       'Expected Start Date',
       'Reason for Rejection'
     ],
     'Request schedules Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Schedule Type',
       'Schedule Start Date',
       'Reason for Rejection'
     ],
     'Pets Application.': [
       'Create Date',
-      'States',
+      'Status',
       'Type Of Pet',
       'Pet Breed',
       'Reason for Rejection'
@@ -357,6 +357,7 @@ export class RaiseARequestMainPage implements OnInit {
     switch (propertyName) {
       case 'create_date':
         return allData.create_date || '-';
+      case 'status':
       case 'states':
         return allData.states || '-';
       case 'appeal_status':
