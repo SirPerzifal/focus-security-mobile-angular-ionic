@@ -28,6 +28,8 @@ export class IncomingCallPage implements OnInit {
     if (!this.offer) {
       this.offer = this.webrtc.nativeOffer;
     }
+    // Ask for the microphone while the incoming screen is up, before Answer.
+    this.webrtc.startLocalStream();
   }
 
   acceptCall(){

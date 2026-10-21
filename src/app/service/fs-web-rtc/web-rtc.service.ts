@@ -181,6 +181,8 @@ export class WebRtcService extends ApiService {
         componentProps,
         backdropDismiss: false,
         showBackdrop: false,
+        // Hardware back was dismissing the call and leaving a dead notification.
+        canDismiss: () => Promise.resolve(false),
         cssClass: 'non-blocking-modal',
       });
 
@@ -898,7 +900,8 @@ export class WebRtcService extends ApiService {
 
   async handleOffer(offer: any) {
     console.log(offer)
-    await this.startLocalStream();
+    // Show the call first. Asking for the microphone here used to block the
+    // incoming screen, so the first Answer tap failed and only the next call worked.
     if (!this.peerConnection) {
       this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
 
@@ -1275,6 +1278,14 @@ export class WebRtcService extends ApiService {
 
   async acceptCall(offer: any) {
     await this.stopRingtone();
+    const micReady = await this.startLocalStream();
+    if (!micReady || !this.localStream) {
+      this.presentToast('Allow microphone access to answer the call.', 'warning');
+      return;
+    }
+    if (!this.peerConnection) {
+      this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
+    }
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     this.remoteDescriptionSet = true;
     for (const candidate of this.pendingCandidates) {
