@@ -595,6 +595,9 @@ export class ResidentHomePagePage implements OnInit {
   }
 
   loadTermsAndConditions() {
+    if (localStorage.getItem('PENDING_CHANGE_PASSWORD') === 'true') {
+      return;
+    }
     this.termsConditionsService.fetchTerms().subscribe({
       next: async (terms) => {
         const needsAccept = await this.termsConditionsService.needsAcceptance(terms);

@@ -262,14 +262,18 @@ export class LoginEndUserPage implements OnInit {
   async goToChangePassword() {
     await this.defaultPasswordModal.dismiss();
     this.showDefaultPasswordModal = false;
-    // Use synchronous localStorage so the flag is guaranteed written before navigation starts
-    localStorage.setItem('PENDING_CHANGE_PASSWORD', 'true');
-    // Navigate home first — estate must be selected before settings-main can work
     if (this.defaultHomeRoute === '/client-main-app') {
-      this.router.navigate([this.defaultHomeRoute], { queryParams: { reload: true } });
-    } else if (this.defaultHomeRoute) {
-      this.router.navigate([this.defaultHomeRoute]);
+      this.router.navigate(['/client-change-password']);
+      return;
     }
+    const estate = await this.storage.getValueFromStorage('USESATE_DATA');
+    if (estate) {
+      localStorage.removeItem('PENDING_CHANGE_PASSWORD');
+      this.router.navigate(['/settings-main'], { queryParams: { openChangePassword: 'true' } });
+      return;
+    }
+    localStorage.setItem('PENDING_CHANGE_PASSWORD', 'true');
+    this.router.navigate([this.defaultHomeRoute || '/resident-home-page']);
   }
 
   showForgotPasswordModal: boolean = false;
