@@ -1,5 +1,6 @@
 package com.sgeede.focus.security.plugin;
 
+import android.app.NotificationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.PluginMethod;
+import com.sgeede.focus.security.MyFirebaseMessagingService;
 
 @CapacitorPlugin(name = "Ringtone")
 public class RingtonePlugin extends Plugin {
@@ -101,9 +103,39 @@ public class RingtonePlugin extends Plugin {
     @PluginMethod
     public void stop(PluginCall call) {
         Log.e("RingtonePlugin", "stop() dipanggil");
-        if (ringtone != null && ringtone.isPlaying()) {
-            ringtone.stop();
-        }
+        silenceIncomingAlert();
         call.resolve();
+    }
+
+    @PluginMethod
+    public void markInCall(PluginCall call) {
+        Log.e("RingtonePlugin", "markInCall() dipanggil");
+        MyFirebaseMessagingService.setInCall(true);
+        silenceIncomingAlert();
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void markCallEnded(PluginCall call) {
+        Log.e("RingtonePlugin", "markCallEnded() dipanggil");
+        MyFirebaseMessagingService.setInCall(false);
+        silenceIncomingAlert();
+        call.resolve();
+    }
+
+    private void silenceIncomingAlert() {
+        if (ringtone != null) {
+            try {
+                ringtone.stop();
+            } catch (Exception ignored) {
+            }
+            ringtone = null;
+        }
+        MyFirebaseMessagingService.stopRingtone();
+        NotificationManager notificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(3001);
+        }
     }
 }

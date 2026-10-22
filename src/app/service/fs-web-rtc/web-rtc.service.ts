@@ -25,6 +25,8 @@ interface RingtonePlugin {
   stop(): Promise<void>;
   playOutgoing(): Promise<void>;
   stopOutgoing(): Promise<void>;
+  markInCall(): Promise<void>;
+  markCallEnded(): Promise<void>;
 }
 
 const Ringtone = registerPlugin<RingtonePlugin>('Ringtone', {
@@ -282,6 +284,7 @@ export class WebRtcService extends ApiService {
   isReceiver = false
   private ongoingModalTask: Promise<any> | null = null;
   async showOngoingCallModal(isReceiver: boolean) {
+    await this.markCallConnected();
     if (this.ongoingModalTask) {
       return this.ongoingModalTask;
     }
@@ -730,6 +733,28 @@ export class WebRtcService extends ApiService {
       }
     } else {
       console.log('Ringtone not supported on this platform.');
+    }
+  }
+
+  async markCallConnected() {
+    if (Capacitor.getPlatform() !== 'android') {
+      return;
+    }
+    try {
+      await Ringtone.markInCall();
+    } catch (err) {
+      console.error('Ringtone error:', err);
+    }
+  }
+
+  async markCallEnded() {
+    if (Capacitor.getPlatform() !== 'android') {
+      return;
+    }
+    try {
+      await Ringtone.markCallEnded();
+    } catch (err) {
+      console.error('Ringtone error:', err);
     }
   }
 
@@ -1307,6 +1332,7 @@ export class WebRtcService extends ApiService {
 
 
   async acceptCall(offer: any) {
+    await this.markCallConnected();
     await this.stopRingtone();
     const micReady = await this.startLocalStream();
     if (!micReady || !this.localStream) {
@@ -1374,6 +1400,8 @@ export class WebRtcService extends ApiService {
   }
 
   async endCall() {
+    await this.markCallEnded();
+    await this.stopRingtone();
     if (this.localStream) {
       this.localStream.getTracks().forEach(track => track.stop());
     }
@@ -1400,6 +1428,8 @@ export class WebRtcService extends ApiService {
   }
 
   async handleEndCall() {
+    await this.markCallEnded();
+    await this.stopRingtone();
     if (this.localStream) {
       this.localStream.getTracks().forEach(track => track.stop());
     }
@@ -1418,6 +1448,7 @@ export class WebRtcService extends ApiService {
   }
 
   async handleRejectCall() {
+    await this.markCallEnded();
     await this.stopOutgoingRingtone();
     await this.stopRingtone();
     await this.closeModal();
@@ -1425,6 +1456,7 @@ export class WebRtcService extends ApiService {
   }
 
   async rejectCall() {
+    await this.markCallEnded();
     await this.stopOutgoingRingtone();
     await this.stopRingtone();
     this.socket.emit('reject-call', {

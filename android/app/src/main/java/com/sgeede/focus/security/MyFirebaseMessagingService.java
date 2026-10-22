@@ -87,6 +87,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     private static Ringtone ringtone;
     private static Vibrator vibrator;
+    private static volatile boolean inCall = false;
+
+    public static boolean isInCall() {
+        return inCall;
+    }
+
+    public static void setInCall(boolean active) {
+        inCall = active;
+    }
 
     /**
      * Called when message is received.
@@ -140,6 +149,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String callerName = remoteMessage.getData().get("callerName");
 
             if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("incoming_call")) {
+                if (inCall) {
+                    Log.e(TAG, "Incoming push ignored, call already ongoing");
+                    stopRingtone();
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    if (notificationManager != null) {
+                        notificationManager.cancel(3001);
+                    }
+                    return;
+                }
                 wakeUpScreen(getApplicationContext());
                 Log.e(TAG, "Message data payload incoming_call: " + remoteMessage.getData());
                 // Intercom callers have no resident photo (image id 0). Waiting for that
@@ -253,12 +272,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public static void stopRingtone() {
-        if (ringtone != null && ringtone.isPlaying()) {
-            ringtone.stop();
+        // isPlaying() stays false for a looping ringtone on several phones,
+        // so the previous check left the sound running after the call connected.
+        if (ringtone != null) {
+            try {
+                ringtone.stop();
+            } catch (Exception ignored) {
+            }
+            ringtone = null;
         }
 
         if (vibrator != null) {
-            vibrator.cancel();
+            try {
+                vibrator.cancel();
+            } catch (Exception ignored) {
+            }
             Log.d("MyFirebaseMessagingService", "Vibration stopped.");
         }
     }
@@ -363,6 +391,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setCategory(NotificationCompat.CATEGORY_CALL)
                     .setOngoing(false)
                     .setAutoCancel(true)
+                    .setSilent(true)
                     .setContentIntent(fullScreenIntent)
                     .setFullScreenIntent(fullScreenIntent, true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
@@ -417,6 +446,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setGroupSummary(false) // Individual notification
                     .setOngoing(true)
                     .setAutoCancel(false)
+                    .setSilent(true)
                     .setFullScreenIntent(fullScreenIntent, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -425,6 +455,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Notifikasi untuk panggilan masuk");
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel.setSound(null, null);
             notificationManager.createNotificationChannel(channel);
         }
 
