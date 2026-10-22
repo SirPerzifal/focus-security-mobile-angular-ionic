@@ -165,13 +165,17 @@ export class WebRtcService extends ApiService {
     this.modalLock = true;
 
     try {
-      // Tutup semua modal aktif terlebih dahulu
+      // Tutup semua modal aktif terlebih dahulu.
+      // Stop if the same modal is still on top, otherwise a blocked dismiss loops forever.
+      const dismissed = new Set<HTMLIonModalElement>();
       let topModal = await this.modalController.getTop();
-      while (topModal) {
+      while (topModal && !dismissed.has(topModal)) {
+        dismissed.add(topModal);
         try {
-          await topModal.dismiss();
+          await topModal.dismiss(undefined, 'swap');
         } catch (e) {
           console.warn('Gagal dismiss modal:', e);
+          break;
         }
         topModal = await this.modalController.getTop();
       }
@@ -181,8 +185,10 @@ export class WebRtcService extends ApiService {
         componentProps,
         backdropDismiss: false,
         showBackdrop: false,
-        // Hardware back was dismissing the call and leaving a dead notification.
-        canDismiss: () => Promise.resolve(false),
+        // Hardware back and swipe use role "backdrop" / "gesture" and stay blocked.
+        // Programmatic dismiss (role "swap" or none) must still work so Accept can
+        // replace the incoming screen with the ongoing call.
+        canDismiss: (_data?: any, role?: string) => Promise.resolve(role !== 'backdrop' && role !== 'gesture'),
         cssClass: 'non-blocking-modal',
       });
 
@@ -274,20 +280,35 @@ export class WebRtcService extends ApiService {
   }
 
   isReceiver = false
+  private ongoingModalTask: Promise<any> | null = null;
   async showOngoingCallModal(isReceiver: boolean) {
-    this.isReceiver = isReceiver
-    const topModal = await this.modalController.getTop();
-    if (topModal) {
-      try {
-        await topModal.dismiss();
-      } catch (e) {
-        console.warn('Gagal dismiss modal lama:', e);
-      }
+    if (this.ongoingModalTask) {
+      return this.ongoingModalTask;
     }
-    // this.startRecording()
-    return this.presentSingletonModal(OngoingCallPage, {
-      isReceiver,
+    this.isReceiver = isReceiver;
+    this.ongoingModalTask = (async () => {
+      const topModal = await this.modalController.getTop();
+      if (topModal && (topModal as any).component === OngoingCallPage) {
+        return;
+      }
+      if (topModal) {
+        try {
+          await topModal.dismiss(undefined, 'swap');
+        } catch (e) {
+          console.warn('Gagal dismiss modal lama:', e);
+        }
+      }
+      // The incoming modal holds this lock until it is dismissed. Accept used to
+      // return here and leave the resident on the incoming screen.
+      this.modalLock = false;
+      await this.presentSingletonModal(OngoingCallPage, {
+        isReceiver,
+      });
+      await this.regenerateVideo();
+    })().finally(() => {
+      this.ongoingModalTask = null;
     });
+    return this.ongoingModalTask;
   }
 
   async showSplashScreen() {
@@ -823,15 +844,24 @@ export class WebRtcService extends ApiService {
       return;
     }
     const videoElement: HTMLVideoElement = document.getElementById('local-video') as HTMLVideoElement;
-    if (videoElement) {
+    if (videoElement && this.localStream) {
       videoElement.srcObject = this.localStream;
-      await videoElement.play();
       videoElement.muted = true;
+      try {
+        await videoElement.play();
+      } catch (e) {
+        console.warn('Local audio play was blocked:', e);
+      }
     }
     const remoteVideo: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
-    if (remoteVideo) {
+    if (remoteVideo && this.remoteStream) {
       remoteVideo.srcObject = this.remoteStream;
-      await remoteVideo.play();
+      remoteVideo.muted = false;
+      try {
+        await remoteVideo.play();
+      } catch (e) {
+        console.warn('Remote audio play was blocked:', e);
+      }
     }
   }
 
@@ -1285,6 +1315,22 @@ export class WebRtcService extends ApiService {
     }
     if (!this.peerConnection) {
       this.peerConnection = new RTCPeerConnection({ iceServers: this.iceServers, iceTransportPolicy: 'all' });
+      if (!this.remoteStream) {
+        this.remoteStream = new MediaStream();
+      }
+      this.peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          this.socket.emit('ice-candidate', event.candidate);
+        }
+      };
+      this.peerConnection.ontrack = (event) => {
+        this.remoteStream = event.streams[0];
+        const remoteVideo: HTMLVideoElement = document.getElementById('remote-video') as HTMLVideoElement;
+        if (remoteVideo) {
+          remoteVideo.srcObject = this.remoteStream;
+          remoteVideo.play().catch(() => undefined);
+        }
+      };
     }
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     this.remoteDescriptionSet = true;
@@ -1309,6 +1355,10 @@ export class WebRtcService extends ApiService {
       receiverSocketId: this.receiverSocketId,
       hostCode: this.hostCode,
     });
+    // Do not wait for the server "open-modal-call" echo. That echo is what used
+    // to swap this screen, and a blocked dismiss left the resident here while
+    // the intercom timer was already running.
+    await this.handleOngoingCallModal();
   }
 
   async handleOngoingCallModal() {
@@ -1455,7 +1505,7 @@ export class WebRtcService extends ApiService {
     const topModal = await this.modalController.getTop();
     if (topModal) {
       try {
-        await topModal.dismiss();
+        await topModal.dismiss(undefined, 'swap');
       } catch (e) {
         console.warn('Gagal dismiss modal aktif:', e);
       }

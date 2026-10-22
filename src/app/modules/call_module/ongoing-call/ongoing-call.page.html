@@ -1,6 +1,6 @@
 <ion-content class="h-full ">
 
-  <video id="remote-video" autoplay class="h-full w-full object-cover" [ngClass]="getRemoteCam() && !showMinimize ? '' : 'hidden'"></video>
+  <video id="remote-video" autoplay playsinline class="h-full w-full object-cover" [ngClass]="getRemoteCam() && !showMinimize ? '' : 'hidden'"></video>
   <video id="local-video" autoplay class="fixed bottom-28 h-48 w-32 object-cover right-4 hidden"></video>
   <div class="relative d-flex w-100 bg-white" [ngClass]="getRemoteCam() ? '' : 'h-full'" *ngIf="!showMinimize">
     <!-- Local video -->
