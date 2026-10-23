@@ -197,6 +197,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Use bundled ringtone.caf if available, otherwise fall back to system ringtone (id 1007)
         if let soundURL = Bundle.main.url(forResource: "ringtone", withExtension: "caf")
+            ?? Bundle.main.url(forResource: "ringtone", withExtension: "wav")
             ?? Bundle.main.url(forResource: "ringtone", withExtension: "mp3") {
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: soundURL)

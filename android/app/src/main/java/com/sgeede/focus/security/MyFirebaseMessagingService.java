@@ -48,6 +48,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -85,6 +86,7 @@ import com.sgeede.focus.security.FocusSecurity;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    private static final String CALL_CHANNEL_ID = "incoming_call_ring_v2";
     private static Ringtone ringtone;
     private static Vibrator vibrator;
     private static volatile boolean inCall = false;
@@ -254,7 +256,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
         if (ringtone != null) {
-            ringtone.setLooping(true); 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ringtone.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+            }
+            ringtone.setLooping(true);
             ringtone.play();
         }
 
@@ -347,14 +355,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //     customLayoutSmall.setTextViewText(R.id.notification_title, callerName);
 
 
+    private void ensureCallChannel(NotificationManager notificationManager) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || notificationManager == null) {
+            return;
+        }
+        if (notificationManager.getNotificationChannel(CALL_CHANNEL_ID) != null) {
+            return;
+        }
+        NotificationChannel channel = new NotificationChannel(
+                CALL_CHANNEL_ID,
+                "Incoming Calls",
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription("Rings and wakes the phone for an incoming call");
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        channel.enableVibration(true);
+        channel.setVibrationPattern(new long[]{0, 800, 400, 800});
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        channel.setSound(sound, attrs);
+        notificationManager.createNotificationChannel(channel);
+    }
+
     private void sendNotification(String callerName, Map<String, String> data, Bitmap callerImage) {
         NotificationManager notificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         stopRingtone();
         notificationManager.cancel(3001);
-
-        String channelId = getString(R.string.default_notification_channel_id);
+        ensureCallChannel(notificationManager);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Person caller = new Person.Builder()
@@ -364,7 +395,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .build();
 
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("callAction", "openDialogCall");
             intent.putExtra("receiverName", data.get("receiverName"));
             intent.putExtra("callerName", data.get("callerName"));
@@ -373,17 +404,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             PendingIntent fullScreenIntent = PendingIntent.getActivity(
                     this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(channelId,
-                        "Call Notification Channel",
-                        NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription("Notifikasi untuk panggilan masuk");
-                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-                channel.setBypassDnd(true);
-                channel.setSound(null, null); 
-                notificationManager.createNotificationChannel(channel);
-            }
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CALL_CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(data.get("callerName") != null ? data.get("callerName") : "Incoming Call")
                     .setContentText("Incoming Call - Tap to open")
@@ -391,7 +412,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setCategory(NotificationCompat.CATEGORY_CALL)
                     .setOngoing(false)
                     .setAutoCancel(true)
-                    .setSilent(true)
                     .setContentIntent(fullScreenIntent)
                     .setFullScreenIntent(fullScreenIntent, true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
@@ -403,9 +423,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent fullScreenIntent = PendingIntent.getActivity(
-                this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent acceptIntent = new Intent(this, CallActionReceiver.class);
         acceptIntent.setAction("com.sgeede.focus.security.ACTION_ACCEPT_CALL");
@@ -435,7 +455,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         customLayout.setOnClickPendingIntent(R.id.btn_reject_call, rejectPendingIntent);
 
         NotificationCompat.Builder notificationBuilder =
-            new NotificationCompat.Builder(this, channelId)
+            new NotificationCompat.Builder(this, CALL_CHANNEL_ID)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
                     .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                     .setCustomContentView(customLayoutSmall)
@@ -446,18 +466,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setGroupSummary(false) // Individual notification
                     .setOngoing(true)
                     .setAutoCancel(false)
-                    .setSilent(true)
                     .setFullScreenIntent(fullScreenIntent, true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Call Notification Channel",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("Notifikasi untuk panggilan masuk");
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            channel.setSound(null, null);
-            notificationManager.createNotificationChannel(channel);
-        }
 
         notificationManager.notify(3001, notificationBuilder.build());
     }

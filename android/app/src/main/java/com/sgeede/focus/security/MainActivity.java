@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import com.getcapacitor.Plugin;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.provider.Settings;
 import com.sgeede.focus.security.plugin.RingtonePlugin;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -40,6 +43,25 @@ public class MainActivity extends BridgeActivity {
         );
         handleIntent(getIntent());
         handleNotificationIntent(getIntent());
+        ensureFullScreenCallAllowed();
+    }
+
+    private void ensureFullScreenCallAllowed() {
+        if (Build.VERSION.SDK_INT < 34) {
+            return;
+        }
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (manager == null || manager.canUseFullScreenIntent()) {
+            return;
+        }
+        SharedPreferences prefs = getSharedPreferences("call_alerts", MODE_PRIVATE);
+        if (prefs.getBoolean("asked_full_screen_intent", false)) {
+            return;
+        }
+        prefs.edit().putBoolean("asked_full_screen_intent", true).apply();
+        Intent settings = new Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT);
+        settings.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(settings);
     }
 
     //tambah
