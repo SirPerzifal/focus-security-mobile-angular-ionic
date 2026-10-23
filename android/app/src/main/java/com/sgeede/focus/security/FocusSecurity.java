@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.content.Context;
-import android.app.NotificationManager;
 import com.sgeede.focus.security.MyFirebaseMessagingService;
 
 public class FocusSecurity extends Application {
@@ -49,10 +48,6 @@ public class FocusSecurity extends Application {
     }
 
     private void cancelCallNotification(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(3001);
-        }
-        MyFirebaseMessagingService.stopRingtone();
+        MyFirebaseMessagingService.silence(context);
     }
 }

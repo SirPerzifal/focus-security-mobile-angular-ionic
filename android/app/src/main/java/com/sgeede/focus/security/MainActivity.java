@@ -163,10 +163,7 @@ public class MainActivity extends BridgeActivity {
 
         Bundle extras = intent.getExtras();
         if (extras != null && extras.containsKey("callAction")) {
-            NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(3001);
-            MyFirebaseMessagingService.stopRingtone();
+            MyFirebaseMessagingService.silence(this);
             Log.e("MainActivity", "Masukkk: ");
             String callAction = intent.getStringExtra("callAction");
             String receiverName = intent.getStringExtra("receiverName");

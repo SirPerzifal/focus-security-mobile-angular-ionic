@@ -49,6 +49,8 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -87,7 +89,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
     private static final String CALL_CHANNEL_ID = "incoming_call_ring_v2";
+    private static final int CALL_NOTIFICATION_ID = 3001;
     private static Ringtone ringtone;
+    private static MediaPlayer alertPlayer;
+    private static int alertGeneration = 0;
     private static Vibrator vibrator;
     private static volatile boolean inCall = false;
 
@@ -153,12 +158,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("incoming_call")) {
                 if (inCall) {
                     Log.e(TAG, "Incoming push ignored, call already ongoing");
-                    stopRingtone();
-                    NotificationManager notificationManager =
-                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (notificationManager != null) {
-                        notificationManager.cancel(3001);
-                    }
+                    silence(getApplicationContext());
                     return;
                 }
                 wakeUpScreen(getApplicationContext());
@@ -167,7 +167,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // URL used to skip the notification and the ringtone entirely.
                 Bitmap caller = BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_ifs360_logo_transparent);
                 sendNotification(callerName, remoteMessage.getData(), caller);
-                playRingtone();
+                playAlert(getApplicationContext());
             } else if (remoteMessage.getData().containsKey("type") && remoteMessage.getData().get("type").equals("notification_tampan_dan_berani")) {
                 Log.e(TAG, "Message data payload notification_tampan_dan_berani: " + remoteMessage.getData());
                 wakeUpScreen(getApplicationContext());
@@ -252,26 +252,41 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void playRingtone() {
-        Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
-        if (ringtone != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ringtone.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
-            }
-            ringtone.setLooping(true);
-            ringtone.play();
+    public static void playAlert(Context context) {
+        if (inCall || context == null) {
+            return;
+        }
+        stopAlertPlayer();
+        final int generation = ++alertGeneration;
+        Context appContext = context.getApplicationContext();
+        try {
+            Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+            MediaPlayer player = new MediaPlayer();
+            alertPlayer = player;
+            player.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build());
+            player.setDataSource(appContext, ringtoneUri);
+            player.setLooping(true);
+            player.setOnPreparedListener(mp -> {
+                if (generation != alertGeneration || inCall) {
+                    releasePlayer(mp);
+                    return;
+                }
+                mp.start();
+            });
+            player.prepareAsync();
+        } catch (Exception error) {
+            Log.e(TAG, "Unable to start call tone", error);
         }
 
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator = (Vibrator) appContext.getSystemService(VIBRATOR_SERVICE);
         if (vibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createWaveform(
-                    new long[]{0, 500, 500}, 
-                    0 
+                    new long[]{0, 500, 500},
+                    0
                 ));
             } else {
                 vibrator.vibrate(1000);
@@ -280,8 +295,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public static void stopRingtone() {
-        // isPlaying() stays false for a looping ringtone on several phones,
-        // so the previous check left the sound running after the call connected.
+        alertGeneration++;
+        stopAlertPlayer();
         if (ringtone != null) {
             try {
                 ringtone.stop();
@@ -296,6 +311,62 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } catch (Exception ignored) {
             }
             Log.d("MyFirebaseMessagingService", "Vibration stopped.");
+        }
+    }
+
+    public static void silence(Context context) {
+        stopRingtone();
+        if (context == null) {
+            return;
+        }
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(CALL_NOTIFICATION_ID);
+            try {
+                // Replacing the alert cuts the system ringtone. Cancel alone leaves
+                // that channel sound playing after the notification is opened.
+                NotificationCompat.Builder quiet = new NotificationCompat.Builder(context, CALL_CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSilent(true)
+                        .setOnlyAlertOnce(true)
+                        .setTimeoutAfter(1);
+                notificationManager.notify(CALL_NOTIFICATION_ID, quiet.build());
+                notificationManager.cancel(CALL_NOTIFICATION_ID);
+            } catch (Exception ignored) {
+            }
+        }
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            AudioFocusRequest focus = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                    .setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build())
+                    .build();
+            audioManager.requestAudioFocus(focus);
+            audioManager.abandonAudioFocusRequest(focus);
+        }
+    }
+
+    private static void stopAlertPlayer() {
+        MediaPlayer player = alertPlayer;
+        alertPlayer = null;
+        releasePlayer(player);
+    }
+
+    private static void releasePlayer(MediaPlayer player) {
+        if (player == null) {
+            return;
+        }
+        try {
+            player.setLooping(false);
+            player.stop();
+        } catch (Exception ignored) {
+        }
+        try {
+            player.release();
+        } catch (Exception ignored) {
         }
     }
 

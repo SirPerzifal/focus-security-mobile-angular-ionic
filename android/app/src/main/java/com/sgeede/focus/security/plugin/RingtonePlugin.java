@@ -91,11 +91,8 @@ public class RingtonePlugin extends Plugin {
    @PluginMethod
     public void play(PluginCall call) {
         Log.e("RingtonePlugin", "play() dipanggil");
-        Context context = getContext();
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        ringtone = RingtoneManager.getRingtone(context, notification);
-        if (ringtone != null && !ringtone.isPlaying()) {
-            ringtone.play();
+        if (!MyFirebaseMessagingService.isInCall()) {
+            MyFirebaseMessagingService.playAlert(getContext());
         }
         call.resolve();
     }
@@ -131,11 +128,6 @@ public class RingtonePlugin extends Plugin {
             }
             ringtone = null;
         }
-        MyFirebaseMessagingService.stopRingtone();
-        NotificationManager notificationManager =
-                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(3001);
-        }
+        MyFirebaseMessagingService.silence(getContext());
     }
 }
