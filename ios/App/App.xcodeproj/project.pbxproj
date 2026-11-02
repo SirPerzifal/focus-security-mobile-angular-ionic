@@ -14,8 +14,8 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		DE422E0310E1712BD3C2958E /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C77782C19C5EFC46A0E3223D /* Pods_App.framework */; };
-		FA94F7292E00FF3000957584 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA94F7282E00FF3000957584 /* GoogleService-Info.plist */; };
 		FA11A0012E23000000000001 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = FA11A0022E23000000000002 /* ringtone.wav */; };
+		FA94F7292E00FF3000957584 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA94F7282E00FF3000957584 /* GoogleService-Info.plist */; };
 		FADAA0562E03C9DC00BCF18A /* AppDelegatePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADAA0532E03C9DC00BCF18A /* AppDelegatePlugin.swift */; };
 		FAECF3242E093CD700169542 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAECF3222E093CD700169542 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -46,9 +46,9 @@
 		6D8B48A720F42D684732D00F /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
 		C77782C19C5EFC46A0E3223D /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA08B8C23000CA4000BF5CD9 /* App.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = App.xcodeproj; path = ../App.xcodeproj; sourceTree = "<group>"; };
+		FA11A0022E23000000000002 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		FA57867B2DEED97C00FF2127 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		FA94F7282E00FF3000957584 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		FA11A0022E23000000000002 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		FAAB69A92E2103D2008A0512 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = SDKROOT; };
 		FAAB69AC2E21064E008A0512 /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		FADAA0502E03C9DC00BCF18A /* App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "App-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -414,7 +414,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = WEE4LE3ABE;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = iFS360;
@@ -444,7 +444,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = WEE4LE3ABE;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = iFS360;
